@@ -1,6 +1,6 @@
 # RWG2 Continents and classic RWG: how a chunk is made, and where cities hook in
 
-Research sheet for spike S2 (open questions Q1, Q2, Q7, Q10). It records what the GTNH 2.9.0 overworld generators do, read from source at the tags the pack ships, and the candidate hook points for the city overlay. The decision built on it is [0005](../../design/0005-rwg-overlay.md).
+Research sheet for spike S2 (open questions Q1, Q2, Q7, Q10). It records what the GTNH 2.9.0 overworld generators do, read from source at the tags the pack ships, and the candidate hook points for the city overlay. The decision built on it is [0005](../../design/0005-rwg-overlay.md) (*Accepted*).
 
 Every fact below either cites a pinned permalink or is marked *unverified*. Vanilla 1.7.10 code has no public pinned source; facts that rest on it are marked *vanilla*.
 
@@ -172,14 +172,14 @@ What runs before and after the overlay, for one overworld chunk C:
 | Order | Stage | Who | Writes |
 |---|---|---|---|
 | 1 | `provideChunk(C)` | RWG2 or RWG, as above | C's arrays only |
-| 2 | **Overlay terrain phase** (proposed) | this mod | C only |
+| 2 | **Overlay terrain phase** ([0005](../../design/0005-rwg-overlay.md) §2) | this mod | C only |
 | 3 | `onChunkLoad` → `ChunkEvent.Load` | Forge | |
 | 4 | `populate(C)` starts when neighbors are ready (vanilla: +x, +z, +xz; Hodgepodge scheduler: full 3×3) | | |
 | 5 | `PopulateChunkEvent.Pre` listeners | NHCore Railcraft geodes [NH_GeodePopulator.java#L36-L37](https://github.com/GTNewHorizons/NewHorizonsCoreMod/blob/2.9.99/src/main/java/com/dreammaster/railcraftStones/NH_GeodePopulator.java#L36-L37) and quarries [NH_QuarryPopulator.java#L38-L39](https://github.com/GTNewHorizons/NewHorizonsCoreMod/blob/2.9.99/src/main/java/com/dreammaster/railcraftStones/NH_QuarryPopulator.java#L38-L39); both gate on `TerrainGen.populate`. RWG2 filters Railcraft's own population through `Populate` events [RailcraftWorldgenFilter.java#L13](https://github.com/GTNewHorizons/Realistic-World-Gen-2/blob/2.0.6/src/main/java/rwg2/data/RailcraftWorldgenFilter.java#L13) | +8 area |
 | 6 | RWG structures, lakes, dungeons, ores, decoration, springs, landmarks | RWG (table above) | +8 area, trees spill past it |
 | 7 | `PopulateChunkEvent.Post` listeners | NHCore BuildCraft oil deposits, gated on `Populate CUSTOM` [OilGeneratorFix.java#L139-L171](https://github.com/GTNewHorizons/NewHorizonsCoreMod/blob/2.9.99/src/main/java/com/dreammaster/modfixes/oilgen/OilGeneratorFix.java#L139-L171); other pack listeners *unverified* | +8 area |
 | 8 | RWG ice, snow, ocean decorations | RWG | +8 area |
-| 9 | **Overlay population phase** (proposed) | this mod | C only |
+| 9 | **Overlay population phase** ([0005](../../design/0005-rwg-overlay.md) §3) | this mod | C only |
 | 10 | `IWorldGenerator`s by weight | Thaumcraft, Natura, Forestry, IC2, Witchery, Roguelike Dungeons and others: weights *unverified* (S3, Q8) | mod-specific |
 | 11 | Et Futurum deepslate layer (weight `Integer.MAX_VALUE`, per GT's comment) | EFR | stone below Y 22 |
 | 12 | GT ore veins, forced last | GT5-Unofficial: weight `Integer.MAX_VALUE` [GTWorldgenerator.java#L147-L152](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/common/GTWorldgenerator.java#L147-L152), moved to the end by a mixin because "the ore world gen expects to be the last pass over the world" [GameRegistryMixin.java](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/mixin/java/gregtech/mixin/mixins/early/forge/GameRegistryMixin.java). Veins are queued and at most 5 queued chunks run per call, so **a chunk's ore can be placed during a later chunk's population** [#L175-L213](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/common/GTWorldgenerator.java#L175-L213) | ore chunks |

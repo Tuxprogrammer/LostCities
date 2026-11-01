@@ -2,17 +2,18 @@
 
 Upstream's assets name about 120 distinct blocks by their 1.20 IDs with blockstate properties. In 1.7.10 a block is a registry name plus metadata, and many 1.20 blocks don't exist in vanilla. This sheet maps every block upstream's assets and code use to one 1.7.10 block in GTNH 2.9.0 as the pack configures it, with a fallback for when the supplying mod is absent. Et Futurum Requiem supplies most of the modern blocks, but the pack's own config switches some of them off (granite, andesite and diorite; prismarine and the sea lantern; the iron trapdoor; wood-variant doors), so Botania and Chisel fill those gaps. Every choice also respects the ore rule from [ore-veins.md](ore-veins.md): no building block is a block GT ore can replace.
 
-Status: *Proposed* (spike S3). Settles open question Q4 once the owner accepts it. The assets lane (M02) turns these tables into the block-name map that `AssetValidationTest` and the dev self-check read.
+Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D19). Settles open question Q4. The assets lane (M02) turns these tables into the block-name map that `AssetValidationTest` and the dev self-check read.
 
-## Proposed answer to Q4
+## Answer to Q4
 
-**Et Futurum Requiem first, then Botania and Chisel, then vanilla.** Confidence: **high** for which blocks exist and their registry names (read from source at the pack's tags and the pack's shipped config), **medium** for the visual choices until the alpha screenshots, and **unverified** for the blockstate-to-metadata details marked as such below.
+**Et Futurum Requiem first, then Botania and Chisel, then vanilla.** Which blocks exist and their registry names are read from source at the pack's tags and the pack's shipped config. The visual choices are confirmed or redirected at the alpha screenshot review. The blockstate-to-metadata details marked *unverified* below are checked in M02.
 
 1. **Where a 1.7.10 vanilla block is the same block**, use it, with metadata from the blockstate (the [vanilla table](#vanilla-blocks-with-a-1710-equivalent)). About 80 of upstream's blocks are in this group, several under different names (`stone_bricks` is `stonebrick`, `smooth_stone_slab` is `stone_slab`, `cut_sandstone` is `sandstone:2`).
 2. **Where vanilla has nothing, use Et Futurum Requiem 2.6.65-GTNH** if the pack enables that block: concrete, deepslate bricks and tiles, blackstone, copper, chain, lantern, barrel, smooth stone, smooth quartz, quartz bricks, red sandstone, red nether bricks, and the extra stairs and walls.
 3. **Where the pack disables the Et Futurum block, use Botania 1.13.42-GTNH or Chisel 2.17.34-GTNH**: Botania's sea lantern and its 1.8 diorite (block, stairs and wall), Chisel's polished diorite as the second choice.
 4. **Every pack block has a vanilla fallback**, used when its mod is absent (dev environments, other packs). The dev self-check reports each fallback it takes ([CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules)).
 5. **Never an ore host.** Upstream's raw `minecraft:stone` in building variants maps to smooth stone; `etfuturum:deepslate`, `etfuturum:tuff`, GT's granite, marble and basalt, netherrack and end stone are never building blocks. Colored terracotta stays `minecraft:stained_hardened_clay`, a GT boulder host, as [ore-veins.md](ore-veins.md) accepts for alpha.
+6. **No silverfish.** Every infested block maps to its plain block, so no city holds a `minecraft:monster_egg` ([No infested blocks](#no-infested-blocks)).
 
 ## How the mapping works
 
@@ -67,7 +68,7 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `crafting_table` | `minecraft:crafting_table` | |
 | `cut_sandstone` | `minecraft:sandstone` : 2 | 1.7.10's "smooth sandstone" is 1.13's cut sandstone |
 | `dandelion` | `minecraft:yellow_flower` : 0 | |
-| `diamond_block`, `emerald_block`, `gold_block`, `iron_block` | `minecraft:diamond_block` and so on | Within the EV ceiling; the `!` treasure mix in `common.json` and the oil rig's diamond blocks go on the beta balance list |
+| `diamond_block`, `emerald_block`, `gold_block`, `iron_block` | `minecraft:diamond_block` and so on | Within the EV ceiling; the `!` treasure mix in `common.json` and the oil rig's diamond blocks go on the [beta balance list](../beta-balance-list.md) |
 | `dirt` | `minecraft:dirt` : 0 | |
 | `enchanting_table` | `minecraft:enchanting_table` | |
 | `furnace` | `minecraft:furnace` : facing | Its `Items` tag needs item IDs resolved at placement |
@@ -76,7 +77,7 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `<color>_terracotta` | `minecraft:stained_hardened_clay` : color | black, brown, cyan, gray, light gray, orange, red: 22 references in 10 files. A GT boulder host ([ore-veins.md](ore-veins.md)) |
 | `glowstone` | `minecraft:glowstone` | |
 | `grass_block` | `minecraft:grass` | |
-| `infested_stone_bricks` | `minecraft:monster_egg` : 2 | Silverfish, as upstream |
+| `infested_stone_bricks` | `minecraft:stonebrick` : 0 | The plain block: no silverfish ([No infested blocks](#no-infested-blocks)) |
 | `iron_bars` | `minecraft:iron_bars` | |
 | `iron_door` | `minecraft:iron_door` : door halves | |
 | `ladder` | `minecraft:ladder` : facing | |
@@ -104,6 +105,18 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `stone_pressure_plate` | `minecraft:stone_pressure_plate` | |
 | `torch`, `wall_torch` | `minecraft:torch` : 5 standing, 1 to 4 on a wall | |
 | `water` | `minecraft:water` : 0 | `minecraft:water` is still water in 1.7.10 |
+
+### No infested blocks
+
+Upstream puts `infested_stone_bricks` in three palettes (`bricks_border`, `bricks_standard`, `quartzbricks_border`). This mod never places `minecraft:monster_egg`: buildings are meant to be moved into, and silverfish make players tear them down. Any infested block an asset names, upstream's or an override's, maps to its plain block, or, where the plain block is an ore host, to the non-host block that stands in for it:
+
+| 1.20 block | 1.7.10 block : meta | Note |
+|---|---|---|
+| `infested_stone_bricks` | `minecraft:stonebrick` : 0 | The only infested block upstream uses |
+| `infested_mossy_stone_bricks`, `infested_cracked_stone_bricks`, `infested_chiseled_stone_bricks` | `minecraft:stonebrick` : 1, 2, 3 | |
+| `infested_cobblestone` | `minecraft:cobblestone` | A GT boulder host, not an ore host ([ore-veins.md](ore-veins.md)) |
+| `infested_stone` | as `stone` below: `etfuturum:smooth_stone` : 0, fallback `minecraft:double_stone_slab` : 8 | Raw `minecraft:stone` is an ore host |
+| `infested_deepslate` | `etfuturum:deepslate_bricks` : 0, fallback `minecraft:stonebrick` : 0 | Raw `etfuturum:deepslate` is an ore host |
 
 ## Blocks 1.7.10 vanilla lacks
 
@@ -192,19 +205,24 @@ To record in `05-assets` when it is written:
 
 - Raw stone in the `stoneandbrick` variants becomes smooth stone.
 - Every wooden door is oak.
+- Infested blocks become their plain blocks: no silverfish.
 - Polished-diorite stairs become plain-diorite stairs; the iron trapdoor becomes a wooden trapdoor.
 - Blocks with a tile entity (furnace contents, flower pot, spawner, chests, barrels) get their NBT built at placement with per-world item IDs.
 
 ## To check in game (alpha)
 
 - Every primary resolves in the real pack, and the dev self-check reports no fallback.
-- The `!` treasure mix and other valuable blocks: note how often they appear, for the beta balance list.
+- The `!` treasure mix and other valuable blocks: note how often they appear, for the [beta balance list](../beta-balance-list.md).
 - Botania's diorite next to Chisel and vanilla quartz: whether the polished-diorite family reads as one material.
 - Copper weathers in place over time, as in upstream.
 
-## Owner questions
+## Decisions
 
-None that block M02. The visual choices above are proposals the alpha screenshots confirm or redirect; the boulder-host question for terracotta belongs to [ore-veins.md](ore-veins.md).
+Recorded in the [decision log](../../design/decision-log.md) as D19:
+
+- The mapping on this sheet is accepted as written, with the one change that every infested block maps to its plain block, so cities hold no silverfish.
+- The visual choices are confirmed or redirected at the alpha screenshot review.
+- The boulder-host question for terracotta is settled in [ore-veins.md](ore-veins.md) (D18).
 
 [fml-prefix]: https://github.com/MinecraftForge/FML/blob/a099592d3d1418245e3af65eda195da244287188/src/main/java/cpw/mods/fml/common/registry/GameData.java#L950-L972
 [efr-init]: https://github.com/GTNewHorizons/Et-Futurum-Requiem/blob/2.6.65-GTNH/src/main/java/ganymedes01/etfuturum/ModBlocks.java#L937-L951

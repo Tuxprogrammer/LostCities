@@ -2,6 +2,8 @@
 
 How upstream fills chests and spawners, how GTNH 2.9.0 handles chest loot and spawner mobs, and what this mod does with them. Covers open questions Q5 (loot) and Q6 (mobs). Tier rules come from [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md): nothing above **EV**, weighted toward the lower tiers, no balance pass before beta.
 
+Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D20). Settles open questions Q5 and Q6.
+
 Status words follow the [new-spec README](../README.md). *Verified* facts cite a pinned permalink or a pack config path relative to `.minecraft/` in the official GTNH 2.9.0 download. *Unverified* facts must be checked before code.
 
 ## Summary
@@ -12,12 +14,12 @@ Status words follow the [new-spec README](../README.md). *Verified* facts cite a
 - Spawner mobs in the pack are vanilla entity names on a vanilla `mob_spawner`. Special Mobs and Infernal Mobs then transform whatever a spawner spawns, so plain vanilla names already produce GTNH-style mobs.
 - Two pack settings matter for "livable" buildings: GT makes mob spawners hardness 500 and blast resistance 6,000,000, and EnderIO drops a Broken Spawner every time one is broken.
 
-## Proposed answers to Q5 and Q6
+## Answers to Q5 and Q6
 
-| Question | Proposed answer | Confidence |
+| Question | Answer | Basis |
 |---|---|---|
-| **Q5** Loot | Register our own `ChestGenHooks` categories, one per tier band (Steam, LV, MV, HV, EV) plus a rail category, with defaults built from pack items: GT components and materials by tier, EnhancedLootBags bags of the matching tier, pack food and building supplies. Upstream's `chestloot` condition keeps its floor and part tests and chooses among these categories, so deeper cellars and higher floors roll the higher bands with smaller factors. The EV ceiling is enforced by a tier map that the dev self-check reads. Server owners retune any category with TooMuchLoot XML, without our config. | High for the mechanism (verified); medium for the item categories (owner and beta balance) |
-| **Q6** Mobs | Map upstream's mob IDs to 1.7.10 entity names on vanilla spawners (`Zombie`, `Skeleton`, `Spider`; `Blaze`, `Witch`). Add no pack mobs by default: Special Mobs and Infernal Mobs already vary what vanilla spawners spawn. Offer EnderZoo overworld mobs as an optional `hardmobs` set. Ask the owner whether `Blaze` stays in the overworld. | High for the mechanism (verified); medium for the mob lists |
+| **Q5** Loot | Register our own `ChestGenHooks` categories, one per tier band (Steam, LV, MV, HV, EV) plus a rail category, with defaults built from pack items: GT components and materials by tier, EnhancedLootBags bags of the matching tier, pack food and building supplies. Upstream's `chestloot` condition keeps its floor and part tests and chooses among these categories, so deeper cellars and higher floors roll the higher bands with smaller factors. The EV ceiling is enforced by a tier map that the dev self-check reads, and the higher bands are weighted low ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)). City chests never draw from the vanilla categories unless a profile option opts in (off by default). Chests are filled at generation. Loot bags come from the tech, food, rail, farming and computer families only. Server owners retune any category with TooMuchLoot XML, without our config. Quantities wait for the beta balance pass. | Mechanism verified; item lists follow the tier sources below |
+| **Q6** Mobs | Map upstream's mob IDs to 1.7.10 entity names on vanilla spawners (`Zombie`, `Skeleton`, `Spider`; `Blaze`, `Witch`). `Blaze` stays, faithful to upstream. Add no pack mobs by default: Special Mobs and Infernal Mobs already vary what vanilla spawners spawn. EnderZoo overworld mobs are an optional `hardmobs` set, off by default. Spawner density is upstream's. Blaze spawners, spawner density and spawner hardness are on the [beta balance list](../beta-balance-list.md). | Mechanism verified; faithful mob lists |
 
 ## Upstream behavior
 
@@ -99,7 +101,7 @@ Consequences:
 | 32 to 34 | transportation_3_class … transportation_1_class | rail, rising rarity | Yes (rail dungeons, stations) |
 | 35, 36, 51 | seeds, gardens, crops_farmhand | farming | Yes |
 | 45, 46 | computer_floppies, tier_1_computers | OpenComputers | Yes |
-| 9 to 14, 16 to 18, 52 to 56 | magic, Blood Magic, Witchery | magic progression | Owner's call |
+| 9 to 14, 16 to 18, 52 to 56 | magic, Blood Magic, Witchery | magic progression | Not by default |
 | 22 to 24, 57, 58 | space, Hardcore Ender Expansion | other dimensions | No |
 
 - Quests reward bags heavily: about 2,000 bag rewards in `config/betterquesting/DefaultQuests/Quests/`, most often groups 4 to 8 (LV to IV). Bags are the pack's standard currency for "some tiered loot".
@@ -115,7 +117,7 @@ Consequences:
 | Roguelike Dungeons 1.6.6-GTNH | Generates in dimension 0 only (`dimensionWL=0`), with its own JSON loot settings in `config/roguelike_dungeons/settings/`. | *Verified* config |
 | bartworks ruins | Places GT machines up to a configured tier and a `pyramidJungleChest` chest, but only on Ross128b, and seeds its tier from `SecureRandom` ([MapGenRuins.java#L202-L228](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/bartworks/system/worldgen/MapGenRuins.java#L202-L228)). A precedent for tier-capped machines in ruins; its non-seeded randomness is not one to copy. | *Verified* |
 
-## Proposed loot design (Q5)
+## Loot design (Q5)
 
 ### Categories
 
@@ -141,7 +143,7 @@ Tier sources, best first:
 
 - **Conditions choose the band.** Upstream's `chestloot` condition already distinguishes high floors, deep cellars and rail-dungeon parts. Its converted form names our categories instead of 1.20 loot tables: ordinary floors draw mostly `city_supplies` and `city_lv`, higher floors and deeper cellars add `city_mv` and `city_hv`, and `city_ev` appears with the smallest factor. Factor values are beta balance.
 - **The ceiling is a check, not a convention.** A tier map (item to tier, loot bag group to tier) lives with the loot defaults. The dev self-check walks every category this mod registers and fails on any item above EV or missing from the map ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) consequences).
-- **Owner overrides.** A server owner can replace or edit any of our categories with a TooMuchLoot XML file using the same category name. That is TooMuchLoot's job, so this mod adds no loot config of its own.
+- **Owner overrides.** A server owner can replace or edit any of our categories with a TooMuchLoot XML file using the same category name. That is TooMuchLoot's job, so this mod adds no config for category contents of its own; the profile's opt-in for vanilla categories only chooses which categories a chest draws from.
 - **Absent mods.** An item whose mod is absent is skipped with one log line; a band never becomes empty because the GT and vanilla entries always resolve.
 
 ### Upstream's vanilla-table entries
@@ -150,7 +152,7 @@ Upstream's `chestloot` lists 33 vanilla 1.20 tables, mostly at factor 1. The one
 
 | 1.20 loot table | 1.7.10 category | Note |
 |---|---|---|
-| `simple_dungeon` (factor 30) | `dungeonChest` | Pack-overridden, untiered. Proposed: replace with `city_supplies` |
+| `simple_dungeon` (factor 30) | `dungeonChest` | Pack-overridden, untiered. By default its entry draws `city_supplies` instead; `dungeonChest` only with the opt-in option |
 | `desert_pyramid` | `pyramidDesertyChest` | |
 | `jungle_temple` | `pyramidJungleChest` | |
 | `jungle_temple_dispenser` | `pyramidJungleDispenser` | Only fits a dispenser |
@@ -161,13 +163,14 @@ Upstream's `chestloot` lists 33 vanilla 1.20 tables, mostly at factor 1. The one
 | `lostcities:chests/lostcitychest` | `lostcitiesnh:city_*` by floor | |
 | `lostcities:chests/raildungeonchest` | `lostcitiesnh:rail_dungeon` | |
 
-Proposed default: city chests draw only from this mod's categories, and the vanilla categories are an opt-in profile option, because they are untiered in the pack.
+By default, city chests draw only from this mod's categories. The vanilla categories are an opt-in profile option, off by default, because they are untiered in the pack.
 
 ### Fill timing
 
 1.7.10 chests are filled when they are written. Two consequences:
 
-- **Spawn-area chests use registration defaults.** Chests generated before `FMLServerStartingEvent` get this mod's defaults even when a TooMuchLoot file overrides the category. Proposed: accept it and document it; a server owner who overrides our categories should know the spawn area keeps defaults. A deferred fill (record chest positions in world saved data and fill them on first open) would restore upstream's lazy behavior, at the cost of saved-data state; it waits for the owner.
+- **Chests are filled at generation.** No deferred fill (chest positions in world saved data, filled on first open) is built, so upstream's roll-on-open behavior is a recorded deviation and the mod keeps no per-world loot state.
+- **Spawn-area chests use registration defaults.** Chests generated before `FMLServerStartingEvent` get this mod's defaults even when a TooMuchLoot file overrides the category. This is documented for server owners: one who overrides our categories should know the spawn area keeps the defaults.
 - **Determinism.** Chest contents depend on the pack's loot configuration as well as the seed. Golden-chunk tests compare blocks and the chosen category per chest, not item stacks, or they run with a fixed loot configuration.
 
 ### Other block-entity data
@@ -197,7 +200,7 @@ Upstream's furnace `tag` names items as strings (`"id": "minecraft:coal"`). A 1.
 | Twilight Forest 2.7.45 | Twilight Forest dimension mobs | No: not overworld mobs | *Unverified* |
 | Hardcore Ender Expansion | End mobs | No: End progression | *Unverified* |
 
-## Proposed mob design (Q6)
+## Mob design (Q6)
 
 | Upstream ID | 1.7.10 spawner entity name | Fallback |
 |---|---|---|
@@ -205,21 +208,23 @@ Upstream's furnace `tag` names items as strings (`"id": "minecraft:coal"`). A 1.
 | `minecraft:skeleton` | `Skeleton` | none needed |
 | `minecraft:spider` | `Spider` | none needed |
 | `minecraft:witch` | `Witch` | none needed |
-| `minecraft:blaze` | `Blaze` (faithful) or `enderzoo.FallenKnight` (proposed GTNH default) | `Skeleton` when EnderZoo is absent |
+| `minecraft:blaze` | `Blaze` | none needed |
 
 - Spawners are vanilla `minecraft:mob_spawner` blocks with the entity name set through `MobSpawnerBaseLogic`, as Roguelike does. No spawner block of our own ([CONTRIBUTING § Loot, spawners and items](../../../CONTRIBUTING.md#gtnh-integration)).
 - Conditions keep upstream's structure, so a profile or asset override can add pack mobs by name. A mob whose mod is absent falls back as in the table, and the dev self-check reports it.
-- Upstream's `generateSpawners` and `buildingWithoutLootChance` stay; they are how a server owner keeps buildings free of spawners.
+- Spawner density is upstream's. Upstream's `generateSpawners` and `buildingWithoutLootChance` stay; they are how a server owner keeps buildings free of spawners.
+- EnderZoo's overworld mobs (`enderzoo.FallenKnight` and the others in the table above) are available as an optional `hardmobs` set, off by default, with `Skeleton` as the fallback when EnderZoo is absent.
 
-## Questions for the owner
+## Decisions
 
-| Question | Recommendation | Trade-off |
-|---|---|---|
-| Do Blaze spawners stay in overworld cities (`hardmobs`)? | Replace `Blaze` with EnderZoo's Fallen Knight by default; keep `Witch`. | Faithfulness against an early overworld source of blaze rods and of Broken Blaze Spawners for EnderIO. |
-| Spawners in buildings meant to be lived in: GT makes them hardness 500, and each one breaks into an EnderIO Broken Spawner. Keep upstream's spawner density? | Keep spawners, faithful to upstream, and list "spawner count and mob types" for the beta balance pass. | Players moving in must clear spawners with slow mining or a Dislocation focus, and each city becomes a stock of Broken Spawners. |
-| Should city chests ever draw from the vanilla categories (`dungeonChest` and others)? | No by default; an opt-in profile option. | The pack's vanilla categories are untiered and contain strong items; leaving them out loses some of upstream's variety. |
-| Fill chests at generation, or defer to first open? | Fill at generation; document that spawn-area chests keep this mod's defaults. | Deferring restores upstream's roll-on-open behavior and honors TooMuchLoot overrides everywhere, but adds per-world saved state. |
-| Which loot bag families belong in cities beyond tech, food, rail and farming (magic, Blood Magic, Witchery)? | Tech, food, rail, farming and computers only. | Magic bags would give cities a reason to matter to magic players, but they skip that progression's own gates. |
+Recorded in the [decision log](../../design/decision-log.md) as D20:
+
+- **Loot categories:** this mod's own `ChestGenHooks` categories, one per tier band (Steam, LV, MV, HV, EV) plus rail, filled from pack items. Nothing above EV, and the higher bands weighted low ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)). Quantities are not balanced before beta.
+- **Vanilla categories:** never drawn by city chests unless a profile option opts in; the option is off by default.
+- **Fill timing:** chests are filled at generation; spawn-area chests keep this mod's default contents.
+- **Loot bags:** the tech, food, rail, farming and computer families only; no magic, Blood Magic or Witchery bags by default, since they would skip those progressions' own gates.
+- **Spawners:** vanilla spawners with vanilla entity names mapped from upstream's IDs. `Blaze` and `Witch` stay, faithful to upstream. No pack mobs by default. Spawner density is upstream's.
+- **For beta:** Blaze spawners in the overworld, spawner density and GT's spawner hardness are on the [beta balance list](../beta-balance-list.md). That is where the early source of blaze rods and Broken Blaze Spawners, and the effort of clearing spawners from a building before moving in, are judged.
 
 ## Pack changes
 
