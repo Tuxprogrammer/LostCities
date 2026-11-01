@@ -29,4 +29,4 @@ The ID is the first area's ID; **Also** lists the same bug as reported by other 
 |---|---|---|---|---|
 
 <!-- In the new mod: a regression test per reproducible bug, named doesNotReproduce<ID>_<what>,
-     and the PR's "Inherited bugs avoided" section lists the IDs. -->
+     and the change's "Inherited bugs avoided" list (pull_request_template.md) names the IDs. -->

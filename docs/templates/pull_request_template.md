@@ -28,7 +28,7 @@
 - [ ] Scenario exists (world-touching features); multiplayer checked (synced features)
 - [ ] Content registered regardless of config; config gates behavior only
 - [ ] Recipes tier-gated, no clash with the pack's recipe set, visible in NEI; no duplicated GT materials
-- [ ] Every string is a lang key; assets are original with provenance recorded
+- [ ] Every string is a lang key; every asset is our own or free-licensed, with its provenance recorded
 - [ ] Javadoc and `// Spec:` comments in place; no commented-out code
 - [ ] No hostnames, usernames, local paths or secrets in the diff
 - [ ] Roadmap box ticked; docs and changelog updated

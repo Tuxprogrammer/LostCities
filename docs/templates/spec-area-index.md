@@ -8,8 +8,8 @@ What this area covers, in a few sentences, and which version of the original mod
 
 ## Contents
 
-- [sheet-a.md](sheet-a.md): one line on what it documents
-- [sheet-b.md](sheet-b.md): ...
+- `[sheet-a.md](sheet-a.md)`: one line on what it documents
+- `[sheet-b.md](sheet-b.md)`: ...
 
 ## Key facts
 

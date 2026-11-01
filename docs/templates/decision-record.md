@@ -1,8 +1,8 @@
 # NNNN · Title
 
-<!-- Copy to docs/design/NNNN-short-title.md. Once accepted, never rewrite it: supersede it with a new record. -->
+<!-- Copy to docs/design/NNNN-short-title.md. When the decision changes, edit this record in place (git history keeps the old text) and fix links to any record merged or deleted. -->
 
-- Status: Proposed | Accepted | Accepted (by default; revisit after MVP) | Superseded by NNNN
+- Status: Proposed | Accepted | Accepted (by default; revisit after MVP)
 - Gate: <decision gate this closes, or none>
 - Amends: <records this changes, or none>
 - Date: YYYY-MM-DD
