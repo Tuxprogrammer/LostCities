@@ -124,7 +124,7 @@ Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open qu
 
 **Entry gate:** M02, M03 and M04 done.
 
-**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld.
+**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
 
 **Exit gate (the alpha gate):**
 - [ ] On a fresh GTNH 2.9.0 dedicated server with RWG2 Continents, a city generates within the expected distance of spawn for a fixed seed.
@@ -142,7 +142,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 |---|---|---|
 | M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain; highways and railways detour around landmark cores or end before them ([0006](design/0006-build-around-other-worldgen.md)) |
 | M07 · Scattered structures | Layout | Scattered structures and decorative stuff; scattered structures stay out of landmark cores and edge rings, which replace upstream's structure avoidance ([0006](design/0006-build-around-other-worldgen.md)) |
-| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (VillageNames, Roguelike Dungeons, Witchery, LootGames, AE2, RWG2), the Roguelike Dungeons steering mixin, and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
+| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin, and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
 | M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |
