@@ -1,0 +1,127 @@
+{
+ "title": "Et Futurum Requiem: wood",
+ "entries": [
+  {
+   "label": "etfuturum:log_stripped:0",
+   "name": "Stripped Oak Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_oak_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_oak_log.png"
+  },
+  {
+   "label": "etfuturum:log_stripped:1",
+   "name": "Stripped Spruce Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_spruce_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_spruce_log.png"
+  },
+  {
+   "label": "etfuturum:log_stripped:2",
+   "name": "Stripped Birch Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_birch_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_birch_log.png"
+  },
+  {
+   "label": "etfuturum:log_stripped:3",
+   "name": "Stripped Jungle Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_jungle_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_jungle_log.png"
+  },
+  {
+   "label": "etfuturum:log2_stripped:0",
+   "name": "Stripped Acacia Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_acacia_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_acacia_log.png"
+  },
+  {
+   "label": "etfuturum:log2_stripped:1",
+   "name": "Stripped Dark Oak Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_dark_oak_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_dark_oak_log.png"
+  },
+  {
+   "label": "etfuturum:bark:0",
+   "name": "Oak Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_oak.png"
+  },
+  {
+   "label": "etfuturum:bark:1",
+   "name": "Spruce Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_spruce.png"
+  },
+  {
+   "label": "etfuturum:bark:2",
+   "name": "Birch Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_birch.png"
+  },
+  {
+   "label": "etfuturum:bark:3",
+   "name": "Jungle Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_jungle.png"
+  },
+  {
+   "label": "etfuturum:bark2:0",
+   "name": "Acacia Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_acacia.png"
+  },
+  {
+   "label": "etfuturum:bark2:1",
+   "name": "Dark Oak Wood",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_big_oak.png"
+  },
+  {
+   "label": "etfuturum:wood_stripped:0",
+   "name": "Stripped Oak Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_oak_log.png"
+  },
+  {
+   "label": "etfuturum:wood_stripped:1",
+   "name": "Stripped Spruce Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_spruce_log.png"
+  },
+  {
+   "label": "etfuturum:wood_stripped:2",
+   "name": "Stripped Birch Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_birch_log.png"
+  },
+  {
+   "label": "etfuturum:wood_stripped:3",
+   "name": "Stripped Jungle Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_jungle_log.png"
+  },
+  {
+   "label": "etfuturum:wood2_stripped:0",
+   "name": "Stripped Acacia Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_acacia_log.png"
+  },
+  {
+   "label": "etfuturum:wood2_stripped:1",
+   "name": "Stripped Dark Oak Wood",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_dark_oak_log.png"
+  },
+  {
+   "label": "etfuturum:wood_planks:3",
+   "name": "Cherry Planks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:cherry_log:0",
+   "name": "Cherry Log",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_log.png"
+  },
+  {
+   "label": "etfuturum:leaves:1",
+   "name": "Cherry Leaves",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_leaves.png"
+  },
+  {
+   "label": "etfuturum:sapling:1",
+   "name": "Cherry Sapling",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_sapling.png"
+  },
+  {
+   "label": "etfuturum:cherry_trapdoor:0",
+   "name": "Cherry Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_trapdoor.png"
+  }
+ ]
+}

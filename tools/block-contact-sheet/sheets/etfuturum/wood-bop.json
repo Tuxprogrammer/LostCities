@@ -1,0 +1,312 @@
+{
+ "title": "Et Futurum Requiem: wood-bop",
+ "entries": [
+  {
+   "label": "etfuturum:bop_log_stripped:0",
+   "name": "Stripped Sacredoak Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_sacredoak_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_sacredoak_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped:1",
+   "name": "Stripped Cherry Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_cherry_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_cherry_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped:2",
+   "name": "Stripped Dark Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dark_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dark_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped:3",
+   "name": "Stripped Fir Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_fir_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_fir_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped2:0",
+   "name": "Stripped Ethereal Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_ethereal_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_ethereal_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped2:1",
+   "name": "Stripped Magic Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_magic_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_magic_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped2:2",
+   "name": "Stripped Mangrove Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_mangrove_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_mangrove_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped2:3",
+   "name": "Stripped Palm Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_palm_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_palm_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped3:0",
+   "name": "Stripped Redwood Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_redwood_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_redwood_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped3:1",
+   "name": "Stripped Willow Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_willow_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_willow_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped3:2",
+   "name": "Stripped Dead Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dead_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dead_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped3:3",
+   "name": "Stripped Bigflowerstem Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_bigflowerstem_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_bigflowerstem_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped4:0",
+   "name": "Stripped Pine Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_pine_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_pine_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped4:1",
+   "name": "Stripped Hellbark Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_hellbark_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_hellbark_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped4:2",
+   "name": "Stripped Jacaranda Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_jacaranda_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_jacaranda_log.png"
+  },
+  {
+   "label": "etfuturum:bop_log_stripped4:3",
+   "name": "Stripped Mahogany Log (BoP)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_mahogany_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_mahogany_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood:0",
+   "name": "Sacredoak Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_sacredoak_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood:0",
+   "name": "Stripped Sacredoak Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_sacredoak_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood:1",
+   "name": "Cherry Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_cherry_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood:1",
+   "name": "Stripped Cherry Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_cherry_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood:2",
+   "name": "Dark Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dark_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood:2",
+   "name": "Stripped Dark Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dark_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood:3",
+   "name": "Fir Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_fir_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood:3",
+   "name": "Stripped Fir Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_fir_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood2:0",
+   "name": "Ethereal Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_ethereal_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood2:0",
+   "name": "Stripped Ethereal Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_ethereal_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood2:1",
+   "name": "Magic Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_magic_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood2:1",
+   "name": "Stripped Magic Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_magic_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood2:2",
+   "name": "Mangrove Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mangrove_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood2:2",
+   "name": "Stripped Mangrove Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stripped_mangrove_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood2:3",
+   "name": "Palm Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_palm_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood2:3",
+   "name": "Stripped Palm Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_palm_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood3:0",
+   "name": "Redwood Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_redwood_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood3:0",
+   "name": "Stripped Redwood Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_redwood_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood3:1",
+   "name": "Willow Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_willow_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood3:1",
+   "name": "Stripped Willow Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_willow_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood3:2",
+   "name": "Dead Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dead_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood3:2",
+   "name": "Stripped Dead Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_dead_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood3:3",
+   "name": "Bigflowerstem Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_bigflowerstem_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood3:3",
+   "name": "Stripped Bigflowerstem Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_bigflowerstem_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood4:0",
+   "name": "Pine Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_pine_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood4:0",
+   "name": "Stripped Pine Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_pine_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood4:1",
+   "name": "Hellbark Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_hellbark_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood4:1",
+   "name": "Stripped Hellbark Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_hellbark_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood4:2",
+   "name": "Jacaranda Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_jacaranda_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood4:2",
+   "name": "Stripped Jacaranda Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_jacaranda_log.png"
+  },
+  {
+   "label": "etfuturum:bop_wood4:3",
+   "name": "Mahogany Wood (BoP bark)",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mahogany_side.png"
+  },
+  {
+   "label": "etfuturum:bop_stripped_wood4:3",
+   "name": "Stripped Mahogany Wood (BoP)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/biomesoplenty/textures/blocks/stripped_mahogany_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_log_stripped:0",
+   "name": "Stripped Rowan Log (Witchery)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_rowan_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_rowan_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_log_stripped:1",
+   "name": "Stripped Alder Log (Witchery)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_alder_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_alder_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_log_stripped:2",
+   "name": "Stripped Hawthorn Log (Witchery)",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_hawthorn_log_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_hawthorn_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_wood:0",
+   "name": "Rowan Wood (Witchery bark)",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_rowan_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_rowan.png"
+  },
+  {
+   "label": "etfuturum:witchery_wood:1",
+   "name": "Alder Wood (Witchery bark)",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_alder_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_alder.png"
+  },
+  {
+   "label": "etfuturum:witchery_wood:2",
+   "name": "Hawthorn Wood (Witchery bark)",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_hawthorn_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_hawthorn.png"
+  },
+  {
+   "label": "etfuturum:witchery_stripped_wood:0",
+   "name": "Stripped Rowan Wood (Witchery)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_rowan_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_stripped_wood:1",
+   "name": "Stripped Alder Wood (Witchery)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_alder_log.png"
+  },
+  {
+   "label": "etfuturum:witchery_stripped_wood:2",
+   "name": "Stripped Hawthorn Wood (Witchery)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/witchery/textures/blocks/stripped_hawthorn_log.png"
+  }
+ ]
+}

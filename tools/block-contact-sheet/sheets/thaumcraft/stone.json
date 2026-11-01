@@ -1,0 +1,110 @@
+{
+ "title": "Thaumcraft: cosmetic stone, slabs, stairs",
+ "entries": [
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:0",
+   "name": "Obsidian Totem",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/obsidiantile.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/obsidiantotem1.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:1",
+   "name": "Obsidian Tile",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/obsidiantile.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:2",
+   "name": "Paving Stone of Travel",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_travel.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:3",
+   "name": "Paving Stone of Warding",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_warding.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:4",
+   "name": "Thaumium Block",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/thaumiumblock.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:5",
+   "name": "Tallow Block",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/tallowblock_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/tallowblock.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:6",
+   "name": "Arcane Stone Block",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/pedestal_top.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:7",
+   "name": "Arcane Stone Bricks",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/arcane_stone.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:9",
+   "name": "Golem Fetter",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/golem_stone_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/golem_stone_side.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:10",
+   "name": "Active Golem Fetter",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/golem_stone_top_active.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/golem_stone_side.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:11",
+   "name": "Ancient Stone",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:11 (alt)",
+   "name": "Ancient Stone, random face 3",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_3.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:12",
+   "name": "Ancient Rock",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/er_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:12 (alt)",
+   "name": "Ancient Rock, 2x2 face 4",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/er_4.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:14",
+   "name": "Crusted Stone",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crust.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSolid:15",
+   "name": "Ancient Stone Pedestal",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_1.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_p.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSlabStone:0",
+   "name": "Arcane Stone Slab",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/arcane_stone.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticSlabStone:1",
+   "name": "Ancient Stone Slab",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockStairsArcaneStone",
+   "name": "Arcane Stone Stairs",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/arcane_stone.png"
+  },
+  {
+   "label": "Thaumcraft:blockStairsEldritch",
+   "name": "Ancient Stone Stairs",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_1.png"
+  }
+ ]
+}

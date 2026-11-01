@@ -1,0 +1,241 @@
+{
+ "title": "Et Futurum Requiem: stone",
+ "entries": [
+  {
+   "label": "etfuturum:smooth_stone:0",
+   "name": "Smooth Stone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_top.png"
+  },
+  {
+   "label": "etfuturum:smooth_quartz:0",
+   "name": "Smooth Quartz Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_bottom.png"
+  },
+  {
+   "label": "etfuturum:quartz_bricks:0",
+   "name": "Quartz Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/quartz_bricks.png"
+  },
+  {
+   "label": "etfuturum:calcite:0",
+   "name": "Calcite",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/calcite.png"
+  },
+  {
+   "label": "etfuturum:tuff:0",
+   "name": "Tuff",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff:1",
+   "name": "Polished Tuff",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff:2",
+   "name": "Tuff Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff_bricks.png"
+  },
+  {
+   "label": "etfuturum:tuff:3",
+   "name": "Chiseled Tuff",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_tuff_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff:4",
+   "name": "Chiseled Tuff Bricks",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_tuff_bricks_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_tuff_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate:0",
+   "name": "Deepslate",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate.png"
+  },
+  {
+   "label": "etfuturum:cobbled_deepslate:0",
+   "name": "Cobbled Deepslate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cobbled_deepslate.png"
+  },
+  {
+   "label": "etfuturum:polished_deepslate:0",
+   "name": "Polished Deepslate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_bricks:0",
+   "name": "Deepslate Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_bricks:1",
+   "name": "Cracked Deepslate Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cracked_deepslate_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_bricks:2",
+   "name": "Deepslate Tiles",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_tiles.png"
+  },
+  {
+   "label": "etfuturum:deepslate_bricks:3",
+   "name": "Cracked Deepslate Tiles",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cracked_deepslate_tiles.png"
+  },
+  {
+   "label": "etfuturum:deepslate_bricks:4",
+   "name": "Chiseled Deepslate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_deepslate.png"
+  },
+  {
+   "label": "etfuturum:blackstone:0",
+   "name": "Blackstone",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blackstone_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone:1",
+   "name": "Polished Blackstone",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone:2",
+   "name": "Polished Blackstone Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone_bricks.png"
+  },
+  {
+   "label": "etfuturum:blackstone:3",
+   "name": "Cracked Polished Blackstone Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cracked_polished_blackstone_bricks.png"
+  },
+  {
+   "label": "etfuturum:blackstone:4",
+   "name": "Chiseled Polished Blackstone",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:gilded_blackstone:0",
+   "name": "Gilded Blackstone",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/gilded_blackstone.png"
+  },
+  {
+   "label": "etfuturum:red_netherbrick:0",
+   "name": "Red Nether Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:red_netherbrick:1",
+   "name": "Cracked Nether Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cracked_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:red_netherbrick:2",
+   "name": "Chiseled Nether Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone:0",
+   "name": "Red Sandstone",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone:1",
+   "name": "Chiseled Red Sandstone",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone:2",
+   "name": "Cut Red Sandstone",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:smooth_red_sandstone:0",
+   "name": "Smooth Red Sandstone",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png"
+  },
+  {
+   "label": "etfuturum:end_bricks:0",
+   "name": "End Stone Bricks",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/end_bricks.png"
+  },
+  {
+   "label": "etfuturum:purpur_block:0",
+   "name": "Purpur Block",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purpur_block.png"
+  },
+  {
+   "label": "etfuturum:purpur_pillar:0",
+   "name": "Purpur Pillar",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purpur_pillar_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purpur_pillar.png"
+  },
+  {
+   "label": "etfuturum:crying_obsidian:0",
+   "name": "Crying Obsidian",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/crying_obsidian.png"
+  },
+  {
+   "label": "etfuturum:bone:0",
+   "name": "Bone Block",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/bone_block_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/bone_block_side.png"
+  },
+  {
+   "label": "etfuturum:magma:0",
+   "name": "Magma Block",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/magma.png"
+  },
+  {
+   "label": "etfuturum:amethyst_block:0",
+   "name": "Block of Amethyst",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/amethyst_block.png"
+  },
+  {
+   "label": "etfuturum:budding_amethyst:0",
+   "name": "Budding Amethyst",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/budding_amethyst.png"
+  },
+  {
+   "label": "etfuturum:ancient_debris:0",
+   "name": "Ancient Debris",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/ancient_debris_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/ancient_debris_side.png"
+  },
+  {
+   "label": "etfuturum:netherite_block:0",
+   "name": "Block of Netherite",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/netherite_block.png"
+  },
+  {
+   "label": "etfuturum:honeycomb_block:0",
+   "name": "Honeycomb Block",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/honeycomb_block.png"
+  },
+  {
+   "label": "etfuturum:honey_block:0",
+   "name": "Honey Block",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/honey_block_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/honey_block_side.png"
+  },
+  {
+   "label": "etfuturum:slime:0",
+   "name": "Slime Block",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/slime.png"
+  },
+  {
+   "label": "etfuturum:sponge:0",
+   "name": "Sponge",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sponge.png"
+  },
+  {
+   "label": "etfuturum:blue_ice:0",
+   "name": "Blue Ice",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blue_ice.png"
+  }
+ ]
+}

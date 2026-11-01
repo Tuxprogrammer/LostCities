@@ -1,0 +1,187 @@
+{
+ "title": "Minecraft 1.7.10: shapes",
+ "entries": [
+  {
+   "label": "minecraft:stone_slab:0",
+   "name": "Smooth Stone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_top.png"
+  },
+  {
+   "label": "minecraft:stone_slab:1",
+   "name": "Sandstone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png"
+  },
+  {
+   "label": "minecraft:stone_slab:2",
+   "name": "Wooden Slab (old, stone material)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:stone_slab:3",
+   "name": "Cobblestone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "minecraft:stone_slab:4",
+   "name": "Brick Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "minecraft:stone_slab:5",
+   "name": "Stone Brick Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "minecraft:stone_slab:6",
+   "name": "Nether Brick Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "minecraft:stone_slab:7",
+   "name": "Quartz Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_top.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:0",
+   "name": "Oak Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:1",
+   "name": "Spruce Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:2",
+   "name": "Birch Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:3",
+   "name": "Jungle Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:4",
+   "name": "Acacia Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "minecraft:wooden_slab:5",
+   "name": "Dark Oak Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "minecraft:oak_stairs:0-7",
+   "name": "Oak Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:spruce_stairs:0-7",
+   "name": "Spruce Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "minecraft:birch_stairs:0-7",
+   "name": "Birch Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "minecraft:jungle_stairs:0-7",
+   "name": "Jungle Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "minecraft:acacia_stairs:0-7",
+   "name": "Acacia Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "minecraft:dark_oak_stairs:0-7",
+   "name": "Dark Oak Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "minecraft:stone_stairs:0-7",
+   "name": "Cobblestone Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "minecraft:brick_stairs:0-7",
+   "name": "Brick Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "minecraft:stone_brick_stairs:0-7",
+   "name": "Stone Brick Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "minecraft:nether_brick_stairs:0-7",
+   "name": "Nether Brick Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "minecraft:sandstone_stairs:0-7",
+   "name": "Sandstone Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_normal.png"
+  },
+  {
+   "label": "minecraft:quartz_stairs:0-7",
+   "name": "Quartz Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_side.png"
+  },
+  {
+   "label": "minecraft:cobblestone_wall:0",
+   "name": "Cobblestone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "minecraft:cobblestone_wall:1",
+   "name": "Mossy Cobblestone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone_mossy.png"
+  },
+  {
+   "label": "minecraft:fence:0",
+   "name": "Oak Fence",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:nether_brick_fence:0",
+   "name": "Nether Brick Fence",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "minecraft:fence_gate:0-7",
+   "name": "Oak Fence Gate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:iron_bars:0",
+   "name": "Iron Bars",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/iron_bars.png"
+  },
+  {
+   "label": "minecraft:trapdoor:0-15",
+   "name": "Wooden Trapdoor",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/trapdoor.png"
+  },
+  {
+   "label": "minecraft:wooden_door:0-11",
+   "name": "Wooden Door",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/door_wood_upper.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/door_wood_lower.png"
+  },
+  {
+   "label": "minecraft:iron_door:0-11",
+   "name": "Iron Door",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/door_iron_upper.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/door_iron_lower.png"
+  },
+  {
+   "label": "minecraft:ladder:2-5",
+   "name": "Ladder",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/ladder.png"
+  }
+ ]
+}

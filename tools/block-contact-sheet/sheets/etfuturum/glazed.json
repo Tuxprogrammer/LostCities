@@ -1,0 +1,85 @@
+{
+ "title": "Et Futurum Requiem: glazed",
+ "entries": [
+  {
+   "label": "etfuturum:white_glazed_terracotta:0",
+   "name": "White Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/white_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:orange_glazed_terracotta:0",
+   "name": "Orange Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/orange_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:magenta_glazed_terracotta:0",
+   "name": "Magenta Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/magenta_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:light_blue_glazed_terracotta:0",
+   "name": "Light Blue Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_blue_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:yellow_glazed_terracotta:0",
+   "name": "Yellow Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/yellow_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:lime_glazed_terracotta:0",
+   "name": "Lime Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/lime_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:pink_glazed_terracotta:0",
+   "name": "Pink Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/pink_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:gray_glazed_terracotta:0",
+   "name": "Gray Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/gray_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:light_gray_glazed_terracotta:0",
+   "name": "Light Gray Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_gray_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:cyan_glazed_terracotta:0",
+   "name": "Cyan Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cyan_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:purple_glazed_terracotta:0",
+   "name": "Purple Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purple_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:blue_glazed_terracotta:0",
+   "name": "Blue Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blue_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:brown_glazed_terracotta:0",
+   "name": "Brown Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/brown_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:green_glazed_terracotta:0",
+   "name": "Green Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/green_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:red_glazed_terracotta:0",
+   "name": "Red Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_glazed_terracotta.png"
+  },
+  {
+   "label": "etfuturum:black_glazed_terracotta:0",
+   "name": "Black Glazed Terracotta",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/black_glazed_terracotta.png"
+  }
+ ]
+}

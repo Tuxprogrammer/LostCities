@@ -1,0 +1,74 @@
+{
+ "title": "Botania: soils, grass, root, pumpkin, vine",
+ "entries": [
+  {
+   "label": "Botania:dirtPath:0",
+   "name": "Trodden Dirt",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dirtPath.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/dirt.png"
+  },
+  {
+   "label": "Botania:enchantedSoil:0",
+   "name": "Enchanted Soil",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/enchantedSoil0.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/enchantedSoil1.png"
+  },
+  {
+   "label": "Botania:altGrass:0",
+   "name": "Dry Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass0.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass1.png"
+  },
+  {
+   "label": "Botania:altGrass:1",
+   "name": "Golden Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass2.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass3.png"
+  },
+  {
+   "label": "Botania:altGrass:2",
+   "name": "Vivid Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass4.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass5.png"
+  },
+  {
+   "label": "Botania:altGrass:3",
+   "name": "Scorched Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass6.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass7.png"
+  },
+  {
+   "label": "Botania:altGrass:4",
+   "name": "Infused Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass8.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass9.png"
+  },
+  {
+   "label": "Botania:altGrass:5",
+   "name": "Mutated Grass",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass10.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/altGrass11.png"
+  },
+  {
+   "label": "Botania:root:0",
+   "name": "Living Root",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/root.png"
+  },
+  {
+   "label": "Botania:felPumpkin:0",
+   "name": "Fel Pumpkin",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/pumpkin_top.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/felPumpkin.png"
+  },
+  {
+   "label": "Botania:solidVine:0",
+   "name": "Solid Vine (untinted)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/vine.png"
+  },
+  {
+   "label": "Botania:buriedPetals:0",
+   "name": "Buried Petals (untinted)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/buriedPetals.png"
+  }
+ ]
+}

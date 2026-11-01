@@ -1,0 +1,186 @@
+{
+ "title": "Thaumic Horizons: crystal glass, clouds, flesh and bone",
+ "entries": [
+  {
+   "label": "ThaumicHorizons:crystalTH:0",
+   "name": "White Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalWhite.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:1",
+   "name": "Orange Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalOrange.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:2",
+   "name": "Magenta Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalMagenta.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:3",
+   "name": "LightBlue Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalLightBlue.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:4",
+   "name": "Yellow Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalYellow.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:5",
+   "name": "Lime Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalLime.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:6",
+   "name": "Pink Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalPink.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:7",
+   "name": "Gray Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalGray.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:8",
+   "name": "LightGray Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalLightGray.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:9",
+   "name": "Cyan Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalCyan.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:10",
+   "name": "Purple Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalPurple.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:11",
+   "name": "Blue Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalBlue.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:12",
+   "name": "Brown Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalBrown.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:13",
+   "name": "Green Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalGreen.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:14",
+   "name": "Red Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalRed.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:15",
+   "name": "Black Crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalBlack.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalDeep:0",
+   "name": "Deep crystal",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalDeep.png"
+  },
+  {
+   "label": "ThaumicHorizons:boneTH:0",
+   "name": "Bone",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/bone.png"
+  },
+  {
+   "label": "ThaumicHorizons:fleshTH:0",
+   "name": "Lump of Flesh",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/fleshblock.png"
+  },
+  {
+   "label": "ThaumicHorizons:chocolate:0",
+   "name": "Block of Chocolate",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/chocolate.png"
+  },
+  {
+   "label": "ThaumicHorizons:dustTH:0",
+   "name": "Dust",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/dust.png"
+  },
+  {
+   "label": "ThaumicHorizons:evanescent:0",
+   "name": "Evanescent",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/evanescent.png"
+  },
+  {
+   "label": "ThaumicHorizons:alchemite:0",
+   "name": "Alchemite",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/alchemite_top.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/alchemite_side.png"
+  },
+  {
+   "label": "ThaumicHorizons:eyeTH:0",
+   "name": "Eye Cluster",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/eyecluster.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:0",
+   "name": "cloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/cloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/cloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:1",
+   "name": "firecloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/firecloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/firecloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:2",
+   "name": "thundercloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/thundercloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/thundercloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:3",
+   "name": "acidcloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/acidcloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/acidcloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:4",
+   "name": "alloycloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/alloycloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/alloycloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:5",
+   "name": "fleshcloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/fleshcloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/fleshcloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:6",
+   "name": "viscloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/viscloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/viscloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:7",
+   "name": "glyphcloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/glyphcloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/glyphcloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:8",
+   "name": "sporecloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/sporecloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/sporecloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:cloudTH:9",
+   "name": "animuscloud",
+   "top": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/animuscloudtop.png",
+   "side": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/animuscloud.png"
+  }
+ ]
+}

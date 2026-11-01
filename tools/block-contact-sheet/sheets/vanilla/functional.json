@@ -1,0 +1,225 @@
+{
+ "title": "Minecraft 1.7.10: functional",
+ "entries": [
+  {
+   "label": "minecraft:torch:0",
+   "name": "Torch",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/torch_on.png"
+  },
+  {
+   "label": "minecraft:redstone_torch:0",
+   "name": "Redstone Torch",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_torch_on.png"
+  },
+  {
+   "label": "minecraft:crafting_table:0",
+   "name": "Crafting Table",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/crafting_table_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/crafting_table_front.png"
+  },
+  {
+   "label": "minecraft:furnace:0",
+   "name": "Furnace",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/furnace_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/furnace_front_off.png"
+  },
+  {
+   "label": "minecraft:chest:0",
+   "name": "Chest",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:trapped_chest:0",
+   "name": "Trapped Chest",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:ender_chest:0",
+   "name": "Ender Chest",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/obsidian.png"
+  },
+  {
+   "label": "minecraft:anvil:0",
+   "name": "Anvil",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/anvil_top_damaged_0.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/anvil_base.png"
+  },
+  {
+   "label": "minecraft:cauldron:0",
+   "name": "Cauldron",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/cauldron_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/cauldron_side.png"
+  },
+  {
+   "label": "minecraft:brewing_stand:0",
+   "name": "Brewing Stand",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brewing_stand_base.png"
+  },
+  {
+   "label": "minecraft:enchanting_table:0",
+   "name": "Enchantment Table",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/enchanting_table_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/enchanting_table_side.png"
+  },
+  {
+   "label": "minecraft:jukebox:0",
+   "name": "Jukebox",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/jukebox_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/jukebox_side.png"
+  },
+  {
+   "label": "minecraft:noteblock:0",
+   "name": "Note Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/noteblock.png"
+  },
+  {
+   "label": "minecraft:bed:0",
+   "name": "Bed (red)",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/bed_head_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/bed_head_side.png"
+  },
+  {
+   "label": "minecraft:standing_sign:0",
+   "name": "Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:wall_sign:0",
+   "name": "Sign (wall)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:wooden_pressure_plate:0",
+   "name": "Wooden Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:stone_pressure_plate:0",
+   "name": "Stone Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png"
+  },
+  {
+   "label": "minecraft:light_weighted_pressure_plate:0",
+   "name": "Weighted Pressure Plate (Light)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/gold_block.png"
+  },
+  {
+   "label": "minecraft:heavy_weighted_pressure_plate:0",
+   "name": "Weighted Pressure Plate (Heavy)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/iron_block.png"
+  },
+  {
+   "label": "minecraft:stone_button:0",
+   "name": "Stone Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png"
+  },
+  {
+   "label": "minecraft:wooden_button:0",
+   "name": "Wooden Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:lever:0",
+   "name": "Lever",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/lever.png"
+  },
+  {
+   "label": "minecraft:rail:0",
+   "name": "Rail",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/rail_normal.png"
+  },
+  {
+   "label": "minecraft:golden_rail:0",
+   "name": "Powered Rail",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/rail_golden.png"
+  },
+  {
+   "label": "minecraft:detector_rail:0",
+   "name": "Detector Rail",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/rail_detector.png"
+  },
+  {
+   "label": "minecraft:activator_rail:0",
+   "name": "Activator Rail",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/rail_activator.png"
+  },
+  {
+   "label": "minecraft:hopper:0",
+   "name": "Hopper",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hopper_outside.png"
+  },
+  {
+   "label": "minecraft:dispenser:0",
+   "name": "Dispenser",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/furnace_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/dispenser_front_horizontal.png"
+  },
+  {
+   "label": "minecraft:dropper:0",
+   "name": "Dropper",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/furnace_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/dropper_front_horizontal.png"
+  },
+  {
+   "label": "minecraft:daylight_detector:0",
+   "name": "Daylight Sensor",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/daylight_detector_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/daylight_detector_side.png"
+  },
+  {
+   "label": "minecraft:mob_spawner:0",
+   "name": "Monster Spawner",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/mob_spawner.png"
+  },
+  {
+   "label": "minecraft:beacon:0",
+   "name": "Beacon",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/beacon.png"
+  },
+  {
+   "label": "minecraft:skull:0",
+   "name": "Mob Head",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/soul_sand.png"
+  },
+  {
+   "label": "minecraft:tnt:0",
+   "name": "TNT",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/tnt_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/tnt_side.png"
+  },
+  {
+   "label": "minecraft:piston:0",
+   "name": "Piston",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/piston_top_normal.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/piston_side.png"
+  },
+  {
+   "label": "minecraft:sticky_piston:0",
+   "name": "Sticky Piston",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/piston_top_sticky.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/piston_side.png"
+  },
+  {
+   "label": "minecraft:command_block:0",
+   "name": "Command Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/command_block.png"
+  },
+  {
+   "label": "minecraft:dragon_egg:0",
+   "name": "Dragon Egg",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/dragon_egg.png"
+  },
+  {
+   "label": "minecraft:end_portal_frame:0",
+   "name": "End Portal Frame",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/endframe_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/endframe_side.png"
+  },
+  {
+   "label": "minecraft:cake:0",
+   "name": "Cake",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/cake_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/cake_side.png"
+  }
+ ]
+}

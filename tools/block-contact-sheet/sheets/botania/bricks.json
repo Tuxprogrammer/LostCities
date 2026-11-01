@@ -1,0 +1,151 @@
+{
+ "title": "Botania: custom bricks, azulejo, end stone, prismarine, pavement",
+ "entries": [
+  {
+   "label": "Botania:customBrick:0",
+   "name": "Hellish Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick0.png"
+  },
+  {
+   "label": "Botania:customBrick:1",
+   "name": "Soul Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick1.png"
+  },
+  {
+   "label": "Botania:customBrick:2",
+   "name": "Frosty Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick2.png"
+  },
+  {
+   "label": "Botania:customBrick:3",
+   "name": "Roof Tile",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick3.png"
+  },
+  {
+   "label": "Botania:customBrick:4",
+   "name": "Azulejo 0",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick4.png"
+  },
+  {
+   "label": "Botania:customBrick:5",
+   "name": "Azulejo 1",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick5.png"
+  },
+  {
+   "label": "Botania:customBrick:6",
+   "name": "Azulejo 2",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick6.png"
+  },
+  {
+   "label": "Botania:customBrick:7",
+   "name": "Azulejo 3",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick7.png"
+  },
+  {
+   "label": "Botania:customBrick:8",
+   "name": "Azulejo 4",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick8.png"
+  },
+  {
+   "label": "Botania:customBrick:9",
+   "name": "Azulejo 5",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick9.png"
+  },
+  {
+   "label": "Botania:customBrick:10",
+   "name": "Azulejo 6",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick10.png"
+  },
+  {
+   "label": "Botania:customBrick:11",
+   "name": "Azulejo 7",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick11.png"
+  },
+  {
+   "label": "Botania:customBrick:12",
+   "name": "Azulejo 8",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick12.png"
+  },
+  {
+   "label": "Botania:customBrick:13",
+   "name": "Azulejo 9",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick13.png"
+  },
+  {
+   "label": "Botania:customBrick:14",
+   "name": "Azulejo 10",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick14.png"
+  },
+  {
+   "label": "Botania:customBrick:15",
+   "name": "Azulejo 11",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/customBrick15.png"
+  },
+  {
+   "label": "Botania:endStoneBrick:0",
+   "name": "End Stone Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/endStoneBrick0.png"
+  },
+  {
+   "label": "Botania:endStoneBrick:1",
+   "name": "Chiseled End Stone Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/endStoneBrick1.png"
+  },
+  {
+   "label": "Botania:endStoneBrick:2",
+   "name": "Ender Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/endStoneBrick2.png"
+  },
+  {
+   "label": "Botania:endStoneBrick:3",
+   "name": "Pillar Ender Bricks",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/endStoneBrick4.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/endStoneBrick3.png"
+  },
+  {
+   "label": "Botania:prismarine:0",
+   "name": "Prismarine",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/prismarine0.png"
+  },
+  {
+   "label": "Botania:prismarine:1",
+   "name": "Prismarine Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/prismarine1.png"
+  },
+  {
+   "label": "Botania:prismarine:2",
+   "name": "Dark Prismarine",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/prismarine2.png"
+  },
+  {
+   "label": "Botania:pavement:0",
+   "name": "White Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement0.png"
+  },
+  {
+   "label": "Botania:pavement:1",
+   "name": "Black Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement1.png"
+  },
+  {
+   "label": "Botania:pavement:2",
+   "name": "Blue Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement2.png"
+  },
+  {
+   "label": "Botania:pavement:3",
+   "name": "Red Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement3.png"
+  },
+  {
+   "label": "Botania:pavement:4",
+   "name": "Yellow Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement4.png"
+  },
+  {
+   "label": "Botania:pavement:5",
+   "name": "Green Portuguese Pavement",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pavement5.png"
+  }
+ ]
+}

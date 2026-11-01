@@ -1,0 +1,100 @@
+{
+ "title": "Botania: livingrock, livingwood, dreamwood, shimmer",
+ "entries": [
+  {
+   "label": "Botania:livingrock:0",
+   "name": "Livingrock",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingrock0.png"
+  },
+  {
+   "label": "Botania:livingrock:1",
+   "name": "Livingrock Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingrock1.png"
+  },
+  {
+   "label": "Botania:livingrock:2",
+   "name": "Mossy Livingrock Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingrock2.png"
+  },
+  {
+   "label": "Botania:livingrock:3",
+   "name": "Cracked Livingrock Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingrock3.png"
+  },
+  {
+   "label": "Botania:livingrock:4",
+   "name": "Chiseled Livingrock Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingrock4.png"
+  },
+  {
+   "label": "Botania:livingwood:0",
+   "name": "Livingwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood0.png"
+  },
+  {
+   "label": "Botania:livingwood:1",
+   "name": "Livingwood Planks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood1.png"
+  },
+  {
+   "label": "Botania:livingwood:2",
+   "name": "Mossy Livingwood Planks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood2.png"
+  },
+  {
+   "label": "Botania:livingwood:3",
+   "name": "Framed Livingwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood3.png"
+  },
+  {
+   "label": "Botania:livingwood:4",
+   "name": "Pattern Framed Livingwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood4.png"
+  },
+  {
+   "label": "Botania:livingwood:5",
+   "name": "Glimmering Livingwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/livingwood5.png"
+  },
+  {
+   "label": "Botania:dreamwood:0",
+   "name": "Dreamwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood0.png"
+  },
+  {
+   "label": "Botania:dreamwood:1",
+   "name": "Dreamwood Planks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood1.png"
+  },
+  {
+   "label": "Botania:dreamwood:2",
+   "name": "Mossy Dreamwood Planks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood2.png"
+  },
+  {
+   "label": "Botania:dreamwood:3",
+   "name": "Framed Dreamwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood3.png"
+  },
+  {
+   "label": "Botania:dreamwood:4",
+   "name": "Pattern Framed Dreamwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood4.png"
+  },
+  {
+   "label": "Botania:dreamwood:5",
+   "name": "Glimmering Dreamwood",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/dreamwood5.png"
+  },
+  {
+   "label": "Botania:shimmerrock:0",
+   "name": "Shimmerrock",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/shimmerrock.png"
+  },
+  {
+   "label": "Botania:shimmerwoodPlanks:0",
+   "name": "Shimmerwood Planks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/shimmerwoodPlanks.png"
+  }
+ ]
+}

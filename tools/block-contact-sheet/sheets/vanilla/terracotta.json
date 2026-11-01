@@ -1,0 +1,85 @@
+{
+ "title": "Minecraft 1.7.10: terracotta",
+ "entries": [
+  {
+   "label": "minecraft:stained_hardened_clay:0",
+   "name": "White Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_white.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:1",
+   "name": "Orange Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_orange.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:2",
+   "name": "Magenta Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_magenta.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:3",
+   "name": "Light Blue Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_light_blue.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:4",
+   "name": "Yellow Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_yellow.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:5",
+   "name": "Lime Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_lime.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:6",
+   "name": "Pink Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_pink.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:7",
+   "name": "Gray Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_gray.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:8",
+   "name": "Light Gray Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_silver.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:9",
+   "name": "Cyan Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_cyan.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:10",
+   "name": "Purple Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_purple.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:11",
+   "name": "Blue Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_blue.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:12",
+   "name": "Brown Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_brown.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:13",
+   "name": "Green Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_green.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:14",
+   "name": "Red Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_red.png"
+  },
+  {
+   "label": "minecraft:stained_hardened_clay:15",
+   "name": "Black Stained Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay_stained_black.png"
+  }
+ ]
+}

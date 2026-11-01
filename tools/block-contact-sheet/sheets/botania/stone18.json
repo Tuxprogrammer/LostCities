@@ -1,0 +1,85 @@
+{
+ "title": "Botania: 1.8 stones (Botania:stone)",
+ "entries": [
+  {
+   "label": "Botania:stone:0",
+   "name": "Andesite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone0.png"
+  },
+  {
+   "label": "Botania:stone:1",
+   "name": "Basalt",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone1.png"
+  },
+  {
+   "label": "Botania:stone:2",
+   "name": "Diorite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone2.png"
+  },
+  {
+   "label": "Botania:stone:3",
+   "name": "Granite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone3.png"
+  },
+  {
+   "label": "Botania:stone:4",
+   "name": "Polished Andesite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone4.png"
+  },
+  {
+   "label": "Botania:stone:5",
+   "name": "Polished Basalt",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone5.png"
+  },
+  {
+   "label": "Botania:stone:6",
+   "name": "Polished Diorite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone6.png"
+  },
+  {
+   "label": "Botania:stone:7",
+   "name": "Polished Granite",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone7.png"
+  },
+  {
+   "label": "Botania:stone:8",
+   "name": "Andesite Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone8.png"
+  },
+  {
+   "label": "Botania:stone:9",
+   "name": "Basalt Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone9.png"
+  },
+  {
+   "label": "Botania:stone:10",
+   "name": "Diorite Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone10.png"
+  },
+  {
+   "label": "Botania:stone:11",
+   "name": "Granite Bricks",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone11.png"
+  },
+  {
+   "label": "Botania:stone:12",
+   "name": "Chiseled Andesite Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone12.png"
+  },
+  {
+   "label": "Botania:stone:13",
+   "name": "Chiseled Basalt Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone13.png"
+  },
+  {
+   "label": "Botania:stone:14",
+   "name": "Chiseled Diorite Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone14.png"
+  },
+  {
+   "label": "Botania:stone:15",
+   "name": "Chiseled Granite Brick",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/stone15.png"
+  }
+ ]
+}
