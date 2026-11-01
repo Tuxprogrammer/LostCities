@@ -11,13 +11,15 @@ sheet.json:
                {"label": "x:y:1", "top": "<jar>!<path>", "side": "<jar>!<path>", "note": "pane"}]}
 
 Texture references are `<jar file name>!<path inside the jar>`, resolved against --mods (default: the reference
-pack's mods folder), or a plain file path. Animated strips use their first frame. Jars and textures are untrusted
+pack's mods folder), or a plain file path. The jar name `minecraft.jar` means the vanilla 1.7.10 client jar
+($LC_MC_CLIENT_JAR, else RetroFuturaGradle's cache). Animated strips use their first frame. Jars and textures are untrusted
 data: they are only read as zip archives and decoded as images, never executed.
 """
 
 import argparse
 import io
 import json
+import os
 import sys
 import zipfile
 from pathlib import Path
@@ -32,6 +34,17 @@ LABEL_COLOR = (230, 230, 230, 255)
 MISSING_COLOR = (255, 0, 255, 255)
 LEFT_SHADE = 0.8
 RIGHT_SHADE = 0.6
+
+
+VANILLA_JAR = "minecraft.jar"
+
+
+def vanilla_client_jar():
+    """The Minecraft 1.7.10 client jar: $LC_MC_CLIENT_JAR, else RetroFuturaGradle's cache under the home folder."""
+    env = os.environ.get("LC_MC_CLIENT_JAR")
+    if env:
+        return Path(env)
+    return Path.home() / ".gradle" / "caches" / "retro_futura_gradle" / "mc-vanilla" / "1.7.10" / "client.jar"
 
 
 def default_mods_dir():
@@ -54,7 +67,8 @@ class TextureSource:
                 jar_name, inner = ref.split("!", 1)
                 jar = self.jars.get(jar_name)
                 if jar is None:
-                    jar = self.jars[jar_name] = zipfile.ZipFile(self.mods_dir / jar_name)
+                    path = vanilla_client_jar() if jar_name == VANILLA_JAR else self.mods_dir / jar_name
+                    jar = self.jars[jar_name] = zipfile.ZipFile(path)
                 data = jar.read(inner)
             else:
                 data = Path(ref).read_bytes()

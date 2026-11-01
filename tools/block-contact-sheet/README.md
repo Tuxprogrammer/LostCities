@@ -22,7 +22,7 @@ A sheet file:
  ]}
 ```
 
-- Texture references are `<jar file name>!<path inside the jar>`, resolved against `--mods` (default `reference/gtnh/2.9.0/.minecraft/mods/` in this checkout), or a plain file path. Vanilla 1.7.10 textures come from the Minecraft 1.7.10 client jar in the Gradle cache.
+- Texture references are `<jar file name>!<path inside the jar>`, resolved against `--mods` (default `reference/gtnh/2.9.0/.minecraft/mods/` in this checkout), or a plain file path. The jar name `minecraft.jar` means the vanilla 1.7.10 client jar: `$LC_MC_CLIENT_JAR` if set, else RetroFuturaGradle's cache (`~/.gradle/caches/retro_futura_gradle/mc-vanilla/1.7.10/client.jar`, present after any build of this repo).
 - `all` sets every face; `top` and `side` set them separately.
 - Animated strips use their first frame. A missing texture renders as a magenta checker, and the run lists it.
 - **Connected-texture atlases** (Chisel's `*-ctm.png` and similar) are tiled sheets, not faces. Point the entry at the block's plain face texture instead, which is usually the non-`ctm` file next to it.

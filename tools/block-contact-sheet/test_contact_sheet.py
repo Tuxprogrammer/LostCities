@@ -43,6 +43,16 @@ class ContactSheetTest(unittest.TestCase):
             self.assertIsNone(source.load("absent.jar!x.png"))
             source.close()
 
+    def test_vanilla_alias_uses_the_client_jar(self):
+        with Fixture() as f:
+            os.environ["LC_MC_CLIENT_JAR"] = str(f.mods / "demo.jar")
+            try:
+                source = cs.TextureSource(f.mods / "elsewhere")
+                self.assertIsNotNone(source.load("minecraft.jar!assets/demo/textures/blocks/blue.png"))
+                source.close()
+            finally:
+                del os.environ["LC_MC_CLIENT_JAR"]
+
     def test_animated_strip_uses_first_frame(self):
         with Fixture() as f:
             source = cs.TextureSource(f.mods)
