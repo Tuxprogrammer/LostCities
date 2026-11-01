@@ -3,9 +3,9 @@
 <!-- Bugs in UPSTREAM Lost Cities 1.20 at f18a094d, listed so this backport does not reproduce them.
      Suspected, not confirmed at runtime; no fixes designed here. Merged from every area index. -->
 
-233 raw findings merge into **202 unique bugs**: 44 crash, 73 worldgen, 24 gameplay, 15 performance, 15 visual, 31 cosmetic.
+235 raw findings merge into **204 unique bugs**: 45 crash, 73 worldgen, 24 gameplay, 15 performance, 16 visual, 31 cosmetic.
 
-The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also** lists the same bug as reported by other areas. Every area ID stays a valid reference: each area's own table in its `index.md` is unchanged and holds the full description. Where areas gave one bug different severities, the more severe one is used. Severity is one of crash, worldgen (wrong or broken world output), gameplay, performance, visual or cosmetic. Locations are on `f18a094d`, as the areas give them: Java paths relative to `src/main/java/mcjty/lostcities/`, resource paths relative to `src/main/resources/` unless they start with `src/`, and bare `palettes/`, `citystyles/` and `stuff/` paths under `data/lostcities/lostcities/`.
+The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also** lists the same bug as reported by other areas. Every area ID stays a valid reference: each area's own table in its `index.md` holds the full description. Areas that report the same bug give it the same severity. Where one row merges several narrower area findings (`ASSET-21` covers `SCAT-17` to `SCAT-19`), the row takes the most severe and each area ID keeps its own. Severity is the worst effect when the code path runs; how reachable that path is (dead code, API only, config only) is stated in the area's row, not folded into the severity. Severity is one of crash, worldgen (wrong or broken world output), gameplay, performance, visual or cosmetic. Locations are on `f18a094d`, as the areas give them: Java paths relative to `src/main/java/mcjty/lostcities/`, resource paths relative to `src/main/resources/` unless they start with `src/`, and bare `palettes/`, `citystyles/` and `stuff/` paths under `data/lostcities/lostcities/`.
 
 ## Crash
 
@@ -31,6 +31,7 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | TERR-30 | | 03-terrain | Ruin leaves can fall forever | `worldgen/LostCityTerrainFeature.java:1181` |
 | TERR-31 | | 03-terrain | Degenerate building bottom is not handled | `worldgen/LostCityTerrainFeature.java:2192` |
 | TERR-35 | | 03-terrain | Sphere feature has no exception guard | `worldgen/LostCitySphereFeature.java:35` |
+| TERR-38 | | 03-terrain | World-generation saved data is saved without the writers' lock | `worldgen/LostCityWorldGenData.java:146` (iterations at `:150`, `:153`) |
 | CITY-15 | | 04-city-layout | Height-cap loop has no lower bound | `worldgen/lost/BuildingInfo.java:948` |
 | CITY-17 | | 04-city-layout | Every chunk selects floor parts and can throw | `worldgen/lost/BuildingInfo.java:1043` |
 | CITY-25 | | 04-city-layout | `MultiChunk` crashes on bad multibuilding settings | `worldgen/lost/MultiChunk.java:138` (also `:79`) |
@@ -195,6 +196,7 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | CITY-28 | ASSET-17 | 04-city-layout, 05-assets | Mirror transforms are inconsistent | `worldgen/lost/Transform.java:10-12` |
 | CITY-30 | | 04-city-layout | Z bridges are transposed but not block-rotated | `worldgen/gen/Bridges.java:49` |
 | CITY-36 | | 04-city-layout | West/north passage ignores the neighbor's `dontconnect` | `worldgen/gen/Doors.java:33` |
+| CITY-38 | | 04-city-layout | Bridges skip only level-0 highways | `worldgen/gen/Bridges.java:20` |
 | ASSET-11 | | 05-assets | `frompalette` resolved once, against the base layer | `worldgen/lost/cityassets/CompiledPalette.java:81-96` |
 | ASSET-18 | LOOT-09 | 05-assets, 08-loot-mobs-blocks | Directional blocks outside the rotatable tag do not turn | `worldgen/LostCityTerrainFeature.java:1993-2009` |
 | ASSET-20 | | 05-assets | Desert brick palettes lack rubble | `palettes/bricks_desert.json`, `bricks_desert_red.json`, `bricks_desert_orange.json`, `default_desert.json` |

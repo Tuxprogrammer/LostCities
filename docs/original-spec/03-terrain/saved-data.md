@@ -40,7 +40,7 @@ Consequence: a world created before this data existed, or loaded without passing
 
 ## 5 · Determinism
 
-No randomness. The stored mode is fixed at first use in a new world, so later profile changes do not alter it. Saving iterates `HashMap`s, which only affects key order in the NBT.
+No randomness. The stored mode is fixed at first use in a new world, so later profile changes do not alter it. Saving iterates `HashMap`s, which affects key order in the NBT. The getters hold the instance lock while they write; `save` does not take it (`TERR-38`).
 
 ## 6 · Data formats
 
@@ -69,7 +69,7 @@ The street and highway modes each dimension's `DefaultDimensionInfo` uses for it
 
 ## 10 · Bugs
 
-None found.
+`TERR-38`: `save` iterates the mode maps without the lock the getters hold while writing them.
 
 ## Deviations in the new mod
 

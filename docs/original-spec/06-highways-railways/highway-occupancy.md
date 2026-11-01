@@ -76,7 +76,7 @@ Profile options that only the legacy algorithm reads, and that the intercity mod
 
 ## Data formats
 
-`LostCityWorldGenData` (overworld data storage, name `LostCityWorldGenData`; documented here only for the highway part, owner `01-core` or `02-profiles-dimensions`):
+`LostCityWorldGenData` (overworld data storage, name `LostCityWorldGenData`; documented here only for the highway part, owner `03-terrain`, [saved-data.md](../03-terrain/saved-data.md)):
 
 | NBT key | Type | Meaning |
 |---|---|---|

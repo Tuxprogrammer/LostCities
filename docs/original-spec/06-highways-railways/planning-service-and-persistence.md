@@ -97,7 +97,7 @@ Missing keys read as 0 or false (NBT defaults).
 
 - `Highway.computeHighwayInfo` → `HighwayPlanningService.getHighwayInfo` ([highway-occupancy.md](highway-occupancy.md)).
 - Wraps `IntercityHighwayPlanner` ([intercity-planner.md](intercity-planner.md)).
-- `LostCityHighwayData` shares the overworld data storage with `LostCityWorldGenData` (`01-core`).
+- `LostCityHighwayData` shares the overworld data storage with `LostCityWorldGenData` (`03-terrain`).
 - `CommandDebug` prints `getParallelismStats()`.
 
 ## 1.20 dependencies

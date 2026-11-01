@@ -12,7 +12,7 @@ The original noise-driven highway layout, still used by worlds whose persisted h
 | 6 | **Data formats** | Profile options only; nothing persisted. |
 | 7 | **Output** | X level and Z level for the chunk (or -1); classification and empty route hits via the facade. |
 | 8 | **Relationships** | Called only through `Highway.computeHighwayInfo` ([highway-occupancy.md](highway-occupancy.md)). Reads `04-city-layout` (`isCityRaw`, city level) and `03-terrain` (`CitySphere`). |
-| 9 | **1.20 dependencies** | `SimplexNoise` with `LegacyRandomSource` inside `PerlinNoiseGenerator14`. |
+| 9 | **1.20 dependencies** | `SimplexNoise` with `LegacyRandomSource` inside `PerlinNoiseGenerator14`; whether 1.7.10 reproduces them is *unverified* ([01-core: Equivalence with 1.7.10](../01-core/noise-and-random.md#equivalence-with-1710)). |
 | 10 | **Bugs** | `HWY-03`, `HWY-04`, `HWY-05`, `HWY-15`. |
 
 ## Numbers
@@ -79,7 +79,7 @@ The X and Z levels per chunk, cached; turned into a `HighwayInfo` by the facade.
 
 | Mechanism | Where | Why it matters for 1.7.10 |
 |---|---|---|
-| `SimplexNoise` seeded through `LegacyRandomSource` | `PerlinNoiseGenerator14` | 1.7.10 has `NoiseGeneratorSimplex` and `NoiseGeneratorPerlin` seeded from `java.util.Random`; values differ, so a legacy layout cannot be reproduced bit for bit. |
+| `SimplexNoise` seeded through `LegacyRandomSource` | `PerlinNoiseGenerator14` | 1.7.10 has `NoiseGeneratorSimplex` seeded from `java.util.Random`. Whether it gives the same values, and so whether a legacy layout can be reproduced bit for bit, is *unverified* and a test for roadmap milestone M03 ([01-core: Equivalence with 1.7.10](../01-core/noise-and-random.md#equivalence-with-1710)). 1.7.10's `NoiseGeneratorPerlin` does not fit: it draws all octaves from one random, while `PerlinNoiseGenerator14` seeds each octave alike. |
 
 ## On 1.12
 

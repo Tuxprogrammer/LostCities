@@ -73,7 +73,7 @@ In hierarchical mode `hasXBridge`/`hasZBridge` return the minimum endpoint's `la
 ### Generation (`Bridges.generateBridges`)
 
 Runs for non-city chunks (`doNormalChunk`, `03-terrain`), before highways and scattered structures.
-1. If either highway level is 0, generate nothing (a level-1 highway allows a bridge).
+1. If either highway level is 0, generate nothing. Any other level allows a bridge, although a level-1 highway overlaps the top of a 7-high bridge part (CITY-38).
 2. Use the X bridge part if any, else the Z part.
 3. Compile the part's palette. For every column `(x, z)`, write the part's slices upward from the bridge Y. X bridges read the part at `(x, z)`; Z bridges read it transposed at `(z, x)` with no block-state rotation (CITY-30). Torch entries become torch to-dos when `GENERATE_LIGHTING`, else air.
 4. Supports, when `BRIDGE_SUPPORTS` and a support character or part exists:
@@ -118,7 +118,7 @@ Bridge blocks and supports in non-city chunks; `hasBridge` also blocks scattered
 
 ## 10. Bugs
 
-CITY-23, CITY-28, CITY-30.
+CITY-23, CITY-28, CITY-30, CITY-38.
 
 ## Deviations in the new mod
 

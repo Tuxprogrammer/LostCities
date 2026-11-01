@@ -62,7 +62,7 @@ All (server). Runs for every city chunk, last in `LostCityTerrainFeature.doCityC
 
 ## 5. Determinism
 
-One shared `RandomSource` (`LegacyRandomSource`, java.util.Random algorithm) per generation context, reseeded from coordinates only (SCAT-21). Draw order depends on the tag list and on `STUFF_BY_TAG` list order, which follows the registry's `ConcurrentHashMap` iteration (SCAT-22). Every rejected attempt consumes three draws. `canSeeSky` depends on the region's current heightmaps (SCAT-23).
+One shared `RandomSource` (`LegacyRandomSource`) per generation context, reseeded from coordinates only (SCAT-21). Draw order depends on the tag list and on `STUFF_BY_TAG` list order, which follows the registry's `ConcurrentHashMap` iteration (SCAT-22). Every rejected attempt consumes three draws. `canSeeSky` depends on the region's current heightmaps (SCAT-23).
 
 ## 6. Data formats
 
@@ -100,7 +100,7 @@ Chains, cobwebs (and any custom columns) in city chunks.
 | `minecraft:chain` (palette `{`) | `chains` | No chain block in 1.7.10 (added in 1.16); a pack substitute is needed |
 | Block tags (`#forge:stone`) and biome tags in matchers | `example`, matchers | No tags in 1.7.10 |
 | `WorldGenLevel.canSeeSky` during generation | `seesky` | 1.7.10 population has `World.canBlockSeeTheSky`, with different timing |
-| `RandomSource` / `LegacyRandomSource` | shared random | `java.util.Random` in 1.7.10 (same algorithm) |
+| `RandomSource` / `LegacyRandomSource` | shared random | `java.util.Random` in 1.7.10; whether the sequences match is *unverified* ([01-core: Equivalence with 1.7.10](../01-core/noise-and-random.md#equivalence-with-1710)) |
 | Data-pack registry for stuff assets | loading | From the jar |
 
 ## 10. Bugs
