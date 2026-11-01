@@ -156,5 +156,5 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 ## After beta
 
-- **PersonalSpace:** cities inside a personal dimension, on a flat world ([0003](design/0003-world-presence.md)).
+- **PersonalSpace:** cities inside a personal dimension, on a flat world ([0003](design/0003-world-presence.md)). Upstream's other landscape types (floating islands, glass-bubble space cities with monorails, caverns, biospheres) are the first candidates there, with terrain this mod generates (decision log D12).
 - **GTNH-themed additions:** new buildings and styles beside upstream's ([0004](design/0004-gtnh-layer-and-tier-ceiling.md)).
