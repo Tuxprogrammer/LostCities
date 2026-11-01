@@ -53,10 +53,10 @@ The original almost certainly has hundreds of bugs. Rebuilding faithfully means 
 
 1. Read the sheet and the matching new-spec area.
 2. Read the feature's rows in `BUGS.md`. Each bug the feature could reproduce gets a regression test named after it, for example `doesNotReproduceCORE12_shiftClickKeepsStack`.
-3. Cite the sheet at the top of the implementing class: `// Spec: docs/original-spec/02-items/tools.md#drill`.
-4. Mark deliberate differences where they happen: `// Deviation: energy is EU, the original used RF (decision 0003).` A large deviation gets a decision record (see `port-workflow`).
-5. In the PR, list deviations and the bug IDs avoided, each with its proving test.
-6. When behavior changes later, update the new-spec deviation notes in the same PR.
+3. Cite the sheet at the top of the implementing class: `// Spec: docs/original-spec/<area>/<sheet>.md#<anchor>`.
+4. Mark deliberate differences where they happen: `// Deviation: <what differs and why> (decision NNNN).` A large deviation gets a decision record (see `port-workflow`).
+5. In the commit message or pull request, list deviations and the bug IDs avoided, each with its proving test.
+6. When behavior changes later, update the new-spec deviation notes in the same change.
 
 ## Pitfalls
 

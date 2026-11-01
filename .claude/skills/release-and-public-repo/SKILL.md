@@ -9,7 +9,7 @@ description: Use when cutting a release, writing a changelog or upgrade notes, t
 
 - The GTNH buildscript derives the version from the latest git tag; `.github/workflows/release-tags.yml` builds the jar and creates the GitHub release when a tag is pushed. Don't hand-edit version strings.
 - Use semantic versions with a stage suffix while unstable: `0.1.0-alpha`, `0.2.0-beta`, `1.0.0`.
-- The shared GTNH release workflow (`GTNewHorizons/GTNH-Actions-Workflows`, `release-tags.yml`) uses `.changelogs/<tag>.md` as the release body when that file exists, and GitHub's generated notes otherwise. Keep an `unreleased.md` there that every PR appends to, and rename it to the tag at release time. Re-read the workflow's source before relying on this; it changes.
+- The shared GTNH release workflow (`GTNewHorizons/GTNH-Actions-Workflows`, `release-tags.yml`) uses `.changelogs/<tag>.md` as the release body when that file exists, and GitHub's generated notes otherwise. Keep an `unreleased.md` there that every player-facing change appends to, and rename it to the tag at release time. Re-read the workflow's source before relying on this; it changes.
 - That workflow deletes and recreates a release whose tag already exists. Treat pushed tags as immutable; fix forward with a new patch version.
 - It marks a GitHub release as pre-release only for `-snapshot` tags, and skips Modrinth and CurseForge publishing for `-snapshot` and `-pre` tags. For alpha or beta builds, set the flag yourself afterwards (`gh release edit <tag> --prerelease`).
 

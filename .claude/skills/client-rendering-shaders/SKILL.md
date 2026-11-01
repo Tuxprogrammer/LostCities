@@ -45,4 +45,4 @@ Angelica can capture tessellator output and replay it later, sampling GL state a
 
 - Reproduce shader bugs with the **same shader pack and settings** the reporter uses. A different pack and a casual look will miss them. Shader runs are expensive; reserve them for shader tests and keep normal client tests on plain rendering.
 - Compare your screenshot side by side with the reporter's for the same situation, and look for the *specific* signature (a rectangle of missing water, a white wash, a light pillar), not general haze the pack adds by itself.
-- Capture first person, third person, inventory, dropped item and GUI views for visual PRs.
+- Capture first person, third person, inventory, dropped item and GUI views for visual changes.

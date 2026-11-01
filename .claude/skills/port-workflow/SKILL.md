@@ -10,7 +10,7 @@ A port of a big mod is hundreds of changes. The workflow exists so that each one
 ## Roadmap with gates
 
 Write `docs/ROADMAP.md` (template: [docs/templates/roadmap.md](../../../docs/templates/roadmap.md)):
-- **Milestones in order**, each with an **entry gate** (what must be true before work starts) and an **exit gate** (checkbox definition of done). A box is ticked only in the PR that completes it.
+- **Milestones in order**, each with an **entry gate** (what must be true before work starts) and an **exit gate** (checkbox definition of done). A box is ticked only in the commit or pull request that completes it.
 - **Decision gates**: design questions (tier map, energy model, machine deconfliction, damage or combat model, world presence, art direction) that block the milestones depending on them.
 - Each milestone's content ships behind a module toggle (see `config-safe-registration`), defaulting on once its exit gate is met.
 - End with a review gate that audits every milestone against its exit gate before calling the project beta.
@@ -21,17 +21,12 @@ Typical order for a content mod: foundation (deps, packages, registries, config,
 
 - One file per decision in `docs/design/NNNN-short-title.md` (template: [docs/templates/decision-record.md](../../../docs/templates/decision-record.md)): context, decision precise enough to test, consequences, alternatives.
 - **Accept by default** during an MVP push when the owner has said so: make the sensible call, write it as `Accepted`, proceed, and list notable decisions in your report. Ask only about credentials, destructive or irreversible actions, real spending, and legal or licensing calls.
-- Never rewrite an accepted record. Supersede it with a new one that links back.
+- When a decision changes, edit its record in place; git history is the audit trail. Merge records that cover the same decision, and fix every link to a record you merge or delete.
 - Keep an open-items ledger. Whoever orchestrates owns answering subagents' open questions; record each answer where it applies (code comment, spec, record) rather than escalating.
-
-## One change per branch
-
-- One feature or fix per branch, in its own git worktree, named for the milestone (`m3/<feature>`, `fix/<topic>`). Never commit to the default branch directly.
-- Remove the worktree when done; keep the branch until it lands.
 
 ## Verify before landing
 
-Never trust a reported test result, including your own earlier one.
+Never trust a reported test result, including your own earlier one. Changes may be committed straight to the default branch when they meet the definition of done below. Work done on its own branch or in a worktree (a parallel agent, a long change) lands only through these steps:
 1. Merge the current default branch **into** the branch.
 2. Rebuild from clean, run formatting, unit and static tests, the headless boot, and the **full** scenario suite (not just the new scenarios).
 3. Land only if the default branch is still an ancestor of the verified commit (`git merge-base --is-ancestor <main> <branch>`). If it moved, go back to step 1. Tree-based or "replay" landings on a moved main silently revert other people's work.
@@ -57,8 +52,8 @@ Put steps 3–4 in a landing script and check that the guards exist before using
 - Format, build and unit tests pass; regression tests for avoided original bugs.
 - Headless boot clean; self-check passes; scenario exists for world-touching features; multiplayer checked for synced ones.
 - Tier-gated recipes, visible in NEI, no duplicated GT materials.
-- Every string is a lang key; assets are original with provenance.
+- Every string is a lang key; every asset is our own or free-licensed, with its provenance and license recorded (decision 0001).
 - Javadoc and `// Spec:` comments; no commented-out code.
-- Roadmap box ticked and docs updated in the same PR.
+- Roadmap box ticked and docs updated in the same commit or pull request.
 
-PR checklist: [docs/templates/pull_request_template.md](../../../docs/templates/pull_request_template.md).
+Checklist for a commit or pull request: [docs/templates/pull_request_template.md](../../../docs/templates/pull_request_template.md).

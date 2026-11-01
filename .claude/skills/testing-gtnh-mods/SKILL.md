@@ -34,10 +34,12 @@ A scenario is a reproducible situation with a checked outcome, run in a live ser
 
 - **Isolation.** Each scenario gets its own arena offset from the others, loads its own chunks, and cleans up. Count only entities and items *inside its own arena*, tagged as its own.
 - **Spawn inside the arena.** Position entities before spawning them, and keep them inside loaded chunks: `origin + i` crosses a chunk edge sooner than you think, and a mob's path cache can reach unloaded terrain.
+- **Real chunk unloads go through the scenario harness**, which waits for the unload event rather than a fixed tick. Queuing a chunk yourself fails on new worlds: a keep-loaded call takes it off the queue each tick, and Hodgepodge holds any chunk bordering freshly generated, unpopulated terrain for 600 ticks.
+- **Run new worlds too.** A scenario can pass on a world that already holds its terrain and fail where the terrain is generated during the run; check the first run on a new slot.
 - **Ticks, not wall clock.** Wait in server ticks with a hard timeout; under load, ticks slow down. Confirm each step from the server's side before the next.
 - **One greppable summary.** Print `PASS <name>` / `FAIL <name>` with reasons, and a final `Scenarios: N passed, M failed` only after every async scenario finishes. Automation waits for that line and treats `M > 0` as failure.
 - **Opt-in slow scenarios** (soaks, long performance runs) are excluded from `all` and run by name before a release gate.
-- **Full suite before landing.** A scenario that passes alone can fail in the full suite because of state leaked from earlier ones. Run everything after merging the main branch in.
+- **Full suite before landing.** A scenario that passes alone can fail in the full suite because of state leaked from earlier ones. Run everything on the current default branch plus your change (for a branch, after merging the default branch in).
 - Fake players need a stub network handler, or the entity tracker crashes when it tries to send to them.
 
 ## Layer 5: the real pack
@@ -60,7 +62,7 @@ Dev environments load a handful of mods. Players load hundreds. Test the release
 ## Multiplayer and client checks
 
 - **Two clients on a dedicated server** for anything synced: others see animations, sounds and effects; inventories and NBT match; nothing desyncs after a relog. Give items server-side, not through `/give` timing races.
-- **Client runs are expensive.** Batch them: gate each branch on unit, static and headless layers, then run one client session after a group of merges. Cap concurrent Minecraft JVMs by RAM (a GT dev server is around 4 GB, a client around 6 GB) with a shared lock.
+- **Client runs are expensive.** Batch them: gate each change on unit, static and headless layers, then run one client session after a group of changes has landed. Cap concurrent Minecraft JVMs by RAM (a GT dev server is around 4 GB, a client around 6 GB) with a shared lock.
 - **Watchdog every client and server you launch:**
   - tight timeouts: everything is local, a join takes seconds once at the menu;
   - scan logs for failure signatures, not just the success line: `Exception`, `Crash Report`, `A fatal error has occured`, `Mod rejections`, `Connection Lost`, `Disconnected`;

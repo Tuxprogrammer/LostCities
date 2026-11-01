@@ -49,7 +49,7 @@ Every item has exactly one GT voltage tier, gated by **both**:
 1. the minimum machine voltage of its final recipe, and
 2. at least one input material unobtainable before that tier (for example steel at LV, aluminum at MV, stainless steel at HV, titanium at EV, tungstensteel at IV; confirm each against the current pack's progression).
 
-Write the map as a decision record (template: [docs/templates/decision-record.md](../../../docs/templates/decision-record.md)). If an item's recipe cannot meet its tier, move its tier with a new record; never weaken the recipe to fit. Items made by combining other items carry their inputs' tier; say so in the record.
+Write the map as a decision record (template: [docs/templates/decision-record.md](../../../docs/templates/decision-record.md)). If an item's recipe cannot meet its tier, move its tier in that record; never weaken the recipe to fit. Items made by combining other items carry their inputs' tier; say so in the record.
 
 Enforce the map in code: a dev-only `postInit` self-check that walks your recipes and fails if any uses an input or machine above its output's tier, or if any recipe input fails to resolve.
 
@@ -62,7 +62,7 @@ Enforce the map in code: a dev-only `postInit` self-check that walks your recipe
 ## Machines
 
 - Kept machines are GT MetaTileEntities (single blocks or StructureLib multiblocks) using GT's GUI framework, not custom tile entities with their own energy code. New non-GT GUIs use ModularUI2.
-- **MetaTileEntity IDs are a shared, global space.** Reserve a block with the GTNH team (or document the range you claim), record it, and **never renumber or reuse an ID**, even after retiring a machine (see `config-safe-registration`).
+- **MetaTileEntity IDs are a shared, global space.** Claim a block confirmed free on a real-pack boot, record it in a decision record, and **never renumber or reuse an ID**, even after retiring a machine (see `config-safe-registration`). Reserving the block with the GTNH team waits for any pack submission.
 - **Multiblocks for scale.** GTNH players scale everything. Every machine players use regularly, and at minimum every bottleneck, gets a multiblock that shares the single block's recipe map and adds parallels. Do a bottleneck analysis per machine.
 - **Distinctive shapes.** No plain 3×3×3 cubes; a multiblock's silhouette should say what it does. Cite a GT multiblock as precedent for hatch and casing rules.
 - Use the pack's own multiblocks to scale the GT maps you rely on, and list which one covers each.
