@@ -1,0 +1,147 @@
+{
+ "title": "Extra Utilities 1.2.12: decorativeBlock1 and decorativeBlock2 (CTM: isolated-block face, the _corners texture)",
+ "entries": [
+  {
+   "label": "ExtraUtilities:decorativeBlock1:0",
+   "name": "Edged Stone Bricks",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/test_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:1",
+   "name": "Ender-infused Obsidian",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/endsidian_corners.png",
+   "note": "obsidian hardness"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:2",
+   "name": "Burnt Quartz",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/dark_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:3",
+   "name": "Frosted Stone",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/icystone_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:4",
+   "name": "Border Stone",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/carved_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:5",
+   "name": "Unstable Ingot Block",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/uingot_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:6",
+   "name": "Gravel Bricks",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/gravel_brick_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:7",
+   "name": "Border Stone (Alternate)",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/singlestonebrick_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:8",
+   "name": "Magical Wood",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/magic_wood_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:9",
+   "name": "Sandy Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/sandedGlass.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:10",
+   "name": "Gravel Road",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/gravel_road_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:11",
+   "name": "Ender Core",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/endCore.png",
+   "note": "light 5"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:12",
+   "name": "Diamond-Etched Computational Matrix",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/diamondCore.png",
+   "note": "light 14"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:13",
+   "name": "Ender-Sand Alloy",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/endslab_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock1:14",
+   "name": "Eminence Stone",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/purplestone_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:0",
+   "name": "Thickened Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass1_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:1",
+   "name": "Edged Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass2_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:2",
+   "name": "Glass Bricks",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass3_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:3",
+   "name": "Carved Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass4_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:4",
+   "name": "Golden Edged Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass5_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:5",
+   "name": "Obsidian Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass6_corners.png",
+   "note": "blast proof"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:6",
+   "name": "Swirling Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass7_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:7",
+   "name": "Glowstone Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass8_corners.png",
+   "note": "light 15"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:8",
+   "name": "Heart Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/glass9_corners.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:9",
+   "name": "Square Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/glassQuadrants.png"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:10",
+   "name": "Dark Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/darkglass_corners.png",
+   "note": "blocks light"
+  },
+  {
+   "label": "ExtraUtilities:decorativeBlock2:11",
+   "name": "Dark Obsidian Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/obsidiandarkglass_corners.png",
+   "note": "blocks light; blast proof"
+  }
+ ]
+}

@@ -1,0 +1,113 @@
+{
+ "title": "IC2: construction and decorative blocks",
+ "entries": [
+  {
+   "label": "IC2:blockAlloy:0",
+   "name": "Reinforced Stone",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockAlloy.png"
+  },
+  {
+   "label": "IC2:blockBasalt:0",
+   "name": "Basalt",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockBasalt.png"
+  },
+  {
+   "label": "IC2:blockAlloyGlass:0",
+   "name": "Reinforced Glass",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockAlloyGlass.png"
+  },
+  {
+   "label": "IC2:blockDoorAlloy",
+   "name": "Reinforced Door (top/bottom halves)",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockDoorAlloy.top.png",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockDoorAlloy.bottom.png"
+  },
+  {
+   "label": "IC2:blockFenceIron:0",
+   "name": "Iron Fence",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockFenceIron.png"
+  },
+  {
+   "label": "IC2:blockScaffold:0",
+   "name": "Scaffold",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockScaffold.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockScaffold.png#2"
+  },
+  {
+   "label": "IC2:blockScaffold:5",
+   "name": "Reinforced Scaffold",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockScaffold.reinforced.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockScaffold.reinforced.png#2"
+  },
+  {
+   "label": "IC2:blockIronScaffold:0",
+   "name": "Iron Scaffold",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockIronScaffold.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockIronScaffold.png#2"
+  },
+  {
+   "label": "IC2:blockIronScaffold:12",
+   "name": "Reinforced Iron Scaffold",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockIronScaffold.reinforced.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockIronScaffold.reinforced.png#2"
+  },
+  {
+   "label": "IC2:blockLuminator",
+   "name": "Luminator (lit, TE)",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/wiring/blockLuminator.png"
+  },
+  {
+   "label": "IC2:blockLuminatorDark",
+   "name": "Luminator (unlit, TE)",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/wiring/blockLuminatorDark.png"
+  },
+  {
+   "label": "IC2:blockMiningPipe:0",
+   "name": "Mining Pipe",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/machine/blockMiningPipe.png"
+  },
+  {
+   "label": "IC2:blockRubber:0",
+   "name": "Rubber Sheet",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubber.png"
+  },
+  {
+   "label": "IC2:blockHarz:0",
+   "name": "Resin (sticky layer)",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockHarz.png"
+  },
+  {
+   "label": "IC2:blockRubWood:0",
+   "name": "Rubber Wood",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubWood.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubWood.png#2"
+  },
+  {
+   "label": "IC2:blockRubWood:wet",
+   "name": "Rubber Wood, resin spot",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubWood.wet.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubWood.wet.png#2"
+  },
+  {
+   "label": "IC2:blockRubLeaves:0",
+   "name": "Rubber Leaves",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockRubLeaves.png"
+  },
+  {
+   "label": "IC2:blockBarrel",
+   "name": "Barrel (TE)",
+   "top": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockBarrel.png#1",
+   "side": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockBarrel.png#2"
+  },
+  {
+   "label": "IC2:blockFoam:0",
+   "name": "Construction Foam (unset)",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/cf/blockFoam.png"
+  },
+  {
+   "label": "IC2:blockReinforcedFoam:0",
+   "name": "Reinforced Construction Foam (unset)",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/cf/blockReinforcedFoam.png"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "title": "Railcraft: cube (storage, concrete, raw stones, creosote)",
+ "entries": [
+  {
+   "label": "Railcraft:cube:0",
+   "name": "Block of Coal Coke",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.coke.png"
+  },
+  {
+   "label": "Railcraft:cube:1",
+   "name": "Block of Concrete",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/concrete.png"
+  },
+  {
+   "label": "Railcraft:cube:2",
+   "name": "Block of Steel",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.steel.png"
+  },
+  {
+   "label": "Railcraft:cube:3",
+   "name": "Infernal Brick (obsolete)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.brick.infernal.png"
+  },
+  {
+   "label": "Railcraft:cube:4",
+   "name": "Crushed Obsidian",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.crushed.obsidian.png"
+  },
+  {
+   "label": "Railcraft:cube:5",
+   "name": "Sandy Brick (obsolete)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.brick.sandy.png"
+  },
+  {
+   "label": "Railcraft:cube:6",
+   "name": "Abyssal Stone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.stone.abyssal.png"
+  },
+  {
+   "label": "Railcraft:cube:7",
+   "name": "Quarried Stone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.stone.quarried.png"
+  },
+  {
+   "label": "Railcraft:cube:8",
+   "name": "Creosote Wood Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.wood.png"
+  },
+  {
+   "label": "Railcraft:cube:9",
+   "name": "Block of Copper",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.copper.png"
+  },
+  {
+   "label": "Railcraft:cube:10",
+   "name": "Block of Tin",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.tin.png"
+  },
+  {
+   "label": "Railcraft:cube:11",
+   "name": "Block of Lead",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.lead.png"
+  }
+ ]
+}

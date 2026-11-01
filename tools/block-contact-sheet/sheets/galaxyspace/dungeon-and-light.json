@@ -1,0 +1,114 @@
+{
+ "title": "GalaxySpace: dungeon bricks, dungeon floors, glowstones, Barnarda C wood",
+ "entries": [
+  {
+   "label": "GalaxySpace:ceresblocks:2",
+   "name": "Ceres Dungeon Bricks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceresbricks.png"
+  },
+  {
+   "label": "GalaxySpace:ceresblocks:4",
+   "name": "Ceres Dungeon Floor",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceresfloor.png"
+  },
+  {
+   "label": "GalaxySpace:ceresblocks:5",
+   "name": "Ceres Dungeon Top",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/cerestop.png"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:3",
+   "name": "Io Dungeon Bricks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iobricks.png"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:7",
+   "name": "Io Dungeon Top",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iotop.png"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:8",
+   "name": "Io Dungeon Floor",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iofloor.png"
+  },
+  {
+   "label": "GalaxySpace:enceladusblocks:2",
+   "name": "Enceladus Dungeon Bricks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/enceladus/enceladusbricks.png"
+  },
+  {
+   "label": "GalaxySpace:proteusblocks:3",
+   "name": "Proteus Dungeon Bricks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/proteus/proteusbricks.png"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:6",
+   "name": "Pluto Dungeon Bricks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutobricks.png"
+  },
+  {
+   "label": "GalaxySpace:ceresglowstone",
+   "name": "Ceres Glowstone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceresglowstone.png"
+  },
+  {
+   "label": "GalaxySpace:ioglowstone",
+   "name": "Io Glowstone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/ioglowstone.png"
+  },
+  {
+   "label": "GalaxySpace:enceladusglowstone",
+   "name": "Enceladus Glowstone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/enceladus/enceladusglowstone.png"
+  },
+  {
+   "label": "GalaxySpace:proteusglowstone",
+   "name": "Proteus Glowstone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/proteus/proteusglowstone.png"
+  },
+  {
+   "label": "GalaxySpace:plutoglowstone",
+   "name": "Pluto Glowstone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutoglowstone.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaClog",
+   "name": "Barnarda C Wood",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2log_oak_top.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2log_oak.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaCplanks",
+   "name": "Barnarda C Wood Planks",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2planks_oak.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaCleaves",
+   "name": "Barnarda C Leaves",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2leaves_violet_leaves_opaque.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaCgrass",
+   "name": "Barnarda C Grass",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2grass_top.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2grass_side.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaCdirt",
+   "name": "Barnarda C Dirt",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnarda2/barnarda2dirt.png"
+  },
+  {
+   "label": "GalaxySpace:ceresweb",
+   "name": "Ceres Web",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceresweb.png",
+   "note": "wither on touch"
+  },
+  {
+   "label": "GalaxySpace:ioweb",
+   "name": "Io Web",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/ioweb.png",
+   "note": "burns on touch"
+  }
+ ]
+}

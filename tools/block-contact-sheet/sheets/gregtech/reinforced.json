@@ -1,0 +1,75 @@
+{
+ "title": "GregTech: gt.blockreinforced",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockreinforced:0",
+   "name": "Bronzeplate Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BRONZEPREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:1",
+   "name": "Iridium Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_IRREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:2",
+   "name": "Plascrete Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_PLASCRETE.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:3",
+   "name": "Tungstensteel Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TSREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:4",
+   "name": "Brittle Charcoal",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/coal_block.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:5",
+   "name": "Powderbarrel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_POWDER.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:6",
+   "name": "Solid Super Fuel",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/coal_block.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:7",
+   "name": "Magic Solid Super Fuel",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/coal_block.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:8",
+   "name": "Steel Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_STEELPREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:9",
+   "name": "Titanium Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TITANIUMPREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:10",
+   "name": "Naquadah Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_NAQUADAHPREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:11",
+   "name": "Neutronium Reinforced Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_NEUTRONIUMPREIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:12",
+   "name": "Raw Deep Dark Portal Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_DEEP_DARK_RAW.png"
+  },
+  {
+   "label": "gregtech:gt.blockreinforced:13",
+   "name": "Reinforced Block (reinforced concrete)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_REINFORCED_CONCRETE.png"
+  }
+ ]
+}

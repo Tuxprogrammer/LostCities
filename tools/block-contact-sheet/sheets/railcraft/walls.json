@@ -1,0 +1,130 @@
+{
+ "title": "Railcraft: walls (wall model; cube shows the source texture)",
+ "entries": [
+  {
+   "label": "Railcraft:wall.alpha:0",
+   "name": "Infernal Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#0"
+  },
+  {
+   "label": "Railcraft:wall.alpha:1",
+   "name": "Sandy Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#0"
+  },
+  {
+   "label": "Railcraft:wall.alpha:2",
+   "name": "Concrete Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/concrete.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:3",
+   "name": "Snow Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/snow.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:4",
+   "name": "Ice Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/ice.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:5",
+   "name": "Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:6",
+   "name": "Mossy Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_mossy.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:7",
+   "name": "Cracked Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_cracked.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:8",
+   "name": "Chiseled Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_carved.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:9",
+   "name": "Nether Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:10",
+   "name": "Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:11",
+   "name": "Sandstone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_normal.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:12",
+   "name": "Chiseled Sandstone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_carved.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:13",
+   "name": "Smooth Sandstone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_smooth.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:14",
+   "name": "Obsidian Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/obsidian.png"
+  },
+  {
+   "label": "Railcraft:wall.alpha:15",
+   "name": "Frost Bound Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#0"
+  },
+  {
+   "label": "Railcraft:wall.beta:0",
+   "name": "Quartz Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_side.png"
+  },
+  {
+   "label": "Railcraft:wall.beta:1",
+   "name": "Chiseled Quartz Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_chiseled.png"
+  },
+  {
+   "label": "Railcraft:wall.beta:2",
+   "name": "Iron Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/iron_block.png"
+  },
+  {
+   "label": "Railcraft:wall.beta:3",
+   "name": "Gold Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/gold_block.png"
+  },
+  {
+   "label": "Railcraft:wall.beta:4",
+   "name": "Diamond Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/diamond_block.png"
+  },
+  {
+   "label": "Railcraft:wall.beta:5",
+   "name": "Abyssal Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#0"
+  },
+  {
+   "label": "Railcraft:wall.beta:6",
+   "name": "Quarried Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#0"
+  },
+  {
+   "label": "Railcraft:wall.beta:7",
+   "name": "Blood Stained Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#0"
+  },
+  {
+   "label": "Railcraft:wall.beta:8",
+   "name": "Bleached Bone Brick Wall",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#0"
+  }
+ ]
+}

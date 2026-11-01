@@ -1,0 +1,80 @@
+{
+ "title": "GregTech: tiered casings ULV-EV, hermetic casings, coils (plain blocks, not TEs)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockcasings:0",
+   "name": "ULV Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_ULV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_ULV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings:1",
+   "name": "LV Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_LV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_LV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings:2",
+   "name": "MV Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_MV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_MV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings:3",
+   "name": "HV Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_HV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_HV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings:4",
+   "name": "EV Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_EV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_EV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings6:0",
+   "name": "Hermetic Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_ULV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TANK_0.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings6:1",
+   "name": "Hermetic Casing I",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_LV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TANK_1.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings6:2",
+   "name": "Hermetic Casing II",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_MV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TANK_2.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings6:3",
+   "name": "Hermetic Casing III",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_HV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TANK_3.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings6:4",
+   "name": "Hermetic Casing IV",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_EV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TANK_4.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings5:0",
+   "name": "Cupronickel Coil Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_COIL_CUPRONICKEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings5:1",
+   "name": "Kanthal Coil Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_COIL_KANTHAL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings5:2",
+   "name": "Nichrome Coil Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_COIL_NICHROME.png"
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "title": "NewHorizonsCoreMod: charcoal, coal and coke blocks",
+ "entries": [
+  {
+   "label": "dreamcraft:Charcoal",
+   "name": "Block of Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:CompressedCharcoal",
+   "name": "Block of Compressed Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCompressedCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:CompressedCoal",
+   "name": "Block of Compressed Coal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCompressedCoal.png"
+  },
+  {
+   "label": "dreamcraft:CompressedCoalCoke",
+   "name": "Block of Compressed Coal Coke",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCompressedCoalCoke.png"
+  },
+  {
+   "label": "dreamcraft:DoubleCompressedCharcoal",
+   "name": "Block of Double Compressed Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockDoubleCompressedCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:DoubleCompressedCoal",
+   "name": "Block of Double Compressed Coal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockDoubleCompressedCoal.png"
+  },
+  {
+   "label": "dreamcraft:DoubleCompressedCoalCoke",
+   "name": "Block of Double Compressed Coal Coke",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockDoubleCompressedCoalCoke.png"
+  },
+  {
+   "label": "dreamcraft:TripleCompressedCharcoal",
+   "name": "Block of Triple Compressed Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTripleCompressedCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:TripleCompressedCoal",
+   "name": "Block of Triple Compressed Coal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTripleCompressedCoal.png"
+  },
+  {
+   "label": "dreamcraft:TripleCompressedCoalCoke",
+   "name": "Block of Triple Compressed Coal Coke",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTripleCompressedCoalCoke.png"
+  },
+  {
+   "label": "dreamcraft:QuadrupleCompressedCharcoal",
+   "name": "Block of Quadruple Compressed Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuadrupleCompressedCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:QuadrupleCompressedCoal",
+   "name": "Block of Quadruple Compressed Coal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuadrupleCompressedCoal.png"
+  },
+  {
+   "label": "dreamcraft:QuadrupleCompressedCoalCoke",
+   "name": "Block of Quadruple Compressed Coal Coke",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuadrupleCompressedCoalCoke.png"
+  },
+  {
+   "label": "dreamcraft:QuintupleCompressedCharcoal",
+   "name": "Block of Quintuple Compressed Charcoal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuintupleCompressedCharcoal.png"
+  },
+  {
+   "label": "dreamcraft:QuintupleCompressedCoal",
+   "name": "Block of Quintuple Compressed Coal",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuintupleCompressedCoal.png"
+  },
+  {
+   "label": "dreamcraft:QuintupleCompressedCoalCoke",
+   "name": "Block of Quintuple Compressed Coal Coke",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuintupleCompressedCoalCoke.png"
+  }
+ ]
+}

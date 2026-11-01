@@ -1,0 +1,220 @@
+{
+ "title": "GregTech: storage blocks, common construction materials (curated)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockmetal1:1",
+   "name": "Block of Aluminium",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_ALUMINIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal1:3",
+   "name": "Block of Annealed Copper",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_ANNEALEDCOPPER.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal1:11",
+   "name": "Block of Black Bronze",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BLACKBRONZE.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal1:12",
+   "name": "Block of Black Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BLACKSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal1:14",
+   "name": "Block of Blue Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BLUESTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal1:15",
+   "name": "Block of Brass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BRASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:0",
+   "name": "Block of Bronze",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_BRONZE.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:3",
+   "name": "Block of Chrome",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_CHROME.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:5",
+   "name": "Block of Cobalt",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_COBALT.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:7",
+   "name": "Block of Copper",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_COPPER.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:8",
+   "name": "Block of Cupronickel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_CUPRONICKEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:9",
+   "name": "Block of Damascus Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_DAMASCUSSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:10",
+   "name": "Block of Dark Iron",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_DARKIRON.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal2:15",
+   "name": "Block of Electrum",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_ELECTRUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal3:11",
+   "name": "Block of Invar",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_INVAR.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal4:2",
+   "name": "Block of Lead",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_LEAD.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal4:4",
+   "name": "Block of Magnalium",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_MAGNALIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal4:7",
+   "name": "Block of Meteoric Iron",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_METEORICIRON.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal5:3",
+   "name": "Block of Nichrome",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_NICHROME.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal5:4",
+   "name": "Block of Nickel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_NICKEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal5:11",
+   "name": "Block of Pig Iron",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_PIGIRON.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:1",
+   "name": "Block of Red Alloy",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_REDALLOY.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:2",
+   "name": "Block of Red Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_REDSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:3",
+   "name": "Block of Rose Gold",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_ROSEGOLD.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:10",
+   "name": "Block of Silver",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_SILVER.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:11",
+   "name": "Block of Soldering Alloy",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_SOLDERINGALLOY.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:12",
+   "name": "Block of Stainless Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_STAINLESSSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:13",
+   "name": "Block of Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal6:15",
+   "name": "Block of Sterling Silver",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_STERLINGSILVER.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal7:7",
+   "name": "Block of Tin",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal7:8",
+   "name": "Block of Tin Alloy",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TINALLOY.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal7:9",
+   "name": "Block of Titanium",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal7:11",
+   "name": "Block of Tungsten",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TUNGSTEN.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal7:12",
+   "name": "Block of Tungstensteel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_TUNGSTENSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal8:2",
+   "name": "Block of Cast Iron",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_CASTIRON.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal8:6",
+   "name": "Block of Zinc",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_ZINC.png"
+  },
+  {
+   "label": "gregtech:gt.blockmetal8:8",
+   "name": "Block of Vanadium Steel",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_VANADIUMSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem2:1",
+   "name": "Block of Lignite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_LIGNITE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem3:4",
+   "name": "Block of Charcoal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_CHARCOAL.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem2:9",
+   "name": "Block of Quartzite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_QUARTZITE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem1:5",
+   "name": "Block of Certus Quartz",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_CERTUSQUARTZ.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem2:0",
+   "name": "Block of Lazurite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_LAZURITE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgem2:13",
+   "name": "Block of Sodalite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BLOCK_SODALITE.png"
+  }
+ ]
+}

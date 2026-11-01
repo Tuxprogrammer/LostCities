@@ -1,0 +1,83 @@
+{
+ "title": "Extra Utilities 1.2.12: colored blocks, untinted base faces (16 tints per block in game)",
+ "entries": [
+  {
+   "label": "ExtraUtilities:colorStoneBrick:0-15",
+   "name": "Colored Stone Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:colorWoodPlanks:0-15",
+   "name": "Colored Wood Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_lightgem:0-15",
+   "name": "Colored Glowstone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/glowstone.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_stone:0-15",
+   "name": "Colored Stone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_quartzBlock:0-15",
+   "name": "Colored Quartz Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_top.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_hellsand:0-15",
+   "name": "Colored Soul Sand",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/soul_sand.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_redstoneLight:0-15",
+   "name": "Colored Redstone Lamp",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_lamp_on.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_brick:0-15",
+   "name": "Colored Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_stonebrick:0-15",
+   "name": "Colored Cobblestone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_blockLapis:0-15",
+   "name": "Colored Lapis Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/lapis_block.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_obsidian:0-15",
+   "name": "Colored Obsidian",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/obsidian.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_blockRedstone:0-15",
+   "name": "Colored Redstone Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_block.png",
+   "note": "untinted: in game x16 colors"
+  },
+  {
+   "label": "ExtraUtilities:color_blockCoal:0-15",
+   "name": "Colored Coal Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/coal_block.png",
+   "note": "untinted: in game x16 colors"
+  }
+ ]
+}

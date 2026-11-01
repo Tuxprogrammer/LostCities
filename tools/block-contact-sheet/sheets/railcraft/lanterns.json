@@ -1,0 +1,111 @@
+{
+ "title": "Railcraft: stone and metal lanterns (light 15; top = cap material, side = candle)",
+ "entries": [
+  {
+   "label": "Railcraft:lantern.stone:0",
+   "name": "Abyssal Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:1",
+   "name": "Bleached Bone Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:2",
+   "name": "Blood Stained Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:3",
+   "name": "Frostbound Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:4",
+   "name": "Infernal Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:5",
+   "name": "Nether Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:6",
+   "name": "Quarried Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:7",
+   "name": "Sandy Stone Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#2",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:8",
+   "name": "Sandstone Stone Lantern",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.stone:9",
+   "name": "Stone Stone Lantern",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_top.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png",
+   "note": "lantern model; caps from source block"
+  },
+  {
+   "label": "Railcraft:lantern.metal:0",
+   "name": "Iron Lantern",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/iron_block.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  },
+  {
+   "label": "Railcraft:lantern.metal:1",
+   "name": "Gold Lantern",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/gold_block.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  },
+  {
+   "label": "Railcraft:lantern.metal:2",
+   "name": "Copper Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.copper.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  },
+  {
+   "label": "Railcraft:lantern.metal:3",
+   "name": "Tin Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.tin.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  },
+  {
+   "label": "Railcraft:lantern.metal:4",
+   "name": "Lead Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.lead.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  },
+  {
+   "label": "Railcraft:lantern.metal:5",
+   "name": "Steel Lantern",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/cube.steel.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/stonelamp.candle.png"
+  }
+ ]
+}

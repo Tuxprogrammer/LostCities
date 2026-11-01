@@ -1,0 +1,107 @@
+{
+ "title": "Tinkers' Construct: clear glass and stained clear glass (panes use the same faces)",
+ "entries": [
+  {
+   "label": "TConstruct:GlassBlock:0",
+   "name": "Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/clear/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:0",
+   "name": "White Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/white/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:1",
+   "name": "Orange Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/orange/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:2",
+   "name": "Magenta Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/magenta/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:3",
+   "name": "Light Blue Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/light_blue/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:4",
+   "name": "Yellow Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/yellow/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:5",
+   "name": "Lime Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/lime/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:6",
+   "name": "Pink Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/pink/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:7",
+   "name": "Gray Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/gray/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:8",
+   "name": "Light Gray Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/light_gray/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:9",
+   "name": "Cyan Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/cyan/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:10",
+   "name": "Purple Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/purple/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:11",
+   "name": "Blue Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/blue/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:12",
+   "name": "Brown Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/brown/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:13",
+   "name": "Green Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/green/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:14",
+   "name": "Red Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/red/glass.png",
+   "note": "CTM: plain face shown"
+  },
+  {
+   "label": "TConstruct:GlassBlock.StainedClear:15",
+   "name": "Black Stained Clear Glass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glass/stained/black/glass.png",
+   "note": "CTM: plain face shown"
+  }
+ ]
+}

@@ -1,0 +1,143 @@
+{
+ "title": "Tinkers' Construct: metal blocks, slime, soils, small decorations",
+ "entries": [
+  {
+   "label": "TConstruct:MetalBlock:0",
+   "name": "Block of Cobalt",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_cobalt.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:1",
+   "name": "Block of Ardite",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_ardite.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:2",
+   "name": "Block of Manyullyn",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_manyullyn.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:3",
+   "name": "Block of Copper",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_copper.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:4",
+   "name": "Block of Bronze",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_bronze.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:5",
+   "name": "Block of Tin",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_tin.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:6",
+   "name": "Block of Aluminum",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_aluminum.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:7",
+   "name": "Block of Aluminum Brass",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_alubrass.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:8",
+   "name": "Block of Alumite",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_alumite.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:9",
+   "name": "Block of Steel",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_steel.png"
+  },
+  {
+   "label": "TConstruct:MetalBlock:10",
+   "name": "Block of Solid Ender",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/compressed_ender.png"
+  },
+  {
+   "label": "TConstruct:slime.gel:0",
+   "name": "Congealed Blue Slime",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimeblock_blue.png",
+   "note": "bouncy"
+  },
+  {
+   "label": "TConstruct:slime.gel:1",
+   "name": "Congealed Green Slime",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimeblock_green.png",
+   "note": "bouncy"
+  },
+  {
+   "label": "TConstruct:slime.gel:2",
+   "name": "Congealed Purple Slime",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimeblock_purple.png",
+   "note": "bouncy"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:0",
+   "name": "Slimy Mud (green)",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimesand.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:1",
+   "name": "Grout",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/grout.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:2",
+   "name": "Slimy Mud (blue)",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimesandblue.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:3",
+   "name": "Graveyard Soil",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/graveyardsoil.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:4",
+   "name": "Consecrated Soil",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/consecratedsoil.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:5",
+   "name": "Slime Soil",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/slimedirt_blue.png"
+  },
+  {
+   "label": "TConstruct:CraftedSoil:6",
+   "name": "Nether Grout",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_grout.png"
+  },
+  {
+   "label": "TConstruct:GlueBlock:0",
+   "name": "Glue Block",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/glue.png",
+   "note": "sticky"
+  },
+  {
+   "label": "TConstruct:MeatBlock:0",
+   "name": "Hambone",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/ham_skin.png",
+   "note": "log-like model"
+  },
+  {
+   "label": "TConstruct:decoration.stonetorch:0",
+   "name": "Stone Torch",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/torch_stone.png",
+   "note": "torch model; light 14"
+  },
+  {
+   "label": "TConstruct:decoration.stoneladder:0",
+   "name": "Stone Ladder",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/ladder_stone.png",
+   "note": "ladder model"
+  },
+  {
+   "label": "TConstruct:trap.punji:0",
+   "name": "Punji Stick",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/punji.png",
+   "note": "damages entities"
+  }
+ ]
+}

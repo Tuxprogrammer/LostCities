@@ -1,0 +1,59 @@
+{
+ "title": "NewHorizonsCoreMod: metal bars",
+ "entries": [
+  {
+   "label": "dreamcraft:SteelBars",
+   "name": "Steel Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockSteelBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:AluminiumBars",
+   "name": "Aluminium Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockAluminiumBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:StainlessSteelBars",
+   "name": "Stainless Steel Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockStainlessSteelBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:TitaniumBars",
+   "name": "Titanium Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTitaniumBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:ChromeBars",
+   "name": "Chrome Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockChromeBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:TungstenSteelBars",
+   "name": "Tungstensteel Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTungstenSteelBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:IridiumBars",
+   "name": "Iridium Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockIridiumBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:OsmiumBars",
+   "name": "Osmium Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockOsmiumBars.png",
+   "note": "pane"
+  },
+  {
+   "label": "dreamcraft:NeutroniumBars",
+   "name": "Neutronium Bars",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockNeutroniumBars.png",
+   "note": "pane"
+  }
+ ]
+}

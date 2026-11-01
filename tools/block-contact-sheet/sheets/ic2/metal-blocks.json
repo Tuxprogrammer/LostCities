@@ -1,0 +1,35 @@
+{
+ "title": "IC2: metal storage blocks",
+ "entries": [
+  {
+   "label": "IC2:blockMetal:0",
+   "name": "Copper Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalCopper.png"
+  },
+  {
+   "label": "IC2:blockMetal:1",
+   "name": "Tin Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalTin.png"
+  },
+  {
+   "label": "IC2:blockMetal:2",
+   "name": "Bronze Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalBronze.png"
+  },
+  {
+   "label": "IC2:blockMetal:3",
+   "name": "Uranium Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalUranium.png#1"
+  },
+  {
+   "label": "IC2:blockMetal:4",
+   "name": "Lead Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalLead.png"
+  },
+  {
+   "label": "IC2:blockMetal:5",
+   "name": "Refined Iron Block",
+   "all": "industrialcraft-2-2.2.828-experimental.jar!assets/ic2/textures/blocks/blockMetalAdvIron.png"
+  }
+ ]
+}

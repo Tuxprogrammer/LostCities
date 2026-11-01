@@ -62,6 +62,12 @@ class TextureSource:
     def load(self, ref):
         if not ref:
             return None
+        tile = None
+        if "#" in ref:
+            ref, _, index = ref.rpartition("#")
+            if not index.isdigit():
+                return None
+            tile = int(index)
         try:
             if "!" in ref:
                 jar_name, inner = ref.split("!", 1)
@@ -76,7 +82,8 @@ class TextureSource:
             image.load()
         except (OSError, KeyError, zipfile.BadZipFile):
             return None
-        return first_frame(image.convert("RGBA"))
+        image = image.convert("RGBA")
+        return first_frame(image) if tile is None else atlas_tile(image, tile)
 
     def close(self):
         for jar in self.jars.values():
@@ -89,12 +96,34 @@ def first_frame(image):
     return image.crop((0, 0, w, w)) if h > w and h % w == 0 else image
 
 
+def atlas_tile(image, index):
+    """The index-th square tile (row-major, side = the image's shorter edge) of an icon atlas such as Railcraft's
+    `TextureAtlasSheet` strips; None when the index is past the end."""
+    w, h = image.size
+    side = min(w, h)
+    cols, rows = w // side, h // side
+    if index >= cols * rows:
+        return None
+    x, y = (index % cols) * side, (index // cols) * side
+    return image.crop((x, y, x + side, y + side))
+
+
 def placeholder():
     image = Image.new("RGBA", (16, 16), MISSING_COLOR)
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, 7, 7), fill=(0, 0, 0, 255))
     draw.rectangle((8, 8, 15, 15), fill=(0, 0, 0, 255))
     return image
+
+
+def tint(image, color):
+    """Multiplies the RGB of an image by a "#rrggbb" color, as Minecraft's colorMultiplier does; None leaves it."""
+    if not color:
+        return image
+    rgb = [int(color.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)]
+    r, g, b, a = image.split()
+    r, g, b = (band.point(lambda v, m=m: v * m // 255) for band, m in zip((r, g, b), rgb))
+    return Image.merge("RGBA", (r, g, b, a))
 
 
 def shade(image, factor):
@@ -163,6 +192,7 @@ def render(sheet, source, cube_size=96, cols=8):
         if top is None or side is None:
             missing.append(entry.get("label", "?"))
         top, side = top or placeholder(), side or placeholder()
+        top, side = tint(top, entry.get("tint")), tint(side, entry.get("tint"))
         x, y = (n % cols) * cell_w, title_h + (n // cols) * cell_h
         out.alpha_composite(cube(top, side, cube_size), (x + (cell_w - cube_size) // 2, y + PADDING))
         text = entry.get("label", "")

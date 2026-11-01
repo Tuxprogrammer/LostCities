@@ -1,0 +1,200 @@
+{
+ "title": "Railcraft: posts and platforms (thin models; cube shows the texture)",
+ "entries": [
+  {
+   "label": "Railcraft:post:0",
+   "name": "Wooden Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.wood.png"
+  },
+  {
+   "label": "Railcraft:post:1",
+   "name": "Stone Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/concrete.png"
+  },
+  {
+   "label": "Railcraft:post:2",
+   "name": "Metal Post (unpainted)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.png"
+  },
+  {
+   "label": "Railcraft:post:3",
+   "name": "Emblem Post (TE)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.png"
+  },
+  {
+   "label": "Railcraft:post:4",
+   "name": "Wooden Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.wood.png"
+  },
+  {
+   "label": "Railcraft:post:5",
+   "name": "Stone Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/concrete.png"
+  },
+  {
+   "label": "Railcraft:post:6",
+   "name": "Metal Platform (unpainted)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.png"
+  },
+  {
+   "label": "Railcraft:post.metal:0",
+   "name": "Black Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#0"
+  },
+  {
+   "label": "Railcraft:post.metal:1",
+   "name": "Red Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#1"
+  },
+  {
+   "label": "Railcraft:post.metal:2",
+   "name": "Green Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#2"
+  },
+  {
+   "label": "Railcraft:post.metal:3",
+   "name": "Brown Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#3"
+  },
+  {
+   "label": "Railcraft:post.metal:4",
+   "name": "Blue Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#4"
+  },
+  {
+   "label": "Railcraft:post.metal:5",
+   "name": "Purple Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#5"
+  },
+  {
+   "label": "Railcraft:post.metal:6",
+   "name": "Cyan Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#6"
+  },
+  {
+   "label": "Railcraft:post.metal:7",
+   "name": "Light Gray Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#7"
+  },
+  {
+   "label": "Railcraft:post.metal:8",
+   "name": "Gray Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#8"
+  },
+  {
+   "label": "Railcraft:post.metal:9",
+   "name": "Pink Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#9"
+  },
+  {
+   "label": "Railcraft:post.metal:10",
+   "name": "Lime Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#10"
+  },
+  {
+   "label": "Railcraft:post.metal:11",
+   "name": "Yellow Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#11"
+  },
+  {
+   "label": "Railcraft:post.metal:12",
+   "name": "Light Blue Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#12"
+  },
+  {
+   "label": "Railcraft:post.metal:13",
+   "name": "Magenta Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#13"
+  },
+  {
+   "label": "Railcraft:post.metal:14",
+   "name": "Orange Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#14"
+  },
+  {
+   "label": "Railcraft:post.metal:15",
+   "name": "White Metal Post",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#15"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:0",
+   "name": "Black Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#0"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:1",
+   "name": "Red Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#1"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:2",
+   "name": "Green Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#2"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:3",
+   "name": "Brown Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#3"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:4",
+   "name": "Blue Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#4"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:5",
+   "name": "Purple Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#5"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:6",
+   "name": "Cyan Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#6"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:7",
+   "name": "Light Gray Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#7"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:8",
+   "name": "Gray Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#8"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:9",
+   "name": "Pink Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#9"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:10",
+   "name": "Lime Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#10"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:11",
+   "name": "Yellow Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#11"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:12",
+   "name": "Light Blue Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#12"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:13",
+   "name": "Magenta Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#13"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:14",
+   "name": "Orange Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#14"
+  },
+  {
+   "label": "Railcraft:post.metal.platform:15",
+   "name": "White Metal Platform",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/post.metal.painted.png#15"
+  }
+ ]
+}

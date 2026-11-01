@@ -1,0 +1,101 @@
+{
+ "title": "Railcraft: strengthened glass (16 colors, runtime tint not shown)",
+ "entries": [
+  {
+   "label": "Railcraft:glass:0",
+   "name": "White Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:1",
+   "name": "Orange Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:2",
+   "name": "Magenta Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:3",
+   "name": "Light Blue Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:4",
+   "name": "Yellow Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:5",
+   "name": "Lime Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:6",
+   "name": "Pink Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:7",
+   "name": "Gray Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:8",
+   "name": "Light Gray Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:9",
+   "name": "Cyan Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:10",
+   "name": "Purple Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:11",
+   "name": "Blue Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:12",
+   "name": "Brown Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:13",
+   "name": "Green Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:14",
+   "name": "Red Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  },
+  {
+   "label": "Railcraft:glass:15",
+   "name": "Black Strengthened Glass",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/glass.png#0",
+   "note": "tinted at runtime; renders untinted"
+  }
+ ]
+}

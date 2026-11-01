@@ -1,0 +1,65 @@
+{
+ "title": "GalaxySpace: decorative metal blocks",
+ "entries": [
+  {
+   "label": "GalaxySpace:metalsblock:0",
+   "name": "Decorative Lead Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_lead_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_lead_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:1",
+   "name": "Decorative Adamantite Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_adm_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_adm_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:2",
+   "name": "Decorative Cobalt Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_cbt_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_cbt_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:3",
+   "name": "Decorative Magnesium Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_mgn_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_mgn_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:4",
+   "name": "Decorative Mithril Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_mtr_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_mtr_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:5",
+   "name": "Decorative Nickel Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_nkl_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_nkl_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:6",
+   "name": "Decorative Oriharukon Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_orh_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_orh_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:7",
+   "name": "Decorative Platinum Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_plat_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_plat_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:8",
+   "name": "Decorative Tungsten Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_wrm_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_wrm_1.png"
+  },
+  {
+   "label": "GalaxySpace:metalsblock:9",
+   "name": "Decorative Copper Block",
+   "top": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_copper_2.png",
+   "side": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/overworld/blocksmetals/deco_copper_1.png"
+  }
+ ]
+}

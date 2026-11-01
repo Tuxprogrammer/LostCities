@@ -1,0 +1,55 @@
+{
+ "title": "Railcraft: multiblock parts (tile entities) and misc",
+ "entries": [
+  {
+   "label": "Railcraft:machine.alpha:7",
+   "name": "Coke Oven Brick (TE)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/coke.oven.png#0"
+  },
+  {
+   "label": "Railcraft:machine.alpha:12",
+   "name": "Advanced Coke Oven Brick (TE)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/blast.furnace.png#0"
+  },
+  {
+   "label": "Railcraft:machine.alpha:14",
+   "name": "Water Tank Siding (TE)",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.water.png#0",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.water.png#1"
+  },
+  {
+   "label": "Railcraft:machine.beta:0",
+   "name": "Iron Tank Wall (TE)",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.iron.wall.png#0",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.iron.wall.png#1"
+  },
+  {
+   "label": "Railcraft:machine.beta:1",
+   "name": "Iron Tank Gauge (TE)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.iron.gauge.png#0"
+  },
+  {
+   "label": "Railcraft:machine.beta:13",
+   "name": "Steel Tank Wall (TE)",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.steel.wall.png#0",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.steel.wall.png#1"
+  },
+  {
+   "label": "Railcraft:machine.beta:14",
+   "name": "Steel Tank Gauge (TE)",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/tank.steel.gauge.png#0"
+  },
+  {
+   "label": "Railcraft:frame:0",
+   "name": "Wire Support Frame",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/frame.png#0",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/frame.png#1"
+  },
+  {
+   "label": "Railcraft:anvil:0",
+   "name": "Steel Anvil",
+   "top": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/anvil_top_damaged_0.png",
+   "side": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/anvil_base.png"
+  }
+ ]
+}

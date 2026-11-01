@@ -1,0 +1,72 @@
+{
+ "title": "ProjectRed Exploration: decorative stones and gem/metal blocks (walls use the same faces)",
+ "entries": [
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:0",
+   "name": "Marble",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/marble.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:1",
+   "name": "Marble Brick",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/marble_brick.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:2",
+   "name": "Basalt Cobblestone",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/basalt_cobble.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:3",
+   "name": "Basalt",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/basalt.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:4",
+   "name": "Basalt Brick",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/basalt_brick.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:5",
+   "name": "Block of Ruby",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/ruby_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:6",
+   "name": "Block of Sapphire",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/sapphire_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:7",
+   "name": "Block of Peridot",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/peridot_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:8",
+   "name": "Block of Copper",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/copper_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:9",
+   "name": "Block of Tin",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/tin_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:10",
+   "name": "Block of Silver",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/silver_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.stone:11",
+   "name": "Block of Electrotine",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/electrotine_block.png"
+  },
+  {
+   "label": "ProjRed|Exploration:projectred.exploration.barrel:0",
+   "name": "Item Barrel",
+   "top": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/barrel/top.png",
+   "side": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/world/barrel/side.png",
+   "note": "TE"
+  }
+ ]
+}

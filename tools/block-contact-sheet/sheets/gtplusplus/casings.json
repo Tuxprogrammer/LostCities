@@ -1,0 +1,110 @@
+{
+ "title": "GT++: casings plausibly up to EV (tiers from material, unverified)",
+ "entries": [
+  {
+   "label": "miscutils:miscutils.blockcasings:0",
+   "name": "Centrifuge Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_CENTRIFUGE.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:1",
+   "name": "Structural Coke Oven Casing (Tantalloy-61)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_TANTALLOY61.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:2",
+   "name": "Heat Resistant Coke Oven Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_BRONZE.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:3",
+   "name": "Heat Proof Coke Oven Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_STEEL.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:5",
+   "name": "Electrolyzer Casing (Potin)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_POTIN.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:6",
+   "name": "Wire Factory Casing (Maraging Steel)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_MARAGINGSTEEL.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:7",
+   "name": "Maceration Stack Casing (Tumbaga)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_TUMBAGA.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:10",
+   "name": "Iron Plated Bricks",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/machine_top.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:11",
+   "name": "Multitank Exterior Casing (Grisium)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_GRISIUM.png"
+  },
+  {
+   "label": "miscutils:miscutils.blockcasings:15",
+   "name": "Blast Smelter Casing (Zirconium Carbide)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_ZIRCONIUM_CARBIDE.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:0",
+   "name": "Thermal Processing Casing (Red Steel)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_RED_STEEL.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:4",
+   "name": "Wash Plant Casing (Grisium)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/MACHINE_CASING_STABLE_GRISIUM.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:5",
+   "name": "Industrial Sieve Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/INDUSTRIAL_SIEVE_CASING.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:6",
+   "name": "Large Sieve Grate",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/LARGE_SIEVE_GRATE.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:7",
+   "name": "Vanadium Redox Power Cell (EV)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/CASING_REDOX_EV.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:8",
+   "name": "Sub-Station External Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/SUB_STATION_EXTERNAL_CASING.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:12",
+   "name": "Bulk Production Frame",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/machine_top.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:13",
+   "name": "Cutting Factory Frame",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/CUTTING_FACTORY_FRAME.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockcasings.2:15",
+   "name": "Sterile Farm Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/TileEntities/sterileCasing.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockspecialcasings.2:0",
+   "name": "Strong Bronze Machine Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_BRONZEPLATEDBRICKS.png"
+  },
+  {
+   "label": "miscutils:gtplusplus.blockspecialcasings.2:1",
+   "name": "Sturdy Aluminium Machine Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FROST_PROOF.png"
+  }
+ ]
+}

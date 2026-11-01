@@ -1,0 +1,140 @@
+{
+ "title": "GregTech: glass (gt.blockglass1, gt.blocktintedglass)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockglass1:0",
+   "name": "Chemical Grade Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_PH_RESISTANT.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:1",
+   "name": "Electron-Permeable Neutronium Coated Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/NEUTRONIUM_COATED_UV_RESISTANT_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:2",
+   "name": "Omni-Purpose Infinity Fused Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/OMNI_PURPOSE_INFINITY_FUSED_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:3",
+   "name": "Non-Photonic Matter Exclusion Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_QUARK_CONTAINMENT.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:4",
+   "name": "Hawking Radiation Realignment Focus",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/HAWKING_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:5",
+   "name": "Nanite Shielding Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/NANITE_SHIELDING_FRAME.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:6",
+   "name": "Chamber Grate",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/SPINMATRON_GRATE.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:7",
+   "name": "Exo-Foundry Containment Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/EXOFOUNDRY_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:8",
+   "name": "Nanochip Complex Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/NANOCHIP_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:9",
+   "name": "Electromagnetic Waveguide",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BEC_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockglass1:10",
+   "name": "Reinforced Glass",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/REINFORCED_GLASS.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:0",
+   "name": "Tinted Industrial Glass (White)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_WHITE.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:1",
+   "name": "Tinted Industrial Glass (Light Gray)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_LIGHT_GRAY.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:2",
+   "name": "Tinted Industrial Glass (Gray)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_GRAY.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:3",
+   "name": "Tinted Industrial Glass (Black)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_BLACK.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:4",
+   "name": "Tinted Industrial Glass (Brown)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_BROWN.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:5",
+   "name": "Tinted Industrial Glass (Red)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_RED.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:6",
+   "name": "Tinted Industrial Glass (Orange)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_ORANGE.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:7",
+   "name": "Tinted Industrial Glass (Yellow)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_YELLOW.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:8",
+   "name": "Tinted Industrial Glass (Lime)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_LIME.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:9",
+   "name": "Tinted Industrial Glass (Green)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_GREEN.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:10",
+   "name": "Tinted Industrial Glass (Cyan)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_CYAN.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:11",
+   "name": "Tinted Industrial Glass (Light Blue)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_LIGHT_BLUE.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:12",
+   "name": "Tinted Industrial Glass (Blue)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_BLUE.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:13",
+   "name": "Tinted Industrial Glass (Purple)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_PURPLE.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:14",
+   "name": "Tinted Industrial Glass (Magenta)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_MAGENTA.png"
+  },
+  {
+   "label": "gregtech:gt.blocktintedglass:15",
+   "name": "Tinted Industrial Glass (Pink)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GLASS_TINTED_INDUSTRIAL_PINK.png"
+  }
+ ]
+}
