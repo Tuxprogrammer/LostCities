@@ -1,19 +1,19 @@
 # World spawn
 
-GTNH 2.9.0 has no spawn handling of its own: no mod in the pack listens to Forge's spawn-position event, and RWG2 and classic RWG give vanilla nothing to search for. Vanilla 1.7.10 therefore picks the spawn point by a random walk from (0, 0), judged by Biomes O' Plenty's overworld provider, which the pack installs for every world type. Upstream Lost Cities' spawn options (spawn in a city, a sphere, a building, or outside buildings) hook the same Forge event that 1.7.10 has, so they can be ported without fighting anything in the pack.
+GTNH 2.9.0 has no spawn handling of its own: no mod in the pack listens to Forge's spawn-position event, and RWG2 and classic RWG give vanilla nothing to search for. Vanilla 1.7.10 therefore picks the spawn point by a random walk from (0, 0), judged by Biomes O' Plenty's overworld provider, which the pack installs for every world type. Upstream Lost Cities' spawn options (spawn in a city, a sphere, a building, or outside buildings) hook the same Forge event that 1.7.10 has, so they are ported without fighting anything in the pack.
 
-Status: *Proposed* (spike S3). Settles open question Q9 once the owner accepts it.
+Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D21). Settles open question Q9.
 
-## Proposed answer to Q9
+## Answer to Q9
 
-**The spawn options survive, off by default.** Confidence: **high** for how the pack spawns (read from source, the shipped jars and config), **medium** for the design until a headless world-creation scenario runs it.
+**The spawn options survive, off by default.** How the pack spawns is read from source, the shipped jars and config; a headless world-creation scenario proves the design.
 
-1. **Default: leave the pack's spawn alone.** Upstream's default overworld profile sets no spawn option, so upstream itself keeps vanilla spawn there ([ForgeEventHandlers.java#L226-L233](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L226-L233)). Cities near spawn come from the city layout (upstream's `citySpawnDistance` and `citySpawnMultiplier` settings), not from moving the spawn.
+1. **Default: leave the pack's spawn alone.** Upstream's default overworld profile sets no spawn option, so upstream itself keeps vanilla spawn there ([ForgeEventHandlers.java#L226-L233](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L226-L233)). Cities near spawn come from the city layout (upstream's `citySpawnDistance` and `citySpawnMultiplier` settings), not from moving the spawn. The GTNH profile tunes `citySpawnDistance` so a city is likely a short walk from spawn; city frequency and size near spawn are on the [beta balance list](../beta-balance-list.md).
 2. **Port the options as profile settings**: `spawnBiome`, `spawnCity`, `spawnSphere` (`<in>`, `<out>` or a predefined sphere), `spawnNotInBuilding`, `forceSpawnInBuilding`, `forceSpawnBuildings`, `forceSpawnParts`, and the search limits ([LostCityProfile.java#L234-L243](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/config/LostCityProfile.java#L234-L243)).
 3. **Hook: `WorldEvent.CreateSpawnPosition`** on the Forge event bus, overworld only. When an option needs a check, the handler picks the spot, writes it to the world info and cancels the event, as upstream does ([#L237-L249](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L237-L249)). The same event is upstream's "this is a new world" signal ([#L134-L141](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L134-L141)), and in 1.7.10 it also fires only for new worlds.
 4. **Search the layout, not the world.** Upstream reads block states while it searches, which generates chunks ([#L400-L422](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L400-L422)). Here the spiral search asks the pure layout which chunks are city, sphere or building chunks, and takes the standing height from the plan (street level, or the floor height of the building's lowest part). No chunk is generated before the spawn is chosen; the server's usual 25×25-chunk spawn pregeneration then builds the area.
-5. **Never fail world creation.** Upstream throws a `RuntimeException` when the search runs out of attempts ([#L299-L368](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L299-L368)). Here the handler logs one warning and leaves the event uncancelled, so vanilla's spawn search runs as it would without this mod. (A bug-register candidate for S1.)
-6. **Spawn fuzz.** Forge moves every bedless spawn by up to ±10 blocks and onto the highest solid block, which puts a "spawn in a building" player on its roof. When `forceSpawnInBuilding` or `forceSpawnParts` is set, the mod places a player who has never joined (and a bedless respawn, if the owner wants it) at the exact chosen spot, as upstream's first-join handler does ([#L77-L97](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L77-L97)). The other options tolerate fuzz.
+5. **Never fail world creation.** Upstream throws a `RuntimeException` when the search runs out of attempts ([#L299-L368](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L299-L368)). Here the handler logs one warning and leaves the event uncancelled, so vanilla's spawn search runs as it would without this mod. (Fixes [CORE-14](../../original-spec/BUGS.md).)
+6. **Spawn fuzz.** Forge moves every bedless spawn by up to ±10 blocks and onto the highest solid block, which puts a "spawn in a building" player on its roof. When `forceSpawnInBuilding` or `forceSpawnParts` is set, the mod places a player who has never joined at the exact chosen spot, as upstream's first-join handler does ([#L77-L97](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/setup/ForgeEventHandlers.java#L77-L97)). Bedless respawns are not moved: they take Forge's fuzzed spawn. The other options tolerate fuzz.
 
 ## How the pack spawns a new world
 
@@ -44,16 +44,17 @@ Status: *Proposed* (spike S3). Settles open question Q9 once the owner accepts i
 | Search space | Upstream's spiral from (0, 0), in chunks, with `spawnCheckRadius`, `spawnRadiusIncrease`, `spawnCheckAttempts` | Faithful; the layout answers each chunk in microseconds |
 | Standing position | From the plan: street level for street chunks; for a building, the floor of the chosen part, at the chunk's center column, or the first free column on that floor | No chunk generation inside the handler; deterministic |
 | Failure | Log once, do not cancel | Vanilla spawn instead of a crashed world creation (upstream bug candidate) |
-| Fuzz | Exact placement on first join (and optionally bedless respawn) only for the building options | Forge's fuzz puts players on roofs; changing `config/forge.cfg` is the server owner's choice, recorded in [PACK-CHANGES.md](../../PACK-CHANGES.md) if adopted |
+| Fuzz | Exact placement on first join only, and only for the building options | Forge's fuzz puts players on roofs; changing `config/forge.cfg` is the server owner's choice, recorded in [PACK-CHANGES.md](../../PACK-CHANGES.md) if adopted |
 | Interaction with BoP's provider | None needed | Cancelling the event skips vanilla's walk, so BoP's sand-or-stone rule never applies |
 | Bed teleporter, Lost City dimension spawn | Not ported | [0003](../../design/0003-world-presence.md) |
 
-## Questions for the owner
+## Decisions
 
-| Question | Recommendation | Trade-off |
-|---|---|---|
-| Should the default GTNH profile spawn players in or near a city? | No: keep the pack's spawn, and tune `citySpawnDistance` so a city is likely within a short walk. | Players see the pack's normal start (and GTNH's early game stays as balanced), against a less immediate first impression of the mod. Spawning inside a city also hands a new player a base and loot on day one. |
-| Should `forceSpawnInBuilding` also apply to bedless respawns, not only to the first join? | Only the first join. | A respawn in the same building is convenient but makes the building a free, permanent respawn point that ignores beds. |
+Recorded in the [decision log](../../design/decision-log.md) as D21:
+
+- **No city spawn by default.** The pack's normal spawn is kept, so players see the pack's usual start and GTNH's early game stays as balanced. `citySpawnDistance` is tuned so a city is likely a short walk away.
+- **Upstream's spawn options are ported**, off by default.
+- **`forceSpawnInBuilding` applies only to a player's first join**, not to bedless respawns, so a building never becomes a free, permanent respawn point that ignores beds.
 
 ## To check in game
 
