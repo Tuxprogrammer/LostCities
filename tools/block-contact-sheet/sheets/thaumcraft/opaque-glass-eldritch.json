@@ -1,0 +1,66 @@
+{
+ "title": "Thaumcraft: amber, warded glass, eldritch blocks",
+ "entries": [
+  {
+   "label": "Thaumcraft:blockCosmeticOpaque:0",
+   "name": "Amber Block",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberblock_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberblock.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticOpaque:1",
+   "name": "Amber Bricks",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberbrick.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticOpaque:2",
+   "name": "Warded Glass (single, CTM face 1)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/warded_glass_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockCosmeticOpaque:2 (plain)",
+   "name": "Warded Glass plain face",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/wardedglass.png"
+  },
+  {
+   "label": "Thaumcraft:blockEldritch:4",
+   "name": "Glowing Crusted Stone",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_i_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockEldritch:5",
+   "name": "Glyphed Stone",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/es_i_2.png"
+  },
+  {
+   "label": "Thaumcraft:blockEldritch:6",
+   "name": "(deco 1)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/deco_1.png"
+  },
+  {
+   "label": "Thaumcraft:blockEldritch:7",
+   "name": "Ancient Doorway",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/deco_3.png"
+  },
+  {
+   "label": "Thaumcraft:blockTaint:0",
+   "name": "Crusted Taint",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/taint_crust.png"
+  },
+  {
+   "label": "Thaumcraft:blockTaint:1",
+   "name": "Tainted Soil",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/taint_soil.png"
+  },
+  {
+   "label": "Thaumcraft:blockTaint:2",
+   "name": "Block of Flesh",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/fleshblock.png"
+  },
+  {
+   "label": "Thaumcraft:blockWarded",
+   "name": "Warded block (rune border)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/runeborder.png"
+  }
+ ]
+}

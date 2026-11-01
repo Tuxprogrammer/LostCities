@@ -1,0 +1,26 @@
+{
+ "title": "Tainted Magic: warpwood and shadowmetal",
+ "entries": [
+  {
+   "label": "TaintedMagic:BlockWarpwoodPlanks:0",
+   "name": "Warpwood Planks",
+   "all": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodPlanks.png"
+  },
+  {
+   "label": "TaintedMagic:BlockWarpwoodLog:0",
+   "name": "Warpwood Log",
+   "top": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodLog_top.png",
+   "side": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodLog_side.png"
+  },
+  {
+   "label": "TaintedMagic:BlockWarpwoodLeaves:0",
+   "name": "Warpwood Leaves",
+   "all": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodLeaves_opaque.png"
+  },
+  {
+   "label": "TaintedMagic:BlockShadowmetal:0",
+   "name": "Shadowmetal Block",
+   "all": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockShadowmetal.png"
+  }
+ ]
+}

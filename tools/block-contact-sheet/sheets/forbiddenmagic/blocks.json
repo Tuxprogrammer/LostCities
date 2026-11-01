@@ -1,0 +1,47 @@
+{
+ "title": "Forbidden Magic: tainted wood and stone",
+ "entries": [
+  {
+   "label": "ForbiddenMagic:TaintBlock:0",
+   "name": "Tainted Stone",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_stone_smooth.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintBlock:1",
+   "name": "Tainted Stone Bricks",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_stone_brick.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintPlank:0",
+   "name": "Tainted Planks",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_planks.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintLog:0",
+   "name": "Tainted Log",
+   "top": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_log_bottom.png",
+   "side": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_log_side.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintLeaves:0",
+   "name": "Tainted Leaves",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_leaves.png"
+  },
+  {
+   "label": "ForbiddenMagic:StarBlock:0",
+   "name": "Nether Star Block",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/starblock.png"
+  },
+  {
+   "label": "ForbiddenMagic:InkFlower:0",
+   "name": "Umbral Rose",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/flower_black.png"
+  },
+  {
+   "label": "ForbiddenMagic:UmbralBush:0",
+   "name": "Umbral Rose Bush",
+   "top": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/umbral_rose_top.png",
+   "side": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/umbral_rose_bottom.png"
+  }
+ ]
+}

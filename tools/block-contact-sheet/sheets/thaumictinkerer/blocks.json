@@ -1,0 +1,60 @@
+{
+ "title": "Thaumic Tinkerer: smokey quartz and paving",
+ "entries": [
+  {
+   "label": "ThaumicTinkerer:darkQuartz:0",
+   "name": "Block of Smokey Quartz",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz:1",
+   "name": "Chiseled Smokey Quartz",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/chiseledDarkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/chiseledDarkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz:2",
+   "name": "Pillar Smokey Quartz",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/pillarDarkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/pillarDarkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz (tex 2)",
+   "name": "Smokey Quartz face 2",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz2.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartzSlab:0",
+   "name": "Smokey Quartz Slab",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartzStairs:0",
+   "name": "Smokey Quartz Stairs",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:travelSlab:0",
+   "name": "Paving Slab of Travel",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_travel.png"
+  },
+  {
+   "label": "ThaumicTinkerer:travelStairs:0",
+   "name": "Paving Stair of Travel",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_travel.png"
+  },
+  {
+   "label": "ThaumicTinkerer:wardSlab:0",
+   "name": "Paving Slab of Warding",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_warding.png"
+  },
+  {
+   "label": "ThaumicTinkerer:platform",
+   "name": "Ethereal Platform",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/platform.png"
+  }
+ ]
+}

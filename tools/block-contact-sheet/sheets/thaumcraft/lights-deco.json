@@ -1,0 +1,55 @@
+{
+ "title": "Thaumcraft: lights, candles, loot, crystals (candles tinted in game)",
+ "entries": [
+  {
+   "label": "Thaumcraft:blockCandle:0-15",
+   "name": "Tallow Candle (white tex, dye-tinted)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/candle.png"
+  },
+  {
+   "label": "Thaumcraft:blockMetalDevice:7",
+   "name": "Arcane Lamp",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/lamp_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/lamp_side.png"
+  },
+  {
+   "label": "Thaumcraft:blockAiry:1",
+   "name": "Nitor (flame sprite)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/animatedglow.png"
+  },
+  {
+   "label": "Thaumcraft:blockCrystal:0-6",
+   "name": "Crystal Cluster (tinted)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crystal.png"
+  },
+  {
+   "label": "Thaumcraft:blockLootUrn:0",
+   "name": "Old Urn",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/urn_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/urn_side_0.png"
+  },
+  {
+   "label": "Thaumcraft:blockLootUrn:2",
+   "name": "Old Urn (rare)",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/urn_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/urn_side_2.png"
+  },
+  {
+   "label": "Thaumcraft:blockLootCrate:0",
+   "name": "Abandoned Crate",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crate_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crate_side_0.png"
+  },
+  {
+   "label": "Thaumcraft:blockLootCrate:2",
+   "name": "Abandoned Crate (rare)",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crate_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/crate_side_2.png"
+  },
+  {
+   "label": "Thaumcraft:blockWoodenDevice:8",
+   "name": "Banner (cloth via model)",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/woodplain.png"
+  }
+ ]
+}

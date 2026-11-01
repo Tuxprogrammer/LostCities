@@ -1,0 +1,106 @@
+{
+ "title": "Et Futurum Requiem: earth",
+ "entries": [
+  {
+   "label": "etfuturum:coarse_dirt:0",
+   "name": "Coarse Dirt",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/coarse_dirt.png"
+  },
+  {
+   "label": "etfuturum:grass_path:0",
+   "name": "Dirt Path",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/dirt_path_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/dirt_path_side.png"
+  },
+  {
+   "label": "etfuturum:old_gravel:0",
+   "name": "Old Gravel",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/old_gravel.png"
+  },
+  {
+   "label": "etfuturum:soul_soil:0",
+   "name": "Soul Soil",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/soul_soil.png"
+  },
+  {
+   "label": "etfuturum:nether_wart:0",
+   "name": "Nether Wart Block",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/nether_wart_block.png"
+  },
+  {
+   "label": "etfuturum:brown_mushroom:0",
+   "name": "Brown Mushroom Block (silk-touched)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/mushroom_block_skin_brown.png"
+  },
+  {
+   "label": "etfuturum:red_mushroom:0",
+   "name": "Red Mushroom Block (silk-touched)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/mushroom_block_skin_red.png"
+  },
+  {
+   "label": "etfuturum:cornflower:0",
+   "name": "Cornflower",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cornflower.png"
+  },
+  {
+   "label": "etfuturum:lily_of_the_valley:0",
+   "name": "Lily of the Valley",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/lily_of_the_valley.png"
+  },
+  {
+   "label": "etfuturum:rose:0",
+   "name": "Rose",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/flower_rose.png"
+  },
+  {
+   "label": "etfuturum:wither_rose:0",
+   "name": "Wither Rose",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/wither_rose.png"
+  },
+  {
+   "label": "etfuturum:sweet_berry_bush:3",
+   "name": "Sweet Berry Bush",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/sweet_berry_bush_stage3.png"
+  },
+  {
+   "label": "etfuturum:pink_petals:0",
+   "name": "Pink Petals",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/pink_petals.png"
+  },
+  {
+   "label": "etfuturum:glow_lichen:0",
+   "name": "Glow Lichen",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/glow_lichen.png"
+  },
+  {
+   "label": "etfuturum:cave_vine_plant:0",
+   "name": "Cave Vines",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cave_vines_plant_lit.png"
+  },
+  {
+   "label": "etfuturum:chorus_plant:0",
+   "name": "Chorus Plant",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chorus_plant.png"
+  },
+  {
+   "label": "etfuturum:chorus_flower:0",
+   "name": "Chorus Flower",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chorus_flower.png"
+  },
+  {
+   "label": "etfuturum:amethyst_cluster_1:0",
+   "name": "Small/Medium Amethyst Bud",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/medium_amethyst_bud.png"
+  },
+  {
+   "label": "etfuturum:amethyst_cluster_2:0",
+   "name": "Large Bud/Amethyst Cluster",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/amethyst_cluster.png"
+  },
+  {
+   "label": "etfuturum:beetroots:3",
+   "name": "Beetroots",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/beetroots_stage3.png"
+  }
+ ]
+}

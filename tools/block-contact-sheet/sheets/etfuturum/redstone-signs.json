@@ -1,0 +1,485 @@
+{
+ "title": "Et Futurum Requiem: redstone-signs",
+ "entries": [
+  {
+   "label": "etfuturum:button_spruce:0",
+   "name": "Spruce Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "etfuturum:pressure_plate_spruce:0",
+   "name": "Spruce Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "etfuturum:sign_spruce:0-15",
+   "name": "Spruce Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "etfuturum:wall_sign_spruce:2-5",
+   "name": "Spruce Wall Sign",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "etfuturum:button_birch:0",
+   "name": "Birch Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "etfuturum:pressure_plate_birch:0",
+   "name": "Birch Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "etfuturum:sign_birch:0-15",
+   "name": "Birch Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "etfuturum:wall_sign_birch:2-5",
+   "name": "Birch Wall Sign",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "etfuturum:button_jungle:0",
+   "name": "Jungle Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "etfuturum:pressure_plate_jungle:0",
+   "name": "Jungle Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "etfuturum:sign_jungle:0-15",
+   "name": "Jungle Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "etfuturum:wall_sign_jungle:2-5",
+   "name": "Jungle Wall Sign",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "etfuturum:button_acacia:0",
+   "name": "Acacia Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "etfuturum:pressure_plate_acacia:0",
+   "name": "Acacia Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "etfuturum:sign_acacia:0-15",
+   "name": "Acacia Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "etfuturum:wall_sign_acacia:2-5",
+   "name": "Acacia Wall Sign",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "etfuturum:button_dark_oak:0",
+   "name": "Dark Oak Button",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "etfuturum:pressure_plate_dark_oak:0",
+   "name": "Dark Oak Pressure Plate",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "etfuturum:sign_dark_oak:0-15",
+   "name": "Dark Oak Sign (standing)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "etfuturum:wall_sign_dark_oak:2-5",
+   "name": "Dark Oak Wall Sign",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "etfuturum:cherry_button:0",
+   "name": "Cherry Button",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:cherry_pressure_plate:0",
+   "name": "Cherry Pressure Plate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:cherry_sign:0-15",
+   "name": "Cherry Sign",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:cherry_wall_sign:2-5",
+   "name": "Cherry Wall Sign",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:bop_sacredoak_button:0",
+   "name": "Sacredoak (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_sacredoak.png"
+  },
+  {
+   "label": "etfuturum:bop_sacredoak_pressure_plate:0",
+   "name": "Sacredoak (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_sacredoak.png"
+  },
+  {
+   "label": "etfuturum:bop_sacredoak_sign:0-15",
+   "name": "Sacredoak (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_sacredoak.png"
+  },
+  {
+   "label": "etfuturum:bop_sacredoak_wall_sign:2-5",
+   "name": "Sacredoak (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_sacredoak.png"
+  },
+  {
+   "label": "etfuturum:bop_cherry_button:0",
+   "name": "Cherry (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_cherry.png"
+  },
+  {
+   "label": "etfuturum:bop_cherry_pressure_plate:0",
+   "name": "Cherry (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_cherry.png"
+  },
+  {
+   "label": "etfuturum:bop_cherry_sign:0-15",
+   "name": "Cherry (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_cherry.png"
+  },
+  {
+   "label": "etfuturum:bop_cherry_wall_sign:2-5",
+   "name": "Cherry (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_cherry.png"
+  },
+  {
+   "label": "etfuturum:bop_dark_button:0",
+   "name": "Dark (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_dark.png"
+  },
+  {
+   "label": "etfuturum:bop_dark_pressure_plate:0",
+   "name": "Dark (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_dark.png"
+  },
+  {
+   "label": "etfuturum:bop_dark_sign:0-15",
+   "name": "Dark (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_dark.png"
+  },
+  {
+   "label": "etfuturum:bop_dark_wall_sign:2-5",
+   "name": "Dark (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_dark.png"
+  },
+  {
+   "label": "etfuturum:bop_fir_button:0",
+   "name": "Fir (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_fir.png"
+  },
+  {
+   "label": "etfuturum:bop_fir_pressure_plate:0",
+   "name": "Fir (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_fir.png"
+  },
+  {
+   "label": "etfuturum:bop_fir_sign:0-15",
+   "name": "Fir (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_fir.png"
+  },
+  {
+   "label": "etfuturum:bop_fir_wall_sign:2-5",
+   "name": "Fir (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_fir.png"
+  },
+  {
+   "label": "etfuturum:bop_ethereal_button:0",
+   "name": "Ethereal (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_ethereal.png"
+  },
+  {
+   "label": "etfuturum:bop_ethereal_pressure_plate:0",
+   "name": "Ethereal (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_ethereal.png"
+  },
+  {
+   "label": "etfuturum:bop_ethereal_sign:0-15",
+   "name": "Ethereal (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_ethereal.png"
+  },
+  {
+   "label": "etfuturum:bop_ethereal_wall_sign:2-5",
+   "name": "Ethereal (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_ethereal.png"
+  },
+  {
+   "label": "etfuturum:bop_magic_button:0",
+   "name": "Magic (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_magic.png"
+  },
+  {
+   "label": "etfuturum:bop_magic_pressure_plate:0",
+   "name": "Magic (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_magic.png"
+  },
+  {
+   "label": "etfuturum:bop_magic_sign:0-15",
+   "name": "Magic (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_magic.png"
+  },
+  {
+   "label": "etfuturum:bop_magic_wall_sign:2-5",
+   "name": "Magic (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_magic.png"
+  },
+  {
+   "label": "etfuturum:bop_mangrove_button:0",
+   "name": "Mangrove (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mangrove.png"
+  },
+  {
+   "label": "etfuturum:bop_mangrove_pressure_plate:0",
+   "name": "Mangrove (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mangrove.png"
+  },
+  {
+   "label": "etfuturum:bop_mangrove_sign:0-15",
+   "name": "Mangrove (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mangrove.png"
+  },
+  {
+   "label": "etfuturum:bop_mangrove_wall_sign:2-5",
+   "name": "Mangrove (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mangrove.png"
+  },
+  {
+   "label": "etfuturum:bop_palm_button:0",
+   "name": "Palm (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_palm.png"
+  },
+  {
+   "label": "etfuturum:bop_palm_pressure_plate:0",
+   "name": "Palm (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_palm.png"
+  },
+  {
+   "label": "etfuturum:bop_palm_sign:0-15",
+   "name": "Palm (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_palm.png"
+  },
+  {
+   "label": "etfuturum:bop_palm_wall_sign:2-5",
+   "name": "Palm (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_palm.png"
+  },
+  {
+   "label": "etfuturum:bop_redwood_button:0",
+   "name": "Redwood (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_redwood.png"
+  },
+  {
+   "label": "etfuturum:bop_redwood_pressure_plate:0",
+   "name": "Redwood (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_redwood.png"
+  },
+  {
+   "label": "etfuturum:bop_redwood_sign:0-15",
+   "name": "Redwood (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_redwood.png"
+  },
+  {
+   "label": "etfuturum:bop_redwood_wall_sign:2-5",
+   "name": "Redwood (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_redwood.png"
+  },
+  {
+   "label": "etfuturum:bop_willow_button:0",
+   "name": "Willow (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_willow.png"
+  },
+  {
+   "label": "etfuturum:bop_willow_pressure_plate:0",
+   "name": "Willow (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_willow.png"
+  },
+  {
+   "label": "etfuturum:bop_willow_sign:0-15",
+   "name": "Willow (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_willow.png"
+  },
+  {
+   "label": "etfuturum:bop_willow_wall_sign:2-5",
+   "name": "Willow (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_willow.png"
+  },
+  {
+   "label": "etfuturum:bop_bamboo_button:0",
+   "name": "Bamboo (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_bamboo.png"
+  },
+  {
+   "label": "etfuturum:bop_bamboo_pressure_plate:0",
+   "name": "Bamboo (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_bamboo.png"
+  },
+  {
+   "label": "etfuturum:bop_bamboo_sign:0-15",
+   "name": "Bamboo (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_bamboo.png"
+  },
+  {
+   "label": "etfuturum:bop_bamboo_wall_sign:2-5",
+   "name": "Bamboo (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_bamboo.png"
+  },
+  {
+   "label": "etfuturum:bop_pine_button:0",
+   "name": "Pine (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_pine.png"
+  },
+  {
+   "label": "etfuturum:bop_pine_pressure_plate:0",
+   "name": "Pine (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_pine.png"
+  },
+  {
+   "label": "etfuturum:bop_pine_sign:0-15",
+   "name": "Pine (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_pine.png"
+  },
+  {
+   "label": "etfuturum:bop_pine_wall_sign:2-5",
+   "name": "Pine (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_pine.png"
+  },
+  {
+   "label": "etfuturum:bop_hellbark_button:0",
+   "name": "Hellbark (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_hell_bark.png"
+  },
+  {
+   "label": "etfuturum:bop_hellbark_pressure_plate:0",
+   "name": "Hellbark (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_hell_bark.png"
+  },
+  {
+   "label": "etfuturum:bop_hellbark_sign:0-15",
+   "name": "Hellbark (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_hell_bark.png"
+  },
+  {
+   "label": "etfuturum:bop_hellbark_wall_sign:2-5",
+   "name": "Hellbark (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_hell_bark.png"
+  },
+  {
+   "label": "etfuturum:bop_jacaranda_button:0",
+   "name": "Jacaranda (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_jacaranda.png"
+  },
+  {
+   "label": "etfuturum:bop_jacaranda_pressure_plate:0",
+   "name": "Jacaranda (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_jacaranda.png"
+  },
+  {
+   "label": "etfuturum:bop_jacaranda_sign:0-15",
+   "name": "Jacaranda (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_jacaranda.png"
+  },
+  {
+   "label": "etfuturum:bop_jacaranda_wall_sign:2-5",
+   "name": "Jacaranda (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_jacaranda.png"
+  },
+  {
+   "label": "etfuturum:bop_mahogany_button:0",
+   "name": "Mahogany (BoP) Button",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mahogany.png"
+  },
+  {
+   "label": "etfuturum:bop_mahogany_pressure_plate:0",
+   "name": "Mahogany (BoP) Pressure Plate",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mahogany.png"
+  },
+  {
+   "label": "etfuturum:bop_mahogany_sign:0-15",
+   "name": "Mahogany (BoP) Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mahogany.png"
+  },
+  {
+   "label": "etfuturum:bop_mahogany_wall_sign:2-5",
+   "name": "Mahogany (BoP) Wall Sign",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mahogany.png"
+  },
+  {
+   "label": "etfuturum:witchery_rowan_button:0",
+   "name": "Rowan (Witchery) Button",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_rowan.png"
+  },
+  {
+   "label": "etfuturum:witchery_rowan_pressure_plate:0",
+   "name": "Rowan (Witchery) Pressure Plate",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_rowan.png"
+  },
+  {
+   "label": "etfuturum:witchery_rowan_sign:0-15",
+   "name": "Rowan (Witchery) Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_rowan.png"
+  },
+  {
+   "label": "etfuturum:witchery_rowan_wall_sign:2-5",
+   "name": "Rowan (Witchery) Wall Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_rowan.png"
+  },
+  {
+   "label": "etfuturum:witchery_alder_button:0",
+   "name": "Alder (Witchery) Button",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_alder.png"
+  },
+  {
+   "label": "etfuturum:witchery_alder_pressure_plate:0",
+   "name": "Alder (Witchery) Pressure Plate",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_alder.png"
+  },
+  {
+   "label": "etfuturum:witchery_alder_sign:0-15",
+   "name": "Alder (Witchery) Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_alder.png"
+  },
+  {
+   "label": "etfuturum:witchery_alder_wall_sign:2-5",
+   "name": "Alder (Witchery) Wall Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_alder.png"
+  },
+  {
+   "label": "etfuturum:witchery_hawthorn_button:0",
+   "name": "Hawthorn (Witchery) Button",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_hawthorn.png"
+  },
+  {
+   "label": "etfuturum:witchery_hawthorn_pressure_plate:0",
+   "name": "Hawthorn (Witchery) Pressure Plate",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_hawthorn.png"
+  },
+  {
+   "label": "etfuturum:witchery_hawthorn_sign:0-15",
+   "name": "Hawthorn (Witchery) Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_hawthorn.png"
+  },
+  {
+   "label": "etfuturum:witchery_hawthorn_wall_sign:2-5",
+   "name": "Hawthorn (Witchery) Wall Sign",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_hawthorn.png"
+  }
+ ]
+}

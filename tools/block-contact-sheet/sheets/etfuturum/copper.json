@@ -1,0 +1,245 @@
+{
+ "title": "Et Futurum Requiem: copper",
+ "entries": [
+  {
+   "label": "etfuturum:copper_block:0",
+   "name": "Block of Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_block.png"
+  },
+  {
+   "label": "etfuturum:copper_block:1",
+   "name": "Exposed Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:2",
+   "name": "Weathered Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:3",
+   "name": "Oxidized Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:4",
+   "name": "Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:5",
+   "name": "Exposed Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:6",
+   "name": "Weathered Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:7",
+   "name": "Oxidized Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:8",
+   "name": "Waxed Block of Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_block.png"
+  },
+  {
+   "label": "etfuturum:copper_block:9",
+   "name": "Waxed Exposed Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:10",
+   "name": "Waxed Weathered Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:11",
+   "name": "Waxed Oxidized Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:12",
+   "name": "Waxed Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:13",
+   "name": "Waxed Exposed Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:14",
+   "name": "Waxed Weathered Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_block:15",
+   "name": "Waxed Oxidized Cut Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:0",
+   "name": "Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:1",
+   "name": "Exposed Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:2",
+   "name": "Weathered Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:3",
+   "name": "Oxidized Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:4",
+   "name": "Waxed Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:5",
+   "name": "Waxed Exposed Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:6",
+   "name": "Waxed Weathered Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:chiseled_copper:7",
+   "name": "Waxed Oxidized Chiseled Copper",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_chiseled_copper.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:0",
+   "name": "Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:1",
+   "name": "Exposed Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:2",
+   "name": "Weathered Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:3",
+   "name": "Oxidized Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:4",
+   "name": "Waxed Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:5",
+   "name": "Waxed Exposed Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:6",
+   "name": "Waxed Weathered Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_grate:7",
+   "name": "Waxed Oxidized Copper Grate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_grate.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:0",
+   "name": "Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:1",
+   "name": "Exposed Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:2",
+   "name": "Weathered Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:3",
+   "name": "Oxidized Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:4",
+   "name": "Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:5",
+   "name": "Exposed Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:6",
+   "name": "Weathered Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:7",
+   "name": "Oxidized Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:8",
+   "name": "Waxed Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:9",
+   "name": "Waxed Exposed Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:10",
+   "name": "Waxed Weathered Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:11",
+   "name": "Waxed Oxidized Copper Bulb",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_bulb.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:12",
+   "name": "Waxed Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:13",
+   "name": "Waxed Exposed Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:14",
+   "name": "Waxed Weathered Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_bulb_lit.png"
+  },
+  {
+   "label": "etfuturum:copper_bulb:15",
+   "name": "Waxed Oxidized Copper Bulb (lit)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_bulb_lit.png"
+  }
+ ]
+}

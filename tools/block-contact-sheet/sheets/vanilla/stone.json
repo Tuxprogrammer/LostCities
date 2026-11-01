@@ -1,0 +1,269 @@
+{
+ "title": "Minecraft 1.7.10: stone",
+ "entries": [
+  {
+   "label": "minecraft:stone:0",
+   "name": "Stone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png"
+  },
+  {
+   "label": "minecraft:cobblestone:0",
+   "name": "Cobblestone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "minecraft:mossy_cobblestone:0",
+   "name": "Moss Stone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone_mossy.png"
+  },
+  {
+   "label": "minecraft:stonebrick:0",
+   "name": "Stone Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "minecraft:stonebrick:1",
+   "name": "Mossy Stone Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_mossy.png"
+  },
+  {
+   "label": "minecraft:stonebrick:2",
+   "name": "Cracked Stone Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_cracked.png"
+  },
+  {
+   "label": "minecraft:stonebrick:3",
+   "name": "Chiseled Stone Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_carved.png"
+  },
+  {
+   "label": "minecraft:brick_block:0",
+   "name": "Bricks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "minecraft:sandstone:0",
+   "name": "Sandstone",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_normal.png"
+  },
+  {
+   "label": "minecraft:sandstone:1",
+   "name": "Chiseled Sandstone",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_carved.png"
+  },
+  {
+   "label": "minecraft:sandstone:2",
+   "name": "Smooth Sandstone",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_smooth.png"
+  },
+  {
+   "label": "minecraft:nether_brick:0",
+   "name": "Nether Brick",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "minecraft:quartz_block:0",
+   "name": "Block of Quartz",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_side.png"
+  },
+  {
+   "label": "minecraft:quartz_block:1",
+   "name": "Chiseled Quartz Block",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_chiseled_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_chiseled.png"
+  },
+  {
+   "label": "minecraft:quartz_block:2",
+   "name": "Pillar Quartz Block",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_lines_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_lines.png"
+  },
+  {
+   "label": "minecraft:obsidian:0",
+   "name": "Obsidian",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/obsidian.png"
+  },
+  {
+   "label": "minecraft:end_stone:0",
+   "name": "End Stone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/end_stone.png"
+  },
+  {
+   "label": "minecraft:netherrack:0",
+   "name": "Netherrack",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/netherrack.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:8",
+   "name": "Smooth Stone (double slab)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_top.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:9",
+   "name": "Smooth Sandstone (double slab)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:0",
+   "name": "Smooth Stone Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/stone_slab_side.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:1",
+   "name": "Sandstone Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_normal.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:2",
+   "name": "Wooden Double Slab (old)",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:3",
+   "name": "Cobblestone Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:4",
+   "name": "Brick Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/brick.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:5",
+   "name": "Stone Brick Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:6",
+   "name": "Nether Brick Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "minecraft:double_stone_slab:7",
+   "name": "Quartz Double Slab",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_side.png"
+  },
+  {
+   "label": "minecraft:hardened_clay:0",
+   "name": "Hardened Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/hardened_clay.png"
+  },
+  {
+   "label": "minecraft:clay:0",
+   "name": "Clay",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/clay.png"
+  },
+  {
+   "label": "minecraft:glowstone:0",
+   "name": "Glowstone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/glowstone.png"
+  },
+  {
+   "label": "minecraft:redstone_lamp:0",
+   "name": "Redstone Lamp (off)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_lamp_off.png"
+  },
+  {
+   "label": "minecraft:lit_redstone_lamp:0",
+   "name": "Redstone Lamp (lit)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_lamp_on.png"
+  },
+  {
+   "label": "minecraft:iron_block:0",
+   "name": "Block of Iron",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/iron_block.png"
+  },
+  {
+   "label": "minecraft:gold_block:0",
+   "name": "Block of Gold",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/gold_block.png"
+  },
+  {
+   "label": "minecraft:diamond_block:0",
+   "name": "Block of Diamond",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/diamond_block.png"
+  },
+  {
+   "label": "minecraft:emerald_block:0",
+   "name": "Block of Emerald",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/emerald_block.png"
+  },
+  {
+   "label": "minecraft:lapis_block:0",
+   "name": "Lapis Lazuli Block",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/lapis_block.png"
+  },
+  {
+   "label": "minecraft:redstone_block:0",
+   "name": "Block of Redstone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/redstone_block.png"
+  },
+  {
+   "label": "minecraft:coal_block:0",
+   "name": "Block of Coal",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/coal_block.png"
+  },
+  {
+   "label": "minecraft:snow:0",
+   "name": "Snow",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/snow.png"
+  },
+  {
+   "label": "minecraft:ice:0",
+   "name": "Ice",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/ice.png"
+  },
+  {
+   "label": "minecraft:packed_ice:0",
+   "name": "Packed Ice",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/ice_packed.png"
+  },
+  {
+   "label": "minecraft:hay_block:0",
+   "name": "Hay Bale",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/hay_block_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/hay_block_side.png"
+  },
+  {
+   "label": "minecraft:bookshelf:0",
+   "name": "Bookshelf",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/bookshelf.png"
+  },
+  {
+   "label": "minecraft:sponge:0",
+   "name": "Sponge",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sponge.png"
+  },
+  {
+   "label": "minecraft:pumpkin:0",
+   "name": "Pumpkin",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/pumpkin_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/pumpkin_side.png"
+  },
+  {
+   "label": "minecraft:lit_pumpkin:0",
+   "name": "Jack o'Lantern",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/pumpkin_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/pumpkin_face_on.png"
+  },
+  {
+   "label": "minecraft:melon_block:0",
+   "name": "Melon",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/melon_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/melon_side.png"
+  }
+ ]
+}

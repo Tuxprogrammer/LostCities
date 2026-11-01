@@ -1,0 +1,41 @@
+{
+ "title": "Ztones: single blocks",
+ "entries": [
+  {
+   "label": "Ztones:stoneTile:0",
+   "name": "Ztone Tile",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/stoneTile.png"
+  },
+  {
+   "label": "Ztones:cleanDirt:0",
+   "name": "Garden Soil",
+   "top": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/cleanDirt1.png",
+   "side": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/cleanDirt.png"
+  },
+  {
+   "label": "Ztones:booster:0",
+   "name": "Booster (flat)",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/booster.png"
+  },
+  {
+   "label": "Ztones:lampf:0",
+   "name": "Flat Lamp",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/lampf.png"
+  },
+  {
+   "label": "Ztones:lampt:0",
+   "name": "Flat Lamp (transparent)",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/lampt.png"
+  },
+  {
+   "label": "Ztones:lampb:0",
+   "name": "Flat Lamp (black)",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/lampb.png"
+  },
+  {
+   "label": "Ztones:auroraBlock:0",
+   "name": "Aurora",
+   "all": "Ztones-1.7.10-2.2.2.jar!assets/ztones/textures/blocks/aurora.png"
+  }
+ ]
+}

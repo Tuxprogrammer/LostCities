@@ -1,0 +1,96 @@
+{
+ "title": "Botania: storage, lamps, glass, panes, reed, thatch, petals",
+ "entries": [
+  {
+   "label": "Botania:storage:0",
+   "name": "Block of Manasteel",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/storage0.png"
+  },
+  {
+   "label": "Botania:storage:1",
+   "name": "Block of Terrasteel",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/storage1.png"
+  },
+  {
+   "label": "Botania:storage:2",
+   "name": "Block of Elementium",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/storage2.png"
+  },
+  {
+   "label": "Botania:storage:3",
+   "name": "Block of Mana Diamond",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/storage3.png"
+  },
+  {
+   "label": "Botania:storage:4",
+   "name": "Block of Dragonstone",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/storage4.png"
+  },
+  {
+   "label": "Botania:blazeBlock:0",
+   "name": "Blaze Lamp",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blazeBlock.png"
+  },
+  {
+   "label": "Botania:seaLamp:0",
+   "name": "Sea Lantern",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/seaLamp.png"
+  },
+  {
+   "label": "Botania:manaGlass:0",
+   "name": "Managlass",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/manaGlass.png"
+  },
+  {
+   "label": "Botania:elfGlass:0",
+   "name": "Alfglass (variant 0)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/elfGlass0.png"
+  },
+  {
+   "label": "Botania:elfGlass:0",
+   "name": "Alfglass (variant 2)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/elfGlass2.png"
+  },
+  {
+   "label": "Botania:bifrostPerm:0",
+   "name": "Bifrost Block",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/bifrost.png"
+  },
+  {
+   "label": "Botania:manaGlassPane:0",
+   "name": "Managlass Pane (edge tex)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/manaGlassPane.png"
+  },
+  {
+   "label": "Botania:elfGlassPane:0",
+   "name": "Alfglass Pane (edge tex)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/elfGlassPane.png"
+  },
+  {
+   "label": "Botania:bifrostPermPane:0",
+   "name": "Bifrost Pane (edge tex)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/bifrostPermPane.png"
+  },
+  {
+   "label": "Botania:unstableBlock:0",
+   "name": "Unstable Cube (untinted)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/unstableBlock.png"
+  },
+  {
+   "label": "Botania:reedBlock:0",
+   "name": "Reed Block",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/reedBlock1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/reedBlock0.png"
+  },
+  {
+   "label": "Botania:thatch:0",
+   "name": "Thatch",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/thatch.png"
+  },
+  {
+   "label": "Botania:petalBlock:0",
+   "name": "Petal Block (untinted)",
+   "all": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/petalBlock.png"
+  }
+ ]
+}

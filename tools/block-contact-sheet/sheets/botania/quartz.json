@@ -1,0 +1,131 @@
+{
+ "title": "Botania: decorative quartz (block, chiseled, pillar)",
+ "entries": [
+  {
+   "label": "Botania:quartzTypeDark:0",
+   "name": "Smokey Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockDarkQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockDarkQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeDark:1",
+   "name": "Chiseled Smokey",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledDarkQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledDarkQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeDark:2",
+   "name": "Pillar Smokey",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarDarkQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarDarkQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeMana:0",
+   "name": "Mana Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockManaQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockManaQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeMana:1",
+   "name": "Chiseled Mana",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledManaQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledManaQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeMana:2",
+   "name": "Pillar Mana",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarManaQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarManaQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeBlaze:0",
+   "name": "Blaze Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockBlazeQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockBlazeQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeBlaze:1",
+   "name": "Chiseled Blaze",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledBlazeQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledBlazeQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeBlaze:2",
+   "name": "Pillar Blaze",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarBlazeQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarBlazeQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeLavender:0",
+   "name": "Lavender Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockLavenderQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockLavenderQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeLavender:1",
+   "name": "Chiseled Lavender",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledLavenderQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledLavenderQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeLavender:2",
+   "name": "Pillar Lavender",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarLavenderQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarLavenderQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeRed:0",
+   "name": "Redquartz Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockRedQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockRedQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeRed:1",
+   "name": "Chiseled Redquartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledRedQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledRedQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeRed:2",
+   "name": "Pillar Redquartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarRedQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarRedQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeElf:0",
+   "name": "Elven Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockElfQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockElfQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeElf:1",
+   "name": "Chiseled Elven",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledElfQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledElfQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeElf:2",
+   "name": "Pillar Elven",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarElfQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarElfQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeSunny:0",
+   "name": "Sunny Quartz",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockSunnyQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/blockSunnyQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeSunny:1",
+   "name": "Chiseled Sunny",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledSunnyQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/chiseledSunnyQuartz0.png"
+  },
+  {
+   "label": "Botania:quartzTypeSunny:2",
+   "name": "Pillar Sunny",
+   "top": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarSunnyQuartz1.png",
+   "side": "Botania-1.13.42-GTNH.jar!assets/botania/textures/blocks/pillarSunnyQuartz0.png"
+  }
+ ]
+}

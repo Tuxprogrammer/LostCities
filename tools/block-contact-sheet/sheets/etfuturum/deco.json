@@ -1,0 +1,368 @@
+{
+ "title": "Et Futurum Requiem: deco",
+ "entries": [
+  {
+   "label": "etfuturum:lantern:0",
+   "name": "Lantern",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/lantern.png"
+  },
+  {
+   "label": "etfuturum:soul_lantern:0",
+   "name": "Soul Lantern",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/soul_lantern.png"
+  },
+  {
+   "label": "etfuturum:chain:0",
+   "name": "Chain",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/chain.png"
+  },
+  {
+   "label": "etfuturum:end_rod:0",
+   "name": "End Rod",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/end_rod.png"
+  },
+  {
+   "label": "etfuturum:soul_torch:0",
+   "name": "Soul Torch",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/soul_torch.png"
+  },
+  {
+   "label": "etfuturum:tinted_glass:0",
+   "name": "Tinted Glass",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tinted_glass.png"
+  },
+  {
+   "label": "etfuturum:barrel:0",
+   "name": "Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/barrel_side.png"
+  },
+  {
+   "label": "etfuturum:target:0",
+   "name": "Target",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/target_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/target_side.png"
+  },
+  {
+   "label": "etfuturum:observer:0",
+   "name": "Observer",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/observer_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/observer_side.png"
+  },
+  {
+   "label": "etfuturum:smoker:0",
+   "name": "Smoker",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/smoker_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/smoker_front.png"
+  },
+  {
+   "label": "etfuturum:blast_furnace:0",
+   "name": "Blast Furnace",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blast_furnace_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blast_furnace_front.png"
+  },
+  {
+   "label": "etfuturum:smithing_table:0",
+   "name": "Smithing Table",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/smithing_table_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/smithing_table_front.png"
+  },
+  {
+   "label": "etfuturum:stonecutter:0",
+   "name": "Stonecutter",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stonecutter_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/stonecutter_side.png"
+  },
+  {
+   "label": "etfuturum:fletching_table:0",
+   "name": "Fletching Table",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/fletching_table_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/fletching_table_front.png"
+  },
+  {
+   "label": "etfuturum:cartography_table:0",
+   "name": "Cartography Table",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cartography_table_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cartography_table_side3.png"
+  },
+  {
+   "label": "etfuturum:loom:0",
+   "name": "Loom",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/loom_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/loom_front.png"
+  },
+  {
+   "label": "etfuturum:brewing_stand:0",
+   "name": "Brewing Stand (Et Futurum)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brewing_stand_base.png"
+  },
+  {
+   "label": "etfuturum:enchantment_table:0",
+   "name": "Enchanting Table (Et Futurum)",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/enchanting_table_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/enchanting_table_side.png"
+  },
+  {
+   "label": "etfuturum:beacon:0",
+   "name": "Beacon (Et Futurum)",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/beacon.png"
+  },
+  {
+   "label": "etfuturum:banner:0",
+   "name": "Banner",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/wool_colored_white.png"
+  },
+  {
+   "label": "etfuturum:shulker_box:0",
+   "name": "Shulker Box",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/shulker_box.png"
+  },
+  {
+   "label": "etfuturum:white_bed:0",
+   "name": "White Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/white_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/white_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:orange_bed:0",
+   "name": "Orange Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/orange_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/orange_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:magenta_bed:0",
+   "name": "Magenta Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/magenta_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/magenta_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:light_blue_bed:0",
+   "name": "Light Blue Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_blue_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_blue_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:yellow_bed:0",
+   "name": "Yellow Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/yellow_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/yellow_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:lime_bed:0",
+   "name": "Lime Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/lime_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/lime_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:pink_bed:0",
+   "name": "Pink Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/pink_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/pink_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:gray_bed:0",
+   "name": "Gray Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/gray_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/gray_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:light_gray_bed:0",
+   "name": "Light Gray Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_gray_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/light_gray_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:cyan_bed:0",
+   "name": "Cyan Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cyan_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cyan_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:purple_bed:0",
+   "name": "Purple Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purple_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purple_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:blue_bed:0",
+   "name": "Blue Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blue_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blue_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:brown_bed:0",
+   "name": "Brown Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/brown_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/brown_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:green_bed:0",
+   "name": "Green Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/green_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/green_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:black_bed:0",
+   "name": "Black Bed",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/black_bed_head_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/black_bed_head_side.png"
+  },
+  {
+   "label": "etfuturum:copper_door:0-11",
+   "name": "Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:waxed_copper_door:0-11",
+   "name": "Waxed Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:exposed_copper_door:0-11",
+   "name": "Exposed Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:waxed_exposed_copper_door:0-11",
+   "name": "Waxed Exposed Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:weathered_copper_door:0-11",
+   "name": "Weathered Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:waxed_weathered_copper_door:0-11",
+   "name": "Waxed Weathered Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:oxidized_copper_door:0-11",
+   "name": "Oxidized Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:waxed_oxidized_copper_door:0-11",
+   "name": "Waxed Oxidized Copper Door",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_door_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_door_bottom.png"
+  },
+  {
+   "label": "etfuturum:copper_trapdoor:0-15",
+   "name": "Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:waxed_copper_trapdoor:0-15",
+   "name": "Waxed Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:exposed_copper_trapdoor:0-15",
+   "name": "Exposed Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:waxed_exposed_copper_trapdoor:0-15",
+   "name": "Waxed Exposed Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:weathered_copper_trapdoor:0-15",
+   "name": "Weathered Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:waxed_weathered_copper_trapdoor:0-15",
+   "name": "Waxed Weathered Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:oxidized_copper_trapdoor:0-15",
+   "name": "Oxidized Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:waxed_oxidized_copper_trapdoor:0-15",
+   "name": "Waxed Oxidized Copper Trapdoor",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_copper_trapdoor.png"
+  },
+  {
+   "label": "etfuturum:polished_blackstone_pressure_plate:0",
+   "name": "Polished Blackstone Pressure Plate",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:polished_blackstone_button:0",
+   "name": "Polished Blackstone Button",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:modded_raw_ore_block:0-13",
+   "name": "Raw Metal Blocks (aluminum, tin, silver, lead, ...)",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/raw_tin_block.png"
+  },
+  {
+   "label": "etfuturum:iron_barrel:0",
+   "name": "Iron Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/iron_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/iron_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:gold_barrel:0",
+   "name": "Gold Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/gold_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/gold_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:diamond_barrel:0",
+   "name": "Diamond Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/diamond_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/diamond_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:copper_barrel:0",
+   "name": "Copper Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/copper_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/copper_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:silver_barrel:0",
+   "name": "Silver Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/silver_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/silver_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:steel_barrel:0",
+   "name": "Steel Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/metalbarrels/textures/blocks/steel_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/metalbarrels/textures/blocks/steel_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:obsidian_barrel:0",
+   "name": "Obsidian Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/obsidian_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/obsidian_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:darksteel_barrel:0",
+   "name": "Dark Steel Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/metalbarrels/textures/blocks/darksteel_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/metalbarrels/textures/blocks/darksteel_barrel_side.png"
+  },
+  {
+   "label": "etfuturum:netherite_barrel:0",
+   "name": "Netherite Barrel",
+   "top": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/netherite_barrel_top.png",
+   "side": "etfuturum-2.6.65-GTNH.jar!assets/etfuturum/textures/blocks/metalbarrels/netherite_barrel_side.png"
+  }
+ ]
+}

@@ -1,0 +1,390 @@
+{
+ "title": "Et Futurum Requiem: shapes",
+ "entries": [
+  {
+   "label": "etfuturum:stone_slab:0",
+   "name": "Stone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png"
+  },
+  {
+   "label": "etfuturum:stone_slab:1",
+   "name": "Mossy Cobblestone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone_mossy.png"
+  },
+  {
+   "label": "etfuturum:stone_slab:2",
+   "name": "Mossy Stone Brick Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_mossy.png"
+  },
+  {
+   "label": "etfuturum:stone_slab:3",
+   "name": "Cut Sandstone Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_smooth.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone_slab:0",
+   "name": "Red Sandstone Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone_slab:1",
+   "name": "Cut Red Sandstone Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:smooth_red_sandstone_slab:0",
+   "name": "Smooth Red Sandstone Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png"
+  },
+  {
+   "label": "etfuturum:purpur_slab:0",
+   "name": "Purpur Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purpur_block.png"
+  },
+  {
+   "label": "etfuturum:smooth_quartz_slab:0",
+   "name": "Smooth Quartz Slab",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_bottom.png"
+  },
+  {
+   "label": "etfuturum:red_netherbrick_slab:0",
+   "name": "Red Nether Brick Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:end_brick_slab:0",
+   "name": "End Stone Brick Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/end_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_slab:0",
+   "name": "Cobbled Deepslate Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cobbled_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_slab:1",
+   "name": "Polished Deepslate Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_brick_slab:0",
+   "name": "Deepslate Brick Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_brick_slab:1",
+   "name": "Deepslate Tile Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_tiles.png"
+  },
+  {
+   "label": "etfuturum:tuff_slab:0",
+   "name": "Tuff Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff_slab:1",
+   "name": "Polished Tuff Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff_slab:2",
+   "name": "Tuff Brick Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff_bricks.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:0",
+   "name": "Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:1",
+   "name": "Exposed Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:2",
+   "name": "Weathered Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:3",
+   "name": "Oxidized Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:4",
+   "name": "Waxed Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:5",
+   "name": "Waxed Exposed Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:6",
+   "name": "Waxed Weathered Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_slab:7",
+   "name": "Waxed Oxidized Cut Copper Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:blackstone_slab:0",
+   "name": "Blackstone Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone_slab:1",
+   "name": "Polished Blackstone Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone_slab:2",
+   "name": "Polished Blackstone Brick Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone_bricks.png"
+  },
+  {
+   "label": "etfuturum:wood_slab:3",
+   "name": "Cherry Slab",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:smooth_red_sandstone_stairs:0-7",
+   "name": "Smooth Red Sandstone Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone_top.png"
+  },
+  {
+   "label": "etfuturum:smooth_quartz_stairs:0-7",
+   "name": "Smooth Quartz Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/quartz_block_bottom.png"
+  },
+  {
+   "label": "etfuturum:red_netherbrick_stairs:0-7",
+   "name": "Red Nether Brick Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:mossy_stone_brick_stairs:0-7",
+   "name": "Mossy Stone Brick Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_mossy.png"
+  },
+  {
+   "label": "etfuturum:mossy_cobblestone_stairs:0-7",
+   "name": "Mossy Cobblestone Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone_mossy.png"
+  },
+  {
+   "label": "etfuturum:stone_stairs:0-7",
+   "name": "Stone Stairs",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png"
+  },
+  {
+   "label": "etfuturum:end_brick_stairs:0-7",
+   "name": "End Stone Brick Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/end_bricks.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone_stairs:0-7",
+   "name": "Red Sandstone Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:purpur_stairs:0-7",
+   "name": "Purpur Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/purpur_block.png"
+  },
+  {
+   "label": "etfuturum:cobbled_deepslate_stairs:0-7",
+   "name": "Cobbled Deepslate Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cobbled_deepslate.png"
+  },
+  {
+   "label": "etfuturum:polished_deepslate_stairs:0-7",
+   "name": "Polished Deepslate Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_brick_stairs:0-7",
+   "name": "Deepslate Brick Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_tile_stairs:0-7",
+   "name": "Deepslate Tile Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_tiles.png"
+  },
+  {
+   "label": "etfuturum:tuff_stairs:0-7",
+   "name": "Tuff Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff.png"
+  },
+  {
+   "label": "etfuturum:polished_tuff_stairs:0-7",
+   "name": "Polished Tuff Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff_brick_stairs:0-7",
+   "name": "Tuff Brick Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff_bricks.png"
+  },
+  {
+   "label": "etfuturum:cut_copper_stairs:0-7",
+   "name": "Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:exposed_cut_copper_stairs:0-7",
+   "name": "Exposed Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:weathered_cut_copper_stairs:0-7",
+   "name": "Weathered Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:oxidized_cut_copper_stairs:0-7",
+   "name": "Oxidized Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:waxed_cut_copper_stairs:0-7",
+   "name": "Waxed Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cut_copper.png"
+  },
+  {
+   "label": "etfuturum:waxed_exposed_cut_copper_stairs:0-7",
+   "name": "Waxed Exposed Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/exposed_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:waxed_weathered_cut_copper_stairs:0-7",
+   "name": "Waxed Weathered Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/weathered_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:waxed_oxidized_cut_copper_stairs:0-7",
+   "name": "Waxed Oxidized Cut Copper Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/oxidized_cut_copper.png"
+  },
+  {
+   "label": "etfuturum:blackstone_stairs:0-7",
+   "name": "Blackstone Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blackstone.png"
+  },
+  {
+   "label": "etfuturum:polished_blackstone_stairs:0-7",
+   "name": "Polished Blackstone Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:polished_blackstone_brick_stairs:0-7",
+   "name": "Polished Blackstone Brick Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone_bricks.png"
+  },
+  {
+   "label": "etfuturum:cherry_stairs:0-7",
+   "name": "Cherry Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cherry_planks.png"
+  },
+  {
+   "label": "etfuturum:netherite_stairs:0-7",
+   "name": "Netherite Stairs",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/netherite_block.png"
+  },
+  {
+   "label": "etfuturum:stone_wall:0",
+   "name": "Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick.png"
+  },
+  {
+   "label": "etfuturum:stone_wall:1",
+   "name": "Mossy Stone Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stonebrick_mossy.png"
+  },
+  {
+   "label": "etfuturum:stone_wall:2",
+   "name": "Sandstone Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/sandstone_normal.png"
+  },
+  {
+   "label": "etfuturum:stone_wall:3",
+   "name": "Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/brick.png"
+  },
+  {
+   "label": "etfuturum:nether_brick_wall:0",
+   "name": "Nether Brick Wall",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/nether_brick.png"
+  },
+  {
+   "label": "etfuturum:red_sandstone_wall:0",
+   "name": "Red Sandstone Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_sandstone.png"
+  },
+  {
+   "label": "etfuturum:red_nether_brick_wall:0",
+   "name": "Red Nether Brick Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/red_nether_bricks.png"
+  },
+  {
+   "label": "etfuturum:end_brick_wall:0",
+   "name": "End Stone Brick Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/end_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_wall:0",
+   "name": "Cobbled Deepslate Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/cobbled_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_wall:1",
+   "name": "Polished Deepslate Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_deepslate.png"
+  },
+  {
+   "label": "etfuturum:deepslate_brick_wall:0",
+   "name": "Deepslate Brick Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_bricks.png"
+  },
+  {
+   "label": "etfuturum:deepslate_brick_wall:1",
+   "name": "Deepslate Tile Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/deepslate_tiles.png"
+  },
+  {
+   "label": "etfuturum:tuff_wall:0",
+   "name": "Tuff Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff_wall:1",
+   "name": "Polished Tuff Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_tuff.png"
+  },
+  {
+   "label": "etfuturum:tuff_wall:2",
+   "name": "Tuff Brick Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/tuff_bricks.png"
+  },
+  {
+   "label": "etfuturum:blackstone_wall:0",
+   "name": "Blackstone Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone_wall:1",
+   "name": "Polished Blackstone Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone.png"
+  },
+  {
+   "label": "etfuturum:blackstone_wall:2",
+   "name": "Polished Blackstone Brick Wall",
+   "all": "etfuturum-2.6.65-GTNH.jar!assets/minecraft/textures/blocks/polished_blackstone_bricks.png"
+  }
+ ]
+}

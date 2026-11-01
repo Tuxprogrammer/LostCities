@@ -1,0 +1,71 @@
+{
+ "title": "Minecraft 1.7.10: wood",
+ "entries": [
+  {
+   "label": "minecraft:planks:0",
+   "name": "Oak Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_oak.png"
+  },
+  {
+   "label": "minecraft:planks:1",
+   "name": "Spruce Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_spruce.png"
+  },
+  {
+   "label": "minecraft:planks:2",
+   "name": "Birch Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_birch.png"
+  },
+  {
+   "label": "minecraft:planks:3",
+   "name": "Jungle Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_jungle.png"
+  },
+  {
+   "label": "minecraft:planks:4",
+   "name": "Acacia Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_acacia.png"
+  },
+  {
+   "label": "minecraft:planks:5",
+   "name": "Dark Oak Planks",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/planks_big_oak.png"
+  },
+  {
+   "label": "minecraft:log:0",
+   "name": "Oak Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_oak_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_oak.png"
+  },
+  {
+   "label": "minecraft:log:1",
+   "name": "Spruce Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_spruce_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_spruce.png"
+  },
+  {
+   "label": "minecraft:log:2",
+   "name": "Birch Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_birch_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_birch.png"
+  },
+  {
+   "label": "minecraft:log:3",
+   "name": "Jungle Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_jungle_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_jungle.png"
+  },
+  {
+   "label": "minecraft:log2:0",
+   "name": "Acacia Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_acacia_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_acacia.png"
+  },
+  {
+   "label": "minecraft:log2:1",
+   "name": "Dark Oak Wood",
+   "top": "minecraft.jar!assets/minecraft/textures/blocks/log_big_oak_top.png",
+   "side": "minecraft.jar!assets/minecraft/textures/blocks/log_big_oak.png"
+  }
+ ]
+}

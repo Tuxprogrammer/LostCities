@@ -1,0 +1,78 @@
+{
+ "title": "Automagy, Witching Gadgets, Thaumic Insurgence, Thaumic Exploration",
+ "entries": [
+  {
+   "label": "Automagy:blockTranslucent:0",
+   "name": "Glowing Amber",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberblock_top.png",
+   "side": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberblock.png"
+  },
+  {
+   "label": "Automagy:blockTranslucent:1",
+   "name": "Glowing Amber Bricks",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/amberbrick.png"
+  },
+  {
+   "label": "Automagy:blockBookshelfEnchanted:0",
+   "name": "Enchanting Bookshelf",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_greatwood.png",
+   "side": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockBookshelfEnchanted.png"
+  },
+  {
+   "label": "Automagy:blockBookshelfEnchanted:1",
+   "name": "Ensorcelled Bookshelf",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_silverwood.png",
+   "side": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockBookshelfEnchantedSilverwood.png"
+  },
+  {
+   "label": "Automagy:blockRunedObsidian:0",
+   "name": "Runed Obsidian",
+   "all": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockRunedObsidian.png"
+  },
+  {
+   "label": "Automagy:blockMetalGlow:0",
+   "name": "Memory Block",
+   "all": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/amberMemory.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_MetalDevice:1",
+   "name": "Void Metal Block",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/metalbase.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_StoneDevice:0",
+   "name": "Ethereal Wall",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/etherealWall.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_StoneDevice:2",
+   "name": "Infernal Blast Furnace brick",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/blastFurnace.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_VoidWalkway:0",
+   "name": "Void Walkway",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/voidWalkway.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_RoseVine:0",
+   "name": "Rose Vines",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/roseVine.png"
+  },
+  {
+   "label": "thaumicinsurgence:tile.arcaneMarble:0",
+   "name": "Arcane Marble Block",
+   "all": "thaumicinsurgence-0.4.1.jar!assets/thaumicinsurgence/textures/blocks/arcane_marble.png"
+  },
+  {
+   "label": "thaumicinsurgence:tile.arcaneMarbleBrick:0",
+   "name": "Arcane Marble Brick",
+   "all": "thaumicinsurgence-0.4.1.jar!assets/thaumicinsurgence/textures/blocks/arcane_marble_brick.png"
+  },
+  {
+   "label": "ThaumicExploration:floatCandle:0-15",
+   "name": "Floating Candle (tinted)",
+   "all": "Thaumic-Exploration-1.5.29-GTNH.jar!assets/thaumicexploration/textures/blocks/candle.png"
+  }
+ ]
+}
