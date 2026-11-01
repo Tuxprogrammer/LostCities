@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.tuxprogrammer.lostcities;
 
 import java.io.File;
 

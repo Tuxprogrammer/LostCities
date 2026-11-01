@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.tuxprogrammer.lostcities;
 
 public class ClientProxy extends CommonProxy {
 
