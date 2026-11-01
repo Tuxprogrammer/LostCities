@@ -6,7 +6,7 @@ Lost Cities: New Horizons includes code and assets ported from the projects belo
 
 - Source: https://github.com/McJtyMods/LostCities
 - Baseline: branch `1.20`, commit `f18a094d710a0957ead20dc24f0bf1365b885802` ([0001](docs/design/0001-port-policy-and-licensing.md))
-- Used: Java code ported under the ported-code gate, and the JSON asset system's data and textures
+- Used: Java code ported under the ported-code gate, and the JSON asset system's data
 - License: MIT
 
 ```
