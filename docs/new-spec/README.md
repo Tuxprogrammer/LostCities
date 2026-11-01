@@ -4,7 +4,7 @@ How this mod differs from Lost Cities 1.20 and how it fits into GT New Horizons.
 
 Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), with RWG2 Continents as the default overworld generator.
 
-Status: **`00-pack-integration` is written and accepted** (spikes S2 and S3). Areas `01` to `09` are still to be written: each is a deviation table against its original-spec area, built from the design records and the [decision log](../design/decision-log.md) ([ROADMAP](../ROADMAP.md)).
+Status: **`00-pack-integration` is written and accepted** (spikes S2 and S3). `05-assets` is started with its block catalog only. Areas `01` to `09` are otherwise still to be written: each is a deviation table against its original-spec area, built from the design records and the [decision log](../design/decision-log.md) ([ROADMAP](../ROADMAP.md)).
 
 ## What this mod is for
 
@@ -30,7 +30,7 @@ Every change here serves that, and every system uses what the pack already has b
 | `02-profiles-dimensions` | Profiles on the overworld only; the Lost City dimension is not ported ([0003](../design/0003-world-presence.md)) |
 | `03-terrain` | The overlay on RWG terrain, the 1.7.10 height range, blending, explosions and damage |
 | `04-city-layout` | Layout carried over as is, apart from 1.7.10 and RWG constraints |
-| `05-assets` | The asset system in plain Java, 1.20 blocks mapped to 1.7.10 pack blocks, the bundled assets |
+| `05-assets` | The asset system in plain Java, 1.20 blocks mapped to 1.7.10 pack blocks, the bundled assets. Started, catalog only: the [decorative block catalog](05-assets/block-catalog/index.md) and its variety pools (S4, D25, D28) |
 | `06-highways-railways` | Highways and railways over RWG terrain |
 | `07-scattered` | Scattered structures among pack structures |
 | `08-loot-mobs-blocks` | Pack loot at EV or below, pack mobs and vanilla spawners |
