@@ -42,8 +42,8 @@ Each row is also proposed for `API-MAP.md`.
 | `ResourceKey<Level>` string dimension IDs | intercity hash (`dimensionSalt`), saved-data keys, `GenerationContext` seed mix | 1.7.10 uses integer dimension IDs; the chosen string changes the layout. |
 | `SavedData` / `DimensionDataStorage.computeIfAbsent` | `LostCityHighwayData`, `LostCityWorldGenData` | 1.7.10 has `WorldSavedData` with `MapStorage`; different API. |
 | Forge `LevelEvent.CreateSpawnPosition` as the new-world signal | mode persistence | 1.7.10 has `WorldEvent.CreateSpawnPosition`; ordering against dimension-info creation must be rechecked. |
-| `RandomSource`/`LegacyRandomSource` per chunk (`GenerationContext`) | part choice from lists | 1.7.10 uses `java.util.Random`; sequences differ. |
-| `SimplexNoise` via `LegacyRandomSource` (`PerlinNoiseGenerator14`) | legacy highways | `NoiseGeneratorSimplex`/`Perlin` in 1.7.10 give different values. |
+| `RandomSource`/`LegacyRandomSource` per chunk (`GenerationContext`) | part choice from lists | 1.7.10 uses `java.util.Random`; whether the sequences match is *unverified* ([01-core: Equivalence with 1.7.10](../01-core/noise-and-random.md#equivalence-with-1710)). |
+| `SimplexNoise` via `LegacyRandomSource` (`PerlinNoiseGenerator14`) | legacy highways | `NoiseGeneratorSimplex` in 1.7.10, one per octave; whether it gives the same values is *unverified* ([01-core: Equivalence with 1.7.10](../01-core/noise-and-random.md#equivalence-with-1710)). |
 | Block tags `LEAVES`, `LOGS` | clearing above highways | No block tags in 1.7.10. |
 | `BlockState` identity: liquid test, all states of `RAIL` and `POWERED_RAIL`, `IRON_BARS` | `Railways`, `Highways` | 1.7.10 compares block plus metadata. |
 | DFU codecs (`RecordCodecBuilder`, `Tools.listOrStringList`) | `HighwayParts`, `RailwayParts`, `MonorailParts`, `RailSettings` | Plain JSON parsing in 1.7.10. |
@@ -60,13 +60,13 @@ Each row is also proposed for `API-MAP.md`.
 - `08-loot-mobs-blocks`: loot in rail dungeons and stations.
 - `09-client-ui`: the map preview draws highways and railways with its own planner (no modifier, no persistence, a pool per frame).
 
-Cross-area observations for those owners (outside this area's scope, not registered here):
+Cross-area observations for those owners (outside this area's scope; registered by the owning area where it gave an ID):
 
-- `04-city-layout`: `City.isCityCenter` and `getCityRadius` seed `java.util.Random` from chunk coordinates only, so in `cityChance` mode every world has the same city centers; the highway potential copies this.
-- `03-terrain`/`04-city-layout`: `LostCityTerrainFeature.clearRange` with water fills liquid below the water level and air from water level + 1, so the block at exactly the water level is left as it was (affects clearing above drowned highways).
-- `01-core`: `LostCityWorldGenData.save` iterates its mode maps without the lock that `getHighwayMode`/`getStreetMode` hold while writing them.
-- `01-core`: `PerlinNoiseGenerator14` seeds all four octaves identically.
-- `04-city-layout`: `Bridges` assumes highway levels are 0 or 1 ("a highway at level 0 blocks bridge parts"); intercity highways can be at any level.
+- `04-city-layout`: `City.isCityCenter` and `getCityRadius` seed `java.util.Random` from chunk coordinates only, so in `cityChance` mode every world has the same city centers (`CITY-01`); the highway potential copies this.
+- `03-terrain`/`04-city-layout`: `LostCityTerrainFeature.clearRange` with water fills liquid below the water level and air from water level + 1, so the block at exactly the water level is left as it was (`TERR-06`; affects clearing above drowned highways).
+- `03-terrain`: `LostCityWorldGenData.save` iterates its mode maps without the lock that `getHighwayMode`/`getStreetMode` hold while writing them (`TERR-38`).
+- `01-core`: `PerlinNoiseGenerator14` seeds all four octaves identically (`CORE-25`).
+- `04-city-layout`: `Bridges` skips only level-0 highways ("a highway at level 0 blocks bridge parts"); a level-1 highway overlaps the top of a 7-high bridge part (`CITY-38`).
 
 ## Coverage
 

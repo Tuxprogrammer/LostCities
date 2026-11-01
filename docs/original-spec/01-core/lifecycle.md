@@ -1,6 +1,6 @@
 # Mod lifecycle and registration
 
-How upstream Lost Cities boots: the `@Mod` entry point, what it registers and in which lifecycle phase, the inter-mod (IMC) entry points, the Forge-bus handlers that are not about spawn or beds, cache cleanup, and the jar metadata (`mods.toml`, access transformer). Spawn selection and the bed teleporter, which share the `ForgeEventHandlers` class, have their own sheets.
+How upstream Lost Cities boots: the `@Mod` entry point, what it registers and in which lifecycle phase, the inter-mod (IMC) entry points, the Forge-bus handlers that are not about spawn or beds, cache cleanup, and the jar metadata (`mods.toml`, access transformer, `pack.mcmeta`). Spawn selection and the bed teleporter, which share the `ForgeEventHandlers` class, have their own sheets.
 
 | # | Field | Contents |
 |---|---|---|
@@ -9,7 +9,7 @@ How upstream Lost Cities boots: the `@Mod` entry point, what it registers and in
 | 3 | **Numbers** | See [Numbers](#numbers). |
 | 4 | **Behavior** | See [Behavior detail](#behavior-detail). |
 | 5 | **Determinism** | No random sources. Order of IMC callbacks is the order FML delivers the messages. Global mutable state lives in statics (`LostCities.instance`, `LostCities.setup`, `LostCities.lostCitiesImp`, `ModSetup.logger`, `ModSetup.profileSetups`, every cache cleared by `ForgeEventHandlers.cleanUp`). Cleanup is driven by server start and stop and by the feature's dirty counter, not by world identity. |
-| 6 | **Data formats** | `mods.toml` and access-transformer entries (below). No NBT or saved data. |
+| 6 | **Data formats** | `mods.toml`, access-transformer entries and `pack.mcmeta` (below). No NBT or saved data. |
 | 7 | **Output** | Two worldgen features registered (`lostcities:lostcity`, `lostcities:spheres`); three config specs registered; the folder `config/lostcities/` created; the network channel and Forge handlers registered at common setup; profiles written to `config/lostcities/profiles/` by `ProfileSetup` (`02-profiles-dimensions`). |
 | 8 | **Relationships** | Calls `CustomRegistries.init` and `CustomRegistries::onDataPackRegistry` (`05-assets`), `ProfileSetup.setupProfiles` (`02-profiles-dimensions`), `PacketHandler.registerMessages` ([network.md](network.md)), `ModCommands.register` ([commands.md](commands.md)), `AssetRegistries.reset/load` (`05-assets`), `GlobalTodo.executeAndClearTodo` (`03-terrain`), the cache owners `BuildingInfo`, `MultiChunk`, `Highway`, `Railway`, `BiomeInfo`, `City`, `CitySphere`, `Scattered` (`03`, `04`, `06`, `07`), `LCBlockTags` (`08-loot-mobs-blocks`). `ClientSetup` registers `ClientEventHandlers` (`09-client-ui`). |
 | 9 | **1.20 dependencies** | Deferred registers for `Feature`; `ModConfig` CLIENT/COMMON/SERVER specs, with SERVER files stored per world; IMC messages carrying `Supplier<Function<…>>`; `FMLConstructModEvent.enqueueWork`; `LevelTickEvent`; `GatherDataEvent` data generation; `mods.toml`; access transformers keyed by SRG names. Each is a row in the area's 1.20 dependency table. |
@@ -82,6 +82,10 @@ How upstream Lost Cities boots: the `@Mod` entry point, what it registers and in
 | `NoiseChunk.m_209247_` (getInterpolatedState), `NoiseChunk$NoiseChunkDensityFunction`, `DensityFunctions$Marker`, `$Marker$Type`, `$Marker$Type.codec`, `$Marker` constructor | Terrain sampling (`03-terrain`) |
 | `ClientLevel$ClientLevelData.f_104832_` (isFlat, `public-f`), `NoiseBasedChunkGenerator.m_224284_` (doFill), `StructureManager.f_220460_` (level) | Commented "For Lost Worlds" (a companion mod) |
 | Commented-out block for `NoiseBasedChunkGenerator` noise sizes | Not active |
+
+### `pack.mcmeta`
+
+`src/main/resources/pack.mcmeta`: the metadata that makes the jar's resources a resource and data pack, `pack_format` 15 (the 1.20.1 format) and description `Resources used for The Lost Cities`.
 
 ## On 1.12
 

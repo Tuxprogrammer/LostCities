@@ -84,7 +84,7 @@ Each row is also for `API-MAP.md`.
 | `RandomSource`, `LegacyRandomSource`, `fork()` | `GenerationContext`, sapling growth | `java.util.Random`. |
 | `SaplingBlock.advanceTree`, `isAreaLoaded` | `GlobalTodo` jobs | `BlockSapling.func_149878_d` (grow tree) exists; area checks via `checkChunksExist`. |
 | Lost Worlds generators and `ILostWorldsChunkGenerator` | landscapes, `Spheres` | Nothing equivalent in GTNH; non-`DEFAULT` landscapes have no terrain source. |
-| Forge `ForgeConfigSpec` values (`cacheCleanupSeconds`, `heightSampleSize`, `optimizedHeightmap`, `avoidFlattening`, `todoQueueSize`, `forceSaplingGrowth`) | throughout | GTNHLib config (02-profiles-dimensions owns config). |
+| Forge `ForgeConfigSpec` values (`cacheCleanupSeconds`, `heightSampleSize`, `optimizedHeightmap`, `avoidFlattening`, `todoQueueSize`, `forceSaplingGrowth`) | throughout | GTNHLib config. The mod config is `01-core`'s ([config.md](../01-core/config.md)); `02-profiles-dimensions` owns the profiles. |
 | Java 9–17 APIs: `Random.nextInt(int, int)`, `Set.of`, `Set.copyOf`, `Map.copyOf`, records, switch expressions | terrain feature, `GlobalTodo` | Java 8 runtime: no such methods; records not allowed. |
 
 ## Related areas
@@ -159,5 +159,6 @@ Each row is also for `API-MAP.md`.
 | TERR-35 | Sphere feature has no exception guard | `worldgen/LostCitySphereFeature.java:35` | Unlike the city feature, any exception in sphere drawing (for example `TERR-16`) propagates out of world generation. | crash |
 | TERR-36 | Predicate range writes skip unstaged blocks | `worldgen/ChunkDriver.java:397` | The predicate variant replaces only positions already staged or read, so highway "clear above the deck" passes leave vanilla blocks that nothing else touched (*inferred* for hillside highways). | worldgen |
 | TERR-37 | Rubble height interpolation is reversed | `worldgen/LostCityTerrainFeature.java:1113` | `bipolate` weights put the diagonal neighbor's ground at the chunk center and this chunk's toward the corners; rubble then fails to appear where levels change. | cosmetic |
+| TERR-38 | World-generation saved data is saved without the writers' lock | `worldgen/LostCityWorldGenData.java:146` (iterations at `:150`, `:153`) | `getStreetMode` and `getHighwayMode` are `synchronized` and put into the two `HashMap`s (`:109`, `:133`) when a dimension info is built, which can happen on a world-generation thread; `save` is not synchronized and iterates both maps with `forEach`. A put during a save throws `ConcurrentModificationException` out of the save (that vanilla's saved-data writer does not catch it is *inferred* from 1.20.1). A put after the iteration but before vanilla clears the dirty flag leaves the new mode out of the file until the next change. `markNewWorld` also writes the flags without the lock. | crash |
 
 <!-- Merged and deduplicated into BUGS.md. Suspected, not confirmed; no fixes designed here. -->

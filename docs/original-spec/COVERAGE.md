@@ -12,16 +12,16 @@ Every file on the upstream `1.20` branch at `f18a094d` (`git ls-tree -r --name-o
 | · Java under `src/api/java/` | 1 |
 | · Resources under `src/main/resources/` | 359 |
 | · Resources under `src/generated/resources/` | 6 |
-| Named by at least one sheet | 594 |
+| Named by at least one sheet | 595 |
 | Documented only in an area index, no sheet | 1 (`DimensionDictionary.java`) |
-| **Uncovered** | 1 (`pack.mcmeta`) |
+| **Uncovered** | 0 |
 | Build and meta files, not behavior | 16 |
 
-In-scope files per area, as each area's Coverage section counts them. The areas overlap on 42 files (27 Java, 15 resources), so the column sums to 637, not 595.
+In-scope files per area, as each area's Coverage section counts them. The areas overlap on 42 files (27 Java, 15 resources), so the column sums to 638, not 596.
 
 | Area | Java | Resources | Total |
 |---|---|---|---|
-| `01-core` | 67 (including `src/api`) | 2 | 69 |
+| `01-core` | 67 (including `src/api`) | 3 | 70 |
 | `02-profiles-dimensions` | 19 | 6 | 25 |
 | `03-terrain` | 17 | 6 | 23 |
 | `04-city-layout` | 35 | 0 | 35 |
@@ -33,12 +33,13 @@ In-scope files per area, as each area's Coverage section counts them. The areas 
 
 Overlaps: all of `worldgen/lost/cityassets/`, `worldgen/lost/regassets/` and `regassets/data/` are counted by `05-assets` and, for 26 of them, also by the area that owns their behavior (`02`, `04`, `06`, `07`); `api/RailChunkType.java` by `01-core` and `06-highways-railways`; the two biome modifiers by `02` and `03`; the two world styles by `02` and `05`; the scattered and stuff assets by `05` and `07`; the three conditions by `05` and `08`.
 
-## Uncovered
+## Not named by a sheet
+
+Every in-scope file is covered. One is documented in an area index rather than a sheet:
 
 | File | What it is | Note |
 |---|---|---|
-| `src/main/resources/pack.mcmeta` | Pack metadata: `pack_format` 15, description `Resources used for The Lost Cities` | No sheet or area index names it. |
-| `src/api/java/ivorius/reccomplex/dimensions/DimensionDictionary.java` | Stale third-party Recurrent Complex API class, not compiled by the 1.20 build | No sheet names it; its contents are recorded in [01-core Key facts](01-core/index.md#key-facts) and it is counted in `01-core`'s Coverage. |
+| `src/api/java/ivorius/reccomplex/dimensions/DimensionDictionary.java` | Third-party code from Recurrent Complex (Ivorius; MIT at its source repository, not McJty's): a stale API class written against 1.12-era types, not compiled by the upstream 1.20 build and referenced by nothing | Documented in [01-core Key facts](01-core/index.md#key-facts) and counted in `01-core`'s Coverage. The port leaves it out because it is unused ([decision log](../design/decision-log.md) D12). |
 
 ## Java
 
@@ -394,7 +395,7 @@ Paths are relative to `src/main/resources/`.
 |---|---|---|---|
 | `META-INF/mods.toml` | 01-core | [lifecycle](01-core/lifecycle.md) | |
 | `META-INF/accesstransformer.cfg` | 01-core | [lifecycle](01-core/lifecycle.md) | 03-terrain (index), 09-client-ui (index) |
-| `pack.mcmeta` | none | **uncovered** | |
+| `pack.mcmeta` | 01-core | [lifecycle](01-core/lifecycle.md) | |
 
 ### Dimension, world generation and biome modifiers
 
