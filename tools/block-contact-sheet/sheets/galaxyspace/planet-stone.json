@@ -1,0 +1,338 @@
+{
+ "title": "GalaxySpace: planet and moon terrain (non-ore)",
+ "entries": [
+  {
+   "label": "GalaxySpace:mercuryblocks:0",
+   "name": "Mercury Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/mercury/mercurysurface.png"
+  },
+  {
+   "label": "GalaxySpace:mercuryblocks:1",
+   "name": "Mercury Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/mercury/mercurysubsurface.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:mercuryblocks:2",
+   "name": "Mercury Core",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/mercury/mercurymetalcore.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:venusblocks:0",
+   "name": "Venus Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/venus/venusgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:venusblocks:1",
+   "name": "Venus Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/venus/venussubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:ceresblocks:0",
+   "name": "Ceres Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceresgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:ceresblocks:1",
+   "name": "Ceres Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ceres/ceressubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:phobosblocks:0",
+   "name": "Phobos Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/phobos/phobosgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:phobosblocks:1",
+   "name": "Phobos Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/phobos/phobossubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:phobosblocks:2",
+   "name": "Phobos Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/phobos/phobosstone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:deimosblocks:0",
+   "name": "Deimos Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/deimos/deimosgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:deimosblocks:1",
+   "name": "Deimos Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/deimos/deimossubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:0",
+   "name": "Io Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iogrunt.png"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:1",
+   "name": "Io Ash",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/ioash.png"
+  },
+  {
+   "label": "GalaxySpace:ioblocks:2",
+   "name": "Io Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iostone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:iodualstone",
+   "name": "Io Dual Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/io/iodualstone_front.png"
+  },
+  {
+   "label": "GalaxySpace:europagrunt:0",
+   "name": "Europa Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/europa/europagrunt.png"
+  },
+  {
+   "label": "GalaxySpace:europagrunt:1",
+   "name": "Europa Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/europa/europaice.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:ganymedeblocks:0",
+   "name": "Ganymede Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ganymede/ganymedegrunt.png"
+  },
+  {
+   "label": "GalaxySpace:ganymedeblocks:1",
+   "name": "Ganymede Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/ganymede/ganymedesubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:callistoblocks:0",
+   "name": "Callisto Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/callisto/callistogrunt.png"
+  },
+  {
+   "label": "GalaxySpace:callistoblocks:1",
+   "name": "Callisto Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/callisto/callistosubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:enceladusblocks:0",
+   "name": "Enceladus Snow",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/enceladus/enceladussnow.png"
+  },
+  {
+   "label": "GalaxySpace:enceladusblocks:1",
+   "name": "Enceladus Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/enceladus/enceladusgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:enceladusblocks:3",
+   "name": "Enceladus Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/enceladus/enceladusice.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:titanblocks:0",
+   "name": "Titan Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/titan/titangrunt.png"
+  },
+  {
+   "label": "GalaxySpace:titanblocks:1",
+   "name": "Titan Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/titan/titansubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:titanblocks:2",
+   "name": "Titan Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/titan/titanstone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:mirandablocks:0",
+   "name": "Miranda Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/miranda/mirandagrunt.png"
+  },
+  {
+   "label": "GalaxySpace:mirandablocks:1",
+   "name": "Miranda Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/miranda/mirandasubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:mirandablocks:2",
+   "name": "Miranda Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/miranda/mirandastone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:oberonblocks:0",
+   "name": "Oberon Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/oberon/oberongrunt.png"
+  },
+  {
+   "label": "GalaxySpace:oberonblocks:1",
+   "name": "Oberon Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/oberon/oberonsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:oberonblocks:2",
+   "name": "Oberon Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/oberon/oberonstone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:proteusblocks:0",
+   "name": "Proteus Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/proteus/proteusgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:proteusblocks:1",
+   "name": "Proteus Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/proteus/proteussubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:proteusblocks:2",
+   "name": "Proteus Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/proteus/proteusstone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:tritonblocks:0",
+   "name": "Triton Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/triton/tritongrunt.png"
+  },
+  {
+   "label": "GalaxySpace:tritonblocks:1",
+   "name": "Triton Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/triton/tritonsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:tritonblocks:2",
+   "name": "Triton Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/triton/tritonstone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:0",
+   "name": "Pluto Surface Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutogrunt.png"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:1",
+   "name": "Pluto Nitrogen Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutogrunt2.png"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:2",
+   "name": "Pluto Tholin Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutogrunt3.png"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:3",
+   "name": "Pluto Methane Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutogrunt4.png"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:4",
+   "name": "Pluto Subsurface Ice",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutosubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:plutoblocks:5",
+   "name": "Pluto Stone",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/pluto/plutostone.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:haumeablocks",
+   "name": "Haumea Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/haumea/haumeagrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:makemakegrunt:0",
+   "name": "Makemake Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/makemake/makemakegrunt.png"
+  },
+  {
+   "label": "GalaxySpace:makemakegrunt:1",
+   "name": "Makemake Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/makemake/makemakesubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:acentauribbgrunt",
+   "name": "Alpha Centauri Bb Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/acentauribb/acentauribbgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:acentauribbsubgrunt",
+   "name": "Alpha Centauri Bb Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/acentauribb/acentauribbsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:barnardaEgrunt",
+   "name": "Barnarda E Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnardaE/barnardaEgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaEsubgrunt",
+   "name": "Barnarda E Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnardaE/barnardaEsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:barnardaFgrunt",
+   "name": "Barnarda F Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnardaF/barnardaFgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:barnardaFsubgrunt",
+   "name": "Barnarda F Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/barnardaF/barnardaFsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:vegabgrunt",
+   "name": "Vega B Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/vegaB/vegaBgrunt.png"
+  },
+  {
+   "label": "GalaxySpace:vegabsubgrunt",
+   "name": "Vega B Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/vegaB/vegaBsubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:tcetieblocks:0",
+   "name": "T Ceti E Surface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/tcetie/tcetiegrunt.png"
+  },
+  {
+   "label": "GalaxySpace:tcetieblocks:1",
+   "name": "T Ceti E Subsurface Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/tcetie/tcetiesubgrunt.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalaxySpace:tcetieblocks:2",
+   "name": "T Ceti E Stone Block",
+   "all": "GalaxySpace-1.1.144-GTNH.jar!assets/galaxyspace/textures/blocks/tcetie/tcetiestone.png",
+   "note": "GT ore host"
+  }
+ ]
+}

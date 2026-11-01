@@ -1,0 +1,165 @@
+{
+ "title": "GregTech: granites, marble, basalt (all boulder hosts; metas 0/8 also ore hosts)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockgranites:0",
+   "name": "Black Granite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_STONE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:1",
+   "name": "Black Granite Cobblestone",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_COBBLE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:2",
+   "name": "Black Granite Cobblestone (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_COBBLE_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:3",
+   "name": "Black Granite Bricks",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_BRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:4",
+   "name": "Black Granite Bricks (cracked)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_BRICKS_CRACKED.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:5",
+   "name": "Black Granite Bricks (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_BRICKS_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:6",
+   "name": "Black Granite (chiseled)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_BRICKS_CHISELED.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:7",
+   "name": "Black Granite (smooth)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_BLACK_SMOOTH.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:8",
+   "name": "Red Granite",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_STONE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:9",
+   "name": "Red Granite Cobblestone",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_COBBLE.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:10",
+   "name": "Red Granite Cobblestone (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_COBBLE_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:11",
+   "name": "Red Granite Bricks",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_BRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:12",
+   "name": "Red Granite Bricks (cracked)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_BRICKS_CRACKED.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:13",
+   "name": "Red Granite Bricks (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_BRICKS_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:14",
+   "name": "Red Granite (chiseled)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_BRICKS_CHISELED.png"
+  },
+  {
+   "label": "gregtech:gt.blockgranites:15",
+   "name": "Red Granite (smooth)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/GRANITE_RED_SMOOTH.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:0",
+   "name": "Marble",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_STONE.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:1",
+   "name": "Marble Cobblestone",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_COBBLE.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:2",
+   "name": "Marble Cobblestone (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_COBBLE_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:3",
+   "name": "Marble Bricks",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_BRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:4",
+   "name": "Marble Bricks (cracked)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_BRICKS_CRACKED.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:5",
+   "name": "Marble Bricks (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_BRICKS_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:6",
+   "name": "Marble (chiseled)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_BRICKS_CHISELED.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:7",
+   "name": "Marble (smooth)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MARBLE_SMOOTH.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:8",
+   "name": "Basalt",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_STONE.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:9",
+   "name": "Basalt Cobblestone",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_COBBLE.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:10",
+   "name": "Basalt Cobblestone (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_COBBLE_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:11",
+   "name": "Basalt Bricks",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_BRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:12",
+   "name": "Basalt Bricks (cracked)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_BRICKS_CRACKED.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:13",
+   "name": "Basalt Bricks (mossy)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_BRICKS_MOSSY.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:14",
+   "name": "Basalt (chiseled)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_BRICKS_CHISELED.png"
+  },
+  {
+   "label": "gregtech:gt.blockstones:15",
+   "name": "Basalt (smooth)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/BASALT_SMOOTH.png"
+  }
+ ]
+}

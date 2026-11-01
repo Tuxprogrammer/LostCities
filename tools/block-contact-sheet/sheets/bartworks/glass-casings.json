@@ -1,0 +1,120 @@
+{
+ "title": "bartworks: borosilicate glass tiers, casings",
+ "entries": [
+  {
+   "label": "bartworks:BW_TieredGlass:0",
+   "name": "Borosilicate Glass Block (HV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/BoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:1",
+   "name": "Titanium Reinforced Borosilicate Glass (EV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/TitaniumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:2",
+   "name": "Tungstensteel Reinforced Borosilicate Glass (IV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/TungstenSteelReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:3",
+   "name": "Rhodium-Plated Palladium Reinforced Borosilicate Glass (LuV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/RhodiumPlatedPalladiumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:4",
+   "name": "Iridium Reinforced Borosilicate Glass (ZPM)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/IridiumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:5",
+   "name": "Osmium Reinforced Borosilicate Glass (UV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/OsmiumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:6",
+   "name": "Neutronium Reinforced Borosilicate Glass (UHV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/NeutroniumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:7",
+   "name": "Infinity Reinforced Borosilicate Glass (UEV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/InfinityReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:8",
+   "name": "Transcendentally Reinforced Borosilicate Glass (UIV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/TranscendentallyReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:9",
+   "name": "Hexanite Reinforced Borosilicate Glass (UMV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/HexaniteReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_TieredGlass:10",
+   "name": "Universium Reinforced Borosilicate Glass (UXV)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/UniversiumReinforcedBoronSilicateGlassBlock.png"
+  },
+  {
+   "label": "bartworks:BW_ExtraGlass:0",
+   "name": "Thorium Yttrium Glass Block",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ThoriumYttriumGlass.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:6",
+   "name": "Colored Borosilicate Glass 1 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock1.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:7",
+   "name": "Colored Borosilicate Glass 2 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock2.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:8",
+   "name": "Colored Borosilicate Glass 3 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock3.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:9",
+   "name": "Colored Borosilicate Glass 4 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock4.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:10",
+   "name": "Colored Borosilicate Glass 5 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock5.png"
+  },
+  {
+   "label": "bartworks:BW_GlasBlocks:11",
+   "name": "Colored Borosilicate Glass 6 (deprecated, NEI-hidden)",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/ColoredBoronSilicateGlassBlock6.png"
+  },
+  {
+   "label": "bartworks:BW_Machinery_Casings:0",
+   "name": "Nickel-Zinc Ferrite Block",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/NickelFerriteBlocks.png"
+  },
+  {
+   "label": "bartworks:BW_Machinery_Casings:1",
+   "name": "Transformer-Winding Block",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/TransformerCoil.png"
+  },
+  {
+   "label": "bartworks:GT_LESU_CASING:0",
+   "name": "LESU Casing",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/LESU_CELL.png"
+  },
+  {
+   "label": "bartworks:BW_ItemBlocks:0",
+   "name": "Etched Lapis Cell",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/EtchedLapisCell.png"
+  },
+  {
+   "label": "bartworks:BW_ItemBlocks:1",
+   "name": "Plated Lapis Cell",
+   "all": "gregtech-5.09.54.265.jar!assets/bartworks/textures/blocks/PlatedLapisCell.png"
+  }
+ ]
+}

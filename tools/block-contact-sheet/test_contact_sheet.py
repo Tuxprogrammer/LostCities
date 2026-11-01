@@ -59,6 +59,27 @@ class ContactSheetTest(unittest.TestCase):
             self.assertEqual(source.load("demo.jar!assets/demo/textures/blocks/anim.png").size, (16, 16))
             source.close()
 
+    def test_atlas_tile_suffix_crops_one_square_tile(self):
+        with Fixture() as f:
+            strip = Image.new("RGBA", (48, 16), (255, 0, 0, 255))
+            strip.paste(Image.new("RGBA", (16, 16), (0, 0, 255, 255)), (16, 0))
+            buf = io.BytesIO()
+            strip.save(buf, "PNG")
+            with zipfile.ZipFile(f.mods / "atlas.jar", "w") as jar:
+                jar.writestr("sheet.png", buf.getvalue())
+            source = cs.TextureSource(f.mods)
+            tile = source.load("atlas.jar!sheet.png#1")
+            self.assertEqual(tile.size, (16, 16))
+            self.assertEqual(tile.getpixel((3, 3)), (0, 0, 255, 255))
+            self.assertIsNone(source.load("atlas.jar!sheet.png#3"))
+            self.assertIsNone(source.load("atlas.jar!sheet.png#x"))
+            source.close()
+
+    def test_tint_multiplies_rgb_and_keeps_alpha(self):
+        image = cs.tint(Image.new("RGBA", (4, 4), (200, 100, 255, 128)), "#80ff00")
+        self.assertEqual(image.getpixel((0, 0)), (100, 100, 0, 128))
+        self.assertIs(cs.tint(image, None), image)
+
     def test_cube_faces_are_textured_and_shaded(self):
         red, blue = Image.new("RGBA", (16, 16), (200, 0, 0, 255)), Image.new("RGBA", (16, 16), (0, 0, 200, 255))
         image = cs.cube(red, blue, 64)

@@ -1,0 +1,80 @@
+{
+ "title": "GT++: compressed obsidian / glowstone / netherrack, wither guard",
+ "entries": [
+  {
+   "label": "miscutils:blockCompressedObsidian:0",
+   "name": "Compressed Obsidian (9)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian1.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:1",
+   "name": "Double Compressed Obsidian",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian2.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:2",
+   "name": "Triple Compressed Obsidian",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian3.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:3",
+   "name": "Quadruple Compressed Obsidian",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian4.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:4",
+   "name": "Quintuple Compressed Obsidian",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian5.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:5",
+   "name": "Inverted Obsidian",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/obsidian_invert.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:6",
+   "name": "Compressed Glowstone (9)",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/glowstone1.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:7",
+   "name": "Double Compressed Glowstone",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/glowstone2.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:8",
+   "name": "Triple Compressed Glowstone",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/glowstone3.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:9",
+   "name": "Quadruple Compressed Glowstone",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/glowstone4.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:10",
+   "name": "Quintuple Compressed Glowstone",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/glowstone5.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:11",
+   "name": "Compressed Netherrack",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/netherrack1.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:12",
+   "name": "Double Compressed Netherrack",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/netherrack2.png"
+  },
+  {
+   "label": "miscutils:blockCompressedObsidian:13",
+   "name": "Triple Compressed Netherrack",
+   "all": "gregtech-5.09.54.265.jar!assets/miscutils/textures/blocks/compressed/netherrack3.png"
+  },
+  {
+   "label": "miscutils:blockBlackGate:0",
+   "name": "Wither Guard (unbreakable)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/CONTAINMENT_FRAME.png"
+  }
+ ]
+}

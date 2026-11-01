@@ -1,0 +1,115 @@
+{
+ "title": "Tinkers' Construct: seared and scorched blocks (Smeltery, SmelteryNether)",
+ "entries": [
+  {
+   "label": "TConstruct:Smeltery:2",
+   "name": "Seared Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedbrick.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:4",
+   "name": "Seared Stone",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedstone.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:5",
+   "name": "Seared Cobblestone",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedcobble.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:6",
+   "name": "Seared Paver",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedpaver.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:7",
+   "name": "Cracked Seared Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedbrickcracked.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:8",
+   "name": "Seared Road",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedroad.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:9",
+   "name": "Fancy Seared Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedbrickfancy.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:10",
+   "name": "Chiseled Seared Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedbricksquare.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:Smeltery:11",
+   "name": "Chiseled Seared Bricks (creeper)",
+   "top": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedpaver.png",
+   "side": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/searedcreeper.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:2",
+   "name": "Scorched Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedbrick.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:4",
+   "name": "Scorched Stone",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedstone.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:5",
+   "name": "Scorched Cobblestone",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedcobble.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:6",
+   "name": "Scorched Paver",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedpaver.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:7",
+   "name": "Scorched Cracked Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedbrickcracked.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:8",
+   "name": "Scorched Road",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedroad.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:9",
+   "name": "Scorched Fancy Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedbrickfancy.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:10",
+   "name": "Scorched Chiseled Bricks",
+   "all": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedbricksquare.png",
+   "note": "TE"
+  },
+  {
+   "label": "TConstruct:SmelteryNether:11",
+   "name": "Scorched Chiseled Bricks (creeper)",
+   "top": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedpaver.png",
+   "side": "TConstruct-1.14.123-GTNH.jar!assets/tinker/textures/blocks/nether_searedcreeper.png",
+   "note": "TE"
+  }
+ ]
+}

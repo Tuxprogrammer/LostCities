@@ -1,0 +1,236 @@
+{
+ "title": "GregTech: frame boxes and sheetmetal (meta = material id; tinted at runtime, approximated)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockframes:305",
+   "name": "Steel Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#808080",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:19",
+   "name": "Aluminium Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#80c8f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:306",
+   "name": "Stainless Steel Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#c8c8dc",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:28",
+   "name": "Titanium Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#dca0f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:32",
+   "name": "Iron Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#c8c8c8",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:304",
+   "name": "Cast Iron (Wrought Iron) Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#c8b4b4",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:300",
+   "name": "Bronze Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#ff8000",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:301",
+   "name": "Brass Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#ffb400",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:35",
+   "name": "Copper Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#ff6400",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:57",
+   "name": "Tin Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#dcdcdc",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:89",
+   "name": "Lead Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#8c648c",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:334",
+   "name": "Black Steel Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#646464",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:302",
+   "name": "Invar Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#b4b478",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:36",
+   "name": "Zinc Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#faf0f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:348",
+   "name": "Red Steel Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#8c6464",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:349",
+   "name": "Blue Steel Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#64648c",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:305",
+   "name": "Steel Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#808080",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:19",
+   "name": "Aluminium Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/DULL/sheetmetal.png",
+   "tint": "#80c8f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:306",
+   "name": "Stainless Steel Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/SHINY/sheetmetal.png",
+   "tint": "#c8c8dc",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:28",
+   "name": "Titanium Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#dca0f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:32",
+   "name": "Iron Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#c8c8c8",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:304",
+   "name": "Cast Iron (Wrought Iron) Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#c8b4b4",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:300",
+   "name": "Bronze Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#ff8000",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:301",
+   "name": "Brass Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#ffb400",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:35",
+   "name": "Copper Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/DULL/sheetmetal.png",
+   "tint": "#ff6400",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:57",
+   "name": "Tin Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/DULL/sheetmetal.png",
+   "tint": "#dcdcdc",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:89",
+   "name": "Lead Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/DULL/sheetmetal.png",
+   "tint": "#8c648c",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:334",
+   "name": "Black Steel Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#646464",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:302",
+   "name": "Invar Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#b4b478",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:36",
+   "name": "Zinc Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#faf0f0",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:348",
+   "name": "Red Steel Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#8c6464",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.sheetmetal:349",
+   "name": "Blue Steel Sheetmetal",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/METALLIC/sheetmetal.png",
+   "tint": "#64648c",
+   "note": "tinted approximation"
+  },
+  {
+   "label": "gregtech:gt.blockframes:809",
+   "name": "Wood Frame Box",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/materialicons/NONE/frameGt.png",
+   "tint": "#643200",
+   "note": "tinted approximation"
+  }
+ ]
+}

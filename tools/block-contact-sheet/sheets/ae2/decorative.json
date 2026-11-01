@@ -1,0 +1,15 @@
+{"title": "AE2 rv3-beta-1095-GTNH: decorative blocks",
+ "entries": [
+  {"label": "appliedenergistics2:tile.BlockSkyStone:0", "name": "Sky Stone", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockSkyStone.png"},
+  {"label": "appliedenergistics2:tile.BlockSkyStone:1", "name": "Sky Stone Block", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockSkyStone.Block.png"},
+  {"label": "appliedenergistics2:tile.BlockSkyStone:2", "name": "Sky Stone Brick", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockSkyStone.Brick.png"},
+  {"label": "appliedenergistics2:tile.BlockSkyStone:3", "name": "Sky Stone Small Brick", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockSkyStone.SmallBrick.png"},
+  {"label": "appliedenergistics2:tile.BlockQuartz:0", "name": "Certus Quartz Block", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartz.png"},
+  {"label": "appliedenergistics2:tile.BlockQuartzChiseled:0", "name": "Chiseled Certus Quartz", "top": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzChiseled.png", "side": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzChiseledSide.png"},
+  {"label": "appliedenergistics2:tile.BlockQuartzPillar:0", "name": "Certus Quartz Pillar", "top": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzPillar.png", "side": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzPillarSide.png"},
+  {"label": "appliedenergistics2:tile.BlockFluix:0", "name": "Fluix Block", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockFluix.png"},
+  {"label": "appliedenergistics2:tile.BlockQuartzGlass:0", "name": "Quartz Glass", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzGlass.png", "note": "frame drawn separately"},
+  {"label": "appliedenergistics2:tile.BlockQuartzGlass:0", "name": "Quartz Glass (frame)", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzGlassFrame.png", "note": "edge frame overlay"},
+  {"label": "appliedenergistics2:tile.BlockQuartzLamp:0", "name": "Vibrant Quartz Glass", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzLamp.png", "note": "light 15"},
+  {"label": "appliedenergistics2:tile.BlockQuartzTorch:0", "name": "Charged Quartz Fixture", "all": "appliedenergistics2-rv3-beta-1095-GTNH.jar!assets/appliedenergistics2/textures/blocks/BlockQuartzTorch.png", "note": "torch model; light 14"}
+ ]}

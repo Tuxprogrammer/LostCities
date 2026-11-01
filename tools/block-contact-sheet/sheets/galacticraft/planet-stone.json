@@ -1,0 +1,77 @@
+{
+ "title": "Galacticraft: Moon, Mars and asteroid terrain",
+ "entries": [
+  {
+   "label": "GalacticraftCore:tile.moonBlock:3",
+   "name": "Moon Dirt",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/middle.png"
+  },
+  {
+   "label": "GalacticraftCore:tile.moonBlock:4",
+   "name": "Moon Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/bottom.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalacticraftCore:tile.moonBlock:5",
+   "name": "Moon Turf",
+   "top": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/top.png",
+   "side": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/top_side.png"
+  },
+  {
+   "label": "GalacticraftMars:tile.mars:4",
+   "name": "Mars Cobblestone",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmars/textures/blocks/cobblestone.png"
+  },
+  {
+   "label": "GalacticraftMars:tile.mars:5",
+   "name": "Mars Surface Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmars/textures/blocks/top.png"
+  },
+  {
+   "label": "GalacticraftMars:tile.mars:6",
+   "name": "Mars Sub-Surface Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmars/textures/blocks/middle.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalacticraftMars:tile.mars:9",
+   "name": "Mars Stone",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmars/textures/blocks/bottom.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalacticraftMars:tile.asteroidsBlock:0",
+   "name": "Asteroid Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/asteroid0.png"
+  },
+  {
+   "label": "GalacticraftMars:tile.asteroidsBlock:1",
+   "name": "Asteroid Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/asteroid1.png",
+   "note": "GT ore host"
+  },
+  {
+   "label": "GalacticraftMars:tile.asteroidsBlock:2",
+   "name": "Asteroid Rock",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/asteroid2.png"
+  },
+  {
+   "label": "GalacticraftMars:tile.denseIce",
+   "name": "Dense Ice",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/denseIce.png"
+  },
+  {
+   "label": "GalacticraftCore:tile.cheeseBlock",
+   "name": "Block of Cheese",
+   "top": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/cheese_1.png",
+   "side": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmoon/textures/blocks/cheese_2.png"
+  },
+  {
+   "label": "GalacticraftCore:tile.fallenMeteor",
+   "name": "Fallen Meteor",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/fallen_meteor.png",
+   "note": "model"
+  }
+ ]
+}

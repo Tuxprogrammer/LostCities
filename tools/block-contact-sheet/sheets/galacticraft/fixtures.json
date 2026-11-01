@@ -1,0 +1,104 @@
+{
+ "title": "Galacticraft: lights, walkways, pads and space-base fixtures",
+ "entries": [
+  {
+   "label": "GalacticraftCore:tile.glowstoneTorch",
+   "name": "Glowstone Torch",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/glowstoneTorch.png",
+   "note": "torch model"
+  },
+  {
+   "label": "GalacticraftCore:tile.arclamp",
+   "name": "Arc Lamp",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/stone.png",
+   "note": "TE, model"
+  },
+  {
+   "label": "GalacticraftMars:tile.walkway",
+   "name": "Walkway",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/walkway.png",
+   "note": "model"
+  },
+  {
+   "label": "GalacticraftMars:tile.walkwayWire",
+   "name": "Walkway (aluminum wire)",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/walkway.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftMars:tile.walkwayOxygenPipe",
+   "name": "Walkway (oxygen pipe)",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftasteroids/textures/blocks/walkway.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.landingPad:0",
+   "name": "Rocket Launch Pad",
+   "top": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/launch_pad.png",
+   "side": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/launch_pad.png",
+   "note": "TE, 0.2 high"
+  },
+  {
+   "label": "GalacticraftCore:tile.landingPad:1",
+   "name": "Buggy Fueling Pad",
+   "top": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/buggy_fueler.png",
+   "side": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/buggy_fueler_blank.png",
+   "note": "TE, 0.2 high"
+  },
+  {
+   "label": "GalacticraftCore:tile.airLockFrame:0",
+   "name": "Air Lock Frame",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/airlock_off.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.airLockFrame:1",
+   "name": "Air Lock Controller",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/airlock_control_off.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.enclosed:1",
+   "name": "Sealable Oxygen Pipe",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/enclosed_oxygen_pipe.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.enclosed:14",
+   "name": "Sealable Aluminum Wire",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/enclosed_aluminum_wire.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.enclosed:2",
+   "name": "Sealable Copper Cable",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/enclosed_copper_cable.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.enclosed:7",
+   "name": "Sealable Stone Transport Pipe",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/enclosed_itempipe_stone.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.enclosed:13",
+   "name": "Sealable ME Cable",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/enclosed_me_cable.png",
+   "note": "TE"
+  },
+  {
+   "label": "GalacticraftCore:tile.spaceStationBase",
+   "name": "Space Station arrival block",
+   "top": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/space_station_top.png",
+   "side": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftcore/textures/blocks/space_station_side.png",
+   "note": "TE, hidden"
+  },
+  {
+   "label": "GalacticraftMars:tile.cavernVines",
+   "name": "Cavernous Vines",
+   "all": "Galacticraft-3.4.37-GTNH.jar!assets/galacticraftmars/textures/blocks/vine_0.png",
+   "note": "hurts"
+  }
+ ]
+}

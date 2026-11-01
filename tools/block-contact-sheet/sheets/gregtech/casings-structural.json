@@ -1,0 +1,287 @@
+{
+ "title": "GregTech: structural casings up to EV (plain blocks, not TEs)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockcasings:10",
+   "name": "Bronze Plated Bricks",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_BRONZEPLATEDBRICKS.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_BRONZEPLATEDBRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings:11",
+   "name": "Heat Proof Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_HEATPROOFCASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_HEATPROOFCASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:0",
+   "name": "Solid Steel Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_SOLID_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_SOLID_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:1",
+   "name": "Frost Proof Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FROST_PROOF.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FROST_PROOF.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:1",
+   "name": "Clean Stainless Steel Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CLEAN_STAINLESSSTEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CLEAN_STAINLESSSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:2",
+   "name": "Stable Titanium Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STABLE_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STABLE_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings8:0",
+   "name": "Chemically Inert Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CHEMICALLY_INERT.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CHEMICALLY_INERT.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:15",
+   "name": "Firebricks",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_DENSEBRICKS.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_DENSEBRICKS.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings12:0",
+   "name": "Coke Oven Bricks",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COKE_OVEN_CASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COKE_OVEN_CASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings9:2",
+   "name": "Primitive Wooden Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/PRIMITIVE_WOODEN_CASING_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/PRIMITIVE_WOODEN_CASING_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:15",
+   "name": "Reinforced Wooden Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/CASING_REINFORCED_WOOD_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/CASING_REINFORCED_WOOD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:2",
+   "name": "Bronze Gear Box Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_BRONZE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_BRONZE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:3",
+   "name": "Steel Gear Box Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:4",
+   "name": "Titanium Gear Box Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GEARBOX_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:12",
+   "name": "Bronze Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_BRONZE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_BRONZE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:13",
+   "name": "Steel Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings2:14",
+   "name": "Titanium Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings8:1",
+   "name": "PTFE Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_POLYTETRAFLUOROETHYLENE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_POLYTETRAFLUOROETHYLENE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:13",
+   "name": "Bronze Firebox Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_BRONZE_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_BRONZE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:14",
+   "name": "Steel Firebox Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_STEEL_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:3",
+   "name": "Titanium Firebox Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_TITANIUM_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREBOX_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:10",
+   "name": "Grate Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GRATE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GRATE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:11",
+   "name": "Filter Machine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_VENT.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_VENT.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:9",
+   "name": "Turbine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:10",
+   "name": "Stainless Steel Turbine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STAINLESSSTEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STAINLESSSTEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:11",
+   "name": "Titanium Turbine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings4:13",
+   "name": "Engine Intake Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ENGINE_INTAKE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ENGINE_INTAKE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings11:0",
+   "name": "Tin Item Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_TIN.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_TIN.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings11:1",
+   "name": "Brass Item Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_BRASS.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_BRASS.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings11:2",
+   "name": "Electrum Item Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_ELECTRUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_ELECTRUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings11:3",
+   "name": "Platinum Item Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_PLATINUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ITEM_PIPE_PLATINUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings13:0",
+   "name": "Cable Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CABLE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_CABLE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings13:1",
+   "name": "Graphite Moderator Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GRAPHITE_MODERATOR.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_GRAPHITE_MODERATOR.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings13:2",
+   "name": "Insulated Fluid Pipe Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_INSULATED_FLUID_PIPE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_INSULATED_FLUID_PIPE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings13:3",
+   "name": "Beryllium Integrated Reactor Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_BERYLLIUM_INTEGRATED_REACTOR.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_BERYLLIUM_INTEGRATED_REACTOR.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings13:4",
+   "name": "Refined Graphite Block",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_REFINED_GRAPHITE.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_REFINED_GRAPHITE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings12:15",
+   "name": "Algae Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/ALGAE_CASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/ALGAE_CASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasingsNH:0",
+   "name": "Air Filter Turbine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_TURBINE_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasingsNH:1",
+   "name": "Air Filter Vent Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_STEEL.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_STEEL.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasingsNH:2",
+   "name": "Pyrolyse Oven Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_ULV_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_ULV_SIDE.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasingsNH:3",
+   "name": "Advanced Air Filter Turbine Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STABLE_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STABLE_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasingsNH:4",
+   "name": "Advanced Air Filter Vent Casing",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_TITANIUM.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_PIPE_TITANIUM.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:0",
+   "name": "MagTech Casing (tier unverified)",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_EMS.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_EMS.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:4",
+   "name": "Electric Compressor Casing (tier unverified)",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COMPRESSOR_CASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COMPRESSOR_CASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:5",
+   "name": "Compression Pipe Casing (tier unverified)",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COMPRESSOR_PIPE_CASING_TOP.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/COMPRESSOR_PIPE_CASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:13",
+   "name": "Solidifier Casing (tier unverified)",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MASS_SOLIDIFIER_CASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MASS_SOLIDIFIER_CASING.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings10:14",
+   "name": "Solidifier Radiator (tier unverified)",
+   "top": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MASS_SOLIDIFIER_RADIATOR_CASING.png",
+   "side": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MASS_SOLIDIFIER_RADIATOR_CASING.png"
+  }
+ ]
+}

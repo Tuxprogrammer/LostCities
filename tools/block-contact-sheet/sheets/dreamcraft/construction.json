@@ -1,0 +1,62 @@
+{
+ "title": "NewHorizonsCoreMod: plated stone and construction blocks",
+ "entries": [
+  {
+   "label": "dreamcraft:BronzePlatedReinforcedStone",
+   "name": "Bronze Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockBronzePlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:SteelPlatedReinforcedStone",
+   "name": "Steel Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockSteelPlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:TitaniumPlatedReinforcedStone",
+   "name": "Titanium Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTitaniumPlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:TungstensteelPlatedReinforcedStone",
+   "name": "Tungstensteel Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockTungstensteelPlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:NaquadahPlatedReinforcedStone",
+   "name": "Naquadah Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockNaquadahPlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:NeutroniumPlatedReinforcedStone",
+   "name": "Neutronium Plated Reinforced Stone",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockNeutroniumPlatedReinforcedStone.png"
+  },
+  {
+   "label": "dreamcraft:PistonBlock",
+   "name": "Piston Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockPistonBlock.png"
+  },
+  {
+   "label": "dreamcraft:DiamondFrameBox",
+   "name": "Diamond Frame Box",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockDiamondFrameBox.png",
+   "note": "see-through"
+  },
+  {
+   "label": "dreamcraft:CompressedGraphite",
+   "name": "Compressed Graphite",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCompressedGraphite.png"
+  },
+  {
+   "label": "dreamcraft:SandClayMix",
+   "name": "Sand Clay Mix",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockSandClayMix.png"
+  },
+  {
+   "label": "dreamcraft:ZincGravelOre",
+   "name": "Zinc Gravel Ore",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockZincGravelOre.png",
+   "note": "ore"
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "title": "GregTech: stripes and hazard sign blocks (gt.blockcasings3:0-9)",
+ "entries": [
+  {
+   "label": "gregtech:gt.blockcasings3:0",
+   "name": "Yellow Stripes Block (A)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STRIPES_A.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:1",
+   "name": "Yellow Stripes Block (B)",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_STRIPES_B.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:2",
+   "name": "Radioactive Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_RADIOACTIVEHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:3",
+   "name": "Bio Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_BIOHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:4",
+   "name": "Explosion Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_EXPLOSIONHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:5",
+   "name": "Fire Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FIREHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:6",
+   "name": "Acid Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_ACIDHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:7",
+   "name": "Magic Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_MAGICHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:8",
+   "name": "Frost Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_FROSTHAZARD.png"
+  },
+  {
+   "label": "gregtech:gt.blockcasings3:9",
+   "name": "Noise Hazard Sign Block",
+   "all": "gregtech-5.09.54.265.jar!assets/gregtech/textures/blocks/iconsets/MACHINE_CASING_NOISEHAZARD.png"
+  }
+ ]
+}

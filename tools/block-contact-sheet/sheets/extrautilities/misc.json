@@ -1,0 +1,137 @@
+{
+ "title": "Extra Utilities 1.2.12: special glass, lamps, furniture, hazards",
+ "entries": [
+  {
+   "label": "ExtraUtilities:etherealglass:0",
+   "name": "Ethereal Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/etherealglass_corners.png",
+   "note": "players pass"
+  },
+  {
+   "label": "ExtraUtilities:etherealglass:1",
+   "name": "Ineffable Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/etherealglass1_corners.png",
+   "note": "players pass"
+  },
+  {
+   "label": "ExtraUtilities:etherealglass:2",
+   "name": "Dark Ethereal Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/etherealdarkglass_corners.png",
+   "note": "players pass; dark"
+  },
+  {
+   "label": "ExtraUtilities:etherealglass:3",
+   "name": "Inverted Ethereal Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/untherealglass1_corners.png",
+   "note": "mobs pass"
+  },
+  {
+   "label": "ExtraUtilities:etherealglass:4",
+   "name": "Inverted Ineffable Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/untherealglass_corners.png",
+   "note": "mobs pass"
+  },
+  {
+   "label": "ExtraUtilities:etherealglass:5",
+   "name": "Inverted Dark Ethereal Glass",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/ConnectedTextures/untherealdarkglass_corners.png",
+   "note": "mobs pass; dark"
+  },
+  {
+   "label": "ExtraUtilities:greenscreen:0-15",
+   "name": "Lapis Caelestis",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/greenscreen.png",
+   "note": "untinted; 16 lit colors"
+  },
+  {
+   "label": "ExtraUtilities:curtains:0",
+   "name": "Curtains",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/curtains.png",
+   "note": "thin; dims light"
+  },
+  {
+   "label": "ExtraUtilities:chandelier:0",
+   "name": "Chandelier",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/chandelier.png",
+   "note": "cross model; light 15; TE"
+  },
+  {
+   "label": "ExtraUtilities:magnumTorch:0",
+   "name": "Magnum Torch",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/magnumTorchTop.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/magnumTorch.png",
+   "note": "TE; no-spawn radius"
+  },
+  {
+   "label": "ExtraUtilities:cobblestone_compressed:0",
+   "name": "Compressed Cobblestone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png",
+   "note": "texture generated at runtime"
+  },
+  {
+   "label": "ExtraUtilities:angelBlock:0",
+   "name": "Angel Block",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/angelBlock.png"
+  },
+  {
+   "label": "ExtraUtilities:block_bedrockium:0",
+   "name": "Bedrockium Block",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/bedrockiumBlock.png",
+   "note": "hardness 1000"
+  },
+  {
+   "label": "ExtraUtilities:pureLove:0",
+   "name": "Block of Pure Love",
+   "all": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/heart.png"
+  },
+  {
+   "label": "ExtraUtilities:spike_base:0",
+   "name": "Spike (iron)",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/spike_base.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/spike_side.png",
+   "note": "TE; hurts"
+  },
+  {
+   "label": "ExtraUtilities:spike_base_wood:0",
+   "name": "Wooden Spike",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/spike_base_wood.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/spike_side_wood.png",
+   "note": "TE; hurts"
+  },
+  {
+   "label": "ExtraUtilities:conveyor:0",
+   "name": "Conveyor Belt",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/conveyor_top.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/conveyor_side.png",
+   "note": "moves entities"
+  },
+  {
+   "label": "ExtraUtilities:trading_post:0",
+   "name": "Trading Post",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/trading_post_top.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/trading_post_side.png",
+   "note": "TE"
+  },
+  {
+   "label": "ExtraUtilities:filing:0",
+   "name": "Filing Cabinet",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/filingcabinet.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/filingcabinet_side.png",
+   "note": "TE"
+  },
+  {
+   "label": "ExtraUtilities:trashcan:0",
+   "name": "Trash Can",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/trashcan_top.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/trashcan.png",
+   "note": "TE"
+  },
+  {
+   "label": "ExtraUtilities:drum:0",
+   "name": "Drum",
+   "top": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/drum_top.png",
+   "side": "extrautilities-1.2.12.jar!assets/extrautils/textures/blocks/drum_side.png",
+   "note": "TE"
+  }
+ ]
+}

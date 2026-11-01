@@ -1,0 +1,75 @@
+{
+ "title": "NewHorizonsCoreMod: material and magic resource blocks",
+ "entries": [
+  {
+   "label": "dreamcraft:Ledox",
+   "name": "Block of Ledox",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockLedox.png"
+  },
+  {
+   "label": "dreamcraft:Mytryl",
+   "name": "Block of Mytryl",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockMytryl.png"
+  },
+  {
+   "label": "dreamcraft:Quantinum",
+   "name": "Block of Quantium",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockQuantinum.png"
+  },
+  {
+   "label": "dreamcraft:BlackPlutonium",
+   "name": "Block of Black Plutonium",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockBlackPlutonium.png"
+  },
+  {
+   "label": "dreamcraft:Sulfur",
+   "name": "Block of Sulfur",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockSulfur.png"
+  },
+  {
+   "label": "dreamcraft:CallistoColdIce",
+   "name": "Callisto Cold Ice Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockCallistoColdIce.png"
+  },
+  {
+   "label": "dreamcraft:MysteriousCrystalBlock",
+   "name": "Mysterious Crystal Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockMysteriousCrystalBlock.png"
+  },
+  {
+   "label": "dreamcraft:BloodyThaumium",
+   "name": "Blood-Soaked Thaumium Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockBloodyThaumium.png"
+  },
+  {
+   "label": "dreamcraft:BloodyVoid",
+   "name": "Blood-Soaked Void Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockBloodyVoid.png"
+  },
+  {
+   "label": "dreamcraft:BloodyIchorium",
+   "name": "Blood-Soaked Ichorium Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockBloodyIchorium.png"
+  },
+  {
+   "label": "dreamcraft:Gaia",
+   "name": "Gaia Spirit Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockGaia.png"
+  },
+  {
+   "label": "dreamcraft:ManaPowder",
+   "name": "Mana Powder Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockManaPowder.png"
+  },
+  {
+   "label": "dreamcraft:ManaPearl",
+   "name": "Mana Pearl Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockManaPearl.png"
+  },
+  {
+   "label": "dreamcraft:PixieDust",
+   "name": "Pixie Dust Block",
+   "all": "GTNewHorizonsCoreMod-2.9.99.jar!assets/dreamcraft/textures/blocks/blockPixieDust.png"
+  }
+ ]
+}

@@ -1,0 +1,240 @@
+{
+ "title": "Railcraft: themed stone bricks (brick.<theme>, metas 0-5)",
+ "entries": [
+  {
+   "label": "Railcraft:brick.abyssal:0",
+   "name": "Abyssal Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#0"
+  },
+  {
+   "label": "Railcraft:brick.abyssal:1",
+   "name": "Abyssal Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#1"
+  },
+  {
+   "label": "Railcraft:brick.abyssal:2",
+   "name": "Abyssal Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#2"
+  },
+  {
+   "label": "Railcraft:brick.abyssal:3",
+   "name": "Abyssal Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#3"
+  },
+  {
+   "label": "Railcraft:brick.abyssal:4",
+   "name": "Abyssal Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#4"
+  },
+  {
+   "label": "Railcraft:brick.abyssal:5",
+   "name": "Abyssal Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#5"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:0",
+   "name": "Bleached Bone Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#0"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:1",
+   "name": "Bleached Bone Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#1"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:2",
+   "name": "Bleached Bone Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#2"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:3",
+   "name": "Bleached Bone Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#3"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:4",
+   "name": "Bleached Bone Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#4"
+  },
+  {
+   "label": "Railcraft:brick.bleachedbone:5",
+   "name": "Bleached Bone Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bleachedbone.png#5"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:0",
+   "name": "Blood Stained Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#0"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:1",
+   "name": "Blood Stained Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#1"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:2",
+   "name": "Blood Stained Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#2"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:3",
+   "name": "Blood Stained Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#3"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:4",
+   "name": "Blood Stained Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#4"
+  },
+  {
+   "label": "Railcraft:brick.bloodstained:5",
+   "name": "Blood Stained Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.bloodstained.png#5"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:0",
+   "name": "Frost Bound Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#0"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:1",
+   "name": "Frost Bound Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#1"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:2",
+   "name": "Frost Bound Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#2"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:3",
+   "name": "Frost Bound Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#3"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:4",
+   "name": "Frost Bound Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#4"
+  },
+  {
+   "label": "Railcraft:brick.frostbound:5",
+   "name": "Frost Bound Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.frostbound.png#5"
+  },
+  {
+   "label": "Railcraft:brick.infernal:0",
+   "name": "Infernal Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#0"
+  },
+  {
+   "label": "Railcraft:brick.infernal:1",
+   "name": "Infernal Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#1"
+  },
+  {
+   "label": "Railcraft:brick.infernal:2",
+   "name": "Infernal Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#2"
+  },
+  {
+   "label": "Railcraft:brick.infernal:3",
+   "name": "Infernal Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#3"
+  },
+  {
+   "label": "Railcraft:brick.infernal:4",
+   "name": "Infernal Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#4"
+  },
+  {
+   "label": "Railcraft:brick.infernal:5",
+   "name": "Infernal Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.infernal.png#5"
+  },
+  {
+   "label": "Railcraft:brick.nether:1",
+   "name": "Nether Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#1"
+  },
+  {
+   "label": "Railcraft:brick.nether:2",
+   "name": "Nether Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#2"
+  },
+  {
+   "label": "Railcraft:brick.nether:3",
+   "name": "Nether Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#3"
+  },
+  {
+   "label": "Railcraft:brick.nether:4",
+   "name": "Nether Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#4"
+  },
+  {
+   "label": "Railcraft:brick.nether:5",
+   "name": "Nether Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.nether.png#5"
+  },
+  {
+   "label": "Railcraft:brick.quarried:0",
+   "name": "Quarried Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#0"
+  },
+  {
+   "label": "Railcraft:brick.quarried:1",
+   "name": "Quarried Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#1"
+  },
+  {
+   "label": "Railcraft:brick.quarried:2",
+   "name": "Quarried Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#2"
+  },
+  {
+   "label": "Railcraft:brick.quarried:3",
+   "name": "Quarried Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#3"
+  },
+  {
+   "label": "Railcraft:brick.quarried:4",
+   "name": "Quarried Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#4"
+  },
+  {
+   "label": "Railcraft:brick.quarried:5",
+   "name": "Quarried Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.quarried.png#5"
+  },
+  {
+   "label": "Railcraft:brick.sandy:0",
+   "name": "Sandy Brick",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#0"
+  },
+  {
+   "label": "Railcraft:brick.sandy:1",
+   "name": "Sandy Fitted",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#1"
+  },
+  {
+   "label": "Railcraft:brick.sandy:2",
+   "name": "Sandy Block",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#2"
+  },
+  {
+   "label": "Railcraft:brick.sandy:3",
+   "name": "Sandy Ornate",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#3"
+  },
+  {
+   "label": "Railcraft:brick.sandy:4",
+   "name": "Sandy Etched",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#4"
+  },
+  {
+   "label": "Railcraft:brick.sandy:5",
+   "name": "Sandy Cobblestone",
+   "all": "Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.sandy.png#5"
+  }
+ ]
+}

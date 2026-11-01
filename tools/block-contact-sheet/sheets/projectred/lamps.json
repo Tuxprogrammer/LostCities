@@ -1,0 +1,221 @@
+{
+ "title": "ProjectRed Illumination: lamps (off and lit) and multipart lights",
+ "entries": [
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:0",
+   "name": "White Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/0.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:1",
+   "name": "Orange Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/1.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:2",
+   "name": "Magenta Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/2.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:3",
+   "name": "Light Blue Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/3.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:4",
+   "name": "Yellow Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/4.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:5",
+   "name": "Lime Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/5.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:6",
+   "name": "Pink Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/6.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:7",
+   "name": "Gray Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/7.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:8",
+   "name": "Light Gray Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/8.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:9",
+   "name": "Cyan Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/9.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:10",
+   "name": "Purple Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/10.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:11",
+   "name": "Blue Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/11.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:12",
+   "name": "Brown Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/12.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:13",
+   "name": "Green Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/13.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:14",
+   "name": "Red Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/14.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:15",
+   "name": "Black Lamp (off)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampoff/15.png",
+   "note": "TE"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:0",
+   "name": "White Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/0.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:1",
+   "name": "Orange Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/1.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:2",
+   "name": "Magenta Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/2.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:3",
+   "name": "Light Blue Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/3.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:4",
+   "name": "Yellow Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/4.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:5",
+   "name": "Lime Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/5.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:6",
+   "name": "Pink Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/6.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:7",
+   "name": "Gray Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/7.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:8",
+   "name": "Light Gray Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/8.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:9",
+   "name": "Cyan Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/9.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:10",
+   "name": "Purple Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/10.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:11",
+   "name": "Blue Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/11.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:12",
+   "name": "Brown Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/12.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:13",
+   "name": "Green Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/13.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:14",
+   "name": "Red Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/14.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ProjRed|Illumination:projectred.illumination.lamp:15",
+   "name": "Black Lamp (lit / inverted)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lampon/15.png",
+   "note": "TE inv=true; light 15"
+  },
+  {
+   "label": "ForgeMultipart part pr_lantern",
+   "name": "Lantern (UV atlas, not a face)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/lantern.png",
+   "note": "multipart TE; bulb tinted by color"
+  },
+  {
+   "label": "ForgeMultipart part pr_fixture",
+   "name": "Fixture (UV atlas, not a face)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/fixture.png",
+   "note": "multipart TE; bulb tinted by color"
+  },
+  {
+   "label": "ForgeMultipart part pr_cagelamp",
+   "name": "Fallout Light (UV atlas, not a face)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/fallout.png",
+   "note": "multipart TE; bulb tinted by color"
+  },
+  {
+   "label": "ForgeMultipart part pr_cagelamp2",
+   "name": "Cage Lamp (UV atlas, not a face)",
+   "all": "ProjRed-4.12.50-GTNH.jar!assets/projectred/textures/blocks/lighting/cage_lamp.png",
+   "note": "multipart TE; bulb tinted by color"
+  }
+ ]
+}

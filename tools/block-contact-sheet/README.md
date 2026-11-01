@@ -23,7 +23,9 @@ A sheet file:
 ```
 
 - Texture references are `<jar file name>!<path inside the jar>`, resolved against `--mods` (default `reference/gtnh/2.9.0/.minecraft/mods/` in this checkout), or a plain file path. The jar name `minecraft.jar` means the vanilla 1.7.10 client jar: `$LC_MC_CLIENT_JAR` if set, else RetroFuturaGradle's cache (`~/.gradle/caches/retro_futura_gradle/mc-vanilla/1.7.10/client.jar`, present after any build of this repo).
+- **Icon atlases** (one PNG holding several square icons in a row or grid, such as Railcraft's `TextureAtlasSheet` strips): append `#<n>` to the reference to take the n-th square tile, counted row-major from 0, with the tile side equal to the image's shorter edge (`Railcraft-9.17.36.jar!assets/railcraft/textures/blocks/brick.abyssal.png#2`).
 - `all` sets every face; `top` and `side` set them separately.
+- `tint` (`"#rrggbb"`) multiplies every face by a color, for textures the game colors at runtime (GT material blocks and glass, Railcraft strengthened glass). It approximates the in-game color.
 - Animated strips use their first frame. A missing texture renders as a magenta checker, and the run lists it.
 - **Connected-texture atlases** (Chisel's `*-ctm.png` and similar) are tiled sheets, not faces. Point the entry at the block's plain face texture instead, which is usually the non-`ctm` file next to it.
 
