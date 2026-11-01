@@ -1,0 +1,191 @@
+{
+ "title": "Biomes O' Plenty: planks and logs",
+ "entries": [
+  {
+   "label": "BiomesOPlenty:planks:0",
+   "name": "sacredoak planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_sacredoak.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:1",
+   "name": "cherry planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_cherry.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:2",
+   "name": "dark planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_dark.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:3",
+   "name": "fir planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_fir.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:4",
+   "name": "ethereal planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_ethereal.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:5",
+   "name": "magic planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_magic.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:6",
+   "name": "mangrove planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mangrove.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:7",
+   "name": "palm planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_palm.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:8",
+   "name": "redwood planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_redwood.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:9",
+   "name": "willow planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_willow.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:10",
+   "name": "Bamboo Thatching",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bamboothatching.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:11",
+   "name": "pine planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_pine.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:12",
+   "name": "hell_bark planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_hell_bark.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:13",
+   "name": "jacaranda planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_jacaranda.png"
+  },
+  {
+   "label": "BiomesOPlenty:planks:14",
+   "name": "mahogany planks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/plank_mahogany.png"
+  },
+  {
+   "label": "BiomesOPlenty:logs1:0",
+   "name": "sacredoak wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_sacredoak_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_sacredoak_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs1:1",
+   "name": "cherry wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_cherry_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_cherry_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs1:2",
+   "name": "dark wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dark_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dark_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs1:3",
+   "name": "fir wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_fir_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_fir_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs2:0",
+   "name": "ethereal wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_ethereal_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_ethereal_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs2:1",
+   "name": "magic wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_magic_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_magic_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs2:2",
+   "name": "mangrove wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mangrove_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mangrove_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs2:3",
+   "name": "palm wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_palm_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_palm_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs3:0",
+   "name": "redwood wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_redwood_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_redwood_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs3:1",
+   "name": "willow wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_willow_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_willow_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs3:2",
+   "name": "dead wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dead_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_dead_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs3:3",
+   "name": "Giant Flower Stem",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bigflowerstem_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bigflowerstem_side.png"
+  },
+  {
+   "label": "BiomesOPlenty:logs4:0",
+   "name": "pine wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_pine_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_pine_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs4:1",
+   "name": "hellbark wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_hellbark_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_hellbark_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs4:2",
+   "name": "jacaranda wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_jacaranda_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_jacaranda_side.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "BiomesOPlenty:logs4:3",
+   "name": "mahogany wood",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mahogany_heart.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/log_mahogany_side.png",
+   "note": "+4/+8 axis"
+  }
+ ]
+}

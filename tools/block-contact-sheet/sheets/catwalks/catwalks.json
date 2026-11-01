@@ -1,0 +1,115 @@
+{
+ "title": "Catwalks 2: catwalks, caged ladders, scaffolds, supports (no TE)",
+ "entries": [
+  {
+   "label": "catwalks:catwalk_lit:0-15",
+   "name": "catwalk_lit",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/bottom/plain/lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/plain/lights.png",
+   "note": "light 12; meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_lit_tape:0-15",
+   "name": "catwalk_lit_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/bottom/tape/lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/tape/lights.png",
+   "note": "light 12; meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_lit_nobottom:0-15",
+   "name": "catwalk_lit_nobottom",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/transparent.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/plain/lights.png",
+   "note": "light 12; meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_lit_nobottom_tape:0-15",
+   "name": "catwalk_lit_nobottom_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/transparent.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/tape/lights.png",
+   "note": "light 12; meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_unlit:0-15",
+   "name": "catwalk_unlit",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/bottom/plain/no_lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/plain/no_lights.png",
+   "note": "meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_unlit_tape:0-15",
+   "name": "catwalk_unlit_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/bottom/tape/no_lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/tape/no_lights.png",
+   "note": "meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_unlit_nobottom:0-15",
+   "name": "catwalk_unlit_nobottom",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/transparent.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/plain/no_lights.png",
+   "note": "meta = open sides"
+  },
+  {
+   "label": "catwalks:catwalk_unlit_nobottom_tape:0-15",
+   "name": "catwalk_unlit_nobottom_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/transparent.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/catwalk/side/tape/no_lights.png",
+   "note": "meta = open sides"
+  },
+  {
+   "label": "catwalks:cagedLadder_north_lit (+_south/_west/_east, +_nobottom)",
+   "name": "cagedLadder_north_lit",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/ladder/plain/lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/side/plain/lights.png"
+  },
+  {
+   "label": "catwalks:cagedLadder_north_lit_tape (+_south/_west/_east, +_nobottom)",
+   "name": "cagedLadder_north_lit_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/ladder/tape/lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/side/tape/lights.png"
+  },
+  {
+   "label": "catwalks:cagedLadder_north_unlit (+_south/_west/_east, +_nobottom)",
+   "name": "cagedLadder_north_unlit",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/ladder/plain/no_lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/side/plain/no_lights.png"
+  },
+  {
+   "label": "catwalks:cagedLadder_north_unlit_tape (+_south/_west/_east, +_nobottom)",
+   "name": "cagedLadder_north_unlit_tape",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/ladder/tape/no_lights.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/ladder/side/tape/no_lights.png"
+  },
+  {
+   "label": "catwalks:scaffold:0",
+   "name": "Scaffolding",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/scaffold_top.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/scaffold_side.png"
+  },
+  {
+   "label": "catwalks:scaffold:1",
+   "name": "Builder's Scaffolding",
+   "top": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/scaffold_builders_top.png",
+   "side": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/scaffold_builders_side.png"
+  },
+  {
+   "label": "catwalks:support_column",
+   "name": "Support Column",
+   "all": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/support.png",
+   "note": "thin post"
+  },
+  {
+   "label": "catwalks:sturdy_rail",
+   "name": "Sturdy Rail",
+   "all": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/sturdy_rail/normal.png",
+   "note": "rail"
+  },
+  {
+   "label": "catwalks:sturdy_rail_powered",
+   "name": "Sturdy Booster Rail",
+   "all": "catwalks-2.4.2-GTNH.jar!assets/catwalks/textures/blocks/sturdy_rail/booster_on.png",
+   "note": "rail"
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "title": "Storage Drawers: trim blocks (plain, no TE), vanilla, BoP and Natura woods",
+ "entries": [
+  {
+   "label": "StorageDrawers:trim:0",
+   "name": "oak trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png"
+  },
+  {
+   "label": "StorageDrawers:trim:1",
+   "name": "spruce trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_spruce_side.png"
+  },
+  {
+   "label": "StorageDrawers:trim:2",
+   "name": "birch trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_birch_side.png"
+  },
+  {
+   "label": "StorageDrawers:trim:3",
+   "name": "jungle trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_jungle_side.png"
+  },
+  {
+   "label": "StorageDrawers:trim:4",
+   "name": "acacia trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_acacia_side.png"
+  },
+  {
+   "label": "StorageDrawers:trim:5",
+   "name": "big_oak trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_big_oak_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:0",
+   "name": "sacredoak trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_sacredoak_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:1",
+   "name": "cherry trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_cherry_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:2",
+   "name": "dark trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_dark_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:3",
+   "name": "fir trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_fir_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:4",
+   "name": "ethereal trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_ethereal_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:5",
+   "name": "magic trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_magic_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:6",
+   "name": "mangrove trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_mangrove_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:7",
+   "name": "palm trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_palm_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:8",
+   "name": "redwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_redwood_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:9",
+   "name": "willow trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_willow_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:11",
+   "name": "pine trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_pine_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:12",
+   "name": "hellbark trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_hellbark_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:13",
+   "name": "jacaranda trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_jacaranda_side.png"
+  },
+  {
+   "label": "StorageDrawersBop:trim:14",
+   "name": "mahogany trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersbop/textures/blocks/drawers_mahogany_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:0",
+   "name": "eucalyptus trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_eucalyptus_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:1",
+   "name": "sakura trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_sakura_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:2",
+   "name": "ghostwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_ghostwood_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:3",
+   "name": "redwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_redwood_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:4",
+   "name": "bloodwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_bloodwood_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:5",
+   "name": "hopseed trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_hopseed_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:6",
+   "name": "maple trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_maple_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:7",
+   "name": "silverbell trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_silverbell_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:8",
+   "name": "purpleheart trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_purpleheart_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:9",
+   "name": "tigerwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_tigerwood_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:10",
+   "name": "willow trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_willow_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:11",
+   "name": "darkwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_darkwood_side.png"
+  },
+  {
+   "label": "StorageDrawersNatura:trim:12",
+   "name": "fusewood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersnatura/textures/blocks/drawers_fusewood_side.png"
+  }
+ ]
+}

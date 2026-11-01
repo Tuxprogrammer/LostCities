@@ -1,0 +1,11 @@
+{"title": "Solar panels (Advanced Solar Panels, Super Solar Panels): rooftop dressing candidates",
+ "entries": [
+  {"label": "AdvancedSolarPanel:BlockAdvSolarPanel:0", "name": "Advanced Solar Panel", "top": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/asp_top.png", "side": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/asp_side.png", "note": "TE, ticks"},
+  {"label": "AdvancedSolarPanel:BlockAdvSolarPanel:1", "name": "Hybrid Solar Panel", "top": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/hsp_top.png", "side": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/hsp_side.png"},
+  {"label": "AdvancedSolarPanel:BlockAdvSolarPanel:2", "name": "Ultimate Hybrid Solar Panel", "top": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/usp_top.png", "side": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/usp_side.png"},
+  {"label": "AdvancedSolarPanel:BlockAdvSolarPanel:3", "name": "Quantum Solar Panel", "top": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/qsp_top.png", "side": "AdvancedSolarPanel-1.7.10-3.5.1.jar!assets/advancedsolarpanel/textures/blocks/qsp_side.png"},
+  {"label": "supersolarpanel:SingularSolarPanel:0", "name": "Singular Solar Panel", "top": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/ssp_top.png", "side": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/ssp_side.png"},
+  {"label": "supersolarpanel:SpectralSolarPanel:0", "name": "Spectral Solar Panel", "top": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/spsp_top.png", "side": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/spsp_side.png"},
+  {"label": "supersolarpanel:PhotonicSolarPanel:0", "name": "Photonic Solar Panel", "top": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/phsp_top.png", "side": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/phsp_side.png"},
+  {"label": "supersolarpanel:AdminSolarPanel:0", "name": "Admin Solar Panel", "top": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/admsp_top.png", "side": "supersolarpanel-1.1.5.jar!assets/supersolarpanel/textures/blocks/admsp_side.png"}
+ ]}

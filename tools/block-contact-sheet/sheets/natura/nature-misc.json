@@ -1,0 +1,355 @@
+{
+ "title": "Natura: leaves, saplings, glass, clouds, grass, plants, nether",
+ "entries": [
+  {
+   "label": "Natura:floraleaves:0",
+   "name": "redwood leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:floraleaves:1",
+   "name": "eucalyptus leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:floraleaves:2",
+   "name": "hopseed leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:floraleavesnocolor:0",
+   "name": "sakura leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:floraleavesnocolor:1",
+   "name": "ghostwood leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:floraleavesnocolor:2",
+   "name": "bloodwood leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:floraleavesnocolor:3",
+   "name": "willow leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:Rare Leaves:0",
+   "name": "maple leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:Rare Leaves:1",
+   "name": "silverbell leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:Rare Leaves:2",
+   "name": "purpleheart leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:Rare Leaves:3",
+   "name": "tiger leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_leaves_fancy.png",
+   "note": "+4 no decay biome-tinted"
+  },
+  {
+   "label": "Natura:Dark Leaves:0",
+   "name": "darkwood leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:Dark Leaves:1",
+   "name": "darkwood_flowering leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_flowering_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:Dark Leaves:2",
+   "name": "darkwood_fruit leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_fruit_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:Dark Leaves:3",
+   "name": "fusewood leaves",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_leaves_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "Natura:florasapling:0",
+   "name": "redwood sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:1",
+   "name": "eucalyptus sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:2",
+   "name": "hopseed sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:3",
+   "name": "sakura sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:4",
+   "name": "ghostwood sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:5",
+   "name": "bloodwood sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:6",
+   "name": "darkwood sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:florasapling:7",
+   "name": "fusewood sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Rare Sapling:0",
+   "name": "maple sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Rare Sapling:1",
+   "name": "silverbell sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Rare Sapling:2",
+   "name": "purpleheart sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Rare Sapling:3",
+   "name": "tiger sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Rare Sapling:4",
+   "name": "willow sapling",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_sapling.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:NetherGlass:0",
+   "name": "Soul Glass",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/glass_soul.png",
+   "note": "NO collision"
+  },
+  {
+   "label": "Natura:NetherGlass:1",
+   "name": "Heat Glass",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/glass_heat.png",
+   "note": "burns on touch"
+  },
+  {
+   "label": "Natura:Cloud:0",
+   "name": "cloud_white",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/cloud_white.png",
+   "note": "translucent, near-no collision"
+  },
+  {
+   "label": "Natura:Cloud:1",
+   "name": "cloud_gray",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/cloud_gray.png",
+   "note": "translucent, near-no collision"
+  },
+  {
+   "label": "Natura:Cloud:2",
+   "name": "cloud_dark",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/cloud_dark.png",
+   "note": "translucent, near-no collision"
+  },
+  {
+   "label": "Natura:Cloud:3",
+   "name": "cloud_sulfur",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/cloud_sulfur.png",
+   "note": "translucent, near-no collision"
+  },
+  {
+   "label": "Natura:GrassBlock:0",
+   "name": "Topiary Grass",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/grass_top.png",
+   "note": "all faces; tinted in game; no mob spawn"
+  },
+  {
+   "label": "Natura:GrassBlock:1",
+   "name": "Bluegrass",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/grass_top.png",
+   "note": "all faces; tinted in game; no mob spawn"
+  },
+  {
+   "label": "Natura:GrassBlock:2",
+   "name": "Autumnal Grass",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/grass_top.png",
+   "note": "all faces; tinted in game; no mob spawn"
+  },
+  {
+   "label": "Natura:heatsand:0",
+   "name": "Heat Sand",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/heatsand.png",
+   "note": "falls; burns"
+  },
+  {
+   "label": "Natura:soil.tainted:0",
+   "name": "Tainted Soil",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/tainted_soil.png"
+  },
+  {
+   "label": "Natura:Glowshroom:0",
+   "name": "Green Glowshroom",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/mushroom_green.png",
+   "note": "0-2; light 9"
+  },
+  {
+   "label": "Natura:greenGlowshroom:0",
+   "name": "Green Glowshroom (large)",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/mushroom_skin_green.png",
+   "note": "light 7"
+  },
+  {
+   "label": "Natura:purpleGlowshroom:0",
+   "name": "Purple Glowshroom (large)",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/mushroom_skin_purple.png",
+   "note": "light 7"
+  },
+  {
+   "label": "Natura:blueGlowshroom:0",
+   "name": "Blue Glowshroom (large)",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/mushroom_skin_blue.png",
+   "note": "light 9"
+  },
+  {
+   "label": "Natura:Thornvines:0",
+   "name": "Thornvines",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/thornvine.png",
+   "note": "vine; light 9; hurts"
+  },
+  {
+   "label": "Natura:Bluebells:0",
+   "name": "Bluebells",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/flower_bluebells.png",
+   "note": "cross model"
+  },
+  {
+   "label": "Natura:Saguaro:0",
+   "name": "Saguaro Cactus",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/saguaro_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/saguaro_side.png",
+   "note": "hurts"
+  },
+  {
+   "label": "Natura:BerryBush:12",
+   "name": "raspberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/raspberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:BerryBush:13",
+   "name": "blueberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/blueberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:BerryBush:14",
+   "name": "blackberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/blackberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:BerryBush:15",
+   "name": "geoberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/geoberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:NetherBerryBush:12",
+   "name": "blightberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/blightberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:NetherBerryBush:13",
+   "name": "duskberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/duskberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:NetherBerryBush:14",
+   "name": "skyberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/skyberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:NetherBerryBush:15",
+   "name": "stingberry bush",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/stingberry_ripe_fancy.png",
+   "note": "0-15 stage"
+  },
+  {
+   "label": "Natura:NetherFurnace:2",
+   "name": "Nether Furnace",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/nfurnace_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/nfurnace_off.png",
+   "note": "TE"
+  },
+  {
+   "label": "Natura:Obelisk:0",
+   "name": "Obelisk",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/obelisk.png",
+   "note": "respawn point"
+  },
+  {
+   "label": "Natura:NetherHopper:0",
+   "name": "Blaze Hopper",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/nhopper_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/nhopper_outside.png",
+   "note": "TE model"
+  },
+  {
+   "label": "Natura:Blazerail:0",
+   "name": "Blaze Rail",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/brail_normal.png",
+   "note": "rail"
+  }
+ ]
+}

@@ -1,0 +1,179 @@
+{
+ "title": "Forestry: logs (wood type in TE tag WT)",
+ "entries": [
+  {
+   "label": "Forestry:logs WT=0",
+   "name": "Larch Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.larch.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.larch.png"
+  },
+  {
+   "label": "Forestry:logs WT=1",
+   "name": "Teak Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.teak.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.teak.png"
+  },
+  {
+   "label": "Forestry:logs WT=2",
+   "name": "Acacia Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.acacia.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.acacia.png"
+  },
+  {
+   "label": "Forestry:logs WT=3",
+   "name": "Lime Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.lime.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.lime.png"
+  },
+  {
+   "label": "Forestry:logs WT=4",
+   "name": "Chestnut Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.chestnut.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.chestnut.png"
+  },
+  {
+   "label": "Forestry:logs WT=5",
+   "name": "Wenge Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.wenge.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.wenge.png"
+  },
+  {
+   "label": "Forestry:logs WT=6",
+   "name": "Baobab Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.baobab.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.baobab.png"
+  },
+  {
+   "label": "Forestry:logs WT=7",
+   "name": "Sequoia Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.sequoia.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.sequoia.png"
+  },
+  {
+   "label": "Forestry:logs WT=8",
+   "name": "Kapok Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.kapok.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.kapok.png"
+  },
+  {
+   "label": "Forestry:logs WT=9",
+   "name": "Ebony Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.ebony.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.ebony.png"
+  },
+  {
+   "label": "Forestry:logs WT=10",
+   "name": "Mahogany Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.mahogany.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.mahogany.png"
+  },
+  {
+   "label": "Forestry:logs WT=11",
+   "name": "Balsa Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.balsa.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.balsa.png"
+  },
+  {
+   "label": "Forestry:logs WT=12",
+   "name": "Willow Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.willow.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.willow.png"
+  },
+  {
+   "label": "Forestry:logs WT=13",
+   "name": "Walnut Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.walnut.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.walnut.png"
+  },
+  {
+   "label": "Forestry:logs WT=14",
+   "name": "Greenheart Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.greenheart.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.greenheart.png"
+  },
+  {
+   "label": "Forestry:logs WT=15",
+   "name": "Cherry Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.cherry.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.cherry.png"
+  },
+  {
+   "label": "Forestry:logs WT=16",
+   "name": "Mahoe Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.mahoe.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.mahoe.png"
+  },
+  {
+   "label": "Forestry:logs WT=17",
+   "name": "Poplar Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.poplar.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.poplar.png"
+  },
+  {
+   "label": "Forestry:logs WT=18",
+   "name": "Palm Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.palm.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.palm.png"
+  },
+  {
+   "label": "Forestry:logs WT=19",
+   "name": "Papaya Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.papaya.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.papaya.png"
+  },
+  {
+   "label": "Forestry:logs WT=20",
+   "name": "Pine Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.pine.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.pine.png"
+  },
+  {
+   "label": "Forestry:logs WT=21",
+   "name": "Plum Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.plum.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.plum.png"
+  },
+  {
+   "label": "Forestry:logs WT=22",
+   "name": "Maple Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.maple.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.maple.png"
+  },
+  {
+   "label": "Forestry:logs WT=23",
+   "name": "Citrus Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.citrus.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.citrus.png"
+  },
+  {
+   "label": "Forestry:logs WT=24",
+   "name": "Giganteum Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.giganteum.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.giganteum.png"
+  },
+  {
+   "label": "Forestry:logs WT=25",
+   "name": "Ipe Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.ipe.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.ipe.png"
+  },
+  {
+   "label": "Forestry:logs WT=26",
+   "name": "Padauk Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.padauk.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.padauk.png"
+  },
+  {
+   "label": "Forestry:logs WT=27",
+   "name": "Cocobolo Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.cocobolo.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.cocobolo.png"
+  },
+  {
+   "label": "Forestry:logs WT=28",
+   "name": "Zebrawood Wood",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/heart.zebrawood.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/bark.zebrawood.png"
+  }
+ ]
+}

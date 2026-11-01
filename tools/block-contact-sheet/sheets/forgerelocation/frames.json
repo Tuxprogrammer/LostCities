@@ -1,0 +1,17 @@
+{
+ "title": "ForgeRelocation (MCFrames): frame and motor",
+ "entries": [
+  {
+   "label": "MCFrames:mcframes.frame",
+   "name": "Support Frame",
+   "all": "ForgeRelocation-0.3.7.jar!assets/mcframes/textures/blocks/frame.png",
+   "note": "registry name unverified"
+  },
+  {
+   "label": "ForgeRelocation motor",
+   "name": "Motor",
+   "top": "ForgeRelocation-0.3.7.jar!assets/mcframes/textures/blocks/motor/top.png",
+   "side": "ForgeRelocation-0.3.7.jar!assets/mcframes/textures/blocks/motor/side.png"
+  }
+ ]
+}

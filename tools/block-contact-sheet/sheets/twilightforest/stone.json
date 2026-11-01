@@ -1,0 +1,329 @@
+{
+ "title": "Twilight Forest: stone, brick and aurora blocks",
+ "entries": [
+  {
+   "label": "TwilightForest:tile.CastleBrick:0",
+   "name": "Castle Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_brick.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.CastleBrick:1",
+   "name": "Worn Castle Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_faded.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.CastleBrick:2",
+   "name": "Cracked Castle Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_cracked.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.CastleBrick:3",
+   "name": "Castle Roof Tile",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_roof.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.CastleMagic:0",
+   "name": "Blue Castle Rune Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_magic_0.png",
+   "note": "rune overlay, glows"
+  },
+  {
+   "label": "TwilightForest:tile.CastleMagic:2",
+   "name": "Pink Castle Rune Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castleblock_magic_2.png",
+   "note": "rune overlay"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:0",
+   "name": "Mazestone",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_plain.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:1",
+   "name": "Mazestone Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_brick.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:2",
+   "name": "Chiseled Mazestone",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_plain.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_pillar.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:3",
+   "name": "Decorative Mazestone Brick",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_brick.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_decorative.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:4",
+   "name": "Cracked Mazestone Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_cracked.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:5",
+   "name": "Mossy Mazestone Brick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_mossy.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:6",
+   "name": "Mazestone Mosaic",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_mosaic.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_brick.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMazestone:7",
+   "name": "Mazestone Border",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_border.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mazestone_brick.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFUnderBrick:0",
+   "name": "Underbrick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/knightbrick.png",
+   "note": "hardness 1.5"
+  },
+  {
+   "label": "TwilightForest:tile.TFUnderBrick:1",
+   "name": "Mossy Underbrick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/knightbrick_mossy.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFUnderBrick:2",
+   "name": "Cracked Underbrick",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/knightbrick_cracked.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDeadrock:0",
+   "name": "Weathered Deadrock",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/deadrock_surface.png",
+   "note": "hardness 100"
+  },
+  {
+   "label": "TwilightForest:tile.TFDeadrock:1",
+   "name": "Cracked Deadrock",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/deadrock_cracked.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDeadrock:2",
+   "name": "Deadrock",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/deadrock_solid.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerStone:0",
+   "name": "Towerwood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerwood_planks.png",
+   "note": "hardness 40"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerStone:1",
+   "name": "Encased Towerwood",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerwood_encased.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerStone:2",
+   "name": "Cracked Towerwood",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerwood_cracked.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerStone:3",
+   "name": "Mossy Towerwood",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerwood_mossy.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerStone:4",
+   "name": "Infested Towerwood",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerwood_infested.png",
+   "note": "termite! never"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastoneEtched:0",
+   "name": "Etched Nagastone",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/stone_tiles.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/etched_nagastone_down.png",
+   "note": "facing meta"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastoneEtchedMossy:0",
+   "name": "Mossy Etched Nagastone",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/stone_tiles_mossy.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/etched_nagastone_down_mossy.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastoneEtchedWeathered:0",
+   "name": "Ruined Etched Nagastone",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/stone_tiles_weathered.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/etched_nagastone_down_weathered.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastonePillar:0",
+   "name": "Nagastone Pillar",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_end.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_side.png",
+   "note": "axis 0/4/8"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastonePillarMossy:0",
+   "name": "Mossy Nagastone Pillar",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_end_mossy.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_side_mossy.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastonePillarWeathered:0",
+   "name": "Ruined Nagastone Pillar",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_end_weathered.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/nagastone_pillar_side_weathered.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFNagastoneEtched (top)",
+   "name": "Nagastone stone tiles",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/nagastone/stone_tiles.png",
+   "note": "face texture"
+  },
+  {
+   "label": "TwilightForest:tile.TFSpiralBricks:0",
+   "name": "Spiral Stone Bricks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/stonebrick_carved_fix.png",
+   "note": "connected spiral; approx"
+  },
+  {
+   "label": "TwilightForest:tile.TrollSteinn:0",
+   "name": "Trollsteinn",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/trollsteinn.png",
+   "note": "lit when lit nearby"
+  },
+  {
+   "label": "TwilightForest:tile.TrollSteinn (lit)",
+   "name": "Trollsteinn lit face",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/trollsteinn_light.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFAuroraBrick:0",
+   "name": "Aurora Block",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurorabrick0.png",
+   "note": "tinted by x,z in game"
+  },
+  {
+   "label": "TwilightForest:tile.TFAuroraBrick:4",
+   "name": "Aurora Block",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurorabrick4.png",
+   "note": "untinted here"
+  },
+  {
+   "label": "TwilightForest:tile.AuroraPillar:0",
+   "name": "Aurora Pillar",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurora_pillar_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurora_pillar_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.AuroraSlab:0",
+   "name": "Aurora Slab",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurora_pillar_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/aurora_slab_side.png",
+   "note": "slab"
+  },
+  {
+   "label": "TwilightForest:tile.GiantCobble:0",
+   "name": "Giant Cobblestone",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/cobblestone.png",
+   "note": "4x4 scaled; approx"
+  },
+  {
+   "label": "TwilightForest:tile.FluffyCloud:0",
+   "name": "Fluffy Cloud",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/fluffy_cloud.png"
+  },
+  {
+   "label": "TwilightForest:tile.WispyCloud:0",
+   "name": "Wispy Cloud",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wispy_cloud.png"
+  },
+  {
+   "label": "TwilightForest:tile.KnightmetalBlock:0",
+   "name": "Block of Knightmetal",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/knightmetal_block.png",
+   "note": "hurts on touch"
+  },
+  {
+   "label": "TwilightForest:tile.IronwoodBlock:0",
+   "name": "Block of Ironwood",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/ironwood_block.png"
+  },
+  {
+   "label": "TwilightForest:tile.SteeleafBlock:0",
+   "name": "Block of Steeleaf",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/steeleaf_block.png"
+  },
+  {
+   "label": "TwilightForest:tile.CarminiteBlock:0",
+   "name": "Block of Carminite",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/carminite_block.png"
+  },
+  {
+   "label": "TwilightForest:tile.FieryBlock:0",
+   "name": "Block of Fiery Metal",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/fiery_block.png",
+   "note": "light, burns"
+  },
+  {
+   "label": "TwilightForest:tile.ArcticFurBlock:0",
+   "name": "Block of Arctic Fur",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/arctic_fur_block.png"
+  },
+  {
+   "label": "TwilightForest:tile.UberousSoil:0",
+   "name": "Uberous Soil",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/uberous_soil.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFFireJet:0",
+   "name": "Smoking Block",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/firejet_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/firejet_side.png",
+   "note": "trap"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerDevice:2",
+   "name": "Vanishing Block",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/towerdev_vanish_off.png",
+   "note": "mechanism"
+  },
+  {
+   "label": "TwilightForest:tile.TFTowerTranslucent:6",
+   "name": "False Gold",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/gold_block.png",
+   "note": "approx"
+  },
+  {
+   "label": "TwilightForest:tile.TFShield:0",
+   "name": "Stronghold Shield",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/shield_outside.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/shield_inside.png",
+   "note": "unbreakable"
+  },
+  {
+   "label": "TwilightForest:tile.ForceField:0",
+   "name": "Violet Force Field",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/forcefield_purple.png",
+   "note": "unbreakable"
+  },
+  {
+   "label": "TwilightForest:tile.CastleDoor:0",
+   "name": "Blue Castle Door",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/castle_door.png",
+   "note": "unbreakable mechanism"
+  },
+  {
+   "label": "TwilightForest:tile.Slider:0",
+   "name": "Slide Trap",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/slider_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/slider_h.png",
+   "note": "moving damage block"
+  }
+ ]
+}

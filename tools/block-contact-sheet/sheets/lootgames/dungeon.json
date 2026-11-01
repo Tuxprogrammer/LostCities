@@ -1,0 +1,61 @@
+{
+ "title": "LootGames: dungeon blocks",
+ "entries": [
+  {
+   "label": "lootgames:LootGamesDungeonWall:0",
+   "name": "Dungeon Wall",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/dungeon_wall.png",
+   "note": "harvest level 4"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:1",
+   "name": "Dungeon Ceiling",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/dungeon_ceiling.png"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:2",
+   "name": "Dungeon Floor",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/dungeon_floor.png"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:3",
+   "name": "Cracked Dungeon Wall",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/cracked_dungeon_wall.png",
+   "note": "hardness 2"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:4",
+   "name": "Cracked Dungeon Ceiling",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/cracked_dungeon_ceiling.png"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:5",
+   "name": "Cracked Dungeon Floor",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/cracked_dungeon_floor.png"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonWall:6",
+   "name": "Shielded Dungeon Floor",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/shielded_dungeon_floor.png",
+   "note": "unbreakable"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonLight:0",
+   "name": "Dungeon Lamp",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/dungeon_lamp.png",
+   "note": "light 15"
+  },
+  {
+   "label": "lootgames:LootGamesDungeonLight:1",
+   "name": "Broken Dungeon Lamp",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/broken_dungeon_lamp.png",
+   "note": "no light"
+  },
+  {
+   "label": "lootgames:LootGamesMasterBlock:0",
+   "name": "Puzzle Master",
+   "all": "lootgames-2.2.14.jar!assets/lootgames/textures/blocks/puzzle_master.png",
+   "note": "TE, spawns game"
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+ "title": "Biomes O' Plenty: leaves and petals",
+ "entries": [
+  {
+   "label": "BiomesOPlenty:leaves1:0",
+   "name": "yellowautumn leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_yellowautumn_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves1:1",
+   "name": "bamboo leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_bamboo_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves1:2",
+   "name": "magic leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_magic_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves1:3",
+   "name": "dark leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_dark_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves2:0",
+   "name": "dead leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_dead_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves2:1",
+   "name": "fir leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_fir_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves2:2",
+   "name": "ethereal leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_ethereal_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves2:3",
+   "name": "orangeautumn leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_orangeautumn_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves3:0",
+   "name": "origin leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_origin_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves3:1",
+   "name": "pinkcherry leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_pinkcherry_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves3:2",
+   "name": "maple leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_maple_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves3:3",
+   "name": "whitecherry leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_whitecherry_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves4:0",
+   "name": "hellbark leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_hellbark_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:leaves4:1",
+   "name": "jacaranda leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_jacaranda_fancy.png",
+   "note": "+4 no decay"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves1:0",
+   "name": "sacredoak leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_sacredoak_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves1:1",
+   "name": "mangrove leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_mangrove_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves1:2",
+   "name": "palm leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_palm_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves1:3",
+   "name": "redwood leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_redwood_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves2:0",
+   "name": "willow leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_willow_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves2:1",
+   "name": "pine leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_pine_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves2:2",
+   "name": "mahogany leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_mahogany_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:colorizedLeaves2:3",
+   "name": "flowering leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_flowering_fancy.png",
+   "note": "biome-tinted; gray here"
+  },
+  {
+   "label": "BiomesOPlenty:appleLeaves:0",
+   "name": "Apple Leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_apple3_fancy.png",
+   "note": "0-3 ripeness"
+  },
+  {
+   "label": "BiomesOPlenty:persimmonLeaves:0",
+   "name": "Persimmon Leaves",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/leaves_persimmon3_fancy.png",
+   "note": "0-3 ripeness"
+  },
+  {
+   "label": "BiomesOPlenty:petals:0",
+   "name": "Giant Red Flower",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bigflowerred.png"
+  },
+  {
+   "label": "BiomesOPlenty:petals:1",
+   "name": "Giant Yellow Flower",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bigfloweryellow.png"
+  }
+ ]
+}

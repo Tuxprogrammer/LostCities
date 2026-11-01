@@ -1,0 +1,150 @@
+{
+ "title": "Forestry: planks (wood type in TE tag WT)",
+ "entries": [
+  {
+   "label": "Forestry:planks WT=0",
+   "name": "Larch Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.larch.png"
+  },
+  {
+   "label": "Forestry:planks WT=1",
+   "name": "Teak Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.teak.png"
+  },
+  {
+   "label": "Forestry:planks WT=2",
+   "name": "Acacia Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.acacia.png"
+  },
+  {
+   "label": "Forestry:planks WT=3",
+   "name": "Lime Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.lime.png"
+  },
+  {
+   "label": "Forestry:planks WT=4",
+   "name": "Chestnut Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.chestnut.png"
+  },
+  {
+   "label": "Forestry:planks WT=5",
+   "name": "Wenge Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.wenge.png"
+  },
+  {
+   "label": "Forestry:planks WT=6",
+   "name": "Baobab Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.baobab.png"
+  },
+  {
+   "label": "Forestry:planks WT=7",
+   "name": "Sequoia Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.sequoia.png"
+  },
+  {
+   "label": "Forestry:planks WT=8",
+   "name": "Kapok Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.kapok.png"
+  },
+  {
+   "label": "Forestry:planks WT=9",
+   "name": "Ebony Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.ebony.png"
+  },
+  {
+   "label": "Forestry:planks WT=10",
+   "name": "Mahogany Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.mahogany.png"
+  },
+  {
+   "label": "Forestry:planks WT=11",
+   "name": "Balsa Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.balsa.png"
+  },
+  {
+   "label": "Forestry:planks WT=12",
+   "name": "Willow Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.willow.png"
+  },
+  {
+   "label": "Forestry:planks WT=13",
+   "name": "Walnut Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.walnut.png"
+  },
+  {
+   "label": "Forestry:planks WT=14",
+   "name": "Greenheart Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.greenheart.png"
+  },
+  {
+   "label": "Forestry:planks WT=15",
+   "name": "Cherry Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.cherry.png"
+  },
+  {
+   "label": "Forestry:planks WT=16",
+   "name": "Mahoe Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.mahoe.png"
+  },
+  {
+   "label": "Forestry:planks WT=17",
+   "name": "Poplar Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.poplar.png"
+  },
+  {
+   "label": "Forestry:planks WT=18",
+   "name": "Palm Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.palm.png"
+  },
+  {
+   "label": "Forestry:planks WT=19",
+   "name": "Papaya Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.papaya.png"
+  },
+  {
+   "label": "Forestry:planks WT=20",
+   "name": "Pine Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.pine.png"
+  },
+  {
+   "label": "Forestry:planks WT=21",
+   "name": "Plum Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.plum.png"
+  },
+  {
+   "label": "Forestry:planks WT=22",
+   "name": "Maple Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.maple.png"
+  },
+  {
+   "label": "Forestry:planks WT=23",
+   "name": "Citrus Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.citrus.png"
+  },
+  {
+   "label": "Forestry:planks WT=24",
+   "name": "Giganteum Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.giganteum.png"
+  },
+  {
+   "label": "Forestry:planks WT=25",
+   "name": "Ipe Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.ipe.png"
+  },
+  {
+   "label": "Forestry:planks WT=26",
+   "name": "Padauk Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.padauk.png"
+  },
+  {
+   "label": "Forestry:planks WT=27",
+   "name": "Cocobolo Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.cocobolo.png"
+  },
+  {
+   "label": "Forestry:planks WT=28",
+   "name": "Zebrawood Planks",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/wood/planks.zebrawood.png"
+  }
+ ]
+}

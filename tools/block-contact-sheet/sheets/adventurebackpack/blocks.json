@@ -1,0 +1,23 @@
+{
+ "title": "AdventureBackpack and SleepingBags: placed-item blocks",
+ "entries": [
+  {
+   "label": "adventurebackpack:blockCampFire",
+   "name": "Camp Fire",
+   "all": "adventurebackpack-1.4.28-GTNH.jar!assets/adventurebackpack/textures/blocks/campFire.png",
+   "note": "TE model"
+  },
+  {
+   "label": "adventurebackpack:blockSleepingBag",
+   "name": "Sleeping Bag",
+   "top": "adventurebackpack-1.4.28-GTNH.jar!assets/adventurebackpack/textures/blocks/sleepingBag_head_top.png",
+   "side": "adventurebackpack-1.4.28-GTNH.jar!assets/adventurebackpack/textures/blocks/sleepingBag_head_side.png"
+  },
+  {
+   "label": "sleepingbag:sleepingBagBlock",
+   "name": "Sleeping Bag (SleepingBags mod)",
+   "top": "sleepingbag-0.3.1.jar!assets/sleepingbag/textures/blocks/sleeping_bag_head_top.png",
+   "side": "sleepingbag-0.3.1.jar!assets/sleepingbag/textures/blocks/sleeping_bag_head_side.png"
+  }
+ ]
+}

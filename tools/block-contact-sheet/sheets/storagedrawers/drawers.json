@@ -1,0 +1,82 @@
+{
+ "title": "Storage Drawers: drawer blocks (tile entities)",
+ "entries": [
+  {
+   "label": "StorageDrawers:fullDrawers1:0",
+   "name": "oak drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers1:1",
+   "name": "spruce drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_spruce_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_spruce_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers1:2",
+   "name": "birch drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_birch_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_birch_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers1:3",
+   "name": "jungle drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_jungle_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_jungle_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers1:4",
+   "name": "acacia drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_acacia_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_acacia_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers1:5",
+   "name": "big_oak drawer",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_big_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_big_oak_front_1.png",
+   "note": "TE; front shown on sides"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers2:0",
+   "name": "oak fullDrawers2",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_front_2.png",
+   "note": "TE"
+  },
+  {
+   "label": "StorageDrawers:fullDrawers4:0",
+   "name": "oak fullDrawers4",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_front_4.png",
+   "note": "TE"
+  },
+  {
+   "label": "StorageDrawers:halfDrawers2:0",
+   "name": "oak halfDrawers2",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_front_2.png",
+   "note": "TE"
+  },
+  {
+   "label": "StorageDrawers:halfDrawers4:0",
+   "name": "oak halfDrawers4",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_oak_front_4.png",
+   "note": "TE"
+  },
+  {
+   "label": "StorageDrawers:controller:2-5",
+   "name": "Drawer Controller",
+   "top": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_comp_side.png",
+   "side": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawers/textures/blocks/drawers_controller_front.png",
+   "note": "TE"
+  }
+ ]
+}

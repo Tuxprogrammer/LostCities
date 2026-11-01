@@ -1,0 +1,281 @@
+{
+ "title": "Biomes O' Plenty: stone, earth, gems, odd blocks",
+ "entries": [
+  {
+   "label": "BiomesOPlenty:rocks:0",
+   "name": "limestone",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/limestone.png"
+  },
+  {
+   "label": "BiomesOPlenty:rocks:1",
+   "name": "limestonesmooth",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/limestonesmooth.png"
+  },
+  {
+   "label": "BiomesOPlenty:rocks:2",
+   "name": "siltstone",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/siltstone.png"
+  },
+  {
+   "label": "BiomesOPlenty:rocks:3",
+   "name": "siltstonesmooth",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/siltstonesmooth.png"
+  },
+  {
+   "label": "BiomesOPlenty:rocks:4",
+   "name": "shale",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/shale.png"
+  },
+  {
+   "label": "BiomesOPlenty:rocks:5",
+   "name": "shalesmooth",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/shalesmooth.png"
+  },
+  {
+   "label": "BiomesOPlenty:mudBricks:0",
+   "name": "Mud Bricks",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/mudbrick.png"
+  },
+  {
+   "label": "BiomesOPlenty:mud:0",
+   "name": "Mud",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/mud.png",
+   "note": "slows 0.1"
+  },
+  {
+   "label": "BiomesOPlenty:mud:1",
+   "name": "Quicksand",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/quicksand.png",
+   "note": "web-trap"
+  },
+  {
+   "label": "BiomesOPlenty:driedDirt:0",
+   "name": "Dried Dirt",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/drieddirt.png"
+  },
+  {
+   "label": "BiomesOPlenty:hardDirt:0",
+   "name": "Hardened Dirt",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/harddirt.png"
+  },
+  {
+   "label": "BiomesOPlenty:hardSand:0",
+   "name": "Hardened Sand",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/hardsand.png"
+  },
+  {
+   "label": "BiomesOPlenty:hardIce:0",
+   "name": "Hardened Ice",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/hardice.png"
+  },
+  {
+   "label": "BiomesOPlenty:ashStone:0",
+   "name": "Ash Stone",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/ashstone.png"
+  },
+  {
+   "label": "BiomesOPlenty:cragRock:0",
+   "name": "Crag Rock",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/cragrock.png"
+  },
+  {
+   "label": "BiomesOPlenty:ash:0",
+   "name": "Ash Block",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/ashblock.png",
+   "note": "slows"
+  },
+  {
+   "label": "BiomesOPlenty:flesh:0",
+   "name": "Flesh",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/flesh.png"
+  },
+  {
+   "label": "BiomesOPlenty:crystal:0",
+   "name": "Celestial Crystal",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/crystal.png",
+   "note": "light 15"
+  },
+  {
+   "label": "BiomesOPlenty:biomeBlock:0",
+   "name": "Biome Essence Ore",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/biomeblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:1",
+   "name": "Block of amethyst",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/amethystblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:3",
+   "name": "Block of ruby",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/rubyblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:5",
+   "name": "Block of peridot",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/peridotblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:7",
+   "name": "Block of topaz",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/topazblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:9",
+   "name": "Block of tanzanite",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/tanzaniteblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:11",
+   "name": "Block of malachite",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/malachiteblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:13",
+   "name": "Block of sapphire",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/sapphireblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:15",
+   "name": "Block of amber",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/amberblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:gemOre:0",
+   "name": "Ender Amethyst Ore",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/amethystore.png",
+   "note": "ore; even metas"
+  },
+  {
+   "label": "BiomesOPlenty:honeyBlock:0",
+   "name": "Honey Block",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/honeyblock.png"
+  },
+  {
+   "label": "BiomesOPlenty:hive:0",
+   "name": "honeycomb",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/honeycomb.png"
+  },
+  {
+   "label": "BiomesOPlenty:hive:1",
+   "name": "hive",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/hive.png"
+  },
+  {
+   "label": "BiomesOPlenty:hive:2",
+   "name": "honeycombempty",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/honeycombempty.png"
+  },
+  {
+   "label": "BiomesOPlenty:hive:3",
+   "name": "honeycombfilled",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/honeycombfilled.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:0",
+   "name": "dirt_loamy",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/dirt_loamy.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:1",
+   "name": "coarse_dirt_loamy",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/coarse_dirt_loamy.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:2",
+   "name": "dirt_sandy",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/dirt_sandy.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:3",
+   "name": "coarse_dirt_sandy",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/coarse_dirt_sandy.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:4",
+   "name": "dirt_silty",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/dirt_silty.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopDirt:5",
+   "name": "coarse_dirt_silty",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/coarse_dirt_silty.png"
+  },
+  {
+   "label": "BiomesOPlenty:newBopGrass:0",
+   "name": "loamy grass",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_top.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_loamy_side.png",
+   "note": "top tinted in game"
+  },
+  {
+   "label": "BiomesOPlenty:newBopGrass:1",
+   "name": "sandy grass",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_top.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_sandy_side.png",
+   "note": "top tinted in game"
+  },
+  {
+   "label": "BiomesOPlenty:newBopGrass:2",
+   "name": "silty grass",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_top.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grass_silty_side.png",
+   "note": "top tinted in game"
+  },
+  {
+   "label": "BiomesOPlenty:bopGrass:0",
+   "name": "Spectral Moss",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/spectralmoss_top.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/spectralmoss_side.png"
+  },
+  {
+   "label": "BiomesOPlenty:bopGrass:1",
+   "name": "Smoldering Grass",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/smolderinggrass_top.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/smolderinggrass_side.png",
+   "note": "sets fire"
+  },
+  {
+   "label": "BiomesOPlenty:originGrass:0",
+   "name": "Origin Grass",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/origingrass1.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/origingrass2.png"
+  },
+  {
+   "label": "BiomesOPlenty:longGrass:0",
+   "name": "Long Grass Block",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/longgrass1.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/longgrass2.png"
+  },
+  {
+   "label": "BiomesOPlenty:overgrownNetherrack:0",
+   "name": "Overgrown Netherrack",
+   "top": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/overgrownnetherrack1.png",
+   "side": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/overgrownnetherrack2.png"
+  },
+  {
+   "label": "BiomesOPlenty:bones:0",
+   "name": "Small Bone Segment",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/bones_small.png",
+   "note": "model; 0-2 sizes +axis"
+  },
+  {
+   "label": "BiomesOPlenty:grave:0",
+   "name": "Gravestone",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/grave.png",
+   "note": "model, 2 high"
+  },
+  {
+   "label": "BiomesOPlenty:stoneFormations:0",
+   "name": "Stalagmite",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/stalagmite.png",
+   "note": "cross model"
+  },
+  {
+   "label": "BiomesOPlenty:stoneFormations:1",
+   "name": "Stalactite",
+   "all": "BiomesOPlenty-1.7.10-2.1.0.2308-universal.jar!assets/biomesoplenty/textures/blocks/stalactite.png",
+   "note": "cross model"
+  }
+ ]
+}

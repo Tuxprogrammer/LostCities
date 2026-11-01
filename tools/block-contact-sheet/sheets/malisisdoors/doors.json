@@ -1,0 +1,273 @@
+{
+ "title": "MalisisDoors: doors, trapdoors, hatches, curtains (all tile entities)",
+ "entries": [
+  {
+   "label": "malisisdoors:door_acacia",
+   "name": "door_acacia",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_acacia_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_acacia_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:door_birch",
+   "name": "door_birch",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_birch_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_birch_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:door_dark_oak",
+   "name": "door_dark_oak",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_dark_oak_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_dark_oak_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:door_jungle",
+   "name": "door_jungle",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_jungle_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_jungle_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:door_spruce",
+   "name": "door_spruce",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_spruce_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_spruce_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:wood_sliding_door",
+   "name": "wood_sliding_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/sliding_door_wood_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/sliding_door_wood_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:iron_sliding_door",
+   "name": "iron_sliding_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/sliding_door_iron_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/sliding_door_iron_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:jail_door",
+   "name": "jail_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/jail_door_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/jail_door_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:laboratory_door",
+   "name": "laboratory_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/laboratory_door_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/laboratory_door_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:factory_door",
+   "name": "factory_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/factory_door_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/factory_door_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "malisisdoors:shoji_door",
+   "name": "shoji_door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/shoji_door_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/shoji_door_lower.png",
+   "note": "door: top=upper, side=lower"
+  },
+  {
+   "label": "minecraft:iron_door (Malisis)",
+   "name": "iron door",
+   "top": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_iron_upper.png",
+   "side": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_iron_lower.png"
+  },
+  {
+   "label": "malisisdoors:saloon",
+   "name": "saloon",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/saloon_door.png"
+  },
+  {
+   "label": "malisisdoors:garage_door",
+   "name": "garage_door",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/garage_door.png"
+  },
+  {
+   "label": "malisisdoors:carriage_door",
+   "name": "carriage_door",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/carriage_door.png"
+  },
+  {
+   "label": "malisisdoors:medieval_door",
+   "name": "medieval_door",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/medieval_door.png"
+  },
+  {
+   "label": "malisisdoors:rustyHatch",
+   "name": "rustyHatch",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/rusty_hatch.png"
+  },
+  {
+   "label": "malisisdoors:iron_trapdoor",
+   "name": "iron_trapdoor",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/iron_trapdoor.png"
+  },
+  {
+   "label": "malisisdoors:sliding_trapdoor",
+   "name": "sliding_trapdoor",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/sliding_trapdoor.png"
+  },
+  {
+   "label": "malisisdoors:trapdoor_acacia",
+   "name": "trapdoor_acacia",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/trapdoor_acacia.png"
+  },
+  {
+   "label": "malisisdoors:trapdoor_birch",
+   "name": "trapdoor_birch",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/trapdoor_birch.png"
+  },
+  {
+   "label": "malisisdoors:trapdoor_dark_oak",
+   "name": "trapdoor_dark_oak",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/trapdoor_dark_oak.png"
+  },
+  {
+   "label": "malisisdoors:trapdoor_jungle",
+   "name": "trapdoor_jungle",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/trapdoor_jungle.png"
+  },
+  {
+   "label": "malisisdoors:trapdoor_spruce",
+   "name": "trapdoor_spruce",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/trapdoor_spruce.png"
+  },
+  {
+   "label": "malisisdoors:camoFenceGate",
+   "name": "camoFenceGate",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/camo_fencegate.png"
+  },
+  {
+   "label": "malisisdoors:player_sensor",
+   "name": "player_sensor",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/player_sensor.png"
+  },
+  {
+   "label": "malisisdoors:vanishing_block:0",
+   "name": "vanishing_block:0",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/vanishing_block_wood.png"
+  },
+  {
+   "label": "malisisdoors:vanishing_block:1",
+   "name": "vanishing_block:1",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/vanishing_block_iron.png"
+  },
+  {
+   "label": "malisisdoors:vanishing_block:2",
+   "name": "vanishing_block:2",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/vanishing_block_gold.png"
+  },
+  {
+   "label": "malisisdoors:vanishing_block_diamond",
+   "name": "vanishing_block_diamond",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/vanishing_block_diamond.png"
+  },
+  {
+   "label": "malisisdoors:door_factory",
+   "name": "door_factory",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/door_factory.png"
+  },
+  {
+   "label": "malisisdoors:block_mixer",
+   "name": "block_mixer",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/block_mixer.png"
+  },
+  {
+   "label": "malisisdoors:garage_door (top)",
+   "name": "garage door top",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/garage_door_top.png"
+  },
+  {
+   "label": "malisisdoors:curtain_black",
+   "name": "black curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_black_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_red",
+   "name": "red curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_red_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_green",
+   "name": "green curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_green_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_brown",
+   "name": "brown curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_brown_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_blue",
+   "name": "blue curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_blue_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_purple",
+   "name": "purple curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_purple_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_cyan",
+   "name": "cyan curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_cyan_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_silver",
+   "name": "silver curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_silver_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_gray",
+   "name": "gray curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_gray_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_pink",
+   "name": "pink curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_pink_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_lime",
+   "name": "lime curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_lime_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_yellow",
+   "name": "yellow curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_yellow_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_light_blue",
+   "name": "light_blue curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_light_blue_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_magenta",
+   "name": "magenta curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_magenta_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_orange",
+   "name": "orange curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_orange_lower.png"
+  },
+  {
+   "label": "malisisdoors:curtain_white",
+   "name": "white curtain",
+   "all": "malisisdoors-1.19.13-GTNH.jar!assets/malisisdoors/textures/blocks/curtains/curtain_white_lower.png"
+  }
+ ]
+}

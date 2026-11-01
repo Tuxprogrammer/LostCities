@@ -1,0 +1,68 @@
+{
+ "title": "Iron Chests: chest icons (in game a chest model with a TESR)",
+ "entries": [
+  {
+   "label": "IronChest:BlockIronChest:0",
+   "name": "Iron Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/iron_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/iron_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:1",
+   "name": "Gold Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/gold_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/gold_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:2",
+   "name": "Diamond Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/diamond_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/diamond_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:3",
+   "name": "Copper Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/copper_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/copper_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:4",
+   "name": "Steel Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/silver_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/silver_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:5",
+   "name": "Crystal Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/crystal_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/crystal_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:6",
+   "name": "Obsidian Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/obsidian_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/obsidian_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:7",
+   "name": "Dirt Chest 9000 Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/dirtchest9000_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/dirtchest9000_front.png",
+   "note": "TE; facing in NBT"
+  },
+  {
+   "label": "IronChest:BlockIronChest:9",
+   "name": "Dark Steel Chest",
+   "top": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/darksteel_top.png",
+   "side": "IronChest-6.1.13.jar!assets/ironchest/textures/blocks/darksteel_front.png",
+   "note": "TE; facing in NBT"
+  }
+ ]
+}

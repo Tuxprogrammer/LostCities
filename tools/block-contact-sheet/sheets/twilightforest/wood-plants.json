@@ -1,0 +1,320 @@
+{
+ "title": "Twilight Forest: woods, plants, lights",
+ "entries": [
+  {
+   "label": "TwilightForest:tile.TFPlank:0",
+   "name": "Twilight Oak Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_twilight_oak_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:1",
+   "name": "Canopy Tree Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_canopy_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:2",
+   "name": "Mangrove Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_mangrove_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:3",
+   "name": "Darkwood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_darkwood_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:4",
+   "name": "Timewood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_time_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:5",
+   "name": "Transwood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_trans_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:6",
+   "name": "Minewood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_mine_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:7",
+   "name": "Sortingwood Planks",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_sort_0.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:0 (alt 1)",
+   "name": "planks variant 1",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_twilight_oak_1.png",
+   "note": "random face variant?"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlank:3 (alt 2)",
+   "name": "darkwood variant 2",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/planks_darkwood_2.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFLog:0",
+   "name": "Twilight Oak Wood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/oak_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/oak_side.png",
+   "note": "axis +4/+8"
+  },
+  {
+   "label": "TwilightForest:tile.TFLog:1",
+   "name": "Canopy Tree Wood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/canopy_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/canopy_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFLog:2",
+   "name": "Mangrove Wood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mangrove_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mangrove_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFLog:3",
+   "name": "Darkwood Wood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/darkwood_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/darkwood_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMagicLog:0",
+   "name": "Timewood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/time_section.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/time_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMagicLog:1",
+   "name": "Transwood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/trans_section.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/trans_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMagicLog:2",
+   "name": "Minewood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mine_section.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mine_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFMagicLog:3",
+   "name": "Sortingwood",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/sort_section.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/sort_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.CinderLog:0",
+   "name": "Cinder Log",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/cinder_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/cinder_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorTwilight",
+   "name": "Twilight Oak Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/twilight_oak_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/twilight_oak_lower.png",
+   "note": "door; upper/lower faces"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorCanopy",
+   "name": "Canopy Tree Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/canopy_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/canopy_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorMangrove",
+   "name": "Mangrove Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/mangrove_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/mangrove_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorDarkwood",
+   "name": "Darkwood Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/dark_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/dark_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorTime",
+   "name": "Timewood Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/time_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/time_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorTrans",
+   "name": "Transwood Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/trans_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/trans_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorMine",
+   "name": "Minewood Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/mine_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/mine_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFDoorSort",
+   "name": "Sortingwood Door",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/sort_upper.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/door/sort_lower.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorTwilight",
+   "name": "Twilight Oak Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/twilight_oak_trapdoor_horizontal.png",
+   "note": "trapdoor"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorCanopy",
+   "name": "Canopy Tree Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/canopy_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorMangrove",
+   "name": "Mangrove Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/mangrove_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorDarkwood",
+   "name": "Darkwood Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/dark_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorTime",
+   "name": "Timewood Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/time_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorTrans",
+   "name": "Transwood Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/trans_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorMine",
+   "name": "Minewood Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/mine_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrapDoorSort",
+   "name": "Sortingwood Trapdoor",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/wood/trapdoor/sort_trapdoor_horizontal.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFFireflyJar:0",
+   "name": "Firefly Jar",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/fireflyjar_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/fireflyjar_side.png",
+   "note": "light 15; model"
+  },
+  {
+   "label": "TwilightForest:tile.TFFirefly:0",
+   "name": "Firefly",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/TFFirefly.png",
+   "note": "TE critter, light 15"
+  },
+  {
+   "label": "TwilightForest:tile.TFHedge:0",
+   "name": "Hedge",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/hedge.png",
+   "note": "hurts on touch"
+  },
+  {
+   "label": "TwilightForest:tile.TFRoots:0",
+   "name": "Roots",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/rootblock.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFRoots:1",
+   "name": "Liveroots",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/oreroots.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFThorns:0",
+   "name": "Thorns",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/brown_thorns_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/brown_thorns_side.png",
+   "note": "hurts, hardness 50"
+  },
+  {
+   "label": "TwilightForest:tile.TFThorns:1",
+   "name": "Green Thorns",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/green_thorns_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/green_thorns_side.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFBurntThorns:0",
+   "name": "Burnt Thorns",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/burnt_thorns_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/burnt_thorns_side.png",
+   "note": "crumbles"
+  },
+  {
+   "label": "TwilightForest:tile.TFThornRose:0",
+   "name": "Thorn Rose",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/thornRose.png",
+   "note": "plant"
+  },
+  {
+   "label": "TwilightForest:tile.DarkLeaves:0",
+   "name": "Darkwood Leaves",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/darkwood_leaves.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlant:3",
+   "name": "Moss Patch",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mosspatch.png",
+   "note": "flat plant"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlant:8",
+   "name": "Fiddlehead",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/fiddlehead.png",
+   "note": "plant"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlant:9",
+   "name": "Mushgloom",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/mushgloom.png",
+   "note": "light 3"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlant:14",
+   "name": "Root Strands",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/rootstrand.png",
+   "note": "hanging"
+  },
+  {
+   "label": "TwilightForest:tile.TFPlant:13",
+   "name": "Torchberry Plant",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/torchberry.png",
+   "note": "hanging, light"
+  },
+  {
+   "label": "TwilightForest:tile.TrollVidr:0",
+   "name": "Trollvidr",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/troll_root.png"
+  },
+  {
+   "label": "TwilightForest:tile.HugeStalk:0",
+   "name": "Huge Stalk",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/huge_stalk_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/huge_stalk.png"
+  },
+  {
+   "label": "TwilightForest:tile.HugeGloomBlock:0",
+   "name": "Huge Mushgloom",
+   "all": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/huge_gloom_cap.png"
+  },
+  {
+   "label": "TwilightForest:tile.TFUncraftingTable:0",
+   "name": "Uncrafting Table",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/uncrafting_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/uncrafting_side.png",
+   "note": "functional"
+  },
+  {
+   "label": "TwilightForest:tile.TFTrophyPedestal:0",
+   "name": "Trophy Pedestal",
+   "top": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/pedestal_top.png",
+   "side": "TwilightForest-2.7.45.jar!assets/twilightforest/textures/blocks/pedestal_naga.png"
+  }
+ ]
+}
