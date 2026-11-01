@@ -108,7 +108,7 @@ Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open qu
 
 **Entry gate:** M01 done; S1's `02-profiles-dimensions` and `04-city-layout` areas written.
 
-**Scope:** city detection, rarity and spheres; city styles; street and bridge planning; building and multibuilding selection; chunk plans; all in `layout`, with golden tests.
+**Scope:** city detection, rarity and spheres; city styles; street and bridge planning; building and multibuilding selection; chunk plans; building around other mods' structures ([0006](design/0006-build-around-other-worldgen.md)): the `StructureOracle` interface and landmark data, landmark cores, edge rings and village transition rings, road detours and plazas, village sewing (gates and lanes), and meteorite height caps; all in `layout`, with golden tests against fake oracles.
 
 ## M04 · RWG overlay and terrain
 
@@ -116,7 +116,7 @@ Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open qu
 
 **Entry gate:** M01 done; S2's design record accepted; S1's `03-terrain` area written.
 
-**Scope:** the overlay hook on RWG2 Continents and classic RWG; city terrain and its blend into RWG terrain; the 1.7.10 height mapping; population; explosions and damage; the per-chunk time budget.
+**Scope:** the overlay hook on RWG2 Continents and classic RWG; city terrain and its blend into RWG terrain; the 1.7.10 height mapping; population; explosions and damage; the per-chunk time budget; around landmarks ([0006](design/0006-build-around-other-worldgen.md)): no writes in cores, soft-edge strips instead of border walls, blend corners fixed at a core's natural height, and village lanes laid on the ground.
 
 ## M05 · First city in the world
 
@@ -132,7 +132,7 @@ Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open qu
 - [ ] No cascading-generation warnings; the per-chunk budget holds.
 - [ ] A player can walk the streets and enter buildings; floors, walls and stairs are sound.
 - [ ] Classic RWG produces a city too.
-- [ ] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG). The owner's notes become fixes or roadmap items.
+- [ ] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG), with landmark shots: a village sewn into a city, a reserved lot, and a soft edge ([0006](design/0006-build-around-other-worldgen.md)). The owner's notes become fixes or roadmap items.
 
 ## M06 to M11 · After the alpha
 
@@ -140,9 +140,9 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 | Milestone | Lane | Covers |
 |---|---|---|
-| M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain |
-| M07 · Scattered structures | Layout | Scattered structures, structure avoidance, decorative stuff |
-| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen |
+| M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain; highways and railways detour around landmark cores or end before them ([0006](design/0006-build-around-other-worldgen.md)) |
+| M07 · Scattered structures | Layout | Scattered structures and decorative stuff; scattered structures stay out of landmark cores and edge rings, which replace upstream's structure avoidance ([0006](design/0006-build-around-other-worldgen.md)) |
+| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (VillageNames, Roguelike Dungeons, Witchery, LootGames, AE2, RWG2), the Roguelike Dungeons steering mixin, and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
 | M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |

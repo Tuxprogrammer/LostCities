@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Proposed
+- Status: Accepted (decision log D26)
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01
@@ -9,7 +9,7 @@
 
 Decision log D24 sets the owner's rule: Lost Cities generation gets out of the way of other world generation without jarring the landscape or cutting it sharply. A Roguelike tower, a temple or a house that would land in a city becomes a feature of the city. Nearby villages are sewn in: paths lead into the city, and the city never writes over village chunks.
 
-D21 handled other structures with four treatments ([other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md)): avoid in the layout (T1), deny the populate event (T2), coexist (T3), and a guard mixin (T4) if the alpha screenshots showed conflicts. T1 left holes in the city with a one-chunk non-city ring, as upstream's `StructureAvoidance` does; AE2 meteorites were allowed to crater cities. Neither builds around anything.
+[other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md) sorts other generators into four treatments: avoid in the layout (T1), deny the populate event (T2), coexist (T3), and a guard mixin (T4). Avoidance alone leaves a hole in the city with a one-chunk non-city ring, as upstream's `StructureAvoidance` does, and letting AE2 meteorites crater a city slices its buildings. Neither builds around anything.
 
 The research is in [coexistence.md](../new-spec/00-pack-integration/coexistence.md). The facts that drive this record:
 
@@ -39,11 +39,11 @@ Around each landmark the layout derives three zones, whole chunks as upstream's 
 
 | Zone | Chunks | What the city does there |
 |---|---|---|
-| **Core** | Every chunk the footprint, grown by `landmarkMargin` (2 blocks), touches | Nothing. Not a city chunk; no building, street, foundation, cellar, corridor, highway, railway, blend, decoration clearing or T2 denial. RWG's terrain and decoration stay |
+| **Core** | Every chunk the footprint, grown by `landmarkMargin` (2 blocks), touches | Nothing but a village lane's surface path (§3). Not a city chunk; no building, street, foundation, cellar, corridor, highway, railway, blend, decoration clearing or T2 denial. RWG's terrain and decoration stay |
 | **Edge ring** | City chunks among the core's eight-neighbors | City chunks without buildings, cellars, corridors, subways or rail dungeons. Each is a park, a plaza (where a road ends facing the landmark), or a road passing by. Sides facing the core get soft-edge strips (§4) |
-| **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do |
+| **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town |
 
-A meteorite's heightCap applies to every city chunk it reaches: a building's floors are capped so its roof stays below the paraboloid (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
+An AE2 meteorite that lands in a city gets a **crater basin**: its core is natural ground for the impact, and its heightCap applies to every city chunk it reaches, capping a building's floors so its roof stays below the paraboloid. The city steps down toward the impact instead of being sliced by the crater (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
 
 Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and no edge ring: the city ends there, and the chunk-scale blend (§4, E1) shapes the land between.
 
@@ -72,7 +72,8 @@ The values each oracle reads from another mod's config are added to the pinned p
 - **Roads.** The hierarchical street field stays as upstream has it; a core chunk is not city, so the road is clipped there.
   - A **primary** road severed by a core detours through edge-ring chunks on the shorter side of the ring (ties north, then west), which become roads of the same class.
   - **Secondary and tertiary** roads end in the edge-ring chunk facing the landmark, which becomes a **plaza**: upstream's `FULL` street type, which upstream defines but never reaches, gets this use.
-- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. In the gate chunk the street continues as a 3-block-wide surface path down or up the soft-edge strip to the core's edge. Whether it may continue over core-chunk ground outside every piece box to meet the village path is owner question 1 (default here: it stops at the core's edge).
+- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. In the gate chunk the street continues as a 3-block-wide surface path down or up the soft-edge strip to the core's edge. From there it crosses the core's ground to meet the village path's end as a **surface-only** path: the city style's path block replaces the natural top block, with nothing written above or below it, and never within `landmarkMargin` (2 blocks) of a village piece box. It is the only thing the city writes in a core, and it is written in the terrain phase, before the village's own pieces.
+- **Villages inside a city's radius** are surrounded by it: the city factor is not lowered near them, so the city continues on every side and the village becomes its old town, sewn in by the edge ring, the transition rings and a lane on each side that has a gate.
 - **Villages near a city**, outside it but within `villageLinkDistance` (4 chunks) of its edge, get gates and a surface lane across the land between, written in the terrain phase as part of the city's footprint.
 - **Height caps** (meteorite basins) reduce floors after upstream's floor draw, so random consumption is unchanged.
 - **City level** near a landmark comes from the same height oracle as the landmark's ground estimate.
@@ -102,17 +103,20 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 - **Steering.** One compat mixin, on `Dungeon.validLocation` (Roguelike Dungeons), makes a candidate invalid inside a city chunk or edge ring unless it is that dungeon's predicted site. The dungeon lands in its lot, outside the city, or not at all, whatever order chunks generate in.
 - **Misses.** A lot whose structure does not appear stays natural ground. A structure that lands in the city anyway (Thaumcraft) is accepted; a per-generator guard (T4) follows only if the alpha screenshots show it. No restore pass ever rewrites another mod's blocks.
 
-### 6. What replaces D21's treatments
+### 6. Treatments by generator
 
-| D21 | Here |
+In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md), building around replaces avoidance (T1) and the guard (T4) for these generators, and coexistence (T3) for AE2 meteorites. T2 and the other T3 features are unchanged.
+
+| Generator | Treatment |
 |---|---|
-| T1, villages avoided | Built around and sewn in (§1 to §4) |
-| T1, LootGames, RWG2 landmarks | Built around (LootGames as a lot, RWG2 landmarks as terrain landmarks) |
-| T4 after alpha, Roguelike Dungeons | Built around a predicted lot, with the steering mixin in M08 |
-| T4 after alpha, Witchery | Built around the union lot; no mixin needed |
-| T3, AE2 meteorites | A crater basin (proposed; owner question 2) |
-| T2 (dungeons, lakes, oil, quarries) | Unchanged in city chunks; not applied in cores |
-| T3 (underground structures, small decoration, Thaumcraft) | Unchanged; Thaumcraft watched at alpha |
+| VillageNames villages | Built around and sewn in (§1 to §4); inside a city's radius, the city's old town |
+| LootGames | Built around as a lot |
+| RWG2 landmarks | Terrain landmarks |
+| Roguelike Dungeons | Built around a predicted lot, with the steering mixin built in M08, not deferred to the alpha screenshots |
+| Witchery | Built around the union lot; no mixin needed |
+| AE2 meteorites | A crater basin (§1, §3) |
+| Dungeons, lakes, oil, quarries (T2) | Denied in city chunks; not denied in cores |
+| Underground structures, small decoration, Thaumcraft (T3) | Unchanged; Thaumcraft watched at alpha |
 
 ## Consequences
 
@@ -122,17 +126,17 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
   - Road detours, plazas (`FULL` made reachable), lanes and gates.
   - Golden layout tests with fixed fake oracles: a village inside a city, one at its edge, one 3 chunks out; a severed primary road; a meteorite basin.
 - **M04 (terrain):**
-  - No writes in cores, including the footprint write guard and T2 denial.
-  - The E1 blend anchor; soft-edge strips; lane writing on blended ground.
+  - No writes in cores, including the footprint write guard and T2 denial, apart from village lanes' surface paths.
+  - The E1 blend anchor; soft-edge strips; lane writing on blended ground and across village cores.
   - Oracle calls inside the time budget (B1 to B5).
 - **M06 (highways and railways):** cores are obstacles; the planners route around them or end before them.
 - **M07 (scattered structures):** upstream's `StructureAvoidance` is replaced by this record, not ported; scattered structures stay out of cores and edge rings.
 - **M08 (GTNH layer):**
   - The per-mod oracles in `compat.villagenames`, `compat.roguelike`, `compat.witchery`, `compat.lootgames`, `compat.ae2` and `compat.rwg2`.
-  - The Roguelike steering mixin.
+  - The Roguelike steering mixin, whatever the alpha screenshots show.
   - Real-pack checks that the oracles match placed structures.
 - **M09 (profiles):** the options in §3; the oracle inputs in the pinned snapshot.
-- **Alpha screenshot set (M05)** adds: a village inside a city and one at its edge, with lanes; a plaza facing a landmark; soft-edge strips; an empty lot; a crater basin if chosen.
+- **Alpha screenshot set (M05)** adds: a village sewn into a city as its old town and one at its edge, with lanes meeting the village paths; a plaza facing a landmark; soft-edge strips; an empty reserved lot; a crater basin.
 - **Spec deviations** to record: `07-scattered` (structure avoidance replaced); `04-city-layout` (chunk characteristics, multibuildings, street planner clip, `FULL` street type, floor caps); `03-terrain` (blend anchors, no border wall toward a core, lanes); `02-profiles-dimensions` (the options).
 - **Dependencies:** VillageNames, Roguelike Dungeons, LootGames and AE2 as `compileOnly`; Witchery through its jar's class names only. All under `compat`, all optional.
 - **Licensing:** calling VillageNames' and Roguelike Dungeons' classes and mixing into them is integration under D23; no GPL code is copied. Witchery's grid is a numeric contract learned from the decompiled jar, written as our own code.
@@ -142,7 +146,7 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 
 | Alternative | Why not |
 |---|---|
-| Upstream's avoidance (D21's T1): a hole in the city and a non-city ring | Leaves holes rather than features, has no paths into villages, and its ring is a hard city edge. Kept as the `AVOID` option |
+| Upstream's avoidance (T1): a hole in the city and a non-city ring | Leaves holes rather than features, has no paths into villages, and its ring is a hard city edge. Kept as the `AVOID` option |
 | Learn structures from the live generators (`structureMap`, `data/Village.dat`, AE2's spawn data) | They fill in generation order, and only within 8 chunks of generated chunks, so layout would depend on order. Used only by tests |
 | Let other structures land and restore the city afterwards | Either their structure or ours is destroyed; restore passes are slow and span chunks |
 | Deny every structure in cities (T4 for all) | Simple and clean for the city, but the landscape loses villages, towers and meteorites wherever cities are, against D24 |
@@ -150,16 +154,13 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 | Generate other mods' structures ourselves, as our own multibuildings | Copies GPL and closed content and duplicates their generators |
 | Our own copy of VillageNames' village layout | GPL code we would copy and keep in step; calling VillageNames' constructor is exact and allowed |
 | A full non-city green belt around every landmark | Fine for villages and terrain landmarks, but a 4 × 4-chunk hole for a 7 × 7 shack. Edge-ring parks keep the city continuous |
-| AE2: let the crater carve (D21) | Slices tall buildings within about 50 blocks: a sharp cutoff |
+| AE2: let the crater carve | Slices tall buildings within about 50 blocks: a sharp cutoff |
+| AE2: a guard mixin that keeps meteorites out of cities | No cut and no extra layout rules, but no meteorites wherever cities are, against D24 |
+| Village lanes that stop at the core's edge | Leaves up to about 15 blocks of natural ground between the city's path and the village's, so the two never meet |
+| Lower the city factor near villages, so cities stop short of them | Open country around villages, but a gap in a city near every village instead of an old town |
+| Build the Roguelike steering mixin only if the alpha screenshots show towers in cities | Without it, a dungeon whose predicted lot fails lands on a city street |
 
 ## Still open
-
-Owner questions, each with the recommendation in [coexistence.md § Questions for the owner](../new-spec/00-pack-integration/coexistence.md#questions-for-the-owner):
-
-1. Surface-only lanes over village core chunks, outside every piece box (recommended), or lanes that stop at the core's edge.
-2. AE2 meteorites: crater basin (recommended), guard, or let them carve.
-3. Build the Roguelike steering mixin in M08 regardless of the alpha screenshots (recommended).
-4. Cities surround villages within their radius (recommended), or stop short of them.
 
 For the prototype and the alpha screenshots:
 
