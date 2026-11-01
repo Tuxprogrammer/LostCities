@@ -38,3 +38,15 @@ layout.json
 
 # Reference packs, other mods' sources and decompiled output (see CLAUDE.md)
 /reference/
+
+# Python
+__pycache__/
+*.pyc
+
+# Agent worktrees and per-machine Claude Code settings
+/.claude/worktrees/
+/.claude/settings.local.json
+
+# Local secrets (OpenRouter key for tools/semantic-search/)
+.env
+.env.*
