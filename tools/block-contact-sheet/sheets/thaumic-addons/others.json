@@ -1,0 +1,218 @@
+{
+ "title": "Thaumcraft add-ons: building candidates",
+ "entries": [
+  {
+   "label": "ThaumicTinkerer:darkQuartz:0",
+   "name": "Block of Smokey Quartz",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz:1",
+   "name": "Chiseled Smokey Quartz",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/chiseledDarkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/chiseledDarkQuartz0.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz:2",
+   "name": "Pillar Smokey Quartz",
+   "top": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/pillarDarkQuartz1.png",
+   "side": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/pillarDarkQuartz0.png",
+   "note": "axis 2/3/4"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartz (top)",
+   "name": "Smokey Quartz top",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz1.png"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartzSlab:0",
+   "name": "Smokey Quartz Slab",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png",
+   "note": "slab"
+  },
+  {
+   "label": "ThaumicTinkerer:darkQuartzStairs",
+   "name": "Smokey Quartz Stairs",
+   "all": "ThaumicTinkerer-2.12.34.jar!assets/ttinkerer/textures/blocks/darkQuartz0.png",
+   "note": "stairs"
+  },
+  {
+   "label": "ThaumicTinkerer:travelSlab:0",
+   "name": "Paving Slab of Travel",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_travel.png",
+   "note": "speed boost"
+  },
+  {
+   "label": "ThaumicTinkerer:wardSlab:0",
+   "name": "Paving Slab of Warding",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/paving_stone_warding.png",
+   "note": "blocks mobs"
+  },
+  {
+   "label": "salisarcana:blockCustomPlank:0",
+   "name": "Greatwood Planks",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_greatwood.png"
+  },
+  {
+   "label": "salisarcana:blockCustomPlank:1",
+   "name": "Silverwood Planks",
+   "all": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_silverwood.png"
+  },
+  {
+   "label": "Automagy:blockBookshelfEnchanted:0",
+   "name": "Enchanted Greatwood Bookshelf",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_greatwood.png",
+   "side": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockBookshelfEnchanted.png"
+  },
+  {
+   "label": "Automagy:blockBookshelfEnchanted:1",
+   "name": "Enchanted Silverwood Bookshelf",
+   "top": "Thaumcraft-1.7.10-4.2.3.5.jar!assets/thaumcraft/textures/blocks/planks_silverwood.png",
+   "side": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockBookshelfEnchantedSilverwood.png"
+  },
+  {
+   "label": "Automagy:blockRunedObsidian:0",
+   "name": "Runed Obsidian",
+   "all": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockRunedObsidian.png"
+  },
+  {
+   "label": "Automagy:blockNethermind",
+   "name": "Nethermind",
+   "top": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockNethermindTopGlow.png",
+   "side": "Automagy-0.29.8-GTNH.jar!assets/automagy/textures/blocks/blockNethermindSide.png"
+  },
+  {
+   "label": "thaumicinsurgence:tile.arcaneMarble:0",
+   "name": "Arcane Marble",
+   "all": "thaumicinsurgence-0.4.1.jar!assets/thaumicinsurgence/textures/blocks/arcane_marble.png",
+   "note": "hardness 10"
+  },
+  {
+   "label": "thaumicinsurgence:tile.arcaneMarbleBrick:0",
+   "name": "Arcane Marble Brick",
+   "all": "thaumicinsurgence-0.4.1.jar!assets/thaumicinsurgence/textures/blocks/arcane_marble_brick.png",
+   "note": "hardness 10"
+  },
+  {
+   "label": "ThaumicMachina:metaphysicalBrick:0",
+   "name": "Metaphysical Brick",
+   "all": "ThaumicMachina-0.2.6-GTNH.jar!assets/thaumicmachina/textures/blocks/metaphysicalBrick.png"
+  },
+  {
+   "label": "TaintedMagic:BlockWarpwoodPlanks:0",
+   "name": "Warpwood Planks",
+   "all": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodPlanks.png"
+  },
+  {
+   "label": "TaintedMagic:BlockWarpwoodLog:0",
+   "name": "Warpwood Log",
+   "top": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodLog_top.png",
+   "side": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockWarpwoodLog_side.png"
+  },
+  {
+   "label": "TaintedMagic:BlockShadowmetal:0",
+   "name": "Block of Shadowmetal",
+   "all": "Tainted-Magic-7.7.8-GTNH.jar!assets/taintedmagic/textures/blocks/BlockShadowmetal.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintPlank:0",
+   "name": "Tainted Planks",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_planks.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintLog:0",
+   "name": "Tainted Log",
+   "top": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_log_bottom.png",
+   "side": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_log_side.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintBlock:0",
+   "name": "Tainted Stone",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_stone_smooth.png"
+  },
+  {
+   "label": "ForbiddenMagic:TaintBlock:1",
+   "name": "Tainted Stone Brick",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/taint_stone_brick.png"
+  },
+  {
+   "label": "ForbiddenMagic:StarBlock:0",
+   "name": "Block of Nether Star",
+   "all": "Forbidden.Magic-0.9.18-GTNH.jar!assets/forbidden/textures/blocks/starblock.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:0",
+   "name": "Crystal (white)",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalWhite.png",
+   "note": "translucent, 16 colors"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:7",
+   "name": "Crystal (gray)",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalGray.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:11",
+   "name": "Crystal (blue)",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalBlue.png"
+  },
+  {
+   "label": "ThaumicHorizons:crystalTH:15",
+   "name": "Crystal (black)",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/blockCrystalBlack.png"
+  },
+  {
+   "label": "ThaumicHorizons:boneTH:0",
+   "name": "Bone",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/bone.png"
+  },
+  {
+   "label": "ThaumicHorizons:fleshTH:0",
+   "name": "Flesh",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/fleshcloud.png"
+  },
+  {
+   "label": "ThaumicHorizons:dustTH:0",
+   "name": "Dust",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/dust.png"
+  },
+  {
+   "label": "ThaumicHorizons:evanescent:0",
+   "name": "Evanescent",
+   "all": "ThaumicHorizons-1.8.28.jar!assets/thaumichorizons/textures/blocks/evanescent.png",
+   "note": "unbreakable"
+  },
+  {
+   "label": "ThaumicExploration:floatCandle:0",
+   "name": "Floating Candle",
+   "all": "Thaumic-Exploration-1.5.29-GTNH.jar!assets/thaumicexploration/textures/blocks/candle.png",
+   "note": "TE, light"
+  },
+  {
+   "label": "ThaumicExploration:everfullUrn:0",
+   "name": "Everfull Urn",
+   "all": "Thaumic-Exploration-1.5.29-GTNH.jar!assets/thaumicexploration/textures/blocks/everfullUrn.png",
+   "note": "TE, water"
+  },
+  {
+   "label": "WitchingGadgets:WG_VoidWalkway:0",
+   "name": "Void Walkway",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/voidWalkway.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_StoneDevice:0",
+   "name": "Ethereal Wall",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/etherealWall.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_MetalDevice:1",
+   "name": "Voidmetal Block",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/voidmetalBlock.png"
+  },
+  {
+   "label": "WitchingGadgets:WG_RoseVine:0",
+   "name": "Rose Vine",
+   "all": "WitchingGadgets-1.8.53-GTNH.jar!assets/witchinggadgets/textures/blocks/roseVine.png"
+  }
+ ]
+}

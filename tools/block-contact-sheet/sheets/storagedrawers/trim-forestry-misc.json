@@ -1,0 +1,255 @@
+{
+ "title": "Storage Drawers: trim blocks (plain, no TE), Forestry and Misc packs",
+ "entries": [
+  {
+   "label": "StorageDrawersForestry:trimA:0",
+   "name": "larch trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_larch_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:1",
+   "name": "teak trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_teak_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:2",
+   "name": "acacia trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_acacia_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:3",
+   "name": "lime trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_lime_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:4",
+   "name": "chestnut trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_chestnut_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:5",
+   "name": "wenge trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_wenge_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:6",
+   "name": "baobab trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_baobab_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:7",
+   "name": "sequoia trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_sequoia_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:8",
+   "name": "kapok trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_kapok_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:9",
+   "name": "ebony trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_ebony_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:10",
+   "name": "mahogany trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_mahogany_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:11",
+   "name": "balsa trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_balsa_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:12",
+   "name": "willow trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_willow_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:13",
+   "name": "walnut trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_walnut_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:14",
+   "name": "greenheart trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_greenheart_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimA:15",
+   "name": "cherry trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_cherry_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:0",
+   "name": "mahoe trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_mahoe_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:1",
+   "name": "poplar trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_poplar_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:2",
+   "name": "palm trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_palm_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:3",
+   "name": "papaya trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_papaya_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:4",
+   "name": "pine trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_pine_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:5",
+   "name": "plum trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_plum_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:6",
+   "name": "maple trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_maple_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:7",
+   "name": "citrus trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_citrus_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:8",
+   "name": "giganteum trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_giganteum_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:9",
+   "name": "ipe trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_ipe_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:10",
+   "name": "padauk trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_padauk_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:11",
+   "name": "cocobolo trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_cocobolo_side.png"
+  },
+  {
+   "label": "StorageDrawersForestry:trimB:12",
+   "name": "zebrawood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersforestry/textures/blocks/drawers_zebrawood_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:0",
+   "name": "ebxl_redwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_redwood_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:1",
+   "name": "ebxl_fir trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_fir_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:2",
+   "name": "ebxl_acacia trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_acacia_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:3",
+   "name": "ebxl_cypress trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_cypress_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:4",
+   "name": "ebxl_japanesemaple trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_japanesemaple_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:5",
+   "name": "ebxl_rainboweucalyptus trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_rainboweucalyptus_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:6",
+   "name": "ebxl_autumn trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_autumn_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:7",
+   "name": "ebxl_baldcypress trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_baldcypress_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_0:8",
+   "name": "ebxl_sakura trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_ebxl_sakura_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:0",
+   "name": "hl_yellow trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_hl_yellow_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:1",
+   "name": "hl_white trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_hl_white_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:2",
+   "name": "hl_red trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_hl_red_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:3",
+   "name": "hl_grey trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_hl_grey_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:4",
+   "name": "tc_greatwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_tc_greatwood_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:5",
+   "name": "tc_silverwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_tc_silverwood_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:6",
+   "name": "witchery_rowan trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_witchery_rowan_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:7",
+   "name": "witchery_alder trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_witchery_alder_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:8",
+   "name": "witchery_hawthorn trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_witchery_hawthorn_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:9",
+   "name": "immeng_treated trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_immeng_treated_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:10",
+   "name": "botania_livingwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_botania_livingwood_side.png"
+  },
+  {
+   "label": "StorageDrawersMisc:trim_1:11",
+   "name": "botania_dreamwood trim",
+   "all": "StorageDrawers-2.2.31-GTNH.jar!assets/storagedrawersmisc/textures/blocks/drawers_botania_dreamwood_side.png"
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "title": "ExtraTrees: doors, carpentry glass designs (untinted layers)",
+ "entries": [
+  {
+   "label": "ExtraTrees:door (standard)",
+   "name": "Standard door (lower half)",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/door.standard.lower.png",
+   "note": "grayscale; tinted by wood"
+  },
+  {
+   "label": "ExtraTrees:door (solid)",
+   "name": "Solid door (lower half)",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/door.solid.lower.png",
+   "note": "grayscale; tinted by wood"
+  },
+  {
+   "label": "ExtraTrees:door (double)",
+   "name": "Double door (lower half)",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/door.double.lower.png",
+   "note": "grayscale; tinted by wood"
+  },
+  {
+   "label": "ExtraTrees:door (full)",
+   "name": "Full door (lower half)",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/door.full.lower.png",
+   "note": "grayscale; tinted by wood"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (blank)",
+   "name": "Stained glass design blank",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/blank.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (barred)",
+   "name": "Stained glass design barred",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/barred.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (crossed)",
+   "name": "Stained glass design crossed",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/crossed.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (chequered)",
+   "name": "Stained glass design chequered",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/chequered.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (diamond)",
+   "name": "Stained glass design diamond",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/diamond.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (circle)",
+   "name": "Stained glass design circle",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/circle.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (edged)",
+   "name": "Stained glass design edged",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/edged.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (diagonal)",
+   "name": "Stained glass design diagonal",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/diagonal.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (octagon)",
+   "name": "Stained glass design octagon",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/octagon.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:stainedglass (ornatebarred)",
+   "name": "Stained glass design ornatebarred",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/glass/ornatebarred.0.png",
+   "note": "layer 0 only; tinted"
+  },
+  {
+   "label": "ExtraTrees:carpentry (kitchen)",
+   "name": "Wooden Tile base",
+   "all": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/kitchen/plain.png",
+   "note": "grayscale"
+  }
+ ]
+}

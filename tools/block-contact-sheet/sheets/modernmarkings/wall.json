@@ -1,0 +1,347 @@
+{
+ "title": "ModernMarkings: wall signs",
+ "entries": [
+  {
+   "label": "modernmarkings:tile.wall_marking_exit",
+   "name": "exit",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_exit.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_unit",
+   "name": "unit",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_unit.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_first_aid",
+   "name": "first_aid",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_first_aid.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_fire_extinguisher",
+   "name": "fire_extinguisher",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_fire_extinguisher.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_0",
+   "name": "number_0",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_0.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_1",
+   "name": "number_1",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_1.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_2",
+   "name": "number_2",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_2.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_3",
+   "name": "number_3",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_3.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_4",
+   "name": "number_4",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_4.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_5",
+   "name": "number_5",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_5.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_6",
+   "name": "number_6",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_6.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_7",
+   "name": "number_7",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_7.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_8",
+   "name": "number_8",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_8.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_9",
+   "name": "number_9",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_9.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_no",
+   "name": "number_no",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_no.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_numero",
+   "name": "number_numero",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_numero.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_dash",
+   "name": "number_dash",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_dash.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_comma",
+   "name": "number_comma",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_comma.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_number_period",
+   "name": "number_period",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_number_period.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_chemical",
+   "name": "symbol_chemical",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_chemical.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_electric",
+   "name": "symbol_electric",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_electric.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_fire",
+   "name": "symbol_fire",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_fire.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_fluid",
+   "name": "symbol_fluid",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_fluid.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_frost",
+   "name": "symbol_frost",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_frost.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_gears",
+   "name": "symbol_gears",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_gears.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_laser",
+   "name": "symbol_laser",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_laser.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_magic",
+   "name": "symbol_magic",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_magic.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_mob",
+   "name": "symbol_mob",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_mob.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_pinch",
+   "name": "symbol_pinch",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_pinch.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_production",
+   "name": "symbol_production",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_production.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_radiation",
+   "name": "symbol_radiation",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_radiation.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_radiation_2",
+   "name": "symbol_radiation_2",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_radiation_2.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_symbol_storage",
+   "name": "symbol_storage",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_symbol_storage.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_warning_danger",
+   "name": "warning_danger",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_warning_danger.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_arrowleft",
+   "name": "arrowleft",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_arrowleft.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_arrowright",
+   "name": "arrowright",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_arrowright.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_hazardline_left",
+   "name": "hazardline_left",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_hazardline_left.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_hazardline_right",
+   "name": "hazardline_right",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_hazardline_right.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_hazard_diamond",
+   "name": "hazard_diamond",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_hazard_diamond.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_eu",
+   "name": "voltage_eu",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_eu.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_ev",
+   "name": "voltage_ev",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_ev.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_fe",
+   "name": "voltage_fe",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_fe.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_hv",
+   "name": "voltage_hv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_hv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_iv",
+   "name": "voltage_iv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_iv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_luv",
+   "name": "voltage_luv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_luv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_lv",
+   "name": "voltage_lv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_lv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_max",
+   "name": "voltage_max",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_max.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_mv",
+   "name": "voltage_mv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_mv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_pert",
+   "name": "voltage_pert",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_pert.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_rf",
+   "name": "voltage_rf",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_rf.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_uev",
+   "name": "voltage_uev",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_uev.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_uhv",
+   "name": "voltage_uhv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_uhv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_uiv",
+   "name": "voltage_uiv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_uiv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_umv",
+   "name": "voltage_umv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_umv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_uv",
+   "name": "voltage_uv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_uv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_uxv",
+   "name": "voltage_uxv",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_uxv.png",
+   "note": "wall sign"
+  },
+  {
+   "label": "modernmarkings:tile.wall_marking_voltage_zpm",
+   "name": "voltage_zpm",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_wall_voltage_zpm.png",
+   "note": "wall sign"
+  }
+ ]
+}

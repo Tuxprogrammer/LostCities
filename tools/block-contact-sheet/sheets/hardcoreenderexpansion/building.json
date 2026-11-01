@@ -1,0 +1,203 @@
+{
+ "title": "Hardcore Ender Expansion: building blocks",
+ "entries": [
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:0",
+   "name": "Ravaged Brick",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:1",
+   "name": "Ravaged Brick (cracked)",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_cracked.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:2",
+   "name": "Ravaged Brick (damaged 1)",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_damaged_1.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:3",
+   "name": "Ravaged Brick (damaged 2)",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_damaged_2.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:4",
+   "name": "Ravaged Brick (damaged 3)",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_damaged_3.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick:5",
+   "name": "Ravaged Brick (damaged 4)",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_damaged_4.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick_smooth:0",
+   "name": "Smooth Ravaged Brick",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_smooth.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick_glow:0",
+   "name": "Glowing Ravaged Brick",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick_glow.png",
+   "note": "light 15"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick_slab:0",
+   "name": "Ravaged Brick Slab",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "note": "slab"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick_stairs",
+   "name": "Ravaged Brick Stairs",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "note": "stairs"
+  },
+  {
+   "label": "HardcoreEnderExpansion:ravaged_brick_fence",
+   "name": "Ravaged Brick Fence",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/ravaged_brick.png",
+   "note": "fence"
+  },
+  {
+   "label": "HardcoreEnderExpansion:obsidian_special:0",
+   "name": "Smooth Obsidian",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_smooth.png",
+   "note": "hardness 28"
+  },
+  {
+   "label": "HardcoreEnderExpansion:obsidian_special:1",
+   "name": "Chiseled Obsidian",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_chiseled_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_chiseled.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:obsidian_special:2",
+   "name": "Obsidian Pillar",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_pillar_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_pillar.png",
+   "note": "axis 2/3/4"
+  },
+  {
+   "label": "HardcoreEnderExpansion:obsidian_special_glow:0",
+   "name": "Glowing Smooth Obsidian",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/obsidian_smooth.png",
+   "note": "light 15"
+  },
+  {
+   "label": "HardcoreEnderExpansion:laboratory_floor:0",
+   "name": "Laboratory Floor",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/laboratory_floor.png",
+   "note": "hardness 30"
+  },
+  {
+   "label": "HardcoreEnderExpansion:laboratory_obsidian:0",
+   "name": "Laboratory Obsidian",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/laboratory_obsidian.png",
+   "note": "hardness 40"
+  },
+  {
+   "label": "HardcoreEnderExpansion:laboratory_glass:0",
+   "name": "Laboratory Glass",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/laboratory_glass.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:laboratory_stairs",
+   "name": "Laboratory Stairs",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/laboratory_floor.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:cinder:0",
+   "name": "Cinder",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/cinder.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:persegrit:0",
+   "name": "Persegrit",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/persegrit.png",
+   "note": "connected border metas"
+  },
+  {
+   "label": "HardcoreEnderExpansion:persegrit:15",
+   "name": "Persegrit (x)",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/persegrit_x.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:end_stone_terrain:0",
+   "name": "Infested End Stone",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_infested_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_infested_side.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:end_stone_terrain:1",
+   "name": "Burned End Stone",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_burned_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_burned_side.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:end_stone_terrain:2",
+   "name": "Enchanted End Stone",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_enchanted_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endstone_ter_enchanted_side.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:sphalerite:0",
+   "name": "Sphalerite",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/sphalerite.png",
+   "note": "ore"
+  },
+  {
+   "label": "HardcoreEnderExpansion:spooky_log:0",
+   "name": "Spooky Log",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/spooky_log_side.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/spooky_log_face.png",
+   "note": "face"
+  },
+  {
+   "label": "HardcoreEnderExpansion:spooky_leaves:0",
+   "name": "Spooky Leaves",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/spooky_leaves.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:endium_block:0",
+   "name": "Endium Block",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/endium_block.png"
+  },
+  {
+   "label": "HardcoreEnderExpansion:dungeon_puzzle:0",
+   "name": "Dungeon Puzzle wall",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/dungeon_puzzle_wall.png",
+   "note": "unbreakable"
+  },
+  {
+   "label": "HardcoreEnderExpansion:crossed_decoration",
+   "name": "Violet Moss",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/decor_violet_moss_tall.png",
+   "note": "plant"
+  },
+  {
+   "label": "HardcoreEnderExpansion:crossed_decoration",
+   "name": "Thorn Bush",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/decor_thorn_bush.png",
+   "note": "plant"
+  },
+  {
+   "label": "HardcoreEnderExpansion:death_flower",
+   "name": "Death Flower",
+   "all": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/end_flower.png",
+   "note": "plant"
+  },
+  {
+   "label": "HardcoreEnderExpansion:decomposition_table",
+   "name": "Decomposition Table",
+   "top": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/decomposition_table_top.png",
+   "side": "HardcoreEnderExpansion-1.12.29-GTNH.jar!assets/hardcoreenderexpansion/textures/blocks/decomposition_table_side.png",
+   "note": "machine"
+  }
+ ]
+}

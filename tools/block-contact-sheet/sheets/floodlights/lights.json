@@ -1,0 +1,76 @@
+{
+ "title": "FloodLights: fixtures, off and on (on needs RF/EU power)",
+ "entries": [
+  {
+   "label": "FloodLights:electricFloodlight",
+   "name": "electricFloodlight (off)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/electricFloodlight_top.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/electricFloodlight_side.png",
+   "note": "TE; dark unless powered"
+  },
+  {
+   "label": "FloodLights:electricFloodlight (on)",
+   "name": "electricFloodlight (on)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/electricFloodlight_top_on.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/electricFloodlight_side.png"
+  },
+  {
+   "label": "FloodLights:carbonFloodlight",
+   "name": "carbonFloodlight (off)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/carbonFloodlight_top.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/carbonFloodlight_side.png",
+   "note": "TE; dark unless powered"
+  },
+  {
+   "label": "FloodLights:carbonFloodlight (on)",
+   "name": "carbonFloodlight (on)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/carbonFloodlight_top_on.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/carbonFloodlight_side.png"
+  },
+  {
+   "label": "FloodLights:uvFloodlight",
+   "name": "uvFloodlight (off)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/uvFloodlight_top.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/uvFloodlight_side.png",
+   "note": "TE; dark unless powered"
+  },
+  {
+   "label": "FloodLights:uvFloodlight (on)",
+   "name": "uvFloodlight (on)",
+   "top": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/uvFloodlight_top_on.png",
+   "side": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/uvFloodlight_side.png"
+  },
+  {
+   "label": "FloodLights:smallElectricFloodlightMetaBlock:0 (off)",
+   "name": "fluorescentSmallLight",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/fluorescentSmallLight_off.png",
+   "note": "thin panel; TE"
+  },
+  {
+   "label": "FloodLights:smallElectricFloodlightMetaBlock:0 (on)",
+   "name": "fluorescentSmallLight",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/fluorescentSmallLight_on.png"
+  },
+  {
+   "label": "FloodLights:smallElectricFloodlightMetaBlock:1 (off)",
+   "name": "fluorescentSquareLight",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/fluorescentSquareLight_off.png",
+   "note": "thin panel; TE"
+  },
+  {
+   "label": "FloodLights:smallElectricFloodlightMetaBlock:1 (on)",
+   "name": "fluorescentSquareLight",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/fluorescentSquareLight_on.png"
+  },
+  {
+   "label": "FloodLights:growLight (off)",
+   "name": "Grow Light",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/growLight_off.png"
+  },
+  {
+   "label": "FloodLights:growLight (on)",
+   "name": "Grow Light",
+   "all": "FloodLights-1.5.6.jar!assets/floodlights/textures/blocks/growLight_on.png"
+  }
+ ]
+}

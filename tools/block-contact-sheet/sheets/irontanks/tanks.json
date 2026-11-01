@@ -1,0 +1,65 @@
+{
+ "title": "Iron Tanks: tank blocks (TE)",
+ "entries": [
+  {
+   "label": "irontank:copperTank",
+   "name": "copper tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/copperTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/copperTank/side.png"
+  },
+  {
+   "label": "irontank:silverTank",
+   "name": "silver tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/silverTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/silverTank/side.png"
+  },
+  {
+   "label": "irontank:ironTank",
+   "name": "iron tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/ironTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/ironTank/side.png"
+  },
+  {
+   "label": "irontank:goldTank",
+   "name": "gold tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/goldTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/goldTank/side.png"
+  },
+  {
+   "label": "irontank:diamondTank",
+   "name": "diamond tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/diamondTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/diamondTank/side.png"
+  },
+  {
+   "label": "irontank:obsidianTank",
+   "name": "obsidian tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/obsidianTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/obsidianTank/side.png"
+  },
+  {
+   "label": "irontank:emeraldTank",
+   "name": "emerald tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/emeraldTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/emeraldTank/side.png"
+  },
+  {
+   "label": "irontank:stainlesssteelTank",
+   "name": "stainlesssteel tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/stainlesssteelTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/stainlesssteelTank/side.png"
+  },
+  {
+   "label": "irontank:titaniumTank",
+   "name": "titanium tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/titaniumTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/titaniumTank/side.png"
+  },
+  {
+   "label": "irontank:tungstensteelTank",
+   "name": "tungstensteel tank",
+   "top": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/tungstensteelTank/topbottom.png",
+   "side": "irontanks-1.4.7.jar!assets/irontank/textures/blocks/tungstensteelTank/side.png"
+  }
+ ]
+}

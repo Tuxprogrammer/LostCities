@@ -1,0 +1,25 @@
+{
+ "title": "VillageNames: blocks the pack config registers",
+ "entries": [
+  {
+   "label": "VillageNames:lunarinGoldBlock:0",
+   "name": "Lunarin Gold Brick",
+   "all": "VillageNames-4.5.21-GTNH.jar!assets/villagenames/textures/blocks/lunarinGoldBrick.png"
+  },
+  {
+   "label": "VillageNames:lunarinIronBlock:0",
+   "name": "Lunarin Iron Brick",
+   "all": "VillageNames-4.5.21-GTNH.jar!assets/villagenames/textures/blocks/lunarinIronBrick.png"
+  },
+  {
+   "label": "VillageNames:sponge:0",
+   "name": "Sponge",
+   "all": "VillageNames-4.5.21-GTNH.jar!assets/minecraft/textures/blocks/sponge.png"
+  },
+  {
+   "label": "VillageNames:sponge:1",
+   "name": "Wet Sponge",
+   "all": "VillageNames-4.5.21-GTNH.jar!assets/minecraft/textures/blocks/sponge_wet.png"
+  }
+ ]
+}

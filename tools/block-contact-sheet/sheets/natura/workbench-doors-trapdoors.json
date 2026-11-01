@@ -1,0 +1,210 @@
+{
+ "title": "Natura: workbenches, doors, trapdoors",
+ "entries": [
+  {
+   "label": "Natura:Natura.workbench:0",
+   "name": "eucalyptus workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:1",
+   "name": "sakura workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:2",
+   "name": "ghostwood workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:3",
+   "name": "redwood workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:4",
+   "name": "bloodwood workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:5",
+   "name": "hopseed workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:6",
+   "name": "maple workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:7",
+   "name": "silverbell workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:8",
+   "name": "purpleheart workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:9",
+   "name": "tiger workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:10",
+   "name": "willow workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:11",
+   "name": "darkwood workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_workbench_face.png"
+  },
+  {
+   "label": "Natura:Natura.workbench:12",
+   "name": "fusewood workbench",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_workbench_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_workbench_face.png"
+  },
+  {
+   "label": "Natura:door.redwood",
+   "name": "redwood door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.eucalyptus",
+   "name": "eucalyptus door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.hopseed",
+   "name": "hopseed door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.sakura",
+   "name": "sakura door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.ghostwood",
+   "name": "ghostwood door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.bloodwood",
+   "name": "bloodwood door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:door.redwoodbark",
+   "name": "redwoodbark door",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwoodbark_door_top.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwoodbark_door_bottom.png",
+   "note": "door; bottom texture on sides"
+  },
+  {
+   "label": "Natura:trapdoor.eucalyptus",
+   "name": "eucalyptus trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.sakura",
+   "name": "sakura trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.ghostwood",
+   "name": "ghostwood trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.redwood",
+   "name": "redwood trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.bloodwood",
+   "name": "bloodwood trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.hopseed",
+   "name": "hopseed trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.maple",
+   "name": "maple trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.amaranth",
+   "name": "amaranth trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.silverbell",
+   "name": "silverbell trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.tiger",
+   "name": "tiger trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.willow",
+   "name": "willow trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.darkwood",
+   "name": "darkwood trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_trapdoor.png",
+   "note": "trapdoor face"
+  },
+  {
+   "label": "Natura:trapdoor.fusewood",
+   "name": "fusewood trapdoor",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_trapdoor.png",
+   "note": "trapdoor face"
+  }
+ ]
+}

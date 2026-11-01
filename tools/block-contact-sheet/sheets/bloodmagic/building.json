@@ -1,0 +1,154 @@
+{
+ "title": "Blood Magic and Blood Arsenal: building blocks",
+ "entries": [
+  {
+   "label": "AWWayofTime:bloodStoneBrick:0",
+   "name": "Bloodstone Brick",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/BloodStoneBrick.png"
+  },
+  {
+   "label": "AWWayofTime:largeBloodStoneBrick:0",
+   "name": "Large Bloodstone Brick",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/LargeBloodStoneBrick.png"
+  },
+  {
+   "label": "AWWayofTime:blockCrystal:0",
+   "name": "Crystal Cluster",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/ShardCluster.png"
+  },
+  {
+   "label": "AWWayofTime:blockCrystal:1",
+   "name": "Crystal Cluster Brick",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/ShardClusterBrick.png"
+  },
+  {
+   "label": "AWWayofTime:ritualStone:0",
+   "name": "Ritual Stone",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/RitualStone.png",
+   "note": "ritual part"
+  },
+  {
+   "label": "AWWayofTime:imperfectRitualStone:0",
+   "name": "Imperfect Ritual Stone",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/ImperfectRitualStone.png"
+  },
+  {
+   "label": "AWWayofTime:AlchemicalWizardrybloodRune:0",
+   "name": "Blood Rune",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/BlankRune.png",
+   "note": "altar part"
+  },
+  {
+   "label": "AWWayofTime:speedRune:0",
+   "name": "Speed Rune",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/SpeedRune.png"
+  },
+  {
+   "label": "AWWayofTime:emptySocket:0",
+   "name": "Empty Socket",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/EmptySocket.png"
+  },
+  {
+   "label": "AWWayofTime:bloodLight:0",
+   "name": "Blood Light",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/BlockBloodLight.png",
+   "note": "tiny light"
+  },
+  {
+   "label": "AWWayofTime:spectralBlock:0",
+   "name": "Spectral Block",
+   "all": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/SpectralBlock.png",
+   "note": "vanishes"
+  },
+  {
+   "label": "AWWayofTime:blockTeleposer:0",
+   "name": "Teleposer",
+   "top": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/Teleposer_Top.png",
+   "side": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/Teleposer_Side.png",
+   "note": "swaps blocks"
+  },
+  {
+   "label": "AWWayofTime:Altar:0",
+   "name": "Blood Altar",
+   "top": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/BloodAltar_Top.png",
+   "side": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/BloodAltar_SideType1.png",
+   "note": "TE"
+  },
+  {
+   "label": "AWWayofTime:blockHomHeart:0",
+   "name": "Spell Table",
+   "top": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/HomHeart_top.png",
+   "side": "BloodMagic-1.9.16.jar!assets/alchemicalwizardry/textures/blocks/HomHeart_side.png",
+   "note": "TE"
+  },
+  {
+   "label": "BloodArsenal:blood_stone:0",
+   "name": "Blood Stone (1)",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stone_1.png"
+  },
+  {
+   "label": "BloodArsenal:blood_stone:2",
+   "name": "Blood Stone (3)",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stone_3.png"
+  },
+  {
+   "label": "BloodArsenal:blood_stone:4",
+   "name": "Blood Stone (5)",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stone_5.png"
+  },
+  {
+   "label": "BloodArsenal:blood_stained_glass:0",
+   "name": "Blood-Stained Glass",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stained_glass.png"
+  },
+  {
+   "label": "BloodArsenal:blood_infused_planks:0",
+   "name": "Blood Infused Planks",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_infused_planks.png"
+  },
+  {
+   "label": "BloodArsenal:blood_infused_wood:0",
+   "name": "Blood Infused Wood",
+   "top": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_infused_wood_top.png",
+   "side": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_infused_wood.png"
+  },
+  {
+   "label": "BloodArsenal:blood_stained_ice:0",
+   "name": "Blood-Stained Ice",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stained_ice.png"
+  },
+  {
+   "label": "BloodArsenal:blood_stained_ice_packed:0",
+   "name": "Blood-Stained Packed Ice",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_stained_ice_packed.png"
+  },
+  {
+   "label": "BloodArsenal:blood_lamp:0",
+   "name": "Blood Lamp",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_lamp.png",
+   "note": "light 15"
+  },
+  {
+   "label": "BloodArsenal:blood_infused_glowstone:0",
+   "name": "Blood Infused Glowstone",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_infused_glowstone.png",
+   "note": "light 15"
+  },
+  {
+   "label": "BloodArsenal:blood_torch:0",
+   "name": "Blood Torch",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_torch.png",
+   "note": "torch"
+  },
+  {
+   "label": "BloodArsenal:blood_infused_iron_block:0",
+   "name": "Blood Infused Iron Block",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/blood_infused_iron_block.png"
+  },
+  {
+   "label": "BloodArsenal:block_burned_string:0",
+   "name": "Burned String",
+   "all": "BloodArsenal-1.5.12.jar!assets/bloodarsenal/textures/blocks/block_burned_string.png"
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+{"title": "Battlegear2: flag pole materials (in game a thin pole; flags come from TE NBT)",
+ "entries": [
+  {"label": "battlegear2:flagpole:0", "name": "Oak Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_oak.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:1", "name": "Spruce Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_spruce.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:2", "name": "Birch Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_birch.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:3", "name": "Jungle Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_jungle.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:4", "name": "Iron Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/iron_block.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:5", "name": "Acacia Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_acacia.png", "note": "thin pole"},
+  {"label": "battlegear2:flagpole:6", "name": "Dark Oak Flag Pole", "all": "minecraft.jar!assets/minecraft/textures/blocks/log_big_oak.png", "note": "thin pole"}
+ ]}

@@ -1,0 +1,184 @@
+{
+ "title": "Forestry: soils, storage blocks, candles, mail, machines, hives",
+ "entries": [
+  {
+   "label": "Forestry:soil:0",
+   "name": "Humus",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/soil/humus.png"
+  },
+  {
+   "label": "Forestry:soil:1",
+   "name": "Bog Earth",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/soil/bog.png"
+  },
+  {
+   "label": "Forestry:resourceStorage:0",
+   "name": "Block of Apatite",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/storage/apatite.png"
+  },
+  {
+   "label": "Forestry:resourceStorage:1",
+   "name": "Block of Copper",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/storage/copper.png"
+  },
+  {
+   "label": "Forestry:resourceStorage:2",
+   "name": "Block of Tin",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/storage/tin.png"
+  },
+  {
+   "label": "Forestry:resourceStorage:3",
+   "name": "Block of Bronze",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/storage/bronze.png"
+  },
+  {
+   "label": "Forestry:resources:0",
+   "name": "Apatite Ore",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/ores/apatite.png"
+  },
+  {
+   "label": "Forestry:resources:1",
+   "name": "Copper Ore",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/ores/copper.png"
+  },
+  {
+   "label": "Forestry:resources:2",
+   "name": "Tin Ore",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/ores/tin.png"
+  },
+  {
+   "label": "Forestry:candle",
+   "name": "Candle (model; stump)",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/candleStumpLit.png",
+   "note": "model: torch-like"
+  },
+  {
+   "label": "Forestry:stump",
+   "name": "Candle Holder (model)",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/stump.png",
+   "note": "model"
+  },
+  {
+   "label": "Forestry:mail:0",
+   "name": "Mailbox",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/mailbox.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/mailbox.0.png",
+   "note": "machine TE"
+  },
+  {
+   "label": "Forestry:mail:1",
+   "name": "Trade Station",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/tradestation.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/tradestation.0.png",
+   "note": "machine TE"
+  },
+  {
+   "label": "Forestry:mail:2",
+   "name": "Stamp Collector",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/philatelist.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/philatelist.0.png",
+   "note": "machine TE"
+  },
+  {
+   "label": "Forestry:core:1",
+   "name": "Escritoire (model)",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/escritoire.png",
+   "note": "TESR model"
+  },
+  {
+   "label": "Forestry:factory2:2",
+   "name": "Worktable",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/worktable.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/worktable.0.png",
+   "note": "machine TE (meta unverified)"
+  },
+  {
+   "label": "Forestry:apiculture:0",
+   "name": "Apiary",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/apiary.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/apiary.0.png",
+   "note": "machine TE"
+  },
+  {
+   "label": "Forestry:apiculture:2",
+   "name": "Bee House",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehouse.1.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehouse.0.png",
+   "note": "machine TE"
+  },
+  {
+   "label": "Forestry:alveary:0",
+   "name": "Alveary",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/apiculture/alveary.plain.png",
+   "note": "multiblock TE"
+  },
+  {
+   "label": "Forestry:ffarm:0",
+   "name": "Farm Block (plain)",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/farm/plain.png",
+   "note": "multiblock TE, look from item NBT"
+  },
+  {
+   "label": "Forestry:ffarm:1",
+   "name": "Farm Block (band)",
+   "all": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/farm/band.png",
+   "note": "multiblock TE"
+  },
+  {
+   "label": "Forestry:beehives:1",
+   "name": "Beehive 1",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.1.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.1.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:2",
+   "name": "Beehive 2",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.2.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.2.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:3",
+   "name": "Beehive 3",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.3.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.3.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:4",
+   "name": "Beehive 4",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.4.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.4.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:5",
+   "name": "Beehive 5",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.5.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.5.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:6",
+   "name": "Beehive 6",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.6.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.6.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:7",
+   "name": "Beehive 7",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.7.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.7.side.png",
+   "note": "meta 1-8"
+  },
+  {
+   "label": "Forestry:beehives:8",
+   "name": "Beehive 8",
+   "top": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.8.top.png",
+   "side": "Forestry-4.11.40.jar!assets/forestry/textures/blocks/beehives/beehive.8.side.png",
+   "note": "meta 1-8"
+  }
+ ]
+}

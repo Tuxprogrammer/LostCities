@@ -1,0 +1,22 @@
+{
+ "title": "VendingMachine: GT multiblock casing and controller faces",
+ "entries": [
+  {
+   "label": "vendingmachine:tile.casing",
+   "name": "Vending Machine Casing",
+   "all": "vendingmachine-0.4.103.jar!assets/vendingmachine/textures/blocks/vending_machine_casing.png"
+  },
+  {
+   "label": "gregtech:gt.blockmachines (mID 2741) off",
+   "name": "Vending Machine front (off)",
+   "top": "vendingmachine-0.4.103.jar!assets/vendingmachine/textures/blocks/vending_machine_casing.png",
+   "side": "vendingmachine-0.4.103.jar!assets/vendingmachine/textures/blocks/vending_machine_front_off.png"
+  },
+  {
+   "label": "gregtech:gt.blockmachines (mID 2741) on",
+   "name": "Vending Machine front (on)",
+   "top": "vendingmachine-0.4.103.jar!assets/vendingmachine/textures/blocks/vending_machine_casing.png",
+   "side": "vendingmachine-0.4.103.jar!assets/vendingmachine/textures/blocks/vending_machine_front_on.png"
+  }
+ ]
+}

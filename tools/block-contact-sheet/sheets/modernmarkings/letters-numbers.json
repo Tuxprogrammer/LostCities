@@ -1,0 +1,161 @@
+{
+ "title": "ModernMarkings: letters and numbers",
+ "entries": [
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_a",
+   "name": "letter_a",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_a.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_b",
+   "name": "letter_b",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_b.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_c",
+   "name": "letter_c",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_c.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_d",
+   "name": "letter_d",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_d.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_e",
+   "name": "letter_e",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_e.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_f",
+   "name": "letter_f",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_f.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_g",
+   "name": "letter_g",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_g.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_h",
+   "name": "letter_h",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_h.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_i",
+   "name": "letter_i",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_i.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_j",
+   "name": "letter_j",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_j.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_k",
+   "name": "letter_k",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_k.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_l",
+   "name": "letter_l",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_l.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_m",
+   "name": "letter_m",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_m.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_n",
+   "name": "letter_n",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_n.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_o",
+   "name": "letter_o",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_o.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_p",
+   "name": "letter_p",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_p.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_q",
+   "name": "letter_q",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_q.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_r",
+   "name": "letter_r",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_r.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_s",
+   "name": "letter_s",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_s.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_t",
+   "name": "letter_t",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_t.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_u",
+   "name": "letter_u",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_u.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_v",
+   "name": "letter_v",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_v.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_w",
+   "name": "letter_w",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_w.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_x",
+   "name": "letter_x",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_x.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_y",
+   "name": "letter_y",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_y.png",
+   "note": "floor_ and wall_ blocks"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_letter_z",
+   "name": "letter_z",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_letter_z.png",
+   "note": "floor_ and wall_ blocks"
+  }
+ ]
+}

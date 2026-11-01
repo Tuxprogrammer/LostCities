@@ -1,0 +1,303 @@
+{
+ "title": "Witchery: woods, glass, decoration",
+ "entries": [
+  {
+   "label": "witchery:witchwood:0",
+   "name": "Rowan Planks",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_rowan.png"
+  },
+  {
+   "label": "witchery:witchwood:1",
+   "name": "Alder Planks",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_alder.png"
+  },
+  {
+   "label": "witchery:witchwood:2",
+   "name": "Hawthorn Planks",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/planks_hawthorn.png"
+  },
+  {
+   "label": "witchery:witchlog:0",
+   "name": "Rowan Wood",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_rowan_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_rowan.png",
+   "note": "axis metas"
+  },
+  {
+   "label": "witchery:witchlog:1",
+   "name": "Alder Wood",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_alder_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_alder.png"
+  },
+  {
+   "label": "witchery:witchlog:2",
+   "name": "Hawthorn Wood",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_hawthorn_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_hawthorn.png",
+   "note": "hawthorn: scares mobs"
+  },
+  {
+   "label": "witchery:witchleaves:0",
+   "name": "Rowan Leaves",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/leaves_rowan_opaque.png"
+  },
+  {
+   "label": "witchery:witchleaves:1",
+   "name": "Alder Leaves",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/leaves_alder_opaque.png"
+  },
+  {
+   "label": "witchery:witchleaves:2",
+   "name": "Hawthorn Leaves",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/leaves_hawthorn_opaque.png"
+  },
+  {
+   "label": "witchery:rowanwooddoor",
+   "name": "Rowan Door",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/door_rowan_upper.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/door_rowan_lower.png",
+   "note": "keyed door, no drop"
+  },
+  {
+   "label": "witchery:icedoor",
+   "name": "Ice Door",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/icedoor_upper.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/icedoor_lower.png"
+  },
+  {
+   "label": "witchery:shadedglass:0",
+   "name": "Shaded Glass (white)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_white.png",
+   "note": "redstone makes opaque"
+  },
+  {
+   "label": "witchery:shadedglass:7",
+   "name": "Shaded Glass (gray)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_gray.png"
+  },
+  {
+   "label": "witchery:shadedglass:8",
+   "name": "Shaded Glass (light gray)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_silver.png"
+  },
+  {
+   "label": "witchery:shadedglass:9",
+   "name": "Shaded Glass (cyan)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_cyan.png"
+  },
+  {
+   "label": "witchery:shadedglass:11",
+   "name": "Shaded Glass (blue)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_blue.png"
+  },
+  {
+   "label": "witchery:shadedglass:12",
+   "name": "Shaded Glass (brown)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_brown.png"
+  },
+  {
+   "label": "witchery:shadedglass:13",
+   "name": "Shaded Glass (green)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_green.png"
+  },
+  {
+   "label": "witchery:shadedglass:14",
+   "name": "Shaded Glass (red)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_red.png"
+  },
+  {
+   "label": "witchery:shadedglass:15",
+   "name": "Shaded Glass (black)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff_black.png"
+  },
+  {
+   "label": "witchery:shadedglass_active:0",
+   "name": "Shaded Glass (active, white)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglass_white.png",
+   "note": "powered state"
+  },
+  {
+   "label": "witchery:shadedglass_active:15",
+   "name": "Shaded Glass (active, black)",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglass_black.png"
+  },
+  {
+   "label": "witchery:shadedglass (base)",
+   "name": "Shaded Glass frame",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/shadedglassoff.png"
+  },
+  {
+   "label": "witchery:perpetualice:0",
+   "name": "Perpetual Ice",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/ice.png",
+   "note": "never melts"
+  },
+  {
+   "label": "witchery:stockade:0",
+   "name": "Oak Stockade",
+   "all": "minecraft.jar!assets/minecraft/textures/blocks/log_oak.png",
+   "note": "palisade post; approx"
+  },
+  {
+   "label": "witchery:stockade:4",
+   "name": "Rowan Stockade",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/log_rowan.png",
+   "note": "approx"
+  },
+  {
+   "label": "witchery:wickerbundle:0",
+   "name": "Wicker Bundle",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/wicker_block_plain_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/wicker_block_plain_side.png"
+  },
+  {
+   "label": "witchery:wickerbundle:1",
+   "name": "Bloodied Wicker Bundle",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/wicker_block_bloodied_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/wicker_block_bloodied_side.png"
+  },
+  {
+   "label": "witchery:bloodedwool:0",
+   "name": "Blooded Wool",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/bloodedwool.png"
+  },
+  {
+   "label": "witchery:spanishmoss:0",
+   "name": "Spanish Moss",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/spanishMoss.png",
+   "note": "hanging vine"
+  },
+  {
+   "label": "witchery:glowglobe:0",
+   "name": "Glow Globe",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/glowGlobe.png",
+   "note": "light 15, model"
+  },
+  {
+   "label": "witchery:candelabra:0",
+   "name": "Candelabra",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/candelabra.png",
+   "note": "TE, light 15, model"
+  },
+  {
+   "label": "witchery:chalice:0",
+   "name": "Chalice",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/chalice.png",
+   "note": "TE, model"
+  },
+  {
+   "label": "witchery:garlicgarland:0",
+   "name": "Garlic Garland",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/garlicgarland.png",
+   "note": "TE, hanging"
+  },
+  {
+   "label": "witchery:coffinblock",
+   "name": "Coffin",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/coffin.png",
+   "note": "TE, model"
+  },
+  {
+   "label": "witchery:spinningwheel",
+   "name": "Spinning Wheel",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/spinningwheel.png",
+   "note": "TE machine"
+  },
+  {
+   "label": "witchery:statuegoddess",
+   "name": "Statue of the Goddess",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/statuegoddess.png",
+   "note": "TE"
+  },
+  {
+   "label": "witchery:brazier",
+   "name": "Brazier",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/brazier.png",
+   "note": "TE"
+  },
+  {
+   "label": "witchery:bramble:1",
+   "name": "Wild Bramble",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/bramble_wild.png",
+   "note": "spreads, hurts"
+  },
+  {
+   "label": "witchery:voidbramble",
+   "name": "Void Bramble",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/voidBramble.png",
+   "note": "teleports"
+  },
+  {
+   "label": "witchery:embermoss",
+   "name": "Ember Moss",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/embermoss.png",
+   "note": "sets fire"
+  },
+  {
+   "label": "witchery:bloodrose",
+   "name": "Blood Rose",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/bloodrose.png",
+   "note": "hurts"
+  },
+  {
+   "label": "witchery:glintweed",
+   "name": "Glint Weed",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/glintWeed.png",
+   "note": "light"
+  },
+  {
+   "label": "witchery:somniancotton",
+   "name": "Wispy Cotton",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/somnianCotton.png"
+  },
+  {
+   "label": "witchery:altar",
+   "name": "Altar",
+   "top": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/altar_top.png",
+   "side": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/altar.png",
+   "note": "multiblock TE"
+  },
+  {
+   "label": "witchery:kettle",
+   "name": "Kettle",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/kettle.png",
+   "note": "TE"
+  },
+  {
+   "label": "witchery:poppetshelf",
+   "name": "Poppet Shelf",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/poppetShelf.png",
+   "note": "TE"
+  },
+  {
+   "label": "witchery:dreamcatcher",
+   "name": "Dream Catcher",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/dreamCatcher.png",
+   "note": "TE"
+  },
+  {
+   "label": "witchery:scarecrow",
+   "name": "Scarecrow",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/scarecrow.png",
+   "note": "TE fetish"
+  },
+  {
+   "label": "witchery:witchesovenidle",
+   "name": "Witches Oven",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/witchesOven.png",
+   "note": "TE machine"
+  },
+  {
+   "label": "witchery:distilleryidle",
+   "name": "Distillery",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/distillery.png",
+   "note": "TE machine"
+  },
+  {
+   "label": "witchery:mirrorblock",
+   "name": "Mirror",
+   "all": "witchery-1.7.10-0.24.1.jar!assets/witchery/textures/blocks/mirror.png",
+   "note": "TE, teleports"
+  }
+ ]
+}

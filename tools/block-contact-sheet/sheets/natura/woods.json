@@ -1,0 +1,246 @@
+{
+ "title": "Natura: planks, logs, bookshelves",
+ "entries": [
+  {
+   "label": "Natura:planks:0",
+   "name": "eucalyptus planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_planks.png"
+  },
+  {
+   "label": "Natura:planks:1",
+   "name": "sakura planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_planks.png"
+  },
+  {
+   "label": "Natura:planks:2",
+   "name": "ghostwood planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_planks.png"
+  },
+  {
+   "label": "Natura:planks:3",
+   "name": "redwood planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_planks.png"
+  },
+  {
+   "label": "Natura:planks:4",
+   "name": "bloodwood planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_planks.png"
+  },
+  {
+   "label": "Natura:planks:5",
+   "name": "hopseed planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_planks.png"
+  },
+  {
+   "label": "Natura:planks:6",
+   "name": "maple planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_planks.png"
+  },
+  {
+   "label": "Natura:planks:7",
+   "name": "silverbell planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_planks.png"
+  },
+  {
+   "label": "Natura:planks:8",
+   "name": "purpleheart planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_planks.png"
+  },
+  {
+   "label": "Natura:planks:9",
+   "name": "tiger planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_planks.png"
+  },
+  {
+   "label": "Natura:planks:10",
+   "name": "willow planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_planks.png"
+  },
+  {
+   "label": "Natura:planks:11",
+   "name": "darkwood planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_planks.png"
+  },
+  {
+   "label": "Natura:planks:12",
+   "name": "fusewood planks",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_planks.png"
+  },
+  {
+   "label": "Natura:tree:0",
+   "name": "eucalyptus log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:tree:1",
+   "name": "sakura log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:tree:2",
+   "name": "ghostwood log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:tree:3",
+   "name": "hopseed log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Rare Tree:0",
+   "name": "maple log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Rare Tree:1",
+   "name": "silverbell log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Rare Tree:2",
+   "name": "purpleheart log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Rare Tree:3",
+   "name": "tiger log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Dark Tree:0",
+   "name": "darkwood log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:Dark Tree:1",
+   "name": "fusewood log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_bark.png",
+   "note": "explodes when broken"
+  },
+  {
+   "label": "Natura:willow:0",
+   "name": "willow log",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_heart.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_bark.png",
+   "note": "+4/+8 axis"
+  },
+  {
+   "label": "Natura:redwood:0",
+   "name": "Redwood Bark",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_bark.png"
+  },
+  {
+   "label": "Natura:redwood:1",
+   "name": "Redwood (heart)",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_heart.png"
+  },
+  {
+   "label": "Natura:redwood:2",
+   "name": "Redwood Root",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_root.png"
+  },
+  {
+   "label": "Natura:bloodwood:15",
+   "name": "Bloodwood (full bark)",
+   "all": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_bark.png",
+   "note": "2x2 log; 0-7 quadrants"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:0",
+   "name": "eucalyptus bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/eucalyptus_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:1",
+   "name": "sakura bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/sakura_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:2",
+   "name": "ghostwood bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/ghostwood_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:3",
+   "name": "redwood bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/redwood_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:4",
+   "name": "bloodwood bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/bloodwood_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:5",
+   "name": "hopseed bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/hopseed_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:6",
+   "name": "maple bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/maple_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:7",
+   "name": "silverbell bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/silverbell_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:8",
+   "name": "purpleheart bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/purpleheart_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:9",
+   "name": "tiger bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/tiger_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:10",
+   "name": "willow bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/willow_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:11",
+   "name": "darkwood bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/darkwood_bookshelf.png"
+  },
+  {
+   "label": "Natura:Natura.bookshelf:12",
+   "name": "fusewood bookshelf",
+   "top": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_planks.png",
+   "side": "Natura-2.8.24.jar!assets/natura/textures/blocks/fusewood_bookshelf.png"
+  }
+ ]
+}

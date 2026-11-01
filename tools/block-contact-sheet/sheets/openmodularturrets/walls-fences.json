@@ -1,0 +1,20 @@
+{"title": "OpenModularTurrets 2.4.8: hard walls, fences, turret bases",
+ "entries": [
+  {"label": "openmodularturrets:hardWallTierOne:0", "name": "Hardened Wall (Tier 1)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/hardWallTierOne.png"},
+  {"label": "openmodularturrets:hardWallTierTwo:0", "name": "Hardened Wall (Tier 2)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/hardWallTierTwo.png"},
+  {"label": "openmodularturrets:hardWallTierThree:0", "name": "Hardened Wall (Tier 3)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/hardWallTierThree.png"},
+  {"label": "openmodularturrets:hardWallTierFour:0", "name": "Hardened Wall (Tier 4)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/hardWallTierFour.png"},
+  {"label": "openmodularturrets:hardWallTierFive:0", "name": "Hardened Wall (Tier 5)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/hardWallTierFive.png"},
+  {"label": "openmodularturrets:fenceTierOne:0", "name": "Fence (Tier 1)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/fenceTierOne.png", "note": "pane"},
+  {"label": "openmodularturrets:fenceTierTwo:0", "name": "Fence (Tier 2)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/fenceTierTwo.png", "note": "pane"},
+  {"label": "openmodularturrets:fenceTierThree:0", "name": "Fence (Tier 3)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/fenceTierThree.png", "note": "pane, 3 dmg"},
+  {"label": "openmodularturrets:fenceTierFour:0", "name": "Fence (Tier 4)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/fenceTierFour.png", "note": "pane, 4 dmg"},
+  {"label": "openmodularturrets:fenceTierFive:0", "name": "Fence (Tier 5)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/fenceTierFive.png", "note": "pane, 5 dmg"},
+  {"label": "openmodularturrets:baseTierWood:0", "name": "Turret Base (Tier 1)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/turretBaseTierOne.png", "note": "TE"},
+  {"label": "openmodularturrets:baseTierOneBlock:0", "name": "Turret Base (Tier 2)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/turretBaseTierTwo.png", "note": "TE"},
+  {"label": "openmodularturrets:baseTierTwoBlock:0", "name": "Turret Base (Tier 3)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/turretBaseTierThree.png", "note": "TE"},
+  {"label": "openmodularturrets:baseTierThreeBlock:0", "name": "Turret Base (Tier 4)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/turretBaseTierFour.png", "note": "TE"},
+  {"label": "openmodularturrets:baseTierFourBlock:0", "name": "Turret Base (Tier 5)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/turretBaseTierFive.png", "note": "TE"},
+  {"label": "openmodularturrets:leverBlock:0", "name": "Lever (crank)", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/leverBlock.png", "note": "model"},
+  {"label": "openmodularturrets:machineGunTurret:0", "name": "Machine Gun Turret", "all": "OpenModularTurrets-2.4.8.jar!assets/openmodularturrets/textures/blocks/machineGunTurret.png", "note": "model, shoots"}
+ ]}

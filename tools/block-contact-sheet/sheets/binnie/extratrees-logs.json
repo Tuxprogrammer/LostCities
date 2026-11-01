@@ -1,0 +1,285 @@
+{
+ "title": "ExtraTrees: logs (TE tag meta = log ordinal; bark is tinted in game)",
+ "entries": [
+  {
+   "label": "ExtraTrees:log meta=0",
+   "name": "Apple Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/appleTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/appleBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=1",
+   "name": "Fig Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/figTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/figBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=2",
+   "name": "Butternut Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/butternutTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/butternutBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=3",
+   "name": "Cherry Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cherryTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cherryBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=4",
+   "name": "Whitebeam Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/whitebeamTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/whitebeamBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=5",
+   "name": "Rowan Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/rowanTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/rowanBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=6",
+   "name": "Hemlock Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hemlockTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hemlockBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=7",
+   "name": "Ash Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/ashTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/ashBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=8",
+   "name": "Alder Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/alderTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/alderBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=9",
+   "name": "Beech Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/beechTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/beechBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=10",
+   "name": "Hawthorn Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hawthornTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hawthornBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=11",
+   "name": "Banana Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/bananaTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/bananaBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=12",
+   "name": "Yew Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/yewTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/yewBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=13",
+   "name": "Cypress Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cypressTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cypressBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=14",
+   "name": "Fir Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/firTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/firBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=15",
+   "name": "Hazel Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hazelTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hazelBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=16",
+   "name": "Hickory Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hickoryTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hickoryBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=17",
+   "name": "Elm Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/elmTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/elmBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=18",
+   "name": "Elder Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/elderTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/elderBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=19",
+   "name": "Holly Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hollyTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hollyBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=20",
+   "name": "Hornbeam Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hornbeamTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/hornbeamBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=21",
+   "name": "Cedar Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cedarTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cedarBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=22",
+   "name": "Olive Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/oliveTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/oliveBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=23",
+   "name": "Sweetgum Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/sweetgumTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/sweetgumBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=24",
+   "name": "Locust Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/locustTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/locustBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=25",
+   "name": "Pear Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/pearTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/pearBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=26",
+   "name": "Maclura Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/macluraTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/macluraBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=27",
+   "name": "Brazilwood Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/brazilwoodTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/brazilwoodBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=28",
+   "name": "Logwood Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/logwoodTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/logwoodBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=29",
+   "name": "Rosewood Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/rosewoodTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/rosewoodBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=30",
+   "name": "Purpleheart Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/purpleheartTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/purpleheartBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=31",
+   "name": "Iroko Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/irokoTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/irokoBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=32",
+   "name": "Ginkgo Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/ginkgoTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/ginkgoBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=33",
+   "name": "Eucalyptus Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptusTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptusBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=34",
+   "name": "Eucalyptus2 Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptus2Trunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptus2Bark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=35",
+   "name": "Box Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/boxTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/boxBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=36",
+   "name": "Syzgium Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/syzgiumTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/syzgiumBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=37",
+   "name": "Eucalyptus3 Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptus3Trunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/eucalyptus3Bark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=38",
+   "name": "Cinnamon Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cinnamonTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/cinnamonBark.png",
+   "note": "bark grayscale, tinted"
+  },
+  {
+   "label": "ExtraTrees:log meta=39",
+   "name": "Pinkivory Log",
+   "top": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/pinkivoryTrunk.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extratrees/textures/blocks/logs/pinkivoryBark.png",
+   "note": "bark grayscale, tinted"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{"title": "Fether 2.0.9 (Harvest the Nether port): wood and plants",
+ "entries": [
+  {"label": "fether:nether_planks:0", "name": "Nether Planks", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_planks.png"},
+  {"label": "fether:nether_log:0", "name": "Nether Log", "top": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_normal_top.png", "side": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_normal.png"},
+  {"label": "fether:nether_log:1", "name": "Infested Nether Log", "top": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_infested_top.png", "side": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_infested.png"},
+  {"label": "fether:nether_log:2", "name": "Stripped Nether Log", "top": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_normal_stripped_top.png", "side": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_normal_stripped.png"},
+  {"label": "fether:nether_log:3", "name": "Stripped Infested Nether Log", "top": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_infested_stripped_top.png", "side": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_log_infested_stripped.png"},
+  {"label": "fether:nether_leaves:0", "name": "Nether Leaves", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_leaves.png"},
+  {"label": "fether:nether_sapling:0", "name": "Nether Sapling", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_sapling.png", "note": "cross plant"},
+  {"label": "fether:glow_flower:0", "name": "Glowflower", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/glow_flower.png", "note": "cross plant, light 15"},
+  {"label": "fether:nether_garden:0", "name": "Nether Garden", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_garden.png", "note": "cross plant"},
+  {"label": "fether:nether_bed", "name": "Nether Bed (head top)", "all": "fether-2.0.9.jar!assets/fether/textures/blocks/nether_bed_head_top.png", "note": "bed model"}
+ ]}

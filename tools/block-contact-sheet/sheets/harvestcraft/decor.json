@@ -1,0 +1,299 @@
+{
+ "title": "HarvestCraft: candles, kitchen blocks, gardens, salt",
+ "entries": [
+  {
+   "label": "harvestcraft:pamcandleDeco1",
+   "name": "White Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_0.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco2",
+   "name": "Orange Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_1.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco3",
+   "name": "Magenta Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_2.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco4",
+   "name": "Light Blue Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_3.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco5",
+   "name": "Yellow Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_4.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco6",
+   "name": "Lime Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_5.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco7",
+   "name": "Pink Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_6.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco8",
+   "name": "Dark Grey Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_7.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco9",
+   "name": "Light Grey Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_8.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco10",
+   "name": "Cyan Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_9.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco11",
+   "name": "Purple Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_10.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco12",
+   "name": "Blue Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_11.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco13",
+   "name": "Brown Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_12.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco14",
+   "name": "Green Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_13.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco15",
+   "name": "Red Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_14.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:pamcandleDeco16",
+   "name": "Black Candle",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/candle_15.png",
+   "note": "torch model, light 15"
+  },
+  {
+   "label": "harvestcraft:sink:0",
+   "name": "Sink 0",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinktop_0.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinkside_0.png"
+  },
+  {
+   "label": "harvestcraft:sink:1",
+   "name": "Sink 1",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinktop_1.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinkside_1.png"
+  },
+  {
+   "label": "harvestcraft:sink:2",
+   "name": "Sink 2",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinktop_2.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinkside_2.png"
+  },
+  {
+   "label": "harvestcraft:sink:3",
+   "name": "Sink 3",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinktop_3.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/sinkside_3.png"
+  },
+  {
+   "label": "harvestcraft:market",
+   "name": "Market",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/markettop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/marketside.png"
+  },
+  {
+   "label": "harvestcraft:oven",
+   "name": "Oven",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/oventop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/ovenfrontoff.png"
+  },
+  {
+   "label": "harvestcraft:ovenon",
+   "name": "Oven (on)",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/oventop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/ovenfronton.png"
+  },
+  {
+   "label": "harvestcraft:churn",
+   "name": "Churn",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/churntop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/churnfrontoff.png"
+  },
+  {
+   "label": "harvestcraft:quern",
+   "name": "Quern",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/querntop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/quernfrontoff.png"
+  },
+  {
+   "label": "harvestcraft:presser",
+   "name": "Presser",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pressertop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/presserfront.png"
+  },
+  {
+   "label": "harvestcraft:apiary",
+   "name": "Apiary",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/apiarytop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/apiaryfront.png"
+  },
+  {
+   "label": "harvestcraft:beehive",
+   "name": "Beehive",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/beehivetop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/beehiveside.png"
+  },
+  {
+   "label": "harvestcraft:cuttingboard",
+   "name": "Cutting Board",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/cuttingboardtop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/cuttingboardsidebottom.png"
+  },
+  {
+   "label": "harvestcraft:pot",
+   "name": "Pot",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pottop.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/potsidebottom.png"
+  },
+  {
+   "label": "harvestcraft:fishtrap",
+   "name": "Fish Trap",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/fishtrap.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/fishtrap.png"
+  },
+  {
+   "label": "harvestcraft:animaltrap",
+   "name": "Animal Trap",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/animaltrap.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/animaltrap.png"
+  },
+  {
+   "label": "harvestcraft:salt",
+   "name": "Salt Ore",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/salt.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/salt.png"
+  },
+  {
+   "label": "harvestcraft:spamcompressedsaltBlockalt",
+   "name": "Compressed Salt Block",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pamcompressedsaltBlock.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pamcompressedsaltBlock.png"
+  },
+  {
+   "label": "harvestcraft:pamMaple",
+   "name": "Maple Wood",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/maple_top.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/maple_0.png"
+  },
+  {
+   "label": "harvestcraft:pamPaperbark",
+   "name": "Paperbark Wood",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/paperbark_top.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/paperbark_0.png"
+  },
+  {
+   "label": "harvestcraft:pamcheeseCake",
+   "name": "Cheesecake",
+   "top": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pamcheesecake_top.png",
+   "side": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/pamcheesecake_side.png"
+  },
+  {
+   "label": "harvestcraft:berrygarden",
+   "name": "Berry Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/berrygarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:desertgarden",
+   "name": "Desert Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/desertgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:grassgarden",
+   "name": "Grass Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/grassgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:gourdgarden",
+   "name": "Gourd Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/gourdgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:groundgarden",
+   "name": "Ground Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/groundgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:herbgarden",
+   "name": "Herb Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/herbgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:leafygarden",
+   "name": "Leafy Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/leafygarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:mushroomgarden",
+   "name": "Mushroom Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/mushroomgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:stalkgarden",
+   "name": "Stalk Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/stalkgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:textilegarden",
+   "name": "Textile Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/textilegarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:tropicalgarden",
+   "name": "Tropical Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/tropicalgarden0.png",
+   "note": "cross model"
+  },
+  {
+   "label": "harvestcraft:watergarden",
+   "name": "Water Garden",
+   "all": "harvestcraft-1.3.15-GTNH.jar!assets/harvestcraft/textures/blocks/watergarden0.png",
+   "note": "cross model"
+  }
+ ]
+}

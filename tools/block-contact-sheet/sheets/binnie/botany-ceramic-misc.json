@@ -1,0 +1,244 @@
+{
+ "title": "Botany ceramics (untinted layers), soils; ExtraBees hives",
+ "entries": [
+  {
+   "label": "Botany:ceramic",
+   "name": "Ceramic Block (untinted)",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.png",
+   "note": "36 tints"
+  },
+  {
+   "label": "Botany:stained",
+   "name": "Pigmented Glass (untinted)",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/stained.png",
+   "note": "36 tints"
+  },
+  {
+   "label": "Botany:ceramicBrick tile L0",
+   "name": "Ceramic tile layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.tile.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick tile L1",
+   "name": "Ceramic tile layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.tile.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick tile L2",
+   "name": "Ceramic tile layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.tile.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brick L0",
+   "name": "Ceramic brick layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brick.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brick L1",
+   "name": "Ceramic brick layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brick.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brick L2",
+   "name": "Ceramic brick layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brick.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brickstripe L0",
+   "name": "Ceramic brickstripe layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brickstripe.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brickstripe L1",
+   "name": "Ceramic brickstripe layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brickstripe.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick brickstripe L2",
+   "name": "Ceramic brickstripe layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.brickstripe.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick bricklarge L0",
+   "name": "Ceramic bricklarge layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.bricklarge.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick bricklarge L1",
+   "name": "Ceramic bricklarge layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.bricklarge.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick bricklarge L2",
+   "name": "Ceramic bricklarge layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.bricklarge.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick split L0",
+   "name": "Ceramic split layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.split.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick split L1",
+   "name": "Ceramic split layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.split.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick split L2",
+   "name": "Ceramic split layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.split.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick cheque L0",
+   "name": "Ceramic cheque layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.cheque.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick cheque L1",
+   "name": "Ceramic cheque layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.cheque.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick cheque L2",
+   "name": "Ceramic cheque layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.cheque.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick mixed L0",
+   "name": "Ceramic mixed layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.mixed.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick mixed L1",
+   "name": "Ceramic mixed layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.mixed.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick mixed L2",
+   "name": "Ceramic mixed layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.mixed.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrick L0",
+   "name": "Ceramic verticalbrick layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrick.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrick L1",
+   "name": "Ceramic verticalbrick layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrick.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrick L2",
+   "name": "Ceramic verticalbrick layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrick.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrickstripe L0",
+   "name": "Ceramic verticalbrickstripe layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrickstripe.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrickstripe L1",
+   "name": "Ceramic verticalbrickstripe layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrickstripe.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbrickstripe L2",
+   "name": "Ceramic verticalbrickstripe layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbrickstripe.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbricklarge L0",
+   "name": "Ceramic verticalbricklarge layer 0",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbricklarge.0.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbricklarge L1",
+   "name": "Ceramic verticalbricklarge layer 1",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbricklarge.1.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:ceramicBrick verticalbricklarge L2",
+   "name": "Ceramic verticalbricklarge layer 2",
+   "all": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/ceramic.verticalbricklarge.2.png",
+   "note": "layer"
+  },
+  {
+   "label": "Botany:soil",
+   "name": "Soil (neutral, normal)",
+   "top": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/soil.neutral.normal.0.png",
+   "side": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/soil.neutral.normal.1.png"
+  },
+  {
+   "label": "Botany:loam",
+   "name": "Loam (neutral, normal)",
+   "top": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/loam.neutral.normal.0.png",
+   "side": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/loam.neutral.normal.1.png"
+  },
+  {
+   "label": "Botany:flowerbed",
+   "name": "Flowerbed (neutral, normal)",
+   "top": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/flowerbed.neutral.normal.0.png",
+   "side": "binnie-mods-2.6.51.jar!assets/botany/textures/blocks/soil/flowerbed.neutral.normal.1.png"
+  },
+  {
+   "label": "ExtraBees:hive (marble)",
+   "name": "Marble Hive",
+   "top": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/marble.1.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/marble.0.png"
+  },
+  {
+   "label": "ExtraBees:hive (nether)",
+   "name": "Nether Hive",
+   "top": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/nether.1.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/nether.0.png"
+  },
+  {
+   "label": "ExtraBees:hive (rock)",
+   "name": "Rock Hive",
+   "top": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/rock.1.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/rock.0.png"
+  },
+  {
+   "label": "ExtraBees:hive (water)",
+   "name": "Water Hive",
+   "top": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/water.1.png",
+   "side": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/hive/water.0.png"
+  },
+  {
+   "label": "ExtraBees:ectoplasm",
+   "name": "Ectoplasm",
+   "all": "binnie-mods-2.6.51.jar!assets/extrabees/textures/blocks/ectoplasm.png"
+  }
+ ]
+}

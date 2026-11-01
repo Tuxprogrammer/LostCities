@@ -1,0 +1,19 @@
+{"title": "BiblioCraft: model UV atlases (not block faces; furniture renders as TESR models)",
+ "entries": [
+  {"label": "BiblioCraft:Bibliotheca:0", "name": "Oak Bookcase", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/bookcase_books.png", "note": "atlas: books"},
+  {"label": "BiblioCraft:Bibliotheca:5", "name": "Dark Oak Bookcase", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/bookcase_v17_oldoak.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioDesk:4", "name": "Acacia Desk", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/desk_v17_acacia.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioTable:0", "name": "Oak Table", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/table0.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioShelf:0", "name": "Oak Shelf", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/genericshelf1.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioPotionShelf:0", "name": "Oak Potion Shelf", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/potionshelf1.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioLamp:0", "name": "Gold Lamp", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/lamp.png", "note": "atlas; light 15"},
+  {"label": "BiblioCraft:BiblioIronLamp:0", "name": "Iron Lamp", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/lamp_iron.png", "note": "atlas; light 15"},
+  {"label": "BiblioCraft:BiblioLantern:0", "name": "Gold Lantern", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/lantern.png", "note": "atlas; light 15"},
+  {"label": "BiblioCraft:BiblioIronLantern:0", "name": "Iron Lantern", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/lantern_iron.png", "note": "atlas; light 15"},
+  {"label": "BiblioCraft:BiblioClock:0", "name": "Oak Clock", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/clock.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioTypewriter:0", "name": "White Typewriter", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/typewriter0.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioFancySign:0", "name": "Oak Fancy Sign", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/sign_front.png", "note": "atlas"},
+  {"label": "BiblioCraft:Armor Stand:0", "name": "Armor Stand", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/armorstand.png", "note": "atlas"},
+  {"label": "BiblioCraft:BiblioBell:0", "name": "Desk Bell", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/bell.png", "note": "atlas"},
+  {"label": "BiblioCraft:Printing Press:0", "name": "Printing Press", "all": "BiblioCraft[v1.11.7][MC1.7.10].jar!assets/bibliocraft/textures/models/printpress.png", "note": "atlas"}
+ ]}

@@ -1,0 +1,21 @@
+{"title": "Carpenter's Blocks: bare frames, glass inserts and designs (real look = cover block from TE NBT)",
+ "entries": [
+  {"label": "CarpentersBlocks:blockCarpentersBlock:0", "name": "Carpenter's Block (uncovered)", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/general/blank.png", "note": "bare frame"},
+  {"label": "general/full_frame", "name": "frame overlay", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/general/full_frame.png"},
+  {"label": "general/quartered_frame", "name": "frame overlay", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/general/quartered_frame.png"},
+  {"label": "general/solid", "name": "solid", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/general/solid.png"},
+  {"label": "CarpentersBlocks:blockCarpentersDoor (french)", "name": "French glass door", "top": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/door/door_french_glass_top.png", "side": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/door/door_french_glass_bottom.png", "note": "glass insert"},
+  {"label": "CarpentersBlocks:blockCarpentersDoor (tall glass)", "name": "Tall glass door", "top": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/door/door_glass_tall_top.png", "side": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/door/door_glass_tall_bottom.png", "note": "glass insert"},
+  {"label": "CarpentersBlocks:blockCarpentersDoor (screen)", "name": "Screen door", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/door/door_screen_tall.png", "note": "insert"},
+  {"label": "CarpentersBlocks:blockCarpentersHatch (glass)", "name": "Glass hatch", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/hatch/hatch_french_glass.png", "note": "insert"},
+  {"label": "CarpentersBlocks:blockCarpentersHatch (screen)", "name": "Screen hatch", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/hatch/hatch_screen.png", "note": "insert"},
+  {"label": "CarpentersBlocks:blockCarpentersGarageDoor (glass)", "name": "Garage door glass", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/garagedoor/glass.png", "note": "insert"},
+  {"label": "CarpentersBlocks:blockCarpentersSafe", "name": "Safe light", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/safe/safe_light.png", "note": "detail"},
+  {"label": "CarpentersBlocks:blockCarpentersTorch", "name": "Lantern glass", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/torch/lantern_glass.png", "note": "detail"},
+  {"label": "designs/chisel/brick", "name": "chisel design: brick", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/designs/chisel/brick.png", "note": "overlay on cover"},
+  {"label": "designs/chisel/column", "name": "chisel design: column", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/designs/chisel/column.png", "note": "overlay on cover"},
+  {"label": "designs/tile/stock_grid", "name": "tile design: grid", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/designs/tile/stock_grid.png", "note": "tile item design"},
+  {"label": "designs/tile/stock_offset_squares", "name": "tile design: offset squares", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/designs/tile/stock_offset_squares.png", "note": "tile item design"},
+  {"label": "designs/flowerpot/red", "name": "flower pot: red", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/designs/flowerpot/red.png", "note": "pot design"},
+  {"label": "CarpentersBlocks:blockCarpentersFlowerPot", "name": "Flower pot (glass)", "all": "CarpentersBlocks-3.7.3-GTNH.jar!assets/carpentersblocks/textures/blocks/flowerpot/flower_pot_glass.png"}
+ ]}

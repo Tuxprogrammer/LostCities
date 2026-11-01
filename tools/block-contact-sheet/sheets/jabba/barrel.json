@@ -1,0 +1,17 @@
+{
+ "title": "JABBA: barrel (TE; default structural tier shown)",
+ "entries": [
+  {
+   "label": "JABBA:barrel",
+   "name": "Better Barrel",
+   "top": "JABBA-1.5.24.jar!assets/jabba/textures/blocks/barrel_top_0.png",
+   "side": "JABBA-1.5.24.jar!assets/jabba/textures/blocks/barrel_label_0.png",
+   "note": "TE"
+  },
+  {
+   "label": "JABBA:barrel (side)",
+   "name": "Better Barrel side",
+   "all": "JABBA-1.5.24.jar!assets/jabba/textures/blocks/barrel_side_0.png"
+  }
+ ]
+}

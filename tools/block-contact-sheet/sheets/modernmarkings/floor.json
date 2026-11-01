@@ -1,0 +1,371 @@
+{
+ "title": "ModernMarkings: floor markings (render as cubes; in game a flat overlay)",
+ "entries": [
+  {
+   "label": "modernmarkings:tile.floor_marking_black_singleline:0-3",
+   "name": "black_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_black_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_arrow:0-3",
+   "name": "white_arrow",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_arrow.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_lane:0-3",
+   "name": "white_lane",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_lane.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_lane_cross:0-3",
+   "name": "white_lane_cross",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_lane_cross.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_singleline:0-3",
+   "name": "white_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_square:0-3",
+   "name": "white_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_whiteblack_hazardline:0-3",
+   "name": "whiteblack_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_whiteblack_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_noentry:0-3",
+   "name": "noentry",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_noentry.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_nostep:0-3",
+   "name": "nostep",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_nostep.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_exit:0-3",
+   "name": "exit",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_exit.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_arrow:0-3",
+   "name": "yellow_arrow",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_arrow.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_hazardline:0-3",
+   "name": "yellow_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_lane:0-3",
+   "name": "yellow_lane",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_lane.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_sideline:0-3",
+   "name": "yellow_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_singleline:0-3",
+   "name": "yellow_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_square:0-3",
+   "name": "yellow_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_stripes:0-3",
+   "name": "yellow_stripes",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_stripes.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_t_crossing:0-3",
+   "name": "yellow_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_crossing:0-3",
+   "name": "yellow_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_turn:0-3",
+   "name": "yellow_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_yellow_end:0-3",
+   "name": "yellow_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_yellow_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_danger_yellow:0-3",
+   "name": "danger_yellow",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_danger_yellow.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_t_crossing:0-3",
+   "name": "white_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_crossing:0-3",
+   "name": "white_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_turn:0-3",
+   "name": "white_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_end:0-3",
+   "name": "white_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_white_sideline:0-3",
+   "name": "white_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_white_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_t_crossing:0-3",
+   "name": "green_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_crossing:0-3",
+   "name": "green_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_turn:0-3",
+   "name": "green_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_end:0-3",
+   "name": "green_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_sideline:0-3",
+   "name": "green_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_square:0-3",
+   "name": "green_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_hazardline:0-3",
+   "name": "green_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_green_singleline:0-3",
+   "name": "green_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_green_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_t_crossing:0-3",
+   "name": "blue_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_crossing:0-3",
+   "name": "blue_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_turn:0-3",
+   "name": "blue_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_end:0-3",
+   "name": "blue_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_sideline:0-3",
+   "name": "blue_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_square:0-3",
+   "name": "blue_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_hazardline:0-3",
+   "name": "blue_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_blue_singleline:0-3",
+   "name": "blue_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_blue_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_t_crossing:0-3",
+   "name": "red_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_crossing:0-3",
+   "name": "red_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_turn:0-3",
+   "name": "red_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_end:0-3",
+   "name": "red_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_sideline:0-3",
+   "name": "red_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_square:0-3",
+   "name": "red_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_hazardline:0-3",
+   "name": "red_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_red_singleline:0-3",
+   "name": "red_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_red_singleline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_danger_red:0-3",
+   "name": "danger_red",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_danger_red.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_redx:0-3",
+   "name": "redx",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_redx.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_t_crossing:0-3",
+   "name": "orange_t_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_t_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_crossing:0-3",
+   "name": "orange_crossing",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_crossing.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_turn:0-3",
+   "name": "orange_turn",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_turn.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_end:0-3",
+   "name": "orange_end",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_end.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_sideline:0-3",
+   "name": "orange_sideline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_sideline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_square:0-3",
+   "name": "orange_square",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_square.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_hazardline:0-3",
+   "name": "orange_hazardline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_hazardline.png",
+   "note": "floor overlay"
+  },
+  {
+   "label": "modernmarkings:tile.floor_marking_orange_singleline:0-3",
+   "name": "orange_singleline",
+   "all": "modernmarkings-0.3.13-1.7.10.jar!assets/modernmarkings/textures/blocks/marking_orange_singleline.png",
+   "note": "floor overlay"
+  }
+ ]
+}
