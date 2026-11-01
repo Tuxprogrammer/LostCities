@@ -4,7 +4,7 @@ How this mod differs from Lost Cities 1.20 and how it fits into GT New Horizons.
 
 Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), with RWG2 Continents as the default overworld generator.
 
-Status: **not yet written.** The areas are produced by spikes S2 and S3 once the original spec exists ([ROADMAP](../ROADMAP.md)).
+Status: **`00-pack-integration` is written and accepted** (spikes S2 and S3). Areas `01` to `09` are still to be written: each is a deviation table against its original-spec area, built from the design records and the [decision log](../design/decision-log.md) ([ROADMAP](../ROADMAP.md)).
 
 ## What this mod is for
 
@@ -25,7 +25,7 @@ Every change here serves that, and every system uses what the pack already has b
 
 | Area | What changes |
 |---|---|
-| `00-pack-integration` | RWG2 and classic RWG, GT ore veins, the block-mapping table, loot and mob sources, other pack worldgen and structures, every pack mod this mod touches |
+| [`00-pack-integration`](00-pack-integration/index.md) | RWG2 and classic RWG, GT ore veins, the block-mapping table, loot and mob sources, other pack worldgen and structures, every pack mod this mod touches |
 | `01-core` | 1.7.10 lifecycle and registration, GTNHLib config, commands, network, the API |
 | `02-profiles-dimensions` | Profiles on the overworld only; the Lost City dimension is not ported ([0003](../design/0003-world-presence.md)) |
 | `03-terrain` | The overlay on RWG terrain, the 1.7.10 height range, blending, explosions and damage |

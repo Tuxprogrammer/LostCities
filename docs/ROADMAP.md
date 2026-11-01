@@ -58,6 +58,8 @@ Two gates matter most:
 
 ## Spikes
 
+Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open questions Q1 to Q10 are settled ([OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md)). What remains of S3 is the new-spec areas `01` to `09`, each a deviation table built from the decisions already taken.
+
 | Spike | Delivers | Before | Lane |
 |---|---|---|---|
 | **S1 · Behavior spec** | All nine original-spec areas per [CONVENTIONS.md](original-spec/CONVENTIONS.md), [BUGS.md](original-spec/BUGS.md), `COVERAGE.md` (every upstream Java file and asset type named) and `API-MAP.md` (every 1.20 API and its 1.7.10 counterpart) | M02, M03, M04 | Spec |
