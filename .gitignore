@@ -50,3 +50,6 @@ __pycache__/
 # Local secrets (OpenRouter key for tools/semantic-search/)
 .env
 .env.*
+
+# Local review renders and contact sheets (decision log D25), never committed
+/docs/previews/
