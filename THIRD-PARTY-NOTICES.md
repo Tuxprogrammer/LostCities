@@ -1,6 +1,6 @@
 # Third-party notices
 
-Lost Cities: New Horizons includes code and assets ported from the projects below. Each keeps its own license notice here.
+Lost Cities: New Horizons includes code and assets from the projects below. Each keeps its own license notice here.
 
 ## Lost Cities
 
@@ -32,3 +32,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## GTNH ExampleMod buildscript
+
+- Source: https://github.com/GTNewHorizons/ExampleMod1.7.10 (through the fork https://github.com/Tuxprogrammer/ExampleMod1.7.10)
+- Used: the build setup this repository started from: `build.gradle.kts`, `settings.gradle.kts`, `gradle.properties`, `dependencies.gradle`, `repositories.gradle`, `gtnhShared/`, `.github/`, `jitpack.yml` and the docs templates
+- License: MIT, Copyright (c) 2021 Johann Bernhardt
+
+The MIT license text is the same as above, with that copyright line.
+
+## Gradle wrapper
+
+- Files: `gradlew`, `gradlew.bat`, `gradle/wrapper/`
+- License: Apache License 2.0, Copyright the original authors (Gradle, Inc.); see https://www.apache.org/licenses/LICENSE-2.0

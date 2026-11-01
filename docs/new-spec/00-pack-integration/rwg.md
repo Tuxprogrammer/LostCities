@@ -12,7 +12,7 @@ Every fact below either cites a pinned permalink or is marked *unverified*. Vani
 | Realistic World Gen (classic) | alpha-1.5.3 | `RWG` | [GTNewHorizons/Realistic-World-Gen @ alpha-1.5.3](https://github.com/GTNewHorizons/Realistic-World-Gen/tree/alpha-1.5.3) (commit `90d0d6cf`) | GPL-3.0 |
 | Hodgepodge | 2.7.221 | `hodgepodge` | [GTNewHorizons/Hodgepodge @ 2.7.221](https://github.com/GTNewHorizons/Hodgepodge/tree/2.7.221) | LGPL-3.0 |
 | GT5-Unofficial | 5.09.54.265 | `gregtech` | [GTNewHorizons/GT5-Unofficial @ 5.09.54.265](https://github.com/GTNewHorizons/GT5-Unofficial/tree/5.09.54.265) | LGPL-3.0 |
-| NewHorizonsCoreMod | 2.9.99 | `dreamcraft` | [GTNewHorizons/NewHorizonsCoreMod @ 2.9.99](https://github.com/GTNewHorizons/NewHorizonsCoreMod/tree/2.9.99) | LGPL-3.0 |
+| NewHorizonsCoreMod | 2.9.99 | `dreamcraft` | [GTNewHorizons/NewHorizonsCoreMod @ 2.9.99](https://github.com/GTNewHorizons/NewHorizonsCoreMod/tree/2.9.99) | GPL-3.0 |
 | PersonalSpace | 1.0.41 | `personalspace` | [GTNewHorizons/PersonalSpace @ 1.0.41](https://github.com/GTNewHorizons/PersonalSpace/tree/1.0.41) | LGPL-3.0 |
 | ArchaicFix | 0.8.2 | `archaicfix` | Pack takes the CurseForge jar; source assumed to be [embeddedt/ArchaicFix @ 0.8.2](https://github.com/embeddedt/ArchaicFix/tree/0.8.2) | LGPL-3.0 |
 | EndlessIDs | 1.7.4 | `endlessids` | Pack takes the CurseForge jar; not read for this sheet | GPL / LGPL |
