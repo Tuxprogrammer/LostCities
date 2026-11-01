@@ -1,0 +1,243 @@
+{
+  "_comment": [
+    "Source locations GTNH's own index (DreamAssemblerXXL gtnh-assets.json) lacks or gets wrong, found by hand.",
+    "Keyed by the mod name in the release manifest. gtnh_ref.py `index` merges these into MOD-INDEX.md.",
+    "repo + ref: a GitHub repo and the tag or branch to read. exact: true only if ref was verified to be the pack's version.",
+    "scope: 'full' (the whole mod, default), 'api' (only its API), or 'decompiled' (third-party decompiled source: hedge applies).",
+    "extras: other evidence. kind is dev-jar (deobfuscated classes, MCP names), api-source (official .java), decompiled-source, or maven (a coordinate for dependencies.gradle).",
+    "Verified against GTNH 2.9.0 on 2026-11-01. verified_version is the pack's mod version each entry was checked against; `index` flags an entry for re-checking when the pack ships a different version."
+  ],
+  "Industrial Craft 2": {
+    "scope": "api",
+    "note": "No public source for IC2 itself. The -api jar is the official ic2.api source (91 .java files). For internals, decompile the -dev jar (already MCP-named).",
+    "extras": [
+      {
+        "kind": "api-source",
+        "url": "https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/2.2.828-experimental/industrialcraft-2-2.2.828-experimental-api.jar"
+      },
+      {
+        "kind": "dev-jar",
+        "url": "https://maven.ic2.player.to/net/industrial-craft/industrialcraft-2/2.2.828-experimental/industrialcraft-2-2.2.828-experimental-dev.jar"
+      },
+      {
+        "kind": "maven",
+        "url": "net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev",
+        "note": "as used by GT5-Unofficial"
+      }
+    ],
+    "verified_version": "2.2.2.828"
+  },
+  "Thaumcraft": {
+    "repo": "https://github.com/Azanor/thaumcraft-api",
+    "ref": "1.7.10",
+    "exact": false,
+    "scope": "api",
+    "note": "Azanor's official API source (branch last updated 2015-12). Thaumcraft's own code was never published; the -sources jar below is Fernflower output, not original source.",
+    "extras": [
+      {
+        "kind": "dev-jar",
+        "url": "https://gregtech.overminddl1.com/thaumcraft/Thaumcraft/1.7.10-4.2.3.5/Thaumcraft-1.7.10-4.2.3.5-dev.jar"
+      },
+      {
+        "kind": "decompiled-source",
+        "url": "https://gregtech.overminddl1.com/thaumcraft/Thaumcraft/1.7.10-4.2.3.5/Thaumcraft-1.7.10-4.2.3.5-sources.jar"
+      },
+      {
+        "kind": "maven",
+        "url": "thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev",
+        "note": "as used by GT5-Unofficial; resolves from gregtech.overminddl1.com"
+      }
+    ],
+    "verified_version": "4.2.3.5"
+  },
+  "Mobs Info": {
+    "repo": "https://github.com/kuba6000/Mobs-Info",
+    "ref": "0.6.2",
+    "exact": true,
+    "note": "The author's repo; GTNewHorizons/Mobs-Info stops at 0.6.0-GTNH.",
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "com.github.GTNewHorizons:Mobs-Info:0.6.0-GTNH:dev",
+        "note": "last GTNH-published dev coordinate; older than the pack"
+      }
+    ],
+    "verified_version": "0.6.2"
+  },
+  "Chunk API": {
+    "repo": "https://github.com/LegacyModdingMC/ChunkAPI",
+    "ref": "0.8.4",
+    "exact": true,
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "com.falsepattern:chunkapi-mc1.7.10:0.8.4:dev"
+      }
+    ],
+    "verified_version": "0.8.4"
+  },
+  "EndlessIDs": {
+    "repo": "https://github.com/GTMEGA/EndlessIDs",
+    "ref": "1.7.4",
+    "exact": true,
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "com.falsepattern:endlessids-mc1.7.10:1.7.4:dev"
+      }
+    ],
+    "verified_version": "1.7.4"
+  },
+  "FalsepatternLib": {
+    "repo": "https://github.com/FalsePattern/FalsePatternLib",
+    "ref": "1.12.2",
+    "exact": true,
+    "verified_version": "1.12.2"
+  },
+  "TC-4-Tweaks": {
+    "repo": "https://github.com/Glease/TC4Tweaks",
+    "ref": "1.5.48",
+    "exact": true,
+    "verified_version": "1.5.48"
+  },
+  "Salis Arcana": {
+    "repo": "https://github.com/rndmorris/Salis-Arcana",
+    "ref": "v2.7.0",
+    "exact": true,
+    "verified_version": "2.7.0"
+  },
+  "Craft-Presence": {
+    "repo": "https://github.com/CDAGaming/CraftPresence-Mirror",
+    "ref": "release/v2.7.1",
+    "exact": true,
+    "verified_version": "2.7.1"
+  },
+  "Extreme Sound Muffler": {
+    "repo": "https://github.com/Lyfts/ExtremeSoundMuffler-Legacy",
+    "ref": "1.1.1",
+    "exact": true,
+    "verified_version": "1.1.1"
+  },
+  "JourneyMap": {
+    "repo": "https://github.com/TeamJM/journeymap-legacy",
+    "ref": "5.2.23",
+    "exact": true,
+    "note": "The pack ships the 5.2.23 'fairplay' build of this tag.",
+    "extras": [
+      {
+        "kind": "api-source",
+        "url": "https://github.com/TeamJM/journeymap-api/tree/1.7.10_2.0.0"
+      },
+      {
+        "kind": "maven",
+        "url": "info.journeymap:journeymap-api-forge:1.7.10-2.0.0"
+      }
+    ],
+    "verified_version": "5.2.23-fairplay"
+  },
+  "Archaicfix": {
+    "repo": "https://github.com/embeddedt/ArchaicFix",
+    "ref": "0.8.2",
+    "exact": true,
+    "verified_version": "0.8.2"
+  },
+  "Bug-Torch": {
+    "repo": "https://github.com/jss2a98aj/BugTorch",
+    "ref": "1.3.1",
+    "exact": true,
+    "verified_version": "1.3.1"
+  },
+  "UniMixins": {
+    "repo": "https://github.com/LegacyModdingMC/UniMixins",
+    "ref": "0.3.1",
+    "exact": true,
+    "verified_version": "0.3.1"
+  },
+  "Tinkers-Gregworks": {
+    "repo": "https://github.com/Vexatos/TinkersGregworks",
+    "ref": "GT-NH",
+    "exact": false,
+    "note": "No tags; the GT-NH branch is what GTNH builds from. The deobf jar below is 1.0.33, one build older than the pack.",
+    "extras": [
+      {
+        "kind": "dev-jar",
+        "url": "https://files.vexatos.com/TGregworks/TGregworks-1.7.10-GTNH-1.0.33-deobf.jar"
+      }
+    ],
+    "verified_version": "1.0.34"
+  },
+  "Biomes O' Plenty": {
+    "repo": "https://github.com/Glitchfiend/BiomesOPlenty",
+    "ref": "BOP-1.7.10-2.1.x",
+    "exact": false,
+    "note": "The 1.7.10 branch (last commit 2017-11); build 2308 is believed to be its final state. Confirm with javap.",
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "curse.maven:biomes-o-plenty-220318:2499612",
+        "note": "obfuscated; wrap in rfg.deobf(...), as GT5-Unofficial does"
+      }
+    ],
+    "verified_version": "2.1.0.2308"
+  },
+  "Hunger-Overhaul": {
+    "repo": "https://github.com/iguanaman/HungerOverhaul",
+    "ref": "master",
+    "exact": false,
+    "note": "The author's source (last push 2016-08); not pinned to jenkins build 104. GTNH-Museum/HungerOverhaul is a later rewrite, not this jar.",
+    "verified_version": "1.0.0.104"
+  },
+  "Witchery": {
+    "repo": "https://github.com/GTNH-Museum/Witchery",
+    "ref": "master",
+    "exact": false,
+    "scope": "decompiled",
+    "note": "'Source is for reference only': decompiled by a third party, version unverified. Code relying on it needs a Decompiled: hedge.",
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "curse.maven:witchery-69673:2234410",
+        "note": "obfuscated; wrap in rfg.deobf(...)"
+      }
+    ],
+    "verified_version": "0.24.1"
+  },
+  "Extra Utilities": {
+    "note": "No source found (ARR).",
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "curse.maven:extra-utilities-225561:2264384",
+        "note": "obfuscated; wrap in rfg.deobf(...), as GT5-Unofficial does"
+      }
+    ],
+    "verified_version": "1.2.12"
+  },
+  "BiblioCraft": {
+    "note": "No 1.7.10 source found (Nuchaz/BiblioCraft-Source starts at 1.12).",
+    "extras": [
+      {
+        "kind": "maven",
+        "url": "curse.maven:bibliocraft-228027:2423369",
+        "note": "obfuscated; wrap in rfg.deobf(...)"
+      }
+    ],
+    "verified_version": "1.11.7"
+  },
+  "Ztones": {
+    "note": "No source found. GTNewHorizons/Ztones-Unofficial is a from-scratch rewrite (2.3.x), not the 2.2.2 jar in the pack.",
+    "verified_version": "2.2.2"
+  },
+  "Advanced Solar Panel For 1.7.10 (Unofficial)": {
+    "note": "No source or dev jar found.",
+    "verified_version": "1.7.10 Edition"
+  },
+  "Gravitation-Suite-old": {
+    "note": "No source found; GitHub repos named GraviSuite are later reconstructions, not this jar.",
+    "verified_version": "2.0.3"
+  },
+  "UniLib": {
+    "note": "No source found (CDAGaming client library).",
+    "verified_version": "1.2.1"
+  }
+}
