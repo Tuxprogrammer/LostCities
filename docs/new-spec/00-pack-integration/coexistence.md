@@ -1,8 +1,8 @@
 # Coexistence: building cities around other world generation
 
-Cities share the GTNH 2.9.0 overworld with other mods' structures. Under decision log D24, a city gets out of their way: it builds around them so they become features of the city, it sews nearby villages in with paths, and it never leaves a sharp cutoff. This sheet answers, for every surface structure generator in the pack: can its site, footprint and ground height be predicted without generating chunks, and what does the city do about it. It builds on the inventory in [other-worldgen.md](other-worldgen.md), corrects it where the source says otherwise, and feeds record [0006](../../design/0006-build-around-other-worldgen.md).
+Cities share the GTNH 2.9.0 overworld with other mods' structures. Under decision log D24, a city gets out of their way: it builds around them so they become features of the city, it sews nearby villages in with paths, and it never leaves a sharp cutoff. This sheet answers, for every surface structure generator in the pack: can its site, footprint and ground height be predicted without generating chunks, and what does the city do about it. It builds on the inventory in [other-worldgen.md](other-worldgen.md), which carries its corrections, and is the research behind record [0006](../../design/0006-build-around-other-worldgen.md).
 
-Status: *Proposed* ([0006](../../design/0006-build-around-other-worldgen.md)). Facts about other mods are *verified* with a permalink at the pack's tag, *decompiled* (closed source; the contract only, no code), *vanilla* (read from the 1.7.10 server with Forge 10.13.4.1614 applied; no public pinned source), or *unverified*.
+Status: *Accepted* ([0006](../../design/0006-build-around-other-worldgen.md); [decision log](../../design/decision-log.md) D26). Facts about other mods are *verified* with a permalink at the pack's tag, *decompiled* (closed source; the contract only, no code), *vanilla* (read from the 1.7.10 server with Forge 10.13.4.1614 applied; no public pinned source), or *unverified*.
 
 ## Summary
 
@@ -12,7 +12,7 @@ Status: *Proposed* ([0006](../../design/0006-build-around-other-worldgen.md)). F
 | **Roguelike Dungeons** towers | `IWorldGenerator`, weight 0 | **Partly**: 50 candidate points per 51-chunk cell are pure; which one wins reads the world | Per tower type, from the biome at the site; about 9 to 17 blocks wide | Read from the world; the oracle gets within about 1 block | **Build around** a predicted lot, with a **steer** mixin so the outcome matches the layout |
 | **Witchery** covens, shacks, wicker men, hobgoblin huts | `IWorldGenerator`, weight 0 | **Yes**: 20-chunk grid, seeded from the world seed; biome type test | **Union only**: the type comes from `world.rand` before reseeding; the union of all types and facings is 23 × 23 blocks | Mean of the top blocks over the box; the oracle estimates it | **Build around** the union lot |
 | **LootGames** puzzle dungeons | `IWorldGenerator`, weight `Integer.MAX_VALUE` | **Yes**: rhomb grid of size 20, seeded from the world seed | **Yes**: a buried 21 × 21 room and a tunnel toward +Z | Lowest surface over the room, read from the world; the oracle estimates it | **Build around** the room and entrance |
-| **AE2 meteorites** | `IWorldGenerator`, weight 0; blocks placed on a later tick | **Yes**: X, Z, start height, size and lava from the world seed and the 707-block grid cell | Meteor up to about ±10 blocks; crater rim 9 to 21; the crater's paraboloid cuts anything tall up to about 70 blocks away | Steps down from the start height in 15-block steps until the block test passes; the oracle estimates it | **Build around** a crater basin (owner question) |
+| **AE2 meteorites** | `IWorldGenerator`, weight 0; blocks placed on a later tick | **Yes**: X, Z, start height, size and lava from the world seed and the 707-block grid cell | Meteor up to about ±10 blocks; crater rim 9 to 21; the crater's paraboloid cuts anything tall up to about 70 blocks away | Steps down from the start height in 15-block steps until the block test passes; the oracle estimates it | **Build around** a crater basin |
 | **RWG2 landmarks**: volcanoes, lava caves, river-junction pillars | Terrain (`provideChunk`) and landmark decoration (`populate`) | **Yes**: the chunk manager's own predicates | Large terrain features | Terrain itself | **Terrain landmark**: the city ends with a soft edge |
 | Thaumcraft mounds, rings, hilltop stones | `IWorldGenerator`, weight 0 | **No**: the roll's place in the stream depends on earlier world-reading features; site tests read blocks | 7 × 7 to 19 × 19 | Read from the world | **Coexist** (T3); city blocks fail its site tests; watched at alpha |
 | VillageNames igloos | `IWorldGenerator`, weight 0 | Yes (32-chunk grid) | 5 × 6 | World | **None**: they need vanilla Ice Plains or Cold Taiga, which neither RWG reports |
@@ -27,7 +27,7 @@ No overworld surface structure generator is missing from the inventory: a byteco
 [0006](../../design/0006-build-around-other-worldgen.md) decides it; in short:
 
 - A **landmark** is another generator's structure the layout knows about through a pure **structure oracle**. It has a footprint (rectangles in block X and Z), a ground estimate, a certainty (exact, union of possibilities, or predicted candidate) and, for villages, **gates** (where its paths can meet ours).
-- Its **core** is every chunk the footprint, grown by a margin of 2 blocks, touches. The city writes nothing in a core chunk: no building, street, foundation, cellar, corridor, terrain blend or decoration clearing. RWG's terrain and decoration stay as RWG made them.
+- Its **core** is every chunk the footprint, grown by a margin of 2 blocks, touches. The city writes nothing in a core chunk but a village lane's surface path: no building, street, foundation, cellar, corridor, terrain blend or decoration clearing. RWG's terrain and decoration stay as RWG made them.
 - Its **edge ring** is the city chunks next to the core (eight neighbors). They hold no buildings or cellars. They become parks, a plaza where a street ends at the landmark, or streets passing by. Their sides facing the core get a **soft-edge strip** instead of upstream's border wall.
 - Villages also get **transition rings** of lower density and **lanes** from city streets to the village's paths.
 
@@ -76,10 +76,10 @@ Town centers by village type (width × depth × height in blocks, before rotatio
 
 1. **Core.** Every chunk any piece box (grown by 2 blocks) touches. Nothing of the city is written there. The village builds itself on RWG's ground as it would in the wild.
 2. **Edge ring.** City chunks next to the core: parks, streets or plazas; no buildings, cellars, corridors or subways; soft-edge strips toward the core.
-3. **Transition rings.** The next two rings of city chunks, as profile options: building chance halved, at most 2 floors in the second ring and 4 in the third. Open lots become parks as upstream's hierarchical open lots do. The village reads as the old town at the edge of the city.
+3. **Transition rings.** The next two rings of city chunks, as profile options: building chance halved, at most 2 floors in the second ring and 4 in the third. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town. A village inside a city's radius is surrounded: the city continues on every side of it rather than stopping short.
 4. **Gates.** A gate is the end of a village path that faces the city: a `PathVN` end that no other piece continues, or a path box within one chunk of the core's edge. Each side of the core gets at most one gate, the one nearest the city's center; ties go north, then west.
 5. **Lanes.** For each gate, the layout runs a lane from the nearest effective city road to the gate's edge-ring chunk: straight, or an L with the bend toward the city's center, through edge-ring and transition chunks, which are forced to the tertiary road class. In the gate chunk the street ends in the soft-edge strip, and a 3-block-wide surface path (the city style's path block on the natural ground, nothing above it) runs down or up the strip to the core's edge, in line with the village path.
-6. **Inside the core**, the lane either stops at the core's edge, leaving the natural ground between it and the village path, or continues as a surface-only path over ground no piece box covers, to meet the village path's end ([owner question 1](#questions-for-the-owner)).
+6. **Inside the core**, the lane continues as a surface-only path (the path block replaces the natural top block; nothing is written above or below it) to meet the village path's end, never within 2 blocks of a piece box.
 7. **Villages outside the city** but within `villageLinkDistance` (4 chunks) of its edge get the same gates and a lane across the non-city land between them, written as a surface path in the terrain phase. Farther villages are left alone.
 8. **Severed roads.** Primary roads that cross a village core detour through edge-ring chunks on the shorter side (ties north, then west); secondary and tertiary roads end in a plaza facing the village.
 9. **City level** near a village comes from the same oracle heights as the village's own ground, so the edge strip usually closes a step of one city level (6 blocks) or less.
@@ -137,7 +137,7 @@ The source is a third-party decompile of the closed mod, its version unverified;
 | Fact | Status |
 |---|---|
 | Pack config: overworld on, `minMeteoriteDistance 0=707`, `meteoriteSpawnChance 0=0.3`. | *Verified:* `config/AppliedEnergistics2/AppliedEnergistics2.cfg` |
-| One meteorite per 707-block grid cell: the generator `Random` is reseeded from the world seed and the cell; draws give the chance roll, `X = cell × 707 + nextInt(567) + 70` (and Z), a start height, and the meteor seed. The chance roll only picks the start height: 180 to 199 when it passes, 128 otherwise. | *Verified:* [MeteoriteWorldGen.java#L36-L99](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoriteWorldGen.java#L36-L99). This corrects [other-worldgen.md](other-worldgen.md), which reads the 0.3 as "30 % at the surface" |
+| One meteorite per 707-block grid cell: the generator `Random` is reseeded from the world seed and the cell; draws give the chance roll, `X = cell × 707 + nextInt(567) + 70` (and Z), a start height, and the meteor seed. The chance roll only picks the start height: 180 to 199 when it passes, 128 otherwise. | *Verified:* [MeteoriteWorldGen.java#L36-L99](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoriteWorldGen.java#L36-L99) |
 | Size: `r = 2 + 6U` from the meteor seed, crater size `2r + 5`, lava when `nextFloat() > 0.9`. Pure. | *Verified:* [MeteoritePlacer.java#L160-L213](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoritePlacer.java#L160-L213) |
 | Placement runs from the tick handler, after population. X and Z never move; Y steps down by 15 from the start height until the center block is natural (stone, grass, dirt, sand, gravel and similar), the boxes hold enough natural blocks, and the 30³ box holds no water, logs, planks, bricks, clay, iron bars or doors. It reads only the meteor's own chunk. | *Verified:* [MeteoriteWorldGen.java#L146-L187](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoriteWorldGen.java#L146-L187), [MeteoritePlacer.java#L73-L158](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoritePlacer.java#L73-L158), [ChunkOnly.java#L16-L85](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/meteorite/ChunkOnly.java#L16-L85) |
 | A crater is dug when more than 10 blocks of the box around the center see the sky: everything above `y − r + 1 + 0.02 d²` is removed within ±200 blocks, up to Y 255. On flat ground the rim is 7 to 29 blocks out, but anything tall is cut far out: at 30 blocks, all above about 18 blocks over the center; at 50 blocks, above about 50. | *Verified:* [MeteoritePlacer.java#L260](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoritePlacer.java#L260), [#L274-L312](https://github.com/GTNewHorizons/Applied-Energistics-2-Unofficial/blob/rv3-beta-1095-GTNH/src/main/java/appeng/worldgen/MeteoritePlacer.java#L274-L312) |
@@ -145,10 +145,9 @@ The source is a third-party decompile of the closed mod, its version unverified;
 
 **Predictability.** X, Z, size and lava are pure. The center's height is the first 15-block step that lands at or below natural ground: the oracle puts it within one step (0 to 14 blocks below the surface), and trees, water or city blocks in the meteor's chunk push it 15 deeper.
 
-**Treatment (proposed): a crater basin.** Upstream's look (D21's "a crater reads as a ruined city") does not hold: the paraboloid slices the tops off every tall building within about 50 blocks, which is the sharp cutoff D24 rules out.
+**Treatment: a crater basin.** Letting the crater carve, so that it reads as part of a ruined city, does not work: the paraboloid slices the tops off every tall building within about 50 blocks, which is the sharp cutoff D24 rules out.
 - Core: the chunks within the crater size (plus margin) of the meteor's X and Z, at most 4 × 4 chunks. Natural ground, so the meteor behaves as in the wild.
 - Height caps: in the city around it, a building's roof stays below `h + 0.02 d²` with the conservative center estimate `h = surface − 14 − 8 + 1`. Buildings step down toward the impact; within about 35 blocks only parks and streets remain.
-- The alternatives are in [owner question 2](#questions-for-the-owner).
 
 ## RWG2 landmarks
 
@@ -204,12 +203,14 @@ Upstream softens the city's outer edge with its terrain blend ([terrain-blend.md
 | E7 | **Nothing underground.** Edge-ring chunks have no cellars, corridors, subways or rail dungeons, so nothing city-made shows in a core's cave or under a strip. |
 | E8 | **Paths meet paths.** Lanes are 3 blocks wide, the width of a village path, and are laid on the ground the strip leaves, so they climb with it. |
 
-## Questions for the owner
+## Decisions
 
-1. **Lanes inside village chunks.** The owner's rule is that the city never writes over village chunks. A lane that stops at the core's edge leaves a strip of natural ground (up to about 15 blocks) between our path and the village's. *Recommendation:* allow a surface-only lane (path blocks replacing the natural top block, nothing above or below) in core chunks, but never inside a piece box grown by 2 blocks. *Trade-off:* visible continuity against a literal reading of "never write in village chunks"; the village's houses and paths are untouched either way.
-2. **AE2 meteorites.** *Recommendation:* the crater basin (a core around the impact and height caps around it). *Trade-off:* about 25 chunks of lower city per meteorite in a city (one cell of 707 × 707 blocks holds one meteorite), against either letting the crater slice through towers (D21's choice, a hard cut) or a guard mixin that keeps meteorites out of cities (no cut and no extra layout rules, but no meteorites in city areas).
-3. **Roguelike Dungeons steering mixin.** *Recommendation:* build it in M08 regardless of the alpha screenshots, because without it a dungeon whose predicted lot fails lands on city streets. *Trade-off:* one optional mixin into a GPL mod's method (allowed under D23) against towers punched through streets in a few cities.
-4. **Villages inside a city's radius.** *Recommendation:* let the city surround the village (an old town inside the city, sewn in on every side). *Trade-off:* the alternative, lowering the city factor near villages so cities stop short of them, gives villages open country around them but leaves gaps in cities near every village.
+Settled by the owner in decision log D26 and recorded in [0006](../../design/0006-build-around-other-worldgen.md):
+
+1. **Lanes inside village chunks:** a surface-only lane may cross a village's core chunks to meet the village path, never within 2 blocks of a piece box.
+2. **AE2 meteorites:** a meteorite that lands in a city gets a crater basin the city steps down toward.
+3. **Roguelike Dungeons:** the steering mixin is built in M08, not deferred to the alpha screenshots.
+4. **Villages inside a city's radius:** the city surrounds them, and each becomes the city's old town.
 
 ## Still open (alpha screenshots and the prototype)
 
@@ -219,4 +220,4 @@ Upstream softens the city's outer edge with its terrain blend ([terrain-blend.md
 - How edge strips, plazas and lanes look; whether 6 columns is wide enough; how often E3's retaining borders appear.
 - Whether empty Witchery and Roguelike lots read as parks or as holes.
 - Whether Thaumcraft mounds appear in city parks.
-- The crater basin's look, if the owner chooses it.
+- The crater basin's look.

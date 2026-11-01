@@ -37,11 +37,11 @@ The overlay is a class in `worldgen` that implements `IChunkProvider` and wraps 
 
 `provideChunk(x, z)` calls the delegate, then runs the **terrain phase** on the returned chunk. `populate(provider, x, z)` calls the delegate, then runs the **population phase**. Forge then runs the `IWorldGenerator`s, with GT's ore veins last. The overlay therefore sees all of RWG's terrain before writing, and all of RWG's decoration before populating, in the same order upstream 1.20 has over vanilla.
 
-The hook needs no mixin. The footprint rule's write guard (§3a) is the only planned one. A second fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
+The hook needs no mixin. The footprint rule's write guard (§3a) is the only one the overlay plans; the compat mixins of [0006](0006-build-around-other-worldgen.md) act on other mods' generators. A second fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
 
 ### 2. Terrain phase
 
-Runs only for chunks the layout marks as city, street, blend (within two chunks of a city) or, later, highway and railway chunks. Every other chunk passes through untouched.
+Runs only for chunks the layout marks as city, street, blend (within two chunks of a city) or, later, highway and railway chunks. Every other chunk passes through untouched. A **landmark core** ([0006](0006-build-around-other-worldgen.md) §1), the chunks another mod's structure is predicted to occupy, is none of these: it passes through untouched, apart from a village lane's surface path ([0006](0006-build-around-other-worldgen.md) §3).
 
 1. Ask the pure-Java layout (`layout`) what the chunk holds. The layout takes heights from the **height oracle** (§4), never from loaded chunks.
 2. Write blocks through the chunk-buffer interface (decision log D6), backed by the chunk's `ExtendedBlockStorage` sections: create missing sections, and set block and metadata through the vanilla setters, which EndlessIDs patches.
@@ -69,8 +69,8 @@ Rules:
 - Writes only into the populated chunk itself, which is always loaded. Never into its neighbors, so it never cascades, with vanilla's neighbor rule or with Hodgepodge's 3×3 rule.
 - Uses its own `Random`, seeded from the world seed and the chunk coordinates. **Never draw from RWG's or an event's `Random`**: that would change RWG's decoration.
 - RWG's decoration does not survive inside the city's footprint (§3a).
-- When a population area touches a city chunk, the overlay vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` steps through `PopulateChunkEvent.Populate` (RWG honors these), and NHCore's oil deposits through `CUSTOM`. Otherwise lakes and dungeons cut into cellars and break [0004](0004-gtnh-layer-and-tier-ceiling.md)'s "sound enough to move into". Upstream 1.12 had this as a profile option (`preventLakesRavinesInCities`); 1.20 has none, because its own feature step makes the question moot. It returns as a profile option, on by default, recorded as a deviation. Which pack features are vetoed or removed beyond these is Q8's (S3).
-- `InitMapGenEvent` is the tool for keeping RWG villages and caves out of cities (Q8). The prototype tries it; S3 decides.
+- When a population area touches a city chunk, the overlay vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` steps through `PopulateChunkEvent.Populate` (RWG honors these), and NHCore's oil deposits through `CUSTOM`. Otherwise lakes and dungeons cut into cellars and break [0004](0004-gtnh-layer-and-tier-ceiling.md)'s "sound enough to move into". Upstream 1.12 had this as a profile option (`preventLakesRavinesInCities`); 1.20 has none, because its own feature step makes the question moot. It returns as a profile option, on by default, recorded as a deviation. Landmark cores are not city chunks and get no veto. The treatment of every other pack feature is in [other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md).
+- Villages and the other surface structures the layout can predict are not kept out of cities: the city builds around them ([0006](0006-build-around-other-worldgen.md)). Whether the cave carver is wrapped through `InitMapGenEvent` in city chunks is left to the prototype.
 
 ### 3a. RWG sets the landscape; the city is set into it
 
@@ -78,6 +78,7 @@ The owner's rule: RWG builds the landscape first, with its terrain and its decor
 
 - **Inside the footprint**, RWG's decoration is cleared. The footprint is every building's volume, every street, bridge, corridor and highway or railway cross-section, and their foundations. Nothing RWG placed survives there.
 - **Outside the footprint**, RWG's decoration stays: parks, yards, the spaces between buildings and the blended city edges. That gives the lived-in, overgrown look.
+- **Landmark cores** ([0006](0006-build-around-other-worldgen.md) §1) are outside the footprint. Neither the write guard nor the footprint restore acts in them, so RWG's decoration there stays, and other mods' structures (village pieces, which RWG's own `populate` writes, included) land on RWG's untouched ground. Edge-ring parks and soft-edge strips are outside the footprint too.
 - City levels still follow upstream's stepped heights (§6), and edges blend into RWG's ground (§5).
 
 **Mechanism.** The rule fixes the outcome; the prototype picks how to reach it. There are two candidates:
@@ -103,14 +104,16 @@ Revisit after the alpha and beta reviews: if cities feel too synthetic, the owne
 
 ### 5. Terrain blend (Q2)
 
-Upstream 1.20's `correctTerrainShape` is ported unchanged in behavior:
+Upstream 1.20's `correctTerrainShape` is ported unchanged in behavior, apart from landmark cores and the corner test below:
 
 - the L1 and L2 desired-height meshes from the nearest city corners (offsets 20 and 25 blocks, plus `terrainFixLower/UpperMin/MaxOffset`);
 - bilinear interpolation with transition noise;
 - columns above the upper mesh are lowered, keeping six surface layers;
 - columns below the lower mesh are raised.
 
-It runs in the terrain phase on RWG's finished chunk. RWG has already painted its surface, so lowered and raised columns keep RWG's grass, sand or snow. Caves are already carved, and raised columns carry their voids along, as upstream's do. The only port change: the L1 mesh's `h < 256` "corner exists" test becomes an explicit flag, because 256 is the 1.7.10 build limit.
+**Landmark cores** ([0006](0006-build-around-other-worldgen.md) §4, rule E1) are excluded from the blend: a core chunk is never reshaped, and a mesh corner shared by a core chunk and a non-city chunk is fixed at the core's natural height from the height oracle (offsets −1 to +1), as a city corner is fixed at the city ground. The blend between a city and a nearby landmark is spread over the chunks between them.
+
+It runs in the terrain phase on RWG's finished chunk. RWG has already painted its surface, so lowered and raised columns keep RWG's grass, sand or snow. Caves are already carved, and raised columns carry their voids along, as upstream's do. The corner test: the L1 mesh's `h < 256` "corner exists" test becomes an explicit flag, because 256 is the 1.7.10 build limit.
 
 ### 6. Height mapping (Q2)
 
@@ -234,7 +237,7 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
    - RWG trees in parks and yards, and none on streets, roofs or inside buildings; boulders and small ruins likewise; landmarks;
    - lakes and dungeons in cellars before and after the vetoes;
    - NHCore oil deposits, Railcraft geodes and quarries;
-   - RWG village overlap;
+   - landmark cores left untouched, with RWG's decoration and the village's own pieces ([0006](0006-build-around-other-worldgen.md));
    - snow on streets.
 
 5. **Budget numbers** per §8 (B1 to B5), written back here.
@@ -247,4 +250,4 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
    - WorldEdit `//regen`;
    - RWG2's `/rwg_noise` command.
 
-Settled elsewhere: ore-vein coexistence (Q3), which pack features to veto or remove in cities (Q8), and spawn handling (Q9), all by S3.
+Settled elsewhere: ore-vein coexistence (Q3), which pack features to veto or remove in cities (Q8), and spawn handling (Q9), all by S3; building around other mods' structures by [0006](0006-build-around-other-worldgen.md).
