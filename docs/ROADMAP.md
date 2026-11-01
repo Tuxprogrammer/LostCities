@@ -65,6 +65,7 @@ Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open qu
 | **S1 · Behavior spec** | All nine original-spec areas per [CONVENTIONS.md](original-spec/CONVENTIONS.md), [BUGS.md](original-spec/BUGS.md), `COVERAGE.md` (every upstream Java file and asset type named) and `API-MAP.md` (every 1.20 API and its 1.7.10 counterpart) | M02, M03, M04 | Spec |
 | **S2 · RWG overlay** | How RWG2 Continents and classic RWG generate a chunk, read from source at the 2.9.0 tags; a throwaway prototype that overlays a flat test city; a design record for the hook, the terrain blend, the height mapping and the time budget (open questions Q1, Q2, Q7, Q10) | M04 | World |
 | **S3 · Pack research** | The extracted 2.9.0 reference pack and `MOD-INDEX.md`; the block-mapping table; GT ore-vein generation and how it meets structures; loot and mob sources; other overworld structures (Q3 to Q6, Q8, Q9); then the new-spec areas | M04, M08 | Integration |
+| **S4 · Decorative block catalog** | Every decorative and construction block GTNH 2.9.0 enables, with contact sheets, roles and fit against upstream's look; variety pools per palette role (decision log D25). Lives in `docs/new-spec/05-assets/block-catalog/` | M02 (palette format), M11 | Assets |
 
 ## M01 · Foundation
 
@@ -160,3 +161,4 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 - **PersonalSpace:** cities inside a personal dimension, on a flat world ([0003](design/0003-world-presence.md)). Upstream's other landscape types (floating islands, glass-bubble space cities with monorails, caverns, biospheres) are the first candidates there, with terrain this mod generates (decision log D12).
 - **GTNH-themed additions:** new buildings and styles beside upstream's ([0004](design/0004-gtnh-layer-and-tier-ceiling.md)).
+- **Building geometry variety:** the other half of D25. Buildings that differ in shape, not only in blocks, so cities feel less constructed. Planned after the block variety work, as its own design record.
