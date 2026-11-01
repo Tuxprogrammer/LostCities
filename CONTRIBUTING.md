@@ -55,7 +55,7 @@ Upstream Lost Cities is MIT ([0001](docs/design/0001-port-policy-and-licensing.m
 - **Tests.** Unit tests cover the spec's numbers, and each bug on the `Avoids:` line has a regression test.
 - **Every known bug is fixed.** No bug-register entry in the ported logic survives.
 
-Other third-party code: MIT is preferred, and CC0, CC-BY and LGPL are acceptable. LGPL logic is preferably described in the spec in our own words and rebuilt; the result is ours and MIT. LGPL code adapted from its source, rather than rebuilt from a description, stays LGPL. It lives in `com.tuxprogrammer.lostcities.thirdparty.<project>` with its license text and a notices entry, and passes the same gate. Never unlicensed, NC or All Rights Reserved code.
+Other third-party code: MIT is preferred, and CC0, CC-BY and LGPL are acceptable. LGPL logic is preferably described in the spec in our own words and rebuilt; the result is ours and MIT. LGPL code adapted from its source, rather than rebuilt from a description, stays LGPL. It lives in `com.tuxprogrammer.lostcities.thirdparty.<project>` with its license text and a notices entry, and passes the same gate. Never unlicensed, NC or All Rights Reserved code. GPL code is not copied in while the mod is MIT. Calling a GPL mod's API or mixing into it is integration and is fine. If an integration can only be done by porting GPL code, the owner has pre-approved relicensing the mod to GPL-3.0, through a design record first (decision log D23).
 
 `PortedCodeGateTest` checks the header, the notice, the Javadoc, the test class and the bug IDs automatically, so CI fails a port that misses any of them. Review checks the rest.
 
