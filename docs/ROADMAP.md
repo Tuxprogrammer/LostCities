@@ -6,8 +6,8 @@ Lost Cities: New Horizons backports McJty's Lost Cities to GT New Horizons: the 
 
 Two gates matter most:
 
-- **Alpha:** a city generates in a fresh GTNH 2.9.0 overworld on RWG2 Continents (the real pack, dedicated server). It is deterministic, has no cascading generation and stays within the time budget, and a player can walk its streets and enter its buildings.
-- **Beta, the MVP:** the whole mod, unpolished. Every spec sheet and design record is functional and live in the mod, so only polish and balance remain ([0004](design/0004-gtnh-layer-and-tier-ceiling.md)).
+- **Alpha:** a city generates in a fresh GTNH 2.9.0 overworld on RWG2 Continents (the real pack, dedicated server). It is deterministic, has no cascading generation and stays within the time budget, and a player can walk its streets and enter its buildings. The owner's review here is light: they look at a screenshot set and redirect from there.
+- **Beta, the MVP:** the whole mod, unpolished. Every spec sheet and design record is functional and live in the mod, so only polish and balance remain ([0004](design/0004-gtnh-layer-and-tier-ceiling.md)). This is where the real review happens: interactive back-and-forth with the owner to iron out the GTNH integrations and the advanced features.
 
 ## How to read this roadmap
 
@@ -129,6 +129,7 @@ Two gates matter most:
 - [ ] No cascading-generation warnings; the per-chunk budget holds.
 - [ ] A player can walk the streets and enter buildings; floors, walls and stairs are sound.
 - [ ] Classic RWG produces a city too.
+- [ ] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG). The owner's notes become fixes or roadmap items.
 
 ## M06 to M11 · After the alpha
 
@@ -151,7 +152,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 - [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live.
 - [ ] Every reproducible bug in BUGS.md has its regression test.
 - [ ] The full scenario suite passes on fresh worlds; the real-pack server and client run is clean on GTNH 2.9.0, on RWG2 Continents and classic RWG.
-- [ ] The owner's play session, with a list of balance items for the polish pass.
+- [ ] The owner's interactive review: play sessions with back-and-forth on the GTNH integrations and advanced features, each round's findings fixed before the next. It ends with the owner's sign-off and a list of balance items for the polish pass.
 
 ## After beta
 
