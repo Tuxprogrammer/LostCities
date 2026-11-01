@@ -1,6 +1,6 @@
 # 0005 · The RWG overlay: hook, terrain blend, heights, profiles and budget
 
-- Status: Proposed
+- Status: Accepted
 - Gate: S2 → M04 (M04's entry gate needs this record accepted)
 - Amends: none (settles the "Still open" items of [0003](0003-world-presence.md))
 - Date: 2026-11-01
@@ -37,7 +37,7 @@ The overlay is a class in `worldgen` that implements `IChunkProvider` and wraps 
 
 `provideChunk(x, z)` calls the delegate, then runs the **terrain phase** on the returned chunk. `populate(provider, x, z)` calls the delegate, then runs the **population phase**. Forge then runs the `IWorldGenerator`s, with GT's ore veins last. The overlay therefore sees all of RWG's terrain before writing, and all of RWG's decoration before populating, in the same order upstream 1.20 has over vanilla.
 
-No mixin is needed. The fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
+The hook needs no mixin. The footprint rule's write guard (§3a) is the only planned one. A second fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
 
 ### 2. Terrain phase
 
@@ -68,9 +68,23 @@ Rules:
 
 - Writes only into the populated chunk itself, which is always loaded. Never into its neighbors, so it never cascades, with vanilla's neighbor rule or with Hodgepodge's 3×3 rule.
 - Uses its own `Random`, seeded from the world seed and the chunk coordinates. **Never draw from RWG's or an event's `Random`**: that would change RWG's decoration.
-- RWG's own decoration runs over the city, as vanilla decoration does over upstream 1.20 cities. Trees need soil, so they grow in parks and at edges.
+- RWG's decoration does not survive inside the city's footprint (§3a).
 - When a population area touches a city chunk, the overlay vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` steps through `PopulateChunkEvent.Populate` (RWG honors these), and NHCore's oil deposits through `CUSTOM`. Otherwise lakes and dungeons cut into cellars and break [0004](0004-gtnh-layer-and-tier-ceiling.md)'s "sound enough to move into". Upstream 1.12 had this as a profile option (`preventLakesRavinesInCities`); 1.20 has none, because its own feature step makes the question moot. It returns as a profile option, on by default, recorded as a deviation. Which pack features are vetoed or removed beyond these is Q8's (S3).
 - `InitMapGenEvent` is the tool for keeping RWG villages and caves out of cities (Q8). The prototype tries it; S3 decides.
+
+### 3a. RWG sets the landscape; the city is set into it
+
+The owner's rule: RWG builds the landscape first, with its terrain and its decoration (trees, boulders, small ruins). The city is then set into that landscape.
+
+- **Inside the footprint**, RWG's decoration is cleared. The footprint is every building's volume, every street, bridge, corridor and highway or railway cross-section, and their foundations. Nothing RWG placed survives there.
+- **Outside the footprint**, RWG's decoration stays: parks, yards, the spaces between buildings and the blended city edges. That gives the lived-in, overgrown look.
+- City levels still follow upstream's stepped heights (§6), and edges blend into RWG's ground (§5).
+
+**Mechanism.** The rule fixes the outcome; the prototype picks how to reach it. There are two candidates:
+- **A write guard** (preferred): one mixin on the chunk's block setter that drops writes from RWG's decoration inside footprint volumes. The layout answers "is this block in a footprint" from pure data. It is precise, cheap, and the mixin comment says why no event works: RWG ignores `DecorateBiomeEvent` results.
+- **A footprint restore**: a pass after decoration that rewrites the city's blocks inside the footprint from the layout. No mixin, but it costs more, because decoration spreads over four chunks. It is the same machinery as the GT boulder restore of [new-spec 00-pack-integration/ore-veins.md](../new-spec/00-pack-integration/ore-veins.md), should that become necessary.
+
+Revisit after the alpha and beta reviews: if cities feel too synthetic, the owner may let the city follow the terrain more closely.
 
 ### 4. Height oracle
 
@@ -179,7 +193,7 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
   - the `Populate` vetoes;
   - the timers and the budget check;
   - profile pinning in saved data.
-- **Dependencies:** RWG2 2.0.6 and RWG alpha-1.5.3 as `compileOnly`, used only under `compat`, guarded by `Loader.isModLoaded("rwg2")` / `("RWG")`. `usesMixins` stays `false`.
+- **Dependencies:** RWG2 2.0.6 and RWG alpha-1.5.3 as `compileOnly`, used only under `compat`, guarded by `Loader.isModLoaded("rwg2")` / `("RWG")`. `usesMixins` is on for the footprint write guard (§3a), through UniMixins in the GTNH style.
 - **Determinism tests:**
   - Golden-chunk hashes are taken after the terrain phase, and separately after our population phase, never after the whole of population. Forge runs `IWorldGenerator`s of equal weight in an order that can change between JVM runs, and GT places ore veins from a queue, sometimes during a later chunk's population.
   - Golden hashes hold only for a given pack and config, because RWG2's terrain depends on its config (continent widths, placement offsets) and on installed biome mods.
@@ -188,9 +202,9 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
   - non-overlay landscape types (floating, space, cavern, spheres) are unavailable on RWG;
   - the build range is 0 to 255;
   - the client horizon option is dropped;
-  - RWG decoration cannot be vetoed by event;
+  - RWG decoration is kept out of building, street and route footprints (§3a) and stays everywhere else;
   - lakes, lava lakes and dungeons are kept out of city chunks by a profile option (from upstream 1.12), on by default.
-- **CONTRIBUTING:** the cascading-worldgen warning comes from ArchaicFix, not Hodgepodge, and the pack ships it switched off. The worldgen scenario enables it in its own config. CONTRIBUTING's wording needs that correction (reported, not edited here).
+- **Testing:** the cascading-worldgen warning comes from ArchaicFix, which the pack ships switched off. The worldgen scenario enables it in its own config ([CONTRIBUTING § World generation rules](../../CONTRIBUTING.md#world-generation-rules)).
 - **Pack changes:** none.
 - **PersonalSpace stays open:** the same wrapper installs on any dimension the config lists, given a constant-height oracle.
 
@@ -206,8 +220,7 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 | An adapter world type, as upstream 1.12 | Ruled out by [0003](0003-world-presence.md), and it needed RWG's cooperation |
 | Heights from loaded neighbor chunks | Neighbors are often not generated yet. Generating them cascades; waiting for them makes layout depend on generation order |
 | Calling `getNewNoise` on RWG's live generator | Corrupts the next chunk's map features |
-| A write guard (mixin on `Chunk.func_150807_a`) that drops RWG decoration inside city volumes | Precise and cheap, with precedent in Variable-Horizons, but a mixin on a hot method, and unfaithful to upstream, where decoration runs over cities. Held back until the prototype's screenshots show the artifacts are worth it |
-| A restore pass after population that rewrites city blocks | Needs the city's authoritative blocks for four chunks per population, by regenerating or caching them. More cost than the write guard for the same result |
+| Letting RWG decoration run over the whole city, as vanilla decoration does over upstream 1.20 cities | Trees and boulders on streets and roofs. The owner's rule (§3a) keeps decoration outside the footprint only |
 | A per-world config folder or a client world-creation screen for profiles | 1.7.10 has no per-world config. A client screen is single player only. Both are possible later, on top of the saved-data pin |
 
 ## Still open
@@ -217,14 +230,13 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
 1. **Install timing.** On a new world, the wrapper counts chunks generated before installation; the expected count is zero. Repeat on an existing world with a chunk-loader ticket, to see whether the `createChunkProvider` mixin fallback is needed.
 2. **Oracle accuracy.** Compare the oracle height with the generated chunk's real height at (8, 8) over 4,096 chunks per generator, and report the error distribution. Check that the second classic-RWG instance has no visible side effects (`InitMapGenEvent` listeners, RWG's static noise flag and canyon colors).
 3. **Height histogram** for RWG2 Continents and classic RWG over the same region. It decides whether `heightSampleSize = 3` and the upstream level thresholds give sensible city levels on RWG, or whether an RWG-tuned profile is needed.
-4. **Decoration artifacts**, with screenshots of city edges and interiors:
-   - RWG trees in parks, boulders on gravel or stone streets, RWG small ruins, landmarks;
+4. **The footprint rule (§3a)**: implement the write guard, fall back to the footprint restore if the guard can't tell RWG's decoration writes apart, and measure both against the budget. Screenshots of city edges and interiors:
+   - RWG trees in parks and yards, and none on streets, roofs or inside buildings; boulders and small ruins likewise; landmarks;
    - lakes and dungeons in cellars before and after the vetoes;
    - NHCore oil deposits, Railcraft geodes and quarries;
    - RWG village overlap;
    - snow on streets.
 
-   The owner decides from these whether the write guard is wanted.
 5. **Budget numbers** per §8 (B1 to B5), written back here.
 6. **Cascades:** zero ArchaicFix warnings attributed to this mod, and Hodgepodge's neighbor-fill count unchanged against the baseline.
 7. **EndlessIDs:** blocks with IDs above 4095 and metadata written through `ExtendedBlockStorage` render, save and reload correctly.
