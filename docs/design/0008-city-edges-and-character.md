@@ -36,11 +36,13 @@ In step 12.7 the intensity replaces the city factor in upstream's bound, so the 
 
 After the plan's draws, a separate lot random turns some low-intensity chunks into lots:
 
-- A single building chunk (not predefined, no highway, no rail station) with `I < 0.4` becomes a lot with chance `edgeLotChance × (1 − I / 0.4)` (default 0.45), and an open lot without a park part with half that chance.
+- A single building chunk with `I < 0.4` becomes a lot with chance `edgeLotChance × (1 − I / 0.4)` (default 0.45), and an open lot without a park part with half that chance; never with a highway or rail, on a lane, in a multibuilding, on predefined content or in a village's transition ring. A lot holds no park, fountain, front or stair.
 - **Kinds**, by weight: bare 0.35, dug 0.35 (depth 1, 2 or 4 by 0.3, 0.35, 0.35), foundation 0.3 (depth 1, 2 or 4 likewise). A chunk with a rail corridor or rail dungeon under it is only ever bare.
 - **Ground:** the lot's surface at city ground is a deterministic mix, per column, of coarse dirt (`minecraft:dirt:1`, which never grows grass), terracotta (`minecraft:hardened_clay`), brown and red terracotta, and a little gravel: the brown and red clay ground the owner asked for. Nothing on it grows: no park, greenery, vegetation or leaf piles, and the chunk is in the footprint guard, so RWG's trees and grass are dropped.
 - **Pits:** a dug lot keeps a 3-block rim at city ground on every side (door approaches stay whole) and digs the 10 × 10 inside down by its depth, with the same clay mix on the floor and a ramp of coarse dirt from one side, the way machinery would get in. 
-- **Foundations:** a pit whose floor is a slab of light gray concrete (`minecraft:light_gray_concrete`, mapped to Et Futurum's concrete and vanilla's light gray terracotta), with a grid of 2 × 2 concrete columns every 5 blocks (4 columns, or 9 for a deep one) rising 1 to 3 floors above city ground, each topped with iron bars as rebar, and a construction fence of oak fence along the rim's street sides.
+- **Foundations:** a pit whose floor is a slab of light gray concrete (`minecraft:light_gray_concrete`, mapped to Et Futurum's concrete and vanilla's light gray terracotta), with a grid of 2 × 2 concrete columns (4 columns in a shallow pit, 9 in a 4-deep one) rising 1 to 3 floors above city ground, each topped with iron bars as rebar, and at two floors or more a concrete deck over one bay at the first floor.
+- **Fence:** dug lots are fenced in oak fence at the pit's edge, with a 4-block gap in the middle of each side, where door approaches and the ramp meet the rim.
+- The lot clears everything above city ground, its street base is filled before it digs, and it gets no rubble or leaf piles.
 - Lots are labeled `empty lot`, `excavation (depth n)` and `foundation (depth n)`, and `/lostcities find lot` finds the nearest.
 
 ### 4. Partial repairs
