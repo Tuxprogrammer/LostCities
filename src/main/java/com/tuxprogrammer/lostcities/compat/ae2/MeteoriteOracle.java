@@ -78,7 +78,8 @@ public final class MeteoriteOracle implements StructureOracle {
     @Override
     public synchronized List<Landmark> landmarksTouching(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
         BlockRect query = new BlockRect(minChunkX << 4, minChunkZ << 4, (maxChunkX << 4) + 15, (maxChunkZ << 4) + 15);
-        int reach = CraterBasin.MAX_HALF_WIDTH;
+        // A footprint is the decay square: the crater (at most 2 × 8 + 5 blocks) never reaches past it.
+        int reach = CraterBasin.DECAY_HALF_WIDTH;
         List<Landmark> out = new ArrayList<>();
         for (int cellX = grid.cellOf(query.minX() - reach); cellX <= grid.cellOf(query.maxX() + reach); cellX++) {
             for (int cellZ = grid.cellOf(query.minZ() - reach); cellZ <= grid.cellOf(query.maxZ() + reach); cellZ++) {

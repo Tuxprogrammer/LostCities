@@ -186,7 +186,7 @@ class MeteoriteOracleTest {
                     continue;
                 }
                 assertTrue(
-                    plan.cityGroundLevel() + CraterBasin.CITY_HEADROOM - 1 <= zone.heightCap(),
+                    plan.cityGroundLevel() + com.tuxprogrammer.lostcities.layout.landmark.HeightCap.CITY_HEADROOM - 1 <= zone.heightCap(),
                     "a street's headroom under the crater: " + where);
                 if (plan.hasBuilding()) {
                     buildings++;

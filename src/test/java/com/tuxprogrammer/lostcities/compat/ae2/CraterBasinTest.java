@@ -8,34 +8,14 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
- * The crater basin: the lowest paraboloid AE2 can dig, and a footprint outside which the paraboloid never reaches
- * down to a city standing up to {@link CraterBasin#CITY_HEADROOM} blocks above natural ground.
+ * The crater basin: the lowest paraboloid AE2 can dig, read from the meteor's own chunk, and the footprint AE2 itself
+ * rebuilds (the decay square). Keeping a city's streets under the paraboloid farther out is the layout's
+ * ({@code MeteoriteOracleTest.theCityStandsUnderTheCrater}).
  */
 class CraterBasinTest {
 
     private static final int X = 1000;
     private static final int Z = -500;
-
-    /** The paraboloid at a column, for a basin's center. */
-    private static double cap(CraterBasin basin, int x, int z) {
-        double dx = x - X;
-        double dz = z - Z;
-        return basin.capCenterY() + CraterBasin.CURVATURE * (dx * dx + dz * dz);
-    }
-
-    /** Asserts that every column outside the footprint, out to 100 blocks, keeps a city's headroom under the cap. */
-    private static void assertHeadroomOutside(CraterBasin basin, TerrainHeightOracle heights) {
-        for (int x = X - 100; x <= X + 100; x++) {
-            for (int z = Z - 100; z <= Z + 100; z++) {
-                if (Math.abs(x - X) <= basin.halfWidth() && Math.abs(z - Z) <= basin.halfWidth()) {
-                    continue;
-                }
-                assertTrue(
-                    cap(basin, x, z) >= heights.height(x, z) + CraterBasin.CITY_HEADROOM,
-                    "column " + x + "," + z + " of " + basin);
-            }
-        }
-    }
 
     @Test
     void flatGround() {
@@ -45,9 +25,7 @@ class CraterBasinTest {
         // 70 - 10 - 5.91 + 1 = 55.09, rounded down, less a block of slack.
         assertEquals(54, basin.capCenterY());
         assertEquals(70, basin.groundEstimate());
-        assertTrue(basin.halfWidth() >= CraterBasin.DECAY_HALF_WIDTH, basin.toString());
-        assertTrue(basin.halfWidth() <= CraterBasin.MAX_HALF_WIDTH, basin.toString());
-        assertHeadroomOutside(basin, flat);
+        assertEquals(CraterBasin.DECAY_HALF_WIDTH, basin.halfWidth(), basin.toString());
     }
 
     @Test
@@ -57,18 +35,19 @@ class CraterBasinTest {
             MeteoriteShape shape = MeteoriteShape.of(seed);
             CraterBasin basin = CraterBasin.of(flat, X, Z, shape);
             assertTrue(basin.halfWidth() >= shape.craterSize(), basin + " " + shape);
-            assertHeadroomOutside(basin, flat);
+            assertTrue(basin.halfWidth() >= CraterBasin.DECAY_HALF_WIDTH, basin.toString());
         }
     }
 
     @Test
-    void aHillNearbyGrowsTheFootprint() {
-        // A hill 20 blocks high whose crest stands 45 blocks east of the impact.
-        TerrainHeightOracle hill = (x, z) -> 70 + (int) Math.max(0, 20 - Math.abs(x - (X + 45)));
-        CraterBasin flat = CraterBasin.of((x, z) -> 70, X, Z, MeteoriteShape.of(7L));
-        CraterBasin basin = CraterBasin.of(hill, X, Z, MeteoriteShape.of(7L));
-        assertTrue(basin.halfWidth() > flat.halfWidth(), basin + " against " + flat);
-        assertHeadroomOutside(basin, hill);
+    void theBasinReadsNoGroundBeyondTheMeteorChunkAndItsPadding() {
+        int[] farthest = { 0 };
+        TerrainHeightOracle counting = (x, z) -> {
+            farthest[0] = Math.max(farthest[0], Math.max(Math.abs(x - X), Math.abs(z - Z)));
+            return 70;
+        };
+        CraterBasin.of(counting, X, Z, MeteoriteShape.of(5L));
+        assertTrue(farthest[0] <= 16 + CraterBasin.STRIDE_PAD, "farthest sample " + farthest[0]);
     }
 
     @Test
@@ -95,7 +74,7 @@ class CraterBasinTest {
             steps++;
         }
         CraterBasin stepped = builder.build();
-        assertTrue(steps > 300, "a zero budget reads one sample per step: " + steps);
+        assertTrue(steps > 100, "a zero budget reads one sample per step: " + steps);
         assertEquals(CraterBasin.capCenterY(rough, X, Z, shape.size()), stepped.capCenterY());
         assertEquals(whole.capCenterY(), stepped.capCenterY());
         assertEquals(whole.halfWidth(), stepped.halfWidth());
@@ -114,7 +93,7 @@ class CraterBasinTest {
     }
 
     @Test
-    void groundEstimateIsTheMedianOverTheFootprint() {
+    void groundEstimateIsTheMedianOverTheSkyBox() {
         TerrainHeightOracle half = (x, z) -> x < X ? 60 : 80;
         CraterBasin basin = CraterBasin.of(half, X, Z, MeteoriteShape.of(3L));
         assertTrue(basin.groundEstimate() == 60 || basin.groundEstimate() == 80, basin.toString());

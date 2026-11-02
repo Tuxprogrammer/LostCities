@@ -18,6 +18,12 @@ public final class HeightCap {
     public static final double AE2_CURVATURE = 0.02D;
     /** How far AE2's crater pass reaches from the impact, in blocks. */
     public static final int AE2_REACH = 200;
+    /**
+     * Blocks above a chunk's city ground the cap must clear for the chunk to stay city: one city level, for its
+     * street, park furniture and lamps. A chunk whose cap is lower leaves the city, so the crater cuts natural ground
+     * there, not a street (D-M08-23).
+     */
+    public static final int CITY_HEADROOM = 6;
 
     private final int centerX;
     private final int centerZ;
