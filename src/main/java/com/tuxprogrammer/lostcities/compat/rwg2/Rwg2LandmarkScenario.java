@@ -28,9 +28,9 @@ import rwg2.world.ChunkManagerRealistic;
  *
  * <ol>
  * <li><b>Find.</b> Volcano and lava-cave centers on a {@value #SEARCH_SPACING}-block grid within
- * {@value #SEARCH_RADIUS} blocks of the spawn, straight from the chunk manager; junctions by asking the oracle about
- * every chunk within {@value #JUNCTION_RADIUS} chunks. Each center found must come back from the oracle under its
- * id.</li>
+ * {@value #SEARCH_RADIUS} blocks of the spawn, straight from the chunk manager; junction columns RWG2 protects on a
+ * {@value #JUNCTION_SPACING}-block grid within {@value #JUNCTION_RADIUS} blocks. Each center found must come back from
+ * the oracle under its id, and each junction column must lie under a {@code junction@} landmark.</li>
  * <li><b>Dense check.</b> Around up to {@value #VOLCANOES} volcanoes, {@value #CAVES} caves, {@value #JUNCTIONS}
  * junctions and {@value #WINDOWS} windows of open country, every column RWG2's rule protects (sampled every 4 blocks
  * around discs, every 2 around junctions and in the windows) must lie under a landmark's footprint, with RWG2's
@@ -46,11 +46,15 @@ import rwg2.world.ChunkManagerRealistic;
 public final class Rwg2LandmarkScenario implements Scenario {
 
     /** Disc-search radius around the spawn, blocks. */
-    static final int SEARCH_RADIUS = 12288;
-    /** Disc-search spacing, blocks: well under a lava cave's influence radius. */
-    static final int SEARCH_SPACING = 192;
-    /** Junction-scan radius around the spawn, chunks. */
-    static final int JUNCTION_RADIUS = 96;
+    static final int SEARCH_RADIUS = 32768;
+    /** Disc-search spacing, blocks: under a lava cave's influence radius (320). */
+    static final int SEARCH_SPACING = 256;
+    /** Junction-search radius around the spawn, blocks. */
+    static final int JUNCTION_RADIUS = 8192;
+    /** Junction-search spacing, blocks: under the width of a protected junction patch. */
+    static final int JUNCTION_SPACING = 16;
+    /** Protected junction columns kept from the search. */
+    static final int MAX_JUNCTION_POINTS = 64;
     /** Volcanoes checked densely. */
     static final int VOLCANOES = 2;
     /** Lava caves checked densely. */
@@ -69,6 +73,7 @@ public final class Rwg2LandmarkScenario implements Scenario {
     private int chunksBefore;
     private final TreeSet<Long> volcanoCenters = new TreeSet<>();
     private final TreeSet<Long> caveCenters = new TreeSet<>();
+    private final List<Long> junctionPoints = new ArrayList<>();
     private final TreeMap<String, Landmark> found = new TreeMap<>();
     private final List<Check> checks = new ArrayList<>();
     private final List<String> failures = new ArrayList<>();
@@ -111,6 +116,7 @@ public final class Rwg2LandmarkScenario implements Scenario {
     public void setup(ScenarioContext context) {
         volcanoCenters.clear();
         caveCenters.clear();
+        junctionPoints.clear();
         found.clear();
         checks.clear();
         failures.clear();
@@ -152,14 +158,16 @@ public final class Rwg2LandmarkScenario implements Scenario {
                 caveCenters.add(cave);
             }
         }
-        int junctionSide = 2 * JUNCTION_RADIUS / 8 + 1;
+        int junctionSide = 2 * JUNCTION_RADIUS / JUNCTION_SPACING + 1;
         while (searchCursor >= side * side && junctionCursor < junctionSide * junctionSide
             && System.nanoTime() - start < TICK_BUDGET_NANOS) {
-            int chunkX = (spawnX >> 4) - JUNCTION_RADIUS + junctionCursor % junctionSide * 8;
-            int chunkZ = (spawnZ >> 4) - JUNCTION_RADIUS + junctionCursor / junctionSide * 8;
+            int x = spawnX - JUNCTION_RADIUS + junctionCursor % junctionSide * JUNCTION_SPACING;
+            int z = spawnZ - JUNCTION_RADIUS + junctionCursor / junctionSide * JUNCTION_SPACING;
             junctionCursor++;
-            for (Landmark landmark : oracle.landmarksTouching(chunkX, chunkZ, chunkX + 7, chunkZ + 7)) {
-                found.put(landmark.id(), landmark);
+            if (junctionPoints.size() < MAX_JUNCTION_POINTS
+                && reference.junctionStrength(x, z) >= Rwg2LandmarkOracle.JUNCTION_THRESHOLD
+                && reference.protectedByRwg2(x, z)) {
+                junctionPoints.add(Rwg2Landforms.pack(x, z));
             }
         }
         if (junctionCursor < junctionSide * junctionSide) {
@@ -195,12 +203,26 @@ public final class Rwg2LandmarkScenario implements Scenario {
                 caves++;
             }
         }
-        int junctions = 0;
-        for (Landmark landmark : found.values()) {
-            if (landmark.id()
-                .startsWith("junction@") && junctions < JUNCTIONS) {
+        TreeMap<String, Landmark> junctions = new TreeMap<>();
+        for (long point : junctionPoints) {
+            int x = Rwg2Landforms.unpackX(point);
+            int z = Rwg2Landforms.unpackZ(point);
+            if (!oracle.covers(x, z)) {
+                failures.add("junction column " + x + "," + z + " protected by RWG2 but under no landmark");
+                continue;
+            }
+            for (Landmark landmark : oracle.landmarksTouching(x >> 4, z >> 4, x >> 4, z >> 4)) {
+                if (landmark.id()
+                    .startsWith("junction@")) {
+                    found.put(landmark.id(), landmark);
+                    junctions.put(landmark.id(), landmark);
+                }
+            }
+        }
+        int checked = 0;
+        for (Landmark landmark : junctions.values()) {
+            if (checked++ < JUNCTIONS) {
                 checks.add(new Check(landmark.id(), bounds(landmark).grow(24), 2));
-                junctions++;
             }
         }
         for (int i = 0; i < WINDOWS; i++) {

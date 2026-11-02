@@ -78,6 +78,23 @@ public final class WitcheryScenario implements Scenario {
     static final long TICK_BUDGET_NANOS = 40_000_000L;
     /** The property that moves the scan center. */
     static final String CENTER_PROPERTY = "lostcitiesnh.witcheryScenario.center";
+    /**
+     * Vanilla blocks Witchery's standalone structures place that RWG's natural decoration does not (decompiled
+     * component classes; see {@link WitcherySettings}).
+     */
+    static final Set<String> STRUCTURE_BLOCKS = new TreeSet<>(
+        Arrays.asList(
+            "minecraft:oak_stairs",
+            "minecraft:spruce_stairs",
+            "minecraft:birch_stairs",
+            "minecraft:glass_pane",
+            "minecraft:planks",
+            "minecraft:web",
+            "minecraft:wooden_pressure_plate",
+            "minecraft:wooden_door",
+            "minecraft:torch",
+            "minecraft:hay_block",
+            "minecraft:fence"));
 
     private WitcheryOracle oracle;
     private final List<int[]> predicted = new ArrayList<>();
@@ -259,23 +276,26 @@ public final class WitcheryScenario implements Scenario {
         for (int[] target : predicted) {
             String id = WitcheryOracle.id(target[0], target[1]);
             boolean stands = recorded.contains(BoundedCache.key(target[0], target[1]));
+            int[] blocks = witcheryBlocks(world, target);
             if (stands) {
                 hits++;
-                int[] blocks = witcheryBlocks(world, target);
                 blocksIn += blocks[0];
                 if (blocks[1] > 0) {
-                    failures.add(id + ": " + blocks[1] + " Witchery blocks outside the union lot");
+                    failures.add(id + ": " + blocks[1] + " structure blocks outside the union lot");
                 }
             } else if (storedBiomeDisallowed(world, target, disallowed)) {
                 explained++;
             } else {
                 failures.add(id + " predicted but Witchery recorded no structure");
             }
+            BiomeGenBase biome = storedBiome(world, target);
             LostCities.LOG.info(
-                "[LCNH-WITCHERY] lot {} {} storedBiome={}",
+                "[LCNH-WITCHERY] lot {} {} storedBiome={} structureBlocks={} outside={}",
                 id,
                 stands ? "stands" : "missing",
-                storedBiome(world, target));
+                biome == null ? "none" : biome.biomeName,
+                blocks[0],
+                blocks[1]);
         }
         int rejectedClear = 0;
         for (int[] target : rejected) {
@@ -296,7 +316,7 @@ public final class WitcheryScenario implements Scenario {
         String cityCheck = cityCheck(world, failures);
         String summary = String.format(
             Locale.ROOT,
-            "predicted %d: %d stand, %d explained by stored biomes; rejected %d: %d clear; witchery blocks in lots %d; %s",
+            "predicted %d: %d stand, %d explained by stored biomes; rejected %d: %d clear; structure blocks in standing lots %d; %s",
             predicted.size(),
             hits,
             explained,
@@ -348,14 +368,22 @@ public final class WitcheryScenario implements Scenario {
             : "city check: " + lots + " lots, " + chunks + " core chunks";
     }
 
-    /** Counts Witchery blocks around a structure: {@code {inside the lot, outside it}}. */
+    /**
+     * Counts structure blocks around a structure in chunks the city does not hold: {@code {inside the lot, outside
+     * it}}. Witchery's structures are built mostly of vanilla blocks; the ones counted are those its covens, shacks,
+     * wicker men and hobgoblin huts place and RWG's natural decoration does not ({@link #STRUCTURE_BLOCKS}), plus any
+     * block Witchery registers.
+     */
     private int[] witcheryBlocks(WorldServer world, int[] target) {
         BlockRect lot = oracle.lot(target[0], target[1]);
+        OverlayWorld overlay = Overlays.INSTANCE.get(world);
+        CityPlan plan = overlay == null ? null : overlay.plan();
         int inside = 0;
         int outside = 0;
         for (int cx = target[0] - 1; cx <= target[0] + 1; cx++) {
             for (int cz = target[1] - 1; cz <= target[1] + 1; cz++) {
-                if (!world.theChunkProviderServer.chunkExists(cx, cz)) {
+                if (!world.theChunkProviderServer.chunkExists(cx, cz) || plan != null && plan.chunk(cx, cz)
+                    .isCity()) {
                     continue;
                 }
                 Chunk chunk = world.getChunkFromChunkCoords(cx, cz);
@@ -364,7 +392,8 @@ public final class WitcheryScenario implements Scenario {
                         for (int y = SCAN_MIN_Y; y <= SCAN_MAX_Y; y++) {
                             Block block = chunk.getBlock(x, y, z);
                             String name = Block.blockRegistry.getNameForObject(block);
-                            if (name != null && name.startsWith(WitcheryOracles.MOD_ID + ":")) {
+                            if (name != null && (name.startsWith(WitcheryOracles.MOD_ID + ":")
+                                || STRUCTURE_BLOCKS.contains(name))) {
                                 if (lot.contains((cx << 4) + x, (cz << 4) + z)) {
                                     inside++;
                                 } else {
