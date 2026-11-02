@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate and M05R review round: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115); M05R adds the rise cap's view.",
+  "comment": "M05 alpha gate and M05R review round: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115); M05R adds the rise cap's view. M07 adds a cabin and a radio tower.",
   "title": "Alpha review: real cities on classic RWG, seed 4242",
   "world": {
     "name": "alpha-rwg",
@@ -90,6 +90,26 @@
       },
       "wait": 3,
       "caption": "Soft edge: the city's margin, a chunk of natural ground the blend slopes from the city's edge to a village's ground, with the strip that meets the village's own edge and the lane's steps; the city builds inside it (AR-10, AR-11)."
+    },
+    {
+      "name": "scattered",
+      "find": {
+        "cmd": "lostcities find scattered:cabin 200",
+        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Scattered structure: the cabin nearest the spawn, from the south-east and a little above. The ground under it is leveled and slopes back to RWG's terrain around it, with no cliff and nothing inside it (M07, design record 0009)."
+    },
+    {
+      "name": "tower",
+      "find": {
+        "cmd": "lostcities find scattered:radiotower 200",
+        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Scattered structure: the radio tower nearest the spawn, from the south-east and above: level ground under its legs, meeting RWG's terrain without a cliff (M07, 0009)."
     }
   ]
 }

@@ -40,4 +40,18 @@ public interface TerrainView {
      * @return whether the biome is an ocean
      */
     boolean isOcean(int chunkX, int chunkZ);
+
+    /**
+     * Returns the height oracle's height of one column: the Y of the first non-solid block above the base terrain
+     * (0005 §4). Scattered structures' terrain stats read it at upstream's four sample points
+     * (docs/original-spec/07-scattered/scattered-structures.md, "Terrain stats"). It must be pure. The default answers
+     * the chunk's height, for fakes whose terrain is flat per chunk.
+     *
+     * @param blockX block X
+     * @param blockZ block Z
+     * @return block Y
+     */
+    default int columnHeight(int blockX, int blockZ) {
+        return height(blockX >> 4, blockZ >> 4);
+    }
 }

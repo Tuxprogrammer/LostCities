@@ -48,4 +48,15 @@ public interface WorldStyleView {
 
     /** Returns whether {@code worldsettings.railwayavoidance} is {@code block_railway}: buildings block rails. */
     boolean buildingsBlockRailways();
+
+    /**
+     * Returns the world style's {@code scattered} settings (07-scattered), or {@code null} when it has none, as
+     * upstream's world style without them places no scattered structure. The default is {@code null}, so a fake
+     * world style in a test has none.
+     *
+     * @return the settings, or {@code null}
+     */
+    default ScatteredView scattered() {
+        return null;
+    }
 }

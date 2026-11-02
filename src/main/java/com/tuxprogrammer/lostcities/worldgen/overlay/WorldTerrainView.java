@@ -6,6 +6,7 @@ import net.minecraftforge.common.BiomeDictionary;
 
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights;
+import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
  * The layout's {@link TerrainView} over a wrapped world (decision log D51): chunk heights from the height oracle's
@@ -23,16 +24,34 @@ public final class WorldTerrainView implements TerrainView {
 
     private final World world;
     private final ChunkHeights heights;
+    private final TerrainHeightOracle columns;
+
+    /**
+     * Creates the view, with column heights from the chunk heights alone.
+     *
+     * @param world   the wrapped world
+     * @param heights its oracle's chunk heights
+     */
+    public WorldTerrainView(World world, ChunkHeights heights) {
+        this(world, heights, null);
+    }
 
     /**
      * Creates the view.
      *
      * @param world   the wrapped world
      * @param heights its oracle's chunk heights
+     * @param columns its per-column oracle, behind the world's column cache and probe; {@code null} for none
      */
-    public WorldTerrainView(World world, ChunkHeights heights) {
+    public WorldTerrainView(World world, ChunkHeights heights, TerrainHeightOracle columns) {
         this.world = world;
         this.heights = heights;
+        this.columns = columns;
+    }
+
+    @Override
+    public int columnHeight(int blockX, int blockZ) {
+        return columns == null ? heights.height(blockX >> 4, blockZ >> 4) : columns.height(blockX, blockZ);
     }
 
     @Override

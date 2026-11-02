@@ -64,4 +64,14 @@ final class OverlaySource implements ApiSource {
     public DamageArea damage(int chunkX, int chunkZ) {
         return overlay.damageArea(chunkX, chunkZ);
     }
+
+    /** The scattered structure whose footprint holds the chunk (07-scattered), from the pure plan. */
+    @Override
+    public String scattered(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.ScatteredPlanner scattered = overlay.cities()
+            .scattered();
+        com.tuxprogrammer.lostcities.layout.ScatteredPlan plan = scattered == null ? null
+            : scattered.planAt(chunkX, chunkZ);
+        return plan == null ? null : plan.entry();
+    }
 }
