@@ -10,7 +10,8 @@ import com.tuxprogrammer.lostcities.core.DevEnvironment;
 
 /**
  * What the steering mixin saw, for the {@code oracle.roguelike} scenario: each site Roguelike's test accepted (the
- * point its dungeon is built at), each point its test rejected and each point the steering refused, with the dungeon chunk's origin they belong to.
+ * point its dungeon is built at), each point its test rejected and each point the steering refused, with the dungeon
+ * chunk's origin they belong to.
  * Roguelike saves nothing that would let another mod find its dungeons, so this is how the scenario learns where they
  * went.
  *
@@ -86,13 +87,7 @@ public final class RoguelikePlacements {
         @Override
         public String toString() {
             String what = accepted ? "site " : outcome != null ? "refused(" + outcome + ") " : "rejected ";
-            return what + x
-                + ","
-                + z
-                + " from "
-                + originX
-                + ","
-                + originZ;
+            return what + x + "," + z + " from " + originX + "," + originZ;
         }
     }
 

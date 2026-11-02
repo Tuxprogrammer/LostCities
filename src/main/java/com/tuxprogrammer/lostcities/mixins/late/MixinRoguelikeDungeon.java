@@ -76,11 +76,9 @@ public abstract class MixinRoguelikeDungeon {
             return;
         }
         if (callback.getReturnValueZ()) {
-            RoguelikePlacements
-                .accepted(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
+            RoguelikePlacements.accepted(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
         } else {
-            RoguelikePlacements
-                .rejected(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
+            RoguelikePlacements.rejected(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
         }
     }
 }

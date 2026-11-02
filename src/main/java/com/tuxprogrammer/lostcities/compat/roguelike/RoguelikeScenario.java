@@ -35,7 +35,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * near-spawn city stands; {@code -Dlostcitiesnh.rlScenario.center=<chunkX>,<chunkZ>} moves it) with an oracle of its
  * own, checking that predicting loads no chunk, leaves {@code world.rand} alone and answers the same in any query
  * order. It then generates the 15 × 15 chunks each search can read and populates each cell's dungeon chunk that is not
- * populated yet, so Roguelike runs its search there with the steering mixin in place, and reads where each dungeon went from {@link RoguelikePlacements}. It fails when a
+ * populated yet, so Roguelike runs its search there with the steering mixin in place, and reads where each dungeon went
+ * from {@link RoguelikePlacements}. It fails when a
  * dungeon's lot touches a city chunk, an edge ring or a scattered footprint (unless it is the predicted, reserved
  * lot), when no dungeon was built at all, or when the steering never ran; it reports the hit rate (a cell is a hit
  * when the dungeon stands at the predicted site, or neither predicts nor builds one), the misses by kind and the
