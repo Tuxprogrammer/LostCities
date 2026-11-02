@@ -15,7 +15,7 @@ LC_REMOTE_ROOT=<project dir on the host>
 
 Environment variables of the same names override `.env`, and `LC_ENV_FILE` points the script at another file. Worktrees read the main checkout's `.env` and write to its `reference/remote/`.
 
-The server-side scripts live in [server/](server/), laid out as they sit under `LC_REMOTE_ROOT`; `lc-remote.sh install-tools` copies them there. Each finds the root from its own location, so nothing in them names the host or the path. The rest of the root is set up by hand once (JDKs and the Xvfb userland in `shared/`, the GTNH 2.9.0 server and client in `realpack/`), and [server/README.txt](server/README.txt) records how:
+The server-side scripts live in [server/](server/), laid out as they sit under `LC_REMOTE_ROOT`; `lc-remote.sh install-tools` copies the tracked ones there. Each finds the root from its own location, so nothing in them names the host or the path. The rest of the root is set up by hand once (JDKs and the Xvfb userland in `shared/`, the GTNH 2.9.0 server and client in `realpack/`), and [server/README.txt](server/README.txt) records how:
 
 - `env.sh` sets up the toolchain: JDK 21 runs Gradle, the buildscript compiles with the JDK 8 toolchain, and `GRADLE_USER_HOME` is the project's own;
 - `bin/lc-sync.sh`, `bin/lc-build.sh` and `bin/lc-devserver.sh` handle the per-slot checkouts in `wt/<slot>/`;
@@ -66,7 +66,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 - `--hold <file>`: after the screenshots, stays up until `<file>` exists (bounded by `--timeout`), so another script can drive the client. The shot runner uses it.
 - `--restore-options`: backs up `options.txt` and `optionsnf.txt` before the run and puts them back after it, deleting any the run created.
 
-The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` often fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server), even once the server is up: FML's startup join opens the connection before it creates the latch the handshake waits on, and a local server answers first. Run the client again. The shot runner avoids it: the capture mode joins from the main menu after creating that latch (`-Dlostcitiesnh.captureServer`, D-M05S-4).
+The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` often fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server), even once the server is up: FML's startup join opens the connection before it creates the latch the handshake waits on, and a local server answers first. Run the client again. The shot runner avoids it: the capture mode joins from the main menu after creating that latch (`-Dlostcitiesnh.captureServer`, D96).
 
 ## Examples
 

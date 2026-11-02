@@ -176,7 +176,10 @@ case "$cmd" in
     install-tools)
         # The remote scripts live in git (tools/remote/server/); this puts them in place. It only adds or
         # replaces those files: JDKs, the pack, worktrees and logs stay as they are.
-        rsync -rlt --executability --checksum --itemize-changes "$HERE/tools/remote/server/" "$HOST:$ROOT/"
+        # Tracked files only, so caches and stray local files never reach the server.
+        git -C "$HERE/tools/remote/server" ls-files -z \
+            | rsync -rlt --executability --checksum --itemize-changes --from0 --files-from=- \
+                "$HERE/tools/remote/server/" "$HOST:$ROOT/"
         ;;
     fetch)
         p="${1:?usage: lc-remote.sh fetch <path under LC_REMOTE_ROOT>}"

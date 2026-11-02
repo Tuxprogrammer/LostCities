@@ -119,7 +119,7 @@ Repeat with `--level-type RWG`. The `[LCNH-VN]` lines give, per world, the scan'
 
 ### Review screenshots on the real pack
 
-Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.0 server and client (D-M05S-1 to D-M05S-6). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
+Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.0 server and client (D93 to D98). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot>
