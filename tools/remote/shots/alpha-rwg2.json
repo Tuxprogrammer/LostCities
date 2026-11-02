@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument is the one city.sewing finds near chunk (-4096, 4096).",
+  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view.",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",
@@ -52,6 +52,16 @@
       "y": "top+10"
     },
     {
+      "name": "rise",
+      "find": {
+        "cmd": "lostcities find rise 64",
+        "match": "kind=rise block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Rise cap: the city street nearest the spawn beside RWG2 ground at least 12 blocks above it, from above the city looking at the slope. The city stops or steps down here instead of climbing it (AR-4)."
+    },
+    {
       "name": "village",
       "find": {
         "cmd": "lostcities find village 48 best",
@@ -68,7 +78,7 @@
         "match": "kind=reserved block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
       "wait": 3,
-      "caption": "Reserved lot: the edge ring the city leaves around a VillageNames village, from the south."
+      "caption": "Reserved lot: the margin the city leaves around a VillageNames village, from the south."
     },
     {
       "name": "softedge",
@@ -77,19 +87,9 @@
         "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
       "wait": 3,
-      "caption": "Soft edge: the strip where the city slopes to a village's natural ground instead of a wall, from above the rooftops.",
+      "caption": "Soft edge: the city's margin, a chunk of natural ground the blend slopes from the city's edge to a village's ground, with the strip that meets the village's own edge and the lane's steps; the city builds inside it (AR-10, AR-11).",
       "pitch": 35,
       "y": "top+20"
-    },
-    {
-      "name": "monument",
-      "x": -67392,
-      "z": 62688,
-      "y": "top+45",
-      "yaw": 180,
-      "pitch": 70,
-      "wait": 3,
-      "caption": "Kept clear: the ocean monument at chunk (-4213, 3917), its landmark core left to VillageNames. No city reaches it on this seed; the core is reserved all the same."
     }
   ]
 }
