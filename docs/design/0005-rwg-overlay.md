@@ -258,6 +258,8 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
    - snow on streets;
    - lamps and glowstone in a fresh city at night, lit by ArchaicFix's Phosphor without a relight (§3).
 
+   *M04, with the synthetic test city on seed 4242:* the guard works on both world types (17,651 and 40,231 writes dropped in the 17 × 17-chunk test region; no log or leaf passes it during a population), every glowstone is lit after the chunk's light pass on both, and landmark cores without a lane are left exactly as RWG made them. Other mods' trees from `IWorldGenerator`s still overhang footprints (D-M04-5). The real-pack screenshots in the M04 report show the city from above, its edge and a village core with its lane; the vetoes, oil, geodes and night shots are left to the alpha set.
+
 5. **Budget numbers** per §8 (B1 to B5), written back here. *M04: written in §8; all met.*
 6. **Cascades:** zero ArchaicFix warnings attributed to this mod, and Hodgepodge's neighbor-fill count unchanged against the baseline. *M04: with `logCascadingWorldgenStacktrace` on, every warning (55 on RWG2 Continents, 63 on classic RWG, against 49 and 56 for the bare pack on the same seed during the spawn search) loads its chunk from HarvestCraft fruit trees, Forestry and MagicBees hives, ExtraBees water hives, Biomes O' Plenty reeds in RWG's decoration, NewHorizonsCoreMod's oil or RWG itself; the overlay appears only as the frame that passes RWG's `populate` through. The neighbor-fill count is not measured.*
 7. **EndlessIDs:** blocks with IDs above 4095 and metadata written through `ExtendedBlockStorage` render, save and reload correctly.

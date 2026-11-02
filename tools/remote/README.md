@@ -59,7 +59,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 - `--extra-shot <name>:<seconds>` (repeatable): another screenshot that many seconds after the one before, for viewpoints the server moves the player to.
 - `--mod <jar>`: installs a `lostcitiesnh` jar in the client for this run and removes it afterwards. A server running the mod rejects a client without it (FML's mod list check), so joining a `--slot` server needs the same jar here, by its path on the build server (`<LC_REMOTE_ROOT>/wt/<slot>/build/libs/lostcitiesnh-<version>.jar`).
 
-The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`.
+The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` while the client is still starting up sometimes fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server); run the client again.
 
 ## Examples
 
