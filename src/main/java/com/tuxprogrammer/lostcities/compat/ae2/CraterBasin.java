@@ -29,7 +29,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * {@code T}: its height is the first non-solid Y of the base terrain, which is where the sky starts on natural ground.
  * The minimum is taken over every column of the clipped box and, because RWG2's oracle answers each column with the
  * sample at its 8-block stride corner, over samples every {@value #PAD_STEP} blocks of the box grown by
- * {@value #STRIDE_PAD}; {@value #SLACK} more block of slack covers the rest of the oracle's error.
+ * {@value #STRIDE_PAD} (not on classic RWG, whose oracle is exact per column); {@value #SLACK} more block of slack covers the rest of the oracle's error.
  *
  * <p>
  * The footprint is the square of half-width at least {@value #DECAY_HALF_WIDTH} (the decay square) and the crater's
@@ -160,8 +160,10 @@ public final class CraterBasin {
                     points.add(new int[] { i, k });
                 }
             }
-            for (int i = lowX - STRIDE_PAD; i <= highX + STRIDE_PAD; i = next(i, highX + STRIDE_PAD)) {
-                for (int k = lowZ - STRIDE_PAD; k <= highZ + STRIDE_PAD; k = next(k, highZ + STRIDE_PAD)) {
+            // An oracle exact per column (classic RWG's, which computes whole chunks) needs no padding.
+            int pad = heights.computesWholeChunks() ? 0 : STRIDE_PAD;
+            for (int i = lowX - pad; i <= highX + pad && pad > 0; i = next(i, highX + pad)) {
+                for (int k = lowZ - pad; k <= highZ + pad; k = next(k, highZ + pad)) {
                     if (i < lowX || i > highX || k < lowZ || k > highZ) {
                         points.add(new int[] { i, k });
                     }
@@ -331,8 +333,10 @@ public final class CraterBasin {
             }
         }
         // The padding, where a stride corner standing for columns inside the box may lie.
-        for (int i = lowX - STRIDE_PAD; i <= highX + STRIDE_PAD; i = next(i, highX + STRIDE_PAD)) {
-            for (int k = lowZ - STRIDE_PAD; k <= highZ + STRIDE_PAD; k = next(k, highZ + STRIDE_PAD)) {
+        // An oracle exact per column (classic RWG's, which computes whole chunks) needs no padding.
+        int pad = heights.computesWholeChunks() ? 0 : STRIDE_PAD;
+        for (int i = lowX - pad; i <= highX + pad && pad > 0; i = next(i, highX + pad)) {
+            for (int k = lowZ - pad; k <= highZ + pad; k = next(k, highZ + pad)) {
                 if (i < lowX || i > highX || k < lowZ || k > highZ) {
                     lowest = Math.min(lowest, heights.height(i, k));
                 }
