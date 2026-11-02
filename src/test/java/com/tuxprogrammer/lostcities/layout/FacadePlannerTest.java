@@ -142,9 +142,7 @@ public class FacadePlannerTest {
         int before = clashes(off, pairs(off), 45f);
         int after = clashes(on, pairs, 45f);
         assertTrue(before > 0, "without feathering some neighbors clash");
-        assertTrue(
-            after * 5 <= before,
-            "feathering leaves at most a fifth of the clashes: " + after + " of " + before + clashList(on, pairs, 45f));
+        assertEquals(0, after, "feathering leaves no clash of " + before + clashList(on, pairs, 45f));
     }
 
     @Test
