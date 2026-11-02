@@ -119,7 +119,7 @@
         "timeout": 240
       },
       "wait": 3,
-      "caption": "Railway station (M06): the surface station nearest the spawn, from above and 22 blocks south of it."
+      "caption": "Railway station (M06): the surface station nearest the spawn, from 30 blocks above it, looking down."
     },
     {
       "name": "railway",

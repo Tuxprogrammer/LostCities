@@ -408,11 +408,14 @@ public final class CityFinder {
     static final int RAMP_EYE = 8;
     /** Pitch of the ramp view, degrees. */
     static final float RAMP_PITCH = 15f;
-    /** How far south of a station its view stands, and how high above its floor: above the roofs around it. */
-    static final int STATION_BACK = 22;
-    static final int STATION_EYE = 26;
+    /**
+     * How far south of a station's middle its view stands, and how high above its floor: over the station's own chunk,
+     * which its clearing keeps open, since a view from the side lands in the buildings around it.
+     */
+    static final int STATION_BACK = 6;
+    static final int STATION_EYE = 30;
     /** Pitch of the station view, degrees. */
-    static final float STATION_PITCH = 45f;
+    static final float STATION_PITCH = 70f;
 
     private com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece abovePiece(int chunkX, int chunkZ,
         com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape shape) {
