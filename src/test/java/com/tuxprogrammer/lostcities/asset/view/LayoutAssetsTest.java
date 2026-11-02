@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -17,11 +18,13 @@ import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.TestAssets;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
+import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.layout.view.AssetView;
 import com.tuxprogrammer.lostcities.layout.view.BuildingView;
 import com.tuxprogrammer.lostcities.layout.view.CityStyleView;
 import com.tuxprogrammer.lostcities.layout.view.PartContext;
 import com.tuxprogrammer.lostcities.layout.view.Selection;
+import com.tuxprogrammer.lostcities.layout.view.StyleView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
 
 /** The asset set through the layout's views (decision log D51), with their draw contracts. */
@@ -125,5 +128,27 @@ public class LayoutAssetsTest {
             "lostcities:highway_restaurant_parking",
             view("PLAINS").multiBuilding("highway_restaurant")
                 .buildingAt(1, 0));
+    }
+
+    @Test
+    public void theVarietyIsDrawnWithoutTheChunksRandomAndFollowsTheModuleFlag() {
+        AssetSet pack = TestAssets.bundled(TestAssets.pack(TestAssets.blockData()));
+        WorldStyle world = pack.worldStyle(AssetId.parse("standard"));
+        StyleView on = new LayoutAssets(pack, world, (x, z) -> BiomeDescriptor.NONE).style("standard");
+        StyleView off = new LayoutAssets(pack, world, (x, z) -> BiomeDescriptor.NONE, false).style("standard");
+        Counting random = new Counting(3);
+        List<String> chosen = on.pickPalettes(random);
+        int floats = random.floats;
+        boolean drawn = false;
+        for (long seed = 0; seed < 50; seed++) {
+            List<String> variety = on.pickVariety(chosen, true, seed);
+            drawn |= !variety.isEmpty();
+            for (String id : variety) {
+                assertTrue(id.startsWith("lostcitiesnh:variety/"), id);
+            }
+            assertEquals(Collections.emptyList(), off.pickVariety(chosen, true, seed), "the module is off");
+        }
+        assertTrue(drawn, "buildings draw variety");
+        assertEquals(floats, random.floats, "no draw from the chunk's random");
     }
 }

@@ -147,7 +147,12 @@ public final class OverlayWorld {
                 .builder(
                     world.getSeed(),
                     CityProfiles.layoutProfile(settings, values),
-                    new LayoutAssets(assets, worldStyle, biomes),
+                    new LayoutAssets(
+                        assets,
+                        worldStyle,
+                        biomes,
+                        snapshot.moduleState()
+                            .isActive(Module.PALETTE_VARIETY)),
                     terrain)
                 .dimension(DimensionKey.forDimension(world.provider.dimensionId))
                 .structures(structures)

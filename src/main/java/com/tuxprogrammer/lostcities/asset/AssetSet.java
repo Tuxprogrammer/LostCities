@@ -28,6 +28,7 @@ import com.tuxprogrammer.lostcities.asset.model.Stuff;
 import com.tuxprogrammer.lostcities.asset.model.Style;
 import com.tuxprogrammer.lostcities.asset.model.Variant;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
+import com.tuxprogrammer.lostcities.asset.variety.PaletteVariety;
 
 /**
  * The loaded asset set: every valid asset of the thirteen types by full id, the indexes built at load, the block data,
@@ -51,6 +52,7 @@ public final class AssetSet {
     private final List<String> unreachable;
     private final BlockMapping mapping;
     private final VarietyPools pools;
+    private final PaletteVariety variety;
     private final Map<String, BlockChoice> codeBlocks;
     private final RandomList defaultLeaves;
     private final RandomList defaultRubble;
@@ -58,7 +60,8 @@ public final class AssetSet {
     AssetSet(Map<AssetType, SortedMap<AssetId, Object>> assets, Map<String, List<Stuff>> stuffByTag,
         SortedMap<String, String> fileHashes, String hash, List<AssetProblem> problems,
         List<BlockResolver.Fallback> fallbacks, List<String> unreachable, BlockMapping mapping, VarietyPools pools,
-        Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves, RandomList defaultRubble) {
+        PaletteVariety variety, Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves,
+        RandomList defaultRubble) {
         this.assets = assets;
         this.stuffByTag = stuffByTag;
         this.fileHashes = fileHashes;
@@ -68,6 +71,7 @@ public final class AssetSet {
         this.unreachable = unreachable;
         this.mapping = mapping;
         this.pools = pools;
+        this.variety = variety;
         this.codeBlocks = codeBlocks;
         this.defaultLeaves = defaultLeaves;
         this.defaultRubble = defaultRubble;
@@ -117,9 +121,15 @@ public final class AssetSet {
         return (Condition) get(AssetType.CONDITIONS, id);
     }
 
-    /** Returns a palette, or null. */
+    /** Returns a palette, or null: a palette asset, or an available palette-variety option. */
     public Palette palette(AssetId id) {
-        return (Palette) get(AssetType.PALETTES, id);
+        Palette palette = (Palette) get(AssetType.PALETTES, id);
+        return palette != null ? palette : variety.palette(id);
+    }
+
+    /** Returns the palette variety drawn on top of the styles' palettes. */
+    public PaletteVariety variety() {
+        return variety;
     }
 
     /** Returns a part, or null. */

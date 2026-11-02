@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.gson.JsonElement;
 import com.tuxprogrammer.lostcities.asset.block.BlockData;
 import com.tuxprogrammer.lostcities.asset.block.MappingRow;
 
@@ -64,11 +65,13 @@ public final class TestAssets {
     }
 
     /**
-     * Returns a registry with every vanilla block and every block the block-name map names, as the full pack would
-     * register them, so every mapping resolves to its primary.
+     * Returns a registry with every vanilla block, every block the block-name map names and every block the catalog's
+     * variety pools name, as the full pack registers them (the real-pack resolution scenario checks that it does), so
+     * every mapping resolves to its primary and every palette-variety option is available.
      */
     public static BlockRegistryView pack(BlockData data) {
         Set<String> names = new HashSet<>(vanillaNames());
+        names.addAll(poolBlockNames(data));
         for (MappingRow row : data.mapping()
             .rows()) {
             for (List<MappingRow.Candidate> chain : Arrays.asList(row.chain(), row.doubleChain(), row.metalOff())) {
@@ -80,6 +83,39 @@ public final class TestAssets {
             }
         }
         return BlockRegistryView.of(names);
+    }
+
+    /** Returns the registry name of every block the raw variety pools name. */
+    public static Set<String> poolBlockNames(BlockData data) {
+        Set<String> out = new HashSet<>();
+        JsonElement pools = data.pools();
+        if (!pools.isJsonObject() || !pools.getAsJsonObject()
+            .has("pools")) {
+            return out;
+        }
+        for (JsonElement pool : pools.getAsJsonObject()
+            .getAsJsonArray("pools")) {
+            for (String key : new String[] { "candidates", "sets", "characters" }) {
+                JsonElement rows = pool.getAsJsonObject()
+                    .get(key);
+                if (rows == null || !rows.isJsonArray()) {
+                    continue;
+                }
+                for (JsonElement row : rows.getAsJsonArray()) {
+                    JsonElement blocks = row.getAsJsonObject()
+                        .get("blocks");
+                    if (blocks == null || !blocks.isJsonArray()) {
+                        continue;
+                    }
+                    for (JsonElement block : blocks.getAsJsonArray()) {
+                        out.add(
+                            BlockRef.parse(block.getAsString())
+                                .name());
+                    }
+                }
+            }
+        }
+        return out;
     }
 
     /**

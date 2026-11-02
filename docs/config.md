@@ -14,6 +14,7 @@ These keys apply to **new worlds only**. A world copies them into its pinned pro
 | `worldgen.highways` | `true` | Generate highways between and through cities |
 | `worldgen.railways` | `true` | Generate railways, stations and subways |
 | `worldgen.scatteredStructures` | `true` | Generate scattered structures outside cities |
+| `worldgen.paletteVariety` | `true` | Draw building walls, glass, interior floors, ceilings, lights, furniture and park flora from the pack's decorative blocks ([palette variety](new-spec/05-assets/asset-format.md#palette-variety)). Off, cities use upstream Lost Cities' blocks only |
 
 In the file, the keys sit in the `worldgen` category:
 
@@ -23,6 +24,7 @@ worldgen {
     B:highways=true
     B:railways=true
     B:scatteredStructures=true
+    B:paletteVariety=true
 }
 ```
 

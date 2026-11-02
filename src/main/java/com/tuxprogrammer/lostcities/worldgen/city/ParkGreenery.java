@@ -8,6 +8,9 @@ import java.util.Set;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
+import com.tuxprogrammer.lostcities.asset.model.RandomList;
+import com.tuxprogrammer.lostcities.asset.palette.CompiledPalette;
+import com.tuxprogrammer.lostcities.asset.variety.PaletteVariety;
 import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
 
 /**
@@ -18,9 +21,10 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
  * <p>
  * A plant goes only on a grass block of the park's surface with air above it, so park parts, paths, ponds, benches
  * and the border are left as they are; it is one block high, so nothing it places can be cut in half later, and the
- * rubble layer covers a plant rather than stacking on top of it. Every plant is a vanilla 1.7.10 block that stays
- * on grass in every biome (no dead bush or cactus, which drop off grass on the next update). Shrubs are leaves with
- * the no-decay bit, like the leaves upstream piles along buildings.
+ * rubble layer covers a plant rather than stacking on top of it. Every plant stays on grass in every biome (no dead
+ * bush or cactus, which drop off grass on the next update). Shrubs are leaves with the no-decay bit, like the leaves
+ * upstream piles along buildings. The tables here are vanilla; where the chunk palette's variety defines a flora list
+ * (D25, M11), the plants come from it instead, with the pack's flowers, grasses and bushes beside the vanilla ones.
  *
  * <p>
  * Deterministic: one {@link Random} per chunk from the world seed and the chunk coordinates, two draws per free grass
@@ -54,6 +58,22 @@ final class ParkGreenery {
         /** Returns the chance a free grass block gets a plant. */
         float cover() {
             return cover;
+        }
+
+        /** Returns the palette character whose list holds this flora's plants with the pack's flora mixed in (D25). */
+        char character() {
+            switch (this) {
+                case ARID:
+                    return PaletteVariety.FLORA_ARID;
+                case COLD:
+                    return PaletteVariety.FLORA_COLD;
+                case JUNGLE:
+                    return PaletteVariety.FLORA_JUNGLE;
+                case SWAMP:
+                    return PaletteVariety.FLORA_SWAMP;
+                default:
+                    return PaletteVariety.FLORA_TEMPERATE;
+            }
         }
     }
 
@@ -201,6 +221,26 @@ final class ParkGreenery {
      * @return the number of plants placed
      */
     static int plant(CityTarget target, int height, Flora flora, Random random) {
+        return plant(target, height, flora, null, random);
+    }
+
+    /**
+     * Plants a park, drawing from the chunk palette's flora list where the palette variety defines one: the pack's
+     * flowers, grasses and bushes beside the vanilla plants (D25). Same draws per grass block as the vanilla tables:
+     * one float against the cover, one integer for the plant (a slot of 128 for a palette list).
+     *
+     * @param target  the chunk being written
+     * @param height  block Y of the plants, one above the park's grass
+     * @param flora   the chunk's flora
+     * @param palette the chunk palette, or {@code null} for the vanilla tables
+     * @param random  the chunk's greenery random
+     * @return the number of plants placed
+     */
+    static int plant(CityTarget target, int height, Flora flora, CompiledPalette palette, Random random) {
+        char c = flora.character();
+        if (palette != null && palette.isDefined(c)) {
+            return plantFromPalette(target, height, flora, palette, c, random);
+        }
         List<BlockRef> table = table(flora);
         int placed = 0;
         for (int z = 0; z < 16; z++) {
@@ -217,6 +257,32 @@ final class ParkGreenery {
                 if (draw < flora.cover()) {
                     target.set(x, height, z, table.get(pick));
                     placed++;
+                }
+            }
+        }
+        return placed;
+    }
+
+    private static int plantFromPalette(CityTarget target, int height, Flora flora, CompiledPalette palette, char c,
+        Random random) {
+        int placed = 0;
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                if (!GRASS_BLOCK.equals(
+                    target.get(x, height - 1, z)
+                        .name())
+                    || !target.get(x, height, z)
+                        .isAir()) {
+                    continue;
+                }
+                float draw = random.nextFloat();
+                int slot = random.nextInt(RandomList.SLOTS);
+                if (draw < flora.cover()) {
+                    BlockRef plant = palette.get(c, slot);
+                    if (plant != null && !plant.isAir()) {
+                        target.set(x, height, z, plant);
+                        placed++;
+                    }
                 }
             }
         }

@@ -29,6 +29,7 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - `/lostcities profile list`, `profile info <profile>`, `profile reload` and `/lostcities saveprofile <profile> <newName>`, operator only.
 - Spawn options: a profile can ask for a spawn in a biome, in a predefined city, never in a building, or inside a building (placing each player exactly on their first join); the spawn is found from the city layout without generating chunks, and the bonus chest still comes when asked for.
 - Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
+- The pack's variety in cities (milestone M11): buildings draw their walls, trims, bands, glass and quartz from GTNH's decorative blocks (Chisel, Railcraft, Et Futurum, Botania, Ztones, Tinkers', Thaumcraft, GregTech stones and more), each building its own mix within its upstream color family, and about two in five keep upstream's walls. Desert cities stay pale and muted. Interiors get wood, tile and stone floors, office ceilings, ceiling lights in nearly half the buildings, kitchens, workshops and studies, and varied bookshelves and fences; parks and planters get flowers from Et Futurum, Biomes O' Plenty and Botania. Without one of those mods, its blocks give way to upstream's. `worldgen.paletteVariety` switches it off for new worlds; see [docs/config.md](docs/config.md).
 
 ### Changed
 

@@ -553,7 +553,9 @@
           "blocks": [
             "gregtech:gt.blockstones:12",
             "gregtech:gt.blockstones:9",
-            "gregtech:gt.blockstones:10"
+            "gregtech:gt.blockstones:10",
+            "gregtech:gt.blockstones:4",
+            "gregtech:gt.blockstones:1"
           ],
           "flags": [
             "BH"
@@ -563,6 +565,7 @@
           "label": "Any",
           "blocks": [
             "chisel:limestone:6",
+            "chisel:marble:10",
             "chisel:brutalism:5",
             "chisel:brutalism:6",
             "thaumicbases:oldCobble:0",
@@ -3734,10 +3737,15 @@
           "flags": []
         },
         {
-          "label": "Natura:planks 1, 2, 3, 5, 6, 7",
+          "label": "Natura:planks:1, :2, :3, :5, :6, :7",
           "weight": 6,
           "blocks": [
-            "Natura:planks:0"
+            "Natura:planks:1",
+            "Natura:planks:2",
+            "Natura:planks:3",
+            "Natura:planks:5",
+            "Natura:planks:6",
+            "Natura:planks:7"
           ],
           "fallback": [
             "minecraft:planks:0"
@@ -3745,10 +3753,18 @@
           "flags": []
         },
         {
-          "label": "BiomesOPlenty:planks 2, 3, 6, 7, 8, 11, 12, 13, 14",
+          "label": "BiomesOPlenty:planks:2, :3, :6, :7, :8, :11, :12, :13, :14",
           "weight": 6,
           "blocks": [
-            "BiomesOPlenty:planks:0"
+            "BiomesOPlenty:planks:2",
+            "BiomesOPlenty:planks:3",
+            "BiomesOPlenty:planks:6",
+            "BiomesOPlenty:planks:7",
+            "BiomesOPlenty:planks:8",
+            "BiomesOPlenty:planks:11",
+            "BiomesOPlenty:planks:12",
+            "BiomesOPlenty:planks:13",
+            "BiomesOPlenty:planks:14"
           ],
           "fallback": [
             "minecraft:planks:0"
@@ -3756,9 +3772,15 @@
           "flags": []
         },
         {
-          "label": "cookingforblockheads:<color>_kitchen_floor (white, black, light gray, red, light blue)",
+          "label": "cookingforblockheads:white_kitchen_floor:0, black_kitchen_floor:0, light_gray_kitchen_floor:0, red_kitchen_floor:0, light_blue_kitchen_floor:0 (registry names <dye>_kitchen_floor)",
           "weight": 5,
-          "blocks": [],
+          "blocks": [
+            "cookingforblockheads:white_kitchen_floor:0",
+            "cookingforblockheads:black_kitchen_floor:0",
+            "cookingforblockheads:light_gray_kitchen_floor:0",
+            "cookingforblockheads:red_kitchen_floor:0",
+            "cookingforblockheads:light_blue_kitchen_floor:0"
+          ],
           "fallback": [
             "minecraft:stained_hardened_clay:0"
           ],
@@ -4561,18 +4583,6 @@
           "flags": [
             "L15"
           ]
-        },
-        {
-          "label": "Automagy:blockTranslucent:0, :1 (glowing amber, amber bricks)",
-          "weight": 2,
-          "blocks": [
-            "Automagy:blockTranslucent:0",
-            "Automagy:blockTranslucent:1"
-          ],
-          "fallbackToBaseline": true,
-          "flags": [
-            "L15"
-          ]
         }
       ]
     },
@@ -4746,10 +4756,15 @@
           ]
         },
         {
-          "label": "etfuturum:smoker, blast_furnace, smithing_table, cartography_table, loom, fletching_table",
+          "label": "etfuturum:smoker:0, blast_furnace:0, smithing_table:0, cartography_table:0, loom:0, fletching_table:0",
           "weight": 8,
           "blocks": [
-            "etfuturum:smoker:0"
+            "etfuturum:smoker:0",
+            "etfuturum:blast_furnace:0",
+            "etfuturum:smithing_table:0",
+            "etfuturum:cartography_table:0",
+            "etfuturum:loom:0",
+            "etfuturum:fletching_table:0"
           ],
           "fallback": [
             "minecraft:crafting_table:0"
@@ -4793,9 +4808,16 @@
           ]
         },
         {
-          "label": "harvestcraft sinks, cutting board, pot",
+          "label": "harvestcraft:sink:0 to :3, harvestcraft:cuttingboard:0, harvestcraft:pot:0 (sinks, cutting board, pot)",
           "weight": 3,
-          "blocks": [],
+          "blocks": [
+            "harvestcraft:sink:0",
+            "harvestcraft:sink:1",
+            "harvestcraft:sink:2",
+            "harvestcraft:sink:3",
+            "harvestcraft:cuttingboard:0",
+            "harvestcraft:pot:0"
+          ],
           "fallback": [
             "minecraft:cauldron:0"
           ],
@@ -5390,10 +5412,24 @@
           "flags": []
         },
         {
-          "label": "BiomesOPlenty:flowers 4 to 9, flowers2 0, 1, 3 to 8",
+          "label": "BiomesOPlenty:flowers:1, :4 to :9, BiomesOPlenty:flowers2:0, :1, :3 to :5, :7, :8 (swampflower, hydrangea to anemone, hibiscus, lily of the valley, lavender, goldenrod, bluebells, icy iris, rose; all stay on grass, unlike miner's delight flowers2:6, which needs stone)",
           "weight": 12,
           "blocks": [
-            "BiomesOPlenty:flowers:0"
+            "BiomesOPlenty:flowers:1",
+            "BiomesOPlenty:flowers:4",
+            "BiomesOPlenty:flowers:5",
+            "BiomesOPlenty:flowers:6",
+            "BiomesOPlenty:flowers:7",
+            "BiomesOPlenty:flowers:8",
+            "BiomesOPlenty:flowers:9",
+            "BiomesOPlenty:flowers2:0",
+            "BiomesOPlenty:flowers2:1",
+            "BiomesOPlenty:flowers2:3",
+            "BiomesOPlenty:flowers2:4",
+            "BiomesOPlenty:flowers2:5",
+            "BiomesOPlenty:flowers2:7",
+            "BiomesOPlenty:flowers2:8",
+            "BiomesOPlenty:flowers2:6"
           ],
           "fallback": [
             "minecraft:red_flower:0"
