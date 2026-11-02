@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
@@ -57,8 +58,13 @@ public final class ChunkPlan {
     private final ChunkContent content;
     private final short[] footprint;
     private final LanePath lane;
-    private final List<PopulationJob> jobs;
-    private final int[] borderOpenings;
+    private final List<PopulationJob> fixedJobs;
+    private final Supplier<List<PopulationJob>> jobSource;
+    private List<PopulationJob> jobs;
+    private int[] borderOpenings;
+    private long[] keepClear;
+    private Supplier<Edges> edgeSource;
+    private final String label;
 
     private ChunkPlan(Builder b) {
         this.chunkX = b.chunkX;
@@ -77,8 +83,13 @@ public final class ChunkPlan {
         this.content = b.content;
         this.footprint = b.footprint == null ? null : b.footprint.clone();
         this.lane = b.lane;
-        this.jobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
+        this.fixedJobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
+        this.jobSource = b.jobSource;
+        this.jobs = b.jobSource == null ? fixedJobs : null;
         this.borderOpenings = b.borderOpenings.clone();
+        this.keepClear = b.keepClear;
+        this.edgeSource = b.edgeSource;
+        this.label = b.label;
     }
 
     /**
@@ -207,7 +218,10 @@ public final class ChunkPlan {
         return style;
     }
 
-    /** Returns the writer of the chunk's own content. */
+    /**
+     * Returns the writer of the chunk's own content: a city chunk's building or street, or the bridge span over a
+     * non-city chunk ({@link ChunkContent#NONE} otherwise). A landmark core never has content.
+     */
     public ChunkContent content() {
         return content;
     }
@@ -235,9 +249,97 @@ public final class ChunkPlan {
         return lane;
     }
 
-    /** Returns the population jobs, in the order they run. */
+    /**
+     * Returns the population jobs, in the order they run: the jobs added to the builder, then those of its job
+     * source. A job source is asked once, on the first call, so a plan read only for its neighbors' terrain never pays
+     * for enumerating its parts (budget B1). The source is pure, so the list is the same whenever it is made.
+     *
+     * @return the jobs
+     */
     public List<PopulationJob> jobs() {
-        return jobs;
+        List<PopulationJob> list = jobs;
+        if (list == null) {
+            List<PopulationJob> all = new ArrayList<>(fixedJobs);
+            all.addAll(jobSource.get());
+            list = Collections.unmodifiableList(all);
+            jobs = list;
+        }
+        return list;
+    }
+
+    /**
+     * Returns whether a column is a door's approach, which the terrain phase's rubble layer leaves clear so a
+     * building's street door can be walked through (decision log, M05J rows).
+     *
+     * @param x local X, 0 to 15
+     * @param z local Z, 0 to 15
+     * @return whether the column stays clear
+     */
+    public boolean keepsClear(int x, int z) {
+        resolveEdges();
+        if (keepClear == null) {
+            return false;
+        }
+        int index = (z << 4) | x;
+        return (keepClear[index >> 6] & (1L << (index & 63))) != 0;
+    }
+
+    /** Asks the edge source once, the first time a border opening or a kept-clear column is read. */
+    private void resolveEdges() {
+        Supplier<Edges> source = edgeSource;
+        if (source == null) {
+            return;
+        }
+        Edges edges = source.get();
+        for (Side side : Side.values()) {
+            borderOpenings[side.ordinal()] = edges.openings[side.ordinal()] & 0xFFFF;
+        }
+        keepClear = pack(edges.keepClear);
+        edgeSource = null;
+    }
+
+    /**
+     * What a chunk's own terrain phase reads at its edges, made lazily because a plan is asked for far more often as a
+     * neighbor than for its own chunk: the border openings of each side and the door approaches.
+     */
+    public static final class Edges {
+
+        final int[] openings;
+        final boolean[] keepClear;
+
+        /**
+         * Collects the edges.
+         *
+         * @param openings  4 masks in {@link Side} order
+         * @param keepClear 256 flags, or {@code null}
+         */
+        public Edges(int[] openings, boolean[] keepClear) {
+            this.openings = openings.clone();
+            this.keepClear = keepClear;
+        }
+    }
+
+    private static long[] pack(boolean[] columns) {
+        if (columns == null) {
+            return null;
+        }
+        long[] bits = new long[4];
+        boolean any = false;
+        for (int i = 0; i < 256; i++) {
+            if (columns[i]) {
+                bits[i >> 6] |= 1L << (i & 63);
+                any = true;
+            }
+        }
+        return any ? bits : null;
+    }
+
+    /**
+     * Returns a short description of what stands here, for the finder and logs: the building's or street's asset name,
+     * or the empty string.
+     */
+    public String label() {
+        return label;
     }
 
     /**
@@ -248,6 +350,7 @@ public final class ChunkPlan {
      * @return a 16-bit mask
      */
     public int borderOpenings(Side side) {
+        resolveEdges();
         return borderOpenings[side.ordinal()];
     }
 
@@ -286,7 +389,11 @@ public final class ChunkPlan {
         private short[] footprint;
         private LanePath lane;
         private final List<PopulationJob> jobs = new ArrayList<>();
+        private Supplier<List<PopulationJob>> jobSource;
         private final int[] borderOpenings = new int[4];
+        private long[] keepClear;
+        private Supplier<Edges> edgeSource;
+        private String label = "";
 
         private Builder(int chunkX, int chunkZ, ChunkKind kind) {
             this.chunkX = chunkX;
@@ -401,6 +508,46 @@ public final class ChunkPlan {
             return this;
         }
 
+        /**
+         * Sets a pure, lazily asked source of further jobs, which run after the jobs added with {@link #job}.
+         *
+         * @param source the source; asked at most once per plan
+         * @return this
+         */
+        public Builder jobSource(Supplier<List<PopulationJob>> source) {
+            this.jobSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /**
+         * Marks the columns of door approaches, which the rubble layer leaves clear.
+         *
+         * @param columns 256 flags, index {@code z × 16 + x}; {@code null} for none
+         * @return this
+         */
+        public Builder keepClear(boolean[] columns) {
+            this.keepClear = pack(columns);
+            return this;
+        }
+
+        /**
+         * Sets a pure, lazily asked source of the border openings and door approaches, replacing what
+         * {@link #borderOpenings} and {@link #keepClear} set.
+         *
+         * @param source the source; asked at most once per plan
+         * @return this
+         */
+        public Builder edgeSource(Supplier<Edges> source) {
+            this.edgeSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /** Sets the label: what stands here, for the finder and logs. */
+        public Builder label(String value) {
+            this.label = Objects.requireNonNull(value);
+            return this;
+        }
+
         /** Sets the border openings of one side (a 16-bit mask). */
         public Builder borderOpenings(Side side, int mask) {
             borderOpenings[side.ordinal()] = mask & 0xFFFF;
@@ -409,9 +556,12 @@ public final class ChunkPlan {
 
         /** Returns the immutable plan. */
         public ChunkPlan build() {
-            if (kind != ChunkKind.CITY && (building || content != ChunkContent.NONE)) {
-                throw new IllegalStateException(
-                    "only a city chunk has a building or content: " + chunkX + "," + chunkZ);
+            if (kind != ChunkKind.CITY && building) {
+                throw new IllegalStateException("only a city chunk has a building: " + chunkX + "," + chunkZ);
+            }
+            if (kind == ChunkKind.LANDMARK_CORE && content != ChunkContent.NONE) {
+                // 0006 §1: the city writes nothing in a core but a village lane's surface path.
+                throw new IllegalStateException("a landmark core has no content: " + chunkX + "," + chunkZ);
             }
             if (building && groundY - WorldLimits.FLOOR_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
                 // TERR-31: a building that cannot fit is the layout's problem, settled before generation.

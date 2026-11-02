@@ -44,7 +44,7 @@ profiles {
 }
 ```
 
-Every profile value, the module flags and the world type are pinned into the world when it is created; `/lostcities profile` shows what a dimension was pinned with, and `/lostcities timers` prints the overlay's generation timers and budgets ([0005](design/0005-rwg-overlay.md) §8).
+Every profile value, the module flags, the world type, the loaded asset set (its hash and every file's), the `decorativeMetals` flags and VillageNames' structure settings are pinned into the world when it is created; a later start with a different asset set logs one warning naming the changed files, and the world carries on with the loaded assets (P05-3); `/lostcities profile` shows what a dimension was pinned with, and `/lostcities timers` prints the overlay's generation timers and budgets ([0005](design/0005-rwg-overlay.md) §8).
 
 `ConfigDocsTest` keeps this table in step with the code: every option has a row here with its default.
 
@@ -87,12 +87,12 @@ JVM properties, not config keys. They exist for development and real-pack testin
 
 | Property | Effect |
 |---|---|
-| `-Dlostcitiesnh.testHooks=true` | Turns on the scenario command and harness outside the development environment ([docs/testing/](testing/README.md)) |
+| `-Dlostcitiesnh.testHooks=true` | Turns on the scenario command and harness, and the `view` and `find` commands, outside the development environment ([docs/testing/](testing/README.md)) |
 | `-Dlostcitiesnh.selfCheck=true` or `false` | Runs the dev self-check at `postInit` outside the development environment, or skips it inside |
 | `-Dlostcitiesnh.scenarios=<selector>` | Runs the selected scenarios once the server has started, where the test hooks are on |
 | `-Dlostcitiesnh.stopAfterScenarios=true` | Stops the server after that run's summary line |
 | `-Dlostcitiesnh.assetReport=true` | Logs the full asset report at `postInit`: every problem, every fallback block taken and every variety-pool block the registry lacks ([asset-format.md](new-spec/05-assets/asset-format.md#the-block-name-map)) |
-| `-Dlostcitiesnh.planSource=synthetic` | With the test hooks on, pins the synthetic test city (M04) into new worlds instead of the layout, for the overlay scenarios and screenshots ([docs/testing/](testing/README.md)) |
+| `-Dlostcitiesnh.planSource=synthetic` | With the test hooks on, pins the synthetic test city (M04) into new worlds instead of the real cities of the layout, for the overlay scenarios and screenshots ([docs/testing/](testing/README.md)) |
 | `-Dlostcitiesnh.capture=true` | Client, with the test hooks on: clean screenshot capture. Hides the GUI, hand, chat, achievement toast and HUD overlays, and logs `[LCNH-CAPTURE] settled` when a viewpoint has loaded ([tools/remote/README.md](../tools/remote/README.md#clean-capture)) |
 | `-Dlostcitiesnh.captureFov=<30-110>`, `captureRenderDistance=<2-16>`, `captureChunkRadius=<n>`, `captureClouds=true` | The capture's field of view (default 70), render distance (default 10), the radius of chunks that must arrive before a viewpoint settles (default render distance − 1), and clouds (default off) |
 | `-Dlostcitiesnh.captureServer=<host>:<port>` | With the capture on, the client joins that server from the main menu by itself, and retries once after a disconnect |

@@ -13,7 +13,8 @@ import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 /**
  * The pinned profile snapshots of a save, in the overworld's {@code data/lostcitiesnh.dat}, one per dimension
  * (docs/design/0005-rwg-overlay.md §7). Keys are constants; a reader tolerates missing keys with the defaults of
- * format 1, and a dimension without a snapshot has no cities (CONTRIBUTING § Code standards, "NBT and saved data").
+ * formats 1 and 2, and a dimension without a snapshot has no cities (CONTRIBUTING § Code standards, "NBT and saved
+ * data").
  *
  * <p>
  * Server thread only. Side: server.
@@ -30,6 +31,9 @@ public final class ProfileSavedData extends WorldSavedData {
     static final String KEY_VALUES = "values";
     static final String KEY_MODULES = "modules";
     static final String KEY_ASSETS = "assetSetHash";
+    static final String KEY_ASSET_FILES = "assetFiles";
+    static final String KEY_METALS = "decorativeMetals";
+    static final String KEY_STRUCTURES = "structureSettings";
     static final String KEY_LAYOUT = "layoutVersion";
     static final String KEY_WORLD_TYPE = "worldType";
     static final String KEY_CREATED_BY = "createdBy";
@@ -119,6 +123,17 @@ public final class ProfileSavedData extends WorldSavedData {
         for (Object key : moduleTag.func_150296_c()) {
             modules.put((String) key, moduleTag.getBoolean((String) key));
         }
+        Map<String, String> assetFiles = new TreeMap<>();
+        NBTTagCompound fileTag = tag.getCompoundTag(KEY_ASSET_FILES);
+        for (Object key : fileTag.func_150296_c()) {
+            assetFiles.put((String) key, fileTag.getString((String) key));
+        }
+        Map<String, Boolean> metals = new TreeMap<>();
+        NBTTagCompound metalTag = tag.getCompoundTag(KEY_METALS);
+        for (Object key : metalTag.func_150296_c()) {
+            metals.put((String) key, metalTag.getBoolean((String) key));
+        }
+        String structures = tag.hasKey(KEY_STRUCTURES) ? tag.getString(KEY_STRUCTURES) : "";
         String plan = tag.hasKey(KEY_PLAN) ? tag.getString(KEY_PLAN) : ProfileSnapshot.PLAN_LAYOUT;
         int layout = tag.hasKey(KEY_LAYOUT) ? tag.getInteger(KEY_LAYOUT) : ProfileSnapshot.LAYOUT_VERSION;
         return new ProfileSnapshot(
@@ -126,10 +141,12 @@ public final class ProfileSavedData extends WorldSavedData {
             plan,
             values,
             modules,
-            tag.getString(KEY_ASSETS),
+            tag.hasKey(KEY_ASSETS) ? tag.getString(KEY_ASSETS) : ProfileSnapshot.NO_ASSETS,
+            assetFiles,
+            metals,
             layout,
             tag.getString(KEY_WORLD_TYPE),
-            tag.getString(KEY_CREATED_BY));
+            tag.getString(KEY_CREATED_BY)).withStructureSettings(structures);
     }
 
     static NBTTagCompound write(ProfileSnapshot snapshot) {
@@ -149,6 +166,19 @@ public final class ProfileSavedData extends WorldSavedData {
         }
         tag.setTag(KEY_MODULES, modules);
         tag.setString(KEY_ASSETS, snapshot.assetSetHash());
+        NBTTagCompound files = new NBTTagCompound();
+        for (Map.Entry<String, String> entry : snapshot.assetFiles()
+            .entrySet()) {
+            files.setString(entry.getKey(), entry.getValue());
+        }
+        tag.setTag(KEY_ASSET_FILES, files);
+        NBTTagCompound metals = new NBTTagCompound();
+        for (Map.Entry<String, Boolean> entry : snapshot.metals()
+            .entrySet()) {
+            metals.setBoolean(entry.getKey(), entry.getValue());
+        }
+        tag.setTag(KEY_METALS, metals);
+        tag.setString(KEY_STRUCTURES, snapshot.structureSettings());
         tag.setInteger(KEY_LAYOUT, snapshot.layoutVersion());
         tag.setString(KEY_WORLD_TYPE, snapshot.worldType());
         tag.setString(KEY_CREATED_BY, snapshot.createdBy());

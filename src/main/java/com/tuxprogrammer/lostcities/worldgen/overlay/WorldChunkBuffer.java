@@ -122,14 +122,20 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     }
 
     /**
-     * Finishes the chunk after the terrain phase: recomputes the height map and sky light, because lowered and
-     * blasted columns must lower their height too (TERR-13), and marks the chunk modified.
+     * Finishes the chunk after the terrain phase: marks it modified when anything was written. The height map and sky
+     * light are the caller's to recompute ({@link #needsLight()}), because lowered and blasted columns must lower their
+     * height too (TERR-13): the overlay's provider lights every chunk once, after the terrain phase
+     * ({@link SkylightDeferral}).
      */
     public void finish() {
         if (writes > 0) {
-            chunk.generateSkylightMap();
             chunk.setChunkModified();
         }
+    }
+
+    /** Returns whether the chunk was written since it was attached, so its height map and sky light are stale. */
+    public boolean needsLight() {
+        return writes > 0;
     }
 
     private static void check(int x, int y, int z) {

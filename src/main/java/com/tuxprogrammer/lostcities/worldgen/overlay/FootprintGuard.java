@@ -3,6 +3,7 @@ package com.tuxprogrammer.lostcities.worldgen.overlay;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.BlockLog;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
@@ -21,6 +22,12 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
  * listener switches the top frame off so snow passes, as the footprint sheet requires.
  *
  * <p>
+ * A third kind of frame, pushed around the other mods' {@code IWorldGenerator}s ({@link TreeGuard}), drops only tree
+ * parts: logs, leaves, plants and vines, so IC2 rubber trees and HarvestCraft fruit trees planted on park grass no
+ * longer overhang streets and roofs, while GT's ore veins and every other block pass (decision log, M05J rows; D75's
+ * finding).
+ *
+ * <p>
  * This is the one mutable static of the overlay, and it must be: the chunk setter has no other cheap way to reach the
  * overlay. It holds only transient state of the server thread's current population, empty whenever no population is
  * running, and it never decides what generates on its own: the footprint comes from the pure plan. Server thread only.
@@ -33,10 +40,17 @@ public final class FootprintGuard {
 
     private static final World[] WORLDS = new World[MAX_DEPTH];
     private static final CityPlan[] PLANS = new CityPlan[MAX_DEPTH];
-    private static final boolean[] ACTIVE = new boolean[MAX_DEPTH];
+    /** A frame that guards nothing: our own population phase, or RWG after its decoration. */
+    static final byte OFF = 0;
+    /** A frame that drops every write in the footprint: RWG's {@code populate}. */
+    static final byte ALL = 1;
+    /** A frame that drops only tree parts in the footprint: the other mods' {@code IWorldGenerator}s. */
+    static final byte TREES = 2;
+
+    private static final byte[] MODE = new byte[MAX_DEPTH];
     private static int depth;
-    /** Whether the top frame is active, kept apart so the common "no population" case is one field read. */
-    private static boolean topActive;
+    /** The top frame's mode, kept apart so the common "no population" case is one field read. */
+    private static byte topMode;
     private static long dropped;
     private static long leakedFoliage;
 
@@ -51,15 +65,40 @@ public final class FootprintGuard {
      * @return whether the frame was pushed; {@code false} past {@link #MAX_DEPTH}
      */
     public static boolean push(World world, CityPlan plan, boolean active) {
+        return push(world, plan, active ? ALL : OFF);
+    }
+
+    /**
+     * Pushes a frame that drops only tree parts, around the other mods' world generators.
+     *
+     * @param world the world being populated
+     * @param plan  that world's plan source
+     * @return whether the frame was pushed
+     */
+    public static boolean pushTrees(World world, CityPlan plan) {
+        return push(world, plan, TREES);
+    }
+
+    private static boolean push(World world, CityPlan plan, byte mode) {
         if (depth >= MAX_DEPTH) {
             return false;
         }
         WORLDS[depth] = world;
         PLANS[depth] = plan;
-        ACTIVE[depth] = active;
+        MODE[depth] = mode;
         depth++;
-        topActive = active;
+        topMode = mode;
         return true;
+    }
+
+    /**
+     * Returns whether the top frame is a tree frame of a world: what the closing generator pops.
+     *
+     * @param world the world
+     * @return {@code true} when it is
+     */
+    public static boolean topIsTrees(World world) {
+        return depth > 0 && MODE[depth - 1] == TREES && WORLDS[depth - 1] == world;
     }
 
     /** Pops the top frame; call it in a {@code finally} for every successful {@link #push}. */
@@ -70,7 +109,7 @@ public final class FootprintGuard {
         depth--;
         WORLDS[depth] = null;
         PLANS[depth] = null;
-        topActive = depth > 0 && ACTIVE[depth - 1];
+        topMode = depth > 0 ? MODE[depth - 1] : OFF;
     }
 
     /**
@@ -80,15 +119,15 @@ public final class FootprintGuard {
      * @param world the world whose {@code Post} event fired
      */
     public static void endOfDecoration(World world) {
-        if (depth > 0 && WORLDS[depth - 1] == world) {
-            ACTIVE[depth - 1] = false;
-            topActive = false;
+        if (depth > 0 && WORLDS[depth - 1] == world && MODE[depth - 1] == ALL) {
+            MODE[depth - 1] = OFF;
+            topMode = OFF;
         }
     }
 
     /**
-     * Returns whether a write must be dropped: the top frame is active, the chunk is in the guarded world, and the
-     * position is inside the footprint.
+     * Returns whether a write must be dropped: the top frame guards, the block is one it guards against (any block, or
+     * a tree part in a tree frame), the chunk is in the guarded world, and the position is inside the footprint.
      *
      * @param world  the chunk's world
      * @param chunkX the chunk's X
@@ -96,10 +135,11 @@ public final class FootprintGuard {
      * @param x      local X, 0 to 15
      * @param y      block Y
      * @param z      local Z, 0 to 15
+     * @param block  the block being written
      * @return {@code true} to drop the write
      */
-    public static boolean drops(World world, int chunkX, int chunkZ, int x, int y, int z) {
-        if (!topActive) {
+    public static boolean drops(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
+        if (topMode == OFF || topMode == TREES && !isTreePart(block)) {
             return false;
         }
         int top = depth - 1;
@@ -148,6 +188,23 @@ public final class FootprintGuard {
         return depth > 0;
     }
 
+    /**
+     * Returns whether a block is part of a tree as other mods plant them: logs and leaves by class, and anything of the
+     * wood, leaves, plants or vine material (IC2's rubber wood, HarvestCraft's fruit).
+     *
+     * @param block the block
+     * @return whether a tree frame drops it
+     */
+    static boolean isTreePart(Block block) {
+        if (block instanceof BlockLog || block instanceof BlockLeavesBase) {
+            return true;
+        }
+        Material material = block.getMaterial();
+        return material == Material.wood || material == Material.leaves
+            || material == Material.plants
+            || material == Material.vine;
+    }
+
     /** Returns the number of writes dropped since the server started. */
     public static long droppedWrites() {
         return dropped;
@@ -158,6 +215,6 @@ public final class FootprintGuard {
         while (depth > 0) {
             pop();
         }
-        topActive = false;
+        topMode = OFF;
     }
 }

@@ -15,12 +15,15 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.Tags;
+import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
+import com.tuxprogrammer.lostcities.config.DecorativeMetalsConfig;
 import com.tuxprogrammer.lostcities.config.ProfilesConfig;
 import com.tuxprogrammer.lostcities.config.profile.BuiltinProfiles;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
+import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -53,8 +56,8 @@ public final class Overlays {
     /** JVM property that pins the synthetic test city into new worlds, honored only with the test hooks. */
     public static final String PLAN_SOURCE_PROPERTY = "lostcitiesnh.planSource";
 
-    /** Hash pinned for the asset set while the overlay loads no assets (M02 joins in M05). */
-    static final String NO_ASSETS = "none";
+    /** Most changed asset files the change warning names before it says how many more there are. */
+    static final int MAX_CHANGED_NAMED = 20;
 
     private final Map<World, OverlayWorld> worlds = new IdentityHashMap<>();
 
@@ -64,6 +67,7 @@ public final class Overlays {
     public static void register() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         MinecraftForge.TERRAIN_GEN_BUS.register(new PopulateVetoes(INSTANCE));
+        TreeGuard.register(INSTANCE);
     }
 
     /**
@@ -183,13 +187,7 @@ public final class Overlays {
      * @throws IllegalArgumentException for an unknown profile
      */
     public ProfileSnapshot pin(WorldServer world, String profile) {
-        ProfileSnapshot snapshot = ProfileSnapshot.resolve(
-            profile,
-            planSource(),
-            ModuleState.configured(),
-            NO_ASSETS,
-            HeightOracles.worldType(world),
-            Tags.VERSION);
+        ProfileSnapshot snapshot = resolve(profile, world);
         if (!HeightOracles.supports(world)) {
             return null;
         }
@@ -223,13 +221,7 @@ public final class Overlays {
         }
         ProfileSnapshot snapshot;
         try {
-            snapshot = ProfileSnapshot.resolve(
-                profile,
-                planSource(),
-                ModuleState.configured(),
-                NO_ASSETS,
-                HeightOracles.worldType(world),
-                Tags.VERSION);
+            snapshot = resolve(profile, world);
         } catch (IllegalArgumentException e) {
             LostCities.LOG.error(
                 "dimensionProfiles names {} for dimension {}: {}",
@@ -241,6 +233,63 @@ public final class Overlays {
         data.pin(world.provider.dimensionId, snapshot);
         LostCities.LOG.info("Pinned profile {} into dimension {}", snapshot.summary(), world.provider.dimensionId);
         return snapshot;
+    }
+
+    /**
+     * Resolves a profile for a world, pinning the loaded asset set (its hash and every file's) and the decorative-metal
+     * flags as the config holds them now (D61, D74; P05-3).
+     */
+    private static ProfileSnapshot resolve(String profile, WorldServer world) {
+        AssetSet assets = LoadedAssets.isLoaded() ? LoadedAssets.current() : null;
+        return ProfileSnapshot
+            .resolve(
+                profile,
+                planSource(),
+                ModuleState.configured(),
+                assets == null ? ProfileSnapshot.NO_ASSETS : assets.hash(),
+                assets == null ? java.util.Collections.<String, String>emptyMap() : assets.fileHashes(),
+                DecorativeMetalsConfig.flags(),
+                HeightOracles.worldType(world),
+                Tags.VERSION)
+            .withStructureSettings(StructureOracles.settingsSummary(world));
+    }
+
+    /** Warns once when the loaded asset set differs from the one a world was pinned with, naming the files (P05-3). */
+    private static void warnIfAssetsChanged(WorldServer world, ProfileSnapshot snapshot) {
+        if (!LoadedAssets.isLoaded() || !ProfileSnapshot.PLAN_LAYOUT.equals(snapshot.planSource())) {
+            return;
+        }
+        AssetSet assets = LoadedAssets.current();
+        if (ProfileSnapshot.NO_ASSETS.equals(snapshot.assetSetHash())) {
+            LostCities.LOG.info(
+                "Dimension {} was pinned before its asset set was; asset changes cannot be detected for it",
+                world.provider.dimensionId);
+            return;
+        }
+        String structures = StructureOracles.settingsSummary(world);
+        if (!snapshot.structureSettings()
+            .isEmpty()
+            && !snapshot.structureSettings()
+                .equals(structures)) {
+            LostCities.LOG.warn(
+                "Dimension {} was created with other structure generator settings ({}, now {}); villages and monuments"
+                    + " in new chunks may not be where the city left room for them",
+                world.provider.dimensionId,
+                snapshot.structureSettings(),
+                structures);
+        }
+        java.util.List<String> changed = snapshot.changedAssets(assets.hash(), assets::changedFiles);
+        if (changed.isEmpty()) {
+            return;
+        }
+        java.util.List<String> named = changed.size() > MAX_CHANGED_NAMED ? changed.subList(0, MAX_CHANGED_NAMED)
+            : changed;
+        LostCities.LOG.warn(
+            "Dimension {} was created with other assets; new chunks use the loaded ones and may not match at the border."
+                + " Changed: {}{}",
+            world.provider.dimensionId,
+            String.join(", ", named),
+            changed.size() > named.size() ? " and " + (changed.size() - named.size()) + " more" : "");
     }
 
     private void install(WorldServer world, ProfileSnapshot snapshot) {
@@ -263,6 +312,7 @@ public final class Overlays {
                 snapshot.layoutVersion(),
                 ProfileSnapshot.LAYOUT_VERSION);
         }
+        warnIfAssetsChanged(world, snapshot);
         int before = server.getLoadedChunkCount();
         IChunkProvider delegate = server.currentChunkProvider;
         OverlayWorld overlay = new OverlayWorld(world, snapshot, oracle, before);

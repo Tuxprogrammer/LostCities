@@ -68,6 +68,14 @@ public final class TerrainSettings {
     private final boolean preventLakesRavinesInCities;
     private final int softEdgeWidth;
     private final int landmarkMargin;
+    private final boolean generateLighting;
+    private final boolean generateSpawners;
+    private final boolean generateLoot;
+    private final float chestWithoutLootChance;
+    private final boolean avoidWater;
+    private final boolean bridgeSupports;
+    private final float randomLeafBlockChance;
+    private final int randomLeafBlockThickness;
     private final List<String> warnings;
 
     private TerrainSettings(Reader r) {
@@ -126,6 +134,14 @@ public final class TerrainSettings {
         preventLakesRavinesInCities = r.booleanValue("preventLakesRavinesInCities", true);
         softEdgeWidth = r.intValue("softEdgeWidth", 6, 2, 12);
         landmarkMargin = r.intValue("landmarkMargin", 2, 0, 16);
+        generateLighting = r.booleanValue("generateLighting", false);
+        generateSpawners = r.booleanValue("generateSpawners", true);
+        generateLoot = r.booleanValue("generateLoot", true);
+        chestWithoutLootChance = r.floatValue("chestWithoutLootChance", 0.2f, 0f, 1f);
+        avoidWater = r.booleanValue("avoidWater", false);
+        bridgeSupports = r.booleanValue("bridgeSupports", true);
+        randomLeafBlockChance = r.floatValue("randomLeafBlockChance", 0.1f, 0f, 1f);
+        randomLeafBlockThickness = r.intValue("randomLeafBlockThickness", 2, 1, 8);
         warnings = Collections.unmodifiableList(new ArrayList<>(r.warnings));
     }
 
@@ -184,6 +200,14 @@ public final class TerrainSettings {
         out.put("preventLakesRavinesInCities", Boolean.toString(preventLakesRavinesInCities));
         out.put("softEdgeWidth", Integer.toString(softEdgeWidth));
         out.put("landmarkMargin", Integer.toString(landmarkMargin));
+        out.put("generateLighting", Boolean.toString(generateLighting));
+        out.put("generateSpawners", Boolean.toString(generateSpawners));
+        out.put("generateLoot", Boolean.toString(generateLoot));
+        out.put("chestWithoutLootChance", Float.toString(chestWithoutLootChance));
+        out.put("avoidWater", Boolean.toString(avoidWater));
+        out.put("bridgeSupports", Boolean.toString(bridgeSupports));
+        out.put("randomLeafBlockChance", Float.toString(randomLeafBlockChance));
+        out.put("randomLeafBlockThickness", Integer.toString(randomLeafBlockThickness));
         return out;
     }
 
@@ -229,6 +253,11 @@ public final class TerrainSettings {
             }
         }
         return CITY_LEVEL_THRESHOLDS;
+    }
+
+    /** Returns the eight {@code cityLevel<n>Height} thresholds, block Y; a copy. */
+    public int[] cityLevelHeights() {
+        return cityLevelHeights.clone();
     }
 
     /** Returns the lowest oracle height a city chunk may have ({@code cityMinHeight}). */
@@ -387,6 +416,49 @@ public final class TerrainSettings {
     /** Returns the margin kept clear around a landmark's footprint, in blocks (0006 §1, 2). */
     public int landmarkMargin() {
         return landmarkMargin;
+    }
+
+    /**
+     * Returns {@code generateLighting}: whether a part's torch characters place torches (fixed up in the population
+     * phase) or air. Upstream's default is off.
+     */
+    public boolean generateLighting() {
+        return generateLighting;
+    }
+
+    /** Returns {@code generateSpawners}: whether spawner characters place spawners (else air). */
+    public boolean generateSpawners() {
+        return generateSpawners;
+    }
+
+    /** Returns {@code generateLoot}: whether chests are filled. */
+    public boolean generateLoot() {
+        return generateLoot;
+    }
+
+    /** Returns {@code chestWithoutLootChance}: the chance a chest stays empty, 0.2. */
+    public float chestWithoutLootChance() {
+        return chestWithoutLootChance;
+    }
+
+    /** Returns {@code avoidWater}: whether a part's liquid becomes air. */
+    public boolean avoidWater() {
+        return avoidWater;
+    }
+
+    /** Returns {@code bridgeSupports}: whether bridges get supports down to the water. */
+    public boolean bridgeSupports() {
+        return bridgeSupports;
+    }
+
+    /** Returns {@code randomLeafBlockChance}: the base chance of the leaves along buildings beside streets, 0.1. */
+    public float randomLeafBlockChance() {
+        return randomLeafBlockChance;
+    }
+
+    /** Returns {@code randomLeafBlockThickness}: how many columns from a building those leaves reach, 2. */
+    public int randomLeafBlockThickness() {
+        return randomLeafBlockThickness;
     }
 
     /** Reads typed values out of the snapshot map, collecting what it had to fix. */

@@ -70,6 +70,15 @@ public final class LangKeys {
     /** A player was moved; arguments: the player, X, Y, Z. */
     public static final String VIEW_DONE = "lostcitiesnh.command.view.done";
 
+    /** {@code /lostcities find} usage line. */
+    public static final String FIND_USAGE = "lostcitiesnh.command.find.usage";
+    /** The world has no real cities to search; argument: the dimension. */
+    public static final String FIND_NO_CITIES = "lostcitiesnh.command.find.no_cities";
+    /** Nothing of a kind within a radius; arguments: the kind, the radius in chunks. */
+    public static final String FIND_NONE = "lostcitiesnh.command.find.none";
+    /** A find; arguments: kind, X, Y, Z, label, view X, view Y, view Z, yaw, pitch. */
+    public static final String FIND_FOUND = "lostcitiesnh.command.find.found";
+
     /** One scenario's result; arguments: PASS or FAIL, name, milliseconds, message. */
     public static final String SCENARIO_RESULT = "lostcitiesnh.scenario.result";
     /** A run's summary; arguments: passed, failed. */

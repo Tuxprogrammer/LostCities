@@ -28,4 +28,29 @@ public interface TerrainHeightOracle {
      * @return block Y, 0 to 256
      */
     int height(int blockX, int blockZ);
+
+    /**
+     * Returns whether one call computes the heights of the whole chunk anyway (classic RWG's {@code getNewNoise}), so a
+     * per-chunk cache in front of it ({@link ChunkColumnCache}) makes further columns of that chunk free.
+     *
+     * @return {@code true} for a whole-chunk oracle; {@code false} by default
+     */
+    default boolean computesWholeChunks() {
+        return false;
+    }
+
+    /**
+     * Fills the heights of every column of a chunk, index {@code x × 16 + z}.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @param out    256 heights, overwritten
+     */
+    default void chunkHeights(int chunkX, int chunkZ, int[] out) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                out[x * 16 + z] = height((chunkX << 4) + x, (chunkZ << 4) + z);
+            }
+        }
+    }
 }

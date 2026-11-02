@@ -30,6 +30,7 @@ public final class ChunkRecorder {
     private final Map<Long, String> terrain = new TreeMap<>();
     private final Map<Long, String> population = new TreeMap<>();
     private final Map<Long, TerrainPhase.ChunkClass> classes = new TreeMap<>();
+    private final Map<Long, Integer> footprintFoliage = new TreeMap<>();
     private long foliageAfterPopulation;
 
     /**
@@ -63,11 +64,53 @@ public final class ChunkRecorder {
     }
 
     /** Records a chunk after the terrain phase, with how the phase treated it. */
-    void afterTerrain(int chunkX, int chunkZ, ChunkBuffer chunk, TerrainPhase.ChunkClass chunkClass) {
+    void afterTerrain(int chunkX, int chunkZ, ChunkBuffer chunk, TerrainPhase.ChunkClass chunkClass, ChunkPlan plan) {
         if (covers(chunkX, chunkZ)) {
             terrain.put(key(chunkX, chunkZ), ChunkBufferDigest.sha256(chunk));
             classes.put(key(chunkX, chunkZ), chunkClass);
+            if (plan != null) {
+                footprintFoliage.put(key(chunkX, chunkZ), foliageInFootprint(chunk, plan));
+            }
         }
+    }
+
+    /**
+     * Returns the logs and leaves the city itself put in each recorded chunk's footprint above its ground (vegetation
+     * along buildings, ruins, rubble), counted right after the terrain phase, so a scenario can tell them from what
+     * decoration added later.
+     */
+    public Map<Long, Integer> footprintFoliageAfterTerrain() {
+        return footprintFoliage;
+    }
+
+    /**
+     * Counts the vanilla-named logs and leaves in a chunk's footprint above its ground.
+     *
+     * @param chunk the chunk
+     * @param plan  its plan
+     * @return the count; 0 for a chunk that is not city
+     */
+    static int foliageInFootprint(ChunkBuffer chunk, ChunkPlan plan) {
+        if (!plan.isCity()) {
+            return 0;
+        }
+        int found = 0;
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                int bottom = plan.footprintBottom(x, z);
+                if (bottom == ChunkPlan.NO_FOOTPRINT) {
+                    continue;
+                }
+                for (int y = Math.max(bottom, plan.groundY() + 1); y < ChunkBuffer.HEIGHT; y++) {
+                    String name = chunk.get(x, y, z)
+                        .name();
+                    if (name.endsWith(":log") || name.endsWith(":log2") || name.contains("leaves")) {
+                        found++;
+                    }
+                }
+            }
+        }
+        return found;
     }
 
     /** Returns how the terrain phase treated each recorded chunk. */
@@ -88,30 +131,14 @@ public final class ChunkRecorder {
                 .append('\n');
         }
         population.put(key(chunkX, chunkZ), ChunkBufferDigest.sha256(sites.toString()));
-        if (!plan.isCity()) {
-            return;
-        }
-        for (int z = 0; z < 16; z++) {
-            for (int x = 0; x < 16; x++) {
-                int bottom = plan.footprintBottom(x, z);
-                if (bottom == ChunkPlan.NO_FOOTPRINT) {
-                    continue;
-                }
-                for (int y = Math.max(bottom, plan.groundY() + 1); y < ChunkBuffer.HEIGHT; y++) {
-                    String name = chunk.get(x, y, z)
-                        .name();
-                    if (name.endsWith(":log") || name.endsWith(":log2") || name.contains("leaves")) {
-                        foliageAfterPopulation++;
-                    }
-                }
-            }
-        }
+        Integer own = footprintFoliage.get(key(chunkX, chunkZ));
+        foliageAfterPopulation += Math.max(0, foliageInFootprint(chunk, plan) - (own == null ? 0 : own));
     }
 
     /**
-     * Returns the vanilla-named logs and leaves found in city footprints right after our population phase: RWG's
-     * decoration is done by then, so anything here passed the write guard, and anything the scenario finds later came
-     * from an {@code IWorldGenerator}.
+     * Returns the vanilla-named logs and leaves found in city footprints right after our population phase beyond those
+     * the city's own terrain phase put there: RWG's decoration is done by then, so anything here passed the write
+     * guard, and anything the scenario finds later came from an {@code IWorldGenerator}.
      */
     public long foliageAfterPopulation() {
         return foliageAfterPopulation;

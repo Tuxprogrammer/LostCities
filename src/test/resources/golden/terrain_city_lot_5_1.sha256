@@ -1,3 +1,3 @@
 # Golden chunk terrain_city_lot_5_1: SHA-256 of the ChunkBufferDigest v1 text.
-# Synthetic test city (M04) on the TestTerrain fixture, after the terrain phase. Change only in a commit that says why.
-668501a7d4f6f11f77d2f4b242cb123095af3afd21c9d94e46498483d268b9b0
+# Synthetic test city (M04) on the TestTerrain fixture, after the terrain phase. M05 writes the lot's chest block, which the population job now fills instead of placing. Change only in a commit that says why.
+661ecb6c74847151cdb65d038d8a0257b42783d14fbc65386ecd65edc3e4c9ec

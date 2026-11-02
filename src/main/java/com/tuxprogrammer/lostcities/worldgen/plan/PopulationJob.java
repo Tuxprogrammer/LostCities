@@ -18,12 +18,22 @@ public final class PopulationJob {
     public enum Kind {
         /** Set a torch's metadata: standing on a block below, else attached to the first solid side (fixTorches). */
         TORCH,
-        /** Place a chest and fill it from the loot category in {@link #argument()}; empty category, empty chest. */
+        /**
+         * Fill the container already written there from the {@code ChestGenHooks} category in {@link #argument()}
+         * (empty: leave it empty), after applying the {@link #template()}. Nothing happens when the block is gone (a
+         * ruin or an explosion took it), as upstream checks the block before filling.
+         */
         CHEST,
-        /** Place a vanilla spawner for the entity name in {@link #argument()}. */
+        /** Set the entity of the vanilla spawner already written there to the name in {@link #argument()}. */
         SPAWNER,
         /** Schedule a 1-tick update on the command block already written there. */
-        COMMAND_BLOCK
+        COMMAND_BLOCK,
+        /**
+         * Create the tile entity of the block already written there and apply the {@link #template()}, its 1.7.10 NBT
+         * as JSON with items named by registry name; an empty template only makes sure the tile entity exists (doors in
+         * this pack keep their state in one).
+         */
+        TILE_ENTITY
     }
 
     private final Kind kind;
@@ -31,8 +41,9 @@ public final class PopulationJob {
     private final int y;
     private final int z;
     private final String argument;
+    private final String template;
 
-    private PopulationJob(Kind kind, int x, int y, int z, String argument) {
+    private PopulationJob(Kind kind, int x, int y, int z, String argument, String template) {
         if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 255) {
             throw new IllegalArgumentException("job position (" + x + ", " + y + ", " + z + ") is outside the chunk");
         }
@@ -41,6 +52,7 @@ public final class PopulationJob {
         this.y = y;
         this.z = z;
         this.argument = Objects.requireNonNull(argument);
+        this.template = Objects.requireNonNull(template);
     }
 
     /**
@@ -54,7 +66,17 @@ public final class PopulationJob {
      * @return the job
      */
     public static PopulationJob of(Kind kind, int x, int y, int z, String argument) {
-        return new PopulationJob(kind, x, y, z, argument);
+        return new PopulationJob(kind, x, y, z, argument, "");
+    }
+
+    /**
+     * Returns this job with a tile-entity template.
+     *
+     * @param json the template as JSON text, its facings already turned with the part; empty for none
+     * @return the job
+     */
+    public PopulationJob withTemplate(String json) {
+        return new PopulationJob(kind, x, y, z, argument, json);
     }
 
     /** Returns what the job does. */
@@ -82,8 +104,20 @@ public final class PopulationJob {
         return argument;
     }
 
+    /** Returns the tile-entity template as JSON text, or the empty string. */
+    public String template() {
+        return template;
+    }
+
     @Override
     public String toString() {
-        return kind + "@" + x + "," + y + "," + z + (argument.isEmpty() ? "" : ":" + argument);
+        return kind + "@"
+            + x
+            + ","
+            + y
+            + ","
+            + z
+            + (argument.isEmpty() ? "" : ":" + argument)
+            + (template.isEmpty() ? "" : " " + template);
     }
 }

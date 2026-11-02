@@ -17,7 +17,8 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 /**
  * The overlay's hook: a delegating {@code IChunkProvider} that replaces {@code ChunkProviderServer
  * .currentChunkProvider} of a wrapped dimension (docs/design/0005-rwg-overlay.md §1). {@code provideChunk} calls the
- * delegate (RWG2 or RWG), then runs the terrain phase on the returned chunk; {@code populate} calls the delegate with
+ * delegate (RWG2 or RWG) with its sky light pass on the chunk deferred ({@link SkylightDeferral}), runs the terrain
+ * phase on the returned chunk, then lights the chunk once; {@code populate} calls the delegate with
  * the footprint write guard active, then runs the population phase. Forge runs the {@code IWorldGenerator}s afterwards,
  * GT's ore veins last, so the overlay sees all of RWG's terrain before writing and all of RWG's decoration before
  * populating, the order upstream 1.20 has over vanilla.
@@ -58,13 +59,27 @@ public final class OverlayChunkProvider implements IChunkProvider {
     @Override
     public Chunk provideChunk(int chunkX, int chunkZ) {
         long start = System.nanoTime();
-        Chunk chunk = delegate.provideChunk(chunkX, chunkZ);
+        boolean deferring = SkylightDeferral.begin(world, chunkX, chunkZ);
+        boolean owed = false;
+        Chunk chunk;
+        try {
+            chunk = delegate.provideChunk(chunkX, chunkZ);
+        } finally {
+            if (deferring) {
+                owed = SkylightDeferral.end();
+            }
+        }
         long generated = System.nanoTime();
         TerrainPhase.ChunkClass chunkClass = chunk == null ? TerrainPhase.ChunkClass.UNTOUCHED : overlay.terrain(chunk);
         long done = System.nanoTime();
+        if (chunk != null && (owed || overlay.terrainNeedsLight())) {
+            chunk.generateSkylightMap();
+        }
+        long light = System.nanoTime() - done;
+        // The one sky light pass is the delegate's when it skipped its own, else the terrain phase's.
         GenerationTimers timers = overlay.timers();
-        timers.record(GenerationTimers.Series.PROVIDE, chunkClass, generated - start);
-        timers.record(GenerationTimers.Series.TERRAIN, chunkClass, done - generated);
+        timers.record(GenerationTimers.Series.PROVIDE, chunkClass, generated - start + (owed ? light : 0));
+        timers.record(GenerationTimers.Series.TERRAIN, chunkClass, done - generated + (owed ? 0 : light));
         if (chunk != null) {
             overlay.recordTerrain(chunk, chunkClass);
         }

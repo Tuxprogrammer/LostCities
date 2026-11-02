@@ -20,8 +20,13 @@ import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
  * <li>lava: cobblestone, with cobblestone posts down through the lava at even world X and Z;</li>
  * <li>water, ice or mud: planks with the block above cleared, and log posts down through the water at even X and
  * Z;</li>
- * <li>anything else: the next block down. A column that matches nothing keeps its surface.</li>
+ * <li>anything else: the next block down.</li>
  * </ul>
+ * A column that matches nothing down to sea level − 1 is paved as sand is (gravel over cobblestone) when its surface is
+ * natural ground the rule does not name: terracotta, stained clay, stone, sandstone, gravel, clay, mycelium or snow.
+ * Deviation (decision log, M05J rows): VillageNames' rule leaves such columns as they are, which on classic RWG's mesa
+ * cores left the lane invisible; the fallback keeps the lane continuous in the blocks VillageNames' paths use, and city
+ * blocks (streets, borders) are still never paved.
  * Every block goes through the village's material swap: a desert village's gravel and cobblestone become sandstone,
  * a mesa village's hardened clay. Nothing else is written above or below the column. The rule reads only this
  * chunk's blocks. Side: both (plain Java).
@@ -77,6 +82,7 @@ public final class VillageLanes {
             }
             top--;
         }
+        int surface = top;
         top = Math.max(top, seaFloor);
         boolean post = (worldX & 1) == 0 && (worldZ & 1) == 0;
         for (int y = top; y >= seaFloor && y > WorldLimits.MIN_Y; y--) {
@@ -117,7 +123,32 @@ public final class VillageLanes {
                 return true;
             }
         }
+        if (surface > WorldLimits.MIN_Y && isNaturalGround(
+            buffer.get(x, surface, z)
+                .name())) {
+            clearPlantAbove(buffer, classes, x, surface, z);
+            buffer.set(x, surface, z, swap(GRAVEL, material));
+            buffer.set(x, surface - 1, z, swap(COBBLESTONE, material));
+            return true;
+        }
         return false;
+    }
+
+    /** Natural ground the path rule names nothing for, which the lane paves as sand (the M05J fallback). */
+    static boolean isNaturalGround(String name) {
+        switch (name) {
+            case "minecraft:hardened_clay":
+            case "minecraft:stained_hardened_clay":
+            case "minecraft:stone":
+            case "minecraft:sandstone":
+            case "minecraft:gravel":
+            case "minecraft:clay":
+            case "minecraft:mycelium":
+            case "minecraft:snow":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static void postDown(ChunkBuffer buffer, BlockClassifier classes, int x, int fromY, int z, BlockRef post) {

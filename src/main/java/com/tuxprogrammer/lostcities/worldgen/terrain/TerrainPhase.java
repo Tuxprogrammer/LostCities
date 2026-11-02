@@ -7,6 +7,7 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.damage.DamageArea;
 import com.tuxprogrammer.lostcities.worldgen.damage.ExplosionDamage;
 import com.tuxprogrammer.lostcities.worldgen.damage.FloatingFragments;
+import com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
@@ -25,8 +26,10 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ContentContext;
  * within three chunks passes through untouched.</li>
  * <li>A landmark core gets only its village lane's surface path, and nothing else (0006 §1).</li>
  * <li>A city chunk: high water, leveling to the city ground (soft-edge strips toward cores), room for the building,
- * the plan's content, the street base and borders, the retaining walls of steep strips, a lane.</li>
- * <li>Any other chunk: the blend toward nearby cities and cores, and a lane to a village outside a city.</li>
+ * the plan's content, the street base and borders, the ruin of a ruined building, the street rubble layer, the
+ * retaining walls of steep strips, a lane.</li>
+ * <li>Any other chunk: the blend toward nearby cities and cores, the plan's content (a bridge span), and a lane to a
+ * village outside a city.</li>
  * <li>Explosion damage, the floating-fragment pass, debris from damaged neighbors, then vines (stages 10 and
  * 13a).</li>
  * </ol>
@@ -112,6 +115,7 @@ public final class TerrainPhase {
     private final TerrainBlend blend;
     private final ExplosionDamage damage;
     private final FloatingFragments fragments;
+    private final Ruins ruins;
     private final int damageReach;
 
     private final long[] areaKeys = new long[AREA_CACHE];
@@ -134,6 +138,7 @@ public final class TerrainPhase {
         this.blend = new TerrainBlend(context);
         this.damage = new ExplosionDamage(context);
         this.fragments = new FloatingFragments(context);
+        this.ruins = new Ruins(context);
         this.damageReach = DamageArea.searchRange(context.settings());
     }
 
@@ -181,6 +186,20 @@ public final class TerrainPhase {
             changed = true;
         } else {
             changed = blend.apply(buffer, chunkX, chunkZ, cityPlan);
+            if (plan.content() != ChunkContent.NONE) {
+                plan.content()
+                    .write(
+                        buffer,
+                        new ContentContext(
+                            chunkX,
+                            chunkZ,
+                            plan,
+                            cityPlan,
+                            context,
+                            contentRandom(chunkX, chunkZ),
+                            null));
+                changed = true;
+            }
         }
         if (plan.lane() != null) {
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
@@ -220,11 +239,17 @@ public final class TerrainPhase {
         if (plan.hasBuilding()) {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
-        Random random = new Random(SeedMix.chunk(context.worldSeed(), chunkX, chunkZ, CONTENT_X, CONTENT_Z));
         plan.content()
-            .write(buffer, new ContentContext(chunkX, chunkZ, plan, cityPlan, context, random, skipMask));
+            .write(
+                buffer,
+                new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), skipMask));
         if (!plan.hasBuilding()) {
             CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
+        }
+        Random ruinRandom = ruins.random(chunkX, chunkZ);
+        ruins.ruin(buffer, chunkX, chunkZ, plan, ruinRandom, skipMask);
+        if (!plan.hasBuilding() || plan.ruinHeight() >= 0) {
+            ruins.rubble(buffer, chunkX, chunkZ, plan, around(chunkX, chunkZ), ruinRandom, skipMask);
         }
         if (strips) {
             SoftEdges.retainingWalls(buffer, plan, targets, depth, inner);
@@ -250,6 +275,34 @@ public final class TerrainPhase {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the seed of a chunk's content random: the random a {@link ContentContext} carries, from which a writer
+     * picks its street parts. Exposed so a plan's job dry run draws the same picks (TERR-27: it mixes in the world
+     * seed).
+     *
+     * @param worldSeed the world seed
+     * @param chunkX    chunk X
+     * @param chunkZ    chunk Z
+     * @return the seed
+     */
+    public static long contentSeed(long worldSeed, int chunkX, int chunkZ) {
+        return SeedMix.chunk(worldSeed, chunkX, chunkZ, CONTENT_X, CONTENT_Z);
+    }
+
+    private Random contentRandom(int chunkX, int chunkZ) {
+        return new Random(contentSeed(context.worldSeed(), chunkX, chunkZ));
+    }
+
+    private ChunkPlan[] around(int chunkX, int chunkZ) {
+        ChunkPlan[] around = new ChunkPlan[9];
+        for (int dz = -1; dz <= 1; dz++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                around[(dz + 1) * 3 + dx + 1] = cityPlan.chunk(chunkX + dx, chunkZ + dz);
+            }
+        }
+        return around;
     }
 
     private ChunkPlan[] sides(int chunkX, int chunkZ) {

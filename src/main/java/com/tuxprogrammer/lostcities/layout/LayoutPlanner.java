@@ -2,7 +2,7 @@ package com.tuxprogrammer.lostcities.layout;
 // Ported from Lost Cities (MIT):
 // https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/BuildingInfo.java
 // Avoids: CITY-10, CITY-11, TERR-07, PROF-06, CITY-15, CITY-16, CITY-17, CITY-18, CITY-19, CITY-20, CITY-21, TERR-24,
-// CITY-24, CITY-35, CITY-36
+// CITY-24, CITY-35, CITY-36, LOOT-10
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -597,7 +597,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
         float loot = random.nextFloat();
-        b.noLoot = c.multiPos.isSingle() && loot < profile.buildingWithoutLootChance;
+        // Avoids LOOT-10: a multibuilding's top-left chunk rolls too, and its other chunks copy the result.
+        b.noLoot = loot < profile.buildingWithoutLootChance;
         float fraction = random.nextFloat();
         PredefinedBuilding pinned = predefined.buildingAtTopLeft(x, z);
         if (random.nextFloat() < profile.ruinChance && (pinned == null || !pinned.preventRuins())) {

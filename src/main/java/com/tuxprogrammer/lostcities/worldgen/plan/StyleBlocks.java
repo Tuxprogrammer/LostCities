@@ -44,6 +44,7 @@ public final class StyleBlocks {
     private final BlockRef rubble;
     private final BlockRef filler;
     private final BlockRef ironBars;
+    private final BlockRef ruinRubble;
     private final List<BlockRef> leaves;
     private final List<BlockRef> rubbleDirt;
     private final Map<BlockRef, BlockRef> damaged;
@@ -56,6 +57,7 @@ public final class StyleBlocks {
         this.rubble = builder.rubble;
         this.filler = builder.filler;
         this.ironBars = builder.ironBars;
+        this.ruinRubble = builder.ruinRubble;
         this.leaves = Collections.unmodifiableList(new ArrayList<>(builder.leaves));
         this.rubbleDirt = Collections.unmodifiableList(new ArrayList<>(builder.rubbleDirt));
         this.damaged = Collections.unmodifiableMap(new HashMap<>(builder.damaged));
@@ -109,6 +111,14 @@ public final class StyleBlocks {
         return ironBars;
     }
 
+    /**
+     * Returns the building's own rubble block, which a ruin scatters on its broken floors, or {@code null} when the
+     * building's palette does not define its {@code rubble} character (upstream's {@code doRubble} test).
+     */
+    public BlockRef ruinRubble() {
+        return ruinRubble;
+    }
+
     /** Returns the leaf blocks ruins and the rubble layer draw from. */
     public List<BlockRef> leaves() {
         return leaves;
@@ -140,6 +150,7 @@ public final class StyleBlocks {
         private BlockRef rubble = BlockRef.of("minecraft:cobblestone", 0);
         private BlockRef filler = BlockRef.of("minecraft:stonebrick", 0);
         private BlockRef ironBars = BlockRef.of("minecraft:iron_bars", 0);
+        private BlockRef ruinRubble;
         private List<BlockRef> leaves = DEFAULT_LEAVES;
         private List<BlockRef> rubbleDirt = DEFAULT_RUBBLE_DIRT;
         private final Map<BlockRef, BlockRef> damaged = new HashMap<>();
@@ -185,6 +196,12 @@ public final class StyleBlocks {
         /** Sets the iron-bars block. */
         public Builder ironBars(BlockRef value) {
             this.ironBars = Objects.requireNonNull(value);
+            return this;
+        }
+
+        /** Sets the building's own rubble block for ruins; {@code null} for none. */
+        public Builder ruinRubble(BlockRef value) {
+            this.ruinRubble = value;
             return this;
         }
 

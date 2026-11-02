@@ -83,6 +83,26 @@ public class VillageLanesTest {
     }
 
     @Test
+    public void terracottaTheRuleNamesNothingForIsPavedAsSandIs() {
+        // M05J: on classic RWG's mesa cores the rule matched nothing and the lane paved no column.
+        ArrayChunkBuffer buffer = column(6, 6, BlockRef.of("minecraft:stained_hardened_clay", 1), 80);
+        assertEquals(
+            1,
+            VillageLanes.lay(buffer, context(BlockAvailability.VANILLA), 0, 0, laneAt(6, 6, LanePath.Material.PLAIN)));
+        assertEquals(GRAVEL, buffer.get(6, 80, 6));
+        assertEquals(COBBLE, buffer.get(6, 79, 6));
+    }
+
+    @Test
+    public void aCitysOwnBlocksAreNeverPaved() {
+        ArrayChunkBuffer buffer = column(6, 6, BlockRef.of("minecraft:double_stone_slab", 8), 71);
+        assertEquals(
+            0,
+            VillageLanes.lay(buffer, context(BlockAvailability.VANILLA), 0, 0, laneAt(6, 6, LanePath.Material.PLAIN)));
+        assertEquals(BlockRef.of("minecraft:double_stone_slab", 8), buffer.get(6, 71, 6));
+    }
+
+    @Test
     public void onlyLaneColumnsChange() {
         ArrayChunkBuffer buffer = column(5, 5, TestTerrain.GRASS, 70);
         buffer.set(6, 70, 5, TestTerrain.GRASS);
