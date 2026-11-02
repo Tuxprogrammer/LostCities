@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.terrain;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
 // Avoids: TERR-06, TERR-24, TERR-31
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;

@@ -408,11 +408,7 @@ public final class OverlayScenarios {
                 BUDGET_CENTER + BUDGET_CITY_OFFSET,
                 city,
                 BUDGET_CENTER);
-            generator = new RegionGenerator(
-                context.world(),
-                center,
-                BUDGET_CENTER + BUDGET_CITY_OFFSET,
-                BUDGET_RADIUS);
+            generator = new RegionGenerator(context.world(), center, BUDGET_CENTER + BUDGET_CITY_OFFSET, BUDGET_RADIUS);
         }
 
         @Override

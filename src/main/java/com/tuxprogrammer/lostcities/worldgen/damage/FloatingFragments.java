@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.damage;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/e89000238a8095cba8a739fc3b9e595d854a1346/src/main/java/mcjty/lostcities/dimensions/world/terraingen/LostCitiesTerrainGenerator.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/e89000238a8095cba8a739fc3b9e595d854a1346/src/main/java/mcjty/lostcities/dimensions/world/terraingen/LostCitiesTerrainGenerator.java
 // Avoids: TERR-28
 
 import java.util.Arrays;

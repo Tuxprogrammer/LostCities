@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.terrain;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/ChunkFixer.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/ChunkFixer.java
 // Avoids: TERR-11, TERR-26, TERR-32
 
 import java.util.Random;
