@@ -162,11 +162,12 @@ public final class CleanCapture {
             LostCities.LOG.info("{} moving", TAG);
         } else if (loadingForAWhile()) {
             LostCities.LOG.info(
-                "{} waiting {} s: {} chunks missing, terrain {}",
+                "{} waiting {} s: {} chunks missing, terrain {}, {} sections pending",
                 TAG,
                 tracker.ticksSinceMove() / 20,
                 missing,
-                built ? "built" : "building");
+                built ? "built" : "building",
+                probe.lastPending());
         }
     }
 
