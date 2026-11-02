@@ -2,7 +2,7 @@
 
 This sheet covers GTNH 2.9.0 mods that this mod does not yet integrate with, what each integration would give players, and where it fits the roadmap. The goal is the owner's "seamless and tight": abandoned cities, highways and railways in the RWG overworld that look lived-in, hold pack loot at EV or below, and can become a player's base ([0003](../../design/0003-world-presence.md), [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)).
 
-Status: *Proposed*, except the five rows the owner decided in decision log D28 ([Owner decisions](#owner-decisions)); the rest follow the roadmap slot given. Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
+Status: a survey. The five rows the owner decided in decision log D28 are *Accepted* ([Owner decisions](#owner-decisions)). The Slot column says what is built, what M06 still decides, and what waits until after beta; no other row is on the roadmap before beta ([decision log](../../design/decision-log.md), beta spec audit). Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
 
 ## Scope
 
@@ -22,7 +22,7 @@ Covered elsewhere:
   - *Faithful* restores or keeps upstream's content.
   - *GTNH layer* is an addition beside upstream's content, which record 0004 allows later.
   - *Meta* sits outside world generation: maps, quests, NEI, the HUD.
-- **Slot** is the roadmap milestone or gate it fits ([ROADMAP](../../ROADMAP.md)): S4, M02 to M11, beta, or after beta.
+- **Slot** is where the row stands on the [ROADMAP](../../ROADMAP.md): built (and in which milestone), M06 (still landing), beta, or after beta.
 
 ## Ranked recommendations
 
@@ -30,21 +30,21 @@ Top recommendations first. The ranking weighs value against effort and risk, and
 
 | # | Opportunity | Mods | Value | Effort | Risk | Kind | Slot |
 |---|---|---|---|---|---|---|---|
-| 1 | [Wood-variant doors and the iron trapdoor](#doors-malisisdoors) that the D19 mapping dropped | MalisisDoors | Upstream's random door woods come back; two recorded deviations disappear | S | Low: blocks by name and metadata, TE created automatically | Faithful | M02 (D28 rule 5) |
-| 2 | [Loot shown in NEI](#loot-extensions) through NEI Custom Diagram's worldgen-loot diagrams | NEI Custom Diagram | Players can look up what each city chest band holds, as they do for every other `ChestGenHooks` category | S (lang keys only) | Low: automatic, reads Forge's map | Meta | M08 |
-| 3 | [Furniture pools](#furniture-and-fittings) for upstream's random-furniture and fitting characters (`F`, `L`, `T`, `h`, `p`) | Et Futurum Requiem, CookingForBlockheads, Chisel, Railcraft, AE2 | Interiors read as offices, kitchens and workshops rather than vanilla-only rooms; usable workstations for a new base | S to M | Low for name-and-metadata blocks; M for blocks that keep facing in a TE | Faithful (same characters, wider pools) | S4, M11 |
-| 4 | [City names](#names-signs-and-discovery) from VillageNames' name generator, with entrance signs | VillageNames (optional) | Every city has a name the player can tell others, put on a map or read on a sign; the anchor for maps, quests, notes and the HUD | S to M | Medium: names depend on the pack's syllable config; GPL-3 API call only | GTNH layer | M08 |
+| 1 | [Wood-variant doors and the iron trapdoor](#doors-malisisdoors) that the D19 mapping dropped | MalisisDoors | Upstream's random door woods come back; two recorded deviations disappear | S | Low: blocks by name and metadata, TE created automatically | Faithful | Built, M02 (D28 rule 5) |
+| 2 | [Loot shown in NEI](#loot-extensions) through NEI Custom Diagram's worldgen-loot diagrams | NEI Custom Diagram | Players can look up what each city chest band holds, as they do for every other `ChestGenHooks` category | S (lang keys only) | Low: automatic, reads Forge's map | Meta | After beta |
+| 3 | [Furniture pools](#furniture-and-fittings) for upstream's random-furniture and fitting characters (`F`, `L`, `T`, `h`, `p`) | Et Futurum Requiem, CookingForBlockheads, Chisel, Railcraft, AE2 | Interiors read as offices, kitchens and workshops rather than vanilla-only rooms; usable workstations for a new base | S to M | Low for name-and-metadata blocks; M for blocks that keep facing in a TE | Faithful (same characters, wider pools) | Built for `F`, `L` and `p`, M11 ([0007](../../design/0007-palette-variety.md)); `T` and `h` after beta |
+| 4 | [City names](#names-signs-and-discovery) from VillageNames' name generator, with entrance signs | VillageNames (optional) | Every city has a name the player can tell others, put on a map or read on a sign; the anchor for maps, quests, notes and the HUD | S to M | Medium: names depend on the pack's syllable config; GPL-3 API call only | GTNH layer | After beta |
 | 5 | [Highways and streets as asphalt](#streets-and-highways) with lane markings | Chisel (`road`, `road_line`), GT concrete | Highways become fast roads (a 1.4× walking-speed block), and their surface stops being a GT boulder host | S | Low; changes upstream's cyan-terracotta look | GTNH layer | M06 (D28 rule 3) |
-| 6 | [Discovered cities on the map](#maps) through a Navigator layer on JourneyMap | Navigator, JourneyMap | Outlines and names of visited cities on the minimap and the full map, like VisualProspecting's veins and ServerUtilities' claims | M (needs a server-to-client city sync) | Medium: client mixin library, GTNH-maintained | Meta | Beta |
-| 7 | [Railway and station dressing](#railways-and-stations): buffer stops, platform posts and lanterns, signals, abandoned chest minecarts | Railcraft, vanilla, IronChestMinecarts | Railways read as a rail network, not a vanilla minecart line; carts carry rail loot | M | Medium: Railcraft tracks need their TE set explicitly | GTNH layer | M06, M08 |
+| 6 | [Discovered cities on the map](#maps) through a Navigator layer on JourneyMap | Navigator, JourneyMap | Outlines and names of visited cities on the minimap and the full map, like VisualProspecting's veins and ServerUtilities' claims | M (needs a server-to-client city sync) | Medium: client mixin library, GTNH-maintained | Meta | After beta |
+| 7 | [Railway and station dressing](#railways-and-stations): buffer stops, platform posts and lanterns, signals, abandoned chest minecarts | Railcraft, vanilla, IronChestMinecarts | Railways read as a rail network, not a vanilla minecart line; carts carry rail loot | M | Medium: Railcraft tracks need their TE set explicitly | GTNH layer | M06 for the parts; cart loot after beta |
 | 8 | [Achievements and an in-game guide](#quests-achievements-and-the-guide) | Amazing-Trophies, GuideNH | "Discover a lost city" sits on the pack's own achievement page; a guide explains cities, loot bands and moving in | S each | Low: public APIs, jar-shipped resources | Meta | Beta |
-| 9 | [Overgrowth](#overgrowth-and-gardens): ivy and moss in the ruin pass, weathered and overgrown road | Biomes O' Plenty, Chisel | The abandoned look; ruins that read as years old | S | Low; vines spread as vanilla vines do | GTNH layer | S4, M11 |
-| 10 | [Lighting for the pack's darkness](#lighting-and-atmosphere) | Darkerer (behavior), Chisel, Railcraft, AE2, Twilight Forest | Under Darkerer's pitch-black nights, a lit city is a landmark and a refuge | S (pool choice) | Low | Faithful plus variety | S4 |
+| 9 | [Overgrowth](#overgrowth-and-gardens): ivy and moss in the ruin pass, weathered and overgrown road | Biomes O' Plenty, Chisel | The abandoned look; ruins that read as years old | S | Low; vines spread as vanilla vines do | GTNH layer | After beta (the catalog's overgrowth pool has no variety group) |
+| 10 | [Lighting for the pack's darkness](#lighting-and-atmosphere) | Darkerer (behavior), Chisel, Railcraft, AE2, Twilight Forest | Under Darkerer's pitch-black nights, a lit city is a landmark and a refuge | S (pool choice) | Low | Faithful plus variety | Built for ceiling lights, M11 ([0007](../../design/0007-palette-variety.md) §6); the rest after beta |
 | 11 | [Move-in kit](#moving-in): beds, an elevator column in tall towers, sleeping bags in loot | Et Futurum Requiem, vanilla, OpenBlocks, SleepingBags | A tower becomes livable: respawn point, fast travel between floors | M | Medium: changes or overlays upstream's parts | GTNH layer | After beta (D28 rule 8) |
 | 12 | [A quest line from the jar](#quests-achievements-and-the-guide) through BetterQuesting's scoreboard task | BetterQuesting | Discovering and looting cities is acknowledged in the questbook, with loot-bag rewards | M | Medium: first jar-shipped quest line in the pack; no code dependency on BetterQuesting | Meta | After beta (D28 rule 8) |
-| 13 | ["Claim this building" command](#moving-in) | ServerUtilities | On servers with claims on, one command claims a building's chunks within the player's limits | S | Low; the pack ships claims off | Meta | Beta |
+| 13 | ["Claim this building" command](#moving-in) | ServerUtilities | On servers with claims on, one command claims a building's chunks within the player's limits | S | Low; the pack ships claims off | Meta | After beta |
 | 14 | [Lore notes in chests](#loot-extensions) | OpenPrinter | Printed pages naming the city and its last days; storytelling without new blocks | S (code) plus writing | Low | GTNH layer | After beta |
-| 15 | [Roof gardens and parks with pack crops](#overgrowth-and-gardens) | HarvestCraft, Et Futurum Requiem | A food source for a new base | S | Low; gardens spread, up to a limit | GTNH layer | M11 |
+| 15 | [Roof gardens and parks with pack crops](#overgrowth-and-gardens) | HarvestCraft, Et Futurum Requiem | A food source for a new base | S | Low; gardens spread, up to a limit | GTNH layer | After beta |
 | 16 | [Abandoned GT machine hulls and cables](#abandoned-industry) up to EV | GT5-Unofficial (bartworks precedent) | Salvageable industry: the strongest "GTNH city" signal, and real early-game value | M to L | High: GT internals, machine-update thread, balance | GTNH layer | Hulls never; casings after beta (D28 rule 4) |
 | 17 | [Office computers](#abandoned-industry): cases, screens, keyboards, inactive | OpenComputers | Offices that look like offices; salvage | M | Medium: placing OpenComputers blocks during population is untested | GTNH layer | After beta |
 | 18 | [Current city on the HUD and in Waila](#names-signs-and-discovery) | Waila, InGame-Info-XML | "You are in Ashford, library" at a glance | S once the sync exists | Low; InGame-Info-XML needs a pack-side XML line | Meta | After beta |
@@ -99,7 +99,7 @@ Two rules carry over from the existing sheets:
 - **Ore rule.** No pool member is a block GT ore or GT's boulders replace ([ore-veins.md](ore-veins.md)).
 - **Loot rule.** Any pool member with an inventory (barrels, the cooking table's storage) follows the loot rules: it is either empty or filled from this mod's categories ([loot-and-mobs.md](loot-and-mobs.md)).
 
-Effort S for the name-and-metadata families, M once TE templates exist. Slot: S4 for the pools, M11 when the catalog converts.
+Effort S for the name-and-metadata families, M once TE templates exist. Built for `F` (furniture), `L` (bookshelves) and `p` (planters) as the palette variety (M11); `T` and `h` keep their baseline until after beta.
 
 ## Streets and highways
 
@@ -144,7 +144,7 @@ Upstream's railways place vanilla `rail` and `powered_rail`, with stations, rail
   - Entities in worldgen are new territory for this mod: the golden-chunk tests compare blocks, so carts need their own determinism check.
 - **Coke ovens and blast furnaces.** `Railcraft:machine.alpha` metadata 7 (coke oven) and 12 (blast furnace) ([EnumMachineAlpha.java#L44-L49](https://github.com/GTNewHorizons/Railcraft/blob/9.17.36/src/main/java/mods/railcraft/common/blocks/machine/alpha/EnumMachineAlpha.java#L44-L49)) are multiblocks that re-test their pattern on server ticks ([TileMultiBlock.java#L141-L160](https://github.com/GTNewHorizons/Railcraft/blob/9.17.36/src/main/java/mods/railcraft/common/blocks/machine/TileMultiBlock.java#L141-L160)). A complete one placed by generation should form by itself (*unverified*, not run). They fit GTNH-themed industrial buildings after beta, not upstream's.
 
-Effort M. Slot: M06 for the parts, M08 for the cart loot. Railcraft stays an optional dependency, with vanilla rail as the fallback.
+Effort M. Slot: M06 for the parts; the cart loot after beta. Railcraft stays an optional dependency, with vanilla rail as the fallback.
 
 ## Abandoned industry
 
@@ -191,7 +191,7 @@ Upstream already puts vines on ruins: `ChunkFixer` places `minecraft:vine` ([blo
   - Et Futurum's sweet berry bush is on (`config/etfuturum/blocksitems.cfg` line 451).
   - A few gardens on roof soil give a new base a food source; their spread is a reason to keep them to roofs and parks.
 
-Effort S. Slot: S4 for the pools, M11 for conversion.
+Effort S. The catalog has the pools (S4); none has a variety group, so overgrowth and gardens wait until after beta.
 
 ## Names, signs and discovery
 
@@ -227,7 +227,7 @@ Upstream has no city names. A name is the GTNH-layer anchor for every meta integ
   - Highways could follow as lines between discovered cities.
 - **Risk.** Navigator mixes into JourneyMap. It is GTNH-maintained and pinned with the pack, but a client-only compat module must never load on a dedicated server (`networking-side-safety`).
 
-Effort M, mostly the sync. Slot: beta.
+Effort M, mostly the sync. After beta.
 
 ## Moving in
 
@@ -243,7 +243,7 @@ Record 0004 says buildings are meant to be lived in. Today that means "ordinary 
   - ServerUtilities exposes `ClaimedChunks.instance.claimChunk(ForgePlayer, ChunkDimPos)` with the player's limits checked and a cancellable claim event ([ClaimedChunks.java#L309-L343](https://github.com/GTNewHorizons/ServerUtilities/blob/2.4.22/src/main/java/serverutils/data/ClaimedChunks.java#L309-L343), [ChunkModifiedEvent.java#L30-L60](https://github.com/GTNewHorizons/ServerUtilities/blob/2.4.22/src/main/java/serverutils/events/chunks/ChunkModifiedEvent.java#L30-L60)).
   - A `/lostcities claim` command claims the chunks of the building or multibuilding the player stands in, always with limits checked.
   - The pack ships `chunk_claiming=false` (`serverutilities/serverutilities.cfg` line 439), so the command only does something on servers that turn claims on, and says so otherwise.
-  - Effort S; slot beta (M10 owns commands).
+  - Effort S; after beta.
 - **Storage.**
   - StorageDrawers, iron chests and Jabba barrels keep their facing in the TE, defaulting to down or unknown, so they wait for TE templates ([TileEntityDrawers.java#L771-L787](https://github.com/GTNewHorizons/StorageDrawers/blob/2.2.31-GTNH/src/main/java/com/jaquadro/minecraft/storagedrawers/block/tile/TileEntityDrawers.java#L771-L787), [BlockIronChest.java#L141-L162](https://github.com/GTNewHorizons/ironchest/blob/6.1.13/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L141-L162)).
   - They fit warehouses in GTNH-themed buildings.
@@ -266,7 +266,7 @@ Record 0004 says buildings are meant to be lived in. Today that means "ordinary 
 - **NEI already shows our loot.**
   - NEI Custom Diagram 1.8.36 builds a diagram for every `ChestGenHooks` category by reading Forge's category map ([ForgeWorldgenLoot.java#L88-L110](https://github.com/GTNewHorizons/nei-custom-diagram/blob/1.8.36/src/main/java/com/github/dcysteine/neicustomdiagram/generators/forge/worldgenloot/ForgeWorldgenLoot.java#L88-L110)), shown by default ([#L56](https://github.com/GTNewHorizons/nei-custom-diagram/blob/1.8.36/src/main/java/com/github/dcysteine/neicustomdiagram/generators/forge/worldgenloot/ForgeWorldgenLoot.java#L56)).
   - The `lostcitiesnh:city_*` categories from D20 appear with no code. A lang key `neicustomdiagram.generators.forge.worldgenloot.forge.loot.<category>` in our own lang file gives each a readable name ([Lang.java#L23](https://github.com/GTNewHorizons/nei-custom-diagram/blob/1.8.36/src/main/java/com/github/dcysteine/neicustomdiagram/main/Lang.java#L23)).
-  - Whether the diagram is built after our postInit registration is *unverified* (it reads the live map, so likely yes). Effort S; slot M08.
+  - Whether the diagram is built after our postInit registration is *unverified* (it reads the live map, so likely yes). Effort S; the lang keys wait until after beta.
 - **Lore notes.**
   - An OpenPrinter printed page is an item stack with a title and `line<n>` NBT ([PaperGUI.java#L75](https://github.com/GTNewHorizons/OpenPrinter/blob/0.3.1-GTNH/src/main/java/pcl/openprinter/gui/PaperGUI.java#L75)), so a chest can hold a note naming its city: an eviction notice, a shift log at the rail depot, a library overdue slip.
   - The code is S; the writing is the work. Text comes from our lang files.

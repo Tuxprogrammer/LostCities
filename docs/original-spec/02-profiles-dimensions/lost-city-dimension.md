@@ -74,4 +74,4 @@ None in scope. The dimension name `Lost City Dimension` is a hard-coded, unused 
 
 ## Deviations in the new mod
 
-The dimension is not ported ([0003](../../design/0003-world-presence.md)); details belong in `docs/new-spec/02-profiles-dimensions`.
+See [new-spec 02-profiles-dimensions § The Lost City dimension](../../new-spec/02-profiles-dimensions/index.md#the-lost-city-dimension): the dimension is not ported ([0003](../../design/0003-world-presence.md)).

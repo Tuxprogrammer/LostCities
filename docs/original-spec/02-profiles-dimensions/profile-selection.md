@@ -129,4 +129,4 @@ In `upstream/1.12` a profile is bound to a dedicated world type or dimension thr
 
 ## Deviations in the new mod
 
-To be decided in `docs/new-spec/02-profiles-dimensions` ([0003](../../design/0003-world-presence.md) already drops the Lost City dimension). None recorded here.
+See [new-spec 02-profiles-dimensions § Profile selection and dimension info](../../new-spec/02-profiles-dimensions/index.md#profile-selection-and-dimension-info) and the [pinned profile](../../new-spec/02-profiles-dimensions/pinned-profile.md). [0003](../../design/0003-world-presence.md) drops the Lost City dimension.

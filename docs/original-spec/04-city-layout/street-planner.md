@@ -131,4 +131,4 @@ None found in the planner itself. Clip-related: CITY-20 (provisional characteris
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Streets, parks, stairs, bridges](../../new-spec/04-city-layout/index.md#streets-parks-stairs-bridges-street-plannermd-streets-parks-stairsmd-bridgesmd) and [landmark-zones.md](../../new-spec/04-city-layout/landmark-zones.md#roads-around-a-core).

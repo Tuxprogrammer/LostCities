@@ -91,4 +91,4 @@ The profile option `icon` describes the icon as 64 × 64; the files are 128 × 1
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 09-client-ui) and `CONTRIBUTING.md` § Assets and localization (lang keys in the `lostcitiesnh` namespace; no Mojang assets in the jar).
+See [new-spec 09-client-ui § Lang and textures](../../new-spec/09-client-ui/index.md#lang-and-textures) and `CONTRIBUTING.md` § Assets and localization (lang keys in the `lostcitiesnh` namespace; no Mojang assets in the jar).

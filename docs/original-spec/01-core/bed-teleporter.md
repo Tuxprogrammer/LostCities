@@ -47,4 +47,4 @@ Upstream lets a player travel between any dimension and the Lost City dimension 
 
 ## Deviations in the new mod
 
-[0003](../../design/0003-world-presence.md): the Lost City dimension, and with it this teleporter, is not ported.
+See [new-spec 01-core § Bed teleporter](../../new-spec/01-core/index.md#bed-teleporter): the Lost City dimension, and with it this teleporter, is not ported ([0003](../../design/0003-world-presence.md), decision log D12).

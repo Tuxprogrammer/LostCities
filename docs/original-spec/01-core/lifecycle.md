@@ -93,4 +93,4 @@ How upstream Lost Cities boots: the `@Mod` entry point, what it registers and in
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core) and [0003](../../design/0003-world-presence.md), which drops the Lost City dimension.
+See [new-spec 01-core § Lifecycle and registration](../../new-spec/01-core/index.md#lifecycle-and-registration). [0003](../../design/0003-world-presence.md) drops the Lost City dimension.

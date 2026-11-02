@@ -205,4 +205,4 @@ CITY-10, CITY-11, CITY-13, CITY-14, CITY-15, CITY-16, CITY-17, CITY-18, CITY-19,
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Buildings](../../new-spec/04-city-layout/index.md#buildings-building-infomd-multibuildingsmd).

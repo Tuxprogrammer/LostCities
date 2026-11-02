@@ -7,7 +7,7 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 ## Rules for every option
 
 - **Format.** Profiles stay in upstream's JSON format: the same five categories, the same keys ([0005](../../design/0005-rwg-overlay.md) §7). A file written for upstream 1.20 loads.
-- **Dropped keys** are read and ignored, with one debug log line per file, so upstream-format files still load. They are not written back by `saveprofile`.
+- **Dropped keys** are read and ignored without a warning, so upstream-format files still load. They are not pinned and not written back by `saveprofile`.
 - **Deferred keys** (the sphere and non-default landscape options) are kept in the format, validated and stored, but have no effect until the landscape types return after beta (D12).
 - **Ranges are enforced when a profile loads**, not only in a GUI (PROF-04). A single numeric value out of range is clamped with a warning; anything a clamp cannot fix (a wrong type, an unknown enum value, an inverted min/max pair, a failed cross-option check) rejects the profile with a message, and mod loading never fails (P-PROF-1, D31).
 - **Heights.** RWG's sea level is 63, as the 1.20 overworld's, so upstream's Y numbers carry over; any range above 255 or below 0 is clamped to 0 to 255 at load with a warning ([0005](../../design/0005-rwg-overlay.md) §6).
@@ -97,10 +97,15 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `cityMaxRise` | `lostcity` | 2 city levels | How far a city chunk's level may rise above its city's base level; one level more is cut down to it, higher ground is not city; 8 is no cap (alpha review AR-4) | 03, 04 | [height-mapping.md](../03-terrain/height-mapping.md#rise-cap), D148 |
 | `villageTransitionRings` | `lostcity` | 2 | Rings of lower building density around a village | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
 | `villageLinkDistance` | `lostcity` | 4 chunks | How far outside a city a village still gets a lane | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
-| Vanilla loot categories opt-in (name `08-loot-mobs-blocks`'; M08 adds it) | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |
+| `cityTaper` | `lostcity` | 1.0 | How strongly building heights follow the urban intensity, low at a city's edge and high at its core; 0 is upstream's floor count | 04 | [0011](../../design/0011-city-edges-and-character.md), D219, D226 |
+| `edgeLotChance` | `lostcity` | 0.45 | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation | 04 | [0011](../../design/0011-city-edges-and-character.md), D220, D226 |
+| `damageRepairChance` | `lostcity` | 0.5 | Chance that an explosion in a city was partly repaired with similar blocks and its windows boarded | 03 | [0011](../../design/0011-city-edges-and-character.md), D222, D226 |
+| `facadeContrast` | `lostcity` | 45 | Most lightness and saturation contrast two neighboring facades may have; 200 turns the check off | 05 | [0012](../../design/0012-facade-color-feathering.md), D226 |
+| `vanillaLootCategories` | `lostcity` | off | Lets city chests also draw from the pack's vanilla `ChestGenHooks` categories | 08 | D20, D196 |
+| `enderZooHardMobs` | `lostcity` | off | `hardmobs` spawners take EnderZoo's overworld mobs instead of blazes and witches | 08 | D199 |
 
 Every new option is in the `lostcity` category (P-PROF-6, D31), and so is `heightSampleSize`, upstream's mod-config key, which is a pinned profile option here (D73). The module flags and the decorative metal flags are mod config, pinned with the profile ([01-core § Mod config](../01-core/index.md#mod-config), [pinned-profile.md](pinned-profile.md)). The catalog of every option, its default, range and status is [docs/config.md § Every profile option](../../config.md#every-profile-option).
 
 ## Count
 
-107 + 12 + 25 + 14 + 5 = 163 upstream options: 133 kept (same or changed), 17 dropped, 13 deferred (`spawnSphere` waits with the spheres); 9 options of this port's own (the eight above that M09 builds, and `heightSampleSize`), and the vanilla loot opt-in that M08 adds.
+107 + 12 + 25 + 14 + 5 = 163 upstream options: 133 kept (same or changed), 17 dropped, 13 deferred (`spawnSphere` waits with the spheres); 16 options of this port's own: the 15 in the table above and `heightSampleSize`.

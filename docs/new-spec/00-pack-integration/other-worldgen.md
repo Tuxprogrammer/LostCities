@@ -139,12 +139,14 @@ Recorded in the [decision log](../../design/decision-log.md) as D21, with D24, D
 - **Roguelike Dungeons** get a predicted lot, and the steering mixin (T4) is built in M08 rather than waiting for the alpha screenshots. It also keeps towers off scattered structures (D31).
 - **Scattered structures** get the T2 denial of dungeons, lakes, lava and oil, as city chunks do (D31).
 - **Witchery, LootGames and RWG2's landmarks** are built around; none needs a mixin.
-- **Thaumcraft** coexists (T3) and is watched at alpha.
+- **Thaumcraft** coexists (T3) and is watched at the screenshot reviews.
 
-## To check in game (alpha)
+## To check in game (beta review)
+
+Left for the beta review ([decision log](../../design/decision-log.md), beta spec audit):
 
 - Whether Thaumcraft mounds land in city parks or spill onto streets.
-- How often the monument oracle (D32) moves an oil rig, measured once oil rigs exist (M07).
+- How often the monument oracle (D32) moves an oil rig, measured over many seeds: oil rigs generate since M07, and the rate is not yet measured.
 - The landmark checks in [0006 § Still open](../../design/0006-build-around-other-worldgen.md#still-open): how edges, lanes, empty lots and crater basins look. The Roguelike prediction rate (60 % on classic RWG, 68 % on RWG2 Continents, [coexistence.md](coexistence.md#roguelike-dungeons)) and the village rate ([coexistence.md](coexistence.md#predictability)) are measured.
 
 [pack-contribution-policy]: ../../../.claude/skills/pack-contribution-policy/SKILL.md

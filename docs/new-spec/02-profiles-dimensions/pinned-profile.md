@@ -27,7 +27,7 @@ Status: *Accepted* where [0005](../../design/0005-rwg-overlay.md) §7, [0006](..
 | World type name | The oracle the world was pinned for | [0005](../../design/0005-rwg-overlay.md) §7 |
 | Other mods' config values each structure oracle reads (VillageNames, Roguelike Dungeons, Witchery, LootGames, AE2, RWG2) | Structure sites move when they change; the server logs it | [0006](../../design/0006-build-around-other-worldgen.md) §2 |
 | The decorative metal flags | They change palettes, so they belong to the world | D29 |
-| The other mod-config keys that change generated blocks: the worldgen module flags, `heightSampleSize` (upstream's `forceSaplingGrowth` is dropped: saplings are never grown at generation, P03-10, D31) | Same rule as D29; upstream's per-installation `heightSampleSize` is CORE-10 | [CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules) ("existing worlds stay valid"); bug register |
+| The other mod-config keys that change generated blocks: the worldgen module flags. Upstream's mod-config `heightSampleSize` is a profile option here, pinned with the other values; upstream's `forceSaplingGrowth` is dropped (saplings are never grown at generation, P03-10, D31) | Same rule as D29; upstream's per-installation `heightSampleSize` is CORE-10 | [CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules) ("existing worlds stay valid"); D73; bug register |
 
 Assets themselves are not copied into the snapshot: only their hash. A world created with one asset set and loaded with another generates new chunks with the new set; the hash makes that visible.
 

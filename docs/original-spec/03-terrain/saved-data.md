@@ -73,4 +73,4 @@ The street and highway modes each dimension's `DefaultDimensionInfo` uses for it
 
 ## Deviations in the new mod
 
-None recorded yet. A new mod has no legacy worlds, so whether `LEGACY` modes are ported at all is a new-spec question.
+See [new-spec 03-terrain § Saved data](../../new-spec/03-terrain/index.md#saved-data-saved-datamd): the `LEGACY` modes are not ported (decision log D11), and a pinned profile snapshot takes the place of the stored modes.

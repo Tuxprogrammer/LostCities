@@ -111,4 +111,4 @@ Every `Player` gets a `PropertiesDispatcher` exposing `PlayerSpawnSet` (one bool
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Spawn selection](../../new-spec/01-core/index.md#spawn-selection) and [00 · spawn.md](../../new-spec/00-pack-integration/spawn.md).

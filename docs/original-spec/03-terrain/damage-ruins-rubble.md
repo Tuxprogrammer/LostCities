@@ -155,4 +155,4 @@ Unused code: `DamageArea.isCompletelyDestroyed` (a section fully within 2r/3 of 
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Explosions, damage, debris, ruins, rubble](../../new-spec/03-terrain/index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd).

@@ -196,7 +196,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `generateLoot` | `true` |  | live | Fill chests at generation from this mod's tier-band loot categories (Stone to EV); otherwise chests stay empty |
 | `generateLighting` | `false` |  | live | Keep palette torches and add bridge lighting; otherwise torch entries become air (04-city-layout) |
 | `buildingChance` | `0.3` | 0 to 1 | live | Chance a city chunk holds a building rather than a street. City styles may override |
-| `buildingMinFloors` | `0` | 0 to 60 | live | Minimum floors above ground; 0 means the first floor only. The minimum used is `buildingMinFloors + 1` |
+| `buildingMinFloors` | `0` | 0 to 22 | live | Minimum floors above ground; 0 means the first floor only. The minimum used is `buildingMinFloors + 1` |
 | `buildingMaxFloors` | `8` | 0 to 22 | live | Cap on floors above ground; at most 22 so nothing passes Y 255 |
 | `buildingMinFloorsChance` | `4` | 1 to 60 | live | Floors are `minFloors + random(minChance + (cityFactor + 0.1) × (maxChance - minChance)) + 1`, then clamped; the bound is never below 1 |
 | `buildingMaxFloorsChance` | `6` | 1 to 60 | live | See above |
@@ -205,7 +205,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `buildingDoorwayChance` | `0.6` | 0 to 1 | live | Chance of a doorway on each side and floor toward an adjacent city chunk |
 | `buildingFrontChance` | `0.2` | 0 to 1 | live | Chance a building gets a front part toward an adjacent street. City styles may override |
 | `multiUseCorner` | `false` |  | live | Multibuildings take the top-left chunk's city level (true) or the average of their chunks (false) |
-| `useAvgHeightmap` | `false` |  | live | City level from the average of the chunk's height and up to four sampled city neighbors. Only active when the mod config `heightSampleSize` is above 2 |
+| `useAvgHeightmap` | `false` |  | live | City level from the average of the chunk's height and up to four sampled city neighbors. Only active when the profile option `heightSampleSize` is above 2 |
 | `parkChance` | `0.2` | 0 to 1 | live | Chance a non-building chunk is a park. City styles may override |
 | `openLotParkChance` | `0.8` | 0 to 1 | live | Chance a hierarchical open lot gets a park part. City styles may override via `profile_overrides` |
 | `corridorChance` | `0.7` | 0 to 1 | live | Chance a chunk may hold an underground corridor (also needs neighbors). City styles may override |

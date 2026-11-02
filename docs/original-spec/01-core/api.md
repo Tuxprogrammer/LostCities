@@ -93,4 +93,4 @@ All fire on the Forge event bus during generation (server, possibly on world-gen
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § API](../../new-spec/01-core/index.md#api), [0008](../../design/0008-public-api.md) and [docs/api.md](../../api.md).

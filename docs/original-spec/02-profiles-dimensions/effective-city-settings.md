@@ -51,4 +51,4 @@ The record stores the four constraints as nullable integers. The world style has
 
 ## Deviations in the new mod
 
-To be decided in `docs/new-spec/02-profiles-dimensions`. None recorded here.
+See [new-spec 02-profiles-dimensions § Effective city settings](../../new-spec/02-profiles-dimensions/index.md#effective-city-settings).

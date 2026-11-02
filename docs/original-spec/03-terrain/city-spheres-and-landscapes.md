@@ -138,4 +138,4 @@ Glass domes (side blocks below the center, glass above) centered at `GROUNDLEVEL
 
 ## Deviations in the new mod
 
-None recorded yet. [0003](../../design/0003-world-presence.md) targets the overworld on RWG, which corresponds to `DEFAULT`.
+See [new-spec 03-terrain § Landscapes and spheres](../../new-spec/03-terrain/index.md#landscapes-and-spheres-city-spheres-and-landscapesmd): only `DEFAULT` is ported ([0003](../../design/0003-world-presence.md) targets the overworld on RWG); the other landscapes and city spheres are deferred (decision log D12).

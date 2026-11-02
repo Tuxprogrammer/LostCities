@@ -130,4 +130,4 @@ A `ChunkHeightmap` per chunk: `getHeight()` (one Y), and after `calculateAccurat
 
 ## Deviations in the new mod
 
-None recorded yet. The heightmap source for RWG is spike S2's decision.
+See [new-spec 03-terrain § Heights](../../new-spec/03-terrain/index.md#heights-heightmap-samplingmd): heights come from the RWG height oracle ([0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4).
