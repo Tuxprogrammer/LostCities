@@ -51,8 +51,12 @@ public final class OverlayScenarios {
     static final int CITY_CENTER = 2048;
     /** Half-side of the generated square around it, in chunks: the city, its blend and debris reach, and margin. */
     static final int CITY_RADIUS = SyntheticCityPlan.RADIUS + 6;
-    /** Center of the budget scenario's region, in chunks. */
+    /** First candidate center of the budget scenario's region, in chunks; later candidates step along X. */
     static final int BUDGET_CENTER = 1024;
+    /** Candidate city centers the budget scenario tries, one city period apart. */
+    static final int BUDGET_CANDIDATES = 24;
+    /** City chunks the budget region's city must have: most of its 13 × 13 square, not an ocean. */
+    static final int BUDGET_MIN_CITY_CHUNKS = 100;
     /** Half-side of the budget region: 64 × 64 chunks, as 0005 §8 asks (65 × 65 with the center). */
     static final int BUDGET_RADIUS = 32;
     /** Chunks generated before the budget timers start counting (0005 §8: JIT warm-up). */
@@ -390,7 +394,9 @@ public final class OverlayScenarios {
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireOverlay(context);
             requireSynthetic(context, overlay);
-            generator = new RegionGenerator(context.world(), BUDGET_CENTER, BUDGET_CENTER, BUDGET_RADIUS);
+            int center = budgetCenter(context, overlay.plan());
+            LostCities.LOG.info("[LCNH-BUDGET] region centered on the synthetic city at chunk ({}, {})", center, BUDGET_CENTER);
+            generator = new RegionGenerator(context.world(), center, BUDGET_CENTER, BUDGET_RADIUS);
         }
 
         @Override
@@ -432,6 +438,34 @@ public final class OverlayScenarios {
                 "budgets exceeded: " + failed.toString()
                     .trim());
         }
+    }
+
+    /**
+     * Picks the budget region's center: the first synthetic city along Z = {@link #BUDGET_CENTER}, stepping X by the
+     * city period away from the city scenario's region, whose plan holds a mostly dry city. The plan is pure, so the
+     * choice is the same for a seed and costs only oracle samples.
+     */
+    static int budgetCenter(ScenarioContext context, CityPlan plan) {
+        for (int i = 0; i < BUDGET_CANDIDATES; i++) {
+            int center = BUDGET_CENTER + i * SyntheticCityPlan.PERIOD * 2;
+            if (Math.abs(center - CITY_CENTER) <= CITY_RADIUS + BUDGET_RADIUS) {
+                continue;
+            }
+            int cities = 0;
+            for (int dz = -SyntheticCityPlan.RADIUS; dz <= SyntheticCityPlan.RADIUS; dz++) {
+                for (int dx = -SyntheticCityPlan.RADIUS; dx <= SyntheticCityPlan.RADIUS; dx++) {
+                    if (plan.chunk(center + dx, BUDGET_CENTER + dz)
+                        .isCity()) {
+                        cities++;
+                    }
+                }
+            }
+            if (cities >= BUDGET_MIN_CITY_CHUNKS) {
+                return center;
+            }
+        }
+        context.check(false, "expected a dry synthetic city among " + BUDGET_CANDIDATES + " candidates, found none");
+        return BUDGET_CENTER;
     }
 
     /** Returns the SHA-256 of every hash in key order, one per line with its chunk key. */
