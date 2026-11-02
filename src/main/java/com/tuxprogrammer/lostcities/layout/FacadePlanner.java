@@ -42,8 +42,11 @@ final class FacadePlanner {
     static final long FACADE_SALT = 0x46414341_44455321L;
     /** Salt of a unit's priority hash. */
     static final long PRIORITY_SALT = 0x5052494f_52495459L;
-    /** Contrast under which two candidates count as the same tone when judging a unit's freedom. */
-    static final float SAME_TONE = 0.5f;
+    /**
+     * Most contrast any palette choice can move a unit's facade by and still count as fixed: a building whose own palette
+     * sets its main wall moves only by its accents, so it chooses first and its neighbors adapt to it.
+     */
+    static final float SAME_TONE = 12f;
     /** Deepest recursion followed; beyond it a neighbor imposes nothing (never reached in practice). */
     static final int MAX_DEPTH = 256;
 
