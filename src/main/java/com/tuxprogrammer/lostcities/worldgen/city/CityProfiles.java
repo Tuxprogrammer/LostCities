@@ -15,7 +15,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 /**
  * Builds the layout's view of a world's pinned profile ({@link LayoutProfile}): the values the terrain also reads come
  * from the world's {@link TerrainSettings} (ground and sea level, the city level thresholds, the height window, the
- * height sample size, the rise cap, the ruin chances, the ocean correction border and the landmark margin), so both halves of a world
+ * height sample size, the rise cap, the ruin chances, the ocean correction border and the landmark margin), so both
+ * halves of a world
  * read the same clamped numbers; every other layout option comes from the pinned profile's values
  * (docs/new-spec/02-profiles-dimensions/profile-options.md).
  *
