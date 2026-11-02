@@ -25,6 +25,12 @@ public class SmallPartsTest {
     }
 
     @Test
+    public void doesNotReproduceLOOT06_theDispenserTableNeverFillsAChestWithArrowsOnly() {
+        // Upstream offered minecraft:chests/jungle_temple_dispenser to chests; here every non-rail value is city loot.
+        assertEquals(LootRules.CITY, LootRules.category("minecraft:chests/jungle_temple_dispenser"));
+    }
+
+    @Test
     public void mobIdsBecome1710EntityNames() {
         assertEquals("Zombie", LootRules.entityName("minecraft:zombie"));
         assertEquals("Skeleton", LootRules.entityName("minecraft:skeleton"));

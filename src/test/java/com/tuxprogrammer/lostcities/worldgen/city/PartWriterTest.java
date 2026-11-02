@@ -74,6 +74,55 @@ public class PartWriterTest {
     }
 
     @Test
+    public void doesNotReproduceTERR20_aSaplingIsPlacedAndNeverQueuedToGrow() {
+        AssetSet set = TestAssets.loadFiles(
+            "lostcities/palettes/s.json",
+            "{\"palette\": [{\"char\": \"t\", \"block\": \"minecraft:oak_sapling\"}]}",
+            "lostcities/parts/sapling.json",
+            "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"t\"]]}");
+        CompiledPalette palette = CompiledPalette.compile(MetalFlags.ALL_ON, set.palette(AssetId.parse("s")));
+        PartWriter.Placement placement = new PartWriter.Placement(
+            set.part(AssetId.parse("sapling")),
+            palette,
+            Transform.ROTATE_NONE,
+            0,
+            70,
+            0,
+            HardAir.AIR,
+            null);
+        ArrayChunkBuffer buffer = new ArrayChunkBuffer();
+        new PartWriter(
+            new BufferTarget(buffer, null),
+            new PaletteSequence(1, 0, 0),
+            rules(false, false, false),
+            LayoutLog.SILENT).place(placement);
+        assertEquals(
+            "minecraft:sapling",
+            buffer.get(0, 70, 0)
+                .name(),
+            "the sapling stays a sapling");
+        JobTarget jobs = new JobTarget(
+            new JobTarget.Facts(
+                1,
+                0,
+                0,
+                71,
+                71,
+                0,
+                0,
+                com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor.NONE,
+                false,
+                true,
+                0f));
+        new PartWriter(jobs, new PaletteSequence(1, 0, 0), rules(false, false, false), LayoutLog.SILENT)
+            .place(placement);
+        assertTrue(
+            jobs.jobs()
+                .isEmpty(),
+            "no growth job: upstream's deferred growth was dropped or cascaded");
+    }
+
+    @Test
     public void eachKindOfCharacterBecomesWhatUpstreamWrites() {
         ArrayChunkBuffer buffer = filled();
         BufferTarget target = new BufferTarget(buffer, null);
