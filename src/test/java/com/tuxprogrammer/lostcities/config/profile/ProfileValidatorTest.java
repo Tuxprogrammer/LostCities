@@ -46,6 +46,17 @@ public class ProfileValidatorTest {
     }
 
     @Test
+    public void buildingMinFloorsIsClampedToTheSameRangeAsTheMaximum() {
+        ProfileValidator.Result result = validate("buildingMinFloors", "40");
+        assertTrue(result.ok(), result.errors()::toString);
+        assertEquals(
+            "22",
+            result.values()
+                .get("buildingMinFloors"),
+            "0 to 22 on 1.7.10, since upstream lets the minimum win over the maximum (P03-14)");
+    }
+
+    @Test
     public void doesNotReproducePROF06_anInvertedPairRejectsTheProfile() {
         ProfileValidator.Result result = validate("explosionMinRadius", "40", "explosionMaxRadius", "20");
         assertFalse(result.ok());

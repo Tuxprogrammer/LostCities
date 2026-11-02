@@ -109,7 +109,22 @@ public final class RegistryBlockClassifier implements BlockClassifier {
         if (block == Blocks.bedrock) {
             flags |= BEDROCK;
         }
-        if (material == Material.glass) {
+        return flags | propertyFlags(block);
+    }
+
+    /**
+     * Returns the class bits that come from a block's own properties alone, the rules that replace upstream's
+     * data-generated {@code easybreakable} and {@code lights} tags (docs/new-spec/08-loot-mobs-blocks/index.md, "Block
+     * tags"): easily broken for glass material, light for a light value above 0. Every registered block is judged,
+     * pack blocks and 1.7.10's separate lit blocks included, so no shipped list can drift from its rule (avoids
+     * LOOT-07) and no modded or lit light source is left out (avoids LOOT-08).
+     *
+     * @param block the block
+     * @return {@link #EASY_BREAKABLE} and {@link #LIGHT} as they apply, else 0
+     */
+    static int propertyFlags(Block block) {
+        int flags = 0;
+        if (block.getMaterial() == Material.glass) {
             flags |= EASY_BREAKABLE;
         }
         if (block.getLightValue() > 0) {

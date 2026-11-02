@@ -99,6 +99,32 @@ public class PaletteGoldenTest {
     }
 
     /**
+     * ASSET-20: upstream's desert brick palettes and {@code default_desert} left out <code>&#125;</code>, the rubble
+     * character every bundled building names, so ruined desert buildings got no rubble. Every desert palette defines it
+     * on its own, upstream's unused red and orange ones and this mod's three included, and so does every draw of the
+     * desert style.
+     */
+    @Test
+    public void doesNotReproduceASSET20_everyDesertPaletteDefinesRubble() {
+        for (String name : new String[] { "bricks_desert", "bricks_desert_red", "bricks_desert_orange",
+            "default_desert", "bricks_desert_rough", "bricks_desert_bleached", "bricks_desert_taupe" }) {
+            CompiledPalette compiled = CompiledPalette.compile(MetalFlags.ALL_ON, layers(PACK, name));
+            assertTrue(compiled.isDefined('}'), name + " defines rubble");
+        }
+        for (long seed = 0; seed < 50; seed++) {
+            CompiledPalette compiled = CompiledPalette.compile(MetalFlags.ALL_ON, style(PACK, "desert", seed));
+            assertTrue(compiled.isDefined('}'), "the desert style, seed " + seed);
+        }
+        for (String building : new String[] { "building1", "building2", "building3", "building4", "building5" }) {
+            assertEquals(
+                Character.valueOf('}'),
+                PACK.building(AssetId.parse(building))
+                    .rubble(),
+                building + "'s rubble character");
+        }
+    }
+
+    /**
      * AR-16 (alpha review): every palette combination the desert style draws is muted. No wall, trim, band, floor or
      * street block is a saturated red or orange: red, orange, magenta, pink, yellow or lime terracotta, Et Futurum's
      * red sandstone family, or red nether bricks. The walls themselves come from the pale and earthy set.
