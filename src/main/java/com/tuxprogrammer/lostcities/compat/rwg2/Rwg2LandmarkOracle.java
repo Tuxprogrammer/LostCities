@@ -28,7 +28,9 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * it. The landmarks:
  * <ul>
  * <li>{@code volcano@<x>,<z>} and {@code lavacave@<x>,<z>} (the center, block coordinates): a disc of the radius plus
- * the margin plus one block for the center's rounding, as one rectangle per 16-block band of Z. RWG2's own flags can
+ * the margin's diagonal (RWG2's margin is a square of ±8 blocks, so it reaches 8√2, 12 blocks rounded up, from a
+ * protected column) plus one block for the center's rounding, as one rectangle per 16-block band of Z. RWG2's own
+ * flags can
  * be a little smaller than the disc (a neighboring candidate wins near the rim), never larger, so the disc errs toward
  * the landmark. Centers are found by sampling the predicates every {@value #DISC_SPACING} blocks, far closer than the
  * radii, so no volcano or cave near the query is missed.</li>
@@ -96,10 +98,12 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
     /** Landmarks and chain-grid points kept. */
     public static final int LANDMARK_CACHE_SIZE = 512;
 
-    /** A volcano footprint's radius: the vicinity, RWG2's margin and one block for the center's rounding. */
-    static final int VOLCANO_REACH = VOLCANO_RADIUS + RWG2_MARGIN + 1;
+    /** How far RWG2's square margin reaches from a protected column along a diagonal, blocks (8√2 rounded up). */
+    static final int MARGIN_DIAGONAL = (int) Math.ceil(RWG2_MARGIN * Math.sqrt(2D));
+    /** A volcano footprint's radius: the vicinity, the margin's diagonal and one block for the center's rounding. */
+    static final int VOLCANO_REACH = VOLCANO_RADIUS + MARGIN_DIAGONAL + 1;
     /** A lava cave footprint's radius. */
-    static final int LAVA_CAVE_REACH = LAVA_CAVE_OPENING + RWG2_MARGIN + 1;
+    static final int LAVA_CAVE_REACH = LAVA_CAVE_OPENING + MARGIN_DIAGONAL + 1;
     /** How far a junction rectangle reaches beyond its strong samples: the margin and one block for the sampling. */
     static final int JUNCTION_GROWTH = RWG2_MARGIN + REFINE_SPACING / 2;
 
