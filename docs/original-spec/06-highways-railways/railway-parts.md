@@ -13,7 +13,7 @@ What gets written into a chunk with railway: the part per rail type, water varia
 | 7 | **Output** | Railway part blocks, cleared space above surface stations, track rows filled in, staircase parts, rail dungeons and their tunnels. |
 | 8 | **Relationships** | Called from `LostCityTerrainFeature.generate` after the city or normal chunk and before damage; reads [railway-layout.md](railway-layout.md); overwrites highways where they overlap. |
 | 9 | **1.20 dependencies** | `BlockState` identity for water detection and rail states; `Blocks.RAIL`, `Blocks.POWERED_RAIL`; codecs. |
-| 10 | **Bugs** | `HWY-12`, `HWY-13`. |
+| 10 | **Bugs** | `HWY-12`; `HWY-13` was checked and is not a bug. |
 
 ## Numbers
 
@@ -25,7 +25,7 @@ What gets written into a chunk with railway: the part per rail type, water varia
 | Track rows | z = 5, 7, 9 (part-local) | One track: rows 5 and 9 are filled with the rail main block, row 7 stays. Two tracks: row 7 is filled |
 | Track-fill Y | part Y + 1 for station and horizontal types; part Y + 1 to part Y + height − 1 for descending types (only where a rail block is) | |
 | Dungeon tunnel, north side | 4 deep (z 0..3) floor and air, 3 deep (z 0..2) walls and ceiling | |
-| Dungeon tunnel, south side | 5 deep (z 15..11) floor and air, 4 deep (z 15..12) walls and ceiling | Asymmetric, `HWY-13` |
+| Dungeon tunnel, south side | 5 deep (z 15..11) floor and air, 4 deep (z 15..12) walls and ceiling | Asymmetric to meet `rails_horizontal`'s interior (rows z 4..10); `HWY-13`, not a bug |
 | Dungeon tunnel cross-section | floor at x 6..7 (Y + 1), air at Y + 2..3, walls x 5 and x 8 (Y + 2..4), ceiling x 6..7 (Y + 4) | All "rail" blocks are the rail main block |
 | `railwayDungeonChance` | 0.01 per chunk | 0..1 |
 
@@ -127,7 +127,7 @@ Rail parts, cleared air above surface stations, solid rows replacing unused trac
 ## Bugs
 
 - `HWY-12`: a rail main block missing from the palette throws `RuntimeException` during generation.
-- `HWY-13`: the dungeon tunnel is 4 (walls 3) blocks deep on the north side and 5 (walls 4) on the south side.
+- `HWY-13`, not a bug: the dungeon tunnel is 4 (walls 3) blocks deep on the north side and 5 (walls 4) on the south side, because `rails_horizontal`'s open interior spans rows z 4 to 10; each tunnel ends where the interior starts.
 
 ## Deviations in the new mod
 

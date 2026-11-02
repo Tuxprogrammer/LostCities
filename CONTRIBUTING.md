@@ -162,7 +162,7 @@ The mod must feel native to GTNH. These are the coupling rules; [docs/new-spec/]
 
 **Config**
 - Mod-level options use GTNHLib's annotation config. Every option has a comment, a default and a range where relevant, and is documented.
-- World options a server owner tunes are server-side and synced. They can't be changed in a way that breaks a running world (no footguns).
+- World options a server owner tunes are server-side. They are synced only when a client feature reads them, and none does today ([0005](docs/design/0005-rwg-overlay.md) §7). They are never changed in a way that breaks a running world (no footguns).
 
 **Mixins**
 - Only when no event or API exists. Use UniMixins in the GTNH style, through `usesMixins` in `gradle.properties`.

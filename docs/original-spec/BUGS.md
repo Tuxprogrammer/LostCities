@@ -3,7 +3,7 @@
 <!-- Bugs in UPSTREAM Lost Cities 1.20 at f18a094d, listed so this backport does not reproduce them.
      Suspected, not confirmed at runtime; no fixes designed here. Merged from every area index. -->
 
-235 raw findings merge into **204 unique bugs**: 45 crash, 73 worldgen, 24 gameplay, 15 performance, 16 visual, 31 cosmetic.
+234 raw findings merge into **203 unique bugs**: 45 crash, 73 worldgen, 24 gameplay, 15 performance, 16 visual, 30 cosmetic. One further finding was checked and is not a bug; it is listed under [Not bugs](#not-bugs) with the evidence, and its ID stays reserved.
 
 The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also** lists the same bug as reported by other areas. Every area ID stays a valid reference: each area's own table in its `index.md` holds the full description. Areas that report the same bug give it the same severity. Where one row merges several narrower area findings (`ASSET-21` covers `SCAT-17` to `SCAT-19`), the row takes the most severe and each area ID keeps its own. Severity is the worst effect when the code path runs; how reachable that path is (dead code, API only, config only) is stated in the area's row, not folded into the severity. Severity is one of crash, worldgen (wrong or broken world output), gameplay, performance, visual or cosmetic. Locations are on `f18a094d`, as the areas give them: Java paths relative to `src/main/java/mcjty/lostcities/`, resource paths relative to `src/main/resources/` unless they start with `src/`, and bare `palettes/`, `citystyles/` and `stuff/` paths under `data/lostcities/lostcities/`.
 
@@ -230,7 +230,6 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | CITY-31 | ASSET-19 | 04-city-layout, 05-assets | Codec encoders write wrong values | `worldgen/lost/regassets/data/CitySphereSettings.java:14`; `worldgen/lost/regassets/data/ObjectSelector.java:16-18` |
 | CITY-33 | | 04-city-layout | GUI preview characteristics differ from the world | `worldgen/lost/BuildingInfo.java:349-365` |
 | ASSET-22 | | 05-assets | Dead fields and assets | `regassets/data/StreetSettings.java` (`width`, `streetvariant`); `CompiledPalette.isSimple`; `ConditionContext.parseTest(JsonElement)`; `Transform.randomRotation`; `stuff/example.json`; `palettes/glass_side_variant_street.json` |
-| HWY-13 | | 06-highways-railways | Rail dungeon tunnels differ north vs south | `worldgen/gen/Railways.java:156-179` |
 | SCAT-21 | | 07-scattered | Stuff random ignores the world seed | `worldgen/gen/Stuff.java:23` |
 | UI-08 | | 09-client-ui | Damage preview uses a fixed ground and can draw outside the box | `gui/GuiLCConfig.java:425` |
 | UI-09 | | 09-client-ui | Config-button image relies on texture wrapping | `setup/ClientEventHandlers.java:56` |
@@ -240,6 +239,14 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | UI-13 | | 09-client-ui | Boolean fields skip validation | `gui/elements/BooleanElement.java:28` |
 | UI-14 | | 09-client-ui | Rejected numbers stay on screen | `gui/elements/IntElement.java:31` |
 | UI-15 | | 09-client-ui | Refreshing fields writes values back into shared profiles | `gui/elements/IntElement.java:74` |
+
+## Not bugs
+
+Findings filed as suspected and then checked against the code or assets. They need no regression test; the area row says why.
+
+| ID | Area | Title | Location | Why it is not a bug |
+|---|---|---|---|---|
+| HWY-13 | 06-highways-railways | Rail dungeon tunnels differ north vs south | `worldgen/gen/Railways.java:156-179` | `rails_horizontal`'s open interior spans rows z 4 to 10 of 16 (`parts/rails_horizontal.json`), so the 4-deep north tunnel (rows 0 to 3) and the 5-deep south tunnel (rows 15 to 11) each end where the interior starts |
 
 <!-- In this mod: a regression test per reproducible bug, named doesNotReproduce<ID>_<what>,
      and the change's "Inherited bugs avoided" list names the IDs. Ported files list them on their Avoids: line. -->

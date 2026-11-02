@@ -28,5 +28,12 @@ The ID is the first area's ID; **Also** lists the same bug as reported by other 
 | ID | Also | Area(s) | Title | Location |
 |---|---|---|---|---|
 
+## Not bugs
+
+Findings filed as suspected and then checked against the code or assets. They leave the counts above, keep their IDs, and need no regression test; the area row says "not a bug" in its severity column.
+
+| ID | Area | Title | Location | Why it is not a bug |
+|---|---|---|---|---|
+
 <!-- In the new mod: a regression test per reproducible bug, named doesNotReproduce<ID>_<what>,
      and the change's "Inherited bugs avoided" list (pull_request_template.md) names the IDs. -->

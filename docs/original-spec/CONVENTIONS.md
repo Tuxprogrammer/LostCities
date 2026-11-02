@@ -75,4 +75,4 @@ Every `index.md` follows [docs/templates/spec-area-index.md](../templates/spec-a
 | 08-loot-mobs-blocks | `LOOT` |
 | 09-client-ui | `UI` |
 
-Columns: `ID | Title | Location | What looks wrong | Severity` (crash, worldgen, gameplay, performance, visual, cosmetic). Locations are `path/Class.java:line` on `f18a094d`, or the asset path. Suspected, not confirmed; no fixes designed in the spec. Upstream GitHub issues that confirm a bug are linked in its row.
+Columns: `ID | Title | Location | What looks wrong | Severity` (crash, worldgen, gameplay, performance, visual, cosmetic). Locations are `path/Class.java:line` on `f18a094d`, or the asset path. Suspected, not confirmed; no fixes designed in the spec. Upstream GitHub issues that confirm a bug are linked in its row. A finding later checked and found correct keeps its ID and row: its severity becomes "not a bug", its row gives the evidence, and BUGS.md moves it to [Not bugs](BUGS.md#not-bugs), out of the counts.

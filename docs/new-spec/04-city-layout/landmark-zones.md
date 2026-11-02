@@ -2,7 +2,7 @@
 
 How each per-chunk decision of upstream's layout ([04-city-layout](../../original-spec/04-city-layout/index.md)) changes in the zones [0006](../../design/0006-build-around-other-worldgen.md#1-landmarks-and-landmark-lots) §1 puts around other mods' structures. 0006 settles the zones and their rules; this sheet lays them against upstream's decisions one by one, so the layout code has one place to read them.
 
-Status: *Accepted* from 0006 and D26, except the lines marked *Proposed*, which are collected in the area's [Proposed, not decided](index.md#proposed-not-decided).
+Status: *Accepted* from 0006, D26 and D30 (deep railways under a core), except the lines marked *Proposed*, which are collected in the area's [Proposed, not decided](index.md#proposed-not-decided).
 
 ## Zones
 
@@ -32,7 +32,7 @@ Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a c
 | Corridors | None | None (E7), whatever the draws say | Upstream | Upstream |
 | Rail dungeon | None | None (E7) | Upstream | Upstream |
 | Bridges | A core chunk is never a bridge gap chunk | Upstream | Upstream | Upstream |
-| Highways, railways | None (`06-highways-railways`) | A highway may pass as a road passing by; railways as upstream (E7 names only cellars, corridors, subways and rail dungeons) | Upstream | Upstream |
+| Highways, railways | No highway. No railway, except a railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground, which passes under; a surface station is dropped (*Accepted*, D30; [06-highways-railways](../06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)) | A highway may pass as a road passing by; railways as upstream (E7 names only cellars, corridors, subways and rail dungeons) | Upstream | Upstream |
 | Scattered structures | None (`07-scattered`) | None | Upstream | Upstream |
 | City level | n/a | From the height oracle, as everywhere | Upstream | Upstream |
 | Terrain | Untouched, except a village lane's surface path | Sides facing the core get soft-edge strips instead of border walls (`03-terrain`) | Upstream | Upstream |

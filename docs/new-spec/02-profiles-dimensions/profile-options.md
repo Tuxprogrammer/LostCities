@@ -27,12 +27,12 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 | `terrainFixLowerMinOffset`, `terrainFixLowerMaxOffset`, `terrainFixUpperMinOffset`, `terrainFixUpperMaxOffset` | same | Upstream's −4/−3 and −1/+1. | 03 | [0005](../../design/0005-rwg-overlay.md) §5, §6 | |
 | `vineChance`, `randomLeafBlockChance`, `randomLeafBlockThickness`, `avoidFoliage`, `rubbleLayer`, `rubbleDirtScale`, `rubbleLeaveScale`, `ruinChance`, `ruinMinlevelPercent`, `ruinMaxlevelPercent`, `avoidWater` | same | | 03, 04 | | |
 | `landscapeType` | changed | Only `default` is valid. Any other value rejects the profile at load with a message, so the allowed list and the check agree. | 02 | [0005](../../design/0005-rwg-overlay.md) §7, D12 | PROF-15 |
-| `bedrockLayer` | changed | Counted up from Y 0, not −64; RWG already places bedrock at Y 0 to 4. | 03 | [0005](../../design/0005-rwg-overlay.md) §6 | |
+| `bedrockLayer` | changed | Read and writes nothing, with a warning when above 0: RWG already places bedrock at Y 0 to 4, and generation never places unbreakable blocks. The key stays so upstream profiles load. | 03 | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | `groundLevel` | same | 71, range clamped to 2 to 255. | 03, 04 | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | `seaLevel` | changed | −1 resolves to 63 (RWG fills water below 63), not to a generator query. Explosion damage reads this resolved value too. | 03 | [0005](../../design/0005-rwg-overlay.md) §6 | PROF-14 |
 | `chestWithoutLootChance`, `buildingWithoutLootChance`, `generateSpawners`, `generateLoot`, `generateLighting` | same | Loot is pack loot under the EV ceiling, spawners stay vanilla. | 08 | D20 | |
 | `buildingChance`, `buildingMinFloors`, `buildingMinFloorsChance`, `buildingMaxFloorsChance`, `buildingMinCellars`, `buildingMaxCellars`, `buildingDoorwayChance`, `buildingFrontChance`, `multiUseCorner`, `useAvgHeightmap` | same | The floor-chance pair is checked at load so the random bound is never below 1. | 04 | Bug register | PROF-06 |
-| `buildingMaxFloors` | changed | Default 8, allowed range 0 to 22 instead of 0 to 60, so 119 + 22 × 6 plus the roof stays below 255; the layout also clamps per chunk below Y 254. | 04 | [0005](../../design/0005-rwg-overlay.md) §6 | |
+| `buildingMaxFloors` | changed | Default 8, allowed range 0 to 22 instead of 0 to 60. Upstream's per-chunk cap (below Y 248) keeps everything below Y 255: at city level 8 a building gets at most 21 floors ([height-mapping.md](../03-terrain/height-mapping.md#building-envelope)). | 04 | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | `parkChance`, `openLotParkChance`, `corridorChance`, `bridgeChance`, `plannedPrimaryBridgeChance`, `plannedPrimaryBridgeMaxLength`, `fountainChance`, `bridgeSupports`, `parkElevation`, `parkBorder`, `parkStreetThreshold`, `primaryRoadSpacingX`, `primaryRoadSpacingZ`, `primaryRoadOptionalChance`, `primaryRoadForceEvery`, `secondaryRoadMinCountX`, `secondaryRoadMaxCountX`, `secondaryRoadMinCountZ`, `secondaryRoadMaxCountZ`, `minimumRoadSeparation`, `minimumRoadEdgeDistance`, `tertiaryRoadChance`, `tertiaryRoadMinLength`, `tertiaryRoadMaxLength`, `multiBuildingStreetConflict` | same | Upstream's explicit checks stay, with upstream's messages as lang keys. | 04 | | |
 | `streetGenerationMode` | dropped | Only `HIERARCHICAL_GRID_V1` is ported, and it is not persisted. | 04 | D11 | |
 | `railwayDungeonChance`, `railwaysCanEnd`, `railwaysEnabled`, `railwayStationsEnabled`, `railwaySurfaceStationsEnabled`, `railwayLevelOffset`, `railwaySpacingNorthSouth`, `railwaySpacingEastWest` | same | Rail heights within 0 to 255 are `06-highways-railways`' to map. | 06 | | |
@@ -55,7 +55,7 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 | Options | Here | What changes | Owner | Decision | Avoids |
 |---|---|---|---|---|---|
 | `cityChance`, `cityMinRadius`, `cityMaxRadius`, `cityPerlinScale`, `cityPerlinOffset`, `cityPerlinInnerScale`, `cityThreshold`, `oceanCorrectionBorder` | same | City placement and city-center styles mix in the world seed; each chunk takes its city center's style. The radius pair is checked at load. | 04 | D10 | PROF-06, PROF-10, PROF-11 |
-| `citySpawnDistance1`, `citySpawnDistance2`, `citySpawnMultiplier1`, `citySpawnMultiplier2` | same | Upstream's semantics. How the default profile uses them for "a city a short walk from spawn" is *Proposed* ([P-PROF-3](index.md#proposed-not-decided)). | 04 | D21 | |
+| `citySpawnDistance1`, `citySpawnDistance2`, `citySpawnMultiplier1`, `citySpawnMultiplier2` | same | Upstream's semantics: they only scale cities that already exist, so they cannot place one near spawn. A city near spawn comes from a new seeded option, on by default, if M03's measurement shows it is needed (D30). | 04 | D21, D30 | |
 | `cityStyleThreshold` | changed | Accepted range is −1 (off) or 0 to 1, so the default is inside it. | 04 | Bug register | PROF-16 |
 | `cityStyleAlternative` | changed | Must name an existing city style whenever `cityStyleThreshold` is on; checked at load. | 04 | Bug register | PROF-12 |
 | `cityAvoidVoid` | deferred | Acts only in the `floating` landscape. | 03 | D12 | |
@@ -94,9 +94,10 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 | `villageTransitionRings` | `lostcity` | 2 | Rings of lower building density around a village | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
 | `villageLinkDistance` | `lostcity` | 4 chunks | How far outside a city a village still gets a lane | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
 | Vanilla loot categories opt-in (name `08-loot-mobs-blocks`') | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |
+| A city near spawn (name and distance set at M03; added only if M03's measurement shows the nearest city center is too far from spawn) | `lostcity` | on | Guarantees a city center within a set distance of (0, 0), seeded from the world seed | 04 | D30 |
 
 Placing the new options in the `lostcity` category is *Proposed* ([P-PROF-6](index.md#proposed-not-decided)). The mod-config keys that are pinned with the profile (module flags, the decorative metal flags, `heightSampleSize`, `forceSaplingGrowth`) are in [01-core § Mod config](../01-core/index.md#mod-config) and [pinned-profile.md](pinned-profile.md).
 
 ## Count
 
-107 + 12 + 25 + 14 + 5 = 163 upstream options: 134 kept (same or changed), 17 dropped (one of them, `highwayDistanceMask`, *Proposed*), 12 deferred; 8 new options.
+107 + 12 + 25 + 14 + 5 = 163 upstream options: 134 kept (same or changed), 17 dropped (one of them, `highwayDistanceMask`, *Proposed*), 12 deferred; 8 new options, and a ninth, the near-spawn city, if M03 needs it (D30).

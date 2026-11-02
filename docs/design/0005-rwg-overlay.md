@@ -41,7 +41,7 @@ The hook needs no mixin. The footprint rule's write guard (§3a) is the only one
 
 ### 2. Terrain phase
 
-Runs only for chunks the layout marks as city, street, blend (within two chunks of a city) or, later, highway and railway chunks. Every other chunk passes through untouched. A **landmark core** ([0006](0006-build-around-other-worldgen.md) §1), the chunks another mod's structure is predicted to occupy, is none of these: it passes through untouched, apart from a village lane's surface path ([0006](0006-build-around-other-worldgen.md) §3).
+Runs only for chunks the layout marks as city, street, blend (within two chunks of a city), scattered-structure footprint ([07-scattered](../new-spec/07-scattered/index.md#scattered-structures), M07) or, later, highway and railway chunks. Every other chunk passes through untouched. A **landmark core** ([0006](0006-build-around-other-worldgen.md) §1), the chunks another mod's structure is predicted to occupy, is none of these: it passes through untouched, apart from a village lane's surface path ([0006](0006-build-around-other-worldgen.md) §3).
 
 1. Ask the pure-Java layout (`layout`) what the chunk holds. The layout takes heights from the **height oracle** (§4), never from loaded chunks.
 2. Write blocks through the chunk-buffer interface (decision log D6), backed by the chunk's `ExtendedBlockStorage` sections: create missing sections, and set block and metadata through the vanilla setters, which EndlessIDs patches.
@@ -127,14 +127,14 @@ RWG's sea level is 63, the same as the 1.20 overworld's. So upstream's overworld
 | `cityLevel0Height` to `cityLevel7Height` | 75 to 131, step 8 | same | City ground = 71 + 6 × level: 71 to 119 |
 | `cityMinHeight` / `cityMaxHeight` | 50 / 150 | same | 150 keeps cities off RWG2 mountain chains (base 120) and high mountains, as upstream keeps them off peaks |
 | `FLOORHEIGHT` | 6 | 6 | |
-| `buildingMaxFloors` | 8 (allowed 0 to 60) | 8 (allowed 0 to 22) | 119 + 22 × 6 + roof stays below 255. Layout also clamps floors per chunk so nothing passes Y 254 |
-| `bedrockLayer` | 1 at Y −64 | 1 at Y 0 | RWG already places bedrock at Y 0 to 4 |
+| `buildingMaxFloors` | 8 (allowed 0 to 60) | 8 (allowed 0 to 22) | Upstream's per-chunk cap (`cityGround + 6 × floors < maxBuild − 8`, so below Y 248) drops floors one at a time, and it keeps everything below Y 255: at city level 8 (ground Y 119) a building gets at most 21 floors and its roof starts at Y 245; at level 7 and below all 22 fit. Nothing passes Y 254 ([height-mapping.md](../new-spec/03-terrain/height-mapping.md#building-envelope)) |
+| `bedrockLayer` | 1 at Y −64 | read, writes nothing; a warning when above 0 | RWG already places bedrock at Y 0 to 4, and generation never places unbreakable blocks ([0004](0004-gtnh-layer-and-tier-ceiling.md), [block-mapping.md](../new-spec/00-pack-integration/block-mapping.md#blocks-upstreams-code-names)). The key stays in the profile format so upstream profiles load |
 | `terrainFix*Offset`, L1/L2 offsets | −4/−3, −1/+1; 20/25 | same | |
 | `heightSampleSize` | 3 | 3 | Revisited from the prototype's histogram |
 | `seaLevel` override | −1 = world default | −1 → 63 | |
 | Any option range above 255 or below 0 | up to 384 or 2048 | clamped to 0 to 255 at load, with a warning | |
 
-The full per-option list belongs to the `03-terrain` new-spec area, which is written in parallel.
+The full per-option list is in the `03-terrain` new-spec area's [height-mapping.md](../new-spec/03-terrain/height-mapping.md).
 
 ### 7. Profile selection (Q7)
 
@@ -145,10 +145,10 @@ There is no world-preset screen. The profile is server configuration, pinned int
 | Config (GTNHLib, server side, `config/lostcitiesnh.cfg`) | `dimensionProfiles = ["0=default"]` (`<dimension id>=<profile>`); `enableOnExistingWorlds = false` |
 | Profiles | Built-in profiles from the jar. Custom profiles are JSON files in upstream's format in `config/lostcitiesnh/profiles/`. Only profiles whose landscape is an overlay (upstream's `default`-type profiles) are valid on RWG; others are rejected at load with a message |
 | Pinning | When the wrapper is installed on a world that is not initialized (a new world), the profile is resolved and a snapshot is written to the overworld's saved data (`data/lostcitiesnh.dat`): profile name, every resolved value, the asset-set hash, the layout version and the world type. From then on the world uses the snapshot, and config edits do not change it. Classic RWG uses the same pattern for its per-world settings |
-| Existing worlds | No snapshot means no cities, unless `enableOnExistingWorlds = true`. Then the snapshot is taken at that load, and the border between old and new chunks is the owner's concern ([0003](0003-world-presence.md)) |
+| Existing worlds | No snapshot means no cities. The server owner opts a world in per world with the operator command `/lostcities profile pin <profile> confirm` ([commands.md](../new-spec/01-core/commands.md)), which takes the snapshot then. `enableOnExistingWorlds = true` opts in every world without a snapshot at its next load. Either way, the border between old and new chunks is the owner's concern ([0003](0003-world-presence.md)) |
 | World type check | Installed only for world types with an oracle: `RWG2_CONTINENTS`, `RWG2`, `RWG`, `flat`. Others are skipped with a log line |
 | Changing a pinned world | An operator command shows the pinned profile. Re-pinning needs an explicit confirm argument and logs that already-generated chunks will not match |
-| Client | Needs nothing. No client feature depends on the profile (upstream's horizon option needs a world type of its own and is dropped), so there is no sync packet. Single player reads the same config file. A create-world screen button is a later client-UI item, not alpha |
+| Client | The mod is required on both sides, with FML's default version check: command output uses lang keys the client resolves, and the pack installs every mod on both sides. No client feature depends on the profile (upstream's horizon option needs a world type of its own and is dropped), so there is no sync packet. Single player reads the same config file. A create-world screen button is a later client-UI item, not alpha |
 | Tuning | Owners copy a built-in profile to the profiles folder, edit it, and name it in `dimensionProfiles` before creating the world |
 
 ### 8. Time budget and how it is measured (Q10)
