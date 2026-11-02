@@ -41,6 +41,11 @@ public final class ViewSubcommand implements Subcommand {
         float yaw = (float) CommandBase.parseDoubleBounded(sender, args[4], -360, 360);
         float pitch = (float) CommandBase.parseDoubleBounded(sender, args[5], -90, 90);
         player.mountEntity(null);
+        if (player.capabilities.allowFlying) {
+            // A creative player hovers at the viewpoint instead of falling onto whatever is below it.
+            player.capabilities.isFlying = true;
+            player.sendPlayerAbilities();
+        }
         player.playerNetServerHandler.setPlayerLocation(x, y, z, yaw, pitch);
         sender.addChatMessage(
             new ChatComponentTranslation(LangKeys.VIEW_DONE, player.getCommandSenderName(), (int) x, (int) y, (int) z));
