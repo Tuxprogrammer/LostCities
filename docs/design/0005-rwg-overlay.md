@@ -37,7 +37,7 @@ The overlay is a class in `worldgen` that implements `IChunkProvider` and wraps 
 
 `provideChunk(x, z)` calls the delegate, then runs the **terrain phase** on the returned chunk. `populate(provider, x, z)` calls the delegate, then runs the **population phase**. Forge then runs the `IWorldGenerator`s, with GT's ore veins last. The overlay therefore sees all of RWG's terrain before writing, and all of RWG's decoration before populating, in the same order upstream 1.20 has over vanilla.
 
-The hook needs no mixin. The footprint rule's write guard (§3a) is the only one the overlay plans; the compat mixins of [0006](0006-build-around-other-worldgen.md) act on other mods' generators. A second fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
+The hook needs no mixin. The footprint rule's write guard (§3a) and the sky light deferral (§2 step 5) are the only ones the overlay has; the compat mixins of [0006](0006-build-around-other-worldgen.md) act on other mods' generators. A second fallback, if the prototype finds a chunk generated before installation, is one `@Inject` at the return of `WorldServer.createChunkProvider`, with a comment saying why no event works.
 
 ### 2. Terrain phase
 
@@ -47,7 +47,7 @@ Runs only for chunks the layout marks as city, street, blend (within two chunks 
 2. Write blocks through the chunk-buffer interface (decision log D6), backed by the chunk's `ExtendedBlockStorage` sections: create missing sections, and set block and metadata through the vanilla setters, which EndlessIDs patches.
 3. City chunks: upstream's city chunk generation, including damage and debris.
 4. Blend chunks: upstream's edge blending (§5).
-5. Recompute the height map and sky light (`generateSkylightMap`).
+5. Recompute the height map and sky light (`generateSkylightMap`). The provider defers RWG's own pass on the chunk it is generating (a head-cancel mixin on `Chunk.generateSkylightMap`, for that one chunk only) and lights every chunk once after this phase, written or not (decision log D-M05J-24).
 
 Rules:
 

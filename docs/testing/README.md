@@ -118,6 +118,8 @@ tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --lev
 
 Repeat with `--level-type RWG`, and once more per world type with only `city.real` to compare the `[LCNH-HASH]` lines of two fresh worlds.
 
+The `[LCNH-BUDGET]` lines give the `provide`, `terrain`, `populate` and `population` series by chunk class, then `oracle` (the layout's height samples) and `structures` (every structure-oracle call, ground estimates included), then B1 to B5. A chunk's one sky light pass counts as RWG's `provide` when the overlay deferred RWG's own pass, and as the terrain phase's otherwise (D-M05J-24).
+
 ### Overlay runs on the real pack
 
 The overlay scenarios run on the real GTNH 2.9.0 server with the release jar, on both world types, with ArchaicFix's cascade warning switched on for the run (D33, D82):

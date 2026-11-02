@@ -54,7 +54,7 @@ Upstream's stages are numbered as in [generation-pipeline.md](../../original-spe
 | 9 | Reseed to a world-independent seed | Terrain phase | The seed now includes the world seed (TERR-27) |
 | 10 | `PreExplosionEvent`, explosion damage, debris | Terrain phase | Pure and confined to C; followed by the floating-fragment pass ported from 1.12 (TERR-28) |
 | 11 | Early commit for second parts | None | Writes are direct, so there is nothing to commit |
-| 12 | Commit and heightmap raise | Terrain phase, last step | Recompute the height map and sky light (`generateSkylightMap`) for C (TERR-13) |
+| 12 | Commit and heightmap raise | Terrain phase, last step | Recompute the height map and sky light (`generateSkylightMap`) for C once, RWG's own pass on C deferred to here (TERR-13, D-M05J-24) |
 | 13a | `ChunkFixer`: vines | Terrain phase | Vines in C's own columns, against neighbors' walls as the plan describes them (TERR-11) |
 | 13b | `ChunkFixer`: post-todo jobs (loot, light refresh, saplings, command blocks; POI swap) | Population phase | POI swap dropped (no POI in 1.7.10); light refresh dropped, since ArchaicFix's Phosphor lights every source (P03-8); saplings placed, never grown (P03-10) |
 | 13c | `ChunkFixer`: border vine cleanup | Dropped | TERR-26 |
