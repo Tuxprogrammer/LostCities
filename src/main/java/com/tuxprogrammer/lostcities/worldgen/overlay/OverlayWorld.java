@@ -213,6 +213,11 @@ public final class OverlayWorld {
         }
     }
 
+    /** Returns whether the last terrain phase wrote to its chunk, whose height map and sky light are then stale. */
+    boolean terrainNeedsLight() {
+        return buffer.needsLight();
+    }
+
     /**
      * Records a chunk for the determinism scenario after its terrain phase, outside the timed span.
      *
