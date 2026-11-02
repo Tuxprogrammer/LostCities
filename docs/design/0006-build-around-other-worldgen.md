@@ -170,4 +170,3 @@ For the prototype and the alpha screenshots:
 
 - The look of margins, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers (the alpha review round's shots, M05R, show the margins and lanes).
 - Thaumcraft mounds in city parks.
-- The oracles' cost against the budget is measured (`oracle.cost`, `city.budget` with every oracle wired, M08); the Roguelike prediction hits 60 % on classic RWG and 68 % on RWG2 Continents at seed 4242, and the steering mixin keeps every miss out of the city (D-M08-10, D-M08-11).
