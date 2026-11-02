@@ -236,6 +236,7 @@ public final class LayoutCityPlan implements CityPlan {
             }
         }
         if (!plan.hasBuilding()) {
+            builder.keepClear(CityChunkWriter.doorApproaches(planner, chunkX, chunkZ));
             for (com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side side : com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side
                 .values()) {
                 builder.borderOpenings(side, borderOpenings(chunkX, chunkZ, side));

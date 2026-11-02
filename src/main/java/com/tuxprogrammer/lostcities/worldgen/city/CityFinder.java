@@ -244,6 +244,20 @@ public final class CityFinder {
      * @return the nearest find, or {@code null} when there is none within the radius
      */
     public Result find(Kind kind, int blockX, int blockZ, int radius) {
+        return find(kind, blockX, blockZ, radius, result -> true);
+    }
+
+    /**
+     * Finds the nearest thing of a kind that a filter accepts.
+     *
+     * @param kind   what to find
+     * @param blockX the start's block X
+     * @param blockZ the start's block Z
+     * @param radius how far to look, in chunks
+     * @param accept which finds count
+     * @return the nearest accepted find, or {@code null}
+     */
+    public Result find(Kind kind, int blockX, int blockZ, int radius, java.util.function.Predicate<Result> accept) {
         int startX = blockX >> 4;
         int startZ = blockZ >> 4;
         Result best = null;
@@ -259,7 +273,7 @@ public final class CityFinder {
                         continue;
                     }
                     Result found = at(kind, startX + dx, startZ + dz);
-                    if (found == null) {
+                    if (found == null || !accept.test(found)) {
                         continue;
                     }
                     long ddx = found.x - blockX;

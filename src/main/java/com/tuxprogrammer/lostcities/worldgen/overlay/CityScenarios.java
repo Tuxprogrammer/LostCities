@@ -47,6 +47,8 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
  */
 public final class CityScenarios {
 
+    /** Half-side of the spawn area a dedicated server generates and keeps loaded at start, in chunks. */
+    static final int SPAWN_AREA = 13;
     /** Chunks searched around the spawn for the nearest city center. */
     static final int CENTER_SEARCH = 96;
     /** Chunks searched around a point for the nearest city chunk. */
@@ -60,6 +62,8 @@ public final class CityScenarios {
 
     /** Least share of a floor's inner columns that must be solid for the floor to count as a floor. */
     static final double FLOOR_SOLID_SHARE = 0.5;
+    /** How far inside the chunk's edge an outer wall may stand, in columns. */
+    static final int WALL_INSET = 3;
     /** Least share of a floor's outer wall blocks, doorways aside, that must be closed. */
     static final double WALL_CLOSED_SHARE = 0.9;
     /** Least share of checked items that must pass, per check. */
@@ -98,13 +102,32 @@ public final class CityScenarios {
 
     /** The city center nearest the world's spawn. */
     static CityFinder.Result centerNearSpawn(ScenarioContext context, OverlayWorld overlay) {
+        return center(context, overlay, 0);
+    }
+
+    /**
+     * The city center nearest the world's spawn whose region lies wholly outside the spawn area the server generates
+     * at start, so a fresh world generates it during the scenario and the recorder sees every chunk.
+     */
+    static CityFinder.Result freshCenter(ScenarioContext context, OverlayWorld overlay) {
+        return center(context, overlay, SPAWN_AREA + REGION_RADIUS + 1);
+    }
+
+    private static CityFinder.Result center(ScenarioContext context, OverlayWorld overlay, int minChunks) {
         ChunkCoordinates spawn = context.world()
             .getSpawnPoint();
         CityFinder finder = new CityFinder(
             overlay.cities()
                 .planner(),
             overlay.plan());
-        CityFinder.Result center = finder.find(CityFinder.Kind.CENTER, spawn.posX, spawn.posZ, CENTER_SEARCH);
+        int spawnX = spawn.posX >> 4;
+        int spawnZ = spawn.posZ >> 4;
+        CityFinder.Result center = finder.find(
+            CityFinder.Kind.CENTER,
+            spawn.posX,
+            spawn.posZ,
+            CENTER_SEARCH,
+            found -> Math.max(Math.abs(found.chunkX() - spawnX), Math.abs(found.chunkZ() - spawnZ)) >= minChunks);
         context.check(center != null, "expected a city center within " + CENTER_SEARCH + " chunks of the spawn");
         return center;
     }
@@ -158,7 +181,7 @@ public final class CityScenarios {
         @Override
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireCities(context);
-            center = centerNearSpawn(context, overlay);
+            center = freshCenter(context, overlay);
             int inner = REGION_RADIUS - 2;
             overlay.recorder()
                 .record(
@@ -186,20 +209,23 @@ public final class CityScenarios {
             ChunkCoordinates spawn = world.getSpawnPoint();
             double fromSpawn = nearestCityChunk(planner, spawn.posX, spawn.posZ);
             double fromOrigin = nearestCityChunk(planner, 0, 0);
+            CityFinder.Result nearest = centerNearSpawn(context, overlay);
             LostCities.LOG.info(
                 String.format(
                     Locale.ROOT,
                     "[LCNH-CITY] spawn=%d,%d,%d nearestCityChunkFromSpawn=%.0f nearestCityChunkFromOrigin=%.0f"
-                        + " center=%d,%d (%s, %.0f blocks from spawn)",
+                        + " nearestCenter=%d,%d (%.0f blocks from spawn) hashedCenter=%d,%d (%s)",
                     spawn.posX,
                     spawn.posY,
                     spawn.posZ,
                     fromSpawn,
                     fromOrigin,
+                    nearest.x(),
+                    nearest.z(),
+                    Math.hypot(nearest.x() - spawn.posX, nearest.z() - spawn.posZ),
                     center.x(),
                     center.z(),
-                    center.label(),
-                    Math.hypot(center.x() - spawn.posX, center.z() - spawn.posZ)));
+                    center.label()));
             int inner = REGION_RADIUS - 2;
             int expected = (2 * inner + 1) * (2 * inner + 1);
             context.check(
@@ -323,11 +349,13 @@ public final class CityScenarios {
         }
     }
 
-    /** Walks the spawn city's buildings: floors, walls, stairs and doors. */
+    /** Walks the buildings of the spawn's city and of the next fresh city: floors, walls, stairs and doors. */
     static final class Walk implements Scenario {
 
         private RegionGenerator generator;
+        private RegionGenerator second;
         private CityFinder.Result center;
+        private CityFinder.Result fresh;
         private boolean done;
 
         @Override
@@ -349,12 +377,14 @@ public final class CityScenarios {
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireCities(context);
             center = centerNearSpawn(context, overlay);
+            fresh = freshCenter(context, overlay);
             generator = new RegionGenerator(context.world(), center.chunkX(), center.chunkZ(), REGION_RADIUS);
+            second = new RegionGenerator(context.world(), fresh.chunkX(), fresh.chunkZ(), REGION_RADIUS);
         }
 
         @Override
         public void tick(ScenarioContext context) {
-            done = generator.tick();
+            done = generator.tick() && second.tick();
         }
 
         @Override
@@ -363,9 +393,11 @@ public final class CityScenarios {
             OverlayWorld overlay = requireCities(context);
             Walkability walk = new Walkability(context.world(), overlay);
             int inner = generator.innerRadius() - 1;
-            for (int cz = center.chunkZ() - inner; cz <= center.chunkZ() + inner; cz++) {
-                for (int cx = center.chunkX() - inner; cx <= center.chunkX() + inner; cx++) {
-                    walk.building(cx, cz);
+            for (CityFinder.Result city : new CityFinder.Result[] { center, fresh }) {
+                for (int cz = city.chunkZ() - inner; cz <= city.chunkZ() + inner; cz++) {
+                    for (int cx = city.chunkX() - inner; cx <= city.chunkX() + inner; cx++) {
+                        walk.building(cx, cz);
+                    }
                 }
             }
             for (String line : walk.report()) {
@@ -499,8 +531,13 @@ public final class CityScenarios {
                     int z = (chunkZ << 4) + (side == Direction.ZMIN ? 0 : side == Direction.ZMAX ? 15 : along);
                     for (int dy = 1; dy <= 3; dy++) {
                         counted++;
-                        if (!world.isAirBlock(x, y + dy, z)) {
-                            closed++;
+                        // A wall may stand a little inside the chunk's edge (balconies, notched corners): the
+                        // position is closed when a block stands within WALL_INSET columns inward.
+                        for (int in = 0; in < WALL_INSET; in++) {
+                            if (!world.isAirBlock(x - side.stepX() * in, y + dy, z - side.stepZ() * in)) {
+                                closed++;
+                                break;
+                            }
                         }
                     }
                 }
@@ -538,9 +575,12 @@ public final class CityScenarios {
                     int oz = z + side.stepZ();
                     boolean door = world.getBlock(x, y + 1, z) instanceof BlockDoor;
                     boolean open = passable(ox, y + 1, oz) && passable(ox, y + 2, oz);
+                    String blocker = open ? ""
+                        : ":blocked by " + Block.blockRegistry
+                            .getNameForObject(world.getBlock(ox, passable(ox, y + 1, oz) ? y + 2 : y + 1, oz));
                     doors.add(
                         door && open,
-                        plan.building() + "@" + x + "," + (y + 1) + "," + z + (door ? "" : ":nodoor") + (open ? "" : ":blocked"));
+                        plan.building() + "@" + x + "," + (y + 1) + "," + z + (door ? "" : ":nodoor") + blocker);
                 }
             }
         }

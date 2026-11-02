@@ -62,6 +62,7 @@ public final class ChunkPlan {
     private final Supplier<List<PopulationJob>> jobSource;
     private List<PopulationJob> jobs;
     private final int[] borderOpenings;
+    private final long[] keepClear;
     private final String label;
 
     private ChunkPlan(Builder b) {
@@ -85,6 +86,7 @@ public final class ChunkPlan {
         this.jobSource = b.jobSource;
         this.jobs = b.jobSource == null ? fixedJobs : null;
         this.borderOpenings = b.borderOpenings.clone();
+        this.keepClear = b.keepClear;
         this.label = b.label;
     }
 
@@ -264,6 +266,22 @@ public final class ChunkPlan {
     }
 
     /**
+     * Returns whether a column is a door's approach, which the terrain phase's rubble layer leaves clear so a
+     * building's street door can be walked through (decision log, M05J rows).
+     *
+     * @param x local X, 0 to 15
+     * @param z local Z, 0 to 15
+     * @return whether the column stays clear
+     */
+    public boolean keepsClear(int x, int z) {
+        if (keepClear == null) {
+            return false;
+        }
+        int index = (z << 4) | x;
+        return (keepClear[index >> 6] & (1L << (index & 63))) != 0;
+    }
+
+    /**
      * Returns a short description of what stands here, for the finder and logs: the building's or street's asset name,
      * or the empty string.
      */
@@ -319,6 +337,7 @@ public final class ChunkPlan {
         private final List<PopulationJob> jobs = new ArrayList<>();
         private Supplier<List<PopulationJob>> jobSource;
         private final int[] borderOpenings = new int[4];
+        private long[] keepClear;
         private String label = "";
 
         private Builder(int chunkX, int chunkZ, ChunkKind kind) {
@@ -442,6 +461,29 @@ public final class ChunkPlan {
          */
         public Builder jobSource(Supplier<List<PopulationJob>> source) {
             this.jobSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /**
+         * Marks the columns of door approaches, which the rubble layer leaves clear.
+         *
+         * @param columns 256 flags, index {@code z × 16 + x}; {@code null} for none
+         * @return this
+         */
+        public Builder keepClear(boolean[] columns) {
+            if (columns == null) {
+                this.keepClear = null;
+                return this;
+            }
+            long[] bits = new long[4];
+            boolean any = false;
+            for (int i = 0; i < 256; i++) {
+                if (columns[i]) {
+                    bits[i >> 6] |= 1L << (i & 63);
+                    any = true;
+                }
+            }
+            this.keepClear = any ? bits : null;
             return this;
         }
 

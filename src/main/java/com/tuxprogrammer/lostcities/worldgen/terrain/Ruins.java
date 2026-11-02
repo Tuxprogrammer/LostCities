@@ -198,7 +198,7 @@ public final class Ruins {
         int placed = 0;
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
-                if (skip != null && skip[(z << 4) | x]) {
+                if (skip != null && skip[(z << 4) | x] || plan.keepsClear(x, z)) {
                     continue;
                 }
                 double vr = dirtScale < SCALE_OFF ? 0 : rubbleBuffer[x + z * 16] / dirtScale;

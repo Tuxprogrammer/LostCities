@@ -52,6 +52,12 @@ public final class CompiledPalette {
     private final Map<Character, BlockChoice[]> blocks;
     private final Map<Character, BlockChoice> damaged;
     private final Map<Character, PaletteEntry> info;
+    /** The slots of the ASCII characters by code, for the writer's per-block lookups; the maps hold the rest. */
+    private final BlockChoice[][] asciiSlots = new BlockChoice[ASCII][];
+    private final PaletteEntry[] asciiInfo = new PaletteEntry[ASCII];
+
+    /** Characters below this code are looked up in arrays: every character the bundled parts use. */
+    private static final int ASCII = 128;
 
     private CompiledPalette(List<Palette> layers, MetalFlags flags, Map<Character, BlockChoice[]> blocks,
         Map<Character, BlockChoice> damaged, Map<Character, PaletteEntry> info) {
@@ -60,6 +66,26 @@ public final class CompiledPalette {
         this.blocks = blocks;
         this.damaged = damaged;
         this.info = info;
+        for (Map.Entry<Character, BlockChoice[]> entry : blocks.entrySet()) {
+            if (entry.getKey() < ASCII) {
+                asciiSlots[entry.getKey()] = entry.getValue();
+            }
+        }
+        for (Map.Entry<Character, PaletteEntry> entry : info.entrySet()) {
+            if (entry.getKey() < ASCII) {
+                asciiInfo[entry.getKey()] = entry.getValue();
+            }
+        }
+    }
+
+    /** Returns a character's slots: an array read for ASCII, a map lookup otherwise. */
+    private BlockChoice[] slotsOf(char c) {
+        return c < ASCII ? asciiSlots[c] : blocks.get(c);
+    }
+
+    /** Returns a character's information entry: an array read for ASCII, a map lookup otherwise. */
+    private PaletteEntry infoOf(char c) {
+        return c < ASCII ? asciiInfo[c] : info.get(c);
     }
 
     /**
@@ -141,12 +167,12 @@ public final class CompiledPalette {
 
     /** Returns whether a character has a block. */
     public boolean isDefined(char c) {
-        return blocks.containsKey(c);
+        return slotsOf(c) != null;
     }
 
     /** Returns whether a character is a random list, which draws a slot per block placed. */
     public boolean isRandom(char c) {
-        BlockChoice[] slots = blocks.get(c);
+        BlockChoice[] slots = slotsOf(c);
         return slots != null && slots.length > 1;
     }
 
@@ -171,7 +197,7 @@ public final class CompiledPalette {
      * @return the block, or null when the character is undefined
      */
     public BlockRef get(char c, int slot) {
-        BlockChoice[] slots = blocks.get(c);
+        BlockChoice[] slots = slotsOf(c);
         if (slots == null) {
             return null;
         }
@@ -187,7 +213,7 @@ public final class CompiledPalette {
      * @return the choice, or null when the character is undefined
      */
     public BlockChoice choice(char c, Random random) {
-        BlockChoice[] slots = blocks.get(c);
+        BlockChoice[] slots = slotsOf(c);
         if (slots == null) {
             return null;
         }
@@ -203,7 +229,7 @@ public final class CompiledPalette {
      * @return the choice, or null when the character is undefined
      */
     public BlockChoice choice(char c, int slot) {
-        BlockChoice[] slots = blocks.get(c);
+        BlockChoice[] slots = slotsOf(c);
         if (slots == null) {
             return null;
         }
@@ -217,7 +243,7 @@ public final class CompiledPalette {
      * @return the distinct blocks in slot order; empty when undefined
      */
     public Set<BlockRef> getAll(char c) {
-        BlockChoice[] slots = blocks.get(c);
+        BlockChoice[] slots = slotsOf(c);
         if (slots == null) {
             return Collections.emptySet();
         }
@@ -246,7 +272,7 @@ public final class CompiledPalette {
      * @return the entry of the layer that last defined the character, when it carries information; else null
      */
     public PaletteEntry info(char c) {
-        return info.get(c);
+        return infoOf(c);
     }
 
     /**
@@ -258,7 +284,7 @@ public final class CompiledPalette {
      * @return the template, or null
      */
     public TileTemplate template(char c, BlockChoice choice) {
-        PaletteEntry entry = info.get(c);
+        PaletteEntry entry = infoOf(c);
         if (entry != null && entry.tag() != null) {
             return entry.tag();
         }

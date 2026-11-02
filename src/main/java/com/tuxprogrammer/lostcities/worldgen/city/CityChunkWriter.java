@@ -97,6 +97,7 @@ public final class CityChunkWriter {
     private final CompiledPalette palette;
     private final CityPalettes.ChunkPalette chunkPalette;
     private final CityStyle cityStyle;
+    private final com.tuxprogrammer.lostcities.worldgen.plan.StyleBlocks style;
     private final Random random;
     private final PaletteSequence sequence;
     private final int chunkX;
@@ -127,7 +128,8 @@ public final class CityChunkWriter {
         this.chunkPalette = context.chunkPalette(plan);
         this.palette = chunkPalette.palette();
         this.cityStyle = assets.cityStyle(CityPalettes.id(plan.cityStyle()));
-        this.writer = new PartWriter(target, sequence, context.rules(plan), context.log());
+        this.style = context.styleBlocks(plan);
+        this.writer = new PartWriter(target, sequence, context.rules(plan, style), context.log());
     }
 
     /** Returns the layout of the chunk being written. */
@@ -468,9 +470,22 @@ public final class CityChunkWriter {
                 .warn("city style " + plan.cityStyle() + " has no " + slot + " street parts");
             return false;
         }
-        Part part = parts.size() == 1 ? parts.get(0) : parts.get(random.nextInt(parts.size()));
-        writer.place(placement(part, transform, height, HardAir.VOID, null));
+        writer.place(placement(pick(parts, random), transform, height, HardAir.VOID, null));
         return true;
+    }
+
+    /**
+     * Upstream's {@code getRandomPart}: the only part of a one-part list without a draw, else one {@code nextInt}.
+     *
+     * @param parts  the list
+     * @param random the content random
+     * @return the part, or {@code null} for an empty list (avoids ASSET-32), drawing nothing
+     */
+    static Part pick(List<Part> parts, Random random) {
+        if (parts.isEmpty()) {
+            return null;
+        }
+        return parts.size() == 1 ? parts.get(0) : parts.get(random.nextInt(parts.size()));
     }
 
     private List<Part> streetParts(CityStyle.StreetSlot slot) {
@@ -548,6 +563,7 @@ public final class CityChunkWriter {
     private void vegetation(int height) {
         Random vegetation = new Random(
             context.worldSeed() * VEGETATION_WORLD + chunkZ * VEGETATION_Z + chunkX * VEGETATION_X);
+        boolean[] clear = doorApproaches(planner, chunkX, chunkZ);
         int thickness = context.settings()
             .randomLeafBlockThickness();
         float chance = context.settings()
@@ -557,26 +573,14 @@ public final class CityChunkWriter {
                 continue;
             }
             for (int d = 0; d < thickness; d++) {
-                float p = Math.min(MAX_VEGETATION_CHANCE, chance * (thickness + 1 - d));
+                float p = vegetationChance(d, thickness, chance);
                 for (int along = 0; along < 16; along++) {
-                    int x;
-                    int z;
-                    switch (side) {
-                        case XMIN:
-                            x = d;
-                            z = along;
-                            break;
-                        case XMAX:
-                            x = 15 - d;
-                            z = along;
-                            break;
-                        case ZMIN:
-                            x = along;
-                            z = d;
-                            break;
-                        default:
-                            x = along;
-                            z = 15 - d;
+                    int[] column = vegetationColumn(side, d, along);
+                    int x = column[0];
+                    int z = column[1];
+                    if (clear != null && clear[(z << 4) | x]) {
+                        // A door's approach stays clear (decision log, M05J rows).
+                        continue;
                     }
                     int y = height;
                     while (y > WorldLimits.MIN_Y && target.get(x, y - 1, z)
@@ -585,12 +589,92 @@ public final class CityChunkWriter {
                     }
                     int count = 0;
                     while (vegetation.nextFloat() < p && count < MAX_VEGETATION_STACK && y <= WorldLimits.MAX_Y) {
-                        target.set(x, y, z, context.leaf(plan, sequence));
+                        target.set(x, y, z, leaf());
                         y++;
                         count++;
                     }
                 }
             }
+        }
+    }
+
+    /** How deep into a street a door's approach reaches, in blocks from the building's side. */
+    static final int DOOR_APPROACH = 3;
+
+    /**
+     * Returns the columns in front of the street doors of the buildings around a street chunk: the two door columns,
+     * {@value #DOOR_APPROACH} blocks deep, for every neighbor whose floor at this street's level has a door on the side
+     * facing it. Vegetation and the rubble layer leave them clear (deviation, decision log M05J rows: upstream's leaves
+     * and rubble could block a door).
+     *
+     * @param planner the layout planner
+     * @param chunkX  the street chunk's X
+     * @param chunkZ  the street chunk's Z
+     * @return 256 flags, index {@code z × 16 + x}; {@code null} when no door faces the chunk
+     */
+    static boolean[] doorApproaches(LayoutPlanner planner, int chunkX, int chunkZ) {
+        ChunkPlan street = planner.plan(chunkX, chunkZ);
+        if (!street.isCity() || street.hasBuilding()) {
+            return null;
+        }
+        boolean[] columns = null;
+        for (Direction side : Direction.values()) {
+            int nx = chunkX + side.stepX();
+            int nz = chunkZ + side.stepZ();
+            ChunkPlan building = planner.plan(nx, nz);
+            if (!building.hasBuilding()) {
+                continue;
+            }
+            int floor = street.cityLevel() - building.cityLevel();
+            if (floor < 0 || floor >= building.floors()
+                || planner.doorway(nx, nz, floor, side.opposite()) != Doorway.DOOR) {
+                continue;
+            }
+            if (columns == null) {
+                columns = new boolean[256];
+            }
+            for (int d = 0; d < DOOR_APPROACH; d++) {
+                for (int along = 7; along <= 8; along++) {
+                    int[] column = vegetationColumn(side, d, along);
+                    columns[(column[1] << 4) | column[0]] = true;
+                }
+            }
+        }
+        return columns;
+    }
+
+    /**
+     * Returns the chance of leaves on a column {@code d} blocks from a building's side: {@code chance × (T + 1 − d)},
+     * capped at 0.8 on every side (avoids TERR-08).
+     *
+     * @param d         the distance from the side, 0 to {@code thickness − 1}
+     * @param thickness the profile's {@code randomLeafBlockThickness}
+     * @param chance    the profile's {@code randomLeafBlockChance}
+     * @return the chance
+     */
+    static float vegetationChance(int d, int thickness, float chance) {
+        return Math.min(MAX_VEGETATION_CHANCE, chance * (thickness + 1 - d));
+    }
+
+    /**
+     * Returns the column {@code d} blocks in from a side at a position along it, the same rule on every side (avoids
+     * TERR-08: upstream's +X and +Z sides started one column in and never used column 15).
+     *
+     * @param side  the side the building is on
+     * @param d     the distance from that side
+     * @param along the position along the side
+     * @return {x, z}
+     */
+    static int[] vegetationColumn(Direction side, int d, int along) {
+        switch (side) {
+            case XMIN:
+                return new int[] { d, along };
+            case XMAX:
+                return new int[] { 15 - d, along };
+            case ZMIN:
+                return new int[] { along, d };
+            default:
+                return new int[] { along, 15 - d };
         }
     }
 
@@ -646,8 +730,7 @@ public final class CityChunkWriter {
         BlockRef glowstone = blockOrDefault(
             setting(CityStyle.Setting.GLOWSTONE),
             code("glowstone", BlockRef.of("minecraft:glowstone", 0)));
-        BlockRef base = context.styleBlocks(plan)
-            .base();
+        BlockRef base = style.base();
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 if (xRail && z >= 7 && z <= 10 || zRail && x >= 7 && x <= 10) {
@@ -715,6 +798,12 @@ public final class CityChunkWriter {
                 .warn("part " + name + " is not loaded; skipped");
         }
         return part;
+    }
+
+    /** Returns the next leaf of the chunk's leaf table, a palette-sequence slot per leaf (upstream's getRandomLeaf). */
+    private BlockRef leaf() {
+        List<BlockRef> leaves = style.leaves();
+        return leaves.get(sequence.next() % leaves.size());
     }
 
     private ChunkPlan neighbor(int dx, int dz) {

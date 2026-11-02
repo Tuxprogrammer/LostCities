@@ -146,6 +146,17 @@ public final class CityWriteContext {
      * @return the rules
      */
     public PartWriter.Rules rules(ChunkPlan plan) {
+        return rules(plan, styleBlocks(plan));
+    }
+
+    /**
+     * Returns the part-writing rules of a chunk whose style blocks the caller already has.
+     *
+     * @param plan  the chunk's layout plan
+     * @param style the chunk's style blocks
+     * @return the rules
+     */
+    public PartWriter.Rules rules(ChunkPlan plan, StyleBlocks style) {
         return new PartWriter.Rules(
             settings.generateLighting(),
             settings.generateSpawners(),
@@ -154,19 +165,7 @@ public final class CityWriteContext {
                 .avoidFoliage(),
             plan.noLoot(),
             settings.waterLevel(),
-            styleBlocks(plan).liquid());
-    }
-
-    /**
-     * Returns a leaf for a chunk, the next slot of its leaf table.
-     *
-     * @param plan     the chunk's layout plan
-     * @param sequence the chunk's palette sequence
-     * @return the leaf block
-     */
-    public BlockRef leaf(ChunkPlan plan, PaletteSequence sequence) {
-        java.util.List<BlockRef> leaves = styleBlocks(plan).leaves();
-        return leaves.get(sequence.next() % leaves.size());
+            style.liquid());
     }
 
     /** Returns upstream's {@code isEmpty}: air or liquid. */
