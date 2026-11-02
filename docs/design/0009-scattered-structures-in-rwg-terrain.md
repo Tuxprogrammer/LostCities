@@ -1,6 +1,6 @@
 # 0009 · Scattered structures in RWG terrain
 
-- Status: Accepted (decision log D-M07-1 to D-M07-17)
+- Status: Accepted (decision log D177 to D193)
 - Gate: M07 ([ROADMAP](../ROADMAP.md#m07--scattered-structures))
 - Amends: [0005](0005-rwg-overlay.md) §2 (a non-city chunk's terrain phase gains the ground fit) and [0006](0006-build-around-other-worldgen.md) Consequences, M07 (where footprints may stand)
 - Date: 2026-11-02
