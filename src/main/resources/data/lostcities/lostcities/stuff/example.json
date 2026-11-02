@@ -1,0 +1,29 @@
+{
+  "column": ":::h",
+  "maxheight": 120,
+  "mincount": 2,
+  "maxcount": 7,
+  "attempts": 10,
+  "inbuilding": false,
+  "seesky": true,
+  "biomes": {
+    "excluding": [
+      "type:OCEAN",
+      "type:RIVER",
+      "type:BEACH"
+    ]
+  },
+  "blocks": {
+    "if_any": [
+      "ore:stone",
+      "minecraft:andesite"
+    ]
+  },
+  "buildings": {
+    "if_any": [
+      "lostcities:building1",
+      "lostcities:building2",
+      "lostcities:building3"
+    ]
+  }
+}

@@ -13,12 +13,29 @@ import java.util.Objects;
  * by value.
  *
  * <p>
+ * Registry names are kept verbatim, as the block catalog's prerequisites require
+ * (docs/new-spec/05-assets/block-catalog/index.md, "Prerequisites for the asset system", items 2 and 3): {@code tile.}
+ * prefixes, dots, pipes in mod IDs, case, and single spaces inside a name ({@code Natura:Rare Tree}). Metadata may go
+ * above the vanilla nibble, up to {@link #MAX_EXTENDED_META}, for blocks such as GT frame boxes whose metadata is a
+ * material ID; such values exist only where EndlessIDs stores them, and {@link #isExtendedMeta()} lets the writer tell
+ * them apart.
+ *
+ * <p>
  * Side: both.
  */
 public final class BlockRef {
 
-    /** The highest metadata value a 1.7.10 block can store (four bits). */
+    /** The highest metadata value a vanilla 1.7.10 block can store (four bits). */
     public static final int MAX_META = 15;
+
+    /**
+     * The highest metadata value a reference may carry: EndlessIDs widens block metadata to 16 bits, and GT uses
+     * material IDs up to about 1000 as metadata (block catalog prerequisites, item 3).
+     */
+    public static final int MAX_EXTENDED_META = 32767;
+
+    /** The most digits a metadata value is written with. */
+    private static final int MAX_META_DIGITS = 5;
 
     /** Air, the content of an empty chunk buffer. */
     public static final BlockRef AIR = new BlockRef("minecraft:air", 0);
@@ -34,8 +51,9 @@ public final class BlockRef {
     /**
      * Returns the reference to a block.
      *
-     * @param name the registry name, {@code modid:name}: two non-empty parts, no whitespace, exactly one colon
-     * @param meta the metadata, 0 to {@link #MAX_META}
+     * @param name the registry name, {@code modid:name}: two non-empty parts, exactly one colon, no whitespace other
+     *             than single spaces inside a part
+     * @param meta the metadata, 0 to {@link #MAX_EXTENDED_META}
      * @return the reference
      * @throws IllegalArgumentException when the name or the metadata is malformed
      */
@@ -43,8 +61,8 @@ public final class BlockRef {
         if (!isRegistryName(name)) {
             throw new IllegalArgumentException("not a modid:name block name: '" + name + "'");
         }
-        if (meta < 0 || meta > MAX_META) {
-            throw new IllegalArgumentException("metadata " + meta + " of " + name + " not in 0.." + MAX_META);
+        if (meta < 0 || meta > MAX_EXTENDED_META) {
+            throw new IllegalArgumentException("metadata " + meta + " of " + name + " not in 0.." + MAX_EXTENDED_META);
         }
         if (AIR.name.equals(name) && meta == 0) {
             return AIR;
@@ -68,11 +86,32 @@ public final class BlockRef {
         if (first >= 0 && last > first) {
             String metaText = text.substring(last + 1);
             if (!isDecimal(metaText)) {
-                throw new IllegalArgumentException("metadata of '" + text + "' is not 0.." + MAX_META);
+                throw new IllegalArgumentException("metadata of '" + text + "' is not 0.." + MAX_EXTENDED_META);
             }
-            return of(text.substring(0, last), Integer.parseInt(metaText));
+            int meta = Integer.parseInt(metaText);
+            if (meta > MAX_EXTENDED_META) {
+                throw new IllegalArgumentException("metadata of '" + text + "' is not 0.." + MAX_EXTENDED_META);
+            }
+            return of(text.substring(0, last), meta);
         }
         return of(text, 0);
+    }
+
+    /**
+     * Returns whether a text names a block directly with its metadata, {@code modid:name:meta}: at least two colons and
+     * a decimal after the last one. A 1.20 block name never ends in {@code :<digits>}, so the two forms cannot collide
+     * (docs/new-spec/05-assets/asset-format.md, "Telling the two forms apart").
+     *
+     * @param text the text
+     * @return whether it is in the direct form; it may still be malformed in its name part
+     */
+    public static boolean isDirectForm(String text) {
+        if (text == null) {
+            return false;
+        }
+        int last = text.lastIndexOf(':');
+        int first = text.indexOf(':');
+        return first >= 0 && last > first && isDecimal(text.substring(last + 1));
     }
 
     /** Returns the registry name, {@code modid:name}. */
@@ -85,9 +124,24 @@ public final class BlockRef {
         return name.substring(0, name.indexOf(':'));
     }
 
-    /** Returns the metadata, 0 to {@link #MAX_META}. */
+    /** Returns the metadata, 0 to {@link #MAX_EXTENDED_META}. */
     public int meta() {
         return meta;
+    }
+
+    /** Returns whether the metadata is above the vanilla nibble, so only an extended-metadata write can store it. */
+    public boolean isExtendedMeta() {
+        return meta > MAX_META;
+    }
+
+    /**
+     * Returns the same block with other metadata.
+     *
+     * @param newMeta the metadata, 0 to {@link #MAX_EXTENDED_META}
+     * @return the reference
+     */
+    public BlockRef withMeta(int newMeta) {
+        return newMeta == meta ? this : of(name, newMeta);
     }
 
     /** Returns {@code true} for {@link #AIR}. */
@@ -126,8 +180,17 @@ public final class BlockRef {
         if (colon <= 0 || colon == name.length() - 1 || name.indexOf(':', colon + 1) >= 0) {
             return false;
         }
+        if (name.contains("  ")) {
+            return false;
+        }
         for (int i = 0; i < name.length(); i++) {
-            if (Character.isWhitespace(name.charAt(i))) {
+            char c = name.charAt(i);
+            if (c == ' ') {
+                // A space is allowed only inside a part, never at either end of the mod ID or the name.
+                if (i == 0 || i == name.length() - 1 || i == colon - 1 || i == colon + 1) {
+                    return false;
+                }
+            } else if (Character.isWhitespace(c)) {
                 return false;
             }
         }
@@ -135,7 +198,7 @@ public final class BlockRef {
     }
 
     private static boolean isDecimal(String text) {
-        if (text.isEmpty() || text.length() > 2) {
+        if (text.isEmpty() || text.length() > MAX_META_DIGITS) {
             return false;
         }
         for (int i = 0; i < text.length(); i++) {

@@ -67,14 +67,16 @@ public interface CityStyleView {
      * Picks from one of the style's weighted lists, honoring each entry's spawn-distance window.
      *
      * <p>
-     * Contract: exactly one {@code random.nextFloat()} when the list has an entry, none when it is empty; the result
-     * is {@code null} only for an empty list (never for float rounding: CITY-09).
+     * Contract: exactly one {@code random.nextFloat()} when the list has an entry, none when it is empty. The result
+     * is {@code null} for an empty list and for a list whose every entry weighs zero at this chunk (ASSET-10: a
+     * zero-weight entry is never picked), never for float rounding (CITY-09). Callers treat {@code null} as "nothing
+     * picked here", the same as a missing style.
      *
      * @param list   which list
      * @param random the chunk's random
      * @param chunkX the chunk the pick is for (spawn-distance windows), chunk X
      * @param chunkZ chunk Z
-     * @return the picked asset name, or {@code null} when the list is empty
+     * @return the picked asset name, or {@code null} when nothing in the list can be picked here
      */
     String pick(Selection list, Random random, int chunkX, int chunkZ);
 }

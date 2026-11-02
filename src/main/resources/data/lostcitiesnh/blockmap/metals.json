@@ -1,0 +1,39 @@
+{
+  "comment": "Decorative metals (D29): each metal at or below EV with its config flag and the blocks one flag covers in every mod. 'modid:name' covers every metadata, 'modid:name:meta' one. Rows: docs/new-spec/05-assets/block-catalog/index.md, 'Decorative metals (D29)'.",
+  "metals": {
+    "iron": ["minecraft:iron_block", "chisel:iron_block", "chisel:iron2", "TConstruct:decoration.multibrick:4", "TConstruct:decoration.multibrickfancy:4", "IC2:blockMetal:5", "thaumicbases:oldIron:0"],
+    "gold": ["minecraft:gold_block", "chisel:gold_block", "chisel:gold2", "TConstruct:decoration.multibrick:5", "TConstruct:decoration.multibrickfancy:5", "thaumicbases:oldGold:0"],
+    "castIron": ["chisel:castironblock", "gregtech:gt.blockmetal8:2"],
+    "copper": [
+      "etfuturum:copper_block", "etfuturum:chiseled_copper", "etfuturum:copper_grate", "etfuturum:copper_bulb",
+      "etfuturum:cut_copper_slab", "etfuturum:double_cut_copper_slab",
+      "etfuturum:cut_copper_stairs", "etfuturum:exposed_cut_copper_stairs", "etfuturum:weathered_cut_copper_stairs", "etfuturum:oxidized_cut_copper_stairs",
+      "etfuturum:waxed_cut_copper_stairs", "etfuturum:waxed_exposed_cut_copper_stairs", "etfuturum:waxed_weathered_cut_copper_stairs", "etfuturum:waxed_oxidized_cut_copper_stairs",
+      "etfuturum:copper_door", "etfuturum:exposed_copper_door", "etfuturum:weathered_copper_door", "etfuturum:oxidized_copper_door",
+      "etfuturum:waxed_copper_door", "etfuturum:waxed_exposed_copper_door", "etfuturum:waxed_weathered_copper_door", "etfuturum:waxed_oxidized_copper_door",
+      "etfuturum:copper_trapdoor", "etfuturum:exposed_copper_trapdoor", "etfuturum:weathered_copper_trapdoor", "etfuturum:oxidized_copper_trapdoor",
+      "etfuturum:waxed_copper_trapdoor", "etfuturum:waxed_exposed_copper_trapdoor", "etfuturum:waxed_weathered_copper_trapdoor", "etfuturum:waxed_oxidized_copper_trapdoor",
+      "chisel:copperblock", "gregtech:gt.blockmetal2:7", "Railcraft:cube:9", "IC2:blockMetal:0", "GalacticraftCore:tile.gcBlockCore:9", "TConstruct:MetalBlock:3", "ProjRed|Exploration:projectred.exploration.stone:8"
+    ],
+    "tin": ["chisel:tinblock", "gregtech:gt.blockmetal7:7", "Railcraft:cube:10", "IC2:blockMetal:1", "GalacticraftCore:tile.gcBlockCore:10", "TConstruct:MetalBlock:5", "ProjRed|Exploration:projectred.exploration.stone:9"],
+    "bronze": ["chisel:bronzeblock", "gregtech:gt.blockmetal2:0", "IC2:blockMetal:2", "TConstruct:MetalBlock:4"],
+    "lead": ["chisel:leadblock", "gregtech:gt.blockmetal4:2", "Railcraft:cube:11", "IC2:blockMetal:4"],
+    "silver": ["chisel:silverblock", "gregtech:gt.blockmetal6:10", "ProjRed|Exploration:projectred.exploration.stone:10"],
+    "nickel": ["chisel:nickelblock", "gregtech:gt.blockmetal5:4"],
+    "invar": ["chisel:invarblock", "gregtech:gt.blockmetal3:11"],
+    "electrum": ["chisel:electrumblock", "gregtech:gt.blockmetal2:15"],
+    "steel": ["chisel:steelblock", "gregtech:gt.blockmetal6:13", "Railcraft:cube:2", "TConstruct:MetalBlock:9"],
+    "blackSteel": ["gregtech:gt.blockmetal1:12"],
+    "damascusSteel": ["gregtech:gt.blockmetal2:9"],
+    "meteoricIron": ["GalacticraftCore:tile.gcBlockCore:12", "gregtech:gt.blockmetal4:7"],
+    "electricalSteel": ["EnderIO:blockIngotStorage:0"],
+    "darkSteel": ["EnderIO:blockIngotStorage:6"],
+    "aluminum": ["chisel:aluminumblock", "gregtech:gt.blockmetal1:1", "GalacticraftCore:tile.gcBlockCore:11", "TConstruct:MetalBlock:6"],
+    "aluminumBrass": ["TConstruct:MetalBlock:7"],
+    "cobalt": ["chisel:cobaltblock", "gregtech:gt.blockmetal2:5", "TConstruct:MetalBlock:0"],
+    "stainlessSteel": ["chisel:stainlesssteelblock", "gregtech:gt.blockmetal6:12"],
+    "titanium": ["chisel:titaniumblock", "gregtech:gt.blockmetal7:9"],
+    "desh": ["GalacticraftMars:tile.mars:8"],
+    "thaumium": ["chisel:thaumium", "Thaumcraft:blockCosmeticSolid:4"]
+  }
+}

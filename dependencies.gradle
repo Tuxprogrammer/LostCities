@@ -42,11 +42,10 @@ dependencies {
     // GTNHLib: the annotation config, its automatic config screen, and the network channel base classes (M01).
     api("com.github.GTNewHorizons:GTNHLib:0.11.54:dev")
 
-    // The two overworld generators the overlay wraps and asks for heights (docs/design/0005-rwg-overlay.md §4): RWG2
-    // (mod id rwg2: RWG2 Continents and RWG2) and classic RWG (mod id RWG). Optional: used only under compat.rwg2 and
-    // compat.rwg, behind Loader.isModLoaded. Not transitive: their own dependencies (EndlessIDs for RWG2) are not ours.
-    compileOnly("com.github.GTNewHorizons:Realistic-World-Gen-2:2.0.6:dev") { transitive = false }
+    // Optional: the rwg: biome matcher reads the realistic biome of both RWG versions the pack ships
+    // (compat.rwg.RealisticBiomes, docs/new-spec/05-assets/asset-format.md). Compile only, never a dependency.
     compileOnly("com.github.GTNewHorizons:Realistic-World-Gen:alpha-1.5.3:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:Realistic-World-Gen-2:2.0.6:dev") { transitive = false }
 
     // Unit and static-check tests (CONTRIBUTING.md, Testing): JUnit 5, the same BOM as the owner's other GTNH mods.
     testImplementation(platform("org.junit:junit-bom:5.14.1"))

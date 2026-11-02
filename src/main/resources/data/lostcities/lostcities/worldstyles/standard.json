@@ -1,0 +1,129 @@
+{
+  "outsidestyle": "outside",
+  "bridgesupport": "v",
+  "highwaysupport": "v",
+  "settings": {
+    "railwayavoidance": "ignore",
+    "railpartheight6": 1
+  },
+  "multisettings": {
+    "areasize": 10,
+    "minimum": 1,
+    "maximum": 5,
+    "correctstylefactor": 0.8,
+    "attempts": 50
+  },
+  "scattered": {
+    "areasize": 8,
+    "chance": 0.7,
+    "weightnone": 30,
+    "list": [
+      {
+        "name": "radiotower",
+        "weight": 15,
+        "maxheightdiff": 3,
+        "biomes": {
+          "excluding": [
+            "type:OCEAN",
+            "type:RIVER",
+            "type:BEACH",
+            "name:Kelp Forest",
+            "name:Coral Reef"
+          ]
+        }
+      },
+      {
+        "name": "oilrig",
+        "weight": 4,
+        "maxheightdiff": 100,
+        "biomes": {
+          "if_any": [
+            "type:OCEAN"
+          ]
+        }
+      },
+      {
+        "name": "cabin",
+        "weight": 10,
+        "maxheightdiff": 2,
+        "biomes": {
+          "excluding": [
+            "type:OCEAN",
+            "type:RIVER",
+            "type:BEACH",
+            "name:Kelp Forest",
+            "name:Coral Reef"
+          ]
+        }
+      },
+      {
+        "name": "highway_gas_station",
+        "weight": 12,
+        "nearhighway": true,
+        "maxheightdiff": 12,
+        "biomes": {
+          "excluding": [
+            "type:OCEAN",
+            "type:RIVER",
+            "type:BEACH"
+          ]
+        }
+      },
+      {
+        "name": "highway_restaurant",
+        "weight": 9,
+        "nearhighway": true,
+        "maxheightdiff": 12,
+        "biomes": {
+          "excluding": [
+            "type:OCEAN",
+            "type:RIVER",
+            "type:BEACH"
+          ]
+        }
+      }
+    ]
+  },
+  "citybiomemultipliers": [
+    {
+      "multiplier": 0.1,
+      "biomes": {
+        "if_any": [
+          "type:OCEAN",
+          "name:Kelp Forest",
+          "name:Coral Reef"
+        ]
+      }
+    },
+    {
+      "multiplier": 0.3,
+      "biomes": {
+        "if_any": [
+          "type:RIVER"
+        ]
+      }
+    }
+  ],
+  "citystyles": [
+    {
+      "factor": 0.5,
+      "citystyle": "citystyle_standard"
+    },
+    {
+      "factor": 9.0,
+      "biomes": {
+        "if_any": [
+          "type:SANDY",
+          "rwg:canyon",
+          "rwg:canyon_forest",
+          "rwg:oasis",
+          "rwg:red_oasis"
+        ],
+        "excluding": [
+          "type:OCEAN"
+        ]
+      },
+      "citystyle": "citystyle_desert"
+    }
+  ]
+}

@@ -4,6 +4,8 @@ import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
 import com.tuxprogrammer.lostcities.config.LostCitiesConfig;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
+import com.tuxprogrammer.lostcities.core.assets.AssetScenarios;
+import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.core.selfcheck.DevSelfCheck;
 import com.tuxprogrammer.lostcities.network.LostCitiesNetwork;
 import com.tuxprogrammer.lostcities.scenario.BuiltinScenarios;
@@ -13,6 +15,7 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -26,7 +29,8 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
  *
  * <p>
  * Phases follow CONTRIBUTING § Architecture: {@code preInit} loads the config and opens the network channel;
- * {@code init} registers event handlers; {@code postInit} runs the dev self-check. Nothing is registered with a game
+ * {@code init} registers event handlers; {@code postInit} loads the assets and runs the dev self-check. Nothing is
+ * registered with a game
  * registry: the mod adds no blocks, items or entities (docs/new-spec/01-core/index.md), so module flags can never
  * change what a client and server must agree on.
  *
@@ -57,6 +61,7 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         Overlays.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
@@ -64,11 +69,15 @@ public class CommonProxy {
     }
 
     /**
-     * Runs the dev self-check, which throws and so stops the dev server when it fails.
+     * Loads the assets against the complete block registry, then runs the dev self-check, which throws and so stops
+     * the dev server when it fails.
      *
      * @param event FML's post-initialization event
      */
     public void postInit(FMLPostInitializationEvent event) {
+        LoadedAssets.load(
+            Loader.instance()
+                .getConfigDir());
         DevSelfCheck.runIfEnabled();
     }
 

@@ -57,10 +57,48 @@ public class BlockRefTest {
         assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("stone"));
         assertThrows(IllegalArgumentException.class, () -> BlockRef.parse(":stone"));
         assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:"));
-        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:stone:16"));
+        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:stone:32768"));
         assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:stone:x"));
-        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:st one"));
+        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:st\tone"));
+        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft:st  one"));
+        assertThrows(IllegalArgumentException.class, () -> BlockRef.parse("minecraft: stone"));
         assertThrows(IllegalArgumentException.class, () -> BlockRef.of("minecraft:stone", -1));
         assertThrows(IllegalArgumentException.class, () -> BlockRef.parse(null));
+    }
+
+    @Test
+    public void keepsSpacesAndPipesInPackNames() {
+        // Natura and BiblioCraft register names with spaces; ProjectRed's mod ID has a pipe (catalog prerequisites 2).
+        assertEquals(
+            "Natura:Rare Tree",
+            BlockRef.parse("Natura:Rare Tree:2")
+                .name());
+        assertEquals(
+            "ProjRed|Exploration",
+            BlockRef.parse("ProjRed|Exploration:projectred.exploration.stone:4")
+                .modId());
+    }
+
+    @Test
+    public void acceptsExtendedMetadata() {
+        // GT frame boxes use the material ID as metadata (catalog prerequisites 3).
+        BlockRef frame = BlockRef.parse("gregtech:gt.blockframes:305");
+        assertEquals(305, frame.meta());
+        assertTrue(frame.isExtendedMeta());
+        assertTrue(
+            !BlockRef.parse("minecraft:wool:15")
+                .isExtendedMeta());
+        assertEquals(
+            BlockRef.parse("minecraft:wool:3"),
+            BlockRef.parse("minecraft:wool:1")
+                .withMeta(3));
+    }
+
+    @Test
+    public void tellsTheDirectFormFromA120Name() {
+        assertTrue(BlockRef.isDirectForm("minecraft:mossy_cobblestone:0"));
+        assertTrue(!BlockRef.isDirectForm("minecraft:mossy_cobblestone"));
+        assertTrue(!BlockRef.isDirectForm("minecraft:oak_stairs[facing=east]"));
+        assertTrue(!BlockRef.isDirectForm("minecraft:red_sandstone@2"));
     }
 }
