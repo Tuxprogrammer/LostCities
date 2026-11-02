@@ -173,6 +173,21 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] A server and a client with different configs still join. *Real pack: the server with `highways` and `iron` off and `nodamage` mapped to dimension 0, the client with its default config; the client joined and played until the server stopped.*
 - [x] Two fresh worlds of the same seed and a non-default profile hash identically (`city.real`). *`tallbuildings` with `forceSpawnInBuilding`, RWG2 Continents, seed 4242: terrain `c2fbbf50…`, population `7ab26747…` in both.*
 
+## M11 · Full asset catalog
+
+**Lane:** Assets. **Parallel with:** M06, M07, M08, M10, M12.
+
+**Entry gate:** the alpha gate; S4's catalog and variety pools written (met); M02's asset system and M05's conversion of the alpha city's assets (met: all 322 upstream files and this mod's five are bundled and load with no error).
+
+**Scope:** every bundled upstream building, part, palette and style converted and checked in the real pack, with palettes drawing the pack's variety ([0011](design/0011-palette-variety.md)): the catalog's pools turned into option palettes a building draws per role (walls, accents and bands per wall family, glass, quartz, interior floors, ceilings, lights, furniture, bookshelves, fences, planters, park flora), with a switch (`worldgen.paletteVariety`). From the alpha review: richer interiors (AR-3), pack variety in the muted desert (D145, AR-16), pack flora in parks (D146). Upstream's other landscape types (floating islands, space, caverns) are after beta (D12). Palette selection across neighbors (feathering, construction lots, repairs) is M12's.
+
+**Exit gate:**
+- [ ] Every upstream asset file is bundled and loads with no error over vanilla alone and over the full pack (`AssetValidationTest`); every block an asset or a variety option names is catalogued (`PaletteVarietyTest`), and every part generates under every style's palettes and the variety with no undefined character and no unregistered block (`AssetCatalogCheckTest`).
+- [ ] In the real pack on both world types (instance 4, seed 4242): `assets.pack_resolution` finds no fallback, no unresolved pool block and no unavailable variety block; `assets.catalog` passes.
+- [ ] The variety follows its rules, with tests: a seed of its own (the layout's draws unchanged), the wall family kept, the baseline's share, unavailable options back to upstream's look, at most 30 of 100 floors spawn-proof, no speed block, a muted desert; the interior characters land only on floors and ceilings inside buildings.
+- [ ] M05's exit-gate checks hold on both world types with the variety on: two fresh worlds hash identically (`city.real`), B1 to B5 hold, no cascade warning names this mod first, `city.walk` passes.
+- [ ] Both review shot lists rerun with the final jar; interiors, facades, parks and the desert checked against AR-3, AR-16 and D146.
+
 ## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
@@ -184,7 +199,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 | M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin (which also keeps towers out of scattered footprints, D31), and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
-| M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |
+| M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game, with the pack's variety in palettes, interiors and parks ([M11](#m11--full-asset-catalog)) |
 | M12 · City edges and character | Layout, with Assets | From the alpha review (AR-5, AR-6, AR-9, AR-17): building heights that taper organically from the center toward the edge; empty and construction lots near the edges (bare clay ground with no foliage, some dug 1 to 4 blocks for a basement, a variant with concrete pillars); damage partly repaired with a similar but not identical material; neighboring buildings' colors that feather across biome and style changes (a design record first) |
 
 ## Beta gate (MVP)
