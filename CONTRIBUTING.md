@@ -46,7 +46,7 @@ Upstream Lost Cities is MIT ([0001](docs/design/0001-port-policy-and-licensing.m
   // Avoids: CITY-03, CITY-07
   ```
 
-  Omit the `Avoids:` line only when the spec lists no bug in the ported logic.
+  Omit the `Avoids:` line only when the spec lists no bug in the ported logic. Name each bug by its row ID in [BUGS.md](docs/original-spec/BUGS.md) (the first area's ID, not an alias from its **Also** column). Spotless wraps comments at 120 columns, so the link usually ends up alone on the next `//` line, and a long `Avoids:` list continues on following `//` lines; the gate reads both forms.
 - **The notice.** [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) keeps the upstream MIT notice. The `LICENSE` file keeps McJty's copyright line.
 - **Our style, not theirs.**
   - Our package layout, naming, idioms and the Java 8 API.

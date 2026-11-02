@@ -105,7 +105,7 @@ Forced city membership, buildings, streets and spheres at fixed chunks.
 
 ## 10. Bugs
 
-CITY-07, CITY-08.
+CITY-07, CITY-08, CITY-40.
 
 ## Deviations in the new mod
 
