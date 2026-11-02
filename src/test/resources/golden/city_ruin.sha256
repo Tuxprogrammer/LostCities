@@ -1,3 +1,3 @@
 # Golden chunk city_ruin: SHA-256 of the ChunkBufferDigest v1 text.
 # Real city (M05): the first ruined building near the origin of the CityFixtures world, after the terrain phase (ruins, rubble). Change only in a commit that says why. M05R: leveling lowers terrain standing one block above its target (TERR-39), margins, lane steps. M05R merge: the world half's margins and TERR-39 with the assets half's damage defaults and greenery. M07: the stuff step (chains and cobwebs) runs last in every city chunk.
-54e51e962be0c2dc5ca9819dc45c5d006b1f4f3cb8d49bf7df199c63dd0353e6
+4e0bf16d4c3d217d333109e9e19cf2a8472a4b231b6d393ed3f4e4d5f9feed36

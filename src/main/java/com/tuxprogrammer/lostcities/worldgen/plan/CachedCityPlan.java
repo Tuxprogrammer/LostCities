@@ -3,6 +3,8 @@ package com.tuxprogrammer.lostcities.worldgen.plan;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.tuxprogrammer.lostcities.worldgen.damage.Repairs;
+
 /**
  * A bounded cache in front of a {@link CityPlan}: a {@link #WAYS}-way set-associative table of {@link #CAPACITY}
  * plans keyed by chunk coordinates. A miss computes the plan and stores it in its set, over the set's oldest entry
@@ -42,6 +44,11 @@ public final class CachedCityPlan implements CityPlan {
      */
     public CachedCityPlan(CityPlan source) {
         this.source = Objects.requireNonNull(source);
+    }
+
+    @Override
+    public Repairs repairs() {
+        return source.repairs();
     }
 
     @Override

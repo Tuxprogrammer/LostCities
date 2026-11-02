@@ -26,6 +26,7 @@ import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.DoorKind;
 import com.tuxprogrammer.lostcities.layout.Doorway;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.street.Orientation;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
@@ -159,7 +160,8 @@ public final class CityChunkWriter {
             writeBuilding();
         } else {
             writeStreet();
-            if (plan.maxHighwayLevel() < 0 && !surfaceRail() && layout.slope() == null) {
+            if (plan.maxHighwayLevel() < 0 && !surfaceRail() && layout.slope() == null
+                && plan.lot() == LotKind.NONE) {
                 writeStairs();
             }
             clearDoorSteps();
@@ -375,6 +377,11 @@ public final class CityChunkWriter {
             return;
         }
         int height = plan.cityGroundLevel();
+        if (plan.lot() != LotKind.NONE) {
+            // Deviation (AR-6, docs/design/0011-city-edges-and-character.md §3): an edge lot, where nothing grows.
+            new EdgeLots(target, plan, assets, context.worldSeed()).write(height);
+            return;
+        }
         Direction slope = layout.slope();
         // Avoids TERR-07: the plan's street type, never re-rolled.
         StreetType type = plan.streetType();

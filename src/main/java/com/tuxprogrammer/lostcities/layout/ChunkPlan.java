@@ -63,6 +63,10 @@ public final class ChunkPlan {
     final boolean zRailCorridor;
     final String railDungeonPart;
     final String frontPart;
+    final float intensity;
+    final LotKind lot;
+    final int lotDepth;
+    final int lotColumnFloors;
 
     ChunkPlan(Builder b) {
         characteristics = b.characteristics;
@@ -98,6 +102,10 @@ public final class ChunkPlan {
         zRailCorridor = b.zRailCorridor;
         railDungeonPart = b.railDungeonPart;
         frontPart = b.frontPart;
+        intensity = b.intensity;
+        lot = b.lot;
+        lotDepth = b.lotDepth;
+        lotColumnFloors = b.lotColumnFloors;
     }
 
     /** Returns chunk X. */
@@ -433,6 +441,29 @@ public final class ChunkPlan {
         return frontPart;
     }
 
+    /**
+     * Returns the chunk's urban intensity, 0 at a city's very edge to 1 in its core (docs/design/0011, §1); 0 outside
+     * cities.
+     */
+    public float intensity() {
+        return intensity;
+    }
+
+    /** Returns the chunk's edge lot, {@link LotKind#NONE} for every other chunk (0011 §3). */
+    public LotKind lot() {
+        return lot;
+    }
+
+    /** Returns how deep a dug lot is, in blocks below city ground: 1, 2 or 4; 0 for any other chunk. */
+    public int lotDepth() {
+        return lotDepth;
+    }
+
+    /** Returns how many floors a foundation's columns rise above city ground: 1 to 3; 0 for any other chunk. */
+    public int lotColumnFloors() {
+        return lotColumnFloors;
+    }
+
     @Override
     public String toString() {
         return "plan(" + chunkX()
@@ -479,5 +510,9 @@ public final class ChunkPlan {
         boolean zRailCorridor;
         String railDungeonPart;
         String frontPart;
+        float intensity;
+        LotKind lot = LotKind.NONE;
+        int lotDepth;
+        int lotColumnFloors;
     }
 }

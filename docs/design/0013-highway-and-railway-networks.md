@@ -1,4 +1,4 @@
-# 0011 · Highway and railway networks: obstacles, deliberate ends, dips under cores
+# 0013 · Highway and railway networks: obstacles, deliberate ends, dips under cores
 
 - Status: Accepted (M06; decision log D-M06-1 to D-M06-16)
 - Gate: M06
@@ -76,6 +76,7 @@ A hub cell samples up to 64 city potentials, each of which may need a height, so
 
 - **Code.** `layout.highway` (the planner, runs, decks, pieces), `layout.rail` (the grid and the dips) and `layout.Networks` are built by `LayoutPlanner` from `LayoutInputs.networks`. `worldgen.city.NetworkWriter` writes them; `worldgen.overlay.NetworkGate` schedules hubs; `NetworkScenarios` checks them in the world.
 - **Spec.** The new-spec area's rows for highways in cores, route geometry, overlapping routes, planning cost, railways and cores, and the railing openings record this.
+- **M12.** An edge lot never takes a highway or railway chunk: M12 reads the networks through the layout's infrastructure view before it draws a lot, and keeps a lot over a rail corridor or rail dungeon undug, so no highway runs through a pit (`NetworkWriterTest`).
 - **M07.** Scattered footprints keep off highway chunks and the highway planner ignores them, so the order is one-way (D-M06-14). A highway-side building opens the railing of the flat piece it faces (D-M06-15).
 - **Shots.** Both alpha lists add a highway, a ramp, a station and a railway view.
 

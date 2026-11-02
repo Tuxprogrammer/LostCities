@@ -22,6 +22,7 @@ public final class LayoutText {
         "# chunks: . not city   C core   a avoid ring   L link path   G gate   l lane   D detour",
         "#         P/S/T primary/secondary/tertiary road   F plaza   p park   o open lot without a park part",
         "#         B building   M multibuilding   = street without a road (predefined or capped)",
+        "#         x empty lot   X excavation   K foundation (edge lots, 0011)",
         "# zones:  C core   E edge ring   1 2 transition rings   a avoid ring   ^ crater cap   . none",
         "# floors: building floors 1-9, + for 10 or more, 0 for a roof-only building, . no building");
 
@@ -54,6 +55,9 @@ public final class LayoutText {
                 return 'D';
             default:
                 break;
+        }
+        if (plan.lot() != LotKind.NONE) {
+            return plan.lot() == LotKind.BARE ? 'x' : plan.lot() == LotKind.PIT ? 'X' : 'K';
         }
         if (plan.streetType() == StreetType.FULL) {
             return 'F';
@@ -174,6 +178,14 @@ public final class LayoutText {
             .append(Float.floatToIntBits(c.stairPriority()))
             .append(" pal=")
             .append(c.palettes())
+            .append(" urb=")
+            .append(Float.floatToIntBits(c.intensity()))
+            .append(" lot=")
+            .append(c.lot())
+            .append('/')
+            .append(c.lotDepth())
+            .append('/')
+            .append(c.lotColumnFloors())
             .append(" noLoot=")
             .append(c.noLoot())
             .append(" ruin=")

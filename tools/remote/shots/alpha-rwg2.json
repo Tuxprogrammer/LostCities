@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view. M07 adds a cabin and a radio tower and an oil rig; M06 adds the highway, ramp, station and railway shots.",
+  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view. M07 adds a cabin and a radio tower and an oil rig; M06 adds the highway, ramp, station and railway shots; M12 adds the taper, lot, repair and feather views (docs/design/0012, 0011).",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",
@@ -160,6 +160,46 @@
       },
       "wait": 3,
       "caption": "Railway (M06): inside the tunnel of the east-west line nearest the spawn, at the track, looking east along the line."
+    },
+    {
+      "name": "taper",
+      "find": {
+        "cmd": "lostcities find taper 96",
+        "match": "kind=taper block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Tapering (AR-5): the city nearest the spawn from 48 blocks beyond its radius, low over the land; heights rise organically from low buildings and lots at the edge to the high-rise core."
+    },
+    {
+      "name": "lot",
+      "find": {
+        "cmd": "lostcities find lot 96",
+        "match": "kind=lot block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Edge lot (AR-6): the nearest empty or construction lot at a city's edge, bare clay and dirt with nothing growing; excavations are dug 1, 2 or 4 blocks, foundations carry concrete columns."
+    },
+    {
+      "name": "repair",
+      "find": {
+        "cmd": "lostcities find repair 96",
+        "match": "kind=repair block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Partial repair (AR-9): a building an explosion reached whose damage was partly filled back in with a similar but not identical material, its windows boarded."
+    },
+    {
+      "name": "feather",
+      "find": {
+        "cmd": "lostcities find feather 160",
+        "match": "kind=feather block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Color feathering (AR-17): two neighboring buildings of different city styles; their facades stay within the contrast limit, no pale building beside a dark saturated one."
     }
   ]
 }

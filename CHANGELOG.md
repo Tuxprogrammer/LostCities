@@ -41,11 +41,18 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - Commands for asset authors and server owners (milestone M10), operator only: `/lostcities debug` (the layout of the chunk you stand in, in full in the server log), `map` (a 41 × 41-chunk map of cities, highways and landmarks in the log), `locate <building>` (the nearest places a building stands, without generating anything) and `createbuilding <building> <floors> <cellars> <x> <y> <z>`; `timings` is another name for `timers`.
 - The part editor: pin a profile with `editMode` to a new world and generation records which part went where; `/lostcities listparts`, `locatepart`, `editpart`, `resumeedit` and `createpart` let you place a part and change it by hand, and `exportpart <name>` writes it, with the blocks its palette lacks, to `config/lostcitiesnh/export/parts/<name>.json`.
 - An API for other mods ([docs/api.md](docs/api.md)): ask what Lost Cities planned for any chunk (city, building, floors, street, road, highway and railway levels, landmark zone, explosions), add profiles, and listen to four generation events.
+- City edges (milestone M12): empty lots, excavations dug 1, 2 or 4 blocks for a basement, and concrete foundations of high-rises that were never finished appear where a city thins out, on bare clay and dirt that nothing grows on.
+- Some explosion damage in cities was partly repaired: holes filled in with a similar but not identical material, and broken windows boarded up.
+- Profile options `cityTaper`, `edgeLotChance`, `damageRepairChance` and `facadeContrast`. See [docs/config.md](docs/config.md).
 
 ### Changed
 
 - Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
 - Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.
+- Building heights taper: low buildings where a city meets the land around it, a dense high-rise core at its center, rising and falling by district rather than in rings.
+- Neighboring buildings' colors feather: a pale building no longer stands beside a dark, saturated one, also where a desert city meets a standard one.
+- Roads beside a village are small streets: a road that goes around a village, or passes beside it, narrows instead of running there as a wide avenue.
+- Slopes at a city's edge step down in ragged contours instead of long straight terraces, and village lanes never climb two blocks at once.
 
 ### Fixed
 

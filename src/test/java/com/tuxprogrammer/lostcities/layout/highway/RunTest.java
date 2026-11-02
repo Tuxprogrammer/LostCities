@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-/** A run's level profile: ramps of one level a chunk at each end, never on a corner (design record 0011). */
+/** A run's level profile: ramps of one level a chunk at each end, never on a corner (design record 0013). */
 public class RunTest {
 
     static Run run(int startLevel, int endLevel, Segment... segments) {

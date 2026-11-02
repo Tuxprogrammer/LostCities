@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.plan;
 
+import com.tuxprogrammer.lostcities.worldgen.damage.Repairs;
+
 /**
  * The source of chunk plans the overlay reads: the one seam between the layout and the overlay. M05 implements it
  * over M03's layout and M02's assets; M04 implements it with the synthetic test city
@@ -34,4 +36,14 @@ public interface CityPlan {
      * @return its plan; never {@code null}
      */
     ChunkPlan chunk(int chunkX, int chunkZ);
+
+    /**
+     * Returns the world's partial repairs of explosion damage (docs/design/0011-city-edges-and-character.md §4); none
+     * unless the plan source knows the assets.
+     *
+     * @return the repairs
+     */
+    default Repairs repairs() {
+        return Repairs.NONE;
+    }
 }

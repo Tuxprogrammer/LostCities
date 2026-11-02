@@ -36,7 +36,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
- * Writing highways and railways (highway-parts.md, railway-parts.md; design record 0011): the part choices, ramps,
+ * Writing highways and railways (highway-parts.md, railway-parts.md; design record 0013): the part choices, ramps,
  * the bugs upstream's writers had, and golden chunks of a highway, a ramp, a railway line and a station in the
  * {@link CityFixtures} world with its networks on.
  */
@@ -146,6 +146,30 @@ public class NetworkWriterTest {
         assertFalse(
             PLAN.chunk(none[0], none[1])
                 .inGuardBand(floor));
+    }
+
+    /** M12's edge lots and M06's networks: no lot on a highway or railway chunk, so no highway runs through a pit. */
+    @Test
+    public void noEdgeLotOnAHighwayOrRailwayChunk() {
+        int networkChunks = 0;
+        for (int z = -64; z <= 64; z++) {
+            for (int x = -64; x <= 64; x++) {
+                boolean network = NETWORKS.highway(x, z)
+                    .hasHighway()
+                    || NETWORKS.railChunk(x, z)
+                        .isPresent();
+                if (!network) {
+                    continue;
+                }
+                networkChunks++;
+                assertEquals(
+                    com.tuxprogrammer.lostcities.layout.LotKind.NONE,
+                    PLANNER.plan(x, z)
+                        .lot(),
+                    "lot on network chunk " + x + "," + z);
+            }
+        }
+        assertTrue(networkChunks > 0);
     }
 
     @Test

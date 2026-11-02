@@ -45,7 +45,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <li>Avoids CITY-19 (HWY-07): where the world style's {@code railwayavoidance} is {@code block_railway} and this
  * chunk's building reaches down into its rail, only this chunk's rail is left out; the layout's answer for its
  * neighbors never changes.</li>
- * <li>Ramps and plazas (design record 0011, alpha review AR-10): a ramp is the straight piece written column by column
+ * <li>Ramps and plazas (design record 0013, alpha review AR-10): a ramp is the straight piece written column by column
  * along its axis a half block higher every few columns, one level across the chunk, with a bottom half slab wherever a
  * column stands a half block up, so the climb never needs a jump; a run's end is a crossing piece at the ground's
  * level, the plaza a highway ends on.</li>
