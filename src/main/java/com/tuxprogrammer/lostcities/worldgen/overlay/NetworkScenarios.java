@@ -249,6 +249,8 @@ public final class NetworkScenarios {
                     }
                 }
                 int deck = expectedDeck(planner, networks, block[0], block[1]);
+                // As city.walk exempts damaged buildings: an explosion's crater in the deck is upstream's damage.
+                walk.exempt = overlay.damaged(chunkX, chunkZ);
                 walk.step(block[0], block[1], deck);
             }
             boolean startMeets = meetsCity(planner, run.start());
@@ -265,9 +267,9 @@ public final class NetworkScenarios {
             LostCities.LOG.info(
                 String.format(
                     Locale.ROOT,
-                    "%sroute %s level %d (shared %d) run %s to %s, %d chunks, %d steps walked, %d too high, %d without"
-                        + " ground, %d without headroom, tunnel chunks %d, start meets city %s, end meets city %s;"
-                        + " pieces%s",
+                    "%sroute %s level %d (shared %d) run %s to %s, %d chunks, %d steps walked (%d in chunks an"
+                        + " explosion reaches), %d too high, %d without ground, %d without headroom, tunnel chunks %d,"
+                        + " start meets city %s, end meets city %s; pieces%s",
                     TAG,
                     route.key(),
                     route.level(),
@@ -277,6 +279,7 @@ public final class NetworkScenarios {
                     run.end(),
                     run.length() + 1,
                     walk.steps,
+                    walk.exempted,
                     walk.tooHigh,
                     walk.gaps,
                     walk.blocked,
@@ -384,6 +387,9 @@ public final class NetworkScenarios {
         int tooHigh;
         int gaps;
         int blocked;
+        int exempted;
+        /** Whether the current step lies where an explosion reaches: counted, not judged. */
+        boolean exempt;
         final List<String> examples = new ArrayList<>();
         private double previous = Double.NaN;
 
@@ -393,6 +399,11 @@ public final class NetworkScenarios {
 
         void step(int x, int z, int deck) {
             steps++;
+            if (exempt) {
+                exempted++;
+                previous = Double.NaN;
+                return;
+            }
             // The lowest surface from just under the deck up: a floor with no full block on it. Searching from above
             // would land on a lamp's arm over the road.
             double standing = Double.NaN;

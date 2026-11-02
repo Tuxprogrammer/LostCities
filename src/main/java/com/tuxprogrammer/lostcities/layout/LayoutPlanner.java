@@ -1139,7 +1139,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     public boolean hasCorridor(int chunkX, int chunkZ, Orientation orientation) {
         ChunkPlan plan = plan(chunkX, chunkZ);
         boolean candidate = orientation == Orientation.X ? plan.xRailCorridor : plan.zRailCorridor;
-        if (!candidate) {
+        // M06: the railways module switches the subways off too; their draws stay, so nothing else moves.
+        if (!candidate || networks != null && !networks.subways()) {
             return false;
         }
         return corridorEndsAtCellars(chunkX, chunkZ, orientation, -1)

@@ -6,6 +6,8 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 
 ### Added
 
+- Highways and railways (milestone M06): on RWG2 Continents, RWG2 and classic RWG worlds, upstream Lost Cities' intercity highways now link cities, as tunnels through hills, open roads in cities and bridges with supports over valleys, with bends, T-junctions and crossings. A highway leaves a city at its street level and reaches the next one the same way, by ramps you can walk up without jumping, and it goes around villages and other mods' landmarks, keeping out of the green margin a city leaves around them, or ends before one on a plaza. Lakes, lava and dungeons stay out of highways, and trees stay off their decks. The railway grid runs under the land, with stations at the surface or underground (with a staircase up) where it meets a city, three-way splits, bends and rail dungeons; a railway dips under a landmark that lies too low above it and climbs back after it.
+- `/lostcities find highway|ramp|station|railway` (test hooks only).
 - The foundation (milestone M01): the mod loads on GTNH 2.9.0 with GTNHLib as its one hard dependency, and generates nothing yet.
 - `config/lostcitiesnh.cfg` with one switch per feature area in the `worldgen` category (cities, highways, railways, scattered structures), all on by default and applying to new worlds only; editable from the Mods list through GTNHLib's config screen. See [docs/config.md](docs/config.md).
 - The `lostcitiesnh` network channel, with no packets yet.

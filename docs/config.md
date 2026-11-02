@@ -145,7 +145,7 @@ The pack's spawn is kept unless a profile asks for another. When `spawnBiome`, `
 
 ### Every profile option
 
-Status: **live** options change generation (or, for the texts, what commands show) now. **Pinned; read from M06** (or M07, M10) options are checked and pinned into new worlds now, and the highways and railways (M06), scattered structures (M07) or part editor (M10) read them when they arrive. **Deferred** options belong to landscapes not ported yet: they are checked and pinned and change nothing. **Dropped** options are read and ignored. Ranges marked are enforced when a profile is read. `ProfileOptionsDocsTest` keeps this table in step with the code: every option has a row here with its default.
+Status: **live** options change generation (or, for the texts, what commands show) now. **Pinned; read from M07** (or M10) options are checked and pinned into new worlds now, and the scattered structures (M07) or part editor (M10) read them when they arrive. **Deferred** options belong to landscapes not ported yet: they are checked and pinned and change nothing. **Dropped** options are read and ignored. Ranges marked are enforced when a profile is read. `ProfileOptionsDocsTest` keeps this table in step with the code: every option has a row here with its default.
 
 #### `lostcity`
 
@@ -231,31 +231,31 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `tertiaryRoadMaxLength` | `5` | 1 to 32 | live | Maximum tertiary road length |
 | `multiBuildingStreetConflict` | `OVERRIDE_MINOR` | BLOCK_ALL, OVERRIDE_MINOR, OVERRIDE_ALL | live | How random multibuildings meet planned roads: `BLOCK_ALL` lets any planned road block them, `OVERRIDE_MINOR` only primary roads, `OVERRIDE_ALL` none. Ignored by legacy streets |
 | `railwayDungeonChance` | `0.01` | 0 to 1 | live | Chance a chunk next to a railway holds a railway dungeon |
-| `railwaysCanEnd` | `false` |  | pinned; read from M06 | A station spot without a city above gets an end part when one side has no connection |
-| `railwaysEnabled` | `true` |  | pinned; read from M06 | Railways on or off (stations still generate when off) |
-| `railwayStationsEnabled` | `true` |  | pinned; read from M06 | Railway stations on or off |
-| `railwaySurfaceStationsEnabled` | `true` |  | pinned; read from M06 | Surface stations allowed; otherwise underground only |
-| `railwayLevelOffset` | `0` | -8 to 2 | pinned; read from M06 | Vertical offset of the underground railway in levels of 6 blocks; raised, with a warning, so the rails stay above Y 5 |
-| `railwaySpacingNorthSouth` | `10` | 4 to 128 | pinned; read from M06 | North-south distance between east-west tracks, in chunks; even |
-| `railwaySpacingEastWest` | `10` | 4 to 128 | pinned; read from M06 | East-west distance between north-south tracks, in chunks; even |
+| `railwaysCanEnd` | `false` |  | live | A station spot without a city above gets an end part when one side has no connection |
+| `railwaysEnabled` | `true` |  | live | Railways on or off (stations still generate when off) |
+| `railwayStationsEnabled` | `true` |  | live | Railway stations on or off |
+| `railwaySurfaceStationsEnabled` | `true` |  | live | Surface stations allowed; otherwise underground only |
+| `railwayLevelOffset` | `0` | -8 to 2 | live | Vertical offset of the underground railway in levels of 6 blocks; raised, with a warning, so the rails stay above Y 5 |
+| `railwaySpacingNorthSouth` | `10` | 4 to 128 | live | North-south distance between east-west tracks, in chunks; even |
+| `railwaySpacingEastWest` | `10` | 4 to 128 | live | East-west distance between north-south tracks, in chunks; even |
 | `highwayRequiresTwoCities` | `true` |  | dropped | Read only by legacy highways, which are not ported |
-| `highwayLevelFromCities` | `3` | 0 to 4 | pinned; read from M06 | Highway level: 0 first endpoint city, 1 minimum of both, 2 maximum, 3 average, 4 `highwayNetworkLevel` |
+| `highwayLevelFromCities` | `3` | 0 to 4 | live | Highway level: 0 first endpoint city, 1 minimum of both, 2 maximum, 3 average, 4 `highwayNetworkLevel` |
 | `highwayDistanceMask` | `7` |  | dropped | Read only by legacy highways; `highwaysEnabled` switches highways off |
 | `highwayMainPerlinScale` | `50.0` |  | dropped | Legacy highways only |
 | `highwaySecondaryPerlinScale` | `10.0` |  | dropped | Legacy highways only |
 | `highwayPerlinFactor` | `2.0` |  | dropped | Legacy highways only |
-| `highwaySupports` | `true` |  | pinned; read from M06 | Highways get supports where needed |
+| `highwaySupports` | `true` |  | live | Highways get supports where needed |
 | `highwayGenerationMode` | `INTERCITY_NETWORK_V1` |  | dropped | Only the intercity highway planner is ported |
-| `highwayPlanningCellSize` | `128` | 32 to 512 | pinned; read from M06 | Size of one hub-planning cell; at least `highwayHubSampleSpacing`, or the profile is rejected |
-| `highwayHubSampleSpacing` | `16` | 1 to 512 | pinned; read from M06 | Spacing of city-potential samples inside a cell |
-| `highwayHubMinimumPotential` | `0.2` | 0 to 1 | pinned; read from M06 | Minimum height- and biome-adjusted city potential for a hub |
-| `highwayHubSearchRadiusCells` | `2` | 0 to 8 | pinned; read from M06 | Cell radius in which a hub looks for others |
-| `highwayMinimumHubDistance` | `64` | 0 to 4096 | pinned; read from M06 | Minimum Euclidean distance between connected hubs; at most the maximum, or the profile is rejected |
-| `highwayMaximumHubDistance` | `320` | 0 to 4096 | pinned; read from M06 | Maximum Euclidean distance between connected hubs |
-| `highwayMaximumConnectionsPerHub` | `2` | 1 to 8 | pinned; read from M06 | Maximum accepted connections per hub |
-| `highwayMinimumRouteLength` | `40` | 0 to 4096 | pinned; read from M06 | Minimum Manhattan length of an inter-city route |
-| `highwayRouteCityPenalty` | `1.0` | 0 to 1000 | pinned; read from M06 | Weight of city potential when choosing an L-route bend |
-| `highwayNetworkLevel` | `0` | 0 to 32 | pinned; read from M06 | Fixed highway level when `highwayLevelFromCities` is 4; lowered, with a warning, so highways stay below Y 255 (28 at ground 71) |
+| `highwayPlanningCellSize` | `128` | 32 to 512 | live | Size of one hub-planning cell; at least `highwayHubSampleSpacing`, or the profile is rejected |
+| `highwayHubSampleSpacing` | `16` | 1 to 512 | live | Spacing of city-potential samples inside a cell |
+| `highwayHubMinimumPotential` | `0.2` | 0 to 1 | live | Minimum height- and biome-adjusted city potential for a hub |
+| `highwayHubSearchRadiusCells` | `2` | 0 to 8 | live | Cell radius in which a hub looks for others |
+| `highwayMinimumHubDistance` | `64` | 0 to 4096 | live | Minimum Euclidean distance between connected hubs; at most the maximum, or the profile is rejected |
+| `highwayMaximumHubDistance` | `320` | 0 to 4096 | live | Maximum Euclidean distance between connected hubs |
+| `highwayMaximumConnectionsPerHub` | `2` | 1 to 8 | live | Maximum accepted connections per hub |
+| `highwayMinimumRouteLength` | `40` | 0 to 4096 | live | Minimum Manhattan length of an inter-city route |
+| `highwayRouteCityPenalty` | `1.0` | 0 to 1000 | live | Weight of city potential when choosing an L-route bend |
+| `highwayNetworkLevel` | `0` | 0 to 32 | live | Fixed highway level when `highwayLevelFromCities` is 4; lowered, with a warning, so highways stay below Y 255 (28 at ground 71) |
 | `editMode` | `false` |  | pinned; read from M10 | The world is a part-editing world; gates the part editor's commands |
 | `generateNether` | `false` |  | dropped | Dead upstream; overworld only |
 
@@ -342,7 +342,7 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | Key | Default | Range | Status | What it does |
 |---|---|---|---|---|
 | `preventLakesInCities` | `true` |  | live | Vetoes RWG's lakes, lava lakes and dungeons and NHCore's oil where a population area touches a city chunk or a scattered structure; not ravines. 1.12's `preventLakesRavinesInCities` still loads |
-| `highwaysEnabled` | `true` |  | pinned; read from M06 | Generate highways in this world |
+| `highwaysEnabled` | `true` |  | live | Generate highways in this world |
 | `villageTreatment` | `BUILD_AROUND` | BUILD_AROUND, AVOID, IGNORE | live | How cities meet villages: `BUILD_AROUND` (sew them in), `AVOID` (upstream's avoidance), `IGNORE` |
 | `landmarkTreatment` | `BUILD_AROUND` |  | live | The same for other landmarks: one treatment for all, and `<kind>=<treatment>` per kind, comma-separated (`ocean_monument`, `roguelike`, `witchery`, `lootgames`, `meteorite`, `terrain`) |
 | `landmarkMargin` | `2` | 0 to 16 | live | Blocks a landmark's footprint grows by before it becomes core chunks |

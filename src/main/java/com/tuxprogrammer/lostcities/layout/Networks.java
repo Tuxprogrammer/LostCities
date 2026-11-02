@@ -33,6 +33,7 @@ public final class Networks implements InfrastructureView {
 
     private final HighwayPlanner highways;
     private final RailwayLayout railways;
+    private final boolean subways;
 
     /**
      * Builds the networks of a planner's world.
@@ -145,6 +146,7 @@ public final class Networks implements InfrastructureView {
                 return Math.min(lowest, planner.terrain.height(chunkX, chunkZ + 1));
             }
         };
+        this.subways = settings.subways();
         this.railways = new RailwayLayout(
             planner.seed,
             settings.railways(),
@@ -160,6 +162,11 @@ public final class Networks implements InfrastructureView {
      */
     public long estimatedCacheBytes() {
         return highways.estimatedCacheBytes() + railways.estimatedCacheBytes();
+    }
+
+    /** Returns whether the cities' subways generate (the {@code railways} module). */
+    public boolean subways() {
+        return subways;
     }
 
     /** Returns the highway planner. */

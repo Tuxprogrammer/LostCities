@@ -23,6 +23,18 @@ public final class NetworkSettings {
     private final HighwaySettings highways;
     private final RailwaySettings railways;
     private final PlanningGate gate;
+    private final boolean subways;
+
+    /**
+     * Creates the settings, with the cities' subways on.
+     *
+     * @param highways the highway settings
+     * @param railways the railway settings
+     * @param gate     schedules the highway planner's hub cells
+     */
+    public NetworkSettings(HighwaySettings highways, RailwaySettings railways, PlanningGate gate) {
+        this(highways, railways, gate, true);
+    }
 
     /**
      * Creates the settings.
@@ -30,11 +42,14 @@ public final class NetworkSettings {
      * @param highways the highway settings
      * @param railways the railway settings
      * @param gate     schedules the highway planner's hub cells
+     * @param subways  whether the cities' rail corridors under their streets generate: the {@code railways} module,
+     *                 which upstream's corridors know nothing of
      */
-    public NetworkSettings(HighwaySettings highways, RailwaySettings railways, PlanningGate gate) {
+    public NetworkSettings(HighwaySettings highways, RailwaySettings railways, PlanningGate gate, boolean subways) {
         this.highways = highways;
         this.railways = railways;
         this.gate = gate;
+        this.subways = subways;
     }
 
     /** Returns the highway settings. */
@@ -45,6 +60,11 @@ public final class NetworkSettings {
     /** Returns the railway settings. */
     public RailwaySettings railways() {
         return railways;
+    }
+
+    /** Returns whether the cities' subways (rail corridors under their streets) generate. */
+    public boolean subways() {
+        return subways;
     }
 
     /** Returns the gate. */
@@ -59,6 +79,6 @@ public final class NetworkSettings {
      * @return the settings
      */
     public NetworkSettings withGate(PlanningGate newGate) {
-        return new NetworkSettings(highways, railways, newGate);
+        return new NetworkSettings(highways, railways, newGate, subways);
     }
 }
