@@ -12,7 +12,7 @@ Upstream Lost Cities 1.20 generates in two ways:
 - **Overworld profiles**, chosen at world creation, which lay cities over vanilla noise terrain.
 - **A dedicated Lost City dimension**, reached by sleeping in a bed placed on a configured block.
 
-GTNH plays differently. The overworld is the main world, and Realistic World Gen is its only generator. GTNH 2.9.0's `defaultworldgenerator.cfg` sets `RWG2_CONTINENTS` (Realistic World Gen 2, 2.0.6) as the default world type and whitelists only `flat`, `RWG` (classic RWG, alpha-1.5.3) and `RWG2_CONTINENTS`. GT ore veins generate into that terrain. Most players later move into their own personal dimension (PersonalSpace 1.0.41).
+GTNH plays differently. The overworld is the main world, and Realistic World Gen is its only generator. GTNH 2.9.0's `defaultworldgenerator.cfg` makes `RWG2_CONTINENTS` (Realistic World Gen 2, 2.0.6) the default on the client's Create World screen and whitelists only `flat`, `RWG` (classic RWG, alpha-1.5.3) and `RWG2_CONTINENTS`; the server pack ships `level-type=rwg`, so a dedicated server creates classic RWG worlds unless its owner changes it (decision log D33). Both are first-class targets. GT ore veins generate into that terrain. Most players later move into their own personal dimension (PersonalSpace 1.0.41).
 
 The owner wants the hard part done first: cities that fit the GTNH overworld and don't break when they meet RWG. They accept that alpha and beta will have rough edges to iron out, as GregGuns did.
 

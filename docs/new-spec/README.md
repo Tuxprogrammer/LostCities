@@ -2,7 +2,7 @@
 
 How this mod differs from Lost Cities 1.20 and how it fits into GT New Horizons. Upstream's behavior is in [docs/original-spec/](../original-spec/README.md). Builders read both: the original-spec sheet for what a system does, and the matching new-spec area for what changes and how it connects to the pack.
 
-Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), with RWG2 Continents as the default overworld generator.
+Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), on both of its overworld generators: RWG2 Continents, the single-player default, and classic RWG, the dedicated-server default (decision log D33).
 
 Status: **all areas `00` to `09` are written** (spikes S2 to S4). `00-pack-integration` is accepted. Areas `01` to `09` are deviation tables against their original-spec areas, built from the design records and the [decision log](../design/decision-log.md); their rows are *Accepted* where they cite a decision. Every item they once proposed was answered by the owner in decision log D31, so the new spec has no open questions ([OPEN-QUESTIONS](OPEN-QUESTIONS.md)); the milestones in the [ROADMAP](../ROADMAP.md) build the answers.
 
