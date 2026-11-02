@@ -160,8 +160,7 @@ public final class CityChunkWriter {
             writeBuilding();
         } else {
             writeStreet();
-            if (plan.maxHighwayLevel() < 0 && !surfaceRail() && layout.slope() == null
-                && plan.lot() == LotKind.NONE) {
+            if (plan.maxHighwayLevel() < 0 && !surfaceRail() && layout.slope() == null && plan.lot() == LotKind.NONE) {
                 writeStairs();
             }
             clearDoorSteps();
