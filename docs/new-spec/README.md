@@ -17,7 +17,7 @@ Every change here serves that, and every system uses what the pack already has b
 - Each area mirrors an original-spec area, plus `00-pack-integration` for cross-cutting pack topics. Its `index.md` has a **deviation table**: every original sheet, what this mod does instead, and the decision behind it.
 - **Status words.**
   - *Accepted* means a decision record in [docs/design/](../design/README.md) settles it; the record is linked.
-  - *Proposed* means this spec suggests it and the owner has not decided. Every proposal is listed in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with its recommendation and what settles it: the milestone that builds it, or the owner. Areas `01` to `09` hold none at present; the [integration-opportunities.md](00-pack-integration/integration-opportunities.md) survey's owner rows are decided (D28) and its unbuilt rows wait until after beta (D-BA-2).
+  - *Proposed* means this spec suggests it and the owner has not decided. Every proposal is listed in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with its recommendation and what settles it: the milestone that builds it, or the owner. Areas `01` to `09` hold none at present; the [integration-opportunities.md](00-pack-integration/integration-opportunities.md) survey's owner rows are decided (D28) and its unbuilt rows wait until after beta (D229).
   - *Verified* facts about other mods cite the file and line at the pack's tag; *unverified* ones say so and must be checked from source before code (`gtnh-integration-research`).
 - Numbers carry units: blocks, chunks, block-Y levels, ticks.
 

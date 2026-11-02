@@ -143,7 +143,7 @@ Recorded in the [decision log](../../design/decision-log.md) as D21, with D24, D
 
 ## To check in game (beta review)
 
-Left for the beta review ([decision log](../../design/decision-log.md) D-BA-3):
+Left for the beta review ([decision log](../../design/decision-log.md) D230):
 
 - Whether Thaumcraft mounds land in city parks or spill onto streets.
 - How often the monument oracle (D32) moves an oil rig, measured over many seeds: oil rigs generate since M07, and the rate is not yet measured.

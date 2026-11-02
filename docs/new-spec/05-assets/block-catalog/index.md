@@ -2,7 +2,7 @@
 
 The entry point to the catalog of every decorative and construction block GTNH 2.9.0 enables, judged against upstream Lost Cities' look ([decision log](../../../design/decision-log.md) D25). Upstream's cities feel synthetic partly because every building is made of the same handful of blocks; the catalog exists so palettes can draw weighted variety for each role instead of one stand-in per missing block. The [D19 block mapping](../../00-pack-integration/block-mapping.md) stays the baseline and the fallback when a mod is absent. D28 sets the rules the [variety pools](#variety-pools) below follow.
 
-Status: the wall, accent, band, glass, quartz, interior floor, ceiling, light, furniture, bookshelf, fence, planter and park flora pools are *live*: M11 turned their candidates into the [palette variety](../asset-format.md#palette-variety) ([0007](../../../design/0007-palette-variety.md)), option palettes a building draws per role, and `tools/asset-convert/variety.py` names the candidates it uses as these tables do. The other pools have no variety group yet and keep their baseline until after beta (D162 for speed blocks, tile-entity blocks, metals, streets, torches and ladders; [decision log](../../../design/decision-log.md) D-BA-1 for the rest). Weights are first judgments, tuned at the beta review. The D28 rules they apply are accepted. City styles that would use distinct pools wait until after beta, with the GTNH-themed buildings ([ROADMAP](../../../ROADMAP.md)).
+Status: the wall, accent, band, glass, quartz, interior floor, ceiling, light, furniture, bookshelf, fence, planter and park flora pools are *live*: M11 turned their candidates into the [palette variety](../asset-format.md#palette-variety) ([0007](../../../design/0007-palette-variety.md)), option palettes a building draws per role, and `tools/asset-convert/variety.py` names the candidates it uses as these tables do. The other pools have no variety group yet and keep their baseline until after beta (D162 for speed blocks, tile-entity blocks, metals, streets, torches and ladders; [decision log](../../../design/decision-log.md) D228 for the rest). Weights are first judgments, tuned at the beta review. The D28 rules they apply are accepted. City styles that would use distinct pools wait until after beta, with the GTNH-themed buildings ([ROADMAP](../../../ROADMAP.md)).
 
 ## How to read the catalog
 
@@ -385,8 +385,8 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:stained_hardened_clay:8` | 60 | | BH | The palette's block (AR-16); takes the 15 the brick patterns had (D-BA-6) |
-| `chisel:hardened_clay_lightgray:2` to `:8` | 0 | baseline | SP | Left out (D-BA-6): 1.7.10's light gray terracotta has vanilla brick's color, so its brick patterns read as red brick in a desert city |
+| Baseline: `minecraft:stained_hardened_clay:8` | 60 | | BH | The palette's block (AR-16); takes the 15 the brick patterns had (D233) |
+| `chisel:hardened_clay_lightgray:2` to `:8` | 0 | baseline | SP | Left out (D233): 1.7.10's light gray terracotta has vanilla brick's color, so its brick patterns read as red brick in a desert city |
 | `Ztones:tile.krypBlock:3` | 10 | baseline | | Taupe tiles |
 | `chisel:hempcrete:8` | 8 | baseline | SP | Hard colored concrete |
 | `Ztones:tile.mystBlock:15`, `Ztones:tile.crayBlock:0` | 8 | baseline | | Matte warm gray |

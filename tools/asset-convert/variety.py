@@ -312,7 +312,7 @@ BLEACHED_WALLS = desert_walls("wall_bleached", "bleached-desert-walls", [
 ])
 
 # No Chisel light gray terracotta bricks here: in 1.7.10 light gray terracotta has vanilla brick's color (CIE76 under
-# 10 from minecraft:brick_block), so its brick patterns read as red brick in a desert city (beta audit, D-BA-6).
+# 10 from minecraft:brick_block), so its brick patterns read as red brick in a desert city (beta audit, D233).
 TAUPE_WALLS = desert_walls("wall_taupe", "taupe-desert-walls", [
     ("Ztones:tile.krypBlock:3", 10),
     ("chisel:hempcrete:8", 8),
