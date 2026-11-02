@@ -41,8 +41,8 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  * itself, avoiding a race in FML's startup join ({@code joinFromMenu}).</li>
  * <li>Each tick a {@link SettleTracker} watches the camera, the chunks around it and the terrain build queue
  * ({@link TerrainProbe}), and the log gets {@code [LCNH-CAPTURE] settled ...} once the viewpoint is complete and still,
- * and {@code [LCNH-CAPTURE] moving} when it changes. The runner screenshots only after a settled line at its
- * viewpoint, so no shot shows half-loaded terrain.</li>
+ * and {@code [LCNH-CAPTURE] moving} when it changes. The runner waits for a settled line at its viewpoint, then
+ * for the picture to hold still, since Celeritas's queue can empty between scheduling rounds.</li>
  * </ul>
  *
  * <p>
