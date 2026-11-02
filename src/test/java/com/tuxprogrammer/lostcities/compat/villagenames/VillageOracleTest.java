@@ -101,8 +101,15 @@ class VillageOracleTest {
             ids.add(landmark.id());
             assertEquals(LandmarkKind.VILLAGE, landmark.kind());
             assertEquals(Certainty.EXACT, landmark.certainty());
-            assertEquals(7, landmark.footprint().size());
-            assertEquals(4, landmark.gates().size(), describe(landmark));
+            assertEquals(
+                7,
+                landmark.footprint()
+                    .size());
+            assertEquals(
+                4,
+                landmark.gates()
+                    .size(),
+                describe(landmark));
         }
         List<String> sorted = new ArrayList<>(ids);
         Collections.sort(sorted);
@@ -118,9 +125,14 @@ class VillageOracleTest {
                 .split(",");
             int cx = Integer.parseInt(coords[0]);
             int cz = Integer.parseInt(coords[1]);
-            assertTrue(oracle.grid().isCandidate(cx, cz));
+            assertTrue(
+                oracle.grid()
+                    .isCandidate(cx, cz));
             assertEquals("Plains", BIOMES.nameAt(cx * 16 + 8, cz * 16 + 8));
-            assertEquals(VillageOracle.Status.VILLAGE, oracle.predict(cx, cz).status());
+            assertEquals(
+                VillageOracle.Status.VILLAGE,
+                oracle.predict(cx, cz)
+                    .status());
         }
     }
 
@@ -143,7 +155,10 @@ class VillageOracleTest {
             }
         }
         assertTrue(rejected > 0, "the fake biomes reject some starts");
-        assertEquals(VillageOracle.Status.NOT_CANDIDATE, oracle.predict(grid.startChunk(0, 0)[0] + 1, 0).status());
+        assertEquals(
+            VillageOracle.Status.NOT_CANDIDATE,
+            oracle.predict(grid.startChunk(0, 0)[0] + 1, 0)
+                .status());
     }
 
     @Test
@@ -189,7 +204,10 @@ class VillageOracleTest {
                 .isEmpty());
         int[] start = free.grid()
             .startChunk(0, 0);
-        assertEquals(VillageOracle.Status.VILLAGE_FREE, free.predict(start[0], start[1]).status());
+        assertEquals(
+            VillageOracle.Status.VILLAGE_FREE,
+            free.predict(start[0], start[1])
+                .status());
     }
 
     @Test
@@ -202,9 +220,12 @@ class VillageOracleTest {
                 for (int cx = rect.minChunkX(); cx <= rect.maxChunkX(); cx++) {
                     for (int cz = rect.minChunkZ(); cz <= rect.maxChunkZ(); cz++) {
                         List<Landmark> one = oracle(new FakePlans(), 4).landmarksTouching(cx, cz, cx, cz);
-                        assertTrue(one.stream()
-                            .anyMatch(l -> l.id()
-                                .equals(landmark.id())), landmark.id() + " missing from chunk " + cx + "," + cz);
+                        assertTrue(
+                            one.stream()
+                                .anyMatch(
+                                    l -> l.id()
+                                        .equals(landmark.id())),
+                            landmark.id() + " missing from chunk " + cx + "," + cz);
                     }
                 }
             }

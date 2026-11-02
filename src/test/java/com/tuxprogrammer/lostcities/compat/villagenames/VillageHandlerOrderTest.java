@@ -41,8 +41,10 @@ class VillageHandlerOrderTest {
             forward.put(c, c.getSimpleName());
         }
         for (int i = classes.size() - 1; i >= 0; i--) {
-            backward.put(classes.get(i), classes.get(i)
-                .getSimpleName());
+            backward.put(
+                classes.get(i),
+                classes.get(i)
+                    .getSimpleName());
         }
         assertEquals(keys(VillageHandlerOrder.byName(forward)), keys(VillageHandlerOrder.byName(backward)));
     }

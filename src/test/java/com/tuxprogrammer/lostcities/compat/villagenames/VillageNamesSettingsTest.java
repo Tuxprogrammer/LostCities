@@ -80,6 +80,7 @@ class VillageNamesSettingsTest {
             3,
             Collections.singleton("Plains"));
         String summary = settings.summary();
-        assertTrue(summary.startsWith("villages=true monuments=false spacing=40+-10 villageFreeRadius=3 spawnBiomes=1("));
+        assertTrue(
+            summary.startsWith("villages=true monuments=false spacing=40+-10 villageFreeRadius=3 spawnBiomes=1("));
     }
 }

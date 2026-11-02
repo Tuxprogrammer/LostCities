@@ -46,7 +46,8 @@ final class VillageNamesConfig {
         boolean mapFeatures = world.getWorldInfo()
             .isMapFeaturesEnabled();
         boolean overworld = world.provider.dimensionId == 0;
-        boolean villages = VillageGeneratorConfigHandler.newVillageGenerator && worldGeneratesVillages(world, mapFeatures);
+        boolean villages = VillageGeneratorConfigHandler.newVillageGenerator
+            && worldGeneratesVillages(world, mapFeatures);
         boolean monuments = GeneralConfig.addOceanMonuments && mapFeatures && overworld;
         return new VillageNamesSettings(
             villages,

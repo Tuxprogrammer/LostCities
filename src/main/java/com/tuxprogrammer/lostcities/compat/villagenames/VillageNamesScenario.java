@@ -242,7 +242,8 @@ public final class VillageNamesScenario implements Scenario {
             }
             int[] built = builtBuildings(world, target);
             if (built[0] < BUILT_SHARE * built[1]) {
-                failures.add(landmark.id() + " shows built blocks in only " + built[0] + " of " + built[1] + " buildings");
+                failures
+                    .add(landmark.id() + " shows built blocks in only " + built[0] + " of " + built[1] + " buildings");
             }
             LostCities.LOG.info(
                 String.format(
@@ -449,11 +450,8 @@ public final class VillageNamesScenario implements Scenario {
         int tile = 8;
         for (int z = maxZ; z >= minZ; z -= tile) {
             for (int x = maxX; x >= minX; x -= tile) {
-                for (Landmark landmark : fresh.landmarksTouching(
-                    Math.max(minX, x - tile + 1),
-                    Math.max(minZ, z - tile + 1),
-                    x,
-                    z)) {
+                for (Landmark landmark : fresh
+                    .landmarksTouching(Math.max(minX, x - tile + 1), Math.max(minZ, z - tile + 1), x, z)) {
                     tiled.add(describe(landmark));
                 }
             }

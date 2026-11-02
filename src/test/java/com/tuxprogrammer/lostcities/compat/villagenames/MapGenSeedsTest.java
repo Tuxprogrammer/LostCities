@@ -48,18 +48,39 @@ class MapGenSeedsTest {
 
     @Test
     void prepareDrawsOneIntAfterTheChunkSeed() {
-        assertEquals(-723955400, MapGenSeeds.prepareForStart(new Random(), 0L, 0, 0).nextInt());
-        assertEquals(-1954219380, MapGenSeeds.prepareForStart(new Random(), 0L, 5, -9).nextInt());
-        assertEquals(490914327, MapGenSeeds.prepareForStart(new Random(), 12345L, 5, -9).nextInt());
-        assertEquals(4232237, MapGenSeeds.prepareForStart(new UnscrambledRandom(), 0L, 0, 0).nextInt());
-        assertEquals(1383851049, MapGenSeeds.prepareForStart(new UnscrambledRandom(), 0L, 5, -9).nextInt());
-        assertEquals(-177857392, MapGenSeeds.prepareForStart(new UnscrambledRandom(), 12345L, 5, -9).nextInt());
+        assertEquals(
+            -723955400,
+            MapGenSeeds.prepareForStart(new Random(), 0L, 0, 0)
+                .nextInt());
+        assertEquals(
+            -1954219380,
+            MapGenSeeds.prepareForStart(new Random(), 0L, 5, -9)
+                .nextInt());
+        assertEquals(
+            490914327,
+            MapGenSeeds.prepareForStart(new Random(), 12345L, 5, -9)
+                .nextInt());
+        assertEquals(
+            4232237,
+            MapGenSeeds.prepareForStart(new UnscrambledRandom(), 0L, 0, 0)
+                .nextInt());
+        assertEquals(
+            1383851049,
+            MapGenSeeds.prepareForStart(new UnscrambledRandom(), 0L, 5, -9)
+                .nextInt());
+        assertEquals(
+            -177857392,
+            MapGenSeeds.prepareForStart(new UnscrambledRandom(), 12345L, 5, -9)
+                .nextInt());
     }
 
     @Test
     void reseedingForgetsEarlierState() {
         Random random = new Random(777L);
         random.nextGaussian();
-        assertEquals(-1954219380, MapGenSeeds.prepareForStart(random, 0L, 5, -9).nextInt());
+        assertEquals(
+            -1954219380,
+            MapGenSeeds.prepareForStart(random, 0L, 5, -9)
+                .nextInt());
     }
 }

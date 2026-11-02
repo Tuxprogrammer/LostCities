@@ -42,7 +42,10 @@ class MonumentOracleTest {
             assertEquals(LandmarkKind.OCEAN_MONUMENT, landmark.kind());
             assertEquals(Certainty.EXACT, landmark.certainty());
             assertEquals(40, landmark.groundEstimate());
-            assertEquals(1, landmark.footprint().size());
+            assertEquals(
+                1,
+                landmark.footprint()
+                    .size());
             BlockRect box = landmark.footprint()
                 .get(0);
             // The 15 x 15 test square around the center lies wholly in the ocean.
@@ -70,7 +73,10 @@ class MonumentOracleTest {
         MonumentGrid grid = oracle.grid();
         int[] start = grid.startChunk(-5, 0);
         assertNull(oracle.monumentAt(start[0] + 1, start[1]));
-        assertEquals(MonumentOracle.id(start[0], start[1]), oracle.monumentAt(start[0], start[1]).id());
+        assertEquals(
+            MonumentOracle.id(start[0], start[1]),
+            oracle.monumentAt(start[0], start[1])
+                .id());
     }
 
     @Test
