@@ -51,6 +51,14 @@ dependencies {
     // generator does (compat.villagenames, decision log D84). Compile only, never a dependency.
     compileOnly("com.github.GTNewHorizons:VillageNames:4.5.21-GTNH:dev") { transitive = false }
 
+    // Optional: the AE2 meteorite oracle reads AE2's own meteorite settings, and its scenario AE2's spawn data
+    // (compat.ae2, docs/design/0006-build-around-other-worldgen.md §2). Compile only, never a dependency.
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1095-GTNH:dev") { transitive = false }
+
+    // Optional: the LootGames dungeon oracle reads LootGames' own world-generation settings (compat.lootgames, 0006 §2).
+    // Compile only, never a dependency.
+    compileOnly("com.github.GTNewHorizons:LootGames:2.2.14:dev") { transitive = false }
+
     // Unit and static-check tests (CONTRIBUTING.md, Testing): JUnit 5, the same BOM as the owner's other GTNH mods.
     testImplementation(platform("org.junit:junit-bom:5.14.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
