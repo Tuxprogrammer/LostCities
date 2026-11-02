@@ -87,6 +87,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final long BUILDING_X = 132897987541L;
     /** "LARGEBRG": salt of the separate large-bridge random. */
     static final long LARGE_BRIDGE_SALT = 0x4c41524745425247L;
+    /** Salt of a building's palette-variety seed ("VARIETY "), distinct from every other per-chunk draw. */
+    static final long VARIETY_SALT = 0x5641524945545920L;
+    /** Salt of a street or park block's palette-variety seed ("STREETS "). */
+    static final long STREET_VARIETY_SALT = 0x5354524545545320L;
+    /** Streets and parks share their variety per 2^2 = 4 chunks on each axis. */
+    static final int STREET_VARIETY_SHIFT = 2;
     /** Salt of the separate random a capped building's roof part is drawn from (decision log D49). */
     static final long ROOF_SALT = 0x524f4f4643415050L;
     /** Highest floor block Y a building's roof part may start below: 1.7.10's {@code 256 - 2 - 6}. */
@@ -598,6 +604,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         StyleView palettes = assets
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
+        if (palettes != null) {
+            // Deviation (D25, M11): the palette variety, drawn from a seed of its own so the stream above is
+            // upstream's; a building's per chunk, a street's or park's per four-by-four block of chunks.
+            long variety = b.hasBuilding ? varietySeed(x, z) : streetVarietySeed(x, z);
+            b.palettes.addAll(palettes.pickVariety(b.palettes, b.hasBuilding, variety));
+        }
         float loot = random.nextFloat();
         // Avoids LOOT-10: a multibuilding's top-left chunk rolls too, and its other chunks copy the result.
         b.noLoot = loot < profile.buildingWithoutLootChance;
@@ -1382,6 +1394,31 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      */
     QualityRandom buildingRandom(int chunkX, int chunkZ) {
         return new QualityRandom(seed + chunkZ * BUILDING_Z + chunkX * BUILDING_X);
+    }
+
+    /**
+     * Returns a chunk's palette-variety seed: a function of the world seed and the chunk alone, so a building's variety
+     * never depends on generation order (a multibuilding's chunks copy their top-left chunk's palettes).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the seed
+     */
+    long varietySeed(int x, int z) {
+        return seed ^ VARIETY_SALT ^ (long) x * BUILDING_Z ^ (long) z * BUILDING_X;
+    }
+
+    /**
+     * Returns the palette-variety seed of a chunk without a building: shared by each four-by-four block of chunks, so a
+     * park that spans chunks keeps one planting scheme and neighboring streets share their fittings (and their compiled
+     * palette).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the seed
+     */
+    long streetVarietySeed(int x, int z) {
+        return varietySeed(x >> STREET_VARIETY_SHIFT, z >> STREET_VARIETY_SHIFT) ^ STREET_VARIETY_SALT;
     }
 
     /** Looks up a city style, reporting an unknown name once. */

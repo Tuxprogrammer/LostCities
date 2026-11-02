@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.asset.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -49,6 +50,18 @@ public final class LayoutAssets implements AssetView {
     private final AssetSet assets;
     private final WorldStyle worldStyle;
     private final BiomeSource biomes;
+    private final boolean variety;
+
+    /**
+     * Creates the view, with the palette variety on.
+     *
+     * @param assets     the loaded asset set
+     * @param worldStyle the profile's world style
+     * @param biomes     the world's chunk biomes
+     */
+    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes) {
+        this(assets, worldStyle, biomes, true);
+    }
 
     /**
      * Creates the view.
@@ -56,11 +69,13 @@ public final class LayoutAssets implements AssetView {
      * @param assets     the loaded asset set
      * @param worldStyle the profile's world style
      * @param biomes     the world's chunk biomes
+     * @param variety    whether styles draw the palette variety (the world's pinned {@code paletteVariety} module)
      */
-    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes) {
+    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes, boolean variety) {
         this.assets = assets;
         this.worldStyle = worldStyle;
         this.biomes = biomes;
+        this.variety = variety;
     }
 
     @Override
@@ -89,14 +104,30 @@ public final class LayoutAssets implements AssetView {
     @Override
     public StyleView style(String name) {
         Style style = assets.style(id(name));
-        return style == null ? null : random -> {
-            List<String> out = new ArrayList<>();
-            for (Palette palette : style.randomPalettes(random)) {
-                out.add(
-                    palette.id()
-                        .toString());
+        if (style == null) {
+            return null;
+        }
+        return new StyleView() {
+
+            @Override
+            public List<String> pickPalettes(Random random) {
+                List<String> out = new ArrayList<>();
+                for (Palette palette : style.randomPalettes(random)) {
+                    out.add(
+                        palette.id()
+                            .toString());
+                }
+                return out;
             }
-            return out;
+
+            @Override
+            public List<String> pickVariety(List<String> chosen, boolean building, long seed) {
+                if (!variety) {
+                    return Collections.emptyList();
+                }
+                return assets.variety()
+                    .pick(style.id(), chosen, building, seed);
+            }
         };
     }
 

@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.layout.view;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -23,4 +24,18 @@ public interface StyleView {
      * @return the chosen palette names, one per group, in group order
      */
     List<String> pickPalettes(Random random);
+
+    /**
+     * Picks the palette variety a building adds over the style's palettes (D25; the asset model's
+     * {@code PaletteVariety}): no draw from the chunk's random, so the layout's draws are upstream's whatever the
+     * variety holds.
+     *
+     * @param chosen   the palette names {@link #pickPalettes} returned for the chunk
+     * @param building whether the chunk holds a building
+     * @param seed     the building's variety seed, a function of the world seed and its (top-left) chunk
+     * @return the option palettes' names, lowest layer first, appended after the chosen palettes; empty by default
+     */
+    default List<String> pickVariety(List<String> chosen, boolean building, long seed) {
+        return Collections.emptyList();
+    }
 }

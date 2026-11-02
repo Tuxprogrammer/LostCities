@@ -42,6 +42,7 @@ import com.tuxprogrammer.lostcities.asset.model.Stuff;
 import com.tuxprogrammer.lostcities.asset.model.Style;
 import com.tuxprogrammer.lostcities.asset.model.Variant;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
+import com.tuxprogrammer.lostcities.asset.variety.PaletteVariety;
 
 /**
  * Loads every asset once, in plain Java: reads the sources in order (the jar, then the config folder, whose files
@@ -70,6 +71,9 @@ public final class AssetLoader {
      * (docs/new-spec/00-pack-integration/block-mapping.md, "Blocks upstream's code names").
      */
     public static final Map<String, String> CODE_BLOCKS = codeBlocks();
+
+    /** The key of the palette variety in the file hashes a world pins. */
+    public static final String VARIETY_KEY = "blockmap/variety";
 
     private AssetLoader() {}
 
@@ -150,6 +154,8 @@ public final class AssetLoader {
         VarietyPools pools = VarietyPools
             .parse(data.pools(), registry, problems.in(BlockData.origin(VarietyPools.RESOURCE)));
         checkPools(pools, data, problems);
+        PaletteVariety variety = PaletteVariety
+            .parse(data.variety(), registry, resolver, lookup, problems, BlockData.origin(PaletteVariety.RESOURCE));
         Map<String, BlockChoice> code = new TreeMap<>();
         Problems.Scope codeScope = problems.in("code");
         for (Map.Entry<String, String> entry : CODE_BLOCKS.entrySet()) {
@@ -174,6 +180,12 @@ public final class AssetLoader {
         for (AssetFile file : files.values()) {
             hashes.put(key(file.type(), file.id()), file.sha256());
         }
+        // The palette variety changes what a world generates like an asset file does, so the hash covers it.
+        hashes.put(
+            VARIETY_KEY,
+            AssetFile.sha256(
+                data.variety()
+                    .toString()));
         StringBuilder all = new StringBuilder();
         for (Map.Entry<String, String> entry : hashes.entrySet()) {
             all.append(entry.getKey())
@@ -195,6 +207,7 @@ public final class AssetLoader {
             unreachable,
             data.mapping(),
             pools,
+            variety,
             Collections.unmodifiableMap(code),
             leaves,
             rubble);

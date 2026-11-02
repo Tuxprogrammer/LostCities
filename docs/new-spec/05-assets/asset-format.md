@@ -122,7 +122,7 @@ An unknown block name, a direct reference to an absent mod, the 1.12 `@meta` for
 
 ## The block-name map
 
-The D19 mapping, the decorative metals, the never-place list and the variety pools are this mod's own data, under `data/lostcitiesnh/blockmap/` in the jar. They are never overridden from the config folder; an override that needs another block names it directly as `modid:name:meta`.
+The D19 mapping, the decorative metals, the never-place list, the variety pools and the palette variety are this mod's own data, under `data/lostcitiesnh/blockmap/` in the jar. They are never overridden from the config folder; an override that needs another block names it directly as `modid:name:meta`.
 
 | File | Holds | Read by |
 |---|---|---|
@@ -130,6 +130,7 @@ The D19 mapping, the decorative metals, the never-place list and the variety poo
 | `metals.json` | Per decorative metal (D29), the blocks one flag covers in every mod: `modid:name` for every metadata, `modid:name:meta` for one | `asset.block.MetalCatalog` |
 | `never_place.json` | The never-place list by reason, with `*` prefixes (`gregtech:gt.blockcasings*`) | `asset.block.NeverPlaceList` |
 | `pools.json` | The [variety pools](block-catalog/index.md#variety-pools), generated from the catalog's tables by `tools/asset-convert/pools_from_catalog.py`: per pool its candidates with weight, blocks, fallback and flags, its rubble sets and its set-piece rows. Edit the catalog and rerun the script, never the file | `asset.block.VarietyPools` |
+| `variety.json` | The [palette variety](#palette-variety): option palettes drawn from the pools, and per style the groups a building draws them from. Written by `tools/asset-convert/variety.py`; edit the script and rerun it, never the file | `asset.variety.PaletteVariety` |
 
 Metadata rules (`asset.block.MetaRule`), one per D19 property set: `stairs`, `slab`, `door`, `torch`, `wall_torch`, `facing` (ladders, furnaces, chests), `lever`, `rail`, `powered_rail`, `trapdoor`, `sapling`, `leaves`, `barrel`, `chain`, `lantern`, `anvil`, `vine`, and `plain`. The values are the pre-flattening encodings 1.8 to 1.12 kept from 1.7.10 for the same blocks, which the 1.13 flattening turned into these properties; `MetaRuleTest` has a test per rule. A candidate may name its own rule where its block encodes differently from the primary (the barrel's fallback chest uses `facing`). Each rule also gives the block's rotation family, from which `asset.transform.MetaRotation` turns metadata with a part's transform.
 
@@ -152,13 +153,33 @@ Resolution is checked twice. `AssetValidationTest` loads every bundled asset ove
 
 Block names stay 1.20 names in every file; the map turns them into 1.7.10 blocks at load. Condition values stay upstream's 1.20 loot-table and entity ids; `08-loot-mobs-blocks` maps them (D20). Provenance: [docs/assets/CREDITS.md](../../assets/CREDITS.md) and [THIRD-PARTY-NOTICES.md](../../../THIRD-PARTY-NOTICES.md).
 
+## Palette variety
+
+The catalog's pools reach the world as the palette variety ([0007](../../design/0007-palette-variety.md); D25, D28). `variety.json` holds two lists:
+
+- **Options**: small palettes, each one pool candidate for one role, in the palette format above (`char`, and `block`, `blocks` or `variant`, with `damaged`), named `lostcitiesnh:variety/<name>`. Blocks are 1.7.10 references (`modid:name:meta`) or 1.20 names the block-name map resolves. Each records the pool it comes from (`pool`).
+- **Styles**: per style, its groups. A group has a `name`, the options with integer weights (`none` is the baseline: upstream's look, no palette added), an optional `when` (a palette the style must have drawn for the chunk; a wall group applies only to its wall palette's buildings) and `for` (`building`, `street` for chunks without a building, or `all`).
+
+A city chunk draws its style's palettes as upstream does, then one option per group that applies, from a seed of the world and its chunk (a multibuilding's top-left chunk; for a chunk without a building, its four-by-four block of chunks) that the layout's own random never sees. The chosen options are appended to the chunk's palettes, above the style's and below the building's and the part's own palettes, which keep the last word. Every group's draw depends only on the seed and the group's name. An option whose blocks are not all registered is unavailable, and its share goes to the baseline, so a pack without a mod builds upstream's look there; `assets.pack_resolution` lists such blocks and requires none in the real pack. Options are read only for styles that are loaded; a group naming an unknown option or `when` palette, a weight below 1 or an unknown `for` is an error. The world's `worldgen.paletteVariety` switch ([config](../../config.md)) turns the draw off, pinned at world creation.
+
+Options may define characters no upstream part uses (Unicode private-use code points):
+
+| Character | Role | Where it lands |
+|---|---|---|
+| `\ue001` | Interior floor | In a building's floor part (not its roof, not an overlay part), a `#` or `S` with air right above it and a solid character above that air, in the same column of the part |
+| `\ue002` | Ceiling | In the same parts, a `#` with air right below it and a solid character below that air |
+| `\ue003` | Ceiling light | A ceiling block on the light grid: part-local X and Z both 2 modulo 4, one light per four-by-four bay |
+| `\ue010` to `\ue014` | Park flora: temperate, arid, cold, jungle, swamp | A 128-slot list `worldgen.city.ParkGreenery` draws a park's plants from, for the chunk's biome, instead of its vanilla tables |
+
+Undefined, each falls back to the part's own character or the vanilla table, so the variety off or absent leaves upstream's blocks.
+
 ## The asset API
 
 What `layout` and `worldgen` consume, all in plain Java under `com.tuxprogrammer.lostcities.asset`:
 
 | Class | Use |
 |---|---|
-| `AssetSet` | The loaded set: typed lookups by `AssetId` (`building`, `part`, `palette`, `style`, `cityStyle`, `worldStyle`, `scattered`, `stuff`, `condition`, `variant`, `multiBuilding`, `predefinedCities`), `stuffByTag`, `codeBlock` (blocks upstream's code names: doors, leaves, rubble, torches, vines), `defaultLeaves` and `defaultRubble`, `pools`, `mapping` (rotation families), `hash`, `fileHashes` and `changedFiles` for the P05-3 warning, `problems`, `fallbacks`. `core.assets.LoadedAssets.current()` returns the set loaded at `postInit` |
+| `AssetSet` | The loaded set: typed lookups by `AssetId` (`building`, `part`, `palette`, `style`, `cityStyle`, `worldStyle`, `scattered`, `stuff`, `condition`, `variant`, `multiBuilding`, `predefinedCities`), `stuffByTag`, `codeBlock` (blocks upstream's code names: doors, leaves, rubble, torches, vines), `defaultLeaves` and `defaultRubble`, `pools`, `variety` (the [palette variety](#palette-variety); `palette(id)` finds its options too), `mapping` (rotation families), `hash`, `fileHashes` and `changedFiles` for the P05-3 warning, `problems`, `fallbacks`. `core.assets.LoadedAssets.current()` returns the set loaded at `postInit` |
 | `AssetId` | A full id; `AssetId.parse` normalizes a bare name |
 | `BlockRef`, `block.BlockChoice` | A resolved block, and its metal-off block; `block(MetalFlags)` picks one, `family()` gives its rotation family, `isHardAir()` the marker |
 | `block.MetalFlags` | A world's decorative-metal flags; `config.DecorativeMetalsConfig.flags()` reads the config's |

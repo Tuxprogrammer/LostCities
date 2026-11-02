@@ -32,6 +32,7 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - Cities now also build around Roguelike Dungeons towers, LootGames puzzle dungeons, AE2 meteorites (stepping down so a crater cuts nothing), Witchery's structures and, on RWG2, its volcanoes, lava caves and river junctions; Roguelike towers no longer land inside cities.
 - Railcraft's quarried-stone patches are kept out of cities, like lakes and oil.
 - Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
+- The pack's variety in cities (milestone M11): buildings draw their walls, trims, bands, glass and quartz from GTNH's decorative blocks (Chisel, Railcraft, Et Futurum, Botania, Ztones, Tinkers', Thaumcraft, GregTech stones and more), each building its own mix within its upstream color family, and about two in five keep upstream's walls. Desert cities stay pale and muted. Interiors get wood, tile and stone floors, office ceilings, ceiling lights in nearly half the buildings, kitchens, workshops and studies, and varied bookshelves and fences; parks and planters get flowers from Et Futurum, Biomes O' Plenty and Botania. Without one of those mods, its blocks give way to upstream's. `worldgen.paletteVariety` switches it off for new worlds; see [docs/config.md](docs/config.md).
 
 ### Changed
 

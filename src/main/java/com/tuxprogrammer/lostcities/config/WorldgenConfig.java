@@ -58,5 +58,11 @@ public final class WorldgenConfig {
     @Config.DefaultBoolean(true)
     public static boolean scatteredStructures = true;
 
+    @Config.Comment({
+        "Draw building walls, glass, interior floors, ceilings, lights, furniture and park flora from the",
+        "pack's decorative blocks. Off, cities use upstream Lost Cities' blocks only. New worlds only." })
+    @Config.DefaultBoolean(true)
+    public static boolean paletteVariety = true;
+
     private WorldgenConfig() {}
 }
