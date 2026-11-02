@@ -244,7 +244,7 @@ Tests that read the compiled classes and resources and fail the build:
 - **Real pack:** the release jar on a GTNH 2.9.0 dedicated server and client, alongside RWG and GT ore generation, at the alpha and beta gates.
 - **Visual:** `runClient` and real-pack screenshots of each feature's structures, including with shaders where rendering is involved. Visual changes keep their screenshots with the change's evidence.
 
-Builds and Minecraft runs happen on the build server, not on a development laptop (decision log D4).
+Builds and Minecraft runs happen on the build server, not on a development laptop (decision log D4). [tools/remote/](tools/remote/README.md) runs builds, the dev server, the real-pack server and client screenshots there, and states the shared-box rules.
 
 ## Assets and localization
 

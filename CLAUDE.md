@@ -63,7 +63,7 @@ Skills live in [.claude/skills/](.claude/skills/). Claude Code loads one automat
 python3 -I tools/semantic-search/index.py --query "..."   # semantic search from the shell
 ```
 
-Builds and Minecraft runs belong on the build server, not a development laptop (decision log D4).
+Builds and Minecraft runs belong on the build server, not a development laptop (decision log D4). Drive it with [tools/remote/lc-remote.sh](tools/remote/README.md) (`build <slot> <rev>`, `devserver`, `realpack`, `client`); host and paths come from the git-ignored `.env`.
 
 ## Housekeeping
 
