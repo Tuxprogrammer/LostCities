@@ -62,8 +62,8 @@ public final class AssetSet {
     AssetSet(Map<AssetType, SortedMap<AssetId, Object>> assets, Map<String, List<Stuff>> stuffByTag,
         SortedMap<String, String> fileHashes, String hash, List<AssetProblem> problems,
         List<BlockResolver.Fallback> fallbacks, List<String> unreachable, BlockMapping mapping, VarietyPools pools,
-        PaletteVariety variety, Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves,
-        RandomList defaultRubble, BlockColors colors) {
+        PaletteVariety variety, Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves, RandomList defaultRubble,
+        BlockColors colors) {
         this.assets = assets;
         this.stuffByTag = stuffByTag;
         this.fileHashes = fileHashes;
