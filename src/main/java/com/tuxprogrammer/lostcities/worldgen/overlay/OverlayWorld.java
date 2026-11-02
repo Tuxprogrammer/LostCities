@@ -331,7 +331,9 @@ public final class OverlayWorld {
         return recorder;
     }
 
-    /** Returns the layout's terrain view over this world (D51), as the real plan source's {@code LayoutPlanner} has it. */
+    /**
+     * Returns the layout's terrain view over this world (D51), as the real plan source's {@code LayoutPlanner} has it.
+     */
     public WorldTerrainView terrainView() {
         return new WorldTerrainView(world, heights);
     }
