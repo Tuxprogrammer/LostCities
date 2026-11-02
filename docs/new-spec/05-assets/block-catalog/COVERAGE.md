@@ -156,7 +156,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | EnderZoo | `EnderZoo-1.3.6.jar` | D | 13 | 1 | Nothing useful: Explosive charges |
 | Fether | `fether-2.0.9.jar` | D | 55 | 12 | [fether.md](fether.md): 12 registry names, 3 useful. Harvest the Nether port: crimson wood, glow flower |
 | FloodLights | `FloodLights-1.5.6.jar` | D | 19 | 7 | [floodlights.md](floodlights.md): 7 registry names, 3 useful. Unpowered fixtures as dead ceiling panels only |
-| ForbiddenMagic | `Forbidden.Magic-0.9.18-GTNH.jar` | D | 25 | 10 | Nothing useful: Purple tainted wood and stone, a wrath-cage spawner |
+| ForbiddenMagic | `Forbidden.Magic-0.9.18-GTNH.jar` | D | 25 | 10 | [thaumic-addons.md](thaumic-addons.md#forbidden-magic): umbral roses and tainted stone bricks for parks and eldritch ruins; the rest off-theme |
 | ForestryMC | `Forestry-4.11.40.jar` | D | 337 | 36 | [forestry.md](forestry.md): 33 registry names, ~150 useful. 29 woods incl. fireproof; every wood block is a tile entity (`WT` NBT); mailbox |
 | ForgeMultipart | `ForgeMultipart-1.7.18.jar` | D | 0 | 1 | Nothing useful: One microblock container block; contents in NBT, too complex for palettes |
 | ForgeRelocation | `ForgeRelocation-0.3.7.jar` | D | 6 | 0 | Nothing useful: Wooden support frame and a motor; marginal (sheet `forgerelocation/`) |
@@ -199,7 +199,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | StorageDrawers | `StorageDrawers-2.2.31-GTNH.jar` | D | 1024 | 97 | [storagedrawers.md](storagedrawers.md): 51 registry names, ~90 useful. 83 plain framed-wood trim blocks (no TE); drawers as storeroom dressing |
 | StructureLib | `structurelib-1.4.47.jar` | D | 16 | 1 | Nothing useful: One hint block for multiblock previews |
 | supersolarpanels | `supersolarpanel-1.1.5.jar` | D | 12 | 4 | Nothing useful: Ticking generators; free high-tier loot against the EV ceiling (sheet `solarpanels/`) |
-| Tainted-Magic | `Tainted-Magic-7.7.8-GTNH.jar` | D | 8 | 6 | Nothing useful: Purple warpwood, shadowmetal, an ore |
+| Tainted-Magic | `Tainted-Magic-7.7.8-GTNH.jar` | D | 8 | 6 | [thaumic-addons.md](thaumic-addons.md#tainted-magic): warpwood and shadowmetal rows, all off-theme |
 | Thaumic_Exploration | `Thaumic-Exploration-1.5.29-GTNH.jar` | D | 54 | 14 | [thaumic-addons.md](thaumic-addons.md): 11 registry names, 1 row (partly). Floating candles only partly fit |
 | ThaumicBases | `Thaumic-Based-1.9.22.jar` | D | 219 | 53 | [thaumic-addons.md](thaumic-addons.md): 53 registry names, 37 rows (4 yes, 17 partly). Beta-era ancient bricks, cobblestone, mossy cobblestone, gravel |
 | ThaumicBoots | `thaumicboots-1.5.13.jar` | D | 64 | 0 | Nothing useful: Ships 64 block textures but registers no blocks |
@@ -218,7 +218,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | WirelessRedstone-CBE | `WR-CBE-1.7.12.jar` | D | 4 | 0 | Nothing useful: Multipart parts, no blocks |
 | Witchery | `witchery-1.7.10-0.24.1.jar` | D | 213 | 36 | [witchery.md](witchery.md): ~120 registry names, ~30 useful. Rowan, alder, hawthorn woods; shaded glass; spreading and teleporting brambles flagged |
 | WitcheryExtras | `WitcheryExtras-1.4.20.jar` | D | 0 | 0 | Nothing useful: Mixins only |
-| WitchingGadgets | `WitchingGadgets-1.8.53-GTNH.jar` | D | 47 | 7 | Nothing useful: Machines, a mirror portal, a rose vine that damages on contact |
+| WitchingGadgets | `WitchingGadgets-1.8.53-GTNH.jar` | D | 47 | 7 | [thaumic-addons.md](thaumic-addons.md#witching-gadgets): rose vines out of reach, the infernal blast furnace's bricks as a partial old-town accent |
 | AkashicTome | `akashictome-1.2.7.jar` | - | 0 | 0 | No placeable blocks |
 | Angelica | `angelica-2.2.43.jar` | - | 3 |  | No placeable blocks: client renderer; textures only |
 | AngerMod | `AngerMod-1.0.7.jar` | - | 0 | 0 | No placeable blocks |
