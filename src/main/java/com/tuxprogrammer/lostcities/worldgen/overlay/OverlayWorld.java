@@ -373,7 +373,9 @@ public final class OverlayWorld {
 
     /** Returns the most memory the world's caches can hold, estimated, for budget B5. */
     public long cacheBytes() {
-        return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES + ChunkColumnCache.MAX_BYTES + (cities == null ? 0 : cities.estimatedCacheBytes());
+        return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES
+            + ChunkColumnCache.MAX_BYTES
+            + (cities == null ? 0 : cities.estimatedCacheBytes());
     }
 
     /** Frees the caches; the world is unloading. */
