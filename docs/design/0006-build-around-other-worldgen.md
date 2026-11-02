@@ -167,8 +167,6 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
 
 For the prototype and the alpha screenshots:
 
-- The village oracle against `data/Village.dat` over many starts, and the side effects of a private `Start` construction.
-- How often VillageNames villages start in RWG2's biomes.
 - The Roguelike prediction's hit rate.
 - The look of edge strips, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers; how often retaining borders appear.
 - Thaumcraft mounds in city parks.
