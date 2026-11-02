@@ -25,7 +25,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
  * {@code city.sewing} (manual only): checks the sewing of a real VillageNames village into a real city on the real
  * pack (0006 §3, M05). It finds the village lane nearest chunk (−4096, 4096), where the oracle scenario found villages
  * on both world types (D90), generates the 21 × 21 chunks around it, and checks the 17 × 17 inside: no landmark core
- * written but for a lane's surface path, no building in an edge ring, and the lane paved. On RWG2 it does the same
+ * written but for a lane's surface path, no city chunk in a margin, and the lane paved. On RWG2 it does the same
  * around the nearest ocean monument's reserved lot: its cores are left as RWG made them. Prints {@code [LCNH-SEWING]}
  * lines with what it measured, and the viewpoints {@code /lostcities find} would give.
  *
@@ -116,7 +116,8 @@ final class SewingScenario implements Scenario {
             .info("[LCNH-SEWING] {} around the village: {}", HeightOracles.worldType(context.world()), sewing);
         context.check(sewing.cores > 0, "expected the village's core chunks");
         context.check(sewing.coresWritten == 0, "landmark cores written beyond a lane: " + sewing.coresWritten);
-        context.check(sewing.edgeRingBuildings == 0, "buildings in an edge ring: " + sewing.edgeRingBuildings);
+        context.check(sewing.margin > 0, "expected the village's margin chunks");
+        context.check(sewing.marginCity == 0, "city chunks in a margin: " + sewing.marginCity);
         context.check(sewing.lanePaved > 0, "expected lane columns paved, found none");
         if (reserved != null) {
             Count kept = count(context.world(), overlay, reserved.chunkX(), reserved.chunkZ());
@@ -168,8 +169,8 @@ final class SewingScenario implements Scenario {
         int cores;
         int coresWritten;
         int coreLanes;
-        int edgeRing;
-        int edgeRingBuildings;
+        int margin;
+        int marginCity;
         int gates;
         int lanes;
         int links;
@@ -180,13 +181,13 @@ final class SewingScenario implements Scenario {
         public String toString() {
             return String.format(
                 Locale.ROOT,
-                "core chunks %d (written beyond a lane %d, with a lane %d), edge-ring city chunks %d (with a building %d),"
+                "core chunks %d (written beyond a lane %d, with a lane %d), margin chunks %d (city %d),"
                     + " gate %d, lane %d, link %d chunks, lane columns paved %d/%d",
                 cores,
                 coresWritten,
                 coreLanes,
-                edgeRing,
-                edgeRingBuildings,
+                margin,
+                marginCity,
                 gates,
                 lanes,
                 links,
@@ -212,9 +213,9 @@ final class SewingScenario implements Scenario {
                 count.gates += role == LaneRole.GATE ? 1 : 0;
                 count.lanes += role == LaneRole.LANE ? 1 : 0;
                 count.links += role == LaneRole.LINK ? 1 : 0;
-                if (zone == Zone.EDGE_RING && layout.isCity()) {
-                    count.edgeRing++;
-                    count.edgeRingBuildings += layout.hasBuilding() ? 1 : 0;
+                if (zone == Zone.EDGE_RING) {
+                    count.margin++;
+                    count.marginCity += layout.isCity() ? 1 : 0;
                 }
                 if (zone == Zone.CORE) {
                     count.cores++;

@@ -8,7 +8,9 @@ import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 /**
  * A chunk's city level, 0 to 8, from the height oracle: the first {@code cityLevel<n>Height} threshold the height is
  * strictly below, optionally from the height averaged with up to four sampled city neighbors
- * ({@code useAvgHeightmap}, {@code heightSampleSize > 2}). Upstream's {@code BuildingInfo.computeCityLevel} for the
+ * ({@code useAvgHeightmap}, {@code heightSampleSize > 2}). A city chunk's level is then capped at its city's base level
+ * plus {@code cityMaxRise} (a deviation from upstream, alpha review AR-4; {@link CityMap#riseBase}). Upstream's
+ * {@code BuildingInfo.computeCityLevel} for the
  * {@code default} landscape; the space, floating and cavern rules are not ported (D12). Levels are cached per chunk in
  * a bounded cache the planner owns.
  *
@@ -46,6 +48,18 @@ final class CityLevels {
     }
 
     private int compute(int chunkX, int chunkZ) {
+        int level = natural(chunkX, chunkZ);
+        if (!profile.capsRise() || !cities.isCityRaw(chunkX, chunkZ)) {
+            return level;
+        }
+        // Deviation (AR-4, height-mapping.md "Rise cap"): a city chunk rises at most cityMaxRise levels above its
+        // city's base; CityMap has already left out terrain more than one level higher.
+        int base = cities.riseBase(chunkX, chunkZ);
+        return base == CityMap.NO_BASE ? level : Math.min(level, base + profile.cityMaxRise);
+    }
+
+    /** Returns a chunk's level from the terrain alone, averaged as upstream averages it. */
+    private int natural(int chunkX, int chunkZ) {
         int height = terrain.height(chunkX, chunkZ);
         int sample = profile.heightSampleSize;
         if (!profile.useAvgHeightmap || sample <= MIN_AVERAGING_SAMPLE) {
@@ -79,11 +93,6 @@ final class CityLevels {
 
     /** Returns the city level for a terrain height: the first threshold the height is strictly below, else 8. */
     int levelForHeight(int height) {
-        for (int level = 0; level < profile.cityLevelThresholds(); level++) {
-            if (height < profile.cityLevelHeight(level)) {
-                return level;
-            }
-        }
-        return profile.cityLevelThresholds();
+        return profile.levelForHeight(height);
     }
 }

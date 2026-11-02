@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.layout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ public class LandmarkZonesTest {
     }
 
     @Test
-    public void terrainLandmarksHaveNoEdgeRing() {
+    public void terrainLandmarksHaveAMarginToo() {
         LandmarkZones z = zones(
             LayoutProfile.defaults(),
             LayoutFixtures.landmark("volcano", LandmarkKind.TERRAIN, 84, 84, 91, 91));
@@ -124,9 +125,11 @@ public class LandmarkZonesTest {
             z.zone(5, 5)
                 .zone());
         assertEquals(
-            Zone.NONE,
+            Zone.EDGE_RING,
             z.zone(4, 5)
                 .zone());
+        assertTrue(Zone.EDGE_RING.forcesNonCity(), "the margin is never city (AR-10)");
+        assertFalse(Zone.EDGE_RING.barsLanes(), "a lane runs down the margin's slope");
     }
 
     @Test

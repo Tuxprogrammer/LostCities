@@ -1,7 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 // Ported from Lost Cities (MIT):
 // https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
-// Avoids: TERR-06, TERR-23, TERR-24
+// Avoids: TERR-06, TERR-23, TERR-24, TERR-39
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
@@ -19,7 +19,11 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
  * the water level minus one become that liquid, so the water stays joined to the lowered bed (P03-4, D31);</li>
  * <li>TERR-06: {@code clearRange} with water fills liquid up to the water level minus one and air from the water level
  * up, so no row is skipped;</li>
- * <li>TERR-24: every bound is a {@link WorldLimits} constant for the 1.7.10 range.</li>
+ * <li>TERR-24: every bound is a {@link WorldLimits} constant for the 1.7.10 range;</li>
+ * <li>TERR-39: {@code moveDown} looks at the block at {@code height} itself, so terrain standing exactly one block
+ * above a city's ground is lowered like any higher terrain. Upstream's scan stopped one block short and left that
+ * block, which on a street became a one-high line of grass or sand following the terrain's contour (alpha review
+ * AR-2).</li>
  * </ul>
  *
  * <p>
@@ -48,7 +52,7 @@ public final class ColumnOps {
      * @param height     the first Y that must end up clear; the new top is {@code height − 1}
      * @param top        the exclusive top of the scan, usually {@link WorldLimits#BUILD_HEIGHT}
      * @param waterLevel the water level; with a submerged surface, cleared blocks below it become liquid (TERR-23)
-     * @return the new top Y of the column, or {@link #NOT_TOUCHED} when the surface was already low enough
+     * @return the new top Y of the column, or {@link #NOT_TOUCHED} when the surface was already below {@code height}
      */
     public static int moveDown(ChunkBuffer buffer, BlockClassifier classes, int x, int z, int height, int top,
         int waterLevel) {
@@ -56,7 +60,8 @@ public final class ColumnOps {
         int y = Math.min(Math.min(top, WorldLimits.BUILD_HEIGHT) - 1, buffer.topY());
         int highestFoliage = NOT_TOUCHED;
         BlockRef liquidAbove = null;
-        while (y > height) {
+        // Avoids TERR-39: the block at height itself is looked at; upstream stopped above it and left it standing.
+        while (y >= height && y >= WorldLimits.MIN_Y) {
             BlockRef block = buffer.get(x, y, z);
             if (!classes.isFoliageOrEmpty(block)) {
                 break;
@@ -71,7 +76,7 @@ public final class ColumnOps {
             }
             y--;
         }
-        if (y <= height) {
+        if (y < height || y < WorldLimits.MIN_Y) {
             return NOT_TOUCHED;
         }
         int surface = y;

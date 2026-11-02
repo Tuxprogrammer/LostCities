@@ -7,7 +7,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 /**
  * Builds the layout's view of a world's pinned profile ({@link LayoutProfile}) from the values M04 pins
  * ({@link TerrainSettings}): ground and sea level, the city level thresholds, the height window, the height sample
- * size, the ruin chances, the ocean correction border and the landmark margin. Every other layout option keeps
+ * size, the rise cap, the ruin chances, the ocean correction border and the landmark margin. Every other layout option
+ * keeps
  * upstream's default until M09 pins custom profiles (docs/new-spec/02-profiles-dimensions/), so both halves of a world
  * read the same numbers.
  *
@@ -32,6 +33,7 @@ public final class CityProfiles {
             .levels(settings.groundLevel(), settings.waterLevel())
             .cityLevelHeights(settings.cityLevelHeights())
             .cityHeightWindow(settings.cityMinHeight(), settings.cityMaxHeight())
+            .cityMaxRise(settings.cityMaxRise())
             .averageHeightmap(false, settings.heightSampleSize())
             .ruins(settings.ruinChance(), settings.ruinMinlevelPercent(), settings.ruinMaxlevelPercent())
             .oceanCorrectionBorder(settings.oceanCorrectionBorder())

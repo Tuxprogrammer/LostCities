@@ -14,7 +14,8 @@ import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
 
 /**
  * Derives each chunk's landmark zone from the structure oracle (0006 §1, landmark-zones.md § Zones): the core (chunks
- * the footprint grown by {@code landmarkMargin} touches), the edge ring (the core's eight-neighbors), for villages the
+ * the footprint grown by {@code landmarkMargin} touches), the edge ring (the core's eight-neighbors: the city's margin,
+ * never city, for every kind of landmark), for villages the
  * {@code villageTransitionRings} transition rings beyond, and the lowest meteorite height cap. Under {@code AVOID} the
  * ring around a core is non-city instead (upstream's avoidance); under {@code IGNORE} the landmark has no effect.
  *
@@ -127,11 +128,7 @@ final class LandmarkZones {
             return Zone.CORE;
         }
         if (distance == EDGE_RING_DISTANCE) {
-            if (treatment == LandmarkTreatment.AVOID) {
-                return Zone.AVOID_RING;
-            }
-            return landmark.kind()
-                .hasEdgeRing() ? Zone.EDGE_RING : Zone.NONE;
+            return treatment == LandmarkTreatment.AVOID ? Zone.AVOID_RING : Zone.EDGE_RING;
         }
         if (treatment == LandmarkTreatment.BUILD_AROUND && landmark.kind()
             .isSewn() && distance <= EDGE_RING_DISTANCE + profile.villageTransitionRings) {

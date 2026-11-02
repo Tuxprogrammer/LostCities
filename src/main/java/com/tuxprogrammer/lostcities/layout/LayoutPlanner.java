@@ -309,9 +309,6 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         boolean could = isCity && checkBuildingPossibility(x, z, pos, cityLevel, planned, random, zone);
         // Zone rules, after upstream's draw (landmark-zones.md, "Random consumption").
-        if (could && zone.zone() == Zone.EDGE_RING) {
-            could = false;
-        }
         if (could && pos.isSingle() && !oneFloorFits(cityLevel, zone.heightCap())) {
             could = false;
         }
@@ -851,10 +848,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
     }
 
-    /** Steps 15 to 18: corridor and legacy bridge candidates, rail dungeon, front; edge-ring rules after the draws. */
+    /** Steps 15 to 18: corridor and legacy bridge candidates, rail dungeon, front. */
     private void drawTail(ChunkPlan.Builder b, int x, int z, QualityRandom random, CityStyleView style) {
         ChunkCharacteristics c = b.characteristics;
-        boolean edgeRing = c.isCity && c.zone.zone() == Zone.EDGE_RING;
         if (b.hasBuilding && b.cellars > 0) {
             b.xRailCorridor = false;
             b.zRailCorridor = false;
@@ -875,36 +871,42 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (random.nextFloat() < b.settings.frontChance()) {
             b.frontPart = pick(style, Selection.FRONTS, random, x, z);
         }
-        if (edgeRing) {
-            // Deviation (0006 §4, E7): nothing city-made underground in the edge ring, whatever the draws say.
-            b.xRailCorridor = false;
-            b.zRailCorridor = false;
-            b.railDungeonPart = null;
-        }
     }
 
     /**
-     * Avoids CITY-12: a secondary or tertiary road that runs into a landmark core ends in the edge-ring chunk
-     * facing it, which becomes a plaza ({@link StreetType#FULL}; 0006 §3).
+     * Avoids CITY-12: a road that runs into a landmark's margin ends in the city chunk facing it, which becomes a
+     * plaza ({@link StreetType#FULL}; 0006 §3, the margin of alpha review AR-10). A primary road whose detour could
+     * not be laid (one of its ends is not city) ends in a plaza too, rather than running into the margin's border
+     * (AR-7: a street should not stop dead where it could go on); a detour chunk keeps its road.
      */
     private void applyPlaza(ChunkPlan.Builder b, int x, int z) {
         ChunkCharacteristics c = b.characteristics;
-        if (!c.isCity || b.hasBuilding
-            || c.zone.zone() != Zone.EDGE_RING
-            || c.lane.role() != LaneRole.NONE
-            || (b.plannedRoad != PlannedRoadType.SECONDARY && b.plannedRoad != PlannedRoadType.TERTIARY)) {
+        if (!c.isCity || b.hasBuilding || c.lane.role() != LaneRole.NONE || !b.plannedRoad.isRoad()) {
             return;
         }
         PlannedStreetInfo raw = streets.getStreetInfo(x, z);
         for (RoadDirection direction : RoadDirection.values()) {
             if (raw.connects(direction) && zones.zone(x + direction.stepX(), z + direction.stepZ())
-                .zone() == Zone.CORE) {
+                .zone() == Zone.EDGE_RING && (b.plannedRoad != PlannedRoadType.PRIMARY || deadEnd(raw, direction))) {
                 b.streetType = StreetType.FULL;
                 b.fountainPart = null;
                 b.parkPart = null;
                 return;
             }
         }
+    }
+
+    /**
+     * Whether a primary road chunk is the end of a straight run into the margin: it connects only toward the margin
+     * and back. A primary crossing there keeps its road, so a plaza never cuts a primary line that goes on.
+     */
+    private static boolean deadEnd(PlannedStreetInfo raw, RoadDirection toMargin) {
+        for (RoadDirection other : RoadDirection.values()) {
+            if (other != toMargin && other != toMargin.opposite() && raw.connects(other)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static String pick(CityStyleView style, Selection list, Random random, int x, int z) {

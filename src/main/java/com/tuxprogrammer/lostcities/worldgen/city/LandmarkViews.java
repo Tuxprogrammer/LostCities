@@ -30,7 +30,7 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
  * strip visibly ramps (3 to 10 blocks). Ties go to the nearer.</li>
  * <li>Views stand beside what they show, above the highest ground on the line of sight plus room for trees, and look
  * down at the target: a village gate from the side, so the city lies on one half of the frame, the village on the
- * other and the lane between; a reserved lot from inside the city across its edge ring; a soft edge along the
+ * other and the lane between; a reserved lot from inside the city across its margin; a soft edge along the
  * strip, so its ramp shows in profile.</li>
  * </ul>
  *
@@ -45,12 +45,12 @@ final class LandmarkViews {
     static final int GATE_SIDE = 40;
     /** How far toward the city from the gate chunk's middle the gate view stands, in blocks. */
     static final int GATE_TOWARD_CITY = 8;
-    /** How far into the city from the edge ring the reserved-lot view stands, in blocks. */
+    /** How far into the city from the core's middle the reserved-lot view stands, across the margin, in blocks. */
     static final int RESERVED_BACK = 44;
-    /** How far along a soft edge the view stands from the strip's middle, in blocks. */
+    /** How far along the margin the soft-edge view stands from the margin chunk's middle, in blocks. */
     static final int STRIP_ALONG = 26;
-    /** How far into the city from the strip the soft-edge view stands, in blocks. */
-    static final int STRIP_INWARD = 10;
+    /** How far into the city from the margin chunk's middle the soft-edge view stands, in blocks. */
+    static final int STRIP_INWARD = 18;
     /** Height of a view above the highest ground on its line of sight, room for trees, in blocks. */
     static final int LIFT = 26;
     /** Height of a soft-edge view above the highest ground on its line of sight, in blocks. */
@@ -164,10 +164,12 @@ final class LandmarkViews {
                 .role() != LaneRole.GATE) {
                 continue;
             }
-            ChunkPlan gateChunk = plan.chunk(x, z);
+            // The gate chunk is the city's margin; the lane is in a city when the chunk beyond it is.
+            boolean inCity = plan.chunk(x + out.stepX(), z + out.stepZ())
+                .isCity();
             int ground = surface(x, z);
             int score = relief(x, z) + Math.abs(ground - landmark.groundEstimate())
-                + (gateChunk.isCity() ? 0 : OUTSIDE_CITY_PENALTY);
+                + (inCity ? 0 : OUTSIDE_CITY_PENALTY);
             int targetX = (x << 4) + 8;
             int targetZ = (z << 4) + 8;
             // Beside the lane: the city on one half of the frame, the village on the other.
@@ -192,7 +194,7 @@ final class LandmarkViews {
                         "gate of %s facing %s, %s, relief %d, ground %d to the village's %d",
                         landmark.id(),
                         out.name(),
-                        gateChunk.isCity() ? "in the city" : "outside a city",
+                        inCity ? "in the city" : "outside a city",
                         relief(x, z),
                         ground,
                         landmark.groundEstimate()));
@@ -209,8 +211,8 @@ final class LandmarkViews {
     }
 
     /**
-     * Returns a landmark's best reserved-lot or soft-edge view: a city chunk of its edge ring beside one of its core
-     * chunks.
+     * Returns a landmark's best reserved-lot or soft-edge view: a chunk of its margin (the edge ring, never city)
+     * beside one of its core chunks, with a city chunk on the margin's other side.
      */
     private Candidate reserved(Landmark landmark, int blockX, int blockZ, int startX, int startZ, int radius,
         boolean strip) {
@@ -231,14 +233,19 @@ final class LandmarkViews {
                     continue;
                 }
                 for (RoadDirection side : RoadDirection.values()) {
-                    // The city chunk E beside core chunk C, and the direction from E to C.
+                    // The margin chunk E beside core chunk C, the direction from E to C, and the city chunk I inside E.
                     int ex = cx - side.stepX();
                     int ez = cz - side.stepZ();
-                    if (!within(ex, ez, startX, startZ, radius) || !plan.chunk(ex, ez)
-                        .isCity()) {
+                    int ix = ex - side.stepX();
+                    int iz = ez - side.stepZ();
+                    if (!within(ex, ez, startX, startZ, radius) || plan.chunk(ex, ez)
+                        .isCity()
+                        || isCoreOf(ex, ez, landmark)
+                        || !plan.chunk(ix, iz)
+                            .isCity()) {
                         continue;
                     }
-                    Candidate found = strip ? softEdge(landmark, ex, ez, cx, cz, side, blockX, blockZ)
+                    Candidate found = strip ? softEdge(landmark, ex, ez, ix, iz, cx, cz, side, blockX, blockZ)
                         : lot(landmark, ex, ez, cx, cz, side, blockX, blockZ);
                     if (found.beats(best)) {
                         best = found;
@@ -255,7 +262,7 @@ final class LandmarkViews {
         int score = relief(cx, cz) + Math.abs(ground - landmark.groundEstimate());
         int targetX = (cx << 4) + 8;
         int targetZ = (cz << 4) + 8;
-        // From inside the city, across the edge ring's park to the core.
+        // From inside the city, across the margin to the core.
         double viewX = targetX + 0.5 - side.stepX() * RESERVED_BACK;
         double viewZ = targetZ + 0.5 - side.stepZ() * RESERVED_BACK;
         CityFinder.Result view = look(
@@ -270,21 +277,21 @@ final class LandmarkViews {
             LIFT,
             String.format(
                 Locale.ROOT,
-                "landmark core %s seen across its edge ring from %s, relief %d",
+                "landmark core %s seen across its margin from %s, relief %d",
                 landmark.id(),
                 opposite(side),
                 relief(cx, cz)));
         return new Candidate(view, score, distance(view, blockX, blockZ));
     }
 
-    private Candidate softEdge(Landmark landmark, int ex, int ez, int cx, int cz, RoadDirection side, int blockX,
-        int blockZ) {
-        int ground = surface(ex, ez);
+    private Candidate softEdge(Landmark landmark, int ex, int ez, int ix, int iz, int cx, int cz, RoadDirection side,
+        int blockX, int blockZ) {
+        int ground = surface(ix, iz);
         int step = Math.abs(ground - surface(cx, cz));
         int score = relief(cx, cz) + Math.max(0, STRIP_STEP_MIN - step) * 2 + Math.max(0, step - STRIP_STEP_MAX);
-        // The strip's middle, on the city chunk's side that faces the core.
-        int targetX = (ex << 4) + 8 + side.stepX() * 7;
-        int targetZ = (ez << 4) + 8 + side.stepZ() * 7;
+        // The middle of the margin's slope, between the city chunk and the core.
+        int targetX = (ex << 4) + 8;
+        int targetZ = (ez << 4) + 8;
         CityFinder.Result view = null;
         for (int sign = -1; sign <= 1; sign += 2) {
             double viewX = targetX + 0.5 - side.stepZ() * sign * STRIP_ALONG - side.stepX() * STRIP_INWARD;
@@ -301,7 +308,7 @@ final class LandmarkViews {
                 STRIP_LIFT,
                 String.format(
                     Locale.ROOT,
-                    "soft edge toward %s (%s), step %d, relief %d",
+                    "margin toward %s (%s), step %d, relief %d",
                     side.name(),
                     landmark.id(),
                     step,

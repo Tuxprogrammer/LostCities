@@ -50,6 +50,22 @@ public class ColumnOpsTest {
     }
 
     @Test
+    public void doesNotReproduceTERR39_terrainExactlyAtTheTargetIsLowered() {
+        ArrayChunkBuffer buffer = column(72, TestTerrain.SAND);
+        int top = ColumnOps.moveDown(buffer, CLASSES, 0, 0, 72, WorldLimits.BUILD_HEIGHT, 63);
+        assertEquals(71, top, "a surface exactly at the first Y that must be clear is lowered too");
+        assertEquals(BlockRef.AIR, buffer.get(0, 72, 0), "nothing is left standing at the target");
+        assertEquals(TestTerrain.SAND, buffer.get(0, 71, 0), "the surface block moves down one");
+    }
+
+    @Test
+    public void moveDownLeavesAColumnJustBelowTheTargetAlone() {
+        ArrayChunkBuffer buffer = column(71, TestTerrain.GRASS);
+        assertEquals(ColumnOps.NOT_TOUCHED, ColumnOps.moveDown(buffer, CLASSES, 0, 0, 72, 256, 63));
+        assertEquals(TestTerrain.GRASS, buffer.get(0, 71, 0));
+    }
+
+    @Test
     public void moveUpCopiesTheColumnUntilAnAirGap() {
         ArrayChunkBuffer buffer = column(64, TestTerrain.GRASS);
         buffer.set(0, 55, 0, BlockRef.AIR);
