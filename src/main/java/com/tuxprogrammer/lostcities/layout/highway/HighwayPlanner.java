@@ -22,7 +22,7 @@ import com.tuxprogrammer.lostcities.layout.random.StableHash;
  * generated or asked before.
  *
  * <p>
- * Changes from upstream (new-spec 06, design record 0008):
+ * Changes from upstream (new-spec 06, design record 0009):
  * <ul>
  * <li>Landmark obstacles (D31 P06-1, P06-2, alpha review AR-10): a hub is never an obstacle chunk (a landmark's core
  * or its margin); a route prefers a shape that crosses none, detours around one, or ends a chunk before it.</li>

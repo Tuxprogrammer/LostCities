@@ -44,7 +44,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <li>Avoids CITY-19 (HWY-07): where the world style's {@code railwayavoidance} is {@code block_railway} and this
  * chunk's building reaches down into its rail, only this chunk's rail is left out; the layout's answer for its
  * neighbors never changes.</li>
- * <li>Ramps and plazas (design record 0008, alpha review AR-10): a ramp is the straight piece written column by column
+ * <li>Ramps and plazas (design record 0009, alpha review AR-10): a ramp is the straight piece written column by column
  * along its axis a half block higher every few columns, one level across the chunk, with a bottom half slab wherever a
  * column stands a half block up, so the climb never needs a jump; a run's end is a crossing piece at the ground's
  * level, the plaza a highway ends on.</li>
@@ -125,6 +125,27 @@ public final class NetworkWriter {
         com.tuxprogrammer.lostcities.worldgen.plan.StyleBlocks style = context.styleBlocks(plan);
         this.liquid = style.liquid();
         this.writer = new PartWriter(target, sequence, context.rules(plan, style), context.log());
+        PartRecorder recorder = context.recorder();
+        if (!target.dryRun() && recorder != PartRecorder.NONE) {
+            // Part editor (D13): the network's parts are recorded after the city's own; a chunk the city writer
+            // did not start (no city, no bridge) starts its list here.
+            boolean started = plan.isCity()
+                || planner.bridgePart(chunkX, chunkZ, com.tuxprogrammer.lostcities.layout.street.Orientation.X) != null
+                || planner.bridgePart(chunkX, chunkZ, com.tuxprogrammer.lostcities.layout.street.Orientation.Z) != null;
+            if (!started) {
+                recorder.beginChunk(chunkX, chunkZ);
+            }
+            writer.onPlace(
+                placement -> recorder.record(
+                    chunkX,
+                    chunkZ,
+                    placement.part()
+                        .id(),
+                    placement.oy(),
+                    placement.transform(),
+                    placement.ox(),
+                    placement.oz()));
+        }
     }
 
     /**

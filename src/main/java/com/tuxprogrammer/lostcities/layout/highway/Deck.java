@@ -3,7 +3,7 @@ package com.tuxprogrammer.lostcities.layout.highway;
 /**
  * A highway's deck across one chunk along one axis: its city level at the chunk's west or north side ({@link #low()},
  * the lower coordinate) and at its east or south side ({@link #high()}). Equal for a flat piece; one apart for a ramp
- * (design record 0008). {@link #end()} marks the end chunk of a run, which becomes a plaza.
+ * (design record 0009). {@link #end()} marks the end chunk of a run, which becomes a plaza.
  *
  * <p>
  * Side: both.

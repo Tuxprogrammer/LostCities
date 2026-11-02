@@ -130,6 +130,7 @@ public final class TerrainPhase {
     private final int[] inner = new int[256];
     private final boolean[] skip = new boolean[256];
     private final int[][] coreEdges = new int[4][16];
+    private ChunkEvents events = ChunkEvents.NONE;
 
     /**
      * Creates the terrain phase of one world.
@@ -145,6 +146,15 @@ public final class TerrainPhase {
         this.fragments = new FloatingFragments(context);
         this.ruins = new Ruins(context);
         this.damageReach = DamageArea.searchRange(context.settings());
+    }
+
+    /**
+     * Sets the API's generation hooks (docs/api.md, Events); {@link ChunkEvents#NONE} by default.
+     *
+     * @param value the hooks, never {@code null}
+     */
+    public void events(ChunkEvents value) {
+        events = java.util.Objects.requireNonNull(value);
     }
 
     /** Returns the plan source. */
@@ -166,11 +176,14 @@ public final class TerrainPhase {
             int paved = plan.lane() == null ? 0 : VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
             // A railway deep enough to pass under the core (D30, D31); nothing else the city makes.
             boolean rail = network(buffer, chunkX, chunkZ, plan);
+            events.postOutside(buffer, chunkX, chunkZ);
             return paved > 0 || rail ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, paved) : UNTOUCHED;
         }
         if (!plan.isCity() && plan.lane() == null && !nearCityOrCore(chunkX, chunkZ)) {
             // Far from every city: nothing but a highway or railway passing through (M06).
-            return network(buffer, chunkX, chunkZ, plan) ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, 0) : UNTOUCHED;
+            boolean network = network(buffer, chunkX, chunkZ, plan);
+            events.postOutside(buffer, chunkX, chunkZ);
+            return network ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, 0) : UNTOUCHED;
         }
         ChunkPlan[] sides = sides(chunkX, chunkZ);
         DamageArea area = damageArea(chunkX, chunkZ);
@@ -223,15 +236,21 @@ public final class TerrainPhase {
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
             changed |= paved > 0;
         }
+        if (!plan.isCity()) {
+            events.postOutside(buffer, chunkX, chunkZ);
+        }
 
         Random random = damage.damageRandom(chunkX, chunkZ);
         int damaged = 0;
         int moved = 0;
-        if (area.hasExplosions()) {
-            damaged = damage.breakBlocks(buffer, area, plan, random);
-            moved = fragments.apply(buffer, area, plan, sides, random);
+        int debris = 0;
+        if (events.preExplosion(buffer, chunkX, chunkZ)) {
+            if (area.hasExplosions()) {
+                damaged = damage.breakBlocks(buffer, area, plan, random);
+                moved = fragments.apply(buffer, area, plan, sides, random);
+            }
+            debris = damage.debris(buffer, plan, debrisNeighbors, debrisAreas, random);
         }
-        int debris = damage.debris(buffer, plan, debrisNeighbors, debrisAreas, random);
         int vines = Vines
             .grow(buffer, context, plan, sides, sideAreas, Vines.random(context.worldSeed(), chunkX, chunkZ));
         changed |= damaged > 0 || moved > 0 || debris > 0 || vines > 0;
@@ -257,13 +276,23 @@ public final class TerrainPhase {
         if (plan.hasBuilding()) {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
-        plan.content()
-            .write(
-                buffer,
-                new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), skipMask));
-        if (!plan.hasBuilding()) {
-            CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
+        if (events.preCity(buffer, chunkX, chunkZ)) {
+            plan.content()
+                .write(
+                    buffer,
+                    new ContentContext(
+                        chunkX,
+                        chunkZ,
+                        plan,
+                        cityPlan,
+                        context,
+                        contentRandom(chunkX, chunkZ),
+                        skipMask));
+            if (!plan.hasBuilding()) {
+                CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
+            }
         }
+        events.postCity(buffer, chunkX, chunkZ);
         Random ruinRandom = ruins.random(chunkX, chunkZ);
         ruins.ruin(buffer, chunkX, chunkZ, plan, ruinRandom, skipMask);
         if (!plan.hasBuilding() || plan.ruinHeight() >= 0) {

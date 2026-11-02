@@ -90,7 +90,7 @@ final class LandmarkZones {
     /**
      * Returns the landmarks a highway must keep out of within a rectangle of chunks: every landmark not ignored whose
      * core or margin (the edge ring, or the ring of an avoided landmark) may touch it, sorted by identity (M06,
-     * design record 0008).
+     * design record 0009).
      *
      * @param minX lowest chunk X
      * @param minZ lowest chunk Z

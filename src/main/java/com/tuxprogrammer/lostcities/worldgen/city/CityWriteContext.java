@@ -39,6 +39,7 @@ public final class CityWriteContext {
     private final BiomeSource biomes;
     private final BlockClassifier classifier;
     private final LayoutLog log;
+    private PartRecorder recorder = PartRecorder.NONE;
 
     /**
      * Creates the context of one world.
@@ -115,6 +116,20 @@ public final class CityWriteContext {
     /** Returns the deduplicating log. */
     public LayoutLog log() {
         return log;
+    }
+
+    /** Returns where written parts are recorded: {@link PartRecorder#NONE} unless the world has {@code editMode}. */
+    public PartRecorder recorder() {
+        return recorder;
+    }
+
+    /**
+     * Sets where written parts are recorded; the overlay sets it once, when it builds an {@code editMode} world.
+     *
+     * @param value the recorder, never {@code null}
+     */
+    public void recorder(PartRecorder value) {
+        recorder = java.util.Objects.requireNonNull(value);
     }
 
     /**

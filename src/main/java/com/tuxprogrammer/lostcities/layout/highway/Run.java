@@ -10,7 +10,7 @@ import java.util.List;
  * (new-spec 06, "R: route geometry" (3)).
  *
  * <p>
- * A run also knows its level profile (deviation, alpha review AR-10, design record 0008): the highway reaches each end
+ * A run also knows its level profile (deviation, alpha review AR-10, design record 0009): the highway reaches each end
  * at that end's own level, a hub's city level or the ground's level at a dead end, by ramps of one city level per
  * chunk next to it, and keeps the route's level between. Ramps never fall on a corner or an end chunk, which stay
  * flat, so bends, junctions and plazas keep their parts. Upstream keeps a route's level from end to end, so a highway
