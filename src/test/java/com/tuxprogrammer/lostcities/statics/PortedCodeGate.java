@@ -21,7 +21,8 @@ import java.util.stream.Stream;
  * A file is ported when it carries {@code // Ported from Lost Cities (MIT): <permalink>}. For each ported file the gate
  * reports a violation, tagged with its rule, when:
  * <ul>
- * <li>{@link #PLACEMENT}: the header is not the first line after the package declaration;</li>
+ * <li>{@link #PLACEMENT}: the header is not the first line after the package declaration (its link may stand on the
+ * next {@code //} line, where Spotless wraps it);</li>
  * <li>{@link #PERMALINK}: the link is not {@code github.com/McJtyMods/LostCities/blob/<commit>/...}, or the commit is
  * neither the baseline {@code f18a094d} nor another commit named in THIRD-PARTY-NOTICES.md (an older MIT branch such
  * as {@code 1.12} must be cited there first);</li>
@@ -59,6 +60,11 @@ final class PortedCodeGate {
     private static final Pattern PERMALINK_URL = Pattern
         .compile("https://github\\.com/McJtyMods/LostCities/blob/([0-9a-fA-F]{7,40})/\\S+");
     private static final Pattern AVOIDS = Pattern.compile("^\\s*//\\s*Avoids:(.*)$", Pattern.MULTILINE);
+    /** A {@code //} line holding a wrapped header's link. */
+    private static final Pattern CONTINUATION = Pattern.compile("^\\s*//\\s*(https://\\S+)\\s*$");
+    /** A {@code //} line holding only further bug IDs of a wrapped {@code Avoids:} line. */
+    private static final Pattern ID_CONTINUATION = Pattern
+        .compile("^\\s*//\\s*[A-Z]+-[0-9]+(\\s*,\\s*[A-Z]+-[0-9]+)*\\s*,?\\s*$");
     private static final Pattern BUG_TOKEN = Pattern.compile("[A-Z]+-[0-9]+");
     private static final Pattern BUG_ROW = Pattern.compile("^\\|\\s*([A-Z]+-[0-9]+)\\s*\\|", Pattern.MULTILINE);
     private static final Pattern UPSTREAM_CODE = Pattern.compile("mcjty", Pattern.CASE_INSENSITIVE);
@@ -164,9 +170,8 @@ final class PortedCodeGate {
         if (!testSource.contains("@Test")) {
             out.add(TEST_CLASS + ": no " + test.getFileName() + " with a @Test at the mirrored test path");
         }
-        Matcher avoids = AVOIDS.matcher(source);
-        while (avoids.find()) {
-            Matcher token = BUG_TOKEN.matcher(avoids.group(1));
+        for (String avoidsText : avoidsTexts(source)) {
+            Matcher token = BUG_TOKEN.matcher(avoidsText);
             boolean any = false;
             while (token.find()) {
                 any = true;
@@ -207,9 +212,8 @@ final class PortedCodeGate {
         while (commit.find()) {
             allowed.add(commit.group());
         }
-        Matcher header = HEADER.matcher(source);
-        while (header.find()) {
-            Matcher url = PERMALINK_URL.matcher(header.group(1));
+        for (String headerText : headerTexts(source)) {
+            Matcher url = PERMALINK_URL.matcher(headerText);
             if (!url.find()) {
                 out.add(PERMALINK + ": the header has no github.com/McJtyMods/LostCities/blob/<commit>/ link");
             } else if (!allowed.contains(
@@ -222,6 +226,54 @@ final class PortedCodeGate {
                                 + BASELINE_SHORT
                                 + " nor a commit named in THIRD-PARTY-NOTICES.md");
                     }
+        }
+        return out;
+    }
+
+    /**
+     * Returns the text after each header's colon. Spotless wraps line comments at 120 columns, so the link of a header
+     * may stand alone on the next {@code //} line; that line then counts as part of the header.
+     */
+    static List<String> headerTexts(String source) {
+        List<String> out = new ArrayList<>();
+        String[] lines = source.split("\\r?\\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            Matcher header = HEADER.matcher(lines[i]);
+            if (header.matches()) {
+                String text = header.group(1);
+                if (text.trim()
+                    .isEmpty() && i + 1 < lines.length) {
+                    Matcher next = CONTINUATION.matcher(lines[i + 1]);
+                    if (next.matches()) {
+                        text = next.group(1);
+                    }
+                }
+                out.add(text);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Returns the IDs text of each {@code Avoids:} line, with the {@code //} lines after it that hold only further IDs
+     * (where Spotless wrapped a long list).
+     */
+    static List<String> avoidsTexts(String source) {
+        List<String> out = new ArrayList<>();
+        String[] lines = source.split("\\r?\\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            Matcher avoids = AVOIDS.matcher(lines[i]);
+            if (avoids.matches()) {
+                StringBuilder text = new StringBuilder(avoids.group(1));
+                for (int j = i + 1; j < lines.length && ID_CONTINUATION.matcher(lines[j])
+                    .matches(); j++) {
+                    text.append(' ')
+                        .append(
+                            lines[j].trim()
+                                .substring(2));
+                }
+                out.add(text.toString());
+            }
         }
         return out;
     }

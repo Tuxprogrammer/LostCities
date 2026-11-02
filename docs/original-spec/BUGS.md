@@ -3,7 +3,7 @@
 <!-- Bugs in UPSTREAM Lost Cities 1.20 at f18a094d, listed so this backport does not reproduce them.
      Suspected, not confirmed at runtime; no fixes designed here. Merged from every area index. -->
 
-234 raw findings merge into **203 unique bugs**: 45 crash, 73 worldgen, 24 gameplay, 15 performance, 16 visual, 30 cosmetic. One further finding was checked and is not a bug; it is listed under [Not bugs](#not-bugs) with the evidence, and its ID stays reserved.
+236 raw findings merge into **205 unique bugs**: 45 crash, 75 worldgen, 24 gameplay, 15 performance, 16 visual, 30 cosmetic. One further finding was checked and is not a bug; it is listed under [Not bugs](#not-bugs) with the evidence, and its ID stays reserved.
 
 The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also** lists the same bug as reported by other areas. Every area ID stays a valid reference: each area's own table in its `index.md` holds the full description. Areas that report the same bug give it the same severity. Where one row merges several narrower area findings (`ASSET-21` covers `SCAT-17` to `SCAT-19`), the row takes the most severe and each area ID keeps its own. Severity is the worst effect when the code path runs; how reachable that path is (dead code, API only, config only) is stated in the area's row, not folded into the severity. Severity is one of crash, worldgen (wrong or broken world output), gameplay, performance, visual or cosmetic. Locations are on `f18a094d`, as the areas give them: Java paths relative to `src/main/java/mcjty/lostcities/`, resource paths relative to `src/main/resources/` unless they start with `src/`, and bare `palettes/`, `citystyles/` and `stuff/` paths under `data/lostcities/lostcities/`.
 
@@ -106,6 +106,8 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | CITY-26 | | 04-city-layout | `MultiChunk` checks positions against the wrong level and profile | `worldgen/lost/MultiChunk.java:86` (also `:92`, `:140`) |
 | CITY-34 | | 04-city-layout | Averaged-heightmap sample grid uses truncating division | `worldgen/lost/BuildingInfo.java:1268` |
 | CITY-35 | | 04-city-layout | Multibuilding doorway guard covers only the last column and row | `worldgen/lost/BuildingInfo.java:1837` (also `:1874`) |
+| CITY-39 | | 04-city-layout | Spawn-distance multiplier overflows `int` far from the origin | `worldgen/lost/City.java:379` |
+| CITY-40 | | 04-city-layout | Predefined city larger than `cityMaxRadius` is cut off at the search square | `worldgen/lost/City.java:338` (also `:269`) |
 | ASSET-04 | LOOT-02 | 05-assets, 08-loot-mobs-blocks | `belowpart` tests the current part | `worldgen/lost/cityassets/ConditionContext.java:85`; `worldgen/lost/BuildingInfo.java:758,1050` |
 | ASSET-06 | | 05-assets | City-style inheritance appends selector lists | `worldgen/lost/cityassets/CityStyle.java:362-371`; `citystyles/citystyle_border.json` |
 | ASSET-07 | | 05-assets | Inheritance skips `generalblocks` and park `grass` | `worldgen/lost/cityassets/CityStyle.java:357-471` |
