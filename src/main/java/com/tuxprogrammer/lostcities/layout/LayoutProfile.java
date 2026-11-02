@@ -345,7 +345,8 @@ public final class LayoutProfile {
         private float buildingDoorwayChance = .6f;
         private float buildingWithoutLootChance = .2f;
         private float buildingFrontChance = .2f;
-        private float ruinChance = .05f;
+        // Deviation: upstream's 0.05 is turned down to 0.015 with the explosions (AR-8, TerrainSettings).
+        private float ruinChance = .015f;
         private float ruinMinLevelPercent = .8f;
         private float ruinMaxLevelPercent = 1.0f;
         private float bridgeChance = .7f;

@@ -181,7 +181,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `rubbleLayer` | `true` |  | live | Use the noise-driven dirt/stone/sand and leaf rubble layer that makes cities look overgrown |
 | `rubbleDirtScale` | `3.0` | 0 to 100 | live | Noise scale of the dirt rubble; smaller is larger patches; 0 disables |
 | `rubbleLeaveScale` | `6.0` | 0 to 100 | live | Noise scale of the leaf rubble; 0 disables |
-| `ruinChance` | `0.05` | 0 to 1 | live | Chance a building is ruined (04-city-layout, `BuildingInfo`). A predefined building can prevent ruins |
+| `ruinChance` | `0.015` | 0 to 1 | live | Chance a building is ruined (04-city-layout, `BuildingInfo`). A predefined building can prevent ruins. Upstream's default is 0.05; this mod's is lower, so ruins are an accent |
 | `ruinMinlevelPercent` | `0.8` | 0 to 1 | live | Lowest start of the ruin cut, as a fraction of building height. The cut is `min + (max - min) * r` |
 | `ruinMaxlevelPercent` | `1.0` | 0 to 1 | live | Highest start of the ruin cut |
 | `bedrockLayer` | `0` | 0 to 10 | live | Read and writes nothing: RWG already places bedrock at Y 0 to 4. A value above 0 logs that it has no effect |
@@ -264,14 +264,14 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | Key | Default | Range | Status | What it does |
 |---|---|---|---|---|
 | `debrisToNearbyChunkFactor` | `200` | 1 to 10000 | live | Divisor for debris spilling from damaged neighbor chunks; larger is less debris |
-| `explosionChance` | `0.002` | 0 to 1 | live | Chance a chunk holds an explosion center |
-| `explosionMinRadius` | `15` | 1 to 1000 | live | Minimum explosion radius; at most the maximum, or the profile is rejected |
-| `explosionMaxRadius` | `35` | 1 to 3000 | live | Maximum explosion radius (exclusive) |
+| `explosionChance` | `0.0004` | 0 to 1 | live | Chance a chunk holds an explosion center. Upstream's default is 0.002; this mod's is lower, so craters are an accent |
+| `explosionMinRadius` | `12` | 1 to 1000 | live | Minimum explosion radius; at most the maximum, or the profile is rejected |
+| `explosionMaxRadius` | `24` | 1 to 3000 | live | Maximum explosion radius (exclusive); upstream's default is 35 |
 | `explosionMinHeight` | `75` | 1 to 255 | live | Minimum center height; the center Y is `cityLevel × 6 + min + random(max - min)` |
 | `explosionMaxHeight` | `90` | 1 to 255 | live | Maximum explosion center height (exclusive); at most 255 |
-| `miniExplosionChance` | `0.03` | 0 to 1 | live | Chance a chunk holds a mini explosion |
-| `miniExplosionMinRadius` | `5` | 1 to 1000 | live | Minimum mini-explosion radius; at most the maximum, or the profile is rejected |
-| `miniExplosionMaxRadius` | `12` | 1 to 3000 | live | Maximum mini-explosion radius (exclusive) |
+| `miniExplosionChance` | `0.005` | 0 to 1 | live | Chance a chunk holds a mini explosion; upstream's default is 0.03 |
+| `miniExplosionMinRadius` | `4` | 1 to 1000 | live | Minimum mini-explosion radius; at most the maximum, or the profile is rejected |
+| `miniExplosionMaxRadius` | `9` | 1 to 3000 | live | Maximum mini-explosion radius (exclusive); upstream's default is 12 |
 | `miniExplosionMinHeight` | `60` | 1 to 255 | live | Minimum mini-explosion center height (plus `cityLevel × 6`) |
 | `miniExplosionMaxHeight` | `100` | 1 to 255 | live | Maximum mini-explosion center height (exclusive); at most 255 |
 | `explosionsInCitiesOnly` | `true` |  | live | Explosion centers only in city chunks (the blast still reaches non-city chunks) |

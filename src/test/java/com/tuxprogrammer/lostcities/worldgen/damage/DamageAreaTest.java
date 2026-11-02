@@ -35,8 +35,10 @@ public class DamageAreaTest {
     }
 
     @Test
-    public void searchRangeIsThreeChunksForDefaults() {
-        assertEquals(3, DamageArea.searchRange(TerrainSettings.defaults()));
+    public void searchRangeIsTwoChunksForDefaults() {
+        // AR-8: the default big radius is below 24, so (23 + 15) / 16 = 2; upstream's 35 gave 3.
+        assertEquals(2, DamageArea.searchRange(TerrainSettings.defaults()));
+        assertEquals(3, DamageArea.searchRange(settings("explosionMaxRadius", "35")));
     }
 
     @Test
@@ -61,7 +63,10 @@ public class DamageAreaTest {
         assertTrue(first.hasExplosions());
         Explosion big = DamageArea.bigExplosionAt(42L, ALL_CITY.chunk(10, -3), always);
         assertTrue(big.y() >= 6 + 75 && big.y() < 6 + 90, "center Y = 6 x level + 75..89, got " + big.y());
-        assertTrue(big.radius() >= 15 && big.radius() < 35);
+        assertTrue(
+            big.radius() >= TerrainSettings.DEFAULT_EXPLOSION_MIN_RADIUS
+                && big.radius() < TerrainSettings.DEFAULT_EXPLOSION_MAX_RADIUS,
+            "radius " + big.radius());
     }
 
     @Test
@@ -106,5 +111,19 @@ public class DamageAreaTest {
             0,
             DamageArea.withExplosions(0, 0, Collections.singletonList(bottom))
                 .lowestExplosionY());
+    }
+
+    /** AR-1: the reach the floating-fragment pass trusts is the sphere's column, widened by one block. */
+    @Test
+    public void damageReachIsTheSpheresColumnPlusOneBlock() {
+        // Chunk (1, 0); an explosion at block (20, 90, 8), radius 6.
+        DamageArea area = DamageArea.withExplosions(1, 0, Collections.singletonList(new Explosion(20, 90, 8, 6)));
+        assertTrue(area.mayHaveDamaged(4, 90, 8), "the center");
+        assertTrue(area.mayHaveDamaged(4, 140, 8), "far above, where the upward carry can reach");
+        assertTrue(area.mayHaveDamaged(10, 90, 8), "one block past the radius");
+        assertTrue(area.mayHaveDamaged(4, 83, 8), "one block under the sphere's bottom");
+        assertFalse(area.mayHaveDamaged(4, 82, 8), "below that");
+        assertFalse(area.mayHaveDamaged(11, 90, 8), "two blocks past the radius");
+        assertFalse(area.mayHaveDamaged(15, 95, 15), "the far corner");
     }
 }

@@ -86,7 +86,7 @@ The cap is decided from the oracle in the layout, before any chunk's characteris
 |---|---|---|---|---|
 | `explosionMinHeight`, `explosionMaxHeight` | 75, 90 | 1 to 256 | same defaults, range 1 to 255 | Center Y = `6 × cityLevel + min + nextInt(max − min)`, absolute, as upstream |
 | `miniExplosionMinHeight`, `miniExplosionMaxHeight` | 60, 100 | 1 to 256 | same defaults, range 1 to 255 | |
-| Explosion radii | 15 to 35, 5 to 12 | 1 to 3000 | same | Blocks, not heights |
+| Explosion radii | 15 to 35, 5 to 12 | 1 to 3000 | 12 to 24, 4 to 9 by default, same range | Blocks, not heights. Smaller by default so damage is an accent ([index.md](index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd), AR-8) |
 | Damage pass | Y 0 to 255 | Y 0 to 255 | | Upstream's hard-coded range is the 1.7.10 range (TERR-19) |
 | Debris start | neighbor's top + 10, or `minBuild − 1` above the cap | neighbor's top + 10, capped at Y 255 | TERR-04 |
 | Ruin column | `base + noise` to building top + 10 | the same, capped at Y 255 | TERR-29 |
