@@ -1,6 +1,6 @@
 # 0011 · Highway and railway networks: obstacles, deliberate ends, dips under cores
 
-- Status: Accepted (M06; decision log D-M06-1 to D-M06-15)
+- Status: Accepted (M06; decision log D-M06-1 to D-M06-16)
 - Gate: M06
 - Amends: [0006](0006-build-around-other-worldgen.md) §1 for highways (the margin is an obstacle as well as the core); the new-spec rows of [06-highways-railways](../new-spec/06-highways-railways/index.md) for route geometry, route levels and railways under cores
 - Date: 2026-11-02
@@ -49,7 +49,7 @@ Two routes overlap when they share more than one chunk along the same axis. Meet
 ### 4. Nothing eats a highway
 
 - **Order.** Highways and railways are written last in a chunk's terrain phase: after the city's content, street borders, ruins and rubble in a city chunk, and after the blend in any other chunk. No blend, soft-edge strip, border or retaining wall runs after them in that chunk. Highways never enter a margin, the only place a soft-edge strip runs.
-- **Footprint.** The columns above a highway's deck (open roads, bridges, ramps and plazas) are in the footprint, so RWG's trees and boulders are dropped there. A tunnel's hill keeps its decoration.
+- **Footprint.** The columns above a highway's deck (open roads, bridges, ramps and plazas) are in the footprint, so RWG's trees and boulders are dropped there. A tunnel's hill keeps its decoration. A chunk with a tunnel, a railway part or a rail dungeon has a guarded band instead: the Y range from one block under the lowest part's floor to the top of the highest, in every column, which the write guard treats as footprint. Biomes O' Plenty writes its poison, lava and water lakes from its own biome decorator with no populate event to veto (`LakesForcedGenerator`, Glitchfiend/BiomesOPlenty branch `BOP-1.7.10-2.1.x`), and on classic RWG one flooded a tunnel's deck; the band keeps those lakes, and the rest of RWG's decoration, out of the tunnels and lines (D-M06-16).
 - **Population vetoes.** A highway chunk's population area gets the city's vetoes: no lake, lava lake, dungeon or oil deposit can carve into it.
 
 ### 5. Railways under landmark cores (D30, D31 P06-4)

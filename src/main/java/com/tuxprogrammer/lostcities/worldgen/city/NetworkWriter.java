@@ -21,6 +21,7 @@ import com.tuxprogrammer.lostcities.layout.highway.Axis;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
+import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
@@ -77,6 +78,12 @@ public final class NetworkWriter {
     static final int TRACK_SOUTH = 9;
     static final int TRACK_MIDDLE = 7;
     static final int TRACK_NORTH = 5;
+    /**
+     * Blocks a tunnel, rail or rail-dungeon part reaches above the city ground of its top level: one level, as the
+     * bundled parts are (a two-level slope is 18 high from its lower level).
+     */
+    static final int PART_LEVEL_HEIGHT = 6;
+
     /** A rail dungeon tunnel's depth from the north edge (z 0 to 3) and from the south edge (z 11 to 15). */
     static final int NORTH_TUNNEL = 4;
     static final int SOUTH_TUNNEL = 5;
@@ -877,6 +884,48 @@ public final class NetworkWriter {
                     .cityGround(rail.level()));
         }
         return bottom;
+    }
+
+    /**
+     * Returns the block Y range the write guard keeps RWG's decoration out of in every column of a chunk, beside the
+     * footprint: from one block under the floor of a highway tunnel, a railway part or a rail dungeon to the top of
+     * the highest of them. The ground above a tunnel or an underground line stays RWG's; only its lakes, which BOP
+     * writes with no populate event to veto, and the rest of its decoration stay out of the tunnels (M06, AR-10).
+     *
+     * @param context       the world's city writing context
+     * @param chunkX        chunk X
+     * @param chunkZ        chunk Z
+     * @param naturalHeight the oracle's height of the chunk
+     * @return {bottom, top}, inclusive, or {@code null} for none
+     */
+    public static int[] guardBand(CityWriteContext context, int chunkX, int chunkZ, int naturalHeight) {
+        LayoutPlanner planner = context.planner();
+        Networks networks = planner.networks();
+        if (networks == null) {
+            return null;
+        }
+        ChunkPlan plan = planner.plan(chunkX, chunkZ);
+        TerrainSettings settings = context.settings();
+        int bottom = Integer.MAX_VALUE;
+        int top = Integer.MIN_VALUE;
+        for (HighwayInfo.Piece piece : networks.highway(chunkX, chunkZ)
+            .pieces(chunkX, chunkZ)) {
+            if (plan.isTunnel(piece.topLevel(), naturalHeight)) {
+                bottom = Math.min(bottom, settings.cityGround(piece.level()) - 1);
+                top = Math.max(top, settings.cityGround(piece.topLevel()) + PART_LEVEL_HEIGHT);
+            }
+        }
+        RailChunk rail = networks.railChunk(chunkX, chunkZ);
+        if (rail.isPresent()) {
+            bottom = Math.min(bottom, settings.cityGround(rail.level()) - 1);
+            top = Math.max(top, settings.cityGround(rail.topLevel()) + PART_LEVEL_HEIGHT);
+        }
+        RailChunk dungeon = dungeonRail(planner, chunkX, chunkZ);
+        if (dungeon != null) {
+            bottom = Math.min(bottom, settings.cityGround(dungeon.level()) - 1);
+            top = Math.max(top, settings.cityGround(dungeon.level()) + PART_LEVEL_HEIGHT);
+        }
+        return bottom > top ? null : new int[] { bottom, top };
     }
 
     /**

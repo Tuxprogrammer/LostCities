@@ -123,6 +123,34 @@ public class NetworkWriterTest {
     }
 
     @Test
+    public void theGuardedBandSpansEveryTunnelAndRailPartAndThePlanCarriesIt() {
+        int[] at = rail(RailChunkType.HORIZONTAL);
+        assertNotNull(at);
+        int natural = CityFixtures.terrain()
+            .height(at[0], at[1]);
+        RailChunk rail = NETWORKS.railChunk(at[0], at[1]);
+        int[] band = NetworkWriter.guardBand(PLAN.context(), at[0], at[1], natural);
+        assertNotNull(band);
+        int floor = PLAN.context()
+            .settings()
+            .cityGround(rail.level());
+        assertTrue(band[0] <= floor - 1, "from under the rail's floor");
+        assertTrue(band[1] >= floor + NetworkWriter.PART_LEVEL_HEIGHT - 1, "up through the part");
+        com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan plan = PLAN.chunk(at[0], at[1]);
+        assertTrue(plan.inGuardBand(floor));
+        assertFalse(plan.inGuardBand(band[1] + 1));
+        // A chunk with no network has no band.
+        int[] none = CityFixtures.first(
+            40,
+            (x, z) -> !NetworkWriter.hasWork(PLANNER, x, z));
+        assertNotNull(none);
+        assertNull(NetworkWriter.guardBand(PLAN.context(), none[0], none[1], 70));
+        assertFalse(
+            PLAN.chunk(none[0], none[1])
+                .inGuardBand(floor));
+    }
+
+    @Test
     public void theFixtureWorldHasHighwaysAndRailways() {
         assertNotNull(NETWORKS);
         assertNotNull(piece(HighwayInfo.Shape.STRAIGHT), "a highway near the origin");

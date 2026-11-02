@@ -59,6 +59,8 @@ public final class ChunkPlan {
     private final ChunkContent network;
     private final boolean highway;
     private final short[] footprint;
+    private final int guardBottom;
+    private final int guardTop;
     private final LanePath lane;
     private final List<PopulationJob> fixedJobs;
     private final Supplier<List<PopulationJob>> jobSource;
@@ -89,6 +91,8 @@ public final class ChunkPlan {
         this.network = b.network;
         this.highway = b.highway;
         this.footprint = b.footprint == null ? null : b.footprint.clone();
+        this.guardBottom = b.guardBottom;
+        this.guardTop = b.guardTop;
         this.lane = b.lane;
         this.fixedJobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
         this.jobSource = b.jobSource;
@@ -257,6 +261,19 @@ public final class ChunkPlan {
      */
     public boolean hasHighway() {
         return highway;
+    }
+
+    /**
+     * Returns whether a block Y lies in the chunk's guarded band: the Y range of its highway tunnels and its railway
+     * parts (M06). The write guard keeps RWG's decoration out of the band in every column, as it does the footprint,
+     * and leaves the ground above to RWG. Without it, BOP's lakes, which no populate event announces, flood a tunnel's
+     * deck.
+     *
+     * @param y block Y
+     * @return whether it is in the band; {@code false} in a chunk with none
+     */
+    public boolean inGuardBand(int y) {
+        return y >= guardBottom && y <= guardTop;
     }
 
     /**
@@ -446,6 +463,8 @@ public final class ChunkPlan {
         private ChunkContent network = ChunkContent.NONE;
         private boolean highway;
         private short[] footprint;
+        private int guardBottom = Integer.MAX_VALUE;
+        private int guardTop = Integer.MIN_VALUE;
         private LanePath lane;
         private final List<PopulationJob> jobs = new ArrayList<>();
         private Supplier<List<PopulationJob>> jobSource;
@@ -537,6 +556,21 @@ public final class ChunkPlan {
         /** Marks the chunk as one a highway passes through. */
         public Builder highway(boolean value) {
             this.highway = value;
+            return this;
+        }
+
+        /**
+         * Adds a block Y range to the guarded band ({@link ChunkPlan#inGuardBand}); the band spans every range added.
+         *
+         * @param bottom lowest block Y, inclusive
+         * @param top    highest block Y, inclusive; below {@code bottom} adds nothing
+         * @return this builder
+         */
+        public Builder guardBand(int bottom, int top) {
+            if (bottom <= top) {
+                this.guardBottom = Math.min(this.guardBottom, bottom);
+                this.guardTop = Math.max(this.guardTop, top);
+            }
             return this;
         }
 

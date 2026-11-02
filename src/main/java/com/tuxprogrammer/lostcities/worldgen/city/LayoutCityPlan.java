@@ -345,8 +345,8 @@ public final class LayoutCityPlan implements CityPlan {
 
     /**
      * Adds a chunk's highways, railways and rail dungeon (M06): the network writer, the flag that keeps lakes, lava and
-     * dungeons out of a highway's population area, the footprint above a highway's deck or a surface station, and the
-     * network's population jobs after the chunk's own (call it after the chunk's own job source is set).
+     * dungeons out of a highway's population area, the footprint above a highway's deck or a surface station, the
+     * guarded band of its tunnels and underground lines, and the network's population jobs after the chunk's own (call it after the chunk's own job source is set).
      *
      * @param builder   the chunk's plan builder
      * @param footprint the chunk's footprint so far, or {@code null}
@@ -373,6 +373,10 @@ public final class LayoutCityPlan implements CityPlan {
                 .highway(chunkX, chunkZ)
                 .hasHighway());
         builder.addJobSource(() -> networkDryRun(chunkX, chunkZ, natural));
+        int[] band = NetworkWriter.guardBand(context, chunkX, chunkZ, natural);
+        if (band != null) {
+            builder.guardBand(band[0], band[1]);
+        }
         int bottom = NetworkWriter.footprintBottom(context, chunkX, chunkZ, natural);
         if (bottom == Integer.MAX_VALUE) {
             return footprint;

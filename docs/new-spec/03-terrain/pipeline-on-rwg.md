@@ -29,6 +29,7 @@ The overlay asks one pure interface what each chunk holds: `worldgen.plan.CityPl
 | `style` (`StyleBlocks`) | Base, liquid, border, wall, rubble, filler, iron bars, leaf and rubble tables, damaged forms | street base, borders, skirts, damage, debris |
 | `content` (`ChunkContent`) | Writes the building or street itself into the buffer, after leveling and room-making, skipping soft-edge columns; on a non-city chunk, the bridge span over it (never on a core) | the city chunk step; the blend step for bridges |
 | `footprintBottom(x, z)` | Lowest Y of a footprint column, or none | the write guard, the population hash |
+| `inGuardBand(y)` | Whether a Y is in the chunk's guarded band: the Y range of its highway tunnels, railway parts and rail dungeon, in every column (M06) | the write guard |
 | `lane` (`LanePath`) | The village lane's columns and the village's material | lanes |
 | `jobs` (`PopulationJob`) | Torches, chests (with their loot category), spawners (with their mob), tile entities (with their template), command blocks; listed lazily by a dry run of the content writer (D100) | the population phase |
 | `keepsClear(x, z)` | The columns in front of a building's street door, which the rubble layer leaves clear (D112) | the rubble layer |

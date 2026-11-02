@@ -27,8 +27,27 @@ public class FootprintGuardTest {
                 .footprint(footprint)
                 .build();
         }
+        if (cx == 2 && cz == 0) {
+            // A highway tunnel's chunk: no footprint, a guarded band from Y 69 to 76 (M06).
+            return ChunkPlan.builder(2, 0, ChunkKind.NONE)
+                .guardBand(69, 76)
+                .build();
+        }
         return ChunkPlan.none(cx, cz, 0, 71, 70, false);
     };
+
+    /** M06: BOP's lakes, which no populate event announces, stay out of a tunnel; the hill above it stays RWG's. */
+    @Test
+    public void dropsWritesInTheGuardedBandOfEveryColumnAndNothingAboveIt() {
+        FootprintGuard.push(null, PLAN, true);
+        assertTrue(FootprintGuard.drops(null, 2, 0, 0, 70, 0, null), "a lake's liquid on the deck");
+        assertTrue(FootprintGuard.drops(null, 2, 0, 15, 76, 9, null), "the ceiling, in any column");
+        assertTrue(FootprintGuard.drops(null, 2, 0, 7, 69, 7, null), "the row under the floor");
+        assertFalse(FootprintGuard.drops(null, 2, 0, 7, 68, 7, null), "below the band passes");
+        assertFalse(FootprintGuard.drops(null, 2, 0, 7, 77, 7, null), "a tree on the hill passes");
+        FootprintGuard.pop();
+        assertFalse(FootprintGuard.drops(null, 2, 0, 0, 70, 0, null), "no population, no guard");
+    }
 
     @AfterEach
     public void clear() {
