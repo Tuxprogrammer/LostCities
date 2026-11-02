@@ -364,8 +364,12 @@ public final class GtnhLayerScenario implements Scenario {
             return "GT ore blocks under the city ground " + oresBelow
                 + ", above it in building chunks "
                 + oresInBuildings
-                + ", above it in open chunks "
-                + oresAboveOpen;
+                + " (and "
+                + oresInBoulders
+                + " in GT boulders there), above it in open chunks "
+                + oresAboveOpen
+                + "; raw GT boulder stone above the ground in building chunks "
+                + boulderBlocksInBuildings;
         }
 
         List<String> report() {
