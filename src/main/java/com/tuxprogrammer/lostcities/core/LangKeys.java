@@ -41,6 +41,35 @@ public final class LangKeys {
     /** A run started; argument: the number of scenarios. */
     public static final String TEST_STARTED = "lostcitiesnh.command.test.started";
 
+    /** {@code /lostcities profile} usage line. */
+    public static final String PROFILE_USAGE = "lostcitiesnh.command.profile.usage";
+    /** The dimension has no pinned profile; argument: the dimension. */
+    public static final String PROFILE_NONE = "lostcitiesnh.command.profile.none";
+    /** The pinned profile; arguments: the dimension, the summary. */
+    public static final String PROFILE_SHOW = "lostcitiesnh.command.profile.show";
+    /** An unknown profile; arguments: the name, the known names. */
+    public static final String PROFILE_UNKNOWN = "lostcitiesnh.command.profile.unknown";
+    /** Pinning needs {@code confirm}; arguments: the profile, the dimension. */
+    public static final String PROFILE_CONFIRM = "lostcitiesnh.command.profile.confirm";
+    /** A profile was pinned; arguments: the profile, the dimension. */
+    public static final String PROFILE_PINNED = "lostcitiesnh.command.profile.pinned";
+    /** The world type has no height oracle; arguments: the dimension, the world type. */
+    public static final String PROFILE_UNSUPPORTED = "lostcitiesnh.command.profile.unsupported";
+
+    /** {@code /lostcities timers} usage line. */
+    public static final String TIMERS_USAGE = "lostcitiesnh.command.timers.usage";
+    /** The overlay is not installed; argument: the dimension. */
+    public static final String TIMERS_NONE = "lostcitiesnh.command.timers.none";
+    /** One report line; argument: the line. */
+    public static final String TIMERS_LINE = "lostcitiesnh.command.timers.line";
+    /** The timers were reset; argument: the dimension. */
+    public static final String TIMERS_RESET = "lostcitiesnh.command.timers.reset";
+
+    /** {@code /lostcities view} usage line. */
+    public static final String VIEW_USAGE = "lostcitiesnh.command.view.usage";
+    /** A player was moved; arguments: the player, X, Y, Z. */
+    public static final String VIEW_DONE = "lostcitiesnh.command.view.done";
+
     /** One scenario's result; arguments: PASS or FAIL, name, milliseconds, message. */
     public static final String SCENARIO_RESULT = "lostcitiesnh.scenario.result";
     /** A run's summary; arguments: passed, failed. */

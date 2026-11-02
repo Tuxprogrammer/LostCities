@@ -1,0 +1,472 @@
+package com.tuxprogrammer.lostcities.worldgen.terrain;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * The profile values the overlay's terrain and population phases read, resolved and range-checked: ground and sea
+ * level, city levels, blend offsets, explosions, debris, ruins, rubble, vines, the 1.12 lake veto and the landmark
+ * edge numbers. It is built from a pinned profile snapshot's values ({@link #fromValues}) and written back into one
+ * ({@link #toValues}), so a world keeps the numbers it was created with (docs/design/0005-rwg-overlay.md §7).
+ *
+ * <p>
+ * Defaults are upstream's {@code default} profile (docs/original-spec/02-profiles-dimensions/profile-options.md).
+ * Ranges follow docs/new-spec/03-terrain/height-mapping.md: anything that could leave Y 0 to 255 is clamped with a
+ * warning, and every min/max pair is ordered at load so a draw between them never throws (TERR-03, PROF-06). Keys
+ * are upstream's profile option names, plus this mod's own ({@code preventLakesRavinesInCities} from 1.12,
+ * {@code softEdgeWidth}, {@code landmarkMargin} from docs/design/0006-build-around-other-worldgen.md §3, and
+ * {@code heightSampleSize}, which upstream keeps in its mod config).
+ *
+ * <p>
+ * Immutable. Side: both (plain Java); only the server reads it.
+ */
+public final class TerrainSettings {
+
+    /** Number of city level thresholds ({@code cityLevel0Height} … {@code cityLevel7Height}). */
+    public static final int CITY_LEVEL_THRESHOLDS = 8;
+
+    /** {@code seaLevel} value meaning "use the generator's sea level", 63 on RWG. */
+    public static final int SEA_LEVEL_DEFAULT = -1;
+
+    /** Upstream's default city level thresholds, Y 75 to 131 in steps of 8. */
+    private static final int[] DEFAULT_LEVEL_HEIGHTS = { 75, 83, 91, 99, 107, 115, 123, 131 };
+
+    private final int groundLevel;
+    private final int seaLevel;
+    private final int[] cityLevelHeights;
+    private final int cityMinHeight;
+    private final int cityMaxHeight;
+    private final int heightSampleSize;
+    private final int bedrockLayer;
+    private final int terrainFixLowerMinOffset;
+    private final int terrainFixLowerMaxOffset;
+    private final int terrainFixUpperMinOffset;
+    private final int terrainFixUpperMaxOffset;
+    private final int oceanCorrectionBorder;
+    private final float explosionChance;
+    private final int explosionMinRadius;
+    private final int explosionMaxRadius;
+    private final int explosionMinHeight;
+    private final int explosionMaxHeight;
+    private final float miniExplosionChance;
+    private final int miniExplosionMinRadius;
+    private final int miniExplosionMaxRadius;
+    private final int miniExplosionMinHeight;
+    private final int miniExplosionMaxHeight;
+    private final boolean explosionsInCitiesOnly;
+    private final int debrisToNearbyChunkFactor;
+    private final float ruinChance;
+    private final float ruinMinlevelPercent;
+    private final float ruinMaxlevelPercent;
+    private final boolean rubbleLayer;
+    private final float rubbleDirtScale;
+    private final float rubbleLeaveScale;
+    private final float vineChance;
+    private final boolean preventLakesRavinesInCities;
+    private final int softEdgeWidth;
+    private final int landmarkMargin;
+    private final List<String> warnings;
+
+    private TerrainSettings(Reader r) {
+        groundLevel = r.intValue("groundLevel", 71, 2, WorldLimits.MAX_Y);
+        seaLevel = r.intValue("seaLevel", SEA_LEVEL_DEFAULT, SEA_LEVEL_DEFAULT, WorldLimits.MAX_Y);
+        cityLevelHeights = new int[CITY_LEVEL_THRESHOLDS];
+        for (int i = 0; i < CITY_LEVEL_THRESHOLDS; i++) {
+            cityLevelHeights[i] = r
+                .intValue("cityLevel" + i + "Height", DEFAULT_LEVEL_HEIGHTS[i], 1, WorldLimits.MAX_Y);
+        }
+        cityMinHeight = r.intValue("cityMinHeight", 50, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
+        cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
+        heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
+        bedrockLayer = r.intValue("bedrockLayer", 1, 0, 10);
+        if (bedrockLayer > 0 && r.values.containsKey("bedrockLayer")) {
+            // 0005 §6: RWG already places bedrock at Y 0 to 4 and generation never places unbreakable blocks.
+            r.warnings.add("bedrockLayer=" + bedrockLayer + " has no effect on RWG worlds; RWG's own bedrock is kept");
+        }
+        int[] lower = r.orderedPair("terrainFixLowerMinOffset", -4, "terrainFixLowerMaxOffset", -3, -40, 40);
+        terrainFixLowerMinOffset = lower[0];
+        terrainFixLowerMaxOffset = lower[1];
+        int[] upper = r.orderedPair("terrainFixUpperMinOffset", -1, "terrainFixUpperMaxOffset", 1, -40, 40);
+        terrainFixUpperMinOffset = upper[0];
+        terrainFixUpperMaxOffset = upper[1];
+        oceanCorrectionBorder = r.intValue("oceanCorrectionBorder", 4, -255, 255);
+        explosionChance = r.floatValue("explosionChance", 0.002f, 0f, 1f);
+        int[] radius = r.orderedPair("explosionMinRadius", 15, "explosionMaxRadius", 35, 1, 3000);
+        explosionMinRadius = radius[0];
+        explosionMaxRadius = radius[1];
+        int[] height = r.orderedPair("explosionMinHeight", 75, "explosionMaxHeight", 90, 1, WorldLimits.MAX_Y);
+        explosionMinHeight = height[0];
+        explosionMaxHeight = height[1];
+        miniExplosionChance = r.floatValue("miniExplosionChance", 0.03f, 0f, 1f);
+        int[] miniRadius = r.orderedPair("miniExplosionMinRadius", 5, "miniExplosionMaxRadius", 12, 1, 3000);
+        miniExplosionMinRadius = miniRadius[0];
+        miniExplosionMaxRadius = miniRadius[1];
+        int[] miniHeight = r
+            .orderedPair("miniExplosionMinHeight", 60, "miniExplosionMaxHeight", 100, 1, WorldLimits.MAX_Y);
+        miniExplosionMinHeight = miniHeight[0];
+        miniExplosionMaxHeight = miniHeight[1];
+        explosionsInCitiesOnly = r.booleanValue("explosionsInCitiesOnly", true);
+        debrisToNearbyChunkFactor = r.intValue("debrisToNearbyChunkFactor", 200, 1, 10000);
+        ruinChance = r.floatValue("ruinChance", 0.05f, 0f, 1f);
+        float ruinMin = r.floatValue("ruinMinlevelPercent", 0.8f, 0f, 1f);
+        float ruinMax = r.floatValue("ruinMaxlevelPercent", 1.0f, 0f, 1f);
+        if (ruinMax < ruinMin) {
+            r.warnings.add("ruinMaxlevelPercent < ruinMinlevelPercent; using the minimum for both");
+            ruinMax = ruinMin;
+        }
+        ruinMinlevelPercent = ruinMin;
+        ruinMaxlevelPercent = ruinMax;
+        rubbleLayer = r.booleanValue("rubbleLayer", true);
+        rubbleDirtScale = r.floatValue("rubbleDirtScale", 3.0f, 0f, 100f);
+        rubbleLeaveScale = r.floatValue("rubbleLeaveScale", 6.0f, 0f, 100f);
+        vineChance = r.floatValue("vineChance", 0.009f, 0f, 1f);
+        preventLakesRavinesInCities = r.booleanValue("preventLakesRavinesInCities", true);
+        softEdgeWidth = r.intValue("softEdgeWidth", 6, 2, 12);
+        landmarkMargin = r.intValue("landmarkMargin", 2, 0, 16);
+        warnings = Collections.unmodifiableList(new ArrayList<>(r.warnings));
+    }
+
+    /** Returns the defaults: upstream's {@code default} profile on RWG. */
+    public static TerrainSettings defaults() {
+        return new TerrainSettings(new Reader(Collections.emptyMap()));
+    }
+
+    /**
+     * Builds the settings from a profile snapshot's values. Missing keys take their defaults; malformed or
+     * out-of-range values are replaced or clamped, and each such fix is listed in {@link #warnings()}.
+     *
+     * @param values option name to its text value
+     * @return the settings
+     */
+    public static TerrainSettings fromValues(Map<String, String> values) {
+        return new TerrainSettings(new Reader(values));
+    }
+
+    /** Returns every resolved value by option name, in name order, as a snapshot stores them. */
+    public Map<String, String> toValues() {
+        Map<String, String> out = new TreeMap<>();
+        out.put("groundLevel", Integer.toString(groundLevel));
+        out.put("seaLevel", Integer.toString(seaLevel));
+        for (int i = 0; i < CITY_LEVEL_THRESHOLDS; i++) {
+            out.put("cityLevel" + i + "Height", Integer.toString(cityLevelHeights[i]));
+        }
+        out.put("cityMinHeight", Integer.toString(cityMinHeight));
+        out.put("cityMaxHeight", Integer.toString(cityMaxHeight));
+        out.put("heightSampleSize", Integer.toString(heightSampleSize));
+        out.put("bedrockLayer", Integer.toString(bedrockLayer));
+        out.put("terrainFixLowerMinOffset", Integer.toString(terrainFixLowerMinOffset));
+        out.put("terrainFixLowerMaxOffset", Integer.toString(terrainFixLowerMaxOffset));
+        out.put("terrainFixUpperMinOffset", Integer.toString(terrainFixUpperMinOffset));
+        out.put("terrainFixUpperMaxOffset", Integer.toString(terrainFixUpperMaxOffset));
+        out.put("oceanCorrectionBorder", Integer.toString(oceanCorrectionBorder));
+        out.put("explosionChance", Float.toString(explosionChance));
+        out.put("explosionMinRadius", Integer.toString(explosionMinRadius));
+        out.put("explosionMaxRadius", Integer.toString(explosionMaxRadius));
+        out.put("explosionMinHeight", Integer.toString(explosionMinHeight));
+        out.put("explosionMaxHeight", Integer.toString(explosionMaxHeight));
+        out.put("miniExplosionChance", Float.toString(miniExplosionChance));
+        out.put("miniExplosionMinRadius", Integer.toString(miniExplosionMinRadius));
+        out.put("miniExplosionMaxRadius", Integer.toString(miniExplosionMaxRadius));
+        out.put("miniExplosionMinHeight", Integer.toString(miniExplosionMinHeight));
+        out.put("miniExplosionMaxHeight", Integer.toString(miniExplosionMaxHeight));
+        out.put("explosionsInCitiesOnly", Boolean.toString(explosionsInCitiesOnly));
+        out.put("debrisToNearbyChunkFactor", Integer.toString(debrisToNearbyChunkFactor));
+        out.put("ruinChance", Float.toString(ruinChance));
+        out.put("ruinMinlevelPercent", Float.toString(ruinMinlevelPercent));
+        out.put("ruinMaxlevelPercent", Float.toString(ruinMaxlevelPercent));
+        out.put("rubbleLayer", Boolean.toString(rubbleLayer));
+        out.put("rubbleDirtScale", Float.toString(rubbleDirtScale));
+        out.put("rubbleLeaveScale", Float.toString(rubbleLeaveScale));
+        out.put("vineChance", Float.toString(vineChance));
+        out.put("preventLakesRavinesInCities", Boolean.toString(preventLakesRavinesInCities));
+        out.put("softEdgeWidth", Integer.toString(softEdgeWidth));
+        out.put("landmarkMargin", Integer.toString(landmarkMargin));
+        return out;
+    }
+
+    /** Returns what was fixed while reading the values, one line each; empty when nothing was. */
+    public List<String> warnings() {
+        return warnings;
+    }
+
+    /** Returns the Y of city level 0's ground ({@code groundLevel}, 71). */
+    public int groundLevel() {
+        return groundLevel;
+    }
+
+    /**
+     * Returns the water level: the {@code seaLevel} override, or RWG's 63 when it is −1. Liquid fills up to this
+     * level minus one, as RWG's water does (docs/new-spec/03-terrain/height-mapping.md).
+     */
+    public int waterLevel() {
+        return seaLevel == SEA_LEVEL_DEFAULT ? WorldLimits.RWG_SEA_LEVEL : seaLevel;
+    }
+
+    /**
+     * Returns the Y of a city level's ground: {@code groundLevel + 6 × level}.
+     *
+     * @param cityLevel the city level, 0 to 8
+     * @return block Y
+     */
+    public int cityGround(int cityLevel) {
+        return groundLevel + WorldLimits.FLOOR_HEIGHT * cityLevel;
+    }
+
+    /**
+     * Returns the city level for a chunk height, by upstream's thresholds ({@code getLevelBasedOnHeight}): 0 below
+     * {@code cityLevel0Height}, 1 below {@code cityLevel1Height}, and so on, 8 at or above {@code cityLevel7Height}.
+     *
+     * @param height the chunk's oracle height, block Y
+     * @return the level, 0 to 8
+     */
+    public int levelForHeight(int height) {
+        for (int i = 0; i < CITY_LEVEL_THRESHOLDS; i++) {
+            if (height < cityLevelHeights[i]) {
+                return i;
+            }
+        }
+        return CITY_LEVEL_THRESHOLDS;
+    }
+
+    /** Returns the lowest oracle height a city chunk may have ({@code cityMinHeight}). */
+    public int cityMinHeight() {
+        return cityMinHeight;
+    }
+
+    /** Returns the highest oracle height a city chunk may have ({@code cityMaxHeight}). */
+    public int cityMaxHeight() {
+        return cityMaxHeight;
+    }
+
+    /** Returns the side of a height-sample group, in chunks ({@code heightSampleSize}). */
+    public int heightSampleSize() {
+        return heightSampleSize;
+    }
+
+    /** Returns {@code bedrockLayer}: read for upstream profiles, never acted on. */
+    public int bedrockLayer() {
+        return bedrockLayer;
+    }
+
+    /** Returns the lower offset range of a fixed blend corner, inclusive: −4. */
+    public int terrainFixLowerMinOffset() {
+        return terrainFixLowerMinOffset;
+    }
+
+    /** Returns the lower offset range of a fixed blend corner, inclusive: −3. */
+    public int terrainFixLowerMaxOffset() {
+        return terrainFixLowerMaxOffset;
+    }
+
+    /** Returns the upper offset range of a fixed blend corner, inclusive: −1. */
+    public int terrainFixUpperMinOffset() {
+        return terrainFixUpperMinOffset;
+    }
+
+    /** Returns the upper offset range of a fixed blend corner, inclusive: +1. */
+    public int terrainFixUpperMaxOffset() {
+        return terrainFixUpperMaxOffset;
+    }
+
+    /** Returns how far below the ground an ocean chunk's blend corner sits ({@code oceanCorrectionBorder}, 4). */
+    public int oceanCorrectionBorder() {
+        return oceanCorrectionBorder;
+    }
+
+    /** Returns the chance per chunk of a big explosion. */
+    public float explosionChance() {
+        return explosionChance;
+    }
+
+    /** Returns a big explosion's minimum radius, blocks. */
+    public int explosionMinRadius() {
+        return explosionMinRadius;
+    }
+
+    /** Returns a big explosion's maximum radius, blocks, exclusive as upstream draws it. */
+    public int explosionMaxRadius() {
+        return explosionMaxRadius;
+    }
+
+    /** Returns the minimum of a big explosion's center height above the city level's offset. */
+    public int explosionMinHeight() {
+        return explosionMinHeight;
+    }
+
+    /** Returns the maximum (exclusive) of a big explosion's center height. */
+    public int explosionMaxHeight() {
+        return explosionMaxHeight;
+    }
+
+    /** Returns the chance per chunk of a mini explosion. */
+    public float miniExplosionChance() {
+        return miniExplosionChance;
+    }
+
+    /** Returns a mini explosion's minimum radius, blocks. */
+    public int miniExplosionMinRadius() {
+        return miniExplosionMinRadius;
+    }
+
+    /** Returns a mini explosion's maximum radius, blocks, exclusive. */
+    public int miniExplosionMaxRadius() {
+        return miniExplosionMaxRadius;
+    }
+
+    /** Returns the minimum of a mini explosion's center height. */
+    public int miniExplosionMinHeight() {
+        return miniExplosionMinHeight;
+    }
+
+    /** Returns the maximum (exclusive) of a mini explosion's center height. */
+    public int miniExplosionMaxHeight() {
+        return miniExplosionMaxHeight;
+    }
+
+    /** Returns whether explosions start only in city chunks. */
+    public boolean explosionsInCitiesOnly() {
+        return explosionsInCitiesOnly;
+    }
+
+    /** Returns the debris divisor ({@code debrisToNearbyChunkFactor}, 200). */
+    public int debrisToNearbyChunkFactor() {
+        return debrisToNearbyChunkFactor;
+    }
+
+    /** Returns the chance per building of a ruined top. */
+    public float ruinChance() {
+        return ruinChance;
+    }
+
+    /** Returns the lower fraction of floors a ruin keeps. */
+    public float ruinMinlevelPercent() {
+        return ruinMinlevelPercent;
+    }
+
+    /** Returns the upper fraction of floors a ruin keeps. */
+    public float ruinMaxlevelPercent() {
+        return ruinMaxlevelPercent;
+    }
+
+    /** Returns whether streets and ruins get the rubble and leaf layer. */
+    public boolean rubbleLayer() {
+        return rubbleLayer;
+    }
+
+    /** Returns the rubble noise divisor; below 0.01 the rubble is off. */
+    public float rubbleDirtScale() {
+        return rubbleDirtScale;
+    }
+
+    /** Returns the leaf noise divisor; below 0.01 the leaves are off. */
+    public float rubbleLeaveScale() {
+        return rubbleLeaveScale;
+    }
+
+    /** Returns the chance per candidate block that a vine strip starts on a building wall. */
+    public float vineChance() {
+        return vineChance;
+    }
+
+    /**
+     * Returns whether lakes, lava lakes, dungeons and oil are vetoed where a population area touches a city chunk
+     * (1.12's option, on by default; 0005 §3).
+     */
+    public boolean preventLakesRavinesInCities() {
+        return preventLakesRavinesInCities;
+    }
+
+    /** Returns the width of a soft-edge strip toward a landmark core, in columns (0006 §3, 6). */
+    public int softEdgeWidth() {
+        return softEdgeWidth;
+    }
+
+    /** Returns the margin kept clear around a landmark's footprint, in blocks (0006 §1, 2). */
+    public int landmarkMargin() {
+        return landmarkMargin;
+    }
+
+    /** Reads typed values out of the snapshot map, collecting what it had to fix. */
+    private static final class Reader {
+
+        private final Map<String, String> values;
+        private final List<String> warnings = new ArrayList<>();
+
+        Reader(Map<String, String> values) {
+            this.values = values;
+        }
+
+        int intValue(String key, int fallback, int min, int max) {
+            String text = values.get(key);
+            if (text == null) {
+                return fallback;
+            }
+            int value;
+            try {
+                value = Integer.parseInt(text.trim());
+            } catch (NumberFormatException e) {
+                warnings.add(key + "='" + text + "' is not a whole number; using " + fallback);
+                return fallback;
+            }
+            if (value < min || value > max) {
+                int clamped = Math.max(min, Math.min(max, value));
+                warnings.add(key + "=" + value + " is outside " + min + ".." + max + "; clamped to " + clamped);
+                return clamped;
+            }
+            return value;
+        }
+
+        float floatValue(String key, float fallback, float min, float max) {
+            String text = values.get(key);
+            if (text == null) {
+                return fallback;
+            }
+            float value;
+            try {
+                value = Float.parseFloat(text.trim());
+            } catch (NumberFormatException e) {
+                warnings.add(key + "='" + text + "' is not a number; using " + fallback);
+                return fallback;
+            }
+            if (Float.isNaN(value) || value < min || value > max) {
+                float clamped = Float.isNaN(value) ? fallback : Math.max(min, Math.min(max, value));
+                warnings.add(key + "=" + text + " is outside " + min + ".." + max + "; using " + clamped);
+                return clamped;
+            }
+            return value;
+        }
+
+        boolean booleanValue(String key, boolean fallback) {
+            String text = values.get(key);
+            if (text == null) {
+                return fallback;
+            }
+            String trimmed = text.trim();
+            if ("true".equalsIgnoreCase(trimmed)) {
+                return true;
+            }
+            if ("false".equalsIgnoreCase(trimmed)) {
+                return false;
+            }
+            warnings.add(key + "='" + text + "' is not true or false; using " + fallback);
+            return fallback;
+        }
+
+        /**
+         * Reads a min/max pair. A maximum below the minimum takes the minimum, so every draw between them works and
+         * an equal pair gives the minimum (TERR-03, PROF-06).
+         */
+        int[] orderedPair(String minKey, int minDefault, String maxKey, int maxDefault, int low, int high) {
+            int min = intValue(minKey, minDefault, low, high);
+            int max = intValue(maxKey, maxDefault, low, high);
+            if (max < min) {
+                warnings.add(maxKey + "=" + max + " is below " + minKey + "=" + min + "; using " + min + " for both");
+                max = min;
+            }
+            return new int[] { min, max };
+        }
+    }
+}

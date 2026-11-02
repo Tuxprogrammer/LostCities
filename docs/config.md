@@ -26,6 +26,26 @@ worldgen {
 }
 ```
 
+## `profiles`: where cities generate
+
+These keys too apply to **new worlds only**: the profile is resolved and pinned into the world when the world is created.
+
+| Key | Default | What it does |
+|---|---|---|
+| `profiles.dimensionProfiles` | `0=default` | Which dimensions get cities and with which profile, one `<dimension id>=<profile>` per entry. The profile is pinned into the world's `data/lostcitiesnh.dat` when the world is created ([0005](design/0005-rwg-overlay.md) §7). Only world types with a height oracle get cities: `RWG2_CONTINENTS`, `RWG2`, `RWG` and `flat` |
+| `profiles.enableOnExistingWorlds` | `false` | Give cities to worlds created before the mod was added, at their next load. Chunks generated before will not match the new ones at the border. `/lostcities profile pin <profile> confirm` opts in one world instead |
+
+```
+profiles {
+    S:dimensionProfiles <
+        0=default
+     >
+    B:enableOnExistingWorlds=false
+}
+```
+
+Every profile value, the module flags and the world type are pinned into the world when it is created; `/lostcities profile` shows what a dimension was pinned with, and `/lostcities timers` prints the overlay's generation timers and budgets ([0005](design/0005-rwg-overlay.md) §8).
+
 `ConfigDocsTest` keeps this table in step with the code: every option has a row here with its default.
 
 ## `decorativeMetals`: metal accents
@@ -72,3 +92,4 @@ JVM properties, not config keys. They exist for development and real-pack testin
 | `-Dlostcitiesnh.scenarios=<selector>` | Runs the selected scenarios once the server has started, where the test hooks are on |
 | `-Dlostcitiesnh.stopAfterScenarios=true` | Stops the server after that run's summary line |
 | `-Dlostcitiesnh.assetReport=true` | Logs the full asset report at `postInit`: every problem, every fallback block taken and every variety-pool block the registry lacks ([asset-format.md](new-spec/05-assets/asset-format.md#the-block-name-map)) |
+| `-Dlostcitiesnh.planSource=synthetic` | With the test hooks on, pins the synthetic test city (M04) into new worlds instead of the layout, for the overlay scenarios and screenshots ([docs/testing/](testing/README.md)) |

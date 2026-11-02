@@ -10,9 +10,9 @@ import com.tuxprogrammer.lostcities.LostCities;
  *
  * <p>
  * Every key here changes what a world generates, so the category is marked {@code @Config.RequiresWorldRestart} and
- * every comment says "new worlds only": when profile pinning lands (M04, docs/design/0005-rwg-overlay.md §7) the flags
- * are copied into a world's pinned profile when the world is created, and later edits affect only worlds created
- * after them (D31). GTNHLib's automatic config screen shows the restart marker. Labels and tooltips are the lang keys
+ * every comment says "new worlds only": the flags are copied into a world's pinned profile when the world is created
+ * (docs/design/0005-rwg-overlay.md §7), and later edits affect only worlds created after them (D31). GTNHLib's
+ * automatic config screen shows the restart marker. Labels and tooltips are the lang keys
  * {@code lostcitiesnh.worldgen.<field>} and {@code lostcitiesnh.worldgen.<field>.tooltip}, with the field name in
  * lowercase, because GTNHLib lowercases every part of a generated key.
  *

@@ -14,8 +14,8 @@ import com.tuxprogrammer.lostcities.asset.BlockRef;
  * generation, CONTRIBUTING § World generation rules).
  *
  * <p>
- * The interface holds no Minecraft type. The world-backed implementation over {@code ExtendedBlockStorage} arrives
- * with the overlay in M04; it must allocate nothing per block.
+ * The interface holds no Minecraft type. The world-backed implementation over {@code ExtendedBlockStorage} is
+ * {@code worldgen.overlay.WorldChunkBuffer}; it allocates nothing per block.
  *
  * <p>
  * Side: server (world generation), and plain Java in tests.
@@ -50,6 +50,17 @@ public interface ChunkBuffer {
      * @throws NullPointerException      when {@code block} is {@code null}
      */
     void set(int x, int y, int z, BlockRef block);
+
+    /**
+     * Returns a Y at or above every non-air block of the buffer, so a scan down from the top can start there instead
+     * of at Y 255. The default is the top of the world; a section-backed buffer answers the top of its highest
+     * section that holds anything. Writing above it raises it.
+     *
+     * @return block Y, 0 to 255
+     */
+    default int topY() {
+        return HEIGHT - 1;
+    }
 
     /**
      * Returns {@code true} when a position lies inside a chunk column.

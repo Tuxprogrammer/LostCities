@@ -1,7 +1,7 @@
 # Lost Cities: New Horizons, English (US). The source of truth for every player-visible string.
 
 # Commands
-lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: test
+lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: profile, timers, test, view
 lostcitiesnh.command.unknown=Unknown subcommand: %s
 lostcitiesnh.command.no_permission=You do not have permission to use this subcommand.
 lostcitiesnh.command.test.usage=/lostcities test <scenario|prefix|all|list>
@@ -10,6 +10,19 @@ lostcitiesnh.command.test.no_match=No scenario matches '%s'. Try /lostcities tes
 lostcitiesnh.command.test.busy=A scenario run is already in progress.
 lostcitiesnh.command.test.list=Scenarios: %s
 lostcitiesnh.command.test.started=Running %s scenario(s); results follow.
+lostcitiesnh.command.profile.usage=/lostcities profile [pin <profile> confirm]
+lostcitiesnh.command.profile.none=Dimension %s has no pinned profile, so no cities generate there.
+lostcitiesnh.command.profile.show=Dimension %s: %s
+lostcitiesnh.command.profile.unknown=Unknown profile '%s'. Known profiles: %s
+lostcitiesnh.command.profile.confirm=Pinning %s changes what new chunks of dimension %s generate, and chunks generated before will not match them. Add 'confirm' to pin it.
+lostcitiesnh.command.profile.pinned=Pinned profile %s into dimension %s.
+lostcitiesnh.command.profile.unsupported=Dimension %s cannot have cities: world type %s has no height oracle.
+lostcitiesnh.command.timers.usage=/lostcities timers [reset]
+lostcitiesnh.command.timers.none=Cities are not generating in dimension %s.
+lostcitiesnh.command.timers.line=%s
+lostcitiesnh.command.timers.reset=Generation timers of dimension %s reset.
+lostcitiesnh.command.view.usage=/lostcities view <player> <x> <y> <z> <yaw> <pitch>
+lostcitiesnh.command.view.done=Moved %s to %s %s %s.
 
 # Scenario harness
 lostcitiesnh.scenario.result=%s %s (%s ms): %s
@@ -76,3 +89,9 @@ lostcitiesnh.decorativemetals.desh=Desh
 lostcitiesnh.decorativemetals.desh.tooltip=Desh accents. New worlds only.
 lostcitiesnh.decorativemetals.thaumium=Thaumium
 lostcitiesnh.decorativemetals.thaumium.tooltip=Thaumium accents. New worlds only.
+lostcitiesnh.profiles.dimensionprofiles=Dimension profiles
+lostcitiesnh.profiles.dimensionprofiles.tooltip=Which dimensions get cities, and with which profile, as <dimension id>=<profile>. New worlds only.
+lostcitiesnh.profiles.enableonexistingworlds=Enable on existing worlds
+lostcitiesnh.profiles.enableonexistingworlds.tooltip=Give cities to worlds created before this mod was added. Chunks generated before will not match.
+lostcitiesnh.profiles=Profiles
+lostcitiesnh.profiles.tooltip=Where cities generate and with which profile. New worlds only: changes do not affect worlds that already exist.
