@@ -51,6 +51,11 @@ final class SiteCache<V> {
         return value;
     }
 
+    /** Drops a key, if cached. */
+    void remove(long key) {
+        entries.remove(key);
+    }
+
     /** Returns the number of entries. */
     int size() {
         return entries.size();

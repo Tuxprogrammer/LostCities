@@ -10,6 +10,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
@@ -38,12 +39,17 @@ public final class MeteoriteOracle implements StructureOracle {
     /** Height used without an oracle, block Y. */
     static final int FALLBACK_Y = 64;
 
+    /** Basins part-way read, kept at most. */
+    static final int BUILDING_SIZE = 16;
+
     private static final Landmark NONE = Landmark.builder("none", LandmarkKind.METEORITE)
         .footprint(new BlockRect(0, 0, 0, 0))
         .build();
 
     private final MeteoriteGrid grid;
     private final TerrainHeightOracle heights;
+    private final HeightProbe probe;
+    private final SiteCache<CraterBasin.Builder> building = new SiteCache<>(BUILDING_SIZE);
     private final SiteCache<Landmark> cache;
 
     /**
@@ -57,6 +63,8 @@ public final class MeteoriteOracle implements StructureOracle {
     public MeteoriteOracle(long worldSeed, MeteoriteSettings settings, TerrainHeightOracle heights, int cacheSize) {
         this.grid = new MeteoriteGrid(worldSeed, settings);
         this.heights = heights == null ? (x, z) -> FALLBACK_Y : heights;
+        HeightProbe guard = heights == null ? null : heights.probe();
+        this.probe = guard == null ? new HeightProbe() : guard;
         this.cache = new SiteCache<>(cacheSize);
     }
 
@@ -112,14 +120,32 @@ public final class MeteoriteOracle implements StructureOracle {
             .contains(site.x(), site.z())) {
             return null;
         }
-        Landmark landmark = build(site);
+        if (probe.active()) {
+            // About 550 height samples: read a part per prefetch step, with the probe off (B4).
+            throw probe.miss(() -> step(key, site));
+        }
+        Landmark landmark = build(site, CraterBasin.of(heights, site.x(), site.z(), MeteoriteShape.of(site.seed())));
         cache.put(key, landmark);
         return landmark;
     }
 
-    private Landmark build(MeteoriteGrid.Site site) {
-        MeteoriteShape shape = MeteoriteShape.of(site.seed());
-        CraterBasin basin = CraterBasin.of(heights, site.x(), site.z(), shape);
+    /** Reads the next part of a basin's samples, and caches the landmark once all are read. */
+    private synchronized void step(long key, MeteoriteGrid.Site site) {
+        if (cache.get(key) != null) {
+            return;
+        }
+        CraterBasin.Builder builder = building.get(key);
+        if (builder == null) {
+            builder = building
+                .put(key, new CraterBasin.Builder(heights, site.x(), site.z(), MeteoriteShape.of(site.seed())));
+        }
+        if (builder.step()) {
+            cache.put(key, build(site, builder.build()));
+            building.remove(key);
+        }
+    }
+
+    private Landmark build(MeteoriteGrid.Site site, CraterBasin basin) {
         int half = basin.halfWidth();
         return Landmark.builder(id(site.x(), site.z()), LandmarkKind.METEORITE)
             .footprint(new BlockRect(site.x() - half, site.z() - half, site.x() + half, site.z() + half))

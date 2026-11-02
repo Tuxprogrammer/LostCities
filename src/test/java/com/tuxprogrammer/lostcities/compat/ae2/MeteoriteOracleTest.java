@@ -37,6 +37,51 @@ class MeteoriteOracleTest {
     }
 
     @Test
+    void aProbeReadsABasinInStepsAndGetsTheOnePassLandmark() {
+        com.tuxprogrammer.lostcities.worldgen.height.HeightProbe probe = new com.tuxprogrammer.lostcities.worldgen.height.HeightProbe();
+        com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle rough = (x, z) -> 64
+            + Math.floorMod(x * 13 + z * 7, 11);
+        int[] calls = { 0 };
+        com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle heights = new com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle() {
+
+            @Override
+            public int height(int blockX, int blockZ) {
+                calls[0]++;
+                return rough.height(blockX, blockZ);
+            }
+
+            @Override
+            public com.tuxprogrammer.lostcities.worldgen.height.HeightProbe probe() {
+                return probe;
+            }
+        };
+        Landmark whole = new MeteoriteOracle(SEED, PACK, rough, 16).meteoriteAt(0, 0);
+        MeteoriteOracle stepped = new MeteoriteOracle(SEED, PACK, heights, 16);
+        probe.setActive(true);
+        Landmark found = null;
+        int steps = 0;
+        while (found == null && steps < 100) {
+            try {
+                found = stepped.meteoriteAt(0, 0);
+            } catch (com.tuxprogrammer.lostcities.worldgen.height.HeightProbe.NotCached missing) {
+                int before = calls[0];
+                assertTrue(probe.fetchMissing());
+                steps++;
+                assertTrue(calls[0] - before < 400, "a step reads part of the samples: " + (calls[0] - before));
+            }
+        }
+        probe.setActive(false);
+        assertTrue(steps > 2, "the basin is read in several steps: " + steps);
+        assertEquals(whole.footprint(), found.footprint());
+        assertEquals(whole.groundEstimate(), found.groundEstimate());
+        assertEquals(
+            whole.heightCap()
+                .centerY(),
+            found.heightCap()
+                .centerY());
+    }
+
+    @Test
     void oneLandmarkPerCell() {
         MeteoriteOracle oracle = oracle(MeteoriteOracle.CACHE_SIZE);
         Landmark landmark = oracle.meteoriteAt(0, 0);

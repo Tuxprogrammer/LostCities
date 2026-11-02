@@ -90,48 +90,101 @@ public final class CraterBasin {
      * @return the basin
      */
     public static CraterBasin of(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
-        int capCenter = capCenterY(heights, x, z, shape.size());
-        int half = Math.max(DECAY_HALF_WIDTH, (int) Math.ceil(shape.craterSize()));
-        int corners = 2 * MAX_HALF_WIDTH / CELL + 1;
-        int[] grid = new int[corners * corners];
-        for (int i = 0; i < corners; i++) {
-            for (int k = 0; k < corners; k++) {
-                grid[i * corners + k] = heights.height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
-            }
+        Builder builder = new Builder(heights, x, z, shape);
+        boolean done = false;
+        while (!done) {
+            done = builder.step();
         }
-        for (int i = 0; i + 1 < corners; i++) {
-            for (int k = 0; k + 1 < corners; k++) {
-                int highest = Math.max(
-                    Math.max(grid[i * corners + k], grid[(i + 1) * corners + k]),
-                    Math.max(grid[i * corners + k + 1], grid[(i + 1) * corners + k + 1]));
-                int fromX = -MAX_HALF_WIDTH + i * CELL;
-                int fromZ = -MAX_HALF_WIDTH + k * CELL;
-                double nearestX = nearest(fromX, fromX + CELL);
-                double nearestZ = nearest(fromZ, fromZ + CELL);
-                double cap = capCenter + CURVATURE * (nearestX * nearestX + nearestZ * nearestZ);
-                if (cap < highest + CITY_HEADROOM) {
-                    int far = Math.max(
-                        Math.max(Math.abs(fromX), Math.abs(fromX + CELL)),
-                        Math.max(Math.abs(fromZ), Math.abs(fromZ + CELL)));
-                    half = Math.max(half, far);
+        return builder.build();
+    }
+
+    /**
+     * Computes a basin in steps, so the plan prefetcher can spread its height samples (about 550 on RWG2 Continents)
+     * over several fetches instead of one (budget B4): the first step finds the cap's center, each later one reads
+     * {@value #ROWS_PER_STEP} rows of the ground grid. The steps read the same samples as one pass, so the basin is
+     * the same.
+     */
+    static final class Builder {
+
+        /** Rows of the ground grid one step reads. */
+        static final int ROWS_PER_STEP = 4;
+        private static final int CORNERS = 2 * MAX_HALF_WIDTH / CELL + 1;
+
+        private final TerrainHeightOracle heights;
+        private final int x;
+        private final int z;
+        private final MeteoriteShape shape;
+        private final int[] grid = new int[CORNERS * CORNERS];
+        private boolean centered;
+        private int capCenter;
+        private int rows;
+
+        Builder(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
+            this.heights = heights;
+            this.x = x;
+            this.z = z;
+            this.shape = shape;
+        }
+
+        /**
+         * Reads the next part of the samples.
+         *
+         * @return {@code true} once every sample is read
+         */
+        boolean step() {
+            if (!centered) {
+                capCenter = capCenterY(heights, x, z, shape.size());
+                centered = true;
+                return false;
+            }
+            int end = Math.min(CORNERS, rows + ROWS_PER_STEP);
+            for (int i = rows; i < end; i++) {
+                for (int k = 0; k < CORNERS; k++) {
+                    grid[i * CORNERS + k] = heights.height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
                 }
             }
+            rows = end;
+            return rows >= CORNERS;
         }
-        half = Math.min(half, MAX_HALF_WIDTH);
-        int[] inside = new int[grid.length];
-        int n = 0;
-        for (int i = 0; i < corners; i++) {
-            for (int k = 0; k < corners; k++) {
-                int dx = -MAX_HALF_WIDTH + i * CELL;
-                int dz = -MAX_HALF_WIDTH + k * CELL;
-                if (Math.abs(dx) <= half && Math.abs(dz) <= half) {
-                    inside[n++] = grid[i * corners + k];
+
+        /** Returns the basin; every sample must be read. */
+        CraterBasin build() {
+            int corners = CORNERS;
+            int half = Math.max(DECAY_HALF_WIDTH, (int) Math.ceil(shape.craterSize()));
+            for (int i = 0; i + 1 < corners; i++) {
+                for (int k = 0; k + 1 < corners; k++) {
+                    int highest = Math.max(
+                        Math.max(grid[i * corners + k], grid[(i + 1) * corners + k]),
+                        Math.max(grid[i * corners + k + 1], grid[(i + 1) * corners + k + 1]));
+                    int fromX = -MAX_HALF_WIDTH + i * CELL;
+                    int fromZ = -MAX_HALF_WIDTH + k * CELL;
+                    double nearestX = nearest(fromX, fromX + CELL);
+                    double nearestZ = nearest(fromZ, fromZ + CELL);
+                    double cap = capCenter + CURVATURE * (nearestX * nearestX + nearestZ * nearestZ);
+                    if (cap < highest + CITY_HEADROOM) {
+                        int far = Math.max(
+                            Math.max(Math.abs(fromX), Math.abs(fromX + CELL)),
+                            Math.max(Math.abs(fromZ), Math.abs(fromZ + CELL)));
+                        half = Math.max(half, far);
+                    }
                 }
             }
+            half = Math.min(half, MAX_HALF_WIDTH);
+            int[] inside = new int[grid.length];
+            int n = 0;
+            for (int i = 0; i < corners; i++) {
+                for (int k = 0; k < corners; k++) {
+                    int dx = -MAX_HALF_WIDTH + i * CELL;
+                    int dz = -MAX_HALF_WIDTH + k * CELL;
+                    if (Math.abs(dx) <= half && Math.abs(dz) <= half) {
+                        inside[n++] = grid[i * corners + k];
+                    }
+                }
+            }
+            int[] samples = Arrays.copyOf(inside, n);
+            Arrays.sort(samples);
+            return new CraterBasin(capCenter, half, samples[samples.length / 2]);
         }
-        int[] samples = Arrays.copyOf(inside, n);
-        Arrays.sort(samples);
-        return new CraterBasin(capCenter, half, samples[samples.length / 2]);
     }
 
     /**
