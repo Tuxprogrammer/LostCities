@@ -36,8 +36,9 @@ public class BlockRefTest {
     @Test
     public void airIsOneInstance() {
         assertSame(BlockRef.AIR, BlockRef.parse("minecraft:air"));
-        assertTrue(BlockRef.parse("minecraft:air:0")
-            .isAir());
+        assertTrue(
+            BlockRef.parse("minecraft:air:0")
+                .isAir());
     }
 
     @Test

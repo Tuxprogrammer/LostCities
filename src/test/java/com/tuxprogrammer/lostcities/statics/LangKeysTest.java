@@ -47,7 +47,9 @@ public class LangKeysTest {
     @Test
     public void everyKeyInCodeIsInTheLangFile() throws Exception {
         List<String> missing = missing(MainClasses.all(), definedKeys());
-        assertTrue(missing.isEmpty(), "lang keys used in code but missing from en_US.lang:\n" + String.join("\n", missing));
+        assertTrue(
+            missing.isEmpty(),
+            "lang keys used in code but missing from en_US.lang:\n" + String.join("\n", missing));
     }
 
     @Test
@@ -65,14 +67,17 @@ public class LangKeysTest {
     @Test
     public void noCodeSendsUntranslatedChat() throws Exception {
         List<String> offenders = plainTextChat(MainClasses.all());
-        assertTrue(offenders.isEmpty(), "ChatComponentText (hard-coded text) built in:\n" + String.join("\n", offenders));
+        assertTrue(
+            offenders.isEmpty(),
+            "ChatComponentText (hard-coded text) built in:\n" + String.join("\n", offenders));
     }
 
     @Test
     public void fixtureWithAnUndefinedKeyFails() throws Exception {
         ClassNode fixture = MainClasses.fixture("LangKeyUser");
         assertEquals(
-            Collections.singletonList("lostcitiesnh.fixture.missing_key (com.tuxprogrammer.lostcities.statics.fixtures.LangKeyUser)"),
+            Collections.singletonList(
+                "lostcitiesnh.fixture.missing_key (com.tuxprogrammer.lostcities.statics.fixtures.LangKeyUser)"),
             missing(Collections.singletonList(fixture), new HashSet<>()));
     }
 
@@ -86,12 +91,18 @@ public class LangKeysTest {
 
     @Test
     public void identifiersThatShareThePrefixAreNotKeys() {
-        assertTrue(!KEY.matcher("lostcitiesnh.testHooks")
-            .matches(), "camelCase JVM property");
-        assertTrue(!KEY.matcher("lostcitiesnh")
-            .matches(), "the mod ID");
-        assertTrue(KEY.matcher("lostcitiesnh.command.usage")
-            .matches(), "a real key");
+        assertTrue(
+            !KEY.matcher("lostcitiesnh.testHooks")
+                .matches(),
+            "camelCase JVM property");
+        assertTrue(
+            !KEY.matcher("lostcitiesnh")
+                .matches(),
+            "the mod ID");
+        assertTrue(
+            KEY.matcher("lostcitiesnh.command.usage")
+                .matches(),
+            "a real key");
     }
 
     @Test

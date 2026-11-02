@@ -17,7 +17,9 @@ import com.tuxprogrammer.lostcities.core.DevEnvironment;
  */
 public final class ScenarioAutorun {
 
-    /** JVM property naming the scenarios to run at server start: a selector as {@link ScenarioRegistry#select} takes. */
+    /**
+     * JVM property naming the scenarios to run at server start: a selector as {@link ScenarioRegistry#select} takes.
+     */
     public static final String SCENARIOS_PROPERTY = "lostcitiesnh.scenarios";
 
     /** JVM property that stops the server after the started run's summary line: {@code true} or {@code false}. */
@@ -34,7 +36,8 @@ public final class ScenarioAutorun {
         }
         boolean stop = Boolean.getBoolean(STOP_PROPERTY);
         if (!DevEnvironment.testHooksEnabled()) {
-            LostCities.LOG.error(ScenarioReport.errorLine("-D" + SCENARIOS_PROPERTY + " set but the test hooks are off"));
+            LostCities.LOG
+                .error(ScenarioReport.errorLine("-D" + SCENARIOS_PROPERTY + " set but the test hooks are off"));
             stopIf(stop);
             return;
         }

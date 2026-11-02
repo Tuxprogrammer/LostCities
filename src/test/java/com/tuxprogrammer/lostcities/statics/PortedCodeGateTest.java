@@ -99,27 +99,39 @@ public class PortedCodeGateTest {
     public void upstreamCodeWithoutHeaderFails() throws Exception {
         List<String> violations = PortedCodeGate.unmarkedMentions(fixtureRoot("unmarked").resolve("main"));
         assertEquals(1, violations.size(), "violations: " + violations);
-        assertTrue(violations.get(0).startsWith(PortedCodeGate.UNMARKED), violations.get(0));
+        assertTrue(
+            violations.get(0)
+                .startsWith(PortedCodeGate.UNMARKED),
+            violations.get(0));
     }
 
     @Test
     public void emptyTreeFails() throws Exception {
         List<String> violations = PortedCodeGate.checkRoot(fixtureRoot("good").resolve("main"), MIN_MAIN_FILES);
         assertEquals(1, violations.size(), "violations: " + violations);
-        assertTrue(violations.get(0).startsWith(PortedCodeGate.ROOT), violations.get(0));
+        assertTrue(
+            violations.get(0)
+                .startsWith(PortedCodeGate.ROOT),
+            violations.get(0));
     }
 
     @Test
     public void incompleteNoticeFails() {
         List<String> violations = PortedCodeGate.checkNotices(notices.replace("Copyright (c) 2017 McJty", ""), license);
         assertEquals(1, violations.size(), "violations: " + violations);
-        assertTrue(violations.get(0).startsWith(PortedCodeGate.NOTICE), violations.get(0));
+        assertTrue(
+            violations.get(0)
+                .startsWith(PortedCodeGate.NOTICE),
+            violations.get(0));
     }
 
     private static void assertRule(String fixture, String className, String rule) throws Exception {
         List<String> violations = checkFixture(fixture, className);
         assertEquals(1, violations.size(), "expected exactly one " + rule + " violation, got " + violations);
-        assertTrue(violations.get(0).startsWith(rule + ":"), violations.get(0));
+        assertTrue(
+            violations.get(0)
+                .startsWith(rule + ":"),
+            violations.get(0));
     }
 
     private static List<String> checkFixture(String fixture, String className) throws Exception {

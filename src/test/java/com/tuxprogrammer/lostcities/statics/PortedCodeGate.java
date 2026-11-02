@@ -104,7 +104,8 @@ final class PortedCodeGate {
             String source = read(file);
             if (!isPorted(source) && UPSTREAM_CODE.matcher(source)
                 .find()) {
-                out.add(UNMARKED + ": " + file.getFileName() + " names upstream's code but has no 'Ported from' header");
+                out.add(
+                    UNMARKED + ": " + file.getFileName() + " names upstream's code but has no 'Ported from' header");
             }
         }
         return out;
@@ -214,9 +215,13 @@ final class PortedCodeGate {
             } else if (!allowed.contains(
                 url.group(1)
                     .toLowerCase())) {
-                out.add(PERMALINK + ": pinned to " + url.group(1) + ", which is neither " + BASELINE_SHORT
-                    + " nor a commit named in THIRD-PARTY-NOTICES.md");
-            }
+                        out.add(
+                            PERMALINK + ": pinned to "
+                                + url.group(1)
+                                + ", which is neither "
+                                + BASELINE_SHORT
+                                + " nor a commit named in THIRD-PARTY-NOTICES.md");
+                    }
         }
         return out;
     }

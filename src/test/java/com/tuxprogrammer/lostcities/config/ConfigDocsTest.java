@@ -46,6 +46,8 @@ public class ConfigDocsTest {
     @Test
     public void docsSayWorldgenKeysApplyToNewWorldsOnly() throws Exception {
         String docs = ProjectFiles.read(ProjectFiles.resolve("docs/config.md"));
-        assertTrue(docs.contains("new worlds only"), "docs/config.md explains that worldgen keys apply to new worlds only");
+        assertTrue(
+            docs.contains("new worlds only"),
+            "docs/config.md explains that worldgen keys apply to new worlds only");
     }
 }

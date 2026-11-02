@@ -70,10 +70,12 @@ public class WorldgenConfigTest {
         assertTrue(WorldgenConfig.cities, "cities defaults to true");
         assertTrue(WorldgenConfig.railways, "railways defaults to true");
         assertTrue(WorldgenConfig.scatteredStructures, "scatteredStructures defaults to true");
-        assertFalse(ModuleState.configured()
-            .isActive(Module.HIGHWAYS));
-        assertTrue(ModuleState.configured()
-            .isActive(Module.CITIES));
+        assertFalse(
+            ModuleState.configured()
+                .isActive(Module.HIGHWAYS));
+        assertTrue(
+            ModuleState.configured()
+                .isActive(Module.CITIES));
     }
 
     @Test
@@ -110,10 +112,12 @@ public class WorldgenConfigTest {
                 .getCategory(WorldgenConfig.CATEGORY)
                 .get("scatteredStructures")
                 .getLanguageKey());
-        assertTrue(LostCitiesConfig.langKeys()
-            .contains("lostcitiesnh.worldgen.scatteredstructures"));
-        assertTrue(LostCitiesConfig.langKeys()
-            .contains("lostcitiesnh.worldgen"));
+        assertTrue(
+            LostCitiesConfig.langKeys()
+                .contains("lostcitiesnh.worldgen.scatteredstructures"));
+        assertTrue(
+            LostCitiesConfig.langKeys()
+                .contains("lostcitiesnh.worldgen"));
     }
 
     @Test

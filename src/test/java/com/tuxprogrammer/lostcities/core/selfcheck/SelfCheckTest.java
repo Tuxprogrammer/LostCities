@@ -28,7 +28,9 @@ public class SelfCheckTest {
 
     @Test
     public void missingLangKeyIsReported() {
-        LangCheck check = new LangCheck(Arrays.asList("lostcitiesnh.a.b", "lostcitiesnh.a.c"), new HashSet<>(Collections.singletonList("lostcitiesnh.a.b")));
+        LangCheck check = new LangCheck(
+            Arrays.asList("lostcitiesnh.a.b", "lostcitiesnh.a.c"),
+            new HashSet<>(Collections.singletonList("lostcitiesnh.a.b")));
         assertEquals(Collections.singletonList("missing from en_US.lang: lostcitiesnh.a.c"), check.problems());
     }
 
@@ -37,7 +39,10 @@ public class SelfCheckTest {
         // A config class with none of the module options: every module is reported missing.
         List<String> problems = new ModuleConfigCheck(Empty.class).problems();
         assertEquals(4, problems.size(), "problems: " + problems);
-        assertTrue(problems.get(0).startsWith("module "), problems.get(0));
+        assertTrue(
+            problems.get(0)
+                .startsWith("module "),
+            problems.get(0));
     }
 
     @Test
@@ -61,16 +66,23 @@ public class SelfCheckTest {
         };
         List<String> problems = SelfCheck.runAll(Collections.singletonList(broken));
         assertEquals(1, problems.size());
-        assertTrue(problems.get(0).startsWith("broken: the check itself failed"), problems.get(0));
+        assertTrue(
+            problems.get(0)
+                .startsWith("broken: the check itself failed"),
+            problems.get(0));
     }
 
     @Test
     public void failureCarriesEveryProblem() {
         SelfCheckFailedException e = new SelfCheckFailedException(Arrays.asList("a: one", "b: two"));
         assertEquals(Arrays.asList("a: one", "b: two"), e.problems());
-        assertTrue(e.getMessage().contains("a: one\nb: two"), e.getMessage());
+        assertTrue(
+            e.getMessage()
+                .contains("a: one\nb: two"),
+            e.getMessage());
     }
 
     /** A config class with no options. */
-    static final class Empty {}
+    static final class Empty {
+    }
 }

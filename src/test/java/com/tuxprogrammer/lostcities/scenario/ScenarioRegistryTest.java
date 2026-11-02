@@ -21,12 +21,21 @@ public class ScenarioRegistryTest {
         registry.register(named("harnessing.other", false));
         registry.register(named("city.spawn_distance", false));
 
-        assertEquals(Arrays.asList("city.spawn_distance", "harness.trivial", "harnessing.other"), names(registry.select("all")));
+        assertEquals(
+            Arrays.asList("city.spawn_distance", "harness.trivial", "harnessing.other"),
+            names(registry.select("all")));
         assertEquals(Arrays.asList("harness.trivial"), names(registry.select("harness")));
         assertEquals(Arrays.asList("harness.must_fail"), names(registry.select("harness.must_fail")));
-        assertTrue(registry.select("harn").isEmpty(), "a prefix must be whole words");
-        assertTrue(registry.select("").isEmpty());
-        assertTrue(registry.select(null).isEmpty());
+        assertTrue(
+            registry.select("harn")
+                .isEmpty(),
+            "a prefix must be whole words");
+        assertTrue(
+            registry.select("")
+                .isEmpty());
+        assertTrue(
+            registry.select(null)
+                .isEmpty());
     }
 
     @Test
@@ -43,8 +52,12 @@ public class ScenarioRegistryTest {
     public void builtInsRegisterAndAllSkipsTheDeliberateFailure() {
         ScenarioRegistry registry = new ScenarioRegistry();
         BuiltinScenarios.registerAll(registry);
-        assertEquals(Arrays.asList("harness.fresh_chunk", "harness.must_fail", "harness.trivial"), names(registry.all()));
-        assertEquals(Arrays.asList("harness.fresh_chunk", "harness.trivial"), names(registry.select(ScenarioRegistry.ALL)));
+        assertEquals(
+            Arrays.asList("harness.fresh_chunk", "harness.must_fail", "harness.trivial"),
+            names(registry.all()));
+        assertEquals(
+            Arrays.asList("harness.fresh_chunk", "harness.trivial"),
+            names(registry.select(ScenarioRegistry.ALL)));
     }
 
     private static List<String> names(List<Scenario> scenarios) {

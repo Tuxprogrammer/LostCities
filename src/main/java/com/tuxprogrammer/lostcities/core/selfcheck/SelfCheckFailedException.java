@@ -22,8 +22,10 @@ public final class SelfCheckFailedException extends RuntimeException {
      * @param problems every problem the checks reported, one line each
      */
     public SelfCheckFailedException(List<String> problems) {
-        super("Lost Cities: New Horizons dev self-check failed with " + problems.size() + " problem(s):\n"
-            + String.join("\n", problems));
+        super(
+            "Lost Cities: New Horizons dev self-check failed with " + problems.size()
+                + " problem(s):\n"
+                + String.join("\n", problems));
         this.problems = Collections.unmodifiableList(problems);
     }
 

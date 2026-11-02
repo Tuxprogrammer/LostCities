@@ -13,4 +13,5 @@ import com.tuxprogrammer.lostcities.CommonProxy;
  * <p>
  * Side: client.
  */
-public class ClientProxy extends CommonProxy {}
+public class ClientProxy extends CommonProxy {
+}

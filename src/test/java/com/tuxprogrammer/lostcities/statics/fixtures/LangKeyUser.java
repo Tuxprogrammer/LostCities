@@ -1,6 +1,8 @@
 package com.tuxprogrammer.lostcities.statics.fixtures;
 
-/** Fixture for {@code LangKeysTest}: one key-shaped constant no lang file defines, and identifiers that are not keys. */
+/**
+ * Fixture for {@code LangKeysTest}: one key-shaped constant no lang file defines, and identifiers that are not keys.
+ */
 public class LangKeyUser {
 
     /** A JVM property name: camelCase, so not a key. */

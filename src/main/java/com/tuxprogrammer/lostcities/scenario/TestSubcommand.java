@@ -61,7 +61,8 @@ public final class TestSubcommand implements Subcommand {
             LostCities.LOG.info(ScenarioReport.errorLine("a scenario run is already in progress"));
             throw new CommandException(LangKeys.TEST_BUSY);
         }
-        LostCities.LOG.info("{} started {} scenario(s) for '{}'", sender.getCommandSenderName(), scenarios.size(), selector);
+        LostCities.LOG
+            .info("{} started {} scenario(s) for '{}'", sender.getCommandSenderName(), scenarios.size(), selector);
         sender.addChatMessage(new ChatComponentTranslation(LangKeys.TEST_STARTED, scenarios.size()));
     }
 

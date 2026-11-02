@@ -25,7 +25,12 @@ public class RateLimitedSinkTest {
         clock.set(100);
         sink.rejected("P", "spammer", violation);
         assertEquals(3, log.rejected.size());
-        assertTrue(log.rejected.get(2).detail().contains("3 earlier reports dropped"), log.rejected.get(2).detail());
+        assertTrue(
+            log.rejected.get(2)
+                .detail()
+                .contains("3 earlier reports dropped"),
+            log.rejected.get(2)
+                .detail());
         assertEquals(0, sink.droppedSinceLastReport());
     }
 }

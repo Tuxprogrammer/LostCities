@@ -56,8 +56,13 @@ public final class GoldenChunks {
         }
         if (!Files.isRegularFile(golden)) {
             Path written = writeActual(caseName, text);
-            fail("no golden " + ProjectFiles.relative(golden) + " (actual " + actual + ", text in " + written
-                + "); create it with ./gradlew test -PupdateGoldens");
+            fail(
+                "no golden " + ProjectFiles.relative(golden)
+                    + " (actual "
+                    + actual
+                    + ", text in "
+                    + written
+                    + "); create it with ./gradlew test -PupdateGoldens");
         }
         String expected = expectedHash(Files.readAllLines(golden, StandardCharsets.UTF_8));
         String mismatch = mismatch(expected, text);

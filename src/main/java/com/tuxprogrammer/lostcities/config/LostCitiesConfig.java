@@ -89,8 +89,9 @@ public final class LostCitiesConfig {
         Set<String> keys = new TreeSet<>();
         for (Class<?> configClass : CLASSES) {
             Config config = configClass.getAnnotation(Config.class);
-            String category = LostCities.MODID + "." + config.category()
-                .toLowerCase(Locale.ROOT);
+            String category = LostCities.MODID + "."
+                + config.category()
+                    .toLowerCase(Locale.ROOT);
             keys.add(category);
             keys.add(category + TOOLTIP_SUFFIX);
             for (Field option : options(configClass)) {

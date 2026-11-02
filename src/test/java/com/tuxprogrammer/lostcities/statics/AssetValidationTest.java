@@ -76,7 +76,12 @@ public class AssetValidationTest {
     public void malformedJsonFails() throws Exception {
         List<String> problems = validate(fixtures("malformed"), knownBlocks());
         assertEquals(1, problems.size(), "problems: " + problems);
-        assertTrue(problems.get(0).contains("broken.json.txt") && problems.get(0).contains("not valid JSON"), problems.get(0));
+        assertTrue(
+            problems.get(0)
+                .contains("broken.json.txt")
+                && problems.get(0)
+                    .contains("not valid JSON"),
+            problems.get(0));
     }
 
     @Test
@@ -167,8 +172,7 @@ public class AssetValidationTest {
                         .endsWith(suffix))
                 .filter(
                     p -> dataRoot.relativize(p)
-                        .getNameCount() > 2
-                        && "lostcities".equals(
+                        .getNameCount() > 2 && "lostcities".equals(
                             dataRoot.relativize(p)
                                 .getName(1)
                                 .toString()))

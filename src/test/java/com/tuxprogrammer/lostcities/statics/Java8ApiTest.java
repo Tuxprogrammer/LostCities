@@ -91,7 +91,13 @@ public class Java8ApiTest {
         call(fixture, Opcodes.INVOKEVIRTUAL, "java/util/ArrayList", "stream", "()Ljava/util/stream/Stream;", false);
         call(fixture, Opcodes.INVOKEINTERFACE, "java/util/List", "hashCode", "()I", true);
         call(fixture, Opcodes.INVOKEVIRTUAL, "java/lang/String", "isEmpty", "()Z", false);
-        call(fixture, Opcodes.INVOKESTATIC, "java/util/Objects", "requireNonNull", "(Ljava/lang/Object;)Ljava/lang/Object;", false);
+        call(
+            fixture,
+            Opcodes.INVOKESTATIC,
+            "java/util/Objects",
+            "requireNonNull",
+            "(Ljava/lang/Object;)Ljava/lang/Object;",
+            false);
         fixture.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "out", "Ljava/util/Optional;", null, null));
         assertEquals(Collections.emptyList(), violations(Collections.singletonList(fixture)));
     }

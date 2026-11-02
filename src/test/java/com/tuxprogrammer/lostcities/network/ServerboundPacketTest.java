@@ -149,9 +149,8 @@ public class ServerboundPacketTest {
     @Test
     public void handlerExceptionIsContained() {
         RecordingSink sink = new RecordingSink();
-        PacketOutcome outcome = new EditSlotPacket(0, 2, 64, 2, 0).dispatch(FakeSender.operator(), () -> {
-            throw new IllegalStateException("handler bug");
-        }, sink);
+        PacketOutcome outcome = new EditSlotPacket(0, 2, 64, 2, 0)
+            .dispatch(FakeSender.operator(), () -> { throw new IllegalStateException("handler bug"); }, sink);
         assertEquals(PacketOutcome.Kind.FAILED, outcome.kind());
         assertEquals(1, sink.failures.size());
     }
@@ -180,9 +179,11 @@ public class ServerboundPacketTest {
     @Test
     public void noRealPacketIsRegisteredYet() {
         // docs/new-spec/01-core/index.md: no packet is defined until a feature needs one.
-        assertTrue(LostCitiesNetwork.serverboundPackets()
-            .isEmpty());
-        assertTrue(LostCitiesNetwork.clientboundPackets()
-            .isEmpty());
+        assertTrue(
+            LostCitiesNetwork.serverboundPackets()
+                .isEmpty());
+        assertTrue(
+            LostCitiesNetwork.clientboundPackets()
+                .isEmpty());
     }
 }

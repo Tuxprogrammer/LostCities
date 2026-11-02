@@ -20,7 +20,8 @@ public final class ProjectFiles {
         Path dir = Paths.get(System.getProperty("user.dir"))
             .toAbsolutePath();
         for (Path p = dir; p != null; p = p.getParent()) {
-            if (Files.isRegularFile(p.resolve("CONTRIBUTING.md")) && Files.isRegularFile(p.resolve("gradle.properties"))) {
+            if (Files.isRegularFile(p.resolve("CONTRIBUTING.md"))
+                && Files.isRegularFile(p.resolve("gradle.properties"))) {
                 return p;
             }
         }
