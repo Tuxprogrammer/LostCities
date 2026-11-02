@@ -42,7 +42,7 @@ Runs before the building or street is written.
 1. **Bedrock floor** (`DEFAULT` and `SPHERES`): for every column, bedrock from the minimum build height for `BEDROCK_LAYER` layers.
 2. **High water** (`DEFAULT` and `SPHERES`): if `waterLevel > groundLevel`, liquid from `groundLevel` to `waterLevel − 1` in every column. (This is the "drowned city" setup: profiles with a sea level above the city ground.)
 3. **Leveling** (`DEFAULT` and `SPHERES`): for each of the 256 columns, with `ground` = city ground Y:
-   1. `moveDown(x, z, ground + 1, maxBuild)`. Scan down from `maxBuild − 1` through air, water, lava, climbable blocks and foliage (`lostcities:foliage` tag), remembering the highest foliage block. If the scan reaches `ground + 1` without meeting terrain, nothing happens. Otherwise copy up to 6 blocks from the terrain surface downward (stopping at `ground + 1`), set everything from the highest foliage (or the surface) down to `ground + 1` to air, and write the copied blocks from `ground` downward. The column's terrain top is now at `ground`.
+   1. `moveDown(x, z, ground + 1, maxBuild)`. Scan down from `maxBuild − 1` through air, water, lava, climbable blocks and foliage (`lostcities:foliage` tag), remembering the highest foliage block. If the scan reaches `ground + 1` without meeting terrain, nothing happens; the scan stops there without looking at the block at `ground + 1`, so a column whose surface is exactly `ground + 1` is left as it is (`TERR-39`). Otherwise copy up to 6 blocks from the terrain surface downward (stopping at `ground + 1`), set everything from the highest foliage (or the surface) down to `ground + 1` to air, and write the copied blocks from `ground` downward. The column's terrain top is now at `ground`.
    2. If `moveDown` did nothing (terrain at or below `ground`), `moveUp(x, z, ground)`. Scan down from `ground` through the same "empty" set to the first solid block S. If S ≥ `ground`, nothing happens. Otherwise copy the column upward by `ground − S`: block at S goes to `ground`, S − 1 to `ground − 1`, and so on, stopping at the first air block or bedrock in the source (or at Y 0). The column's top is now at `ground`. A cave or any air gap ends the copy, so the column under the shifted part keeps its old blocks.
 4. Post the cancelable `PreGenCityChunkEvent`; unless canceled, write the building (`generateBuilding`, which first calls `makeRoomForBuilding`) or the street (`generateStreet`, which ends with `generateBorders`). Then post `PostGenCityChunkEvent`.
 
@@ -126,7 +126,7 @@ Called from `doCityChunk` and `generateBuilding` / `generateStreet` ([pipeline](
 
 ## 10 · Bugs
 
-`TERR-06`, `TERR-23`, `TERR-24`, `TERR-31`.
+`TERR-06`, `TERR-23`, `TERR-24`, `TERR-31`, `TERR-39`.
 
 ## On 1.12
 

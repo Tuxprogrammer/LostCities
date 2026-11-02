@@ -28,10 +28,37 @@ public final class LanePath {
 
     private final long[] columns;
     private final Material material;
+    private final ChunkPlan.Side gradeSide;
+    private final int gradeFrom;
 
-    private LanePath(long[] columns, Material material) {
+    private LanePath(long[] columns, Material material, ChunkPlan.Side gradeSide, int gradeFrom) {
         this.columns = columns;
         this.material = material;
+        this.gradeSide = gradeSide;
+        this.gradeFrom = gradeFrom;
+    }
+
+    /**
+     * Returns this path graded across the city's margin (alpha review AR-7, AR-11): before the path is laid, its
+     * columns are moved to a straight ramp from the city's ground on the city side to the core's own edge on the
+     * opposite side, so the lane runs down (or up) the margin at no more than a block a column where it can.
+     *
+     * @param citySide   the chunk side the city lies on
+     * @param cityGround the city chunk's ground there, block Y
+     * @return the graded path
+     */
+    public LanePath gradedFrom(ChunkPlan.Side citySide, int cityGround) {
+        return new LanePath(columns, material, Objects.requireNonNull(citySide), cityGround);
+    }
+
+    /** Returns the side the lane is graded from, or {@code null} when it is laid on the ground as it is. */
+    public ChunkPlan.Side gradeSide() {
+        return gradeSide;
+    }
+
+    /** Returns the city ground the grade starts at, block Y; meaningful only with a {@link #gradeSide()}. */
+    public int gradeFrom() {
+        return gradeFrom;
     }
 
     /**
@@ -53,7 +80,7 @@ public final class LanePath {
                 any = true;
             }
         }
-        return any ? new LanePath(bits, Objects.requireNonNull(material)) : null;
+        return any ? new LanePath(bits, Objects.requireNonNull(material), null, 0) : null;
     }
 
     /**

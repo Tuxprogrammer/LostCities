@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115).",
+  "comment": "M05 alpha gate and M05R review round: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115); M05R adds the rise cap's view.",
   "title": "Alpha review: real cities on classic RWG, seed 4242",
   "world": {
     "name": "alpha-rwg",
@@ -52,6 +52,16 @@
       "y": "top+10"
     },
     {
+      "name": "rise",
+      "find": {
+        "cmd": "lostcities find rise 64",
+        "match": "kind=rise block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Rise cap: the city street nearest the spawn beside classic RWG ground at least 12 blocks above it, from above the city looking at the slope. The city stops or steps down here instead of climbing it (AR-4)."
+    },
+    {
       "name": "village",
       "find": {
         "cmd": "lostcities find village 200 best",
@@ -69,7 +79,7 @@
         "timeout": 300
       },
       "wait": 3,
-      "caption": "Reserved lot: the core of the same village as the village shot, the natural ground the city leaves to it, seen from inside the city across the edge ring."
+      "caption": "Reserved lot: the core of the same village as the village shot, the natural ground the city leaves to it, seen from inside the city across the margin."
     },
     {
       "name": "softedge",
@@ -79,7 +89,7 @@
         "timeout": 300
       },
       "wait": 3,
-      "caption": "Soft edge: the strip where a city chunk slopes to a village's natural ground instead of a wall, seen along the strip so its ramp shows in profile. The clearest within 200 chunks of the spawn."
+      "caption": "Soft edge: the city's margin, a chunk of natural ground the blend slopes from the city's edge to a village's ground, with the strip that meets the village's own edge and the lane's steps; the city builds inside it (AR-10, AR-11)."
     }
   ]
 }

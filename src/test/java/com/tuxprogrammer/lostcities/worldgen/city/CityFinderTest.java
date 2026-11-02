@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.city;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -164,10 +165,19 @@ public class CityFinderTest {
                 .lane()
                 .role(),
             gate.format());
-        assertTrue(
+        assertFalse(
             withVillage.chunk(gate.chunkX(), gate.chunkZ())
                 .isCity(),
-            "sewn into the city: " + gate.format());
+            "the gate chunk is the city's margin: " + gate.format());
+        com.tuxprogrammer.lostcities.layout.street.RoadDirection out = withVillage.planner()
+            .plan(gate.chunkX(), gate.chunkZ())
+            .lane()
+            .gate()
+            .facing();
+        assertTrue(
+            withVillage.chunk(gate.chunkX() + out.stepX(), gate.chunkZ() + out.stepZ())
+                .isCity(),
+            "sewn into the city beyond the margin: " + gate.format());
         double side = Math.hypot(gate.viewX() - gate.x() - 0.5, gate.viewZ() - gate.z() - 0.5);
         assertEquals(
             Math.hypot(LandmarkViews.GATE_SIDE, LandmarkViews.GATE_TOWARD_CITY),
@@ -207,6 +217,12 @@ public class CityFinderTest {
                 .facesCore(strip.chunkX(), strip.chunkZ(), side);
         }
         assertTrue(facesCore, strip.format());
+        assertEquals(
+            Zone.EDGE_RING,
+            withVillage.planner()
+                .zone(strip.chunkX(), strip.chunkZ())
+                .zone(),
+            "the soft edge is the city's margin: " + strip.format());
         assertNull(
             new CityFinder(withVillage.planner(), withVillage)
                 .findBest(CityFinder.Kind.VILLAGE, block[0] << 4, block[1] << 4, 24),

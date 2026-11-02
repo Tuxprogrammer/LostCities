@@ -53,6 +53,27 @@ public class CityTerrainTest {
     }
 
     @Test
+    public void doesNotReproduceTERR39_noTerrainLineIsLeftOneBlockAboveTheCityGround() {
+        // Every column's surface one block above the city ground: upstream left them all standing (AR-2).
+        ArrayChunkBuffer buffer = new ArrayChunkBuffer();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                ColumnOps.fill(buffer, x, z, 0, 78, TestTerrain.STONE);
+                buffer.set(x, 78, z, TestTerrain.GRASS);
+            }
+        }
+        int[] targets = new int[256];
+        Arrays.fill(targets, 77);
+        CityTerrain.level(buffer, CONTEXT, targets);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                assertEquals(77, ColumnOps.surface(buffer, CONTEXT.classifier(), x, z, true), "column " + x + "," + z);
+                assertEquals(BlockRef.AIR, buffer.get(x, 78, z), "column " + x + "," + z);
+            }
+        }
+    }
+
+    @Test
     public void bordersOnlyTowardLowerOrNonCityNeighbors() {
         ChunkPlan high = city(2, 0, 0);
         ChunkPlan lowCity = city(1, 0, 0);

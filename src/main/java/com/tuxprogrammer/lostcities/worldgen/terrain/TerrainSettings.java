@@ -20,7 +20,8 @@ import java.util.TreeMap;
  * Ranges follow docs/new-spec/03-terrain/height-mapping.md: anything that could leave Y 0 to 255 is clamped with a
  * warning, and every min/max pair is ordered at load so a draw between them never throws (TERR-03, PROF-06). Keys
  * are upstream's profile option names, plus this mod's own ({@code preventLakesRavinesInCities} from 1.12,
- * {@code softEdgeWidth}, {@code landmarkMargin} from docs/design/0006-build-around-other-worldgen.md §3, and
+ * {@code softEdgeWidth}, {@code landmarkMargin} from docs/design/0006-build-around-other-worldgen.md §3,
+ * {@code cityMaxRise} from the alpha review (docs/new-spec/03-terrain/height-mapping.md "Rise cap"), and
  * {@code heightSampleSize}, which upstream keeps in its mod config).
  *
  * <p>
@@ -33,6 +34,12 @@ public final class TerrainSettings {
 
     /** {@code seaLevel} value meaning "use the generator's sea level", 63 on RWG. */
     public static final int SEA_LEVEL_DEFAULT = -1;
+
+    /**
+     * Default {@code cityMaxRise}: two city levels (12 blocks of city ground) above a city's base, the alpha review's
+     * "happy medium" between leveling a mountain and building up it (AR-4, decision log D-RW rows).
+     */
+    public static final int DEFAULT_MAX_RISE = 2;
 
     /** Upstream's default city level thresholds, Y 75 to 131 in steps of 8. */
     private static final int[] DEFAULT_LEVEL_HEIGHTS = { 75, 83, 91, 99, 107, 115, 123, 131 };
@@ -61,6 +68,7 @@ public final class TerrainSettings {
     private final int[] cityLevelHeights;
     private final int cityMinHeight;
     private final int cityMaxHeight;
+    private final int cityMaxRise;
     private final int heightSampleSize;
     private final int bedrockLayer;
     private final int terrainFixLowerMinOffset;
@@ -110,6 +118,7 @@ public final class TerrainSettings {
         }
         cityMinHeight = r.intValue("cityMinHeight", 50, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
+        cityMaxRise = r.intValue("cityMaxRise", DEFAULT_MAX_RISE, 0, CITY_LEVEL_THRESHOLDS);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
         bedrockLayer = r.intValue("bedrockLayer", 1, 0, 10);
         if (bedrockLayer > 0 && r.values.containsKey("bedrockLayer")) {
@@ -225,6 +234,7 @@ public final class TerrainSettings {
         }
         out.put("cityMinHeight", Integer.toString(cityMinHeight));
         out.put("cityMaxHeight", Integer.toString(cityMaxHeight));
+        out.put("cityMaxRise", Integer.toString(cityMaxRise));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
         out.put("bedrockLayer", Integer.toString(bedrockLayer));
         out.put("terrainFixLowerMinOffset", Integer.toString(terrainFixLowerMinOffset));
@@ -317,6 +327,14 @@ public final class TerrainSettings {
     /** Returns the lowest oracle height a city chunk may have ({@code cityMinHeight}). */
     public int cityMinHeight() {
         return cityMinHeight;
+    }
+
+    /**
+     * Returns how many city levels a city chunk may rise above its city's base level ({@code cityMaxRise}); at
+     * {@link #CITY_LEVEL_THRESHOLDS} there is no cap.
+     */
+    public int cityMaxRise() {
+        return cityMaxRise;
     }
 
     /** Returns the highest oracle height a city chunk may have ({@code cityMaxHeight}). */

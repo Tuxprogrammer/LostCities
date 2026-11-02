@@ -44,6 +44,13 @@ public final class LayoutProfile {
     public final int cityMinHeight;
     /** {@code cityMaxHeight}, block Y; higher terrain is never city. */
     public final int cityMaxHeight;
+    /**
+     * {@code cityMaxRise}, city levels: how far a city chunk's level may rise above its city's base level, the level of
+     * the ground around the strongest city center (alpha review AR-4, docs/new-spec/03-terrain/height-mapping.md
+     * "Rise cap"). Terrain one level above that is cut down to it; higher terrain is never city. At
+     * {@link #cityLevelThresholds()} or more there is no cap, as upstream.
+     */
+    public final int cityMaxRise;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -148,6 +155,7 @@ public final class LayoutProfile {
         cityPerlinOffset = b.cityPerlinOffset;
         cityMinHeight = b.cityMinHeight;
         cityMaxHeight = b.cityMaxHeight;
+        cityMaxRise = b.cityMaxRise;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -220,6 +228,27 @@ public final class LayoutProfile {
         return cityLevelHeights.length;
     }
 
+    /**
+     * Returns the city level for a terrain height: the first {@code cityLevel<n>Height} threshold the height is
+     * strictly below, else {@link #cityLevelThresholds()} (docs/original-spec/04-city-layout/city-level.md).
+     *
+     * @param height block Y
+     * @return 0 to {@link #cityLevelThresholds()}
+     */
+    public int levelForHeight(int height) {
+        for (int level = 0; level < cityLevelHeights.length; level++) {
+            if (height < cityLevelHeights[level]) {
+                return level;
+            }
+        }
+        return cityLevelHeights.length;
+    }
+
+    /** Returns whether {@link #cityMaxRise} caps anything: below {@link #cityLevelThresholds()}. */
+    public boolean capsRise() {
+        return cityMaxRise < cityLevelHeights.length;
+    }
+
     /** Returns the water level the layout uses: {@link #seaLevel}, or {@link #RWG_SEA_LEVEL} when it is -1. */
     public int waterLevel() {
         return seaLevel == -1 ? RWG_SEA_LEVEL : seaLevel;
@@ -272,6 +301,9 @@ public final class LayoutProfile {
                 out.add("cityLevel" + i + "Height is below cityLevel" + (i - 1) + "Height");
             }
         }
+        if (cityMaxRise < 0) {
+            out.add("cityMaxRise must be 0 or more");
+        }
         if (villageTransitionRings < 0 || villageLinkDistance < 0 || landmarkMargin < 0) {
             out.add("villageTransitionRings, villageLinkDistance and landmarkMargin must be 0 or more");
         }
@@ -290,6 +322,7 @@ public final class LayoutProfile {
         private double cityPerlinOffset = .1;
         private int cityMinHeight = 50;
         private int cityMaxHeight = 150;
+        private int cityMaxRise = 2;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -375,6 +408,12 @@ public final class LayoutProfile {
         public Builder cityHeightWindow(int min, int max) {
             cityMinHeight = min;
             cityMaxHeight = max;
+            return this;
+        }
+
+        /** @param levels {@code cityMaxRise}, city levels @return this builder */
+        public Builder cityMaxRise(int levels) {
+            cityMaxRise = levels;
             return this;
         }
 

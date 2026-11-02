@@ -2,7 +2,7 @@
 
 Where each stage of upstream's per-chunk pipeline ([generation-pipeline.md](../../original-spec/03-terrain/generation-pipeline.md)) runs once the city is an overlay on RWG, what each phase may touch, and the three pieces of terrain work upstream does not have: the RWG decoration footprint, soft-edge strips toward landmark cores, and village lanes.
 
-Status: *Accepted* from [0005](../../design/0005-rwg-overlay.md) and [0006](../../design/0006-build-around-other-worldgen.md), with the footprint's volume (P03-1), the strip's ramp (P03-13) and the lane's path blocks (P03-6) settled by the owner's answers in D31.
+Status: *Accepted* from [0005](../../design/0005-rwg-overlay.md) and [0006](../../design/0006-build-around-other-worldgen.md), with the footprint's volume (P03-1), the strip's ramp (P03-13) and the lane's path blocks (P03-6) settled by the owner's answers in D31; the leveling fix (TERR-39), the margin's strip and the lane's grade and steps come from the alpha review round (AR-2, AR-7, AR-10, AR-11; D-RW rows).
 
 ## The two phases
 
@@ -47,7 +47,7 @@ Upstream's stages are numbered as in [generation-pipeline.md](../../original-spe
 | 2 | Attach the `ChunkDriver` | Terrain phase | The chunk buffer over C's sections; no staging |
 | 3 | Fetch the heightmap and `BuildingInfo` | Terrain phase | The plan from `layout`, built from oracle heights and structure oracles; validated completely before the first write (TERR-25) |
 | 4 | City or normal; floating void probe | Terrain phase | The void probe is deferred with the floating landscape (D12). A **landmark core** stops here: nothing is written but a village lane's surface path |
-| 5 | City chunk (`doCityChunk`) or normal chunk (`doNormalChunk`: blend, bridges, highways, scattered) | Terrain phase | Toward a core, soft-edge strips replace border walls; blend corners next to a core are fixed at its natural height (E1) |
+| 5 | City chunk (`doCityChunk`) or normal chunk (`doNormalChunk`: blend, bridges, highways, scattered) | Terrain phase | Leveling lowers terrain standing exactly one block above the city ground too (TERR-39). Blend corners next to a core are fixed at its natural height (E1); in the margin beside a core a soft-edge strip then meets the core's edge columns, and a lane is graded and stepped |
 | 6 | Sphere centerpiece | Deferred | D12 |
 | 7 | Railways and rail dungeons | Terrain phase | `06-highways-railways` |
 | 8 | `fixTorches` | Population phase | [0005](../../design/0005-rwg-overlay.md#3-population-phase) §3 lists torch and attachment fix-ups there |
@@ -70,7 +70,7 @@ The population phase, in order: data-bearing tile entities (chests filled from o
 | Inside the footprint | Outside the footprint |
 |---|---|
 | Building volumes and their foundations (cellars, border skirts) | Park and yard columns, fountains' surroundings |
-| Streets, plazas, stairs, slopes and their base | Edge-ring parks and soft-edge strips |
+| Streets, plazas, stairs, slopes and their base | The margin around a core, apart from a lane's columns |
 | Bridges and their supports | Blended non-city chunks |
 | Corridors | Landmark cores, entirely (village pieces land on RWG's untouched ground) |
 | Highway and railway cross-sections | Chunks the city does not touch |
@@ -81,26 +81,32 @@ The population phase, in order: data-bearing tile entities (chests filled from o
 
 ## Soft-edge strips
 
-Rules E2 to E4 of [coexistence.md § Soft edges](../00-pack-integration/coexistence.md#soft-edges), adopted by [0006](../../design/0006-build-around-other-worldgen.md#4-edge-rules) §4. They replace `generateBorders`' border wall ([city-chunk-terrain.md](../../original-spec/03-terrain/city-chunk-terrain.md#street-edge-borders-generateborders-part-2-server)) on every side of a city chunk that faces a landmark core.
+Rules E2 to E4 of [coexistence.md § Soft edges](../00-pack-integration/coexistence.md#soft-edges), adopted by [0006](../../design/0006-build-around-other-worldgen.md#4-edge-rules) §4. The layout puts the city's margin, a ring of non-city chunks, around every landmark core (AR-10), so a city chunk never faces a core. The strip lies in the margin chunk, the non-city chunk C beside the core:
+
+1. Before the blend, C's edge column on each side facing a core is read: its solid surface through plants, or the top of the water standing on it.
+2. The blend (E1) slopes C from the city's ground at its city corners toward the core's oracle height at its core corners.
+3. A strip on each side facing the core then ramps the blended ground back to the edge columns read in step 1.
 
 | Item | Value | Source |
 |---|---|---|
 | Width | `softEdgeWidth` 6 columns, varied ±2 per column along the side by upstream's terrain transition noise | E2, E4 |
-| Inner edge | The city ground of the chunk | E2 |
-| Outer edge | The column's own RWG height at the core's edge, read from C's own columns: its solid surface, or the top of the water standing on it, so a pond or river in the core meets the strip at its waterline | E2; [0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4; D129 |
+| Inner edge | The blended height of C's column at the strip's width from the edge | E2 |
+| Outer edge | The column's own RWG height at the core's edge, read from C's own columns before the blend: its solid surface, or the top of the water standing on it, so a pond or river in the core meets the strip at its waterline | E2; [0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4; D129 |
 | Surface | Each column keeps its own top block, moved with upstream's `moveDown` (6 kept layers) or `moveUp` | E2 |
-| Steep step | When the height difference exceeds twice the strip's width, the strip ramps as far as it can and a retaining border of the city style's `borderBlock`, no taller than the remaining step, stands at the strip's inner edge | E3 |
-| Decoration | Outside the footprint: RWG's trees and boulders stay | E5 |
-| Ramp shape | Linear across the strip (*Accepted*, P03-13, D31). The E3 threshold means a strip absorbs at most 2 blocks of height per column | D31 |
+| Corners | A column in two strips follows the side it is nearer to | E2 |
+| Decoration | The margin is outside the footprint: RWG's trees and boulders stay | E5 |
+| Ramp shape | Linear across the strip (*Accepted*, P03-13, D31) | D31 |
 
-A strip is written only in the city chunk's own columns, so it never writes into the core.
+A strip is written only in C's own columns, so it never writes into the core, and nothing the city builds lies in it, so it never cuts a road, a highway or a park (AR-10, AR-12, AR-13). On the city's side of the margin, a street chunk keeps upstream's border toward lower non-city land, opened over the 3 columns where a lane arrives.
+
+A plan that puts a city chunk right beside a core, which only the synthetic test city still does, gets the strip inside the city chunk instead, from the city ground to the core's edge, and a retaining border of the city style's `borderBlock`, no taller than the remaining step, where the step is more than twice the strip's width (E3).
 
 ## Village lanes
 
 [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3, written in the terrain phase before RWG's `populate` places the village pieces:
 
-1. In the gate's edge-ring chunk the street continues as a 3-block-wide surface path, down or up the soft-edge strip to the core's edge (E8).
-2. Across the core, a surface-only path to the end of the village path: the lane's blocks replace the natural surface, never within `landmarkMargin` (2 blocks) of a village piece box. Besides the supports and the lily-pad clearing that VillageNames' own rule adds (below), nothing is written above or below. This is the only thing the city ever writes in a core.
+1. In the gate chunk, the margin chunk in front of the gate, a 3-block-wide surface path runs from the city's street, through the opening in its border, down or up the margin to the core's edge (E8). Before it is laid its columns are graded: each moves, keeping its top blocks, to a straight ramp from the street's ground on the city side to the core's edge column on the far side (read before the blend), so the lane runs down the slope rather than stopping at its top (AR-7); a column beside the lane more than a block from it then moves halfway to it, so the lane is neither a causeway nor a trench.
+2. Across the core, a surface-only path to the end of the village path: the lane's blocks replace the natural surface, never within `landmarkMargin` (2 blocks) of a village piece box. Besides the supports and the lily-pad clearing that VillageNames' own rule adds and the steps (below), nothing is written above or below. This is the only thing the city ever writes in a core.
 3. For villages outside a city but within `villageLinkDistance` (4 chunks) of its edge, the same surface lane runs across the land between, as part of the city's footprint.
 
 **Path blocks** (*Accepted*, P03-6, D31). Each lane column follows VillageNames' per-column path rule, `setPathSpecificBlock` ([StructureVillageVN.java#L1224-L1328](https://github.com/GTNewHorizons/VillageNames/blob/4.5.21-GTNH/src/main/java/astrotibs/villagenames/village/StructureVillageVN.java#L1224-L1328)), so the lane meets the village's paths in the same blocks. From the column's top solid or liquid block (raised to sea level − 1 if lower), scanning down to sea level − 1:
@@ -116,6 +122,8 @@ A strip is written only in the city chunk's own columns, so it never writes into
 A column that matches nothing down to sea level − 1 is paved as sand would be when its surface is natural ground the rule names nothing for (terracotta, stained clay, stone, sandstone, gravel, clay, mycelium, snow), so a lane stays continuous on classic RWG's mesas; a city's own blocks are never paved (deviation, D110).
 
 Every block goes through the village's biome material swaps ([StructureVillageVN.java#L945-L1003](https://github.com/GTNewHorizons/VillageNames/blob/4.5.21-GTNH/src/main/java/astrotibs/villagenames/village/StructureVillageVN.java#L945-L1003) for sand and mesa villages): a desert village's gravel and cobblestone become sandstone, a mesa village's hardened clay. Until the village oracle reports the material type, it comes from the gate chunk's biome (`MESA` mesa, `SANDY` and `HOT` sand, else plain); a lane to a village outside the city uses that village's. Where a lane runs in each chunk is D111: 3 wide, along a link chunk's connections, in line with the gate in the gate chunk, and from the gate straight out across the core. The rule is pure over C's own blocks, as the terrain phase requires, so it reads no world.
+
+**Steps** (deviation, AR-11). Once laid, a lane column whose lane neighbor along X or Z in the same chunk is exactly one block higher gets a step on top of its path block: a stair of the path's material facing up the slope (cobblestone, sandstone on sandstone, brick on hardened clay) where the lane rises again beyond that neighbor, else a bottom half slab of it, so a single step is a half-block landing. Rises of two or more blocks are left as they are; the grade keeps the margin's lane to one block a column where its two ends are no more than 15 blocks apart. VillageNames' own paths and the first lanes climbed in whole blocks, which nobody walks.
 
 ## Measurement points
 

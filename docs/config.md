@@ -346,7 +346,8 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `villageTreatment` | `BUILD_AROUND` | BUILD_AROUND, AVOID, IGNORE | live | How cities meet villages: `BUILD_AROUND` (sew them in), `AVOID` (upstream's avoidance), `IGNORE` |
 | `landmarkTreatment` | `BUILD_AROUND` |  | live | The same for other landmarks: one treatment for all, and `<kind>=<treatment>` per kind, comma-separated (`ocean_monument`, `roguelike`, `witchery`, `lootgames`, `meteorite`, `terrain`) |
 | `landmarkMargin` | `2` | 0 to 16 | live | Blocks a landmark's footprint grows by before it becomes core chunks |
-| `softEdgeWidth` | `6` | 2 to 12 | live | Columns of the strip that steps city ground down to natural ground facing a landmark core |
+| `softEdgeWidth` | `6` | 2 to 12 | live | Columns of the strip in a landmark core's margin that meets the blended ground to the core's own edge |
+| `cityMaxRise` | `2` | 0 to 8 | live | City levels a city chunk may rise above its city's base level; one more is cut down to it, higher ground is left out of the city; 8 is no cap |
 | `villageTransitionRings` | `2` | 0 to 8 | live | Rings of lower building density around a village |
 | `villageLinkDistance` | `4` | 0 to 16 | live | Chunks outside a city a village still gets a lane to it |
 | `heightSampleSize` | `3` | 1 to 100 | live | Upstream's mod-config key, pinned here: chunks sampled for a city level when `useAvgHeightmap` is on (averaging only above 2) |

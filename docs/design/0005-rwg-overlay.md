@@ -237,6 +237,22 @@ Classic RWG missed B4: a few chunks where the layout first met new ground asked 
 
 Every budget holds on both world types. The terrain phase's worst chunk is 3.5 ms on classic RWG (was 47.7) and 4.3 ms on RWG2 Continents; the prefetcher costs about 820 ms on classic RWG and 450 ms on RWG2 over the region, of which 50 to 90 ms is attempts abandoned at a missing value. Without it (`-Dlostcitiesnh.prefetch=false`) the same classic RWG run still has B4 at 18.9 ms. The `city.real` hashes of all four worlds are M05J's. Outside the method's warm-up, the first few VillageNames starts of a JVM's life cost 14 to 140 ms each wherever they run, the prefetch tick included.
 
+**Measured in the alpha review round (M05R)**: the same method and sequence, the release jar of M05R with both halves merged (the rise cap, the margins, the lane grades and steps, TERR-39; the lower damage defaults, the desert palette and the park greenery) and M09, two fresh worlds per world type. Times in milliseconds; where the two runs differ, both are given.
+
+| | RWG2 Continents | Classic RWG |
+|---|---|---|
+| RWG `provideChunk`, p50 (all chunks) | 2.10 | 2.36 |
+| RWG `populate`, p50 (all chunks) | 4.72 / 4.19 | 2.88 |
+| B1: terrain phase on city chunks, p95 | **0.98 / 1.05** (≤ 2.10) | **1.05 / 1.18** (≤ 2.36) |
+| B2: population phase on city chunks, p95 | **0.30 / 0.33** (≤ 2.36 / 2.10) | **0.30** (≤ 1.44) |
+| B3: overlay share of RWG's total over the region, prefetcher included | **8.5 % / 9.0 %** (1,595 of 18,762; 1,661 of 18,552) | **12.3 % / 12.5 %** (2,062 of 16,831; 2,074 of 16,648) |
+| B4: worst p99.9 of terrain phase, population phase and prefetch tick | **4.13 / 4.22** (terrain 2.62 / 2.88) | **7.14 / 7.37** (terrain 1.84; the prefetch tick) |
+| Invocations a GC pause fell into, set apart from B4 | 0 / 0 | 2 / 0 |
+| B5: plan, height and palette caches, bound | **14.0 MB** (≤ 16) | **14.0 MB** (≤ 16) |
+| Layout height sample, p50 / p99.9 | 0.33 / 0.78, 0.36 / 0.88 | 0.92 / 1.67, 0.92 / 1.73 |
+
+Every budget still holds on both world types; the rise cap's base levels, the margin's strip and the lane grades cost nothing the timers can see (the World half's own jar, before the merges, measured B3 at 9.1 % and 12.8 %, B4 at 3.9 and 7.5 ms). Each pair of worlds printed the same `city.real` hashes (RWG2 Continents `5b9ab82a…`/`6666e91e…`, classic RWG `3d6c14d5…`/`6ea4b3bf…`), and no ArchaicFix cascade warning names this mod as the first frame that asked for the chunk (52 to 66 per run, all from Et Futurum's glow lichen, cave vines and geodes, ExtraBees, LootGames, Thaumcraft, HarvestCraft, NHCore's oil fix and Forge's chunk I/O).
+
 ## Consequences
 
 - **M04 scope:**

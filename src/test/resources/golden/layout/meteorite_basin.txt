@@ -15,11 +15,11 @@ SBBppPBBSBBopPBpMMpBM
 SppppPppSppMMPpppSppp
 SBpBpPBpSppMMPpopSBpB
 PPPPPPPPPPPPPPPPPPPPP
-MMBpBPppSpopoPpppMMpB
-MMopBPpoSCCFTPoppMMpo
-ppppBPBpSCCppPMMTpSBp
-MMBpBPSSSSSSSPMMTMMpp
-MMMMBPppSpppBPBpTMMpp
+MMBpBPpp....oPpppMMpB
+MMopBPpo.CC.FPoppMMpo
+ppppBPBp.CC.pPMMTpSBp
+MMBpBPSF....FPMMTMMpp
+MMMMBPppFpppBPBpTMMpp
 ppMMBPpBSoBBBPoMMBSBp
 poppBPpBSBBBoPoMMpSB.
 PPPPPPPPPPPPPPPPPPP..
@@ -72,4 +72,4 @@ floors
 .......1.233...4.....
 ....3...4...1........
 .......11.2.1........
-details-sha256: 59dbf1e3db9173dd0c0d5f5b702ebac9294c08602f5efe61796f0fd4ae1fb986
+details-sha256: 3ba516e5cc492821d0c9272dce7ec18470980b8561cf7be84cbdb0852f9361e6

@@ -15,7 +15,11 @@ public enum Zone {
     TRANSITION_2,
     /** Villages only: the first transition ring, next to the edge ring (at most 2 floors, building chance halved). */
     TRANSITION_1,
-    /** One of a core's eight-neighbors; when city, it holds no building, cellar, corridor or rail dungeon. */
+    /**
+     * One of a core's eight-neighbors under {@code BUILD_AROUND}: the city's margin. Never city: the city builds inside
+     * it, and the blend slopes this natural ground from the city's edge down or up to the core's, crossed only by a
+     * village's lane (0006 §1, alpha review AR-10).
+     */
     EDGE_RING,
     /** One of a core's eight-neighbors under the {@code AVOID} treatment: never city, as upstream's avoidance. */
     AVOID_RING,
@@ -27,8 +31,16 @@ public enum Zone {
         return this == TRANSITION_1 || this == TRANSITION_2;
     }
 
-    /** Returns whether a chunk in this zone is never city. */
+    /** Returns whether a chunk in this zone is never city: a core, the margin around it, or an avoid ring. */
     public boolean forcesNonCity() {
+        return this == CORE || this == EDGE_RING || this == AVOID_RING;
+    }
+
+    /**
+     * Returns whether a village lane may not cross a chunk in this zone: a core (the lane's path in a core is drawn
+     * from the gate, not routed) or an avoid ring. The margin carries lanes down its slope.
+     */
+    public boolean barsLanes() {
         return this == CORE || this == AVOID_RING;
     }
 

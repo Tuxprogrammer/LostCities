@@ -15,9 +15,9 @@ import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
  * <ul>
  * <li>In a link chunk (a village outside a city) the path runs from the chunk's middle to each side it connects
  * to.</li>
- * <li>In a gate chunk it does the same, except that toward the core it runs in line with the gate, with a jog along the
- * chunk's middle to join the rest; in a city the gate chunk is a road, so the path shows only where the street's
- * soft-edge strip leaves the ground natural.</li>
+ * <li>In a gate chunk, the margin chunk in front of the gate, it does the same, except that toward the core it runs in
+ * line with the gate, with a jog along the chunk's middle to join the rest; beside a city it runs down (or up) the
+ * margin's slope from the city's street to the core, graded and stepped by the terrain phase (AR-7, AR-11).</li>
  * <li>In a core chunk it runs from the gate straight out to the core's edge, so it never comes nearer the village's
  * pieces than the gate itself.</li>
  * </ul>

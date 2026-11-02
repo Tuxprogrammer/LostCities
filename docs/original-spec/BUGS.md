@@ -3,7 +3,7 @@
 <!-- Bugs in UPSTREAM Lost Cities 1.20 at f18a094d, listed so this backport does not reproduce them.
      Suspected, not confirmed at runtime; no fixes designed here. Merged from every area index. -->
 
-236 raw findings merge into **205 unique bugs**: 45 crash, 75 worldgen, 24 gameplay, 15 performance, 16 visual, 30 cosmetic. One further finding was checked and is not a bug; it is listed under [Not bugs](#not-bugs) with the evidence, and its ID stays reserved.
+237 raw findings merge into **206 unique bugs**: 45 crash, 75 worldgen, 24 gameplay, 15 performance, 17 visual, 30 cosmetic. One further finding was checked and is not a bug; it is listed under [Not bugs](#not-bugs) with the evidence, and its ID stays reserved.
 
 The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also** lists the same bug as reported by other areas. Every area ID stays a valid reference: each area's own table in its `index.md` holds the full description. Areas that report the same bug give it the same severity. Where one row merges several narrower area findings (`ASSET-21` covers `SCAT-17` to `SCAT-19`), the row takes the most severe and each area ID keeps its own. Severity is the worst effect when the code path runs; how reachable that path is (dead code, API only, config only) is stated in the area's row, not folded into the severity. Severity is one of crash, worldgen (wrong or broken world output), gameplay, performance, visual or cosmetic. Locations are on `f18a094d`, as the areas give them: Java paths relative to `src/main/java/mcjty/lostcities/`, resource paths relative to `src/main/resources/` unless they start with `src/`, and bare `palettes/`, `citystyles/` and `stuff/` paths under `data/lostcities/lostcities/`.
 
@@ -195,6 +195,7 @@ The ID is the first area's ID (area order `01-core` to `09-client-ui`); **Also**
 | TERR-13 | | 03-terrain | Heightmaps can only rise after the commit | `worldgen/ChunkDriver.java:52` |
 | TERR-23 | | 03-terrain | Lowering under water leaves air under the water | `worldgen/LostCityTerrainFeature.java:751` (clear at `:774`) |
 | TERR-28 | | 03-terrain | No cleanup of floating fragments after explosions | `worldgen/LostCityTerrainFeature.java:356` |
+| TERR-39 | | 03-terrain | Leveling leaves terrain one block above the city ground | `worldgen/LostCityTerrainFeature.java:751` (return at `:758`) |
 | CITY-28 | ASSET-17 | 04-city-layout, 05-assets | Mirror transforms are inconsistent | `worldgen/lost/Transform.java:10-12` |
 | CITY-30 | | 04-city-layout | Z bridges are transposed but not block-rotated | `worldgen/gen/Bridges.java:49` |
 | CITY-36 | | 04-city-layout | West/north passage ignores the neighbor's `dontconnect` | `worldgen/gen/Doors.java:33` |

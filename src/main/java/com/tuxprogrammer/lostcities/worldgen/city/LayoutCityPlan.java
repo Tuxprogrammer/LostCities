@@ -22,6 +22,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.street.Orientation;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
+import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
@@ -181,12 +182,13 @@ public final class LayoutCityPlan implements CityPlan {
         }
         boolean[] lane = LaneShapes.forCell(plan.lane(), chunkX, chunkZ);
         if (lane != null) {
-            builder.lane(LaneShapes.path(lane, material(chunkX, chunkZ)));
+            builder.lane(graded(plan.lane(), LaneShapes.path(lane, material(chunkX, chunkZ)), chunkX, chunkZ));
             if (footprint == null) {
                 footprint = new int[256];
                 Arrays.fill(footprint, com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT);
             }
-            int bottom = natural - LANE_FOOTPRINT_DEPTH;
+            // The blend and the grade move a margin's lane between the natural height and the city's ground.
+            int bottom = Math.min(natural, settings.groundLevel()) - LANE_FOOTPRINT_DEPTH;
             for (int i = 0; i < 256; i++) {
                 if (lane[i]) {
                     footprint[i] = Math.min(footprint[i], bottom);
@@ -195,6 +197,40 @@ public final class LayoutCityPlan implements CityPlan {
         }
         return builder.footprint(footprint)
             .build();
+    }
+
+    /**
+     * Grades a gate chunk's path across the city's margin (AR-7): when the chunk beyond the gate's margin chunk, away
+     * from the core, is city and the lane connects to it, the path is ramped from that chunk's ground to the core's
+     * edge.
+     */
+    private LanePath graded(LaneCell cell, LanePath path, int chunkX, int chunkZ) {
+        if (cell.role() != LaneRole.GATE || cell.gate() == null) {
+            return path;
+        }
+        RoadDirection out = cell.gate()
+            .facing();
+        if (!cell.connects(out)) {
+            return path;
+        }
+        ChunkPlan beyond = planner.plan(chunkX + out.stepX(), chunkZ + out.stepZ());
+        if (!beyond.isCity()) {
+            return path;
+        }
+        return path.gradedFrom(side(out), beyond.cityGroundLevel());
+    }
+
+    private static com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side side(RoadDirection direction) {
+        switch (direction) {
+            case WEST:
+                return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side.WEST;
+            case EAST:
+                return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side.EAST;
+            case NORTH:
+                return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side.NORTH;
+            default:
+                return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side.SOUTH;
+        }
     }
 
     private com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan city(int chunkX, int chunkZ, ChunkPlan plan,
@@ -224,7 +260,7 @@ public final class LayoutCityPlan implements CityPlan {
         if (plan.hasBuilding()) {
             Arrays.fill(footprint, plan.buildingBottomHeight() - 1);
         } else if (isPark(plan, chunkX, chunkZ)) {
-            // Parks, open lots and edge-ring parks keep RWG's decoration (0006 §1, pipeline-on-rwg.md).
+            // Parks and open lots keep RWG's decoration (0006 §1, pipeline-on-rwg.md).
             Arrays.fill(footprint, com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT);
         } else {
             Arrays.fill(footprint, ground - STREET_FOOTPRINT_DEPTH);
@@ -340,6 +376,16 @@ public final class LayoutCityPlan implements CityPlan {
             return 0xFFFF;
         }
         int mask = 0;
+        ChunkPlan neighbor = planner.plan(nx, nz);
+        LaneCell lane = neighbor.lane();
+        if (!neighbor.isCity() && (lane.role() == LaneRole.GATE || lane.role() == LaneRole.LINK)
+            && lane.connects(roadDirection(direction.opposite()))) {
+            // A lane climbing out of the margin meets the street through the border (AR-7): its 3 columns open.
+            for (int along = LaneShapes.MIDDLE - LaneShapes.WIDTH / 2; along
+                <= LaneShapes.MIDDLE + LaneShapes.WIDTH / 2; along++) {
+                mask |= 1 << along;
+            }
+        }
         if (planner.streetSlope(nx, nz) == direction.opposite()) {
             mask |= openingOf(slopePart(nx, nz), direction);
         }
@@ -390,6 +436,19 @@ public final class LayoutCityPlan implements CityPlan {
             mask |= 1 << along;
         }
         return mask;
+    }
+
+    private static RoadDirection roadDirection(Direction direction) {
+        switch (direction) {
+            case XMIN:
+                return RoadDirection.WEST;
+            case XMAX:
+                return RoadDirection.EAST;
+            case ZMIN:
+                return RoadDirection.NORTH;
+            default:
+                return RoadDirection.SOUTH;
+        }
     }
 
     private static Direction direction(com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side side) {
