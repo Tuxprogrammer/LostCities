@@ -637,11 +637,12 @@ public class ScatteredPlannerTest {
 
     @Test
     public void anAreaHasAHighwaySpotExactlyWhenTheHighwayReachesIt() {
-        FakeScattered gas = new FakeScattered(8, 1f, 0).add(
-            new FakeEntry(
-                new FakeAsset("lostcities:highway_gas_station").building("building1")
-                    .anyRotation(),
-                10).besideHighway())
+        FakeScattered gas = new FakeScattered(8, 1f, 0)
+            .add(
+                new FakeEntry(
+                    new FakeAsset("lostcities:highway_gas_station").building("building1")
+                        .anyRotation(),
+                    10).besideHighway())
             .add(new FakeEntry(new FakeAsset("lostcities:cabin").building("building1"), 10));
         ScatteredPlanner planner = planner(
             gas,

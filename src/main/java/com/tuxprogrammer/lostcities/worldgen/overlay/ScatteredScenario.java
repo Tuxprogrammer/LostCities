@@ -328,7 +328,8 @@ final class ScatteredScenario implements Scenario {
             int count = placed.getOrDefault(names.get(i), 0);
             // Placement can still fail after a spot is found (build height, steep surroundings, a neighbor's
             // structure), so the expectation is a ceiling with the usual spread.
-            boolean holds = count <= spotExpected[i] + SIGMAS * sigma + 1 && count >= spotExpected[i] / 2 - SIGMAS * sigma - 1;
+            boolean holds = count <= spotExpected[i] + SIGMAS * sigma + 1
+                && count >= spotExpected[i] / 2 - SIGMAS * sigma - 1;
             highwayRatesHold &= holds;
             highways.append(
                 String.format(
@@ -352,8 +353,7 @@ final class ScatteredScenario implements Scenario {
             "expected near-highway structures placed at the odds of the areas beside highways, found" + highways);
         if (overlay.cities()
             .planner()
-            .networks() != null
-            && overlay.cities()
+            .networks() != null && overlay.cities()
                 .planner()
                 .networks()
                 .highways()

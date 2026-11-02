@@ -61,6 +61,7 @@ public class NetworkWriterTest {
         long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights;
         assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, "estimated " + bytes + " bytes");
     }
+
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final Networks NETWORKS = PLANNER.networks();
     private static final int SEARCH = 160;

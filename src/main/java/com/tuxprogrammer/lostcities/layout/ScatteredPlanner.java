@@ -353,8 +353,7 @@ public final class ScatteredPlanner {
         }
         for (ScatteredView.Entry entry : settings.entries()) {
             if (!entry.name()
-                .equals(entryName) || !entry.nearHighway()
-                || entry.asset() == null) {
+                .equals(entryName) || !entry.nearHighway() || entry.asset() == null) {
                 continue;
             }
             int width = 1;
