@@ -38,6 +38,7 @@ Two gates matter most:
           M06 Highways   M07 Scattered  M08 GTNH layer  M09 Profiles   M10 Commands,  M11 Full asset
           and railways   structures     (loot, mobs,    and config     API, editor    catalog
                                         ore veins)
+          (M05R alpha review round; M12 city edges and character)
                └──────────────┴──────────────┴────────┬─────┴──────────────┴──────────────┘
                                                       ▼
                                               BETA GATE (MVP) ──► Polish and balance ──► Release
@@ -140,9 +141,22 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] No cascading-generation warnings; the per-chunk budget holds. *M05J: no ArchaicFix cascade warning has this mod's code as its first frame on either world type. Alpha follow-ups: with the plan prefetcher (D123, D125) B1 to B5 hold on both world types in two fresh worlds each, seed 4242: B4's worst p99.9 7.8 and 7.4 ms on classic RWG (was 18.9), 4.1 and 3.6 ms on RWG2 Continents; B3 13.1 and 12.8 %, 9.7 and 9.1 % ([0005](design/0005-rwg-overlay.md) §8); still no cascade warning with this mod's code as its first frame.*
 - [x] A player can walk the streets and enter buildings; floors, walls and stairs are sound. *M05J: `city.walk` passes on both world types (floors 96 to 99 %, walls 96 %, stairs 93 to 95 %, doors 98 to 100 %).*
 - [x] Classic RWG produces a city too. *M05J: seed 4242 has a desert city at the spawn.*
-- [ ] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG), with landmark shots: a village sewn into a city, a reserved lot, and a soft edge ([0006](design/0006-build-around-other-worldgen.md)). The owner's notes become fixes or roadmap items.
+- [x] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG), with landmark shots: a village sewn into a city, a reserved lot, and a soft edge ([0006](design/0006-build-around-other-worldgen.md)). The owner's notes become fixes or roadmap items. *2026-11-02: reviewed; the notes and their triage are in [reviews/2026-11-02-alpha.md](reviews/2026-11-02-alpha.md) (AR-1 to AR-21). The alpha gate is passed; the review's fixes are M05R, its larger asks M12 (D131).*
 
-## M06 to M11 · After the alpha
+## M05R · Alpha review round
+
+**Lane:** World, with Assets. **Parallel with:** M08, M09.
+
+**Entry gate:** the alpha gate.
+
+**Scope:** the alpha review's notes marked M05R in [reviews/2026-11-02-alpha.md](reviews/2026-11-02-alpha.md). Clean streets (AR-2). A cap on how far a city's ground rises above its base, so cities stop or step down before high terrain (AR-4, AR-14). A city builds inside its own margin, which the soft edge then stitches to the village; slopes have stairs and slabs and never take a road, a highway or half a park (AR-10 to AR-13). Small roads for sewing that run down the slope (AR-7). Much lower damage (AR-8). A muted desert palette (AR-16). Denser park greenery (AR-18). The missing stair step (AR-1). A review shot list without the monument (AR-15).
+
+**Exit gate:**
+- [ ] Each M05R note is fixed, with a test where one can be written, or its cause is recorded.
+- [ ] M05's exit-gate checks still hold on both world types: hashes match between fresh worlds, budgets B1 to B5, no cascades, `city.walk`.
+- [ ] Both review shot lists rerun with the final jar, and every M05R note checked against them.
+
+## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
 
@@ -154,10 +168,11 @@ Scopes are written from S1 to S3 when they land. In outline:
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
 | M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |
+| M12 · City edges and character | Layout, with Assets | From the alpha review (AR-5, AR-6, AR-9, AR-17): building heights that taper organically from the center toward the edge; empty and construction lots near the edges (bare clay ground with no foliage, some dug 1 to 4 blocks for a basement, a variant with concrete pillars); damage partly repaired with a similar but not identical material; neighboring buildings' colors that feather across biome and style changes (a design record first) |
 
 ## Beta gate (MVP)
 
-**Entry gate:** M01 to M11 done.
+**Entry gate:** M01 to M12 and M05R done.
 
 **Exit gate:**
 - [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live.
