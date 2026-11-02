@@ -219,6 +219,16 @@ public final class CityFinder {
     static final int LANDMARK_BACK = 36;
     /** Pitch of those views. */
     static final float LANDMARK_PITCH = 45f;
+    /** Fewest chunks of open street a street view looks along. */
+    static final int STREET_RUN = 2;
+    /** Most chunks of open street counted ahead. */
+    static final int STREET_RUN_MAX = 4;
+    /** How far behind the street chunk's middle the street view stands, in blocks. */
+    static final int STREET_BACK = 7;
+    /** Height of the street view above the street's block. */
+    static final int STREET_EYE = 2;
+    /** Pitch of the street view, degrees. */
+    static final float STREET_PITCH = 8f;
     /** Fewest floors of a building worth entering. */
     static final int INTERIOR_MIN_FLOORS = 2;
 
@@ -346,19 +356,38 @@ public final class CityFinder {
 
     private Result street(int chunkX, int chunkZ) {
         ChunkPlan layout = planner.plan(chunkX, chunkZ);
-        if (!layout.isCity() || layout.hasBuilding()
-            || !layout.isPrimaryRoad()
-            || planner.streetSlope(chunkX, chunkZ) != null) {
+        if (!openStreet(layout) || !layout.isPrimaryRoad() || planner.streetSlope(chunkX, chunkZ) != null) {
             return null;
         }
         int ground = layout.cityGroundLevel();
-        boolean alongX = planner.plan(chunkX - 1, chunkZ)
-            .isPrimaryRoad()
-            || planner.plan(chunkX + 1, chunkZ)
-                .isPrimaryRoad();
+        // Look along the longest run of open street at this ground level, at least STREET_RUN chunks ahead, so the
+        // view is down a street and not into a park's border or a building's wall.
+        com.tuxprogrammer.lostcities.layout.Direction best = null;
+        int bestRun = STREET_RUN - 1;
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            int run = 0;
+            while (run < STREET_RUN_MAX) {
+                ChunkPlan next = planner
+                    .plan(chunkX + side.stepX() * (run + 1), chunkZ + side.stepZ() * (run + 1));
+                if (!openStreet(next) || next.cityGroundLevel() != ground) {
+                    break;
+                }
+                run++;
+            }
+            if (run > bestRun) {
+                bestRun = run;
+                best = side;
+            }
+        }
+        if (best == null) {
+            return null;
+        }
         int x = (chunkX << 4) + 8;
         int z = (chunkZ << 4) + 8;
-        // Stand at the street's middle and look along it: east along X, south along Z.
+        // Stand at the chunk's back edge and look along the run.
+        double viewX = x - best.stepX() * STREET_BACK + 0.5;
+        double viewZ = z - best.stepZ() * STREET_BACK + 0.5;
         return new Result(
             Kind.STREET,
             chunkX,
@@ -366,12 +395,19 @@ public final class CityFinder {
             x,
             ground,
             z,
-            x + 0.5,
-            ground + FEET,
-            z + 0.5,
-            alongX ? 270f : 0f,
-            5f,
-            "primary street");
+            viewX,
+            ground + STREET_EYE,
+            viewZ,
+            doorYaw(best),
+            STREET_PITCH,
+            "primary street, " + bestRun + " chunks open toward " + best.name());
+    }
+
+    /** Returns whether a chunk is open street: city, no building, no park or fountain. */
+    private static boolean openStreet(ChunkPlan layout) {
+        return layout.isCity() && !layout.hasBuilding()
+            && layout.parkPart() == null
+            && layout.fountainPart() == null;
     }
 
     private Result interior(int chunkX, int chunkZ) {

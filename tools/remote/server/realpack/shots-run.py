@@ -125,7 +125,7 @@ def check_shot(i, shot, plan, seen):
          "pitch": float(shot.get("pitch", 30)), "wait": int(shot.get("wait", 2)), "time": shot.get("time"),
          "settle_timeout": int(shot.get("settle_timeout", plan["settle_timeout"])), "find": shot.get("find"),
          "stable_timeout": int(shot.get("stable_timeout", plan["stable_timeout"])),
-         "offset": shot.get("offset", [0, 0, 0])}
+         "offset": shot.get("offset", [0, 0, 0]), "yaw_set": "yaw" in shot, "pitch_set": "pitch" in shot}
     if not -360 <= s["yaw"] <= 360 or not -90 <= s["pitch"] <= 90:
         fail("%s: yaw must be -360..360 and pitch -90..90" % where)
     if not 0 <= s["wait"] <= 600 or not 10 <= s["settle_timeout"] <= 1800:
@@ -477,6 +477,10 @@ class Run:
                 raise ValueError("find: no console line matched %r" % f["match"])
             x, z = float(m.group("x")), float(m.group("z"))
             base_y = float(m.group("y")) if "y" in m.re.groupindex and m.group("y") else None
+            # A find may print the view direction too: named groups yaw and pitch, used when the shot sets none.
+            for key in ("yaw", "pitch"):
+                if key in m.re.groupindex and m.group(key) and not shot[key + "_set"]:
+                    shot[key] = float(m.group(key))
             self.log("find %r -> %s" % (f["cmd"], m.group(0).strip()))
         y = shot["y"]
         if y is None:
@@ -495,6 +499,7 @@ class Run:
             if shot["time"] is not None:
                 self.send("time set %d" % shot["time"])
             x, y, z = self.resolve(shot)
+            r.update(yaw=shot["yaw"], pitch=shot["pitch"])
             if isinstance(y, tuple):
                 self.view(x, PROBE_Y, z, shot["yaw"], shot["pitch"])
                 st = self.wait_settled(x, PROBE_Y, z, shot["settle_timeout"])

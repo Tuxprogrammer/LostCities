@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate: real cities on RWG2 Continents, seed 4242. Positions come from /lostcities find (decision log D-M05J-17); each yaw and pitch is the one the finder prints for this seed. The monument is the one city.sewing finds near chunk (-4096, 4096).",
+  "comment": "M05 alpha gate: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D-M05J-17); the monument is the one city.sewing finds near chunk (-4096, 4096).",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",
@@ -18,10 +18,8 @@
       "name": "above",
       "find": {
         "cmd": "lostcities find center",
-        "match": "kind=center block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=center block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 180,
-      "pitch": 40,
       "wait": 3,
       "caption": "City from above: the city nearest the spawn, from south of its center, looking north."
     },
@@ -29,54 +27,45 @@
       "name": "street",
       "find": {
         "cmd": "lostcities find street",
-        "match": "kind=street block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=street block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 0,
-      "pitch": 5,
       "wait": 3,
-      "caption": "Street level: the primary street nearest the spawn, looking south."
+      "caption": "Street level: the primary street nearest the spawn with open street ahead, from head height."
     },
     {
       "name": "interior",
       "find": {
         "cmd": "lostcities find interior",
-        "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 180,
-      "pitch": 0,
       "wait": 3,
-      "caption": "Building interior: the ground floor of the building nearest the spawn, looking toward its door."
+      "caption": "Building interior: the ground floor of the building nearest the spawn, looking toward its street door."
     },
     {
       "name": "edge",
       "find": {
         "cmd": "lostcities find edge",
-        "match": "kind=edge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=edge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 91,
-      "pitch": 20,
       "wait": 3,
-      "caption": "City edge: where the city meets RWG2 terrain, looking west into the city."
+      "caption": "City edge: where the city meets RWG2 terrain, from just above the land outside it, looking into the city.",
+      "y": "top+10"
     },
     {
       "name": "village",
       "find": {
         "cmd": "lostcities find village",
-        "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 180,
-      "pitch": 45,
       "wait": 3,
-      "caption": "Village sewn into the city: a VillageNames village's lane into the city, from the south."
+      "caption": "Village sewn into the city: the lane or link from the city toward a VillageNames village, from the south."
     },
     {
       "name": "reserved",
       "find": {
         "cmd": "lostcities find reserved",
-        "match": "kind=reserved block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=reserved block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 180,
-      "pitch": 45,
       "wait": 3,
       "caption": "Reserved lot: the edge ring the city leaves around a VillageNames village, from the south."
     },
@@ -84,12 +73,10 @@
       "name": "softedge",
       "find": {
         "cmd": "lostcities find softedge",
-        "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),"
+        "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
-      "yaw": 179,
-      "pitch": 20,
       "wait": 3,
-      "caption": "Soft edge: the strip where the city slopes down to a village's natural ground instead of a wall."
+      "caption": "Soft edge: the strip where the city slopes to a village's natural ground instead of a wall."
     },
     {
       "name": "monument",
@@ -99,7 +86,7 @@
       "yaw": 180,
       "pitch": 70,
       "wait": 3,
-      "caption": "Kept clear: the ocean monument at chunk (-4213, 3917), its landmark core left to VillageNames."
+      "caption": "Kept clear: the ocean monument at chunk (-4213, 3917), its landmark core left to VillageNames. No city reaches it on this seed; the core is reserved all the same."
     }
   ]
 }

@@ -98,7 +98,7 @@ Each feature adds its scenarios to this table.
 
 ### Finding things to look at
 
-`/lostcities find <kind> [radius]` (test hooks only, operator level 2) prints the nearest `center` (city center), `street` (primary street), `interior` (a building of two floors or more with a street door), `edge` (a city chunk beside RWG land), `softedge` (a city chunk facing a landmark core, with its soft-edge strip), `reserved` (a landmark core or its edge ring) or `village` (a village's gate, lane or link chunk) from the sender, within `radius` chunks (48 by default, at most 256). The log line is machine-readable:
+`/lostcities find <kind> [radius]` (test hooks only, operator level 2) prints the nearest `center` (city center), `street` (a primary street with at least two chunks of open street, no park or fountain, at its level ahead; the view looks along them from head height), `interior` (a building of two floors or more with a street door), `edge` (a city chunk beside RWG land), `softedge` (a city chunk facing a landmark core, with its soft-edge strip), `reserved` (a landmark core or its edge ring) or `village` (a village's gate, lane or link chunk) from the sender, within `radius` chunks (48 by default, at most 256). The log line is machine-readable:
 
 ```
 [LCNH-FIND] kind=interior block=-24,71,-8 chunk=-2,-1 view=-23.5,72.0,-7.5,0,0 label=building lostcities:building2, 2 floors, door ZMIN
