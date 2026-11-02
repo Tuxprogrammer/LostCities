@@ -7,6 +7,10 @@
 #               [--timeout <s>] [--cmd-wait <s>] [--run-timeout <s>]
 #               [--set-config '<file under config/>:<key>=<value>'] (repeatable; restored after the run)
 #               [--view-distance <3-15>] (server.properties view-distance for this run; restored after it)
+#               [--instance <0-7>] (0, the default: server/ on port 25800, the one shot runs use; 1-7: a copy of
+#               it without worlds in instances/<n>/server/ on port 25820+n, with its own lock, so headless runs
+#               from several slots go in parallel. Made on first use from instances/template/, itself copied
+#               once from server/.)
 # In --cmds, 'wait:<s>' sleeps s seconds and 'until:<regex>' waits (polling every 5 s, at most
 # --run-timeout seconds) for a console line written since the last command was sent that matches the
 # extended regex; neither is sent to the server.
@@ -22,7 +26,7 @@ export JAVA_TOOL_OPTIONS="-Duser.home=$LC/shared/home"
 
 MOD="" JVM_EXTRA="" CMDS="" TIMEOUT=900 FRESH=0 CMD_WAIT=2 RUN_TIMEOUT=21600 UNTIL="" WORLD=""
 LEVEL_TYPE="$PACK_LEVEL_TYPE" SEED="" VIEW_DISTANCE="" ORIG_VIEW_DISTANCE=""
-SETCFG=() RESTORE=()
+SETCFG=() RESTORE=() INSTANCE=0
 while [ $# -gt 0 ]; do
     case "$1" in
         --mod) MOD="$2"; shift 2 ;;
@@ -37,7 +41,8 @@ while [ $# -gt 0 ]; do
         --seed) SEED="$2"; shift 2 ;;
         --set-config) SETCFG+=("$2"); shift 2 ;;
         --view-distance) VIEW_DISTANCE="$2"; shift 2 ;;
-        -h|--help) sed -n '2,11p' "$0"; exit 0 ;;
+        --instance) INSTANCE="$2"; shift 2 ;;
+        -h|--help) sed -n '2,14p' "$0"; exit 0 ;;
         *) echo "unknown argument: $1" >&2; exit 2 ;;
     esac
 done
@@ -48,16 +53,55 @@ if [ -n "$VIEW_DISTANCE" ] && { ! [[ "$VIEW_DISTANCE" =~ ^[0-9]+$ ]] || [ "$VIEW
     echo "bad --view-distance: $VIEW_DISTANCE (3-15)" >&2; exit 2
 fi
 
-# One run at a time: the server dir, port and world are shared. Our own lock, in our own dir.
-exec 9>"$RP/run.lock"
-if ! flock -n 9; then echo "another run.sh holds $RP/run.lock" >&2; exit 3; fi
+if ! [[ "$INSTANCE" =~ ^[0-7]$ ]]; then echo "bad --instance: $INSTANCE (0-7)" >&2; exit 2; fi
 
-RUN_ID="$(date +%Y%m%d-%H%M%S)"
+# One run at a time per instance: its server dir, port and worlds are shared. Our own locks, in our own dir.
+if [ "$INSTANCE" = 0 ]; then
+    LOCK="$RP/run.lock" DONE="$RP/run.done" RUN_ID="$(date +%Y%m%d-%H%M%S)"
+else
+    IDIR="$RP/instances/$INSTANCE"
+    SRV="$IDIR/server"
+    LOCK="$IDIR/run.lock" DONE="$IDIR/run.done" RUN_ID="$(date +%Y%m%d-%H%M%S)-i$INSTANCE"
+    mkdir -p "$IDIR"
+fi
+exec 9>"$LOCK"
+if ! flock -n 9; then echo "another run.sh holds $LOCK" >&2; exit 3; fi
+
+if [ "$INSTANCE" != 0 ] && [ ! -f "$SRV/.lc-instance" ]; then
+    # Instances are copied from a template: the pack server without its worlds, logs or crash reports. The
+    # template is made once, while no instance-0 run is changing its config (--set-config edits files in
+    # place for the length of a run), and never changes after that.
+    BASE="$RP/server" TPL="$RP/instances/template"
+    exec 7>"$RP/instances/template.lock"
+    flock -w 7200 7 || { echo "instance $INSTANCE: timed out waiting for the template lock" >&2; exit 3; }
+    if [ ! -f "$TPL/.lc-template" ]; then
+        exec 8>"$RP/run.lock"
+        echo "instance $INSTANCE: waiting for $RP/run.lock to copy the pack server into the template"
+        flock -w 7200 8 || { echo "instance $INSTANCE: timed out waiting for $RP/run.lock" >&2; exit 3; }
+        EXCL=(--exclude=/logs/ --exclude=/crash-reports/ --exclude=/backups/)
+        while IFS= read -r lvl; do
+            d="$(dirname "${lvl#"$BASE"/}")"
+            EXCL+=("--exclude=/$d/")
+        done < <(find "$BASE" -mindepth 2 -maxdepth 2 -name level.dat)
+        rm -rf "${TPL:?}"
+        rsync -a "${EXCL[@]}" "$BASE/" "$TPL/" || { echo "instance $INSTANCE: template copy failed" >&2; exit 2; }
+        exec 8>&-
+        rm -f "$TPL"/mods/lostcitiesnh-*.jar
+        sed -i "s|^level-name=.*|level-name=World|" "$TPL/server.properties"
+        touch "$TPL/.lc-template"
+    fi
+    exec 7>&-
+    rm -rf "${SRV:?}"
+    rsync -a --exclude=/.lc-template "$TPL/" "$SRV/" || { echo "instance $INSTANCE: copy failed" >&2; exit 2; }
+    sed -i "s|^server-port=.*|server-port=$((25820 + INSTANCE))|" "$SRV/server.properties"
+    touch "$SRV/.lc-instance"
+    echo "instance $INSTANCE: server copied, port $((25820 + INSTANCE))"
+fi
+
 RUN_DIR="$RP/runs/$RUN_ID"
 mkdir -p "$RUN_DIR"
 CONSOLE="$RUN_DIR/console.log"
 FIFO="$RUN_DIR/stdin.fifo"
-DONE="$RP/run.done"
 rm -f "$DONE"
 
 PID="" STATUS="error" EXIT_CODE="" BOOT_S="" PEAK_KB=0 T0="$(date +%s)"
@@ -113,6 +157,7 @@ finish() {
         echo "level_type=$LEVEL_TYPE"
         echo "seed=${SEED:-random}"
         echo "view_distance=${VIEW_DISTANCE:-unchanged}"
+        echo "instance=$INSTANCE"
     } | tee "$RUN_DIR/run.done" > "$DONE"
     cat "$DONE"
     [ "$STATUS" = ok ] || exit 1

@@ -48,6 +48,7 @@ The server-side scripts live in [server/](server/), laid out as they sit under `
 - `--jvm '<args>'`, `--timeout <s>`, `--run-timeout <s>`.
 - `--set-config '<file under config/>:<key>=<value>'` (repeatable): changes one config value for this run only and puts the file back when the run ends, however it ends. The overlay scenarios use it for ArchaicFix's `logCascadingWorldgen`, which the pack ships off.
 - `--view-distance <3-15>`: the server's `view-distance` for this run (the box's default is 6), put back when the run ends. The shot runner sets it to the capture's render distance.
+- `--instance <0-7>`: which copy of the pack server runs. 0, the default, is `realpack/server/` on port 25800; shot runs always use it. 1 to 7 are copies of it without its worlds, in `realpack/instances/<n>/server/` on port 25820+n, each with its own lock, so headless runs (scenarios, hashes, budgets) from several slots go in parallel. A copy is made on first use from `realpack/instances/template/`, which is itself copied once from the pack server while no instance-0 run holds its lock; an instance keeps its own worlds after that. To pick up a changed pack server, delete `instances/`. Give each parallel slot its own instance.
 
 Each run writes `runs/<id>/` with the console, the FML log, any crash report and a `run.done` summary: status, boot seconds and peak RSS.
 
@@ -173,4 +174,4 @@ The build server is shared with other projects' agents.
 - **Our ranges.** Xvfb displays `:80`–`:89`. TCP ports `25800`–`25899`: the real-pack server on the first, dev servers from `25810`. The scripts enforce these ranges.
 - **Our processes only.** Stop only what a script started, by the PID it recorded. Never `pkill` or `killall` by pattern. Leave nothing running: every script stops its JVM and Xvfb when it ends, fails or is interrupted. `lc-remote.sh status` shows anything left over.
 - **Memory.** Stay under 64 GB in total. Typical use: a Gradle build takes about 5 GB, the real-pack server about 8 GB and the real-pack client about 11 GB.
-- **One at a time.** Locks allow one real-pack server, one client, and one job per slot at a time. Use separate slots for parallel builds.
+- **One at a time.** Locks allow one real-pack server per instance (`--instance`), one client, and one job per slot at a time. Use separate slots for parallel builds and separate instances for parallel headless runs. Ports: instance 0 on 25800, instances 1 to 7 on 25821 to 25827, dev servers from 25810.
