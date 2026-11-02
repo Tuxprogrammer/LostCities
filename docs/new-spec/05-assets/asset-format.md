@@ -155,7 +155,7 @@ Block names stay 1.20 names in every file; the map turns them into 1.7.10 blocks
 
 ## Palette variety
 
-The catalog's pools reach the world as the palette variety ([0011](../../design/0011-palette-variety.md); D25, D28). `variety.json` holds two lists:
+The catalog's pools reach the world as the palette variety ([0007](../../design/0007-palette-variety.md); D25, D28). `variety.json` holds two lists:
 
 - **Options**: small palettes, each one pool candidate for one role, in the palette format above (`char`, and `block`, `blocks` or `variant`, with `damaged`), named `lostcitiesnh:variety/<name>`. Blocks are 1.7.10 references (`modid:name:meta`) or 1.20 names the block-name map resolves. Each records the pool it comes from (`pool`).
 - **Styles**: per style, its groups. A group has a `name`, the options with integer weights (`none` is the baseline: upstream's look, no palette added), an optional `when` (a palette the style must have drawn for the chunk; a wall group applies only to its wall palette's buildings) and `for` (`building`, `street` for chunks without a building, or `all`).

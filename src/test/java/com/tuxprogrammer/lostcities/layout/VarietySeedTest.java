@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 
 /**
- * The palette variety's seeds (D-M11-1, D-M11-10): a pure function of the world seed and the chunk, a building's per
+ * The palette variety's seeds (D157, D166): a pure function of the world seed and the chunk, a building's per
  * chunk, a street's or park's shared by each four-by-four block of chunks.
  */
 public class VarietySeedTest {

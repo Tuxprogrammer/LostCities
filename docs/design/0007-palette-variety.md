@@ -1,4 +1,4 @@
-# 0011 · Palette variety
+# 0007 · Palette variety
 
 - Status: Accepted
 - Gate: none (M11's design; the beta review judges the looks)

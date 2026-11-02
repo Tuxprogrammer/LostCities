@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import org.junit.jupiter.api.Test;
 
 /**
- * D-M11-9: a block class that overrides the world-aware light opacity is found by reading its bytes, through its
+ * D165: a block class that overrides the world-aware light opacity is found by reading its bytes, through its
  * superclasses, without reflecting on (and so loading) the classes its methods name.
  */
 public class GenerationSafetyTest {
