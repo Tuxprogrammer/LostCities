@@ -4,7 +4,7 @@ import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
 import com.tuxprogrammer.lostcities.compat.ae2.Ae2Scenario;
 import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesScenario;
 import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeScenario;
-import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2LandmarkScenario;
+import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesScenario;
 import com.tuxprogrammer.lostcities.compat.witchery.WitcheryScenario;
@@ -87,7 +87,7 @@ public class CommonProxy {
         LootGamesScenario.registerAll(ScenarioRegistry.INSTANCE);
         Ae2Scenario.registerAll(ScenarioRegistry.INSTANCE);
         WitcheryScenario.registerAll(ScenarioRegistry.INSTANCE);
-        Rwg2LandmarkScenario.registerAll(ScenarioRegistry.INSTANCE);
+        Rwg2Landmarks.registerScenarios(ScenarioRegistry.INSTANCE);
         GtnhLayerScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
