@@ -2,7 +2,7 @@
 
 Cities share the GTNH 2.9.0 overworld with other mods' structures. Under decision log D24, a city gets out of their way: it builds around them so they become features of the city, it sews nearby villages in with paths, and it never leaves a sharp cutoff. This sheet answers, for every surface structure generator in the pack: can its site, footprint and ground height be predicted without generating chunks, and what does the city do about it. It builds on the inventory in [other-worldgen.md](other-worldgen.md), which carries its corrections, and is the research behind record [0006](../../design/0006-build-around-other-worldgen.md).
 
-Status: *Accepted* ([0006](../../design/0006-build-around-other-worldgen.md); [decision log](../../design/decision-log.md) D26; the margin, soft edges and lanes revised by the alpha review round, D-RW-2 to D-RW-6). Facts about other mods are *verified* with a permalink at the pack's tag, *decompiled* (closed source; the contract only, no code), *vanilla* (read from the 1.7.10 server with Forge 10.13.4.1614 applied; no public pinned source), or *unverified*.
+Status: *Accepted* ([0006](../../design/0006-build-around-other-worldgen.md); [decision log](../../design/decision-log.md) D26; the margin, soft edges and lanes revised by the alpha review round, D149 to D153). Facts about other mods are *verified* with a permalink at the pack's tag, *decompiled* (closed source; the contract only, no code), *vanilla* (read from the 1.7.10 server with Forge 10.13.4.1614 applied; no public pinned source), or *unverified*.
 
 ## Summary
 

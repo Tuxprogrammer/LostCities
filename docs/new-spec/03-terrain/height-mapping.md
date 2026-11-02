@@ -40,7 +40,7 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows th
 
 ## Rise cap
 
-Upstream lets a city climb any slope up to `cityMaxHeight`: each chunk takes the level of its own terrain, so a city whose center lies in a valley follows RWG up a mountainside, levels 4 to 7 above its streets, with parks 40 to 60 blocks up and buildings ending against the slope (alpha review AR-4, AR-14). The owner asked for the "happy medium" between cutting the mountain flat and raising the city to the sky. Deviation (pinned profile value `cityMaxRise`, default 2; decision log D-RW-1):
+Upstream lets a city climb any slope up to `cityMaxHeight`: each chunk takes the level of its own terrain, so a city whose center lies in a valley follows RWG up a mountainside, levels 4 to 7 above its streets, with parks 40 to 60 blocks up and buildings ending against the slope (alpha review AR-4, AR-14). The owner asked for the "happy medium" between cutting the mountain flat and raising the city to the sky. Deviation (pinned profile value `cityMaxRise`, default 2; decision log D148):
 
 | Rule | Value |
 |---|---|

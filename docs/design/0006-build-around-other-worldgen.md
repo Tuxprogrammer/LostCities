@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin); §1, §3 and §4 amended by the alpha review round M05R (decision log D-RW-2 to D-RW-6): the edge ring is the city's margin, never city, and the soft edge, the lanes and the detours move with it
+- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin); §1, §3 and §4 amended by the alpha review round M05R (decision log D149 to D153): the edge ring is the city's margin, never city, and the soft edge, the lanes and the detours move with it
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01

@@ -2,7 +2,7 @@
 
 How each per-chunk decision of upstream's layout ([04-city-layout](../../original-spec/04-city-layout/index.md)) changes in the zones [0006](../../design/0006-build-around-other-worldgen.md#1-landmarks-and-landmark-lots) §1 puts around other mods' structures. 0006 settles the zones and their rules; this sheet lays them against upstream's decisions one by one, so the layout code has one place to read them.
 
-Status: *Accepted* from 0006, D26, D30 (deep railways under a core) and D31 (multibuildings in transition rings, P04-5; shallow railways dipping under a core, P06-4); the edge ring is the city's margin, never city, since the alpha review round (AR-10, D-RW-2 to D-RW-5).
+Status: *Accepted* from 0006, D26, D30 (deep railways under a core) and D31 (multibuildings in transition rings, P04-5; shallow railways dipping under a core, P06-4); the edge ring is the city's margin, never city, since the alpha review round (AR-10, D149 to D152).
 
 ## Zones
 
