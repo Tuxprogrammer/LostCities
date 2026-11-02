@@ -14,9 +14,8 @@ import java.util.Random;
  */
 public final class SimplexNoise2D {
 
-    private static final int[][] GRADIENTS = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 1, 0 }, { -1, 0 }, { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 },
-        { 0, 1 }, { 0, -1 } };
+    private static final int[][] GRADIENTS = { { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 1, 0 }, { -1, 0 },
+        { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }, { 0, 1 }, { 0, -1 } };
 
     private static final double SKEW = 0.5 * (Math.sqrt(3.0) - 1.0);
     private static final double UNSKEW = (3.0 - Math.sqrt(3.0)) / 6.0;

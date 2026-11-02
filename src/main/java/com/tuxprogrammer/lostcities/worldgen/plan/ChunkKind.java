@@ -9,7 +9,9 @@ package com.tuxprogrammer.lostcities.worldgen.plan;
  */
 public enum ChunkKind {
 
-    /** Not part of a city. The overlay may still blend it toward a nearby city, or damage it with a city's explosion. */
+    /**
+     * Not part of a city. The overlay may still blend it toward a nearby city, or damage it with a city's explosion.
+     */
     NONE,
 
     /** A city chunk: a building, a street, a park or a plaza, leveled to its city ground. */

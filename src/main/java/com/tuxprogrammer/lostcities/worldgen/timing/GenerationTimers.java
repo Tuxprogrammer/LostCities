@@ -118,8 +118,9 @@ public final class GenerationTimers {
                 if (h.count() == 0) {
                     continue;
                 }
-                String name = c == ALL ? "all" : TerrainPhase.ChunkClass.values()[c].name()
-                    .toLowerCase(Locale.ROOT);
+                String name = c == ALL ? "all"
+                    : TerrainPhase.ChunkClass.values()[c].name()
+                        .toLowerCase(Locale.ROOT);
                 lines.add(
                     String.format(
                         Locale.ROOT,

@@ -1,6 +1,8 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/DamageArea.java
 // Avoids: TERR-03, TERR-19
+// @formatter:on
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +25,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <ul>
  * <li>TERR-03 (PROF-06): an equal min/max pair gives the minimum instead of throwing; the pairs are ordered when the
  * profile is read ({@link TerrainSettings});</li>
- * <li>TERR-19: the Y range is the 1.7.10 world, named by {@link WorldLimits}, which is upstream's hard-coded 0 to 255;</li>
+ * <li>TERR-19: the Y range is the 1.7.10 world, named by {@link WorldLimits}, which is upstream's hard-coded 0 to
+ * 255;</li>
  * <li>{@link #isCompletelyDestroyed}, {@link #lowestExplosionY} and {@link #highestExplosionY}, dead in 1.20, serve
  * the floating-fragment pass again (TERR-28).</li>
  * </ul>
@@ -90,6 +93,18 @@ public final class DamageArea {
             }
         }
         return new DamageArea(chunkX, chunkZ, found);
+    }
+
+    /**
+     * Returns a damage area with the given explosions, for tests and for callers that collected them otherwise.
+     *
+     * @param chunkX     chunk X
+     * @param chunkZ     chunk Z
+     * @param explosions the explosions that reach the chunk
+     * @return the area
+     */
+    public static DamageArea withExplosions(int chunkX, int chunkZ, List<Explosion> explosions) {
+        return new DamageArea(chunkX, chunkZ, new ArrayList<>(explosions));
     }
 
     /** Returns how many chunks around an explosion's origin it can reach: {@code (max radius + 15) / 16}. */

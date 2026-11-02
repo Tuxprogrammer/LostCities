@@ -51,7 +51,8 @@ public final class ProfileSubcommand implements Subcommand {
             if (snapshot == null) {
                 sender.addChatMessage(new ChatComponentTranslation(LangKeys.PROFILE_NONE, dimension));
             } else {
-                sender.addChatMessage(new ChatComponentTranslation(LangKeys.PROFILE_SHOW, dimension, snapshot.summary()));
+                sender
+                    .addChatMessage(new ChatComponentTranslation(LangKeys.PROFILE_SHOW, dimension, snapshot.summary()));
             }
             return;
         }
@@ -71,7 +72,8 @@ public final class ProfileSubcommand implements Subcommand {
         if (snapshot == null) {
             throw new CommandException(LangKeys.PROFILE_UNSUPPORTED, dimension, HeightOracles.worldType(world));
         }
-        LostCities.LOG.info("{} pinned profile {} into dimension {}", sender.getCommandSenderName(), profile, dimension);
+        LostCities.LOG
+            .info("{} pinned profile {} into dimension {}", sender.getCommandSenderName(), profile, dimension);
         sender.addChatMessage(new ChatComponentTranslation(LangKeys.PROFILE_PINNED, profile, dimension));
     }
 

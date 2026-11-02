@@ -1,6 +1,8 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/ChunkFixer.java
 // Avoids: TERR-11, TERR-26, TERR-32
+// @formatter:on
 
 import java.util.Random;
 
@@ -65,12 +67,12 @@ public final class Vines {
     /**
      * Writes the chunk's vines.
      *
-     * @param buffer      the chunk, after its content
-     * @param context     the world's terrain context
-     * @param plan        the chunk's plan
-     * @param sides       the plans toward −X, +X, −Z and +Z
-     * @param sideDamage  the damage areas of those neighbors, in the same order
-     * @param random      the vine random
+     * @param buffer     the chunk, after its content
+     * @param context    the world's terrain context
+     * @param plan       the chunk's plan
+     * @param sides      the plans toward −X, +X, −Z and +Z
+     * @param sideDamage the damage areas of those neighbors, in the same order
+     * @param random     the vine random
      * @return the number of vine blocks placed
      */
     public static int grow(ChunkBuffer buffer, TerrainContext context, ChunkPlan plan, ChunkPlan[] sides,
@@ -124,8 +126,9 @@ public final class Vines {
 
     /** The pure survival rule: air here, the neighbor's planned wall at this height, and no damage in its section. */
     private static boolean canHang(ChunkBuffer buffer, ChunkPlan wall, DamageArea wallDamage, int x, int y, int z) {
-        if (y < WorldLimits.MIN_Y || y > WorldLimits.MAX_Y || !buffer.get(x, y, z)
-            .isAir()) {
+        if (y < WorldLimits.MIN_Y || y > WorldLimits.MAX_Y
+            || !buffer.get(x, y, z)
+                .isAir()) {
             return false;
         }
         if (y < wall.groundY() || y >= wall.maxHeight()) {

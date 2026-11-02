@@ -108,11 +108,8 @@ public final class PopulationPhase {
             return true;
         }
         ChestGenHooks info = ChestGenHooks.getInfo(job.argument());
-        WeightedRandomChestContent.generateChestContents(
-            random,
-            info.getItems(random),
-            (IInventory) tile,
-            info.getCount(random));
+        WeightedRandomChestContent
+            .generateChestContents(random, info.getItems(random), (IInventory) tile, info.getCount(random));
         return true;
     }
 

@@ -195,7 +195,8 @@ public final class TerrainPhase {
             moved = fragments.apply(buffer, area, plan, sides, random);
         }
         int debris = damage.debris(buffer, plan, debrisNeighbors, debrisAreas, random);
-        int vines = Vines.grow(buffer, context, plan, sides, sideAreas, Vines.random(context.worldSeed(), chunkX, chunkZ));
+        int vines = Vines
+            .grow(buffer, context, plan, sides, sideAreas, Vines.random(context.worldSeed(), chunkX, chunkZ));
         changed |= damaged > 0 || moved > 0 || debris > 0 || vines > 0;
         if (!changed) {
             return UNTOUCHED;

@@ -1,6 +1,8 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/e89000238a8095cba8a739fc3b9e595d854a1346/src/main/java/mcjty/lostcities/dimensions/world/terraingen/LostCitiesTerrainGenerator.java
 // Avoids: TERR-28
+// @formatter:on
 
 import java.util.Arrays;
 import java.util.Random;
@@ -20,7 +22,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <p>
  * A blob's support is its count of "connections": a block next to a chunk side counts one when it is no higher than
  * that neighbor's planned building height plus 3 (as on 1.12, so the pass reads only its own chunk and the plan), and
- * a block reaching below the damaged band counts five. A blob may reach any height above the band, as on 1.12. A blob is poorly supported with fewer than five connections, or
+ * a block reaching below the damaged band counts five. A blob may reach any height above the band, as on 1.12. A blob
+ * is poorly supported with fewer than five connections, or
  * when connections are under {@link #DESTROY_LONE_BLOCKS_FACTOR} of its size. Such blobs, lowest first, are removed
  * when a draw is below {@link #DESTROY_OR_MOVE_CHANCE}, when they are smaller than {@link #DESTROY_SMALL_SECTIONS_SIZE}
  * blocks or have fewer than five connections, and otherwise fall.

@@ -1,7 +1,9 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/DamageArea.java
 // Avoids: TERR-04, TERR-05, TERR-18, TERR-27
+// @formatter:on
 
 import java.util.Arrays;
 import java.util.Random;

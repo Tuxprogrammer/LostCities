@@ -231,7 +231,10 @@ public final class Overlays {
                 HeightOracles.worldType(world),
                 Tags.VERSION);
         } catch (IllegalArgumentException e) {
-            LostCities.LOG.error("dimensionProfiles names {} for dimension {}: {}", profile, world.provider.dimensionId,
+            LostCities.LOG.error(
+                "dimensionProfiles names {} for dimension {}: {}",
+                profile,
+                world.provider.dimensionId,
                 e.getMessage());
             return null;
         }
@@ -308,7 +311,8 @@ public final class Overlays {
             try {
                 if (Integer.parseInt(
                     entry.substring(0, equals)
-                        .trim()) == dimension) {
+                        .trim())
+                    == dimension) {
                     String profile = entry.substring(equals + 1)
                         .trim();
                     return profile.isEmpty() ? BuiltinProfiles.DEFAULT : profile;

@@ -60,8 +60,7 @@ public final class OverlayChunkProvider implements IChunkProvider {
         long start = System.nanoTime();
         Chunk chunk = delegate.provideChunk(chunkX, chunkZ);
         long generated = System.nanoTime();
-        TerrainPhase.ChunkClass chunkClass = chunk == null ? TerrainPhase.ChunkClass.UNTOUCHED
-            : overlay.terrain(chunk);
+        TerrainPhase.ChunkClass chunkClass = chunk == null ? TerrainPhase.ChunkClass.UNTOUCHED : overlay.terrain(chunk);
         long done = System.nanoTime();
         GenerationTimers timers = overlay.timers();
         timers.record(GenerationTimers.Series.PROVIDE, chunkClass, generated - start);
@@ -80,7 +79,8 @@ public final class OverlayChunkProvider implements IChunkProvider {
         long start = System.nanoTime();
         boolean pushed = FootprintGuard.push(world, overlay.plan(), true);
         if (!pushed) {
-            LostCities.LOG.warn("Population nested too deep at chunk ({}, {}); the footprint guard is off", chunkX, chunkZ);
+            LostCities.LOG
+                .warn("Population nested too deep at chunk ({}, {}); the footprint guard is off", chunkX, chunkZ);
         }
         try {
             delegate.populate(provider, chunkX, chunkZ);

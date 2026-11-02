@@ -130,8 +130,14 @@ public final class SoftEdges {
             int z = index >> 4;
             int low = Math.min(inner[index], ground);
             int high = Math.max(inner[index], ground);
-            ColumnOps.fill(buffer, x, z, low + 1, high + 1, plan.style()
-                .border());
+            ColumnOps.fill(
+                buffer,
+                x,
+                z,
+                low + 1,
+                high + 1,
+                plan.style()
+                    .border());
         }
     }
 

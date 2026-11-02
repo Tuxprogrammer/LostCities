@@ -48,7 +48,8 @@ public class CommonProxy {
 
     /**
      * Registers event handlers: the overlay's installer and population vetoes (docs/design/0005-rwg-overlay.md §1),
-     * then the scenarios. The built-in and overlay scenarios are always registered, since a registry entry does nothing on
+     * then the scenarios. The built-in and overlay scenarios are always registered, since a registry entry does nothing
+     * on
      * its own; the scenario runner listens to server ticks only where the test hooks are on.
      *
      * @param event FML's initialization event

@@ -104,8 +104,7 @@ public final class ChunkPlan {
      * @param ocean         whether the chunk's biome is an ocean
      * @return the plan
      */
-    public static ChunkPlan none(int chunkX, int chunkZ, int cityLevel, int groundY, int naturalHeight,
-        boolean ocean) {
+    public static ChunkPlan none(int chunkX, int chunkZ, int cityLevel, int groundY, int naturalHeight, boolean ocean) {
         return builder(chunkX, chunkZ, ChunkKind.NONE).cityLevel(cityLevel)
             .groundY(groundY)
             .naturalHeight(naturalHeight)
@@ -411,7 +410,20 @@ public final class ChunkPlan {
         /** Returns the immutable plan. */
         public ChunkPlan build() {
             if (kind != ChunkKind.CITY && (building || content != ChunkContent.NONE)) {
-                throw new IllegalStateException("only a city chunk has a building or content: " + chunkX + "," + chunkZ);
+                throw new IllegalStateException(
+                    "only a city chunk has a building or content: " + chunkX + "," + chunkZ);
+            }
+            if (building && groundY - WorldLimits.FLOOR_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
+                // TERR-31: a building that cannot fit is the layout's problem, settled before generation.
+                throw new IllegalStateException(
+                    "building bottom " + (groundY - WorldLimits.FLOOR_HEIGHT * cellars)
+                        + " is below Y "
+                        + WorldLimits.BUILDING_BOTTOM_MIN
+                        + " at "
+                        + chunkX
+                        + ","
+                        + chunkZ
+                        + "; drop cellars in the layout");
             }
             return new ChunkPlan(this);
         }

@@ -18,7 +18,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
  * {@code etfuturum:grass_path}, or gravel without Et Futurum;</li>
  * <li>sand: gravel, with cobblestone in the block below;</li>
  * <li>lava: cobblestone, with cobblestone posts down through the lava at even world X and Z;</li>
- * <li>water, ice or mud: planks with the block above cleared, and log posts down through the water at even X and Z;</li>
+ * <li>water, ice or mud: planks with the block above cleared, and log posts down through the water at even X and
+ * Z;</li>
  * <li>anything else: the next block down. A column that matches nothing keeps its surface.</li>
  * </ul>
  * Every block goes through the village's material swap: a desert village's gravel and cobblestone become sandstone,
@@ -83,7 +84,14 @@ public final class VillageLanes {
             String name = block.name();
             if (isGrassOrDirt(name) && isOpenAbove(buffer, classes, x, y, z)) {
                 clearPlantAbove(buffer, classes, x, y, z);
-                buffer.set(x, y, z, swap(context.availability().orElse(GRASS_PATH, GRAVEL), material));
+                buffer.set(
+                    x,
+                    y,
+                    z,
+                    swap(
+                        context.availability()
+                            .orElse(GRASS_PATH, GRAVEL),
+                        material));
                 return true;
             }
             if ("minecraft:sand".equals(name)) {
@@ -112,8 +120,7 @@ public final class VillageLanes {
         return false;
     }
 
-    private static void postDown(ChunkBuffer buffer, BlockClassifier classes, int x, int fromY, int z,
-        BlockRef post) {
+    private static void postDown(ChunkBuffer buffer, BlockClassifier classes, int x, int fromY, int z, BlockRef post) {
         for (int y = fromY; y > WorldLimits.MIN_Y && classes.isLiquid(buffer.get(x, y, z)); y--) {
             buffer.set(x, y, z, post);
         }

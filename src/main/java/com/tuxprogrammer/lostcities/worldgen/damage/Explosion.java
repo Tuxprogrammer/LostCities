@@ -1,5 +1,7 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Explosion.java
+// @formatter:on
 
 /**
  * One explosion of the abandoned-city look: a center block and a radius in blocks

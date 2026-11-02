@@ -1,7 +1,9 @@
+// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/BuildingInfo.java
 // Avoids: TERR-10, TERR-24, TERR-27
+// @formatter:on
 
 import java.util.Random;
 
@@ -145,18 +147,16 @@ public final class TerrainBlend {
                 byte kind = l0Kind[l0Index];
                 int h = l0[l0Index];
                 if (kind == CITY_CORNER) {
-                    l1Min[index] = h
-                        + randomizedOffset(
-                            cornerX,
-                            cornerZ,
-                            settings.terrainFixLowerMinOffset(),
-                            settings.terrainFixLowerMaxOffset());
-                    l1Max[index] = h
-                        + randomizedOffset(
-                            cornerX,
-                            cornerZ,
-                            settings.terrainFixUpperMinOffset(),
-                            settings.terrainFixUpperMaxOffset());
+                    l1Min[index] = h + randomizedOffset(
+                        cornerX,
+                        cornerZ,
+                        settings.terrainFixLowerMinOffset(),
+                        settings.terrainFixLowerMaxOffset());
+                    l1Max[index] = h + randomizedOffset(
+                        cornerX,
+                        cornerZ,
+                        settings.terrainFixUpperMinOffset(),
+                        settings.terrainFixUpperMaxOffset());
                     l1Fixed[index] = true;
                     continue;
                 }
@@ -343,7 +343,9 @@ public final class TerrainBlend {
         return moved;
     }
 
-    /** Upstream's {@code getRandomizedOffset}: one draw in {@code min..max}, seeded by the corner and world (TERR-27). */
+    /**
+     * Upstream's {@code getRandomizedOffset}: one draw in {@code min..max}, seeded by the corner and world (TERR-27).
+     */
     int randomizedOffset(int chunkX, int chunkZ, int min, int max) {
         jitter.setSeed(SeedMix.chunk(context.worldSeed(), chunkX, chunkZ, OFFSET_X, OFFSET_Z));
         return jitter.nextInt(max - min + 1) + min;

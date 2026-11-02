@@ -6,6 +6,7 @@ Lost Cities: New Horizons includes code and assets from the projects below. Each
 
 - Source: https://github.com/McJtyMods/LostCities
 - Baseline: branch `1.20`, commit `f18a094d710a0957ead20dc24f0bf1365b885802` ([0001](docs/design/0001-port-policy-and-licensing.md))
+- Also ported from: branch `1.12`, commit `e89000238a8095cba8a739fc3b9e595d854a1346`, where its era fits 1.7.10 better (the floating-fragment pass after explosions, `worldgen/damage/FloatingFragments.java`)
 - Used: Java code ported under the ported-code gate, and the JSON asset system's data
 - License: MIT
 

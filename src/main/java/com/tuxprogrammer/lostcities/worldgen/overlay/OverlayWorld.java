@@ -249,6 +249,8 @@ public final class OverlayWorld {
     /** Returns the wrapped provider's delegate's description, for logs. */
     static String describe(IChunkProvider provider) {
         return provider.getClass()
-            .getName() + " (" + provider.makeString() + ")";
+            .getName() + " ("
+            + provider.makeString()
+            + ")";
     }
 }

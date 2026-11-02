@@ -75,7 +75,8 @@ public final class TerrainSettings {
         seaLevel = r.intValue("seaLevel", SEA_LEVEL_DEFAULT, SEA_LEVEL_DEFAULT, WorldLimits.MAX_Y);
         cityLevelHeights = new int[CITY_LEVEL_THRESHOLDS];
         for (int i = 0; i < CITY_LEVEL_THRESHOLDS; i++) {
-            cityLevelHeights[i] = r.intValue("cityLevel" + i + "Height", DEFAULT_LEVEL_HEIGHTS[i], 1, WorldLimits.MAX_Y);
+            cityLevelHeights[i] = r
+                .intValue("cityLevel" + i + "Height", DEFAULT_LEVEL_HEIGHTS[i], 1, WorldLimits.MAX_Y);
         }
         cityMinHeight = r.intValue("cityMinHeight", 50, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);

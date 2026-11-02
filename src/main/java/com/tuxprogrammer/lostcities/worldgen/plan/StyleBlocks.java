@@ -26,7 +26,9 @@ import com.tuxprogrammer.lostcities.asset.BlockRef;
  */
 public final class StyleBlocks {
 
-    /** Upstream's default leaf table (20 jungle, 20 spruce, 88 oak), persistent: 1.7.10 leaves with the no-decay bit. */
+    /**
+     * Upstream's default leaf table (20 jungle, 20 spruce, 88 oak), persistent: 1.7.10 leaves with the no-decay bit.
+     */
     public static final List<BlockRef> DEFAULT_LEAVES = Collections.unmodifiableList(defaultLeaves());
 
     /**
@@ -64,7 +66,10 @@ public final class StyleBlocks {
         return new Builder();
     }
 
-    /** Returns the defaults: stone base, water, cobblestone border, cobblestone wall, cobblestone rubble, stone-brick filler. */
+    /**
+     * Returns the defaults: stone base, water, cobblestone border, cobblestone wall, cobblestone rubble, stone-brick
+     * filler.
+     */
     public static StyleBlocks defaults() {
         return builder().build();
     }

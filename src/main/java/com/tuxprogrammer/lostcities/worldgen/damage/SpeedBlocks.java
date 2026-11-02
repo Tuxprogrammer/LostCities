@@ -41,8 +41,10 @@ public final class SpeedBlocks {
         }
         register("gregtech:gt.blockconcretes", "minecraft:stained_hardened_clay", gtConcrete);
         // Brownstone 0 rough, 1 rough road, 2 smooth, 3 brick, 4 road, 5 fancy, 6 chiseled.
-        register("TConstruct:SpeedBlock", "minecraft:sandstone", new int[] { 0, 0, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0,
-            0, 0 });
+        register(
+            "TConstruct:SpeedBlock",
+            "minecraft:sandstone",
+            new int[] { 0, 0, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
         register("TConstruct:SpeedSlab", "minecraft:stone_slab", slab(1));
     }
 

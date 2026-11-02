@@ -239,15 +239,19 @@ public final class OverlayScenarios {
                     .size(),
                 combined(recorder.terrainHashes()),
                 combined(recorder.populationHashes()));
-            context.check(cityChunks > 0, "expected city chunks around (2048, 2048), found none (all too high or low?)");
+            context
+                .check(cityChunks > 0, "expected city chunks around (2048, 2048), found none (all too high or low?)");
             context.check(
                 streets == 0 || streetsAtGround * 4 >= streets * 3,
                 "expected at least 3/4 of street chunks paved at the city ground, found " + streetsAtGround
                     + "/"
                     + streets);
-            context.check(foliageInFootprint == 0, "expected no RWG logs or leaves in the footprint, found " + foliageInFootprint);
+            context.check(
+                foliageInFootprint == 0,
+                "expected no RWG logs or leaves in the footprint, found " + foliageInFootprint);
             context.check(coresTouched == 0, "expected landmark cores untouched, " + coresTouched + " were written");
-            context.check(lights == 0 || litLights == lights, "expected every glowstone lit, " + litLights + "/" + lights);
+            context
+                .check(lights == 0 || litLights == lights, "expected every glowstone lit, " + litLights + "/" + lights);
         }
 
         private static int laneColumns(Chunk chunk, ChunkPlan plan) {
@@ -391,7 +395,10 @@ public final class OverlayScenarios {
                 generator.size(),
                 overlay.cascades(),
                 FootprintGuard.droppedWrites());
-            context.check(failed.length() == 0, "budgets exceeded: " + failed.toString().trim());
+            context.check(
+                failed.length() == 0,
+                "budgets exceeded: " + failed.toString()
+                    .trim());
         }
     }
 
@@ -400,8 +407,7 @@ public final class OverlayScenarios {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             for (Map.Entry<Long, String> entry : hashes.entrySet()) {
-                digest.update(
-                    (entry.getKey() + "=" + entry.getValue() + "\n").getBytes(StandardCharsets.UTF_8));
+                digest.update((entry.getKey() + "=" + entry.getValue() + "\n").getBytes(StandardCharsets.UTF_8));
             }
             StringBuilder out = new StringBuilder();
             for (byte b : digest.digest()) {

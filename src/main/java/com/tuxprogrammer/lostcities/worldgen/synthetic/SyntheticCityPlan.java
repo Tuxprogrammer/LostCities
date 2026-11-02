@@ -214,6 +214,9 @@ public final class SyntheticCityPlan implements CityPlan {
     }
 
     private static boolean nearCore(int[] rect, int dx, int dz) {
-        return dx >= rect[0] - 1 && dx <= rect[1] + 1 && dz >= rect[2] - 1 && dz <= rect[3] + 1 && !inRect(rect, dx, dz);
+        return dx >= rect[0] - 1 && dx <= rect[1] + 1
+            && dz >= rect[2] - 1
+            && dz <= rect[3] + 1
+            && !inRect(rect, dx, dz);
     }
 }

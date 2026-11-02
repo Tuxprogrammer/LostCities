@@ -59,8 +59,8 @@ public final class ProfileSnapshot {
      * @param worldType     the world type's name, for example {@code RWG2_CONTINENTS}
      * @param createdBy     the mod version that pinned it
      */
-    public ProfileSnapshot(String profile, String planSource, Map<String, String> values,
-        Map<String, Boolean> modules, String assetSetHash, int layoutVersion, String worldType, String createdBy) {
+    public ProfileSnapshot(String profile, String planSource, Map<String, String> values, Map<String, Boolean> modules,
+        String assetSetHash, int layoutVersion, String worldType, String createdBy) {
         this.profile = Objects.requireNonNull(profile);
         this.planSource = Objects.requireNonNull(planSource);
         this.values = Collections.unmodifiableMap(new TreeMap<>(values));
@@ -160,8 +160,17 @@ public final class ProfileSnapshot {
 
     /** Returns a one-line summary for logs and commands. */
     public String summary() {
-        return profile + " (plan " + planSource + ", layout v" + layoutVersion + ", " + worldType + ", " + values.size()
-            + " values, pinned by " + createdBy + ")";
+        return profile + " (plan "
+            + planSource
+            + ", layout v"
+            + layoutVersion
+            + ", "
+            + worldType
+            + ", "
+            + values.size()
+            + " values, pinned by "
+            + createdBy
+            + ")";
     }
 
     @Override
