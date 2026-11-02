@@ -159,9 +159,15 @@ public final class MeteoriteOracle implements StructureOracle {
         }
         CraterBasin.Builder builder = building.get(key);
         if (builder == null) {
-            builder = building.put(
-                key,
-                new CraterBasin.Builder(heights, site.x(), site.z(), MeteoriteShape.of(site.seed()), nearCity(site)));
+            builder = building
+                .put(
+                    key,
+                    new CraterBasin.Builder(
+                        heights,
+                        site.x(),
+                        site.z(),
+                        MeteoriteShape.of(site.seed()),
+                        nearCity(site)));
         }
         if (builder.step(STEP_NANOS)) {
             cache.put(key, build(site, builder.build()));
