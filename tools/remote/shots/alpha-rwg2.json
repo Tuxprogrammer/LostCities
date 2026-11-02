@@ -54,12 +54,12 @@
     {
       "name": "village",
       "find": {
-        "cmd": "lostcities find village 120 best",
+        "cmd": "lostcities find village 48 best",
         "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
         "timeout": 300
       },
       "wait": 3,
-      "caption": "Village sewn into the city: a village's gate where the city's lane meets it, seen from beside the lane, the city on one side and the village on the other. The clearest of every gate within 120 chunks of the spawn."
+      "caption": "Village sewn into the city: a village's gate where the city's lane meets it, seen from beside the lane, the city on one side and the village on the other. The clearest gate within 48 chunks of the spawn, of the village by the pond that the reserved-lot and soft-edge shots show; 120 chunks out the clearest is a village in a forest of tall trees."
     },
     {
       "name": "reserved",

@@ -160,7 +160,7 @@ tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <s
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot> -- --level-type RWG --world shots-rwg
 ```
 
-The alpha gate's set of real cities is two lists, one per world type, whose every shot but the RWG2 monument takes its position and view from `/lostcities find` (D124): city from above, street level, a building interior, the city's edge, a village's gate, a reserved lot and a soft edge. The village shots, and on classic RWG the reserved lot and the soft edge too, use `find … best` within 120 (RWG2) or 200 chunks (classic RWG), since classic RWG's nearest village on seed 4242 sits on a mountainside (D-A-6); the RWG2 soft edge stays the nearest, the bank between a street and a village's pond.
+The alpha gate's set of real cities is two lists, one per world type, whose every shot but the RWG2 monument takes its position and view from `/lostcities find` (D124): city from above, street level, a building interior, the city's edge, a village's gate, a reserved lot and a soft edge. The village shots, and on classic RWG the reserved lot and the soft edge too, use `find … best` within 48 (RWG2) or 200 chunks (classic RWG), since classic RWG's nearest village on seed 4242 sits on a mountainside (D-A-6); the RWG2 soft edge stays the nearest, the bank between a street and a village's pond.
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/alpha-rwg2.json --slot <slot>
