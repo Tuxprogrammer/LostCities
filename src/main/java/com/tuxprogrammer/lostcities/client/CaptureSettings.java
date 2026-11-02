@@ -24,6 +24,12 @@ public final class CaptureSettings {
     public static final String CHUNK_RADIUS_PROPERTY = "lostcitiesnh.captureChunkRadius";
     /** Whether clouds are drawn: default {@code false}, since they hide a city from above. */
     public static final String CLOUDS_PROPERTY = "lostcitiesnh.captureClouds";
+    /**
+     * Server the client joins from the main menu, {@code host:port}; unset, the client does not join by itself. The
+     * shot runner uses this instead of the launcher's {@code --server}, which races FML's handshake (see
+     * {@link CleanCapture}).
+     */
+    public static final String SERVER_PROPERTY = "lostcitiesnh.captureServer";
 
     static final int DEFAULT_FOV = 70;
     static final int DEFAULT_RENDER_DISTANCE = 10;
@@ -32,12 +38,17 @@ public final class CaptureSettings {
     private final int renderDistance;
     private final int chunkRadius;
     private final boolean clouds;
+    private final String serverHost;
+    private final int serverPort;
 
-    private CaptureSettings(int fov, int renderDistance, int chunkRadius, boolean clouds) {
+    private CaptureSettings(int fov, int renderDistance, int chunkRadius, boolean clouds, String serverHost,
+        int serverPort) {
         this.fov = fov;
         this.renderDistance = renderDistance;
         this.chunkRadius = chunkRadius;
         this.clouds = clouds;
+        this.serverHost = serverHost;
+        this.serverPort = serverPort;
     }
 
     /**
@@ -52,7 +63,33 @@ public final class CaptureSettings {
         int renderDistance = clamp(intValue(properties, RENDER_DISTANCE_PROPERTY, DEFAULT_RENDER_DISTANCE), 2, 16);
         int chunkRadius = clamp(intValue(properties, CHUNK_RADIUS_PROPERTY, renderDistance - 1), 0, renderDistance);
         boolean clouds = Boolean.parseBoolean(properties.getProperty(CLOUDS_PROPERTY, "false"));
-        return new CaptureSettings(fov, renderDistance, chunkRadius, clouds);
+        String host = null;
+        int port = 0;
+        String server = properties.getProperty(SERVER_PROPERTY, "").trim();
+        int colon = server.lastIndexOf(':');
+        if (colon > 0 && colon < server.length() - 1) {
+            int parsed = intValue(server.substring(colon + 1), -1);
+            if (parsed >= 1 && parsed <= 65535) {
+                host = server.substring(0, colon);
+                port = parsed;
+            }
+        }
+        return new CaptureSettings(fov, renderDistance, chunkRadius, clouds, host, port);
+    }
+
+    /** Returns whether the client joins a server by itself from the main menu. */
+    public boolean joinsServer() {
+        return serverHost != null;
+    }
+
+    /** Returns the host to join, or {@code null}. */
+    public String serverHost() {
+        return serverHost;
+    }
+
+    /** Returns the port to join, or 0. */
+    public int serverPort() {
+        return serverPort;
     }
 
     /** Returns the field of view in degrees. */
@@ -77,11 +114,22 @@ public final class CaptureSettings {
 
     @Override
     public String toString() {
-        return "fov=" + fov + " renderDistance=" + renderDistance + " chunkRadius=" + chunkRadius + " clouds=" + clouds;
+        return "fov=" + fov
+            + " renderDistance="
+            + renderDistance
+            + " chunkRadius="
+            + chunkRadius
+            + " clouds="
+            + clouds
+            + " server="
+            + (serverHost == null ? "none" : serverHost + ":" + serverPort);
     }
 
     private static int intValue(Properties properties, String key, int fallback) {
-        String value = properties.getProperty(key);
+        return intValue(properties.getProperty(key), fallback);
+    }
+
+    private static int intValue(String value, int fallback) {
         if (value == null) {
             return fallback;
         }

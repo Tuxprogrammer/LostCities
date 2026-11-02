@@ -112,7 +112,7 @@ def check_shot(i, shot, plan, seen):
     if unknown:
         fail("%s: unknown keys %s" % (where, sorted(unknown)))
     name = shot.get("name", "")
-    if not isinstance(name, str) or not NAME.match(name) or name in seen or name.startswith("joined"):
+    if not isinstance(name, str) or not NAME.match(name) or name in seen:
         fail("%s: bad or repeated name %r" % (where, name))
     seen.add(name)
     s = {"name": name, "caption": shot.get("caption", ""), "yaw": float(shot.get("yaw", 0)),
@@ -320,7 +320,9 @@ class Run:
 
     def client_jvm(self):
         p = self.plan
+        # The mod joins from the main menu (captureServer): the launcher's --server races FML's handshake.
         props = ["-Dlostcitiesnh.testHooks=true", "-Dlostcitiesnh.capture=true",
+                 "-Dlostcitiesnh.captureServer=%s" % SERVER_ADDRESS,
                  "-Dlostcitiesnh.captureFov=%d" % int(p["fov"]),
                  "-Dlostcitiesnh.captureRenderDistance=%d" % int(p["render_distance"]),
                  "-Dlostcitiesnh.captureClouds=%s" % ("true" if p["clouds"] else "false")]
@@ -333,8 +335,8 @@ class Run:
             if os.path.exists(self.hold):
                 os.remove(self.hold)
             mark = self.console.size()
-            argv = [os.path.join(RP, "client-run.sh"), "--display", str(self.args.display), "--server",
-                    SERVER_ADDRESS, "--mod", self.args.mod, "--user", user, "--shot", "joined-%d" % attempt,
+            argv = [os.path.join(RP, "client-run.sh"), "--display", str(self.args.display),
+                    "--mod", self.args.mod, "--user", user, "--shot", "menu-%d" % attempt,
                     "--wait", "1", "--timeout", str(int(self.left())), "--hold", self.hold, "--restore-options",
                     "--jvm", self.client_jvm()]
             self.client = self.start("client-%d" % attempt, argv)
@@ -356,8 +358,8 @@ class Run:
                 new = self.console.text(mark)
                 if re.search(r"\b%s joined the game" % user, new):
                     return "joined"
-                if re.search(r"\b%s lost connection" % user, new):
-                    return "lost connection"
+                if len(re.findall(r"\b%s lost connection" % user, new)) >= 2:   # the mod retries once itself
+                    return "lost connection twice"
                 if self.client.poll() is not None:
                     return "client exited"
                 if CRASH.search(self.client_log.text()):
@@ -366,7 +368,10 @@ class Run:
 
             result = self.wait_for("%s to join" % user, outcome, self.args.join_timeout, poll=2) or "join timeout"
             if result == "joined":
-                self.log("%s joined (attempt %d)" % (user, attempt))
+                drops = len(re.findall(r"\b%s lost connection" % user, self.console.text(mark)))
+                if drops:
+                    self.notes.append("client %d: joined after %d dropped join" % (attempt, drops))
+                self.log("%s joined (client %d)" % (user, attempt))
                 return
             self.log("join attempt %d failed: %s; stopping that client" % (attempt, result))
             self.notes.append("join attempt %d: %s" % (attempt, result))

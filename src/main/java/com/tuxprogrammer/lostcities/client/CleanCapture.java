@@ -4,7 +4,11 @@ import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MathHelper;
@@ -13,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.tuxprogrammer.lostcities.LostCities;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -32,6 +37,8 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  * <li>Any screen that opens in the world (other than terrain download) is closed.</li>
  * <li>Field of view, render distance and clouds come from {@link CaptureSettings}. They are set in memory only and
  * never saved by this class; the shot runner also restores the client's options files after the run.</li>
+ * <li>With {@code -Dlostcitiesnh.captureServer=<host>:<port>}, the client joins that server from the main menu by
+ * itself, avoiding a race in FML's startup join ({@code joinFromMenu}).</li>
  * <li>Each tick a {@link SettleTracker} watches the camera, the chunks around it and the terrain build queue
  * ({@link TerrainProbe}), and the log gets {@code [LCNH-CAPTURE] settled ...} once the viewpoint is complete and still,
  * and {@code [LCNH-CAPTURE] moving} when it changes. The runner screenshots only after a settled line at its
@@ -49,11 +56,19 @@ public final class CleanCapture {
 
     /** Ticks between progress lines while a viewpoint is still loading: ten seconds. */
     static final int PROGRESS_TICKS = 200;
+    /** Joins tried from the main menu at most: the first and one retry. */
+    static final int MAX_JOINS = 2;
+    /** Ticks on the main menu before joining: two seconds, so its first frames are drawn. */
+    static final int MENU_TICKS = 40;
+    /** Ticks on the disconnected screen before the retry: ten seconds. */
+    static final int RETRY_TICKS = 200;
 
     private final CaptureSettings settings;
     private final TerrainProbe probe;
     private final SettleTracker tracker = new SettleTracker();
     private boolean announced;
+    private int joins;
+    private int idleTicks;
 
     private CleanCapture(CaptureSettings settings, TerrainProbe probe) {
         this.settings = settings;
@@ -112,6 +127,7 @@ public final class CleanCapture {
         if (world == null || player == null) {
             tracker.reset();
             announced = false;
+            joinFromMenu(mc);
             return;
         }
         keepFrameClean(mc);
@@ -157,6 +173,44 @@ public final class CleanCapture {
     private boolean loadingForAWhile() {
         int ticks = tracker.ticksSinceMove();
         return !tracker.settled() && ticks > 0 && ticks % PROGRESS_TICKS == 0;
+    }
+
+    /**
+     * With {@link CaptureSettings#SERVER_PROPERTY} set, joins that server from the main menu, and once more after a
+     * disconnect.
+     *
+     * <p>
+     * FML's own route, which the launcher's {@code --server} takes ({@code FMLClientHandler.connectToServerAtStartup}
+     * and {@code connectToServer}, Forge 10.13.4.1614), opens the connection before it creates the latch its handshake
+     * thread waits on, and its fallback never creates it. Against a server on the same machine the login reply can
+     * arrive first, and the handshake fails with {@code playClientBlock is null}: the real-pack client lost two joins in
+     * a row this way. {@code connectToRealmsServer} only creates that latch, so calling it first and then opening the
+     * connection removes the race.
+     */
+    private void joinFromMenu(Minecraft mc) {
+        if (!settings.joinsServer() || joins >= MAX_JOINS) {
+            return;
+        }
+        GuiScreen screen = mc.currentScreen;
+        boolean dropped = screen instanceof GuiDisconnected;
+        boolean menu = screen instanceof GuiMainMenu || screen != null && screen.getClass()
+            .getSimpleName()
+            .contains("MainMenu");
+        if (!menu && !dropped) {
+            idleTicks = 0;
+            return;
+        }
+        if (++idleTicks < (dropped ? RETRY_TICKS : MENU_TICKS)) {
+            return;
+        }
+        idleTicks = 0;
+        joins++;
+        String host = settings.serverHost();
+        int port = settings.serverPort();
+        LostCities.LOG.info("{} joining {}:{} (attempt {} of {})", TAG, host, port, joins, MAX_JOINS);
+        FMLClientHandler.instance()
+            .connectToRealmsServer(host, port);
+        mc.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), mc, host, port));
     }
 
     /** Hides the GUI, the hand and the toast, keeps first person, and closes any screen but terrain download. */

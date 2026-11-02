@@ -55,6 +55,23 @@ public class CaptureSettingsTest {
     }
 
     @Test
+    public void joinsOnlyAWellFormedServer() {
+        Properties p = new Properties();
+        assertFalse(CaptureSettings.from(p).joinsServer(), "no join without the property");
+
+        p.setProperty(CaptureSettings.SERVER_PROPERTY, " 127.0.0.1:25800 ");
+        CaptureSettings settings = CaptureSettings.from(p);
+        assertTrue(settings.joinsServer());
+        assertEquals("127.0.0.1", settings.serverHost());
+        assertEquals(25800, settings.serverPort());
+
+        for (String bad : new String[] { "127.0.0.1", ":25800", "127.0.0.1:", "host:port", "host:0", "host:70000" }) {
+            p.setProperty(CaptureSettings.SERVER_PROPERTY, bad);
+            assertFalse(CaptureSettings.from(p).joinsServer(), bad);
+        }
+    }
+
+    @Test
     public void malformedNumbersTakeTheirDefaults() {
         Properties p = new Properties();
         p.setProperty(CaptureSettings.FOV_PROPERTY, "wide");
