@@ -402,12 +402,15 @@ public final class CityFinder {
     static final int HIGHWAY_EYE = 15;
     /** Pitch of the highway view, degrees. */
     static final float HIGHWAY_PITCH = 25f;
-    /** How far to the side of a ramp its view stands, in blocks. */
-    static final int RAMP_SIDE = 28;
+    /**
+     * How far from the ramp chunk's middle, across its axis, its view stands, in blocks: at the chunk's edge, over the
+     * ramp's own chunk, which holds no building; a view from farther out lands in the buildings beside it.
+     */
+    static final int RAMP_SIDE = 7;
     /** Height of the ramp view above the ramp's top. */
-    static final int RAMP_EYE = 8;
-    /** Pitch of the ramp view, degrees. */
-    static final float RAMP_PITCH = 15f;
+    static final int RAMP_EYE = 16;
+    /** Pitch of the ramp view, degrees: steep, down onto the steps. */
+    static final float RAMP_PITCH = 55f;
     /**
      * How far south of a station's middle its view stands, and how high above its floor: over the station's own chunk,
      * which its clearing keeps open, since a view from the side lands in the buildings around it.

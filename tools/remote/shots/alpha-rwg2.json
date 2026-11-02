@@ -109,7 +109,7 @@
         "timeout": 240
       },
       "wait": 3,
-      "caption": "Highway ramp (M06, AR-10): where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from the side: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
+      "caption": "Highway ramp (M06, AR-10): where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from above the ramp's edge: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
     },
     {
       "name": "station",
