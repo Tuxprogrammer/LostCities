@@ -88,7 +88,7 @@ D28 rule 6 lets palettes carry tile-entity data, as upstream's do for chests, sp
 
 ## Checks at load
 
-Every check reports the file, the field and the value. In the dev environment a failure fails the dev self-check; in a real pack the asset is skipped with one log line ([CONTRIBUTING § Code standards](../../../CONTRIBUTING.md#code-standards)). `AssetValidationTest` runs the same checks on the bundled set ([CONTRIBUTING § Testing](../../../CONTRIBUTING.md#testing)).
+The checks below are implemented in `lostcities.asset` (M02). Every check reports the file, the field and the value. In the dev environment a failure fails the dev self-check; in a real pack the asset is skipped with one log line ([CONTRIBUTING § Code standards](../../../CONTRIBUTING.md#code-standards)). `AssetValidationTest` runs the same checks on the bundled set ([CONTRIBUTING § Testing](../../../CONTRIBUTING.md#testing)).
 
 | Check | Fixes |
 |---|---|
@@ -105,7 +105,65 @@ Every check reports the file, the field and the value. In the dev environment a 
 | `range` tests parse | (upstream already throws at load) |
 | No entry names a never-placed block or a GT ore host | D18, D28 rule 7, D29 |
 | Dead fields (`streetblocks.width`, `streetvariant`) warn that they have no effect | ASSET-22, ASSET-27 |
-| Reachability: the dev self-check lists assets nothing names (upstream's `stuff/example` and two palettes) | ASSET-22 |
+| Reachability: the asset report lists, as notes, assets nothing reachable from a world style or predefined city names (upstream's `stuff/example`, `glass_side_variant_street`, `bricks_desert_redsand`, and `citystyle_border` with its style, palettes and variants, which only a profile's alternative city style names: profiles are not assets, so the report cannot see that use) | ASSET-22 |
+
+### Severity, rejection and the report
+
+Every problem has a severity (`asset.AssetProblem`):
+
+- **Error**: the asset is rejected, with one log line per problem and one "asset rejected" line, and loading carries on. An asset that names a rejected asset through a required reference is rejected in turn, with a message saying so. The dev self-check fails on any error.
+- **Warning**: logged once; the asset is used. Optional references that do not resolve, properties with no 1.7.10 meaning, buildings with no part for some floor, and dead fields in an override are warnings.
+- **Note**: a fact for the report, logged at debug level: a fallback block taken because a mod is absent, an override replacing a jar file, an asset nothing reaches, and the dead `width` and `streetvariant` fields of upstream's own bundled city styles (bundled files carry them as upstream does, so the boot has no warnings).
+
+One summary line always reaches the log (`[LCNH-ASSETS] loaded 324 assets {...}, 0 errors, 0 warnings, 0 fallbacks, ...`). `-Dlostcitiesnh.assetReport=true` logs the full report at `postInit`, and the manual-only scenario `assets.pack_resolution` logs it and fails if any fallback was taken or any variety-pool block is not registered ([docs/testing/](../../testing/README.md)).
+
+An unknown block name, a direct reference to an absent mod, the 1.12 `@meta` form, or a never-placed block in a direct reference is an error: there is no last-resort block, so the asset is rejected rather than built with a guessed block. Inside a mapping chain, a candidate whose mod is absent or which the never-place list forbids is skipped and the next one is used, which is how the documented fallbacks work.
+
+## The block-name map
+
+The D19 mapping, the decorative metals, the never-place list and the variety pools are this mod's own data, under `data/lostcitiesnh/blockmap/` in the jar. They are never overridden from the config folder; an override that needs another block names it directly as `modid:name:meta`.
+
+| File | Holds | Read by |
+|---|---|---|
+| `mapping.json` | One row per 1.20 block id: the 1.7.10 fallback chain (`to`, primary first, a vanilla block last), the metadata `rule`, a `double` chain for slabs, a tile-entity `tag` (the potted cactus), and `hardAir` for `minecraft:structure_void`. Ids may contain `{color}`, expanded over the sixteen dye colors in dye order, with the color index as metadata. **Scoped rows** apply only to the assets they name: the cabin's copper and the gas station's and restaurant parking's iron (each with its `metal` and `metalOff` chain, `capExempt`), and the oil rig's diamond look-alike (D30). **Treasure** lists the characters that are loot (`common`'s `!`). `metalFallback` is the block a metal entry takes with its flag off when it names no `metalOff` | `asset.block.BlockMapping` |
+| `metals.json` | Per decorative metal (D29), the blocks one flag covers in every mod: `modid:name` for every metadata, `modid:name:meta` for one | `asset.block.MetalCatalog` |
+| `never_place.json` | The never-place list by reason, with `*` prefixes (`gregtech:gt.blockcasings*`) | `asset.block.NeverPlaceList` |
+| `pools.json` | The [variety pools](block-catalog/index.md#variety-pools), generated from the catalog's tables by `tools/asset-convert/pools_from_catalog.py`: per pool its candidates with weight, blocks, fallback and flags, its rubble sets and its set-piece rows. Edit the catalog and rerun the script, never the file | `asset.block.VarietyPools` |
+
+Metadata rules (`asset.block.MetaRule`), one per D19 property set: `stairs`, `slab`, `door`, `torch`, `wall_torch`, `facing` (ladders, furnaces, chests), `lever`, `rail`, `powered_rail`, `trapdoor`, `sapling`, `leaves`, `barrel`, `chain`, `lantern`, `anvil`, `vine`, and `plain`. The values are the pre-flattening encodings 1.8 to 1.12 kept from 1.7.10 for the same blocks, which the 1.13 flattening turned into these properties; `MetaRuleTest` has a test per rule. A candidate may name its own rule where its block encodes differently from the primary (the barrel's fallback chest uses `facing`). Each rule also gives the block's rotation family, from which `asset.transform.MetaRotation` turns metadata with a part's transform.
+
+Resolution is checked twice. `AssetValidationTest` loads every bundled asset over a registry of vanilla 1.7.10 alone, where every name must resolve through its vanilla fallback, and over the full map, where every name must take its primary. The real-pack scenario `assets.pack_resolution` checks the live GTNH 2.9.0 registry: in M02 every mapped primary resolved with no fallback, on classic RWG and RWG2 Continents worlds.
+
+## Bundled assets
+
+`tools/asset-convert/convert.py` builds `src/main/resources/data/lostcities/lostcities/` from upstream's tree at the pinned commit (`git show 1.20:...`): it copies every file byte for byte, applies the conversions below as exact text patches that must each match, adds this mod's two rubble variants, and writes `data/lostcitiesnh/assets.index`, the list of bundled files the mod reads from the jar (a jar cannot be listed portably). A re-pin reruns the script; a patch that no longer matches stops it.
+
+| File | Conversion | Why |
+|---|---|---|
+| `worldstyles/standard.json`, `standard_everywhere.json` | Biome tags to `type:` entries; the desert style's `minecraft:desert` and `minecraft:badlands` to `type:SANDY` plus `rwg:canyon`, `rwg:canyon_forest`, `rwg:oasis`, `rwg:red_oasis`, excluding `type:OCEAN`; `standard`'s ocean multiplier adds `name:Kelp Forest` and `name:Coral Reef`; the cabin's and radio tower's land filters exclude those two | P05-6, P-PROF-4, D31, D32 |
+| `stuff/example.json` | Biome tags to `type:` entries; `#forge:stone` to `ore:stone` | P05-6, D19 |
+| `palettes/bricks_desert_redsand.json` | `minecraft:red_sandstone@2` to `minecraft:cut_red_sandstone` | ASSET-03 |
+| `palettes/bricks_desert.json`, `bricks_desert_orange.json`, `default_desert.json`, `bricks_desert_red.json` | A `}` rubble character from `variants/sandstone_rubble` (`red_sandstone_rubble` for the red palette) | P05-5, D31; ASSET-20 |
+| `variants/sandstone_rubble.json`, `red_sandstone_rubble.json` (new) | Shaped like `stonebrick_rubble`: about 70 % cut sandstone, the rest sandstone, slabs and stairs | P05-5 |
+
+Block names stay 1.20 names in every file; the map turns them into 1.7.10 blocks at load. Condition values stay upstream's 1.20 loot-table and entity ids; `08-loot-mobs-blocks` maps them (D20). Provenance: [docs/assets/CREDITS.md](../../assets/CREDITS.md) and [THIRD-PARTY-NOTICES.md](../../../THIRD-PARTY-NOTICES.md).
+
+## The asset API
+
+What `layout` and `worldgen` consume, all in plain Java under `com.tuxprogrammer.lostcities.asset`:
+
+| Class | Use |
+|---|---|
+| `AssetSet` | The loaded set: typed lookups by `AssetId` (`building`, `part`, `palette`, `style`, `cityStyle`, `worldStyle`, `scattered`, `stuff`, `condition`, `variant`, `multiBuilding`, `predefinedCities`), `stuffByTag`, `codeBlock` (blocks upstream's code names: doors, leaves, rubble, torches, vines), `defaultLeaves` and `defaultRubble`, `pools`, `mapping` (rotation families), `hash`, `fileHashes` and `changedFiles` for the P05-3 warning, `problems`, `fallbacks`. `core.assets.LoadedAssets.current()` returns the set loaded at `postInit` |
+| `AssetId` | A full id; `AssetId.parse` normalizes a bare name |
+| `BlockRef`, `block.BlockChoice` | A resolved block, and its metal-off block; `block(MetalFlags)` picks one, `family()` gives its rotation family, `isHardAir()` the marker |
+| `block.MetalFlags` | A world's decorative-metal flags; `config.DecorativeMetalsConfig.flags()` reads the config's |
+| `palette.CompiledPalette` | `compile(flags, layers)` over a style draw, the building's palette and a part's; `withLayer(partPalette)`; `get`, `choice`, `getAll`, `damaged`, `info`, `template`, `describe` |
+| `model.Style`, `model.CityStyle`, `model.WorldStyle` | `randomPalettes(random)`; settings, `selectors`, `pick(kind, random, chunkX, chunkZ)`, `streetParts`; `randomCityStyle(biome, random)`, `cityChanceMultiplier`, part-selector `parts(group, key)` |
+| `model.Building`, `model.Part`, `model.MultiBuilding` | `randomPart` and `randomPart2` with a `ConditionContext`; slices and columns, metadata; the grid |
+| `model.Condition`, `model.ConditionContext` | `randomValue(random, context)`, null when nothing matches; `ConditionContext.floorOf(y, ground)` with floor division |
+| `match.BiomeDescriptor`, `BiomeMatcher`, `BlockMatcher`, `NameMatcher` | The facts and the tests; `core.assets.BiomeDescriptors.at(world, x, z)` builds the facts, with `compat.rwg.RealisticBiomes` for `rwg:` |
+| `transform.Transform`, `transform.MetaRotation` | Part positions and block metadata under the seven transforms |
 
 ## Writing assets
 
