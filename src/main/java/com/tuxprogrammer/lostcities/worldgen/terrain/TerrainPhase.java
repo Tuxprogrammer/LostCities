@@ -30,6 +30,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ContentContext;
  * retaining walls of steep strips, a lane.</li>
  * <li>Any other chunk: the blend toward nearby cities and cores, then, beside a core (the city's margin), the strip
  * that meets the core's own edge columns; the plan's content (a bridge span), and a village lane with its steps.</li>
+ * <li>In each of those, the highways, railways and rail dungeon of the chunk last (M06), so nothing the city or the
+ * blend writes cuts them; in a core only a railway deep enough to pass under it.</li>
  * <li>Explosion damage, the floating-fragment pass, debris from damaged neighbors, then vines (stages 10 and
  * 13a).</li>
  * </ol>
@@ -109,6 +111,8 @@ public final class TerrainPhase {
 
     private static final long CONTENT_X = 341873128712L;
     private static final long CONTENT_Z = 132897987541L;
+    /** "NETWORKS": the network random's salt, so its picks never follow the content random's. */
+    private static final long NETWORK_SALT = 0x4e4554574f524b53L;
 
     private final TerrainContext context;
     private final CityPlan cityPlan;
@@ -160,9 +164,13 @@ public final class TerrainPhase {
         ChunkPlan plan = cityPlan.chunk(chunkX, chunkZ);
         if (plan.isCore()) {
             int paved = plan.lane() == null ? 0 : VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
-            return paved > 0 ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, paved) : UNTOUCHED;
+            // A railway deep enough to pass under the core (D30, D31); nothing else the city makes.
+            boolean rail = network(buffer, chunkX, chunkZ, plan);
+            return paved > 0 || rail ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, paved) : UNTOUCHED;
         }
-        if (!plan.isCity() && plan.lane() == null && !nearCityOrCore(chunkX, chunkZ)) {
+        if (!plan.isCity() && plan.lane() == null
+            && plan.network() == ChunkContent.NONE
+            && !nearCityOrCore(chunkX, chunkZ)) {
             return UNTOUCHED;
         }
         ChunkPlan[] sides = sides(chunkX, chunkZ);
@@ -207,6 +215,7 @@ public final class TerrainPhase {
                             null));
                 changed = true;
             }
+            changed |= network(buffer, chunkX, chunkZ, plan);
         }
         if (plan.lane() != null) {
             if (!plan.isCity()) {
@@ -264,6 +273,24 @@ public final class TerrainPhase {
         if (strips) {
             SoftEdges.retainingWalls(buffer, plan, targets, depth, inner);
         }
+        network(buffer, chunkX, chunkZ, plan);
+    }
+
+    /**
+     * Writes the chunk's highways, railways and rail dungeon (M06), after everything the city or the blend wrote, so
+     * no later step cuts them.
+     *
+     * @return whether anything was written
+     */
+    private boolean network(ChunkBuffer buffer, int chunkX, int chunkZ, ChunkPlan plan) {
+        if (plan.network() == ChunkContent.NONE) {
+            return false;
+        }
+        plan.network()
+            .write(
+                buffer,
+                new ContentContext(chunkX, chunkZ, plan, cityPlan, context, networkRandom(chunkX, chunkZ), null));
+        return true;
     }
 
     /**
@@ -299,6 +326,23 @@ public final class TerrainPhase {
      */
     public static long contentSeed(long worldSeed, int chunkX, int chunkZ) {
         return SeedMix.chunk(worldSeed, chunkX, chunkZ, CONTENT_X, CONTENT_Z);
+    }
+
+    /**
+     * Returns the seed of a chunk's network random, from which highway and railway parts are picked out of lists
+     * longer than one; the bundled lists have one part each, so the bundled assets draw nothing from it.
+     *
+     * @param worldSeed the world seed
+     * @param chunkX    chunk X
+     * @param chunkZ    chunk Z
+     * @return the seed
+     */
+    public static long networkSeed(long worldSeed, int chunkX, int chunkZ) {
+        return SeedMix.chunk(worldSeed ^ NETWORK_SALT, chunkX, chunkZ, CONTENT_X, CONTENT_Z);
+    }
+
+    private Random networkRandom(int chunkX, int chunkZ) {
+        return new Random(networkSeed(context.worldSeed(), chunkX, chunkZ));
     }
 
     private Random contentRandom(int chunkX, int chunkZ) {

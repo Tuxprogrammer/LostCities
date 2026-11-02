@@ -172,4 +172,20 @@ public final class CityWriteContext {
     public boolean isEmpty(BlockRef block) {
         return classifier.isEmpty(block);
     }
+
+    /**
+     * Returns whether a block is a log, leaf, plant or vine: what the clearing above a highway leaves standing
+     * (upstream keeps leaves and logs; new-spec 06, the clearing row).
+     *
+     * @param block the block
+     * @return whether it is foliage
+     */
+    public boolean isFoliage(BlockRef block) {
+        return classifier.isFoliage(block);
+    }
+
+    /** Returns whether a block is water or lava, still or flowing. */
+    public boolean isLiquid(BlockRef block) {
+        return classifier.isLiquid(block);
+    }
 }

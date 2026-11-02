@@ -56,6 +56,8 @@ public final class ChunkPlan {
     private final float explosionChance;
     private final StyleBlocks style;
     private final ChunkContent content;
+    private final ChunkContent network;
+    private final boolean highway;
     private final short[] footprint;
     private final LanePath lane;
     private final List<PopulationJob> fixedJobs;
@@ -81,6 +83,8 @@ public final class ChunkPlan {
         this.explosionChance = b.explosionChance;
         this.style = b.style;
         this.content = b.content;
+        this.network = b.network;
+        this.highway = b.highway;
         this.footprint = b.footprint == null ? null : b.footprint.clone();
         this.lane = b.lane;
         this.fixedJobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
@@ -224,6 +228,28 @@ public final class ChunkPlan {
      */
     public ChunkContent content() {
         return content;
+    }
+
+    /**
+     * Returns the writer of the chunk's highways, railways and rail dungeon (M06), which the terrain phase runs after
+     * the chunk's own content, its street borders, ruins and rubble, or after the blend outside a city;
+     * {@link ChunkContent#NONE} when none passes. In a landmark core it is only ever a railway deep enough to pass
+     * under the core (D30, D31).
+     *
+     * @return the network writer
+     */
+    public ChunkContent network() {
+        return network;
+    }
+
+    /**
+     * Returns whether a highway passes through the chunk, so lakes, lava and dungeons stay out of its population area
+     * as they stay out of a city's (M06: no slope or pit eats a highway, alpha review AR-10).
+     *
+     * @return whether a highway passes
+     */
+    public boolean hasHighway() {
+        return highway;
     }
 
     /**
@@ -386,6 +412,8 @@ public final class ChunkPlan {
         private float explosionChance = Float.NaN;
         private StyleBlocks style = StyleBlocks.defaults();
         private ChunkContent content = ChunkContent.NONE;
+        private ChunkContent network = ChunkContent.NONE;
+        private boolean highway;
         private short[] footprint;
         private LanePath lane;
         private final List<PopulationJob> jobs = new ArrayList<>();
@@ -463,6 +491,18 @@ public final class ChunkPlan {
         /** Sets the content writer. */
         public Builder content(ChunkContent value) {
             this.content = Objects.requireNonNull(value);
+            return this;
+        }
+
+        /** Sets the network writer (highways, railways, rail dungeon). */
+        public Builder network(ChunkContent value) {
+            this.network = Objects.requireNonNull(value);
+            return this;
+        }
+
+        /** Marks the chunk as one a highway passes through. */
+        public Builder highway(boolean value) {
+            this.highway = value;
             return this;
         }
 
