@@ -662,8 +662,7 @@ public final class AssetLoader {
         out.put("repair.boards.birch", "minecraft:planks:2");
         String[] plain = { "minecraft:cobblestone:0", "minecraft:stonebrick:0", "minecraft:brick_block:0",
             "minecraft:hardened_clay:0", "minecraft:sandstone:0", "minecraft:sandstone:2",
-            "minecraft:double_stone_slab:8", "minecraft:quartz_block:0", "minecraft:planks:0", "minecraft:planks:1",
-            "minecraft:planks:5" };
+            "minecraft:double_stone_slab:8", "minecraft:quartz_block:0" };
         for (String block : plain) {
             out.put("repair.material." + block.substring("minecraft:".length()), block);
         }

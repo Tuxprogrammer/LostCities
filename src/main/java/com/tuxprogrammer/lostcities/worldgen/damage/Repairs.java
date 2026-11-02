@@ -43,11 +43,11 @@ public final class Repairs {
         BlockColors.EMPTY);
 
     /** The color difference a patch aims for: visibly different, clearly related. */
-    static final float TARGET_DIFFERENCE = 12f;
+    static final float TARGET_DIFFERENCE = 10f;
     /** Least color difference of a patch: anything closer reads as the same block. */
     static final float MIN_DIFFERENCE = 6f;
     /** Most color difference of a patch: anything further reads as a different material. */
-    static final float MAX_DIFFERENCE = 30f;
+    static final float MAX_DIFFERENCE = 22f;
     /** How many of the nearest materials a patch is drawn from. */
     static final int CHOICES = 3;
     /** The lowest repair line, as a share of the explosion's diameter above its bottom. */
