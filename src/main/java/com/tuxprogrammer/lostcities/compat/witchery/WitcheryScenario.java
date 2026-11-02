@@ -308,7 +308,8 @@ public final class WitcheryScenario implements Scenario {
                 // The oracle keeps a lot wherever any biome RWG can store there passes: none may stand outside one.
                 BiomeGenBase biome = storedBiome(world, target);
                 failures.add(
-                    target[0] + "," + target[1]
+                    target[0] + ","
+                        + target[1]
                         + " holds a structure but no lot was kept (stored biome "
                         + (biome == null ? "none" : biome.biomeName)
                         + ")");
@@ -398,8 +399,8 @@ public final class WitcheryScenario implements Scenario {
                         for (int y = SCAN_MIN_Y; y <= SCAN_MAX_Y; y++) {
                             Block block = chunk.getBlock(x, y, z);
                             String name = Block.blockRegistry.getNameForObject(block);
-                            if (name != null && (name.startsWith(WitcheryOracles.MOD_ID + ":")
-                                || STRUCTURE_BLOCKS.contains(name))) {
+                            if (name != null
+                                && (name.startsWith(WitcheryOracles.MOD_ID + ":") || STRUCTURE_BLOCKS.contains(name))) {
                                 int worldX = (cx << 4) + x;
                                 int worldZ = (cz << 4) + z;
                                 if (!scanned.contains(worldX, worldZ)) {
