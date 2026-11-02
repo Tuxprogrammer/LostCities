@@ -20,8 +20,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  * <p>
  * Upstream (ChunkFixer) wrote into the +X and +Z neighbors only when they had reached {@code FEATURES} and checked
  * {@code canSurvive} against blocks that may not exist yet. Here a pure rule replaces that test: a vine is placed
- * only where the plan says the neighbor's wall stands at that height and the neighbor's damage area does not reach
- * the section. Fixes:
+ * only where the plan says the neighbor's wall stands at that height and no explosion reaches the neighbor at or below
+ * that height (damage carries upward, so a section above an explosion's reach can lose its wall too). Fixes:
  * <ul>
  * <li>TERR-11: the result never depends on whether a neighbor was generated;</li>
  * <li>TERR-32: every column of a wall, 0 to 15, takes vines;</li>
@@ -123,7 +123,11 @@ public final class Vines {
         return placed;
     }
 
-    /** The pure survival rule: air here, the neighbor's planned wall at this height, and no damage in its section. */
+    /**
+     * The pure survival rule: air here, the neighbor's planned wall at this height, and no explosion reaching the
+     * neighbor at or below this height. Explosion damage carries upward and escalates once a layer is mostly gone
+     * ({@code ExplosionDamage}), so a wall can be missing in sections above those an explosion reaches.
+     */
     private static boolean canHang(ChunkBuffer buffer, ChunkPlan wall, DamageArea wallDamage, int x, int y, int z) {
         if (y < WorldLimits.MIN_Y || y > WorldLimits.MAX_Y
             || !buffer.get(x, y, z)
@@ -133,6 +137,6 @@ public final class Vines {
         if (y < wall.groundY() || y >= wall.maxHeight()) {
             return false;
         }
-        return !wallDamage.hasExplosions(y >> 4);
+        return !wallDamage.hasExplosions() || y < wallDamage.lowestExplosionY();
     }
 }

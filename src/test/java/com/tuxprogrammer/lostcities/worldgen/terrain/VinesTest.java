@@ -94,8 +94,11 @@ public class VinesTest {
         damaged[ChunkPlan.Side.EAST.ordinal()] = DamageArea
             .withExplosions(1, 0, Collections.singletonList(new Explosion(24, 85, 8, 12)));
         Vines.grow(buffer, context(1f), street(), sidesWithTowerEast(), damaged, Vines.random(1L, 0, 0));
-        for (int y = 80; y < 96; y++) {
-            assertEquals(BlockRef.AIR, buffer.get(15, y, 8), "no vine without the wall it needs at " + y);
+        for (int y = 64; y < 107; y++) {
+            assertEquals(
+                BlockRef.AIR,
+                buffer.get(15, y, 8),
+                "no vine at or above the explosion's reach, where damage carrying upward may take the wall, at " + y);
         }
     }
 }
