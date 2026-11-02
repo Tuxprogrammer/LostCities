@@ -166,13 +166,13 @@ There is no world-preset screen. The profile is server configuration, pinned int
 
 Each is split by chunk class: city, blend or untouched. The report also names the eight slowest invocations of a phase or a prefetch tick, with the height samples and structure-oracle time each took. An operator command and a server-stop log line print p50, p95, p99, p99.9 and max per series. Timing is measurement only. It never changes what is generated (no "skip detail when slow"), because that would break determinism.
 
-**Planning ahead.** The layout computes some of its work lazily in cells that reach far: a village's lanes are routed through the city map up to about 40 chunks away, a multibuilding area places its buildings over a block of chunks, a village's ground estimate reads about a hundred columns. The first chunk whose terrain phase touches such a cell would pay for all of its height samples at once. A plan prefetcher (`worldgen.overlay.PlanPrefetcher`, decision log D-A-1) therefore plans the chunks 6 chunks around every chunk the overlay generates, at the end of each server tick, within 3 ms. It asks for a plan with the world's height probe active, so a height the caches do not hold ends the attempt instead of being computed; the prefetcher fetches that one value and asks again. A VillageNames start, which cannot be split, runs alone at the start of a tick. Because plans are pure and every cache stores only complete values, the prefetcher changes when work is done, never what is generated. The caches are set-associative so a burst fetched piece by piece stays cached (D-A-2).
+**Planning ahead.** The layout computes some of its work lazily in cells that reach far: a village's lanes are routed through the city map up to about 40 chunks away, a multibuilding area places its buildings over a block of chunks, a village's ground estimate reads about a hundred columns. The first chunk whose terrain phase touches such a cell would pay for all of its height samples at once. A plan prefetcher (`worldgen.overlay.PlanPrefetcher`, decision log D125) therefore plans the chunks 6 chunks around every chunk the overlay generates, at the end of each server tick, within 3 ms. It asks for a plan with the world's height probe active, so a height the caches do not hold ends the attempt instead of being computed; the prefetcher fetches that one value and asks again. A VillageNames start, which cannot be split, runs alone at the start of a tick. Because plans are pure and every cache stores only complete values, the prefetcher changes when work is done, never what is generated. The caches are set-associative so a burst fetched piece by piece stays cached (D126).
 
 **Method**, on the build server, never a laptop:
 
 1. Dedicated GTNH 2.9.0 server with the real pack and its start flags, with ArchaicFix `logCascadingWorldgen = true` and GC logging on.
 2. Three fixed seeds, each on `RWG2_CONTINENTS` and on `RWG`.
-3. A scenario command generates a 64 × 64 chunk square in spiral order from spawn, one chunk at a time, with no players. This keeps Hodgepodge's player throttle out of the numbers. The first 512 chunks are discarded as JIT warm-up, and `city.sewing` runs before the timers are reset, so VillageNames' start constructor is compiled too (decision log D-A-4).
+3. A scenario command generates a 64 × 64 chunk square in spiral order from spawn, one chunk at a time, with no players. This keeps Hodgepodge's player throttle out of the numbers. The first 512 chunks are discarded as JIT warm-up, and `city.sewing` runs before the timers are reset, so VillageNames' start constructor is compiled too (decision log D128).
 4. **Baseline run** with the overlay disabled by config. It gives RWG's own `provideChunk` and `populate` distributions from the same timers.
 5. **Overlay run** with the default profile.
 6. One run of each under Java Flight Recorder, to attribute time to `rwg2.*`, `gregtech.*` and our package.
@@ -185,7 +185,7 @@ Each is split by chunk class: city, blend or untouched. The report also names th
 | B1 | Terrain phase on city chunks: p95 ≤ RWG's own `provideChunk` p50 in the same run |
 | B2 | Population phase on city chunks: p95 ≤ 0.5 × RWG's `populate` p50 |
 | B3 | Over the whole 64 × 64 region, all overlay work ≤ 15 % of RWG's total generation time |
-| B4 | No single chunk's overlay work above 10 ms at p99.9: half of Hodgepodge's 20 ms per-tick generation budget. Judged per terrain-phase and population-phase invocation and per prefetch tick; an invocation during which the JVM collected garbage is set apart and counted, since a 20 to 60 ms G1 pause lands wherever the server thread is (D-A-3) |
+| B4 | No single chunk's overlay work above 10 ms at p99.9: half of Hodgepodge's 20 ms per-tick generation budget. Judged per terrain-phase and population-phase invocation and per prefetch tick; an invocation during which the JVM collected garbage is set apart and counted, since a 20 to 60 ms G1 pause lands wherever the server thread is (D127) |
 | B5 | Oracle cache and layout caches bounded to 16 MB per world, freed on unload |
 
 The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceeded on the build server: `overlay.budget` ([docs/testing/](../testing/README.md)).
@@ -203,7 +203,7 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 | B5: plan and height caches, bound | **4.1 MB** (≤ 16) | **4.1 MB** (≤ 16) |
 | Oracle call, p50 / p99.9 (inside the terrain phase) | 0.33 / 1.66 | 0.79 / 1.39 (classic RWG computes all 256 columns) |
 
-Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99.9 over 1,269 chunks was 11.5 ms on RWG2 Continents: the first city chunks of a server's life, which B4's warm-up rule excludes. Java Flight Recorder attributed classic RWG's alpha-gate bursts (RWG's `getNewNoise` under the layout's samples, VillageNames' start constructor; D-A-1); three seeds and Hodgepodge's `showChunkGenDebug` cross-check remain open.
+Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99.9 over 1,269 chunks was 11.5 ms on RWG2 Continents: the first city chunks of a server's life, which B4's warm-up rule excludes. Java Flight Recorder attributed classic RWG's alpha-gate bursts (RWG's `getNewNoise` under the layout's samples, VillageNames' start constructor; D125); three seeds and Hodgepodge's `showChunkGenDebug` cross-check remain open.
 
 **Measured in M05** (D81's method, `city.budget`, decision log D117): the same server, seed 4242, real cities, 65 × 65 chunks in spiral order starting 20 chunks beside the city nearest the spawn, the first 512 dropped, the M05J release jar. Times in milliseconds.
 
@@ -220,7 +220,7 @@ Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99
 
 Classic RWG missed B4: a few chunks where the layout first met new ground asked for a burst of 20 to 52 height samples, each a whole classic RWG chunk (15.7 and 18.9 ms in two runs; 3 to 4 of 3,165 chunks above 10 ms; decision log D123). Two measures had taken classic RWG's B3 from 17.5 % to 12.4 %: a whole-chunk height cache in front of the oracle (D121) and one sky light pass per chunk instead of two (§2 step 5, D122).
 
-**Measured at the alpha gate**: the same method with `city.sewing` in the warm-up (D-A-4), the alpha follow-ups' jar with the plan prefetcher, two fresh worlds per world type. Times in milliseconds; where the two runs differ, both are given.
+**Measured at the alpha gate**: the same method with `city.sewing` in the warm-up (D128), the alpha follow-ups' jar with the plan prefetcher, two fresh worlds per world type. Times in milliseconds; where the two runs differ, both are given.
 
 | | RWG2 Continents | Classic RWG |
 |---|---|---|
