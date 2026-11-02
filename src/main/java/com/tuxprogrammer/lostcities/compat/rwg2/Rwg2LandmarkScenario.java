@@ -128,7 +128,11 @@ public final class Rwg2LandmarkScenario implements Scenario {
         spawnX = world.getSpawnPoint().posX;
         spawnZ = world.getSpawnPoint().posZ;
         chunksBefore = world.theChunkProviderServer.getLoadedChunkCount();
-        LostCities.LOG.info("[LCNH-RWG2] landmark scenario around {},{} ({})", spawnX, spawnZ, Rwg2Landmarks.settingsSummary(world));
+        LostCities.LOG.info(
+            "[LCNH-RWG2] landmark scenario around {},{} ({})",
+            spawnX,
+            spawnZ,
+            Rwg2Landmarks.settingsSummary(world));
     }
 
     @Override
@@ -262,7 +266,8 @@ public final class Rwg2LandmarkScenario implements Scenario {
                 check.misses,
                 check.firstMiss == null ? "" : " (first at " + check.firstMiss + ")");
             if (check.misses > 0) {
-                failures.add(check.name + ": " + check.misses + " protected columns not reserved, first " + check.firstMiss);
+                failures.add(
+                    check.name + ": " + check.misses + " protected columns not reserved, first " + check.firstMiss);
             }
         }
         String cityCheck = cityCheck(world);
@@ -309,10 +314,12 @@ public final class Rwg2LandmarkScenario implements Scenario {
         for (Landmark landmark : found.values()) {
             BlockRect first = landmark.footprint()
                 .get(0);
-            boolean wired = structures.landmarksTouching(first.minChunkX(), first.minChunkZ(), first.minChunkX(), first.minChunkZ())
+            boolean wired = structures
+                .landmarksTouching(first.minChunkX(), first.minChunkZ(), first.minChunkX(), first.minChunkZ())
                 .stream()
-                .anyMatch(l -> l.id()
-                    .equals(landmark.id()));
+                .anyMatch(
+                    l -> l.id()
+                        .equals(landmark.id()));
             if (!wired) {
                 continue;
             }

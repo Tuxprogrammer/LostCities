@@ -78,7 +78,8 @@ public final class WitcheryOracles {
         static StructureOracle create(World world, TerrainHeightOracle heights) {
             WitcherySettings settings = WitcheryConfig.read(world);
             if (!settings.on()) {
-                LostCities.LOG.info("[LCNH-WITCHERY] dimension {}: no oracle ({})", world.provider.dimensionId, settings);
+                LostCities.LOG
+                    .info("[LCNH-WITCHERY] dimension {}: no oracle ({})", world.provider.dimensionId, settings);
                 return StructureOracle.NONE;
             }
             LostCities.LOG.info("[LCNH-WITCHERY] dimension {}: oracle on ({})", world.provider.dimensionId, settings);

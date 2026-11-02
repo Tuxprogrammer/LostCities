@@ -167,7 +167,9 @@ public final class WitcheryScenario implements Scenario {
             }
         }
         Comparator<int[]> nearest = Comparator
-            .comparingLong((int[] c) -> (long) (c[0] - center[0]) * (c[0] - center[0]) + (long) (c[1] - center[1]) * (c[1] - center[1]))
+            .comparingLong(
+                (int[] c) -> (long) (c[0] - center[0]) * (c[0] - center[0])
+                    + (long) (c[1] - center[1]) * (c[1] - center[1]))
             .thenComparingInt(c -> c[1])
             .thenComparingInt(c -> c[0]);
         accepted.sort(nearest);
@@ -187,8 +189,14 @@ public final class WitcheryScenario implements Scenario {
             refused.size(),
             predicted.size(),
             rejected.size());
-        LostCities.LOG.info("[LCNH-WITCHERY] oracle-hash={}", Integer.toHexString(scanned.keySet().hashCode()));
-        context.check(!predicted.isEmpty(), "expected a predicted lot near the center, found none; move it with -D" + CENTER_PROPERTY);
+        LostCities.LOG.info(
+            "[LCNH-WITCHERY] oracle-hash={}",
+            Integer.toHexString(
+                scanned.keySet()
+                    .hashCode()));
+        context.check(
+            !predicted.isEmpty(),
+            "expected a predicted lot near the center, found none; move it with -D" + CENTER_PROPERTY);
     }
 
     private static TreeMap<String, Landmark> scan(WitcheryOracle oracle, int[] center, boolean reverse) {
@@ -317,8 +325,9 @@ public final class WitcheryScenario implements Scenario {
             String id = WitcheryOracle.id(target[0], target[1]);
             boolean known = structures.landmarksTouching(target[0], target[1], target[0], target[1])
                 .stream()
-                .anyMatch(l -> l.id()
-                    .equals(id));
+                .anyMatch(
+                    l -> l.id()
+                        .equals(id));
             if (!known) {
                 continue;
             }

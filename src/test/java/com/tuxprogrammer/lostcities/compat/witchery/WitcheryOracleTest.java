@@ -63,8 +63,9 @@ class WitcheryOracleTest {
                     expected++;
                     assertTrue(
                         found.stream()
-                            .anyMatch(l -> l.id()
-                                .equals(WitcheryOracle.id(candidate[0], candidate[1]))),
+                            .anyMatch(
+                                l -> l.id()
+                                    .equals(WitcheryOracle.id(candidate[0], candidate[1]))),
                         "missing " + candidate[0] + "," + candidate[1]);
                 }
             }
@@ -107,15 +108,13 @@ class WitcheryOracleTest {
         BlockRect lot = first.footprint()
             .get(0);
         // A query of only the north-west neighbor chunk still finds the lot.
-        List<Landmark> corner = oracle.landmarksTouching(
-            (lot.minX() >> 4),
-            (lot.minZ() >> 4),
-            (lot.minX() >> 4),
-            (lot.minZ() >> 4));
+        List<Landmark> corner = oracle
+            .landmarksTouching((lot.minX() >> 4), (lot.minZ() >> 4), (lot.minX() >> 4), (lot.minZ() >> 4));
         assertTrue(
             corner.stream()
-                .anyMatch(l -> l.id()
-                    .equals(first.id())));
+                .anyMatch(
+                    l -> l.id()
+                        .equals(first.id())));
     }
 
     @Test

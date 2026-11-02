@@ -65,8 +65,8 @@ public final class WitcheryOracle implements StructureOracle {
      * @param heights   the height oracle, or {@code null} for {@link GroundEstimates#FALLBACK_Y}
      * @param cacheSize the most candidate chunks cached
      */
-    public WitcheryOracle(long worldSeed, WitcherySettings settings, WitcheryBiomes biomes,
-        TerrainHeightOracle heights, int cacheSize) {
+    public WitcheryOracle(long worldSeed, WitcherySettings settings, WitcheryBiomes biomes, TerrainHeightOracle heights,
+        int cacheSize) {
         this.settings = settings;
         this.grid = new WitcheryGrid(worldSeed, settings.cellSize(), WitcheryGrid.SEPARATION);
         this.biomes = biomes;
@@ -159,11 +159,7 @@ public final class WitcheryOracle implements StructureOracle {
     public BlockRect lot(int chunkX, int chunkZ) {
         int originX = chunkX << 4;
         int originZ = chunkZ << 4;
-        return new BlockRect(
-            originX + offsets[0],
-            originZ + offsets[1],
-            originX + offsets[2],
-            originZ + offsets[3]);
+        return new BlockRect(originX + offsets[0], originZ + offsets[1], originX + offsets[2], originZ + offsets[3]);
     }
 
     private Landmark compute(int chunkX, int chunkZ) {

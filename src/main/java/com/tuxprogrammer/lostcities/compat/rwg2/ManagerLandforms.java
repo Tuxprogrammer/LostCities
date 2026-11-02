@@ -63,7 +63,8 @@ final class ManagerLandforms implements Rwg2Landforms {
             Object value = field.get(manager);
             return value instanceof ContinentalNoise ? (ContinentalNoise) value : null;
         } catch (ReflectiveOperationException | SecurityException e) {
-            LostCities.LOG.warn("[LCNH-RWG2] cannot read RWG2's continental noise ({}); volcano centers rounded", e.toString());
+            LostCities.LOG
+                .warn("[LCNH-RWG2] cannot read RWG2's continental noise ({}); volcano centers rounded", e.toString());
             return null;
         }
     }
@@ -75,9 +76,8 @@ final class ManagerLandforms implements Rwg2Landforms {
             return NONE;
         }
         if (continents != null) {
-            long center = continents.getVolcanoCenterCoordinates(
-                blockX + ConfigRWG.landmassOffsetX,
-                blockZ + ConfigRWG.landmassOffsetZ);
+            long center = continents
+                .getVolcanoCenterCoordinates(blockX + ConfigRWG.landmassOffsetX, blockZ + ConfigRWG.landmassOffsetZ);
             if (center != Long.MIN_VALUE) {
                 int x = (int) (center >> 32) - ConfigRWG.landmassOffsetX;
                 int z = (int) center - ConfigRWG.landmassOffsetZ;
@@ -124,8 +124,8 @@ final class ManagerLandforms implements Rwg2Landforms {
         if (cave != Long.MIN_VALUE) {
             float caveX = ContinentalNoise.unpackVolcanoX(cave);
             float caveZ = ContinentalNoise.unpackVolcanoY(cave);
-            if (caveX * caveX + caveZ * caveZ <= Rwg2LandmarkOracle.LAVA_CAVE_OPENING
-                * Rwg2LandmarkOracle.LAVA_CAVE_OPENING) {
+            if (caveX * caveX + caveZ * caveZ
+                <= Rwg2LandmarkOracle.LAVA_CAVE_OPENING * Rwg2LandmarkOracle.LAVA_CAVE_OPENING) {
                 return true;
             }
         }

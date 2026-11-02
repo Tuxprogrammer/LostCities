@@ -155,8 +155,11 @@ class Rwg2LandmarkOracleTest {
             -60,
             80,
             140);
-        assertEquals(3, whole.size(), whole.keySet()
-            .toString());
+        assertEquals(
+            3,
+            whole.size(),
+            whole.keySet()
+                .toString());
         Rwg2LandmarkOracle tiled = oracle(new FakeLandforms(), 1);
         TreeMap<String, Landmark> found = new TreeMap<>();
         for (int x = 72; x >= -200; x -= 8) {

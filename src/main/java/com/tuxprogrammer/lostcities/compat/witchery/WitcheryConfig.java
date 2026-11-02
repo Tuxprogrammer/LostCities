@@ -36,8 +36,10 @@ import com.tuxprogrammer.lostcities.LostCities;
  * Decompiled: witchery-1.7.10-0.24.1.jar (GTNH 2.9.0), {@code com.emoniph.witchery.util.Config} (its public fields and
  * {@code instance()}), {@code com.emoniph.witchery.Witchery#worldGenerator},
  * {@code com.emoniph.witchery.worldgen.WitcheryWorldGenerator#generate} and
- * {@code com.emoniph.witchery.worldgen.BiomeManager#DISALLOWED_BIOMES} / {@code #addModBiomes}; member names checked with
- * {@code javap} against the pack jar; inferred from decompiled bytecode and may be wrong. Third-party decompile cited by
+ * {@code com.emoniph.witchery.worldgen.BiomeManager#DISALLOWED_BIOMES} / {@code #addModBiomes}; member names checked
+ * with
+ * {@code javap} against the pack jar; inferred from decompiled bytecode and may be wrong. Third-party decompile cited
+ * by
  * the spec:
  * https://github.com/GTNH-Museum/Witchery/blob/4b7a98b60de7901e3503247016aa90c90099d0ce/src/main/java/com/emoniph/witchery/worldgen/BiomeManager.java#L14-L84.
  *
@@ -117,7 +119,9 @@ final class WitcheryConfig {
                 }
             }
         } catch (ReflectiveOperationException | LinkageError e) {
-            LostCities.LOG.warn("[LCNH-WITCHERY] cannot read Witchery's disallowed biomes ({}); rebuilt from types", e.toString());
+            LostCities.LOG.warn(
+                "[LCNH-WITCHERY] cannot read Witchery's disallowed biomes ({}); rebuilt from types",
+                e.toString());
         }
         if (out.isEmpty()) {
             BiomeDictionary.Type[] types = { BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.RIVER,
@@ -168,7 +172,8 @@ final class WitcheryConfig {
                 .getMethod("instance");
             return instance.invoke(null);
         } catch (ReflectiveOperationException | LinkageError e) {
-            LostCities.LOG.warn("[LCNH-WITCHERY] cannot read Witchery's config ({}); assuming the pack's", e.toString());
+            LostCities.LOG
+                .warn("[LCNH-WITCHERY] cannot read Witchery's config ({}); assuming the pack's", e.toString());
             return null;
         }
     }

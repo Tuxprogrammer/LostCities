@@ -17,7 +17,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
  * The structure oracle for RWG2's terrain landmarks (0006 §1, §2; coexistence.md § RWG2 landmarks): the volcano
- * islands, lava-cave openings and mountain-chain river junctions RWG2 keeps Witchery off, as {@link LandmarkKind#TERRAIN}
+ * islands, lava-cave openings and mountain-chain river junctions RWG2 keeps Witchery off, as
+ * {@link LandmarkKind#TERRAIN}
  * landmarks, so the city ends there with a soft edge instead of building over them.
  *
  * <p>
@@ -35,7 +36,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * the landmark. Centers are found by sampling the predicates every {@value #DISC_SPACING} blocks, far closer than the
  * radii, so no volcano or cave near the query is missed.</li>
  * <li>{@code junction@<x>,<z>} (the strength's local peak): junction strength is sampled every
- * {@value #JUNCTION_SPACING} blocks; an 8 × 8 cell whose corners reach {@value #REFINE_THRESHOLD} is sampled again every
+ * {@value #JUNCTION_SPACING} blocks; an 8 × 8 cell whose corners reach {@value #REFINE_THRESHOLD} is sampled again
+ * every
  * {@value #REFINE_SPACING} blocks; a cell holding a sample of at least {@value #STRONG_SAMPLE} (a little below RWG2's
  * {@value #JUNCTION_THRESHOLD}, for the columns between samples) with a
  * mountain-chain biome on the 16-block grid within {@value #CHAIN_REACH} + 8 blocks becomes one footprint rectangle
@@ -174,7 +176,8 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
     /** Returns the distinct centers of one kind (0 volcano, 1 lava cave) that the samples in a rectangle report. */
     private TreeSet<Long> discCenters(BlockRect area, int which) {
         TreeSet<Long> centers = new TreeSet<>();
-        for (int regionX = Math.floorDiv(area.minX(), REGION); regionX <= Math.floorDiv(area.maxX(), REGION); regionX++) {
+        for (int regionX = Math.floorDiv(area.minX(), REGION); regionX
+            <= Math.floorDiv(area.maxX(), REGION); regionX++) {
             for (int regionZ = Math.floorDiv(area.minZ(), REGION); regionZ
                 <= Math.floorDiv(area.maxZ(), REGION); regionZ++) {
                 long[] samples = discRegion(regionX, regionZ);
@@ -229,7 +232,8 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
         for (BlockRect row : rows) {
             builder.footprint(row);
         }
-        Landmark built = builder.groundEstimate(GroundEstimates.median(heights, Collections.singletonList(bounds(rows))))
+        Landmark built = builder
+            .groundEstimate(GroundEstimates.median(heights, Collections.singletonList(bounds(rows))))
             .build();
         return cache.put(center, built);
     }
@@ -261,7 +265,8 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
     /** Returns the peaks of every junction part in the regions a rectangle touches. */
     private TreeSet<Long> junctionPeaks(BlockRect area) {
         TreeSet<Long> peaks = new TreeSet<>();
-        for (int regionX = Math.floorDiv(area.minX(), REGION); regionX <= Math.floorDiv(area.maxX(), REGION); regionX++) {
+        for (int regionX = Math.floorDiv(area.minX(), REGION); regionX
+            <= Math.floorDiv(area.maxX(), REGION); regionX++) {
             for (int regionZ = Math.floorDiv(area.minZ(), REGION); regionZ
                 <= Math.floorDiv(area.maxZ(), REGION); regionZ++) {
                 int[] parts = junctionRegion(regionX, regionZ);
@@ -302,9 +307,8 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
         List<int[]> parts = new ArrayList<>();
         for (int i = 0; i < CELLS; i++) {
             for (int j = 0; j < CELLS; j++) {
-                float corner = Math.max(
-                    Math.max(coarse[i][j], coarse[i + 1][j]),
-                    Math.max(coarse[i][j + 1], coarse[i + 1][j + 1]));
+                float corner = Math
+                    .max(Math.max(coarse[i][j], coarse[i + 1][j]), Math.max(coarse[i][j + 1], coarse[i + 1][j + 1]));
                 if (corner >= REFINE_THRESHOLD) {
                     int[] part = refineCell(originX + i * JUNCTION_SPACING, originZ + j * JUNCTION_SPACING);
                     if (part != null) {

@@ -34,7 +34,8 @@ import cpw.mods.fml.common.Loader;
  * Classes that touch RWG2 load only after {@code Loader.isModLoaded("rwg2")}. Server thread only.
  *
  * <p>
- * Spec: docs/new-spec/00-pack-integration/coexistence.md § RWG2 landmarks; docs/design/0006-build-around-other-worldgen.md
+ * Spec: docs/new-spec/00-pack-integration/coexistence.md § RWG2 landmarks;
+ * docs/design/0006-build-around-other-worldgen.md
  * §1. Side: server.
  */
 public final class Rwg2Landmarks {
@@ -104,10 +105,8 @@ public final class Rwg2Landmarks {
                     world.provider.dimensionId);
                 return StructureOracle.NONE;
             }
-            LostCities.LOG.info(
-                "[LCNH-RWG2] dimension {}: landmark oracle on ({})",
-                world.provider.dimensionId,
-                settings());
+            LostCities.LOG
+                .info("[LCNH-RWG2] dimension {}: landmark oracle on ({})", world.provider.dimensionId, settings());
             return new Rwg2LandmarkOracle(
                 new ManagerLandforms(manager),
                 heights,
