@@ -197,7 +197,7 @@ public final class PopulationPhase {
      * {@code World.getTileEntity} creates a missing tile entity with {@code World.setTileEntity}, which then tells the
      * neighbors' comparators ({@code World.func_147453_f}) and so reads the blocks beside it: for a door on a chunk's
      * edge that loads, or generates, the next chunk, a cascade the real pack logged. The chunk's own
-     * {@code getTileEntityUnsafe} and {@code func_150813_a} (add tile entity) touch nothing outside the chunk.
+     * {@code getTileEntityUnsafe} and {@code addTileEntity} touch nothing outside the chunk.
      *
      * @return the tile entity, or {@code null} when the block has none
      */
@@ -219,7 +219,7 @@ public final class PopulationPhase {
         tile.xCoord = x;
         tile.yCoord = y;
         tile.zCoord = z;
-        chunk.func_150813_a(tile);
+        chunk.addTileEntity(tile);
         return tile;
     }
 
