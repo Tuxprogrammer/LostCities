@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
@@ -33,8 +34,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * It predicts the grid cells within {@value #CELLS} cells of a center (default the cell of chunk 0, 0, where the
  * near-spawn city stands; {@code -Dlostcitiesnh.rlScenario.center=<chunkX>,<chunkZ>} moves it) with an oracle of its
  * own, checking that predicting loads no chunk, leaves {@code world.rand} alone and answers the same in any query
- * order. It then populates each cell's dungeon chunk that is not populated yet, so Roguelike runs its search there with
- * the steering mixin in place, and reads where each dungeon went from {@link RoguelikePlacements}. It fails when a
+ * order. It then generates the 15 × 15 chunks each search can read and populates each cell's dungeon chunk that is not
+ * populated yet, so Roguelike runs its search there with the steering mixin in place, and reads where each dungeon went from {@link RoguelikePlacements}. It fails when a
  * dungeon's lot touches a city chunk, an edge ring or a scattered footprint (unless it is the predicted, reserved
  * lot), when no dungeon was built at all, or when the steering never ran; it reports the hit rate (a cell is a hit
  * when the dungeon stands at the predicted site, or neither predicts nor builds one), the misses by kind and the
@@ -51,6 +52,13 @@ public final class RoguelikeScenario implements Scenario {
     static final long TICK_BUDGET_NANOS = 40_000_000L;
     /** The property that moves the center. */
     static final String CENTER_PROPERTY = "lostcitiesnh.rlScenario.center";
+    /**
+     * Chunks around the dungeon chunk the search can read: candidates lie up to 103 blocks from the chunk's corner and
+     * their 9 × 9 layers 4 blocks further.
+     */
+    static final int SEARCH_RADIUS = 7;
+    /** Side of the generated square, chunks. */
+    static final int SEARCH_SIDE = 2 * SEARCH_RADIUS + 1;
     /** Cells described one per log line. */
     static final int DETAIL_LINES = 40;
 
@@ -159,14 +167,20 @@ public final class RoguelikeScenario implements Scenario {
         long start = System.nanoTime();
         while (cursor < targets.size() && System.nanoTime() - start < TICK_BUDGET_NANOS) {
             RoguelikeOracle.Prediction target = targets.get(cursor);
-            if (phase == 0) {
-                // The dungeon chunk and its eight neighbors, as a player walking up would load them.
-                for (int dz = -1; dz <= 1; dz++) {
-                    for (int dx = -1; dx <= 1; dx++) {
-                        server.loadChunk(target.chunkX() + dx, target.chunkZ() + dz);
-                    }
-                }
-                phase = 1;
+            if (phase < SEARCH_SIDE * SEARCH_SIDE) {
+                // Every chunk the search reads, generated first: the scenario runs inside the server tick, where
+                // Hodgepodge's chunk-generation scheduler hands a missing chunk out as an empty one, so a search
+                // reading ungenerated chunks would see only air (in play, population runs in the scheduler's own
+                // window, where reading a missing chunk generates it). Terrain is pure, so the search sees the same
+                // blocks either way.
+                // The dungeon chunk's +X+Z neighbor comes last: loading it completes the four chunks population
+                // waits for, so the search never runs while part of the square is still missing.
+                int last = (SEARCH_RADIUS + 1) * SEARCH_SIDE + SEARCH_RADIUS + 1;
+                int index = phase == SEARCH_SIDE * SEARCH_SIDE - 1 ? last : phase >= last ? phase + 1 : phase;
+                server.loadChunk(
+                    target.chunkX() - SEARCH_RADIUS + index % SEARCH_SIDE,
+                    target.chunkZ() - SEARCH_RADIUS + index / SEARCH_SIDE);
+                phase++;
             } else {
                 Chunk chunk = server.provideChunk(target.chunkX(), target.chunkZ());
                 if (!chunk.isTerrainPopulated) {
@@ -313,6 +327,8 @@ public final class RoguelikeScenario implements Scenario {
             out.append(" worldOracle=")
                 .append(known);
         }
+        out.append(" world=")
+            .append(worldVerdict(world, target.x(), target.z()));
         String search = "not tried";
         for (RoguelikePlacements.Event event : events) {
             if (event.x() == target.x() && event.z() == target.z()) {
@@ -329,6 +345,64 @@ public final class RoguelikeScenario implements Scenario {
         return out.append(" search=")
             .append(search)
             .toString();
+    }
+
+    /**
+     * Returns Roguelike's site test read from the world's blocks, rule by rule as {@code Dungeon.validLocation} reads
+     * them (Dungeon.java#L165-L212 at 1.6.6-GTNH), with the valid ground's Y, to explain a predicted site the mod
+     * rejected; {@code unloaded} when the point's chunk is not loaded.
+     */
+    private static String worldVerdict(WorldServer world, int x, int z) {
+        if (!world.theChunkProviderServer.chunkExists(x >> 4, z >> 4)) {
+            return "unloaded";
+        }
+        RoguelikeSettings settings = RoguelikeConfig.read();
+        if (!world.isAirBlock(x, settings.upperLimit(), z)) {
+            return "NO_AIR";
+        }
+        int y = settings.upperLimit();
+        while (!validGround(world, x, y, z)) {
+            y--;
+            if (y < settings.lowerLimit()) {
+                return "TOO_LOW";
+            }
+            if (world.getBlock(x, y, z)
+                .getMaterial() == Material.water) {
+                return "WATER@" + y;
+            }
+        }
+        for (int dx = -SiteRules.LAYER_RADIUS; dx <= SiteRules.LAYER_RADIUS; dx++) {
+            for (int dz = -SiteRules.LAYER_RADIUS; dz <= SiteRules.LAYER_RADIUS; dz++) {
+                if (validGround(world, x + dx, y + SiteRules.ABOVE, z + dz)) {
+                    return "CROWDED G=" + y;
+                }
+            }
+        }
+        int gaps = 0;
+        for (int dx = -SiteRules.LAYER_RADIUS; dx <= SiteRules.LAYER_RADIUS; dx++) {
+            for (int dz = -SiteRules.LAYER_RADIUS; dz <= SiteRules.LAYER_RADIUS; dz++) {
+                if (!validGround(world, x + dx, y - SiteRules.BELOW, z + dz)) {
+                    gaps++;
+                }
+            }
+        }
+        return (gaps > SiteRules.MAX_GAPS ? "HOLLOW(" + gaps + ")" : "PASS") + " G=" + y;
+    }
+
+    /** Roguelike's "valid ground": solid, and not wood, water, cactus, snow, grass, gourd, leaves or plants. */
+    private static boolean validGround(WorldServer world, int x, int y, int z) {
+        if (world.isAirBlock(x, y, z)) {
+            return false;
+        }
+        Material material = world.getBlock(x, y, z)
+            .getMaterial();
+        return material != Material.wood && material != Material.water
+            && material != Material.cactus
+            && material != Material.snow
+            && material != Material.grass
+            && material != Material.gourd
+            && material != Material.leaves
+            && material != Material.plants;
     }
 
     /** Checks that two fresh oracles asked in opposite orders give the same landmarks. */
