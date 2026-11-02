@@ -33,7 +33,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
  * Writes one city chunk's own content from its layout: a building floor by floor with its doors, cellar fillers,
- * corridor openings and overlay parts, or a street, plaza or park with its park or fountain part, vegetation, the
+ * corridor openings and overlay parts, or a street, plaza or park with its park or fountain part, vegetation, a
+ * park's greenery ({@link ParkGreenery}), the
  * fronts of neighboring buildings, the connectors of a primary road, its stair and the rail corridors under it
  * (docs/original-spec/03-terrain/building-and-street-writing.md, {@code generateBuilding} and {@code generateStreet};
  * {@code Doors} and {@code Corridors}). The terrain phase does the leveling, room for the building, street base and
@@ -400,6 +401,9 @@ public final class CityChunkWriter {
         }
         if (!target.dryRun()) {
             vegetation(height);
+            if (type == StreetType.PARK) {
+                greenery(height);
+            }
         }
         front(height, Direction.XMIN, Transform.ROTATE_NONE);
         front(height, Direction.ZMIN, Transform.ROTATE_90);
@@ -577,6 +581,22 @@ public final class CityChunkWriter {
                 }
             }
         }
+    }
+
+    /**
+     * Fills the park's free grass with tall grass, flowers, ferns and shrubs for its biome, like bonemeal (deviation,
+     * AR-18: upstream's parks keep only their part's few flowers and saplings). Nothing where the profile or city style
+     * avoids foliage.
+     */
+    private void greenery(int height) {
+        if (plan.settings()
+            .avoidFoliage()) {
+            return;
+        }
+        ParkGreenery.Flora flora = ParkGreenery.floraOf(
+            context.biomes()
+                .biomeOfChunk(chunkX, chunkZ));
+        ParkGreenery.plant(target, height, flora, ParkGreenery.random(context.worldSeed(), chunkX, chunkZ));
     }
 
     /**
