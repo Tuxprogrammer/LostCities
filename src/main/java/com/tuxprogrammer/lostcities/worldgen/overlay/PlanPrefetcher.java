@@ -56,6 +56,11 @@ public final class PlanPrefetcher {
      * keep evicting each other. A village's ground estimate reads about a hundred chunks.
      */
     static final int MAX_FETCHES_PER_TARGET = 512;
+    /** A fetch longer than this is named in the budget report by the class that asked for it, nanoseconds. */
+    static final long SLOW_FETCH_NANOS = 2_000_000L;
+
+    /** The longest slow fetch per source class, since the last reset; a handful of keys at most. */
+    private final java.util.Map<String, Long> slowFetches = new java.util.TreeMap<>();
 
     private static final int PERIMETER = 8 * LEAD;
 
@@ -231,6 +236,9 @@ public final class PlanPrefetcher {
             long fetchStart = System.nanoTime();
             probe.fetchMissing();
             long fetchNanos = System.nanoTime() - fetchStart;
+            if (fetchNanos > SLOW_FETCH_NANOS) {
+                slowFetches.merge(probe.lastFetchSource(), fetchNanos, Math::max);
+            }
             tickFetches++;
             tickFetchNanos += fetchNanos;
             fetches++;
@@ -253,11 +261,27 @@ public final class PlanPrefetcher {
 
     /** Forgets the counts {@link #summary()} reports, with the timers' reset at the end of a budget warm-up. */
     void resetStats() {
+        slowFetches.clear();
         planned = 0;
         fetchedTotal = 0;
         failedAttemptNanos = 0;
         worstTickNanos = 0;
         worstTick = "none";
+    }
+
+    /** The slow fetches' sources and their longest fetch, ms, sorted by source. */
+    private String slowFetchesText() {
+        StringBuilder out = new StringBuilder("{");
+        for (java.util.Map.Entry<String, Long> entry : slowFetches.entrySet()) {
+            if (out.length() > 1) {
+                out.append(", ");
+            }
+            out.append(entry.getKey())
+                .append('=')
+                .append(String.format(Locale.ROOT, "%.1f", entry.getValue() / 1_000_000.0));
+        }
+        return out.append('}')
+            .toString();
     }
 
     /**
@@ -269,7 +293,10 @@ public final class PlanPrefetcher {
     public String summary() {
         return String.format(
             Locale.ROOT,
-            "prefetcher: %d plans, %d fetches, abandoned attempts %.1f ms; slowest tick %s",
+            "prefetcher: %d plans, %d fetches, abandoned attempts %.1f ms; slowest tick %s; fetches over "
+                + SLOW_FETCH_NANOS / 1_000_000
+                + " ms, longest by source "
+                + slowFetchesText(),
             planned,
             fetchedTotal,
             failedAttemptNanos / 1_000_000.0,
