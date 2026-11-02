@@ -72,8 +72,15 @@ public abstract class MixinRoguelikeDungeon {
 
     @Inject(method = "validLocation", at = @At("RETURN"), remap = false)
     private void lostcitiesnh$recordSite(Random rand, int x, int z, CallbackInfoReturnable<Boolean> callback) {
-        if (callback.getReturnValueZ() && !lostcitiesnh$refused) {
-            RoguelikePlacements.accepted(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
+        if (lostcitiesnh$refused) {
+            return;
+        }
+        if (callback.getReturnValueZ()) {
+            RoguelikePlacements
+                .accepted(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
+        } else {
+            RoguelikePlacements
+                .rejected(editor.getDimension(), lostcitiesnh$originX, lostcitiesnh$originZ, x, z);
         }
     }
 }

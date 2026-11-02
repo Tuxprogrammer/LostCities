@@ -10,7 +10,7 @@ import com.tuxprogrammer.lostcities.core.DevEnvironment;
 
 /**
  * What the steering mixin saw, for the {@code oracle.roguelike} scenario: each site Roguelike's test accepted (the
- * point its dungeon is built at) and each point the steering refused, with the dungeon chunk's origin they belong to.
+ * point its dungeon is built at), each point its test rejected and each point the steering refused, with the dungeon chunk's origin they belong to.
  * Roguelike saves nothing that would let another mod find its dungeons, so this is how the scenario learns where they
  * went.
  *
@@ -36,14 +36,16 @@ public final class RoguelikePlacements {
         private final int x;
         private final int z;
         private final SteeringRule.Outcome outcome;
+        private final boolean accepted;
 
-        Event(int dimension, int originX, int originZ, int x, int z, SteeringRule.Outcome outcome) {
+        Event(int dimension, int originX, int originZ, int x, int z, SteeringRule.Outcome outcome, boolean accepted) {
             this.dimension = dimension;
             this.originX = originX;
             this.originZ = originZ;
             this.x = x;
             this.z = z;
             this.outcome = outcome;
+            this.accepted = accepted;
         }
 
         /** Returns the dimension ID. */
@@ -71,19 +73,20 @@ public final class RoguelikePlacements {
             return z;
         }
 
-        /** Returns {@code null} for an accepted site, or the steering outcome that refused the point. */
+        /** Returns the steering outcome that refused the point, or {@code null} when the steering let it through. */
         public SteeringRule.Outcome refusedBy() {
             return outcome;
         }
 
         /** Returns whether Roguelike accepted the point: its dungeon stands there. */
         public boolean accepted() {
-            return outcome == null;
+            return accepted;
         }
 
         @Override
         public String toString() {
-            return (accepted() ? "site " : "refused(" + outcome + ") ") + x
+            String what = accepted ? "site " : outcome != null ? "refused(" + outcome + ") " : "rejected ";
+            return what + x
                 + ","
                 + z
                 + " from "
@@ -107,7 +110,20 @@ public final class RoguelikePlacements {
      * @param z         the site's block Z
      */
     public static void accepted(int dimension, int originX, int originZ, int x, int z) {
-        add(new Event(dimension, originX, originZ, x, z, null));
+        add(new Event(dimension, originX, originZ, x, z, null, true));
+    }
+
+    /**
+     * Records a point the steering let through and Roguelike's own test rejected.
+     *
+     * @param dimension the dimension ID
+     * @param originX   the block X the dungeon searched from
+     * @param originZ   the block Z the dungeon searched from
+     * @param x         the point's block X
+     * @param z         the point's block Z
+     */
+    public static void rejected(int dimension, int originX, int originZ, int x, int z) {
+        add(new Event(dimension, originX, originZ, x, z, null, false));
     }
 
     /**
@@ -121,7 +137,7 @@ public final class RoguelikePlacements {
      * @param outcome   why
      */
     public static void refused(int dimension, int originX, int originZ, int x, int z, SteeringRule.Outcome outcome) {
-        add(new Event(dimension, originX, originZ, x, z, outcome));
+        add(new Event(dimension, originX, originZ, x, z, outcome, false));
     }
 
     private static synchronized void add(Event event) {

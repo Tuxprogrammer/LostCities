@@ -205,7 +205,7 @@ public final class RoguelikeScenario implements Scenario {
                 }
                 if (event.accepted()) {
                     site = event;
-                } else {
+                } else if (event.refusedBy() != null) {
                     refused++;
                     refusals.merge(event.refusedBy(), 1, Integer::sum);
                 }
@@ -244,11 +244,12 @@ public final class RoguelikeScenario implements Scenario {
             }
             if (lines++ < DETAIL_LINES) {
                 LostCities.LOG.info(
-                    "[LCNH-RL] {}: {}; actual {}; refused {}",
+                    "[LCNH-RL] {}: {}; actual {}; refused {}{}",
                     target,
                     verdict,
                     site == null ? "none" : site.x() + "," + site.z(),
-                    refused);
+                    refused,
+                    target.hasSite() ? "; predicted site " + describeSite(context.world(), target, events) : "");
             }
         }
         int cells = targets.size();
@@ -275,6 +276,59 @@ public final class RoguelikeScenario implements Scenario {
         LostCities.LOG.info("[LCNH-RL] summary {}", summary);
         context.check(built > 0, "expected at least one dungeon built, found none (" + summary + ")");
         context.check(failures.isEmpty(), String.join("; ", failures) + " (" + summary + ")");
+    }
+
+    /**
+     * Describes how the world sees a predicted site: the steering's outcome there now, the zone and plan kind of its
+     * chunk, whether the world's own structure oracle reports it, and how the search treated the point.
+     */
+    private static String describeSite(WorldServer world, RoguelikeOracle.Prediction target,
+        List<RoguelikePlacements.Event> events) {
+        OverlayWorld overlay = Overlays.INSTANCE.get(world);
+        int chunkX = target.x() >> 4;
+        int chunkZ = target.z() >> 4;
+        StringBuilder out = new StringBuilder();
+        out.append("steering=")
+            .append(RoguelikeSteering.decide(world.provider.dimensionId, target.x(), target.z()))
+            .append(" kind=")
+            .append(
+                overlay.plan()
+                    .chunk(chunkX, chunkZ)
+                    .kind());
+        if (overlay.cities() != null) {
+            out.append(" zone=")
+                .append(
+                    overlay.cities()
+                        .planner()
+                        .zone(chunkX, chunkZ));
+            boolean known = false;
+            for (Landmark landmark : overlay.cities()
+                .structures()
+                .landmarksTouching(chunkX, chunkZ, chunkX, chunkZ)) {
+                known |= landmark.id()
+                    .equals(
+                        target.landmark()
+                            .id());
+            }
+            out.append(" worldOracle=")
+                .append(known);
+        }
+        String search = "not tried";
+        for (RoguelikePlacements.Event event : events) {
+            if (event.x() == target.x() && event.z() == target.z()) {
+                search = event.accepted() ? "accepted"
+                    : event.refusedBy() != null ? "refused " + event.refusedBy() : "rejected by Roguelike";
+            }
+        }
+        out.append(" top=")
+            .append(world.getTopSolidOrLiquidBlock(target.x(), target.z()))
+            .append(" ground=")
+            .append(
+                target.landmark()
+                    .groundEstimate());
+        return out.append(" search=")
+            .append(search)
+            .toString();
     }
 
     /** Checks that two fresh oracles asked in opposite orders give the same landmarks. */
