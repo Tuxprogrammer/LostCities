@@ -36,6 +36,40 @@ public class ProfileRegistryTest {
     }
 
     @Test
+    public void doesNotReproduceCORE04_anUnknownProfileIsReportedNotThrownFromResolution() {
+        ProfileRegistry registry = new ProfileRegistry();
+        assertNull(registry.get("nosuch"), "an unknown name resolves to no profile, so its dimension gets no cities");
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> registry.require("nosuch"));
+        assertTrue(
+            error.getMessage()
+                .contains("unknown profile 'nosuch'"),
+            error.getMessage());
+        assertTrue(
+            error.getMessage()
+                .contains("default"),
+            "the command path names the known profiles: " + error.getMessage());
+    }
+
+    @Test
+    public void doesNotReproduceCORE05_everyStateMethodHoldsTheRegistrysLock() {
+        // Upstream filled its profile cache without synchronization; here every method that reads or changes the
+        // registry's maps is synchronized on the registry.
+        for (String name : new String[] { "get", "names", "rejection", "require", "load", "applyApi" }) {
+            boolean found = false;
+            for (java.lang.reflect.Method method : ProfileRegistry.class.getDeclaredMethods()) {
+                if (method.getName()
+                    .equals(name)) {
+                    found = true;
+                    assertTrue(
+                        java.lang.reflect.Modifier.isSynchronized(method.getModifiers()),
+                        name + " is synchronized");
+                }
+            }
+            assertTrue(found, name + " exists");
+        }
+    }
+
+    @Test
     public void doesNotReproducePROF03_oneUnreadableFileDoesNotStopTheRest() throws IOException {
         Files.createDirectory(folder.resolve("aaa.json"));
         write("bbb.json", "{ \"lostcity\": { ");

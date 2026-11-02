@@ -251,5 +251,5 @@ Findings filed as suspected and then checked against the code or assets. They ne
 |---|---|---|---|---|
 | HWY-13 | 06-highways-railways | Rail dungeon tunnels differ north vs south | `worldgen/gen/Railways.java:156-179` | `rails_horizontal`'s open interior spans rows z 4 to 10 of 16 (`parts/rails_horizontal.json`), so the 4-deep north tunnel (rows 0 to 3) and the 5-deep south tunnel (rows 15 to 11) each end where the interior starts |
 
-<!-- In this mod: a regression test per reproducible bug, named doesNotReproduce<ID>_<what>,
+<!-- In this mod: a regression test per reproducible bug, named doesNotReproduce<ID>_<what>; BUGS-COVERAGE.md maps every ID to its test or the reason it cannot occur.
      and the change's "Inherited bugs avoided" list names the IDs. Ported files list them on their Avoids: line. -->

@@ -2,7 +2,7 @@
 
 A description of **Lost Cities 1.20-7.5.7 for Minecraft 1.20.1** (upstream branch `1.20`, commit `f18a094d`, 2026-10-04): how it behaves, every number and tunable, its asset formats, and its suspected bugs. Lost Cities is MIT, so code may be ported ([0001](../design/0001-port-policy-and-licensing.md)). This spec is not a clean-room substitute for the code. It is the **behavior contract** that unit tests and the ported-code gate check against, and the register of upstream bugs that must not come back. How this mod differs from upstream, and how it fits GTNH, is in [docs/new-spec/](../new-spec/README.md).
 
-Status: **first complete pass done (2026-11-01).** All nine areas are written: 77 sheets and catalogs, covering 596 of the 596 in-scope upstream files ([COVERAGE](COVERAGE.md)), and 203 unique suspected bugs ([BUGS](BUGS.md)). Roadmap spike S1 ([ROADMAP](../ROADMAP.md)).
+Status: **first complete pass done (2026-11-01).** All nine areas are written: 77 sheets and catalogs, covering 596 of the 596 in-scope upstream files ([COVERAGE](COVERAGE.md)), and 206 unique suspected bugs ([BUGS](BUGS.md)), each with its test or the reason it cannot occur ([BUGS-COVERAGE](BUGS-COVERAGE.md)). Roadmap spike S1 ([ROADMAP](../ROADMAP.md)).
 
 | Area | Covers | Bug prefix |
 |---|---|---|
@@ -22,6 +22,7 @@ Reference files, created with the areas:
 |---|---|
 | [CONVENTIONS.md](CONVENTIONS.md) | The standard every area meets |
 | [BUGS.md](BUGS.md) | Every suspected upstream bug, merged across areas |
+| [BUGS-COVERAGE.md](BUGS-COVERAGE.md) | How this mod keeps each bug out: its `doesNotReproduce` test, or why it cannot occur here |
 | [COVERAGE.md](COVERAGE.md) | Every upstream Java file and asset type, and the sheet that covers it |
 | [API-MAP.md](API-MAP.md) | Each 1.20 API upstream relies on and its 1.7.10 counterpart, or "none" |
 
