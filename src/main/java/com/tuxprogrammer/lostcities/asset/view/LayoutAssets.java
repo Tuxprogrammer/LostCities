@@ -45,7 +45,7 @@ import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
  * (ASSET-10); {@link CityStyleView#pick} documents {@code null} only for an empty list.
  *
  * <p>
- * Immutable but for the facade view's bounded tone cache (docs/design/0010-facade-color-feathering.md). Side: both
+ * Immutable but for the facade view's bounded tone cache (docs/design/0012-facade-color-feathering.md). Side: both
  * (server-side use).
  */
 public final class LayoutAssets implements AssetView {

@@ -54,7 +54,7 @@ public interface StyleView {
     List<String> pickPalettes(Random random);
 
     /**
-     * Returns the style's groups with their weights, in group order, for the facade stage (0010 §4). A view that
+     * Returns the style's groups with their weights, in group order, for the facade stage (0012 §4). A view that
      * does not expose them returns an empty list, and its chunks keep their own draw.
      *
      * @return the groups

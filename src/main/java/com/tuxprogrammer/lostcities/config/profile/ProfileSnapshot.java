@@ -44,7 +44,7 @@ public final class ProfileSnapshot {
      * the alpha review round (M05R): the rise cap, the margin around landmark cores and the leveling fix TERR-39.
      * Version 3 adds M07's scattered structures, their ground fits and the stuff columns in city chunks.
      * Version 4 is M12, city edges and character: tapered heights, edge lots, repairs, facade feathering, narrow
-     * roads at a margin and relaxed lanes (docs/design/0010 and 0011).
+     * roads at a margin and relaxed lanes (docs/design/0012 and 0011).
      */
     public static final int LAYOUT_VERSION = 4;
 

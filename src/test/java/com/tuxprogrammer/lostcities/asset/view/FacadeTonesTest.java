@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.layout.view.FacadeTone;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFixtures;
 
-/** Facade tones measured from the bundled assets (docs/design/0010-facade-color-feathering.md §2 and §3). */
+/** Facade tones measured from the bundled assets (docs/design/0012-facade-color-feathering.md §2 and §3). */
 public class FacadeTonesTest {
 
     private static final FacadeTones TONES = new FacadeTones(CityFixtures.ASSETS, CityFixtures.ASSETS.colors());

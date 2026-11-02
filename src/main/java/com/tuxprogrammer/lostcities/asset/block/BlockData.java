@@ -124,7 +124,7 @@ public final class BlockData {
         return neverPlace;
     }
 
-    /** Returns the measured block colors (docs/design/0010-facade-color-feathering.md §1). */
+    /** Returns the measured block colors (docs/design/0012-facade-color-feathering.md §1). */
     public BlockColors colors() {
         return colors;
     }

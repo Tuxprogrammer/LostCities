@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.Problems;
 
-/** The shipped block colors (docs/design/0010-facade-color-feathering.md §1). */
+/** The shipped block colors (docs/design/0012-facade-color-feathering.md §1). */
 public class BlockColorsTest {
 
     @Test

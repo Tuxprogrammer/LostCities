@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.layout.view.FacadeTone;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFixtures;
 
 /**
- * The facade stage (alpha review AR-17, docs/design/0010-facade-color-feathering.md §4): neighboring buildings stay
+ * The facade stage (alpha review AR-17, docs/design/0012-facade-color-feathering.md §4): neighboring buildings stay
  * within {@code facadeContrast} where their palettes allow, across a desert and a standard city, and the choice does
  * not depend on the order chunks are planned in.
  */

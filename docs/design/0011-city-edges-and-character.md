@@ -50,7 +50,7 @@ After the plan's draws, a separate lot random turns some low-intensity chunks in
 - Each explosion is repaired with chance `damageRepairChance` (default 0.5), decided from the world seed and the explosion's center, so every chunk it reaches agrees.
 - A repaired explosion fills its damage back in up to a repair line: from the sphere's bottom up to `bottom + (0.45 + 0.4 u) × diameter` (u from the explosion), varied by ±1 per column. Above the line the damage stays.
 - Only in city chunks: inside buildings (at or above their lowest cellar) and, in streets and parks, up to city ground. Nature outside the city is not repaired.
-- **Patch material:** a block that would break becomes its patch. Glass and panes become planks (boarded windows; oak, spruce or birch per explosion). An opaque block's patch is the block from a list of plain repair materials (cobblestone, stone bricks, bricks, plain and stained terracotta, sandstone, smooth stone, quartz and the Et Futurum concretes; never vanilla stone, a GT ore host) whose measured color is nearest a CIE76 difference of 10 from the original's (hue included, unlike 0010's `J`, so a red wall is not patched in cyan), with at least 6 and at most 22, one of the three nearest by a hash of the explosion and the block. The same block in one repair always gets the same patch: a visible, consistent patch, not noise.
+- **Patch material:** a block that would break becomes its patch. Glass and panes become planks (boarded windows; oak, spruce or birch per explosion). An opaque block's patch is the block from a list of plain repair materials (cobblestone, stone bricks, bricks, plain and stained terracotta, sandstone, smooth stone, quartz and the Et Futurum concretes; never vanilla stone, a GT ore host) whose measured color is nearest a CIE76 difference of 10 from the original's (hue included, unlike 0012's `J`, so a red wall is not patched in cyan), with at least 6 and at most 22, one of the three nearest by a hash of the explosion and the block. The same block in one repair always gets the same patch: a visible, consistent patch, not noise.
 - Blocks whose damaged form would have been chosen (cracked bricks, iron bars) keep that roll; repairs replace only what would have become air or liquid.
 
 ### 5. The M05R leftovers
@@ -61,7 +61,7 @@ After the plan's draws, a separate lot random turns some low-intensity chunks in
 
 ## Consequences
 
-- Five profile options, pinned with the world: `cityTaper`, `edgeLotChance`, `damageRepairChance`, `facadeContrast` (0010), and their rows in [config.md](../config.md).
+- Five profile options, pinned with the world: `cityTaper`, `edgeLotChance`, `damageRepairChance`, `facadeContrast` (0012), and their rows in [config.md](../config.md).
 - The layout version rises; a world pinned before keeps generating with the new rules and logs that new chunks may not match (D153).
 - New-spec deviations: the floor count, edge lots, repairs, detour width and lane relaxation, recorded in new-spec 03-terrain and 04-city-layout.
 - Code-named blocks for the lots and the repair list resolve through the block-name map, so a pack without Et Futurum falls back to vanilla.

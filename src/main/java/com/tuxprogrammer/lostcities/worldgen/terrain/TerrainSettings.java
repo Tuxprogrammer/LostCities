@@ -369,7 +369,7 @@ public final class TerrainSettings {
 
     /**
      * Returns the most contrast two neighboring facades may have ({@code facadeContrast}; AR-17,
-     * docs/design/0010-facade-color-feathering.md §3); 200 turns feathering off.
+     * docs/design/0012-facade-color-feathering.md §3); 200 turns feathering off.
      */
     public float facadeContrast() {
         return facadeContrast;

@@ -1,4 +1,4 @@
-# 0010 · Facade color feathering
+# 0012 · Facade color feathering
 
 - Status: Accepted (M12, decision log D-M12-1)
 - Gate: M12 exit (color feathering)
