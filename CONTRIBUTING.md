@@ -85,7 +85,7 @@ Root package: `com.tuxprogrammer.lostcities`. Target layout:
 
 | Package | Contents |
 |---|---|
-| `lostcities` | `@Mod` entry class, proxies, `Tags` (generated) |
+| `lostcities` | `@Mod` entry class, `CommonProxy`, `Tags` (generated) |
 | `lostcities.api` | Stable interfaces other mods may use, kept minimal and documented |
 | `lostcities.core` | Module system, registration helpers, logging, the dev self-check |
 | `lostcities.config` | Mod config (GTNHLib) and the profile system |
@@ -97,7 +97,7 @@ Root package: `com.tuxprogrammer.lostcities`. Target layout:
 | `lostcities.network` | Channel, packet base classes, packet types |
 | `lostcities.compat` | Optional integrations, one package per mod, each guarded |
 | `lostcities.scenario` | The dev-only in-world test harness |
-| `lostcities.client` | **All** client-only code: GUIs, the world-creation screen, renderers |
+| `lostcities.client` | **All** client-only code, `ClientProxy` included: GUIs, the world-creation screen, renderers, dev-only client probes |
 
 The layout is a starting point. Milestones refine it in design records, and they never move code across the client, pure-Java and glue boundaries.
 
@@ -213,7 +213,7 @@ Each layer catches different bugs, and features need every layer that applies to
   - asset parsing and validation, including rejection of malformed files;
   - config and profile defaults, and NBT round-trips.
 - **Determinism:** the same seed, coordinates, profile and assets give the same layout across runs and across generation orders.
-- **Golden chunks:** for a fixed set of seeds, profiles and chunk coordinates, the chunk buffer's content hash matches a checked-in golden value. A golden value changes only in a change that records why.
+- **Golden chunks:** for a fixed set of seeds, profiles and chunk coordinates, the chunk buffer's content hash matches a checked-in golden value. A golden value changes only in a change that records why. The harness (`GoldenChunks`) compares the SHA-256 of `ChunkBufferDigest`'s text form with `src/test/resources/golden/<case>.sha256`, writes the actual text to `build/golden-actual/` on a mismatch, and `./gradlew test -PupdateGoldens` rewrites the goldens ([docs/testing/](docs/testing/README.md)).
 - **Bug regressions:** each upstream bug a feature could reproduce gets a regression test named for it, for example `doesNotReproduceCITY04_streetEdgeDoublePlaced`.
 - **Speed:** tests are deterministic (seeded randomness, no wall-clock time) and fast.
 
@@ -227,11 +227,13 @@ Tests that read the compiled classes and resources and fail the build:
 - `LangKeysTest`: every player-visible string is a lang key;
 - `AssetValidationTest`: every bundled asset parses, and every block it names is in the block-name map.
 
+Each static check is proven by a fixture that makes it fail, so none can pass because it looked at nothing. `EventHandlerVisibilityTest` (every `@SubscribeEvent` handler and its class are public) runs with them.
+
 ### 3. In-world tests: must, for anything that touches the world
 
 - **Server boot smoke test:** `./gradlew runServer` starts with the pack dependencies loaded and no errors or warnings from this mod.
 - **Dev self-check:** in the dev environment, a `postInit` check that every asset resolves, every palette block exists, and every lang key is present. A failure stops the dev server.
-- **Worldgen scenarios:** `/lostcities test <scenario>` (op only, dev only) generates a fixed region on a fresh world with a given seed and profile, then checks:
+- **Worldgen scenarios:** `/lostcities test <scenario|prefix|all|list>` (op only; dev only, or `-Dlostcitiesnh.testHooks=true` in a release jar) runs registered scenarios on the server and reports `PASS`/`FAIL` lines and a `Scenarios: N passed, M failed` summary to the log and the sender's chat. `-Dlostcitiesnh.scenarios=<selector>` runs them at server start without console input. A worldgen scenario generates a fixed region on a fresh world with a given seed and profile, then checks:
   - no cascading worldgen;
   - the per-chunk time budget;
   - expected structures where the layout says they are;

@@ -13,8 +13,8 @@
 		"logoFile": "",
 		"screenshots": [],
 		"parent": "",
-		"requiredMods": [],
-		"dependencies": [],
+		"requiredMods": ["gtnhlib"],
+		"dependencies": ["gtnhlib"],
 		"dependants": [],
 		"useDependencyInformation": false
 	}]

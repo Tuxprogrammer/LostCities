@@ -6,7 +6,7 @@ Status: the part-editor and file-writing commands are *Accepted* (decision log D
 
 ## Shape
 
-- **One command**, `/lostcities` with the alias `/lost`, a 1.7.10 `CommandBase` that dispatches on its first argument. Upstream's Brigadier argument types become strings parsed by the subcommand; block positions are three integers with vanilla's relative `~` syntax (`CommandBase.clamp_coord`). Tab completion offers subcommand names and, where upstream has suggestion providers, building and part names from the asset registries.
+- **One command**, `/lostcities` with the aliases `/lost` and `/lostcitiesnh`, a 1.7.10 `CommandBase` that dispatches on its first argument. Upstream's Brigadier argument types become strings parsed by the subcommand; block positions are three integers with vanilla's relative `~` syntax (`CommandBase.clamp_coord`). Tab completion offers subcommand names and, where upstream has suggestion providers, building and part names from the asset registries.
 - **Permission per subcommand.** Each subcommand checks the sender's level (`ICommandSender.canCommandSenderUseCommand`) before it runs. Level 2, vanilla's game-master level, everywhere (P-CORE-2, D31); `test` also requires the development environment. Upstream's level 0 for `debug`, `map` and `saveprofile` is not kept (CORE-26, CORE-27).
 - **Output** is `ChatComponentTranslation` with keys `lostcitiesnh.command.<subcommand>.<message>`, sent to the sender only. Long diagnostics also go to the mod logger. Nothing prints to standard output ([CONTRIBUTING § Code standards](../../../CONTRIBUTING.md#code-standards)).
 - **Player-only subcommands** reject a console sender with a message instead of throwing.
@@ -32,7 +32,7 @@ Status: the part-editor and file-writing commands are *Accepted* (decision log D
 | `locate` | level 1 | same | 2 | `<building>` | Layout-only spiral of radius 30 chunks; up to 7 lines `x, groundLevel, z`. | |
 | `createbuilding` | level 1, mutates the cached plan | changed | 2 | `<building> <floors> <cellars> <x> <y> <z>` | Builds from a copy of the chunk's plan with the forced building; the cached layout is never touched. Floors 1 to 20 and cellars 0 to 10 as upstream, further capped so nothing passes Y 254 ([0005](../../design/0005-rwg-overlay.md) §6). | CORE-32 |
 | `testfill` | level 1, unseeded random 1.20 blocks | dropped | | | A 1.20 block-state test with no 1.7.10 use; the [block catalog](../05-assets/block-catalog/index.md) contact sheets serve authors instead. | |
-| `test` | (none) | new | 2, dev only | `<scenario>` | The worldgen scenario harness. | |
+| `test` (alias `scenario`) | (none) | new | 2, dev only (or `-Dlostcitiesnh.testHooks=true`) | `<scenario\|prefix\|all\|list>` | The scenario harness, built in M01: runs the selected scenarios on the server, one at a time, driven by server ticks, and reports `[LCNH-SCENARIO] PASS\|FAIL <name> <ms> <message>` lines and a `Scenarios: N passed, M failed` summary to the log and as `lostcitiesnh.scenario.*` chat to the sender. `all` skips manual-only scenarios ([docs/testing/](../../testing/README.md)). | |
 | vanilla `resetchunks` | level 2, registered in production | dropped | | | 1.7.10 has no such vanilla command. | CORE-33 |
 
 ## Edit-mode gate

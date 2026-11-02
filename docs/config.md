@@ -1,0 +1,40 @@
+# Configuration
+
+Lost Cities: New Horizons reads one file, `config/lostcitiesnh.cfg`, through GTNHLib's annotation config. Single player's integrated server reads the same file. In game, the **Config** button in the Mods list opens GTNHLib's automatic config screen for it; the mod has no config screen of its own ([09-client-ui](new-spec/09-client-ui/index.md), D31).
+
+## `worldgen`: module flags
+
+One switch per feature area. A switch turns that area's generation off; it never adds or removes blocks or items, because the mod registers none, so a client and a server with different settings can always join each other.
+
+These keys apply to **new worlds only**. A world copies them into its pinned profile when it is created ([0005](design/0005-rwg-overlay.md) §7), and editing them later does not change a world that already exists. The config screen marks the category as needing a world restart.
+
+| Key | Default | What it does |
+|---|---|---|
+| `worldgen.cities` | `true` | Generate cities: buildings, streets, bridges and their parks |
+| `worldgen.highways` | `true` | Generate highways between and through cities |
+| `worldgen.railways` | `true` | Generate railways, stations and subways |
+| `worldgen.scatteredStructures` | `true` | Generate scattered structures outside cities |
+
+In the file, the keys sit in the `worldgen` category:
+
+```
+worldgen {
+    B:cities=true
+    B:highways=true
+    B:railways=true
+    B:scatteredStructures=true
+}
+```
+
+`ConfigDocsTest` keeps this table in step with the code: every option has a row here with its default.
+
+## Development and testing switches
+
+JVM properties, not config keys. They exist for development and real-pack testing and are off in a normal game.
+
+| Property | Effect |
+|---|---|
+| `-Dlostcitiesnh.testHooks=true` | Turns on the scenario command and harness outside the development environment ([docs/testing/](testing/README.md)) |
+| `-Dlostcitiesnh.selfCheck=true` or `false` | Runs the dev self-check at `postInit` outside the development environment, or skips it inside |
+| `-Dlostcitiesnh.scenarios=<selector>` | Runs the selected scenarios once the server has started, where the test hooks are on |
+| `-Dlostcitiesnh.stopAfterScenarios=true` | Stops the server after that run's summary line |

@@ -1,0 +1,28 @@
+# Lost Cities: New Horizons, English (US). The source of truth for every player-visible string.
+
+# Commands
+lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: test
+lostcitiesnh.command.unknown=Unknown subcommand: %s
+lostcitiesnh.command.no_permission=You do not have permission to use this subcommand.
+lostcitiesnh.command.test.usage=/lostcities test <scenario|prefix|all|list>
+lostcitiesnh.command.test.disabled=Scenarios run only in the development environment, or with -Dlostcitiesnh.testHooks=true.
+lostcitiesnh.command.test.no_match=No scenario matches '%s'. Try /lostcities test list.
+lostcitiesnh.command.test.busy=A scenario run is already in progress.
+lostcitiesnh.command.test.list=Scenarios: %s
+lostcitiesnh.command.test.started=Running %s scenario(s); results follow.
+
+# Scenario harness
+lostcitiesnh.scenario.result=%s %s (%s ms): %s
+lostcitiesnh.scenario.summary=Scenarios: %s passed, %s failed
+
+# Config screen (GTNHLib builds the keys as lostcitiesnh.<category>.<field>)
+lostcitiesnh.worldgen=World generation
+lostcitiesnh.worldgen.tooltip=One switch per feature area. New worlds only: changes do not affect worlds that already exist.
+lostcitiesnh.worldgen.cities=Cities
+lostcitiesnh.worldgen.cities.tooltip=Generate cities: buildings, streets, bridges and their parks. New worlds only.
+lostcitiesnh.worldgen.highways=Highways
+lostcitiesnh.worldgen.highways.tooltip=Generate highways between and through cities. New worlds only.
+lostcitiesnh.worldgen.railways=Railways
+lostcitiesnh.worldgen.railways.tooltip=Generate railways, stations and subways. New worlds only.
+lostcitiesnh.worldgen.scatteredstructures=Scattered structures
+lostcitiesnh.worldgen.scatteredstructures.tooltip=Generate scattered structures outside cities. New worlds only.
