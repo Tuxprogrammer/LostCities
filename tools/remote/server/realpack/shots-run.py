@@ -39,10 +39,16 @@ STATE = re.compile(r"\[LCNH-CAPTURE\] (settled|moving)")
 CRASH = re.compile(r"Minecraft Crash Report|A fatal error has been detected")
 
 LIST_DEFAULTS = {"title": "", "user": "LCBot", "time": 6000, "render_distance": 10, "fov": 70, "clouds": False,
-                 "mobs": False, "server_jvm": "", "client_jvm": "", "setup": [], "settle_timeout": 300,
+                 "mobs": False, "server_jvm": "", "client_jvm": "", "setup": [], "settle_timeout": 300, "stable_timeout": 120,
                  "world": {}}
 WORLD_DEFAULTS = {"name": "shots", "level_type": "RWG2_CONTINENTS", "seed": "", "fresh": True}
-SHOT_KEYS = {"name", "caption", "x", "y", "z", "yaw", "pitch", "wait", "time", "find", "offset", "settle_timeout"}
+SHOT_KEYS = {"name", "caption", "x", "y", "z", "yaw", "pitch", "wait", "time", "find", "offset", "settle_timeout",
+             "stable_timeout"}
+THUMB = "160x90"          # frames are compared as grayscale thumbnails of this size
+PIXEL_DELTA = 24          # a thumbnail pixel counts as changed past this many gray levels
+STABLE_FRACTION = 0.003   # a frame is calm when under this fraction of its pixels changed
+STABLE_CALM = 3           # calm frames in a row before the shot is kept
+STABLE_INTERVAL = 3       # seconds between frames
 
 
 class Abort(Exception):
@@ -118,11 +124,14 @@ def check_shot(i, shot, plan, seen):
     s = {"name": name, "caption": shot.get("caption", ""), "yaw": float(shot.get("yaw", 0)),
          "pitch": float(shot.get("pitch", 30)), "wait": int(shot.get("wait", 2)), "time": shot.get("time"),
          "settle_timeout": int(shot.get("settle_timeout", plan["settle_timeout"])), "find": shot.get("find"),
+         "stable_timeout": int(shot.get("stable_timeout", plan["stable_timeout"])),
          "offset": shot.get("offset", [0, 0, 0])}
     if not -360 <= s["yaw"] <= 360 or not -90 <= s["pitch"] <= 90:
         fail("%s: yaw must be -360..360 and pitch -90..90" % where)
     if not 0 <= s["wait"] <= 600 or not 10 <= s["settle_timeout"] <= 1800:
         fail("%s: wait must be 0..600 s and settle_timeout 10..1800 s" % where)
+    if not 0 <= s["stable_timeout"] <= 1800:
+        fail("%s: stable_timeout must be 0..1800 s" % where)
     if s["time"] is not None and not isinstance(s["time"], int):
         fail("%s: time must be an integer (ticks)" % where)
     y = shot.get("y")
@@ -411,6 +420,44 @@ class Run:
                         '| convert xwd:- "$3"', "_", LC, str(self.args.display), path], timeout=120)
         return os.path.exists(path) and os.path.getsize(path) > 0
 
+    def thumbnail(self, name):
+        """Returns a screenshot as THUMB gray bytes, for comparing frames."""
+        path = os.path.join(self.dir, name + ".png")
+        out = subprocess.run(["bash", "-c", '. "$1/env.sh" >/dev/null 2>&1; convert "$2" -resize "$3!" '
+                              '-colorspace Gray -depth 8 gray:-', "_", LC, path, THUMB],
+                             stdout=subprocess.PIPE, timeout=120).stdout
+        return out
+
+    def take_stable(self, name, timeout):
+        """Screenshots until the frame stops changing, and keeps the last frame as <name>.png.
+
+        The client's settled line means every chunk has arrived and the renderer's build queue was empty, but
+        Celeritas can still be meshing sections (the queue empties between scheduling rounds; on classic RWG whole
+        chunks were missing 3 s after it and filled in by 40 s). So the runner also waits until STABLE_CALM frames
+        in a row, STABLE_INTERVAL s apart, each differ from the one before in under STABLE_FRACTION of a THUMB
+        grayscale thumbnail's pixels (by more than PIXEL_DELTA levels): chunks appearing change far more, water and
+        a passing animal far less. Returns (stable, seconds, last changed fraction).
+        """
+        t0 = time.time()
+        if timeout <= 0:   # no stability check: one frame
+            return self.screenshot(name), 0, 0.0
+        end = min(t0 + timeout, self.deadline)
+        tmp = name + ".frame"
+        prev, calm, frac = None, 0, 1.0
+        while True:
+            if not self.screenshot(tmp):
+                return False, int(time.time() - t0), frac
+            cur = self.thumbnail(tmp)
+            if prev is not None and cur and len(cur) == len(prev):
+                changed = sum(1 for a, b in zip(prev, cur) if abs(a - b) > PIXEL_DELTA)
+                frac = changed / float(len(cur))
+                calm = calm + 1 if frac < STABLE_FRACTION else 0
+            prev = cur
+            if calm >= STABLE_CALM or time.time() >= end:
+                os.replace(os.path.join(self.dir, tmp + ".png"), os.path.join(self.dir, name + ".png"))
+                return calm >= STABLE_CALM, int(time.time() - t0), frac
+            time.sleep(STABLE_INTERVAL)
+
     # -- shots -----------------------------------------------------------------------------------------------------
 
     def resolve(self, shot):
@@ -461,10 +508,14 @@ class Run:
             r["status"] = "ok" if st else "unsettled"
             for _ in range(shot["wait"]):
                 time.sleep(1)
-            if not self.screenshot(shot["name"]):
+            stable, secs, frac = self.take_stable(shot["name"], shot["stable_timeout"])
+            r["stable_seconds"], r["last_change"] = secs, round(frac, 4)
+            if not os.path.exists(os.path.join(self.dir, shot["name"] + ".png")):
                 r["status"] = "no-image"
             else:
                 r["image"] = shot["name"] + ".png"
+                if r["status"] == "ok" and not stable:
+                    r["status"] = "unstable"
         except ValueError as e:
             r["status"] = "failed"
             r["error"] = str(e)
@@ -545,8 +596,9 @@ def review_page(s):
             pos = "x %s · y %s · z %s · yaw %s · pitch %s" % (r["x"], r["y"], r["z"], r["yaw"], r["pitch"])
         flag = "" if r["status"] == "ok" else ' <span class="bad">%s</span>' % e(r["status"])
         err = '<p class="bad">%s</p>' % e(r["error"]) if r.get("error") else ""
-        cards.append('<figure>%s<figcaption><h2>%s%s</h2><p>%s</p><p class="meta">%s · %d s</p>%s</figcaption>'
-                     '</figure>' % (img, e(r["name"]), flag, e(r["caption"]), e(pos), r.get("seconds", 0), err))
+        timing = "%d s (stable after %s s)" % (r.get("seconds", 0), r.get("stable_seconds", "?"))
+        cards.append('<figure>%s<figcaption><h2>%s%s</h2><p>%s</p><p class="meta">%s · %s</p>%s</figcaption>'
+                     '</figure>' % (img, e(r["name"]), flag, e(r["caption"]), e(pos), e(timing), err))
     notes = "".join("<li>%s</li>" % e(n) for n in s["notes"])
     return """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

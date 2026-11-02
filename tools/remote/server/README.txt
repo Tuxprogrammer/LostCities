@@ -168,7 +168,8 @@ Shot runner: realpack/shots-run.py   (python3 -I; laptop side: lc-remote.sh shot
   not joined (dropped twice, exited, crashed, --join-timeout 420). Locks time and weather
   (gamerule doDaylightCycle false, time set, weather clear 1000000), creative mode, no mob spawning.
   Per shot: console "lostcities view" through run.sh's stdin fifo, wait for the settled line at the
-  target, the shot's wait, then xwd | convert. Then touches the hold file, says LCSHOTS-END-<id> so
+  target, the shot's wait, then xwd | convert every 3 s until 3 frames in a row each change under 0.3%
+  of a 160x90 grayscale thumbnail (stable_timeout 120 s; the last frame is the shot). Then touches the hold file, says LCSHOTS-END-<id> so
   run.sh stops the server, and TERMs either script that outlives its grace (90 s client, 300 s server).
   Writes runs/shots-<id>/: <shot>.png, results.json, index.html (review page), runner.log, server.out,
   client-<n>.out and run.done (status ok|partial|aborted, shots_ok, run_dir). --deadline (5400 s) bounds it all.

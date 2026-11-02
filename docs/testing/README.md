@@ -113,7 +113,7 @@ tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <s
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot> -- --level-type RWG --world shots-rwg
 ```
 
-The client runs with the mod's clean capture (`-Dlostcitiesnh.testHooks=true -Dlostcitiesnh.capture=true`, `client.CleanCapture`): no GUI, hand, chat, tutorial toast or pack overlays, and a `[LCNH-CAPTURE] settled` line once the chunks around a viewpoint have arrived and been built, which the runner waits for before each screenshot. The format, the runner's steps and its bounds are in [tools/remote/README.md](../../tools/remote/README.md#shot-lists). `CaptureSettingsTest` and `SettleTrackerTest` cover the capture's settings and its settle rule; the runner itself is proved by the demo set in the M05S report.
+The client runs with the mod's clean capture (`-Dlostcitiesnh.testHooks=true -Dlostcitiesnh.capture=true`, `client.CleanCapture`): no GUI, hand, chat, tutorial toast or pack overlays, and a `[LCNH-CAPTURE] settled` line once the chunks around a viewpoint have arrived and the build queue is empty; the runner waits for it, then screenshots until the picture holds still. The format, the runner's steps and its bounds are in [tools/remote/README.md](../../tools/remote/README.md#shot-lists). `CaptureSettingsTest` and `SettleTrackerTest` cover the capture's settings and its settle rule; the runner itself is proved by the demo set in the M05S report.
 
 ## Dev client
 

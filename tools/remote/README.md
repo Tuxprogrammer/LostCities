@@ -107,7 +107,7 @@ The runner:
 2. boots the server with `run.sh` for the list's world, the slot's jar, the test hooks, and `view-distance` set to the list's render distance, and waits for "Done";
 3. starts the client with `client-run.sh --hold --restore-options` and the clean capture on. The client joins by itself from the main menu, and retries once after a disconnect. If it still has not joined (dropped twice, exited, crashed, or `--join-timeout`, default 420 s), the runner stops that client and starts another once;
 4. sets creative mode, stops the daylight cycle, sets the time, clears the weather for 1,000,000 seconds, turns mob spawning off (unless `"mobs": true`), and runs the list's `setup` commands;
-5. for each shot, moves the player with `lostcities view`, waits until the client logs that the viewpoint has settled (at most the shot's `settle_timeout`), waits the shot's `wait` and screenshots the display (`xwd`);
+5. for each shot, moves the player with `lostcities view`, waits until the client logs that the viewpoint has settled (at most the shot's `settle_timeout`), waits the shot's `wait`, then screenshots the display (`xwd`) every 3 s until the picture holds still: three frames in a row that each differ from the one before in under 0.3 % of a 160 × 90 grayscale thumbnail (at most `stable_timeout`). The last frame is the shot. The client's signal alone is not enough: Angelica's build queue empties between scheduling rounds, and on classic RWG whole chunks near the camera were still missing 3 s after it and filled in by 40 s. Chunks appearing change a fifth of the thumbnail; water and a passing animal change far less than the limit;
 6. releases the client, ends the server through its console, and writes the review page.
 
 Every wait is bounded, and the whole run by `--deadline` (default 5400 s). However the runner ends, it stops the client and server through their own scripts, whose traps stop the JVMs and Xvfb.
@@ -154,6 +154,7 @@ Weather and time are the server's, so the runner locks them with console command
 | `clouds`, `mobs` | `false` | Draw clouds; leave mob spawning on |
 | `setup` | none | Console commands after the join; `{user}` is replaced by the account |
 | `settle_timeout` | 300 | Default bound, in seconds, on each shot's settle wait |
+| `stable_timeout` | 120 | Default bound, in seconds, on waiting for the picture to hold still; 0 takes one frame without the check |
 
 Each shot has a `name` (letters, digits, `.`, `_`, `-`; the PNG's name), an optional `caption`, `yaw` (default 0; 0 faces south, 90 west, 180 north, −90 east), `pitch` (default 30; positive looks down), `wait` (seconds after settling, default 2), optional `time` and `settle_timeout`, and a position:
 
@@ -162,7 +163,7 @@ Each shot has a `name` (letters, digits, `.`, `_`, `-`; the PNG's name), an opti
 
 `y` is the feet height, as `tp` takes it: a number, or `"top"`, `"top+N"`, `"top-N"` for N blocks above or below the topmost block of the shot's column. A relative `y` first looks down from y = 220 until the column has loaded, reads its top from the client, then moves to the shot. It lets one list fit worlds whose terrain differs. Without `y`, a found `y` is used, or else `"top+3"`.
 
-A shot that does not settle in time is still taken and marked `unsettled` on the page; a `find` that matches nothing marks the shot `failed`. `--only <name,...>` takes a subset; `--check` validates the list and prints the plan without the server.
+A shot that does not settle in time is still taken and marked `unsettled` on the page, and one whose picture never holds still is marked `unstable`; a `find` that matches nothing marks the shot `failed`. `--only <name,...>` takes a subset; `--check` validates the list and prints the plan without the server.
 
 ## Shared-box rules
 
