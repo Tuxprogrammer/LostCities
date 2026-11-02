@@ -203,9 +203,12 @@ public class NetworkWriterTest {
 
     @Test
     public void doesNotReproduceCITY19_aBuildingBlocksOnlyItsOwnChunksRail() {
-        // A building whose lowest floor (level 1 - 3 cellars = -2) reaches below the rail's top (-3 + 1).
+        // A building whose lowest floor (level 1 - 4 cellars = -3) reaches below the rail part's top (-3 + 1).
         assertTrue(
-            NetworkWriter.blockedByBuilding(WorldStyle.RailwayAvoidance.BLOCK_RAILWAY, true, 1, 3, -3, 1));
+            NetworkWriter.blockedByBuilding(WorldStyle.RailwayAvoidance.BLOCK_RAILWAY, true, 1, 4, -3, 1));
+        assertFalse(
+            NetworkWriter.blockedByBuilding(WorldStyle.RailwayAvoidance.BLOCK_RAILWAY, true, 1, 3, -3, 1),
+            "a lowest floor at the part's top leaves it");
         assertFalse(
             NetworkWriter.blockedByBuilding(WorldStyle.RailwayAvoidance.IGNORE, true, 1, 3, -3, 1),
             "the bundled world style ignores it");
