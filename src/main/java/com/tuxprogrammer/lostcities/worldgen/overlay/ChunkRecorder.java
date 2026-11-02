@@ -29,6 +29,7 @@ public final class ChunkRecorder {
     private final Map<Long, String> terrain = new TreeMap<>();
     private final Map<Long, String> population = new TreeMap<>();
     private final Map<Long, TerrainPhase.ChunkClass> classes = new TreeMap<>();
+    private long foliageAfterPopulation;
 
     /**
      * Starts recording a rectangle of chunks, forgetting earlier records.
@@ -47,6 +48,7 @@ public final class ChunkRecorder {
         terrain.clear();
         population.clear();
         classes.clear();
+        foliageAfterPopulation = 0;
     }
 
     /** Stops recording. */
@@ -72,11 +74,39 @@ public final class ChunkRecorder {
         return classes;
     }
 
-    /** Records a chunk's footprint volume after the population phase. */
+    /** Records a chunk's footprint volume after the population phase, and the logs and leaves left in it. */
     void afterPopulation(int chunkX, int chunkZ, ChunkBuffer chunk, ChunkPlan plan) {
-        if (covers(chunkX, chunkZ)) {
-            population.put(key(chunkX, chunkZ), ChunkBufferDigest.sha256(new FootprintView(chunk, plan)));
+        if (!covers(chunkX, chunkZ)) {
+            return;
         }
+        population.put(key(chunkX, chunkZ), ChunkBufferDigest.sha256(new FootprintView(chunk, plan)));
+        if (!plan.isCity()) {
+            return;
+        }
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                int bottom = plan.footprintBottom(x, z);
+                if (bottom == ChunkPlan.NO_FOOTPRINT) {
+                    continue;
+                }
+                for (int y = Math.max(bottom, plan.groundY() + 1); y < ChunkBuffer.HEIGHT; y++) {
+                    String name = chunk.get(x, y, z)
+                        .name();
+                    if (name.endsWith(":log") || name.endsWith(":log2") || name.contains("leaves")) {
+                        foliageAfterPopulation++;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the vanilla-named logs and leaves found in city footprints right after our population phase: RWG's
+     * decoration is done by then, so anything here passed the write guard, and anything the scenario finds later came
+     * from an {@code IWorldGenerator}.
+     */
+    public long foliageAfterPopulation() {
+        return foliageAfterPopulation;
     }
 
     /** Returns the terrain-phase hashes, by chunk key in a fixed order. */

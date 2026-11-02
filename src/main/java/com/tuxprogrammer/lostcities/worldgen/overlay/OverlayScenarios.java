@@ -182,6 +182,17 @@ public final class OverlayScenarios {
             int litLights = 0;
             int coresTouched = 0;
             int laneColumns = 0;
+            StringBuilder foliageSeen = new StringBuilder();
+            // Light the region as the chunk tick would near a player: ArchaicFix's Phosphor initializes a chunk's
+            // light once its 3 x 3 neighborhood exists, from func_150809_p (P03-8).
+            for (int cz = CITY_CENTER - inner; cz <= CITY_CENTER + inner; cz++) {
+                for (int cx = CITY_CENTER - inner; cx <= CITY_CENTER + inner; cx++) {
+                    Chunk chunk = world.getChunkFromChunkCoords(cx, cz);
+                    if (!chunk.isLightPopulated) {
+                        chunk.func_150809_p();
+                    }
+                }
+            }
             for (int cz = CITY_CENTER - inner; cz <= CITY_CENTER + inner; cz++) {
                 for (int cx = CITY_CENTER - inner; cx <= CITY_CENTER + inner; cx++) {
                     ChunkPlan chunkPlan = plan.chunk(cx, cz);
@@ -207,7 +218,7 @@ public final class OverlayScenarios {
                             streetsAtGround++;
                         }
                     }
-                    foliageInFootprint += foliageInFootprint(chunk, chunkPlan);
+                    foliageInFootprint += foliageInFootprint(chunk, chunkPlan, foliageSeen);
                     if (chunkPlan.hasBuilding()) {
                         int[] counts = lights(world, cx, cz, chunkPlan);
                         lights += counts[0];
@@ -231,6 +242,12 @@ public final class OverlayScenarios {
                     laneColumns,
                     FootprintGuard.droppedWrites(),
                     overlay.cascades()));
+            if (foliageSeen.length() > 0) {
+                LostCities.LOG.info(
+                    "[LCNH-OVERLAY] foliage in footprint: {} (right after our population phase: {})",
+                    foliageSeen,
+                    recorder.foliageAfterPopulation());
+            }
             LostCities.LOG.info(
                 "[LCNH-HASH] worldType={} seed={} chunks={} terrain={} population={}",
                 HeightOracles.worldType(world),
@@ -287,7 +304,7 @@ public final class OverlayScenarios {
         }
 
         /** RWG's logs and leaves above the city ground in footprint columns: the write guard must keep them out. */
-        private static int foliageInFootprint(Chunk chunk, ChunkPlan plan) {
+        private static int foliageInFootprint(Chunk chunk, ChunkPlan plan, StringBuilder seen) {
             int found = 0;
             for (int z = 0; z < 16; z++) {
                 for (int x = 0; x < 16; x++) {
@@ -299,6 +316,16 @@ public final class OverlayScenarios {
                         Block block = chunk.getBlock(x, y, z);
                         if (block instanceof BlockLog || block instanceof BlockLeavesBase) {
                             found++;
+                            if (found <= 3 && seen.length() < 2000) {
+                                seen.append(Block.blockRegistry.getNameForObject(block))
+                                    .append('@')
+                                    .append((chunk.xPosition << 4) + x)
+                                    .append(',')
+                                    .append(y)
+                                    .append(',')
+                                    .append((chunk.zPosition << 4) + z)
+                                    .append(' ');
+                            }
                         }
                     }
                 }
