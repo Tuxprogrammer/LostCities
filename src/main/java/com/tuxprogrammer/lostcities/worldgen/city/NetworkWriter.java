@@ -213,22 +213,52 @@ public final class NetworkWriter {
      * piece its west and east ones (avoids HWY-02: upstream tested the east neighbor twice).
      */
     private boolean openRoad(HighwayInfo.Piece piece, int level) {
-        if (!plan.isCity()) {
+        return openRoad(piece, level, plan.isCity(), (dx, dz) -> {
+            ChunkPlan neighbor = planner.plan(chunkX + dx, chunkZ + dz);
+            return neighbor.isCity() ? neighbor.cityLevel() : -1;
+        });
+    }
+
+    /** A neighbor's city level, or −1 when it is not city. */
+    @FunctionalInterface
+    interface NeighborLevel {
+
+        /**
+         * @param dx chunks east
+         * @param dz chunks south
+         * @return the neighbor's city level, or −1 when it is not city
+         */
+        int level(int dx, int dz);
+    }
+
+    /**
+     * Returns whether a highway piece is an open road: the chunk is city, and both neighbors across the road are city
+     * at or above the piece's level. A junction tests east and south, an east-west piece north and south, a
+     * north-south piece west and east (avoids HWY-02).
+     *
+     * @param piece     the piece
+     * @param level     its level
+     * @param city      whether the chunk is city
+     * @param neighbors the neighbors' city levels
+     * @return whether it is open
+     */
+    static boolean openRoad(HighwayInfo.Piece piece, int level, boolean city, NeighborLevel neighbors) {
+        if (!city) {
             return false;
         }
-        ChunkPlan a;
-        ChunkPlan b;
+        int a;
+        int b;
         if (piece.junction()) {
-            a = planner.plan(chunkX + 1, chunkZ);
-            b = planner.plan(chunkX, chunkZ + 1);
+            a = neighbors.level(1, 0);
+            b = neighbors.level(0, 1);
         } else if (piece.axis() == Axis.X) {
-            a = planner.plan(chunkX, chunkZ - 1);
-            b = planner.plan(chunkX, chunkZ + 1);
+            a = neighbors.level(0, -1);
+            b = neighbors.level(0, 1);
         } else {
-            a = planner.plan(chunkX - 1, chunkZ);
-            b = planner.plan(chunkX + 1, chunkZ);
+            a = neighbors.level(-1, 0);
+            b = neighbors.level(1, 0);
         }
-        return a.isCity() && b.isCity() && level <= a.cityLevel() && level <= b.cityLevel();
+        return a >= 0 && b >= 0 && level <= a && level <= b;
     }
 
     private static String suffix(HighwayInfo.Shape shape) {
@@ -259,9 +289,13 @@ public final class NetworkWriter {
 
     /**
      * Returns a ramp's height above its lower level at each part-local X (along its axis), in half blocks: 0 at the
-     * low end's column, {@link #RAMP_HALF_STEPS} at the high end's, at most one half block between neighbors.
+     * low end's column, {@link #RAMP_HALF_STEPS} at the high end's, at most one half block between neighbors. A
+     * north-south ramp is the part turned 90°, which puts part-local X on chunk-local Z.
+     *
+     * @param piece the ramp
+     * @return 16 heights in half blocks, indexed by the chunk-local coordinate along its axis
      */
-    static int[] rampSteps(HighwayInfo.Piece piece) {
+    public static int[] rampSteps(HighwayInfo.Piece piece) {
         boolean risesEastOrSouth = piece.highLevel() > piece.lowLevel();
         int[] steps = new int[16];
         for (int i = 0; i < 16; i++) {
@@ -354,12 +388,13 @@ public final class NetworkWriter {
         if (support == null) {
             return;
         }
-        BlockRef block = CityPalettes.blockOf(context.palettes()
-            .forPart(chunkPalette, part), support);
+        BlockRef block = supportBlock(
+            context,
+            context.palettes()
+                .forPart(chunkPalette, part),
+            support,
+            part);
         if (block == null) {
-            // Avoids HWY-12: upstream threw here.
-            context.log()
-                .warn("highway part " + part.id() + " has support '" + support + "', which its palette does not define");
             return;
         }
         column(transform, deckY, 0, 15, block, halfSteps);
@@ -367,6 +402,29 @@ public final class NetworkWriter {
         if (piece.shape() == HighwayInfo.Shape.BEND || piece.shape() == HighwayInfo.Shape.T_JUNCTION) {
             column(transform, deckY, 15, 0, block, halfSteps);
         }
+    }
+
+    /**
+     * Returns a highway part's support block, or {@code null} with one log line when its palette lacks the character
+     * (avoids HWY-12: upstream threw a {@code RuntimeException} mid-generation).
+     *
+     * @param context the world's city writing context
+     * @param palette the part's palette
+     * @param support the support character
+     * @param part    the part, for the log line
+     * @return the block, or {@code null}
+     */
+    static BlockRef supportBlock(CityWriteContext context, CompiledPalette palette, char support, Part part) {
+        BlockRef block = CityPalettes.blockOf(palette, support);
+        if (block == null) {
+            context.log()
+                .warn(
+                    "highway part " + part.id()
+                        + " has support '"
+                        + support
+                        + "', which its palette does not define; no supports");
+        }
+        return block;
     }
 
     private void column(Transform transform, int deckY, int px, int pz, BlockRef block, int[] halfSteps) {
@@ -480,10 +538,34 @@ public final class NetworkWriter {
      * part's top leaves this chunk's rail out, decided from this chunk's plan alone.
      */
     private boolean blockedByBuilding(RailChunk rail) {
-        if (worldStyle.railwayAvoidance() != WorldStyle.RailwayAvoidance.BLOCK_RAILWAY || !plan.hasBuilding()) {
+        return blockedByBuilding(
+            worldStyle.railwayAvoidance(),
+            plan.hasBuilding(),
+            plan.cityLevel(),
+            plan.cellars(),
+            rail.topLevel(),
+            worldStyle.railPartHeight6());
+    }
+
+    /**
+     * Returns whether a building leaves a chunk's rail out: under {@code block_railway}, when the building's lowest
+     * floor reaches below the rail part's top. Decided from the chunk alone, so no neighbor's rail changes (avoids
+     * CITY-19, HWY-07).
+     *
+     * @param avoidance   the world style's {@code railwayavoidance}
+     * @param building    whether the chunk has a building
+     * @param cityLevel   its city level
+     * @param cellars     its cellars
+     * @param railTop     the highest level the rail reaches
+     * @param partHeight6 the world style's {@code railpartheight6}
+     * @return whether the rail is left out
+     */
+    static boolean blockedByBuilding(WorldStyle.RailwayAvoidance avoidance, boolean building, int cityLevel,
+        int cellars, int railTop, int partHeight6) {
+        if (avoidance != WorldStyle.RailwayAvoidance.BLOCK_RAILWAY || !building) {
             return false;
         }
-        return plan.cityLevel() - plan.cellars() < rail.topLevel() + worldStyle.railPartHeight6();
+        return cityLevel - cellars < railTop + partHeight6;
     }
 
     /** A slope's transform: its part's low end faces west unmirrored; turned to run north-south along Z. */
@@ -534,16 +616,28 @@ public final class NetworkWriter {
     }
 
     private BlockRef railMain(RailChunk rail) {
-        Character c = CityPalettes.setting(cityStyle, CityStyle.Setting.RAIL_MAIN);
-        BlockRef block = c == null ? null : CityPalettes.blockOf(palette, c);
+        return railMainBlock(context, palette, CityPalettes.setting(cityStyle, CityStyle.Setting.RAIL_MAIN),
+            plan.cityStyle(), rail.type());
+    }
+
+    /**
+     * Returns a city style's rail main block, or {@code null} with one log line when it names none or its palette lacks
+     * it (avoids HWY-12: upstream threw a {@code RuntimeException} mid-generation). Without it the rails keep every
+     * track and a rail dungeon's tunnel is not dug.
+     *
+     * @param context   the world's city writing context
+     * @param palette   the chunk's palette
+     * @param character the city style's {@code railmain} character, or {@code null}
+     * @param style     the city style's name, for the log line
+     * @param type      the rail type, for the log line
+     * @return the block, or {@code null}
+     */
+    static BlockRef railMainBlock(CityWriteContext context, CompiledPalette palette, Character character,
+        String style, RailChunkType type) {
+        BlockRef block = character == null ? null : CityPalettes.blockOf(palette, character);
         if (block == null) {
-            // Avoids HWY-12: upstream threw here.
             context.log()
-                .warn(
-                    "city style " + plan.cityStyle()
-                        + " has no rail main block in its palette; "
-                        + rail.type()
-                        + " rails keep every track");
+                .warn("city style " + style + " has no rail main block in its palette; " + type + " rails keep every track");
         }
         return block;
     }

@@ -29,6 +29,7 @@ import com.tuxprogrammer.lostcities.layout.highway.Route;
 import com.tuxprogrammer.lostcities.layout.highway.Run;
 import com.tuxprogrammer.lostcities.layout.highway.Segment;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
+import com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
@@ -60,8 +61,6 @@ public final class NetworkScenarios {
     static final int MAX_RUN = 220;
     /** Chunks either side of a path that are generated, so the path's chunks are populated. */
     static final int CORRIDOR = 2;
-    /** Blocks above and below the expected deck the walk looks for the surface. */
-    static final int SEARCH = 8;
     /** Highest step a walk accepts, in blocks: a half slab. */
     static final double MAX_STEP = 0.5;
     /** Most chunks from the spawn the railway scenario looks for a station. */
@@ -249,7 +248,7 @@ public final class NetworkScenarios {
                         tunnels++;
                     }
                 }
-                int deck = expectedDeck(planner, networks, chunkX, chunkZ);
+                int deck = expectedDeck(planner, networks, block[0], block[1]);
                 walk.step(block[0], block[1], deck);
             }
             boolean startMeets = meetsCity(planner, run.start());
@@ -301,23 +300,24 @@ public final class NetworkScenarios {
             return plan.isCity() && plan.cityLevel() == end.level();
         }
 
-        /** The deck Y in a chunk: the lower deck of its highway. */
-        private static int expectedDeck(LayoutPlanner planner, Networks networks, int chunkX, int chunkZ) {
-            HighwayInfo info = networks.highway(chunkX, chunkZ);
-            int level = Integer.MAX_VALUE;
-            if (info.xDeck() != null) {
-                level = Math.min(
-                    level,
-                    info.xDeck()
-                        .min());
+        /**
+         * The deck's block Y under a block of the walk: the lowest piece's deck, raised on a ramp by the column's
+         * whole steps, as the writer lays it.
+         */
+        private static int expectedDeck(LayoutPlanner planner, Networks networks, int blockX, int blockZ) {
+            int chunkX = blockX >> 4;
+            int chunkZ = blockZ >> 4;
+            int best = Integer.MAX_VALUE;
+            for (HighwayInfo.Piece piece : networks.highway(chunkX, chunkZ)
+                .pieces(chunkX, chunkZ)) {
+                int y = planner.profile().groundLevel + piece.level() * ChunkPlan.FLOOR_HEIGHT;
+                if (piece.shape() == HighwayInfo.Shape.RAMP) {
+                    int along = piece.axis() == Axis.X ? blockX & 15 : blockZ & 15;
+                    y += NetworkWriter.rampSteps(piece)[along] / 2;
+                }
+                best = Math.min(best, y);
             }
-            if (info.zDeck() != null) {
-                level = Math.min(
-                    level,
-                    info.zDeck()
-                        .min());
-            }
-            return planner.profile().groundLevel + level * ChunkPlan.FLOOR_HEIGHT;
+            return best == Integer.MAX_VALUE ? planner.profile().groundLevel : best;
         }
     }
 
@@ -396,7 +396,7 @@ public final class NetworkScenarios {
             // The lowest surface from just under the deck up: a floor with no full block on it. Searching from above
             // would land on a lamp's arm over the road.
             double standing = Double.NaN;
-            for (int y = deck - 1; y <= deck + SEARCH; y++) {
+            for (int y = deck - 1; y <= deck + 2; y++) {
                 double top = top(x, y, z);
                 if (Double.isNaN(top)) {
                     continue;
