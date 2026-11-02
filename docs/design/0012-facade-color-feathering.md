@@ -1,6 +1,6 @@
 # 0012 · Facade color feathering
 
-- Status: Accepted (M12, decision log D-M12-1)
+- Status: Accepted (M12, decision log D217)
 - Gate: M12 exit (color feathering)
 - Amends: refines how [building-info.md](../original-spec/04-city-layout/building-info.md) step 12.13 picks a chunk's palettes, and how [0007](0007-palette-variety.md) §2 draws a building's variety (its "Still open": feathering chooses among the variety by the neighbors' colors)
 - Date: 2026-11-02

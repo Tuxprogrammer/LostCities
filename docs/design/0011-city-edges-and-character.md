@@ -1,6 +1,6 @@
 # 0011 · City edges and character
 
-- Status: Accepted (M12, decision log D-M12-2 to D-M12-8)
+- Status: Accepted (M12, decision log D218 to D224)
 - Gate: M12 exit
 - Amends: [building-info.md](../original-spec/04-city-layout/building-info.md) step 12.7 (floor counts); [0006](0006-build-around-other-worldgen.md) §3 (detours); D152 (lane steps)
 - Date: 2026-11-02
