@@ -64,6 +64,55 @@ public class SoftEdgesTest {
     }
 
     @Test
+    public void aStripMeetsAPondAtItsWaterlineNotItsBed() {
+        ChunkPlan plan = ChunkPlan.builder(0, 0, ChunkKind.CITY)
+            .groundY(71)
+            .build();
+        // The village's pond reaches into the city chunk's edge columns: a bed at 60 under water up to Y 62.
+        ArrayChunkBuffer buffer = flat(66);
+        for (int x = 12; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 61; y <= 66; y++) {
+                    buffer.set(x, y, z, y <= 62 ? TestTerrain.WATER : BlockRef.AIR);
+                }
+                buffer.set(x, 60, z, TestTerrain.DIRT);
+            }
+        }
+        int[] targets = new int[256];
+        int[] depth = new int[256];
+        int[] inner = new int[256];
+        SoftEdges.targets(buffer, CONTEXT, 0, 0, plan, coreToTheEast(plan), targets, depth, inner);
+        for (int z = 0; z < 16; z++) {
+            assertEquals(62, targets[(z << 4) | 15], "the edge column becomes shore at the waterline, row " + z);
+        }
+        int previous = 62;
+        for (int x = 14; x >= 0 && depth[(8 << 4) | x] != SoftEdges.NOT_IN_STRIP; x--) {
+            int target = targets[(8 << 4) | x];
+            assertTrue(target >= previous && target - previous <= SoftEdges.RISE_PER_COLUMN, "x " + x);
+            previous = target;
+        }
+        assertEquals(
+            62,
+            SoftEdges.waterline(
+                buffer,
+                TestTerrain.context(4L)
+                    .classifier(),
+                15,
+                3,
+                60));
+        assertEquals(
+            66,
+            SoftEdges.waterline(
+                flat(66),
+                TestTerrain.context(4L)
+                    .classifier(),
+                15,
+                3,
+                66),
+            "dry land");
+    }
+
+    @Test
     public void aSteepStepLeavesARetainingWallNoTallerThanNeeded() {
         ChunkPlan plan = ChunkPlan.builder(0, 0, ChunkKind.CITY)
             .groundY(101)

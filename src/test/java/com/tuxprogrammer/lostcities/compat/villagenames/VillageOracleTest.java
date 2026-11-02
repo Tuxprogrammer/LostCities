@@ -304,6 +304,49 @@ class VillageOracleTest {
         assertEquals(once, warm.calls, "a large cache answers again without planning");
     }
 
+    /** Thrown by {@link #retryingHeights} the first time a column is asked, as the prefetcher's probe does. */
+    private static final class NotYet extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+    }
+
+    @Test
+    void aGroundEstimateAbandonedMidwayDoesNotPlanTheVillageAgain() {
+        Set<Long> known = new HashSet<>();
+        TerrainHeightOracle retryingHeights = (x, z) -> {
+            if (known.add(BoundedCache.key(x, z))) {
+                throw new NotYet();
+            }
+            return HEIGHTS.height(x, z);
+        };
+        FakePlans plans = new FakePlans();
+        VillageOracle oracle = new VillageOracle(
+            SEED,
+            settings(true, 0),
+            BIOMES,
+            plans,
+            retryingHeights,
+            2,
+            VillageOracle.CACHE_SIZE);
+        List<Landmark> answer = null;
+        for (int attempt = 0; attempt < 10_000 && answer == null; attempt++) {
+            try {
+                answer = oracle.landmarksTouching(-150, -150, 150, 150);
+            } catch (NotYet abandoned) {
+                // The prefetcher fetches the column and asks again.
+            }
+        }
+        assertNotNull(answer);
+        assertEquals(
+            plans.asked.size(),
+            plans.calls,
+            "each village planned once, however often its ground was abandoned");
+        assertEquals(
+            describeAll(oracle(new FakePlans(), VillageOracle.CACHE_SIZE).landmarksTouching(-150, -150, 150, 150)),
+            describeAll(answer),
+            "the same landmarks as an oracle that never abandons");
+    }
+
     @Test
     void groundAndIdentityComeFromThePlan() {
         VillageOracle oracle = oracle(new FakePlans(), VillageOracle.CACHE_SIZE);

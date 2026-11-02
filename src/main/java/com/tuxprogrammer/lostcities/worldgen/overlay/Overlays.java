@@ -63,11 +63,12 @@ public final class Overlays {
 
     private Overlays() {}
 
-    /** Subscribes the installer and the population vetoes. */
+    /** Subscribes the installer, the population vetoes, the tree guard and the plan prefetchers' ticker. */
     public static void register() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         MinecraftForge.TERRAIN_GEN_BUS.register(new PopulateVetoes(INSTANCE));
         TreeGuard.register(INSTANCE);
+        PrefetchTicker.register(INSTANCE);
     }
 
     /**

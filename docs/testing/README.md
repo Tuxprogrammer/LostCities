@@ -107,18 +107,24 @@ Each feature adds its scenarios to this table.
 
 `view=X,Y,Z,YAW,PITCH` feeds `/lostcities view <player> X Y Z YAW PITCH`. `softedge`, `reserved` and `village` find something only where a structure oracle knows a landmark: VillageNames villages on both world types, and ocean monuments on RWG2 (D107, D115).
 
+`/lostcities find <softedge|reserved|village> <radius> best` ranks every candidate of those kinds within the radius instead of taking the nearest (`worldgen.city.LandmarkViews`, D-A-6). Candidates come from the structure oracle's landmarks, so a radius of 200 chunks takes a few seconds, not a scan of every chunk. Lower scores win, ties go to the nearer: the relief of the ground within two chunks of the target (city ground in city chunks, the oracle height elsewhere), plus the gap between the city's ground and the village's (a gate outside a city adds 40), and for a soft edge a penalty for a step under 3 or over 10 blocks. The views stand beside what they show, 26 blocks above the highest ground or roof on the line of sight (16 for a soft edge), and look down at it: a village gate from 40 blocks beside its lane (the city on one half of the frame, the village on the other), a reserved lot (the core of the village whose gate ranks best, since a flat core can still be a forest of tall trees) from 44 blocks inside the city across its edge ring, a soft edge from 26 blocks along its strip. The label names the landmark and the score's parts:
+
+```
+[LCNH-FIND] kind=village block=952,71,-1368 chunk=59,-86 view=912.5,97.0,-1375.5,281,33 label=gate of village@53,-86 facing NORTH, in the city, relief 6, ground 71 to the village's 72
+```
+
 ### City runs on the real pack
 
 ```sh
 tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
     --set-config 'archaicfix.cfg:logCascadingWorldgen=true' --set-config 'archaicfix.cfg:logCascadingWorldgenStacktrace=true' \
     --jvm '-Dlostcitiesnh.testHooks=true' \
-    --cmds 'lostcities test city.real; until:\[LCNH-SCENARIO\] Scenarios:; lostcities test city.walk; until:\[LCNH-SCENARIO\] Scenarios:; lostcities find interior; lostcities timers reset; lostcities test city.budget; until:\[LCNH-SCENARIO\] Scenarios:; wait:5'
+    --cmds 'lostcities test city.real; until:\[LCNH-SCENARIO\] Scenarios:; lostcities test city.walk; until:\[LCNH-SCENARIO\] Scenarios:; lostcities test city.sewing; until:\[LCNH-SCENARIO\] Scenarios:; lostcities find interior; lostcities timers reset; lostcities test city.budget; until:\[LCNH-SCENARIO\] Scenarios:; wait:5'
 ```
 
-Repeat with `--level-type RWG`, and once more per world type with only `city.real` to compare the `[LCNH-HASH]` lines of two fresh worlds.
+Repeat with `--level-type RWG`; two such runs per world type are two fresh worlds whose `[LCNH-HASH]` lines must match. `city.sewing` runs before the budget as part of its warm-up: it builds about a hundred VillageNames village starts, so the JIT has compiled VillageNames' start constructor before the budget region meets a village, as on a server that has generated land for a while (the first few starts of a JVM's life cost 14 to 140 ms each, warm ones 3 to 9 ms; D-A-4). Each `until:` waits for a line written after the command before it ([tools/remote/README.md](../../tools/remote/README.md#real-pack-arguments-runsh)).
 
-The `[LCNH-BUDGET]` lines give the `provide`, `terrain`, `populate` and `population` series by chunk class, then `oracle` (the layout's height samples) and `structures` (every structure-oracle call, ground estimates included), then B1 to B5. A chunk's one sky light pass counts as RWG's `provide` when the overlay deferred RWG's own pass, and as the terrain phase's otherwise (D122).
+The `[LCNH-BUDGET]` lines give the `provide`, `terrain`, `populate` and `population` series by chunk class, then `oracle` (the layout's height samples), `structures` (every structure-oracle call, ground estimates included, and the village starts the prefetcher builds) and `prefetch` (the plan prefetcher's work per server tick, D-A-1); then the eight slowest invocations of a terrain or population phase or a prefetch tick, each with the height samples and structure-oracle time it took (`slow terrain city chunk=4,36 6.654 ms: 7 height samples 4.271 ms, structures 0.066 ms`); then the prefetcher's counts (plans it completed, values it fetched, the time its abandoned attempts cost, its slowest tick broken down) and the plan cache's misses; then B1 to B5. B3 counts the prefetcher's work as overlay work, and B4 takes the worst p99.9 of the terrain phase, the population phase and the prefetch tick, leaving out (and counting) the invocations a garbage-collection pause fell into (D-A-3). A chunk's one sky light pass counts as RWG's `provide` when the overlay deferred RWG's own pass, and as the terrain phase's otherwise (D122). `-Dlostcitiesnh.prefetch=false` turns the prefetcher off for a comparison run; what is generated is the same.
 
 ### Overlay runs on the real pack
 
@@ -154,7 +160,7 @@ tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <s
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot> -- --level-type RWG --world shots-rwg
 ```
 
-The alpha gate's set of real cities is two lists, one per world type, whose every shot but the RWG2 monument takes its position and view from `/lostcities find` (D124): city from above, street level, a building interior, the city's edge, a village's lane or link, a reserved lot and a soft edge.
+The alpha gate's set of real cities is two lists, one per world type, whose every shot but the RWG2 monument takes its position and view from `/lostcities find` (D124): city from above, street level, a building interior, the city's edge, a village's gate, a reserved lot and a soft edge. The village shots, and on classic RWG the reserved lot and the soft edge too, use `find … best` within 48 (RWG2) or 200 chunks (classic RWG), since classic RWG's nearest village on seed 4242 sits on a mountainside (D-A-6); the RWG2 soft edge stays the nearest, the bank between a street and a village's pond.
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/alpha-rwg2.json --slot <slot>

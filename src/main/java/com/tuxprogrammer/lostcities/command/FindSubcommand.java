@@ -26,7 +26,9 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * center), {@code street} (primary street), {@code interior} (an enterable building), {@code edge} (where a city meets
  * RWG terrain), {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
  * chunk); the last two find something only where a structure oracle knows a landmark. The radius is in chunks,
- * {@value #DEFAULT_RADIUS} by default, at most {@value #MAX_RADIUS}.
+ * {@value #DEFAULT_RADIUS} by default, at most {@value #MAX_RADIUS}. With {@code best} after the radius, a soft edge,
+ * reserved lot or village is the one within the radius that shows the city and the landmark together most clearly,
+ * with a view framing both ({@link CityFinder#findBest}), not the nearest.
  *
  * <p>
  * Output: one chat line (a lang key), and one log line for automation:
@@ -43,6 +45,8 @@ public final class FindSubcommand implements Subcommand {
     static final int DEFAULT_RADIUS = 48;
     /** Largest search radius, in chunks. */
     static final int MAX_RADIUS = 256;
+    /** Last argument that asks for the clearest landmark view instead of the nearest. */
+    static final String BEST = "best";
     /** Prefix of the log line automation reads. */
     public static final String TAG = "[LCNH-FIND] ";
 
@@ -56,14 +60,15 @@ public final class FindSubcommand implements Subcommand {
         if (!DevEnvironment.testHooksEnabled()) {
             throw new CommandException(LangKeys.TEST_DISABLED);
         }
-        if (args.length < 1 || args.length > 2) {
+        if (args.length < 1 || args.length > 3) {
             throw new WrongUsageException(LangKeys.FIND_USAGE);
         }
         CityFinder.Kind kind = CityFinder.Kind.of(args[0]);
-        if (kind == null) {
+        boolean best = args.length == 3 && BEST.equalsIgnoreCase(args[2]);
+        if (kind == null || args.length == 3 && !best) {
             throw new WrongUsageException(LangKeys.FIND_USAGE);
         }
-        int radius = args.length == 2 ? CommandBase.parseIntBounded(sender, args[1], 0, MAX_RADIUS) : DEFAULT_RADIUS;
+        int radius = args.length >= 2 ? CommandBase.parseIntBounded(sender, args[1], 0, MAX_RADIUS) : DEFAULT_RADIUS;
         World world = sender.getEntityWorld();
         OverlayWorld overlay = Overlays.INSTANCE.get(world);
         if (overlay == null || overlay.cities() == null) {
@@ -73,8 +78,11 @@ public final class FindSubcommand implements Subcommand {
         CityFinder finder = new CityFinder(
             overlay.cities()
                 .planner(),
-            overlay.plan());
-        CityFinder.Result result = finder.find(kind, at.posX, at.posZ, radius);
+            overlay.plan(),
+            overlay.cities()
+                .structures());
+        CityFinder.Result result = best ? finder.findBest(kind, at.posX, at.posZ, radius)
+            : finder.find(kind, at.posX, at.posZ, radius);
         if (result == null) {
             LostCities.LOG.info("{}kind={} none within {} chunks", TAG, kind.key(), radius);
             sender.addChatMessage(new ChatComponentTranslation(LangKeys.FIND_NONE, kind.key(), radius));
@@ -138,6 +146,9 @@ public final class FindSubcommand implements Subcommand {
 
     @Override
     public List<String> tabComplete(ICommandSender sender, String[] args) {
+        if (args.length == 3) {
+            return CommandBase.getListOfStringsMatchingLastWord(args, BEST);
+        }
         if (args.length != 1) {
             return Collections.emptyList();
         }

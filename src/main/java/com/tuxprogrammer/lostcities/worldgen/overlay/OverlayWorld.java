@@ -21,6 +21,8 @@ import com.tuxprogrammer.lostcities.worldgen.city.CityWriteContext;
 import com.tuxprogrammer.lostcities.worldgen.city.LayoutCityPlan;
 import com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache;
 import com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights;
+import com.tuxprogrammer.lostcities.worldgen.height.ColumnHeightCache;
+import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 import com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
@@ -34,7 +36,8 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 
 /**
  * Everything the overlay holds for one wrapped world: the pinned snapshot and settings, the height oracle and chunk
- * heights, the cached plan, the terrain and population phases, the timers and the scenario recorder. Built when the
+ * heights with their probe, the cached plan and its prefetcher, the terrain and population phases, the timers and the
+ * scenario recorder. Built when the
  * wrapper is installed and dropped on {@code WorldEvent.Unload}, so every cache is owned by the world (0005 §8, B5).
  *
  * <p>
@@ -47,8 +50,10 @@ public final class OverlayWorld {
     private final ProfileSnapshot snapshot;
     private final TerrainSettings settings;
     private final GenerationTimers timers = new GenerationTimers();
+    private final HeightProbe probe = new HeightProbe();
     private final ChunkHeights heights;
     private final CachedCityPlan plan;
+    private final PlanPrefetcher prefetcher;
     private final TerrainPhase terrainPhase;
     private final PopulationPhase populationPhase;
     private final BlockRefs refs = new BlockRefs();
@@ -75,11 +80,16 @@ public final class OverlayWorld {
             settings,
             classifier,
             BlockRefs::exists);
-        TerrainHeightOracle columns = ChunkColumnCache.wrap(oracle);
-        this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle);
+        TerrainHeightOracle columns = ChunkColumnCache.wrap(oracle, probe);
+        this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
         this.biomes = new WorldBiomes(world);
         this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers);
         this.plan = new CachedCityPlan(planSource(world.getSeed(), snapshot, settings, heights, cities));
+        this.prefetcher = new PlanPrefetcher(
+            plan,
+            probe,
+            timers,
+            (x, z) -> world.theChunkProviderServer != null && world.theChunkProviderServer.chunkExists(x, z));
         this.terrainPhase = new TerrainPhase(context, plan);
         this.populationPhase = new PopulationPhase(world, refs);
         this.buffer = new WorldChunkBuffer(refs);
@@ -366,6 +376,16 @@ public final class OverlayWorld {
         return heights;
     }
 
+    /** Returns how many plans the plan cache has computed (its misses), for the budget report. */
+    public long planMisses() {
+        return plan.misses();
+    }
+
+    /** Returns the plan prefetcher. */
+    public PlanPrefetcher prefetcher() {
+        return prefetcher;
+    }
+
     /** Returns how many chunks were generated while a population ran (cascades). */
     public long cascades() {
         return cascades;
@@ -378,8 +398,9 @@ public final class OverlayWorld {
 
     /** Returns the most memory the world's caches can hold, estimated, for budget B5. */
     public long cacheBytes() {
+        // The column cache is a ChunkColumnCache on classic RWG and a smaller ColumnHeightCache on RWG2: the larger.
         return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES
-            + ChunkColumnCache.MAX_BYTES
+            + Math.max(ChunkColumnCache.MAX_BYTES, ColumnHeightCache.MAX_BYTES)
             + (cities == null ? 0 : cities.estimatedCacheBytes());
     }
 

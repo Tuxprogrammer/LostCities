@@ -5,6 +5,7 @@ import java.util.Locale;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
+import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
 
@@ -234,16 +235,47 @@ public final class CityFinder {
 
     private final LayoutPlanner planner;
     private final CityPlan plan;
+    private final StructureOracle structures;
 
     /**
-     * Creates the finder of one world.
+     * Creates the finder of one world, without its structure oracle: {@link #findBest} finds nothing.
      *
      * @param planner the world's layout planner
      * @param plan    the world's plan source, for grounds and natural heights
      */
     public CityFinder(LayoutPlanner planner, CityPlan plan) {
+        this(planner, plan, StructureOracle.NONE);
+    }
+
+    /**
+     * Creates the finder of one world.
+     *
+     * @param planner    the world's layout planner
+     * @param plan       the world's plan source, for grounds and natural heights
+     * @param structures the structure oracle the planner was built with, for {@link #findBest}
+     */
+    public CityFinder(LayoutPlanner planner, CityPlan plan, StructureOracle structures) {
         this.planner = planner;
         this.plan = plan;
+        this.structures = structures;
+    }
+
+    /**
+     * Finds the clearest view of a landmark kind ({@code softedge}, {@code reserved}, {@code village}) within a
+     * radius, ranked by how well it shows the city and the landmark together ({@link LandmarkViews}); any other kind
+     * is {@link #find}'s nearest.
+     *
+     * @param kind   what to find
+     * @param blockX the start's block X
+     * @param blockZ the start's block Z
+     * @param radius how far to look, in chunks
+     * @return the best find, or {@code null}
+     */
+    public Result findBest(Kind kind, int blockX, int blockZ, int radius) {
+        if (kind != Kind.SOFTEDGE && kind != Kind.RESERVED && kind != Kind.VILLAGE) {
+            return find(kind, blockX, blockZ, radius);
+        }
+        return new LandmarkViews(planner, plan, structures).best(kind, blockX, blockZ, radius);
     }
 
     /**

@@ -69,6 +69,8 @@ public final class OverlayChunkProvider implements IChunkProvider {
                 owed = SkylightDeferral.end();
             }
         }
+        GenerationTimers timers = overlay.timers();
+        GenerationTimers.PhaseMark mark = timers.mark();
         long generated = System.nanoTime();
         TerrainPhase.ChunkClass chunkClass = chunk == null ? TerrainPhase.ChunkClass.UNTOUCHED : overlay.terrain(chunk);
         long done = System.nanoTime();
@@ -77,11 +79,18 @@ public final class OverlayChunkProvider implements IChunkProvider {
         }
         long light = System.nanoTime() - done;
         // The one sky light pass is the delegate's when it skipped its own, else the terrain phase's.
-        GenerationTimers timers = overlay.timers();
         timers.record(GenerationTimers.Series.PROVIDE, chunkClass, generated - start + (owed ? light : 0));
-        timers.record(GenerationTimers.Series.TERRAIN, chunkClass, done - generated + (owed ? 0 : light));
+        timers.recordPhase(
+            GenerationTimers.Series.TERRAIN,
+            chunkClass,
+            chunkX,
+            chunkZ,
+            done - generated + (owed ? 0 : light),
+            mark);
         if (chunk != null) {
             overlay.recordTerrain(chunk, chunkClass);
+            overlay.prefetcher()
+                .generated(chunkX, chunkZ);
         }
         return chunk;
     }
@@ -93,7 +102,6 @@ public final class OverlayChunkProvider implements IChunkProvider {
 
     @Override
     public void populate(IChunkProvider provider, int chunkX, int chunkZ) {
-        TerrainPhase.ChunkClass chunkClass = overlay.populationClass(chunkX, chunkZ);
         long start = System.nanoTime();
         boolean pushed = FootprintGuard.push(world, overlay.plan(), true);
         if (!pushed) {
@@ -107,7 +115,11 @@ public final class OverlayChunkProvider implements IChunkProvider {
                 FootprintGuard.pop();
             }
         }
+        GenerationTimers timers = overlay.timers();
+        GenerationTimers.PhaseMark mark = timers.mark();
         long populated = System.nanoTime();
+        // Classed inside the timed span: the plans it reads are overlay work when not cached yet.
+        TerrainPhase.ChunkClass chunkClass = overlay.populationClass(chunkX, chunkZ);
         boolean suspended = FootprintGuard.push(world, overlay.plan(), false);
         try {
             overlay.population(chunkX, chunkZ);
@@ -117,9 +129,8 @@ public final class OverlayChunkProvider implements IChunkProvider {
             }
         }
         long done = System.nanoTime();
-        GenerationTimers timers = overlay.timers();
         timers.record(GenerationTimers.Series.POPULATE, chunkClass, populated - start);
-        timers.record(GenerationTimers.Series.POPULATION, chunkClass, done - populated);
+        timers.recordPhase(GenerationTimers.Series.POPULATION, chunkClass, chunkX, chunkZ, done - populated, mark);
         overlay.recordPopulation(chunkX, chunkZ);
     }
 

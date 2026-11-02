@@ -87,7 +87,7 @@ Rules E2 to E4 of [coexistence.md § Soft edges](../00-pack-integration/coexiste
 |---|---|---|
 | Width | `softEdgeWidth` 6 columns, varied ±2 per column along the side by upstream's terrain transition noise | E2, E4 |
 | Inner edge | The city ground of the chunk | E2 |
-| Outer edge | The column's own RWG height at the core's edge, read from C's own columns | E2; [0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4 |
+| Outer edge | The column's own RWG height at the core's edge, read from C's own columns: its solid surface, or the top of the water standing on it, so a pond or river in the core meets the strip at its waterline | E2; [0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4; D-A-5 |
 | Surface | Each column keeps its own top block, moved with upstream's `moveDown` (6 kept layers) or `moveUp` | E2 |
 | Steep step | When the height difference exceeds twice the strip's width, the strip ramps as far as it can and a retaining border of the city style's `borderBlock`, no taller than the remaining step, stands at the strip's inner edge | E3 |
 | Decoration | Outside the footprint: RWG's trees and boulders stay | E5 |

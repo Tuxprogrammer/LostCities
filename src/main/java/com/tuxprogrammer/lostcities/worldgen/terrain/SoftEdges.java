@@ -13,7 +13,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  *
  * <ul>
  * <li>Width: {@code softEdgeWidth}, varied by up to ±2 per position along the side by the transition noise (E4).</li>
- * <li>Outer edge: the edge column's own surface before leveling, read from this chunk's RWG columns; inner edge: the
+ * <li>Outer edge: the edge column's own surface before leveling, or the top of the water standing on it (a pond or
+ * river at the core's edge meets the strip at its waterline), read from this chunk's RWG columns; inner edge: the
  * city ground (E2).</li>
  * <li>Steep step: the strip absorbs at most two blocks of height per column. A larger step leaves the rest to a
  * retaining column of the city style's border block at the strip's inner edge, no taller than the remaining step
@@ -84,6 +85,8 @@ public final class SoftEdges {
                 int outer = ColumnOps.surface(buffer, classes, edgeX, edgeZ, true);
                 if (outer < WorldLimits.MIN_Y) {
                     outer = ground;
+                } else {
+                    outer = waterline(buffer, classes, edgeX, edgeZ, outer);
                 }
                 float noise = context.transitionNoise((chunkX << 4) + edgeX, (chunkZ << 4) + edgeZ);
                 int variation = Math.max(-WIDTH_VARIATION, Math.min(WIDTH_VARIATION, Math.round(noise / 2f)));
@@ -139,6 +142,26 @@ public final class SoftEdges {
                 plan.style()
                     .border());
         }
+    }
+
+    /**
+     * Returns the height a strip ends at on its edge column: the column's solid surface, or the top of the liquid
+     * standing on it. A core's pond or river then meets the strip at its waterline, as a shore, instead of the strip
+     * ramping down to the bed under the water (0006 §4, E2).
+     *
+     * @param buffer  the chunk before leveling
+     * @param classes the block classes
+     * @param x       local X of the edge column
+     * @param z       local Z of the edge column
+     * @param surface the column's solid surface, through foliage
+     * @return block Y
+     */
+    static int waterline(ChunkBuffer buffer, BlockClassifier classes, int x, int z, int surface) {
+        int y = surface + 1;
+        while (y <= WorldLimits.MAX_Y && classes.isLiquid(buffer.get(x, y, z))) {
+            y++;
+        }
+        return y - 1;
     }
 
     private static int edgeX(ChunkPlan.Side side, int along, int depth) {

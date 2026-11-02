@@ -54,31 +54,32 @@
     {
       "name": "village",
       "find": {
-        "cmd": "lostcities find village",
-        "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+        "cmd": "lostcities find village 200 best",
+        "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
       },
       "wait": 3,
-      "caption": "Village sewn into the city: the lane or link from the city toward a VillageNames village, from the south."
+      "caption": "Village sewn into the city: a village's gate where the city's lane meets it, seen from beside the lane, the city on one side and the village on the other. The clearest of every gate within 200 chunks of the spawn (flattest ground, city and village at one height); the nearest village sits on a mountainside."
     },
     {
       "name": "reserved",
       "find": {
-        "cmd": "lostcities find reserved",
-        "match": "kind=reserved block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+        "cmd": "lostcities find reserved 200 best",
+        "match": "kind=reserved block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
       },
       "wait": 3,
-      "caption": "Reserved lot: the edge ring the city leaves around a VillageNames village, from the south."
+      "caption": "Reserved lot: the core of the same village as the village shot, the natural ground the city leaves to it, seen from inside the city across the edge ring."
     },
     {
       "name": "softedge",
       "find": {
-        "cmd": "lostcities find softedge",
-        "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+        "cmd": "lostcities find softedge 200 best",
+        "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
       },
       "wait": 3,
-      "caption": "Soft edge: the strip where the city slopes to a village's natural ground instead of a wall, from above the rooftops.",
-      "pitch": 35,
-      "y": "top+20"
+      "caption": "Soft edge: the strip where a city chunk slopes to a village's natural ground instead of a wall, seen along the strip so its ramp shows in profile. The clearest within 200 chunks of the spawn."
     }
   ]
 }

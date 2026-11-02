@@ -149,6 +149,71 @@ public class CityFinderTest {
     }
 
     @Test
+    public void theBestVillageViewStandsBesideAGateInTheCity() {
+        int[] block = cityBlock();
+        Landmark village = village(block[0], block[1]);
+        LayoutCityPlan withVillage = CityFixtures
+            .plan(CityFixtures.SEED, new LayoutFixtures.FakeOracle(village), LayoutLog.SILENT);
+        CityFinder finder = new CityFinder(withVillage.planner(), withVillage, new LayoutFixtures.FakeOracle(village));
+        CityFinder.Result gate = finder.findBest(CityFinder.Kind.VILLAGE, block[0] << 4, block[1] << 4, 24);
+        assertNotNull(gate);
+        assertEquals(
+            LaneRole.GATE,
+            withVillage.planner()
+                .plan(gate.chunkX(), gate.chunkZ())
+                .lane()
+                .role(),
+            gate.format());
+        assertTrue(
+            withVillage.chunk(gate.chunkX(), gate.chunkZ())
+                .isCity(),
+            "sewn into the city: " + gate.format());
+        double side = Math.hypot(gate.viewX() - gate.x() - 0.5, gate.viewZ() - gate.z() - 0.5);
+        assertEquals(
+            Math.hypot(LandmarkViews.GATE_SIDE, LandmarkViews.GATE_TOWARD_CITY),
+            side,
+            0.01,
+            "beside the lane: " + gate.format());
+        assertTrue(gate.viewY() >= gate.y() + LandmarkViews.LIFT, "above the ground on the line of sight");
+        assertEquals(
+            Math.round(CityFinder.yawToward(gate.viewX(), gate.viewZ(), gate.x() + 0.5, gate.z() + 0.5)),
+            gate.yaw(),
+            0.01f,
+            "looks at the gate");
+        assertTrue(gate.pitch() > 0f && gate.pitch() < 90f, "looks down: " + gate.format());
+    }
+
+    @Test
+    public void theBestReservedLotAndSoftEdgeFaceTheCore() {
+        int[] block = cityBlock();
+        Landmark village = village(block[0], block[1]);
+        LayoutCityPlan withVillage = CityFixtures
+            .plan(CityFixtures.SEED, new LayoutFixtures.FakeOracle(village), LayoutLog.SILENT);
+        CityFinder finder = new CityFinder(withVillage.planner(), withVillage, new LayoutFixtures.FakeOracle(village));
+        CityFinder.Result lot = finder.findBest(CityFinder.Kind.RESERVED, block[0] << 4, block[1] << 4, 24);
+        assertNotNull(lot);
+        assertEquals(
+            Zone.CORE,
+            withVillage.planner()
+                .zone(lot.chunkX(), lot.chunkZ())
+                .zone(),
+            lot.format());
+        CityFinder.Result strip = finder.findBest(CityFinder.Kind.SOFTEDGE, block[0] << 4, block[1] << 4, 24);
+        assertNotNull(strip);
+        boolean facesCore = false;
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            facesCore |= withVillage.planner()
+                .facesCore(strip.chunkX(), strip.chunkZ(), side);
+        }
+        assertTrue(facesCore, strip.format());
+        assertNull(
+            new CityFinder(withVillage.planner(), withVillage)
+                .findBest(CityFinder.Kind.VILLAGE, block[0] << 4, block[1] << 4, 24),
+            "without the oracle, no landmark to rank");
+    }
+
+    @Test
     public void yawLooksTowardTheTarget() {
         assertEquals(0f, CityFinder.yawToward(0, 0, 0, 10), 0.01f, "south");
         assertEquals(90f, CityFinder.yawToward(0, 0, -10, 0), 0.01f, "west");

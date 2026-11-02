@@ -641,8 +641,11 @@ public final class CityScenarios {
         public void tick(ScenarioContext context) {
             done = generator.tick();
             if (!warmedUp && generator.loaded() >= WARM_UP_CHUNKS) {
-                requireCities(context).timers()
+                OverlayWorld overlay = requireCities(context);
+                overlay.timers()
                     .reset();
+                overlay.prefetcher()
+                    .resetStats();
                 warmedUp = true;
             }
         }
@@ -655,6 +658,11 @@ public final class CityScenarios {
             for (String line : timers.report()) {
                 LostCities.LOG.info("[LCNH-BUDGET] {}", line);
             }
+            LostCities.LOG.info(
+                "[LCNH-BUDGET] {}, plan cache {} misses",
+                overlay.prefetcher()
+                    .summary(),
+                overlay.planMisses());
             StringBuilder failed = new StringBuilder();
             for (GenerationTimers.Verdict verdict : timers.budgets(overlay.cacheBytes())) {
                 LostCities.LOG.info("[LCNH-BUDGET] {}", verdict);

@@ -10,6 +10,7 @@ import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
@@ -127,6 +128,10 @@ public final class StructureOracles {
                 try {
                     out.addAll(oracle.landmarksTouching(minChunkX, minChunkZ, maxChunkX, maxChunkZ));
                 } catch (RuntimeException e) {
+                    if (HeightProbe.isProbe(e)) {
+                        // The plan prefetcher's probe: a ground sample is not cached yet; nothing is wrong.
+                        throw e;
+                    }
                     LostCities.LOG.error(
                         "A structure oracle failed for chunks ({}, {}) to ({}, {}); treated as empty",
                         minChunkX,
