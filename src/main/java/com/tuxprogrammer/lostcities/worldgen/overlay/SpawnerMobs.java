@@ -82,7 +82,8 @@ public final class SpawnerMobs {
             for (Condition.Value value : condition.values()) {
                 String name = LootRules.entityName(value.value());
                 if (!known(name)) {
-                    out.add("mob condition " + id + ": " + value.value() + " (" + name + ") is not a registered entity");
+                    out.add(
+                        "mob condition " + id + ": " + value.value() + " (" + name + ") is not a registered entity");
                 }
             }
         }

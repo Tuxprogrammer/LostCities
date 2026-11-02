@@ -49,8 +49,8 @@ public final class LootRules {
     public static final String RAIL_DUNGEON = "lostcitiesnh:rail_dungeon";
 
     /** Every category this mod registers, lowest band first. */
-    public static final List<String> CATEGORIES = Collections.unmodifiableList(
-        Arrays.asList(CITY_SUPPLIES, CITY_LV, CITY_MV, CITY_HV, CITY_EV, RAIL_DUNGEON));
+    public static final List<String> CATEGORIES = Collections
+        .unmodifiableList(Arrays.asList(CITY_SUPPLIES, CITY_LV, CITY_MV, CITY_HV, CITY_EV, RAIL_DUNGEON));
 
     /** Upstream's ordinary table: every floor, factor 30. */
     static final String SIMPLE_DUNGEON = "minecraft:chests/simple_dungeon";

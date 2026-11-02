@@ -99,6 +99,8 @@ public final class LootEntry {
     @Override
     public String toString() {
         return source.name()
-            .toLowerCase(java.util.Locale.ROOT) + " " + String.join("|", names) + (meta != 0 ? "@" + meta : "");
+            .toLowerCase(java.util.Locale.ROOT) + " "
+            + String.join("|", names)
+            + (meta != 0 ? "@" + meta : "");
     }
 }

@@ -87,11 +87,7 @@ public final class GtnhLayerScenario implements Scenario {
         OverlayWorld overlay = Overlays.INSTANCE.get(context.world());
         context.check(overlay != null && overlay.cities() != null, "expected the overlay with the layout plan");
         center = CityScenarios.freshCenter(context, overlay);
-        generator = new RegionGenerator(
-            context.world(),
-            center.chunkX(),
-            center.chunkZ(),
-            CityScenarios.REGION_RADIUS);
+        generator = new RegionGenerator(context.world(), center.chunkX(), center.chunkZ(), CityScenarios.REGION_RADIUS);
     }
 
     @Override
@@ -176,8 +172,7 @@ public final class GtnhLayerScenario implements Scenario {
         }
     }
 
-    private static void spawner(WorldServer world, int x, int y, int z, String drawn, boolean enderZoo,
-        Tally tally) {
+    private static void spawner(WorldServer world, int x, int y, int z, String drawn, boolean enderZoo, Tally tally) {
         if (world.getBlock(x, y, z) != Blocks.mob_spawner) {
             tally.missingSpawners++;
             return;
@@ -197,8 +192,18 @@ public final class GtnhLayerScenario implements Scenario {
         if (!name.equals(expected) || !allowed || entity == null) {
             if (tally.badSpawners.size() < CityScenarios.EXAMPLES) {
                 tally.badSpawners.add(
-                    name + " (planned " + drawn + ", creates " + (entity == null ? "nothing" : entity.getClass()
-                        .getSimpleName()) + ") at " + x + "," + y + "," + z);
+                    name + " (planned "
+                        + drawn
+                        + ", creates "
+                        + (entity == null ? "nothing"
+                            : entity.getClass()
+                                .getSimpleName())
+                        + ") at "
+                        + x
+                        + ","
+                        + y
+                        + ","
+                        + z);
             }
         }
     }
@@ -257,8 +262,17 @@ public final class GtnhLayerScenario implements Scenario {
         final List<String> badSpawners = new ArrayList<>();
 
         String chestLine() {
-            return "chests filled " + filledChests + ", empty by draw " + emptyChests + ", gone " + missingChests
-                + ", items " + items + ", categories " + categories + ", item tiers " + tiers;
+            return "chests filled " + filledChests
+                + ", empty by draw "
+                + emptyChests
+                + ", gone "
+                + missingChests
+                + ", items "
+                + items
+                + ", categories "
+                + categories
+                + ", item tiers "
+                + tiers;
         }
 
         String spawnerLine() {
@@ -266,8 +280,11 @@ public final class GtnhLayerScenario implements Scenario {
         }
 
         String oreLine() {
-            return "GT ore blocks under the city ground " + oresBelow + ", above it in building chunks "
-                + oresInBuildings + ", above it in open chunks " + oresAboveOpen;
+            return "GT ore blocks under the city ground " + oresBelow
+                + ", above it in building chunks "
+                + oresInBuildings
+                + ", above it in open chunks "
+                + oresAboveOpen;
         }
 
         List<String> report() {
