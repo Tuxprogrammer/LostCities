@@ -191,12 +191,12 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 
 | | RWG2 Continents | Classic RWG |
 |---|---|---|
-| RWG `provideChunk`, p50 (all chunks) | 2.10 | 1.97 |
-| RWG `populate`, p50 (all chunks) | 2.62 | 3.93 |
-| B1: terrain phase on city chunks, p95 | **1.44** (≤ 2.10) | **1.44** (≤ 1.97) |
-| B2: population phase on city chunks, p95 | **0.025** (≤ 1.31) | **0.027** (≤ 1.97) |
-| B3: overlay share of RWG's total over the region | **1.7 %** (319 of 18,769) | **2.4 %** (574 of 24,259) |
-| B4: worst phase, p99.9 | **1.70** (≤ 10) | **3.41** (≤ 10) |
+| RWG `provideChunk`, p50 (all chunks) | 2.10 | 1.84 |
+| RWG `populate`, p50 (all chunks) | 2.88 | 3.93 |
+| B1: terrain phase on city chunks, p95 | **1.18** (≤ 2.10) | **1.44** (≤ 1.84) |
+| B2: population phase on city chunks, p95 | **0.023** (≤ 1.44) | **0.020** (≤ 1.97) |
+| B3: overlay share of RWG's total over the region | **1.7 %** (330 of 19,165) | **2.6 %** (577 of 22,456) |
+| B4: worst phase, p99.9 | **1.70** (≤ 10) | **3.15** (≤ 10) |
 | B5: plan and height caches, bound | **4.1 MB** (≤ 16) | **4.1 MB** (≤ 16) |
 | Oracle call, p50 / p99.9 (inside the terrain phase) | 0.33 / 1.66 | 0.79 / 1.39 (classic RWG computes all 256 columns) |
 
