@@ -36,7 +36,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
- * Writing highways and railways (highway-parts.md, railway-parts.md; design record 0010): the part choices, ramps,
+ * Writing highways and railways (highway-parts.md, railway-parts.md; design record 0011): the part choices, ramps,
  * the bugs upstream's writers had, and golden chunks of a highway, a ramp, a railway line and a station in the
  * {@link CityFixtures} world with its networks on.
  */

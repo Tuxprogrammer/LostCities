@@ -16,6 +16,7 @@ import com.tuxprogrammer.lostcities.core.LangKeys;
 import com.tuxprogrammer.lostcities.core.assets.AssetSelfCheck;
 import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
+import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 
 /**
  * The dev self-check: in the development environment, a {@code postInit} pass that fails loudly, stopping the dev
@@ -66,6 +67,9 @@ public final class DevSelfCheck {
                 ScenarioRegistry.selfCheck()));
         if (LoadedAssets.isLoaded()) {
             checks.add(new AssetSelfCheck(LoadedAssets.current()));
+        }
+        if (CityLoot.defaults() != null) {
+            checks.add(new LootCheck());
         }
         return checks;
     }

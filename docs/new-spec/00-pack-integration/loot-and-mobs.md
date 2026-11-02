@@ -21,9 +21,13 @@ Status words follow the [new-spec README](../README.md). *Verified* facts cite a
 | **Q5** Loot | Register our own `ChestGenHooks` categories, one per tier band (Steam, LV, MV, HV, EV) plus a rail category, with defaults built from pack items: GT components and materials by tier, EnhancedLootBags bags of the matching tier, pack food and building supplies. Upstream's `chestloot` condition keeps its floor and part tests and chooses among these categories, so deeper cellars and higher floors roll the higher bands with smaller factors. The EV ceiling is enforced by a tier map that the dev self-check reads, and the higher bands are weighted low ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)). City chests never draw from the vanilla categories unless a profile option opts in (off by default). Chests are filled at generation. Loot bags come from the tech, food, rail, farming and computer families only. Server owners retune any category with TooMuchLoot XML, without our config. Quantities wait for the beta balance pass. | Mechanism verified; item lists follow the tier sources below |
 | **Q6** Mobs | Map upstream's mob IDs to 1.7.10 entity names on vanilla spawners (`Zombie`, `Skeleton`, `Spider`; `Blaze`, `Witch`). `Blaze` stays, faithful to upstream. Add no pack mobs by default: Special Mobs and Infernal Mobs already vary what vanilla spawners spawn. EnderZoo overworld mobs are an optional `hardmobs` set, off by default. Spawner density is upstream's. Blaze spawners, spawner density and spawner hardness are on the [beta balance list](../beta-balance-list.md). | Mechanism verified; faithful mob lists |
 
-## In the alpha
+## As built (M08)
 
-Until M08 builds the tier bands of Q5, chests fill from two categories this mod registers, `lostcitiesnh:city` (every `chestloot` value except the rail dungeon's) and `lostcitiesnh:rail_dungeon`: 2 to 4 stacks of vanilla items mapped from upstream's two tables, gold and iron ingots kept and diamonds, emeralds and diamond tools replaced by an iron sword or axe and supplies (coal, torches, bread, paper, string; rails and a minecart for the rail dungeon), far below EV. The loot condition, `chestWithoutLootChance` and `buildingWithoutLootChance` work as upstream, drawn per chest from the world seed and the chest's position; spawners get upstream's mobs as 1.7.10 entity names (`Zombie`, `Skeleton`, `Spider`, `Blaze`, `Witch`). TooMuchLoot XML can retune both categories (decision log D108).
+- **Categories** are registered at `postInit` (`worldgen.overlay.CityLoot`) from the bundled defaults `data/lostcitiesnh/loot/categories.json` (`asset.loot.LootDefaults`), 2 to 4 stacks a chest. Each entry names its item as a registry name, ore-dictionary names (GregTech's stack preferred, e.g. `circuitLV` then `circuitBasic`), a GregTech `ItemList` constant read by name (`compat.gregtech.GtItemList`, no compile dependency on GT) or a loot bag group, and carries its tier. An entry whose mod or item is absent is skipped with one log line.
+- **The tier map** is the entries' tiers. `LootDefaultsTest` holds the bundled file to the rules (nothing above EV, nothing above its band, only the allowed loot-bag groups with their pack labels, a vanilla entry in every category), and the dev self-check (`core.selfcheck.LootCheck`) walks every registered category in the running pack and fails on an item that is unmapped or above EV, and on a bundled spawner mob the entity registry lacks.
+- **`chestloot` stays upstream's file**; `worldgen.city.LootRules` converts the value its floor and part tests pick: `simple_dungeon` (every floor) becomes `city_supplies` or `city_lv` (2 to 1), `lostcitychest` (floors 4 and up, the third cellar down) `city_mv`, `city_hv` or `city_ev` (10 to 5 to 1), `raildungeonchest` `rail_dungeon`. The band is drawn from the chest's own random after the condition's draw. Vanilla tables enter the condition's draw only with the profile option `vanillaLootCategories` (off), and tables 1.7.10 has no category for never do, so neither can leave a chest empty.
+- **Spawners** take the name the plan drew, checked against the entity registry where the spawner is written (`worldgen.overlay.SpawnerMobs`): an absent EnderZoo mob falls back to `Skeleton`, any other unknown name leaves air, never a pig spawner. The profile option `enderZooHardMobs` (off) replaces the `hardmobs` draw with one of EnderZoo's five overworld mobs, from the spawner's own random.
+- **In game:** `gtnh.layer` checks a fresh city's chests, spawners and GT ore on the real pack ([docs/testing](../../testing/README.md)).
 
 ## Upstream behavior
 
@@ -129,12 +133,14 @@ This mod registers its own categories in postInit, with defaults built from pack
 
 | Category | Band | Item categories |
 |---|---|---|
-| `lostcitiesnh:city_supplies` | Stone and Steam | Pack food (Pam's HarvestCraft meals, food loot bags 28 and 29), torches, building blocks, vanilla tools, coal and coke, bronze, iron and wrought iron ingots and plates, steam-age loot bag (2) |
-| `lostcitiesnh:city_lv` | LV | LV components (motor, pump, conveyor, piston, robot arm), basic circuits, steel ingots and plates, tin and copper cable, LV loot bag (4), OpenComputers floppies (45) |
-| `lostcitiesnh:city_mv` | MV | MV components, good circuits, aluminum ingots and plates, MV loot bag (5) |
-| `lostcitiesnh:city_hv` | HV | HV components, advanced circuits, stainless steel, HV loot bag (6) |
-| `lostcitiesnh:city_ev` | EV | EV components, EV circuits, titanium, EV loot bag (7); rare |
-| `lostcitiesnh:rail_dungeon` | Steam to MV | Railcraft rails, ties, carts and tools (the pack's `railcraft:workshop` list), transportation loot bags (32 to 34) |
+| `lostcitiesnh:city_supplies` | Stone and Steam | Pack food (Pam's HarvestCraft meals, the fast-food loot bag 28), torches, building blocks, vanilla tools, coal and coke, tin, copper, bronze and iron ingots and plates (GT 5.09.54.265 makes wrought iron an alias of cast iron, which has no ingot), stone- and steam-age loot bags (1, 2), farming bags (35, 36, 51) |
+| `lostcitiesnh:city_lv` | LV | LV components (motor, pump, conveyor, piston, robot arm, sensor, emitter), LV circuits, steel ingots and plates, tin cable, LV loot bag (4), OpenComputers bags (45, 46) |
+| `lostcitiesnh:city_mv` | MV | MV components, MV circuits, aluminum ingots and plates, copper cable, MV loot bag (5) |
+| `lostcitiesnh:city_hv` | HV | HV components, HV circuits, stainless steel, gold cable, HV loot bag (6) |
+| `lostcitiesnh:city_ev` | EV | EV components, EV circuits, titanium, aluminum cable, EV loot bag (7); rare |
+| `lostcitiesnh:rail_dungeon` | Steam to LV | Railcraft rails, ties, carts and tools (the pack's `railcraft:workshop` list), transportation loot bags (32, 33) |
+
+Two loot-bag groups the families include are left out on content: `slow_food` (29) can roll Avaritia's Cosmic Meatballs and Ultimate Stew, end-game food far above EV, and `transportation_1_class` (34) holds Railcraft's electric locomotive and tunnel bore, whose pack recipes were not tiered (`config/EnhancedLootBags/LootBags.xml`). The higher bands are higher components, not more of them: every band also keeps a few lower-tier materials.
 
 Tier sources, best first:
 
@@ -145,7 +151,7 @@ Tier sources, best first:
 
 ### How the EV ceiling and the weighting are expressed
 
-- **Conditions choose the band.** Upstream's `chestloot` condition already distinguishes high floors, deep cellars and rail-dungeon parts. Its converted form names our categories instead of 1.20 loot tables: ordinary floors draw mostly `city_supplies` and `city_lv`, higher floors and deeper cellars add `city_mv` and `city_hv`, and `city_ev` appears with the smallest factor. Factor values are beta balance.
+- **Conditions choose the band.** Upstream's `chestloot` condition already distinguishes high floors, deep cellars and rail-dungeon parts, and stays upstream's file; the value it picks is converted to a band ([As built](#as-built-m08)): ordinary floors draw `city_supplies` and `city_lv`, floors 4 and up and the third cellar down add `city_mv`, `city_hv` and, rarest, `city_ev`. The split weights are beta balance.
 - **The ceiling is a check, not a convention.** A tier map (item to tier, loot bag group to tier) lives with the loot defaults. The dev self-check walks every category this mod registers and fails on any item above EV or missing from the map ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) consequences).
 - **Owner overrides.** A server owner can replace or edit any of our categories with a TooMuchLoot XML file using the same category name. That is TooMuchLoot's job, so this mod adds no config for category contents of its own; the profile's opt-in for vanilla categories only chooses which categories a chest draws from.
 - **Absent mods.** An item whose mod is absent is skipped with one log line; a band never becomes empty because the GT and vanilla entries always resolve.
@@ -217,7 +223,7 @@ Upstream's furnace `tag` names items as strings (`"id": "minecraft:coal"`). A 1.
 - Spawners are vanilla `minecraft:mob_spawner` blocks with the entity name set through `MobSpawnerBaseLogic`, as Roguelike does. No spawner block of our own ([CONTRIBUTING § Loot, spawners and items](../../../CONTRIBUTING.md#gtnh-integration)).
 - Conditions keep upstream's structure, so a profile or asset override can add pack mobs by name. A mob whose mod is absent falls back as in the table, and the dev self-check reports it.
 - Spawner density is upstream's. Upstream's `generateSpawners` and `buildingWithoutLootChance` stay; they are how a server owner keeps buildings free of spawners.
-- EnderZoo's overworld mobs (`enderzoo.FallenKnight` and the others in the table above) are available as an optional `hardmobs` set, off by default, with `Skeleton` as the fallback when EnderZoo is absent.
+- EnderZoo's overworld mobs (`enderzoo.FallenKnight`, `enderzoo.ConcussionCreeper`, `enderzoo.Enderminy`, `enderzoo.WitherWitch`, `enderzoo.DireWolf`) are an optional `hardmobs` set, the profile option `enderZooHardMobs`, off by default, with `Skeleton` as the fallback when EnderZoo is absent.
 
 ## Decisions
 
@@ -232,4 +238,4 @@ Recorded in the [decision log](../../design/decision-log.md) as D20:
 
 ## Pack changes
 
-None needed. A server owner may retune this mod's categories with TooMuchLoot files in `config/TooMuchLoot/loot/`; that goes in [PACK-CHANGES.md](../../PACK-CHANGES.md) when loot is implemented (M08).
+None needed. A server owner may retune this mod's categories with TooMuchLoot files in `config/TooMuchLoot/loot/` ([PACK-CHANGES.md](../../PACK-CHANGES.md)).

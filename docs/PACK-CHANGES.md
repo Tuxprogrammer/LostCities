@@ -10,8 +10,7 @@ This mod is standalone: nothing in it depends on a change to the pack. This list
 
 | File | Change | Why | Delivery | Spec sheet |
 |---|---|---|---|---|
-
-None yet.
+| `config/TooMuchLoot/loot/<name>.xml`, one per category (`lostcitiesnh:city_supplies`, `city_lv`, `city_mv`, `city_hv`, `city_ev`, `rail_dungeon`) | Optional: a `LootGroup` with `category="lostcitiesnh:city_lv"` and `loading_mode="OVERRIDE"` (or `ADD`, `REMOVE`) retunes that category's contents | City loot is this mod's `ChestGenHooks` categories, filled from built-in defaults; TooMuchLoot is how the pack already tunes loot, so this mod adds no loot config of its own. The file applies at server start: chests generated before it, the spawn area of a new world, keep the defaults. An override is not checked against the EV ceiling | Documented server-owner step | [loot-and-mobs.md](new-spec/00-pack-integration/loot-and-mobs.md) |
 
 ## Pack-wide issues found
 

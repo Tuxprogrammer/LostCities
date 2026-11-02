@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Choosing a chunk's highway pieces (highway-parts.md, "Choosing parts"; design record 0010). */
+/** Choosing a chunk's highway pieces (highway-parts.md, "Choosing parts"; design record 0011). */
 public class HighwayInfoTest {
 
     static final HubKey CELL_A = new HubKey(0, 0);

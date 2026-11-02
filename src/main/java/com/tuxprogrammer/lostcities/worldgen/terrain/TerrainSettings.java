@@ -102,6 +102,8 @@ public final class TerrainSettings {
     private final boolean generateSpawners;
     private final boolean generateLoot;
     private final float chestWithoutLootChance;
+    private final boolean vanillaLootCategories;
+    private final boolean enderZooHardMobs;
     private final boolean avoidWater;
     private final boolean bridgeSupports;
     private final float randomLeafBlockChance;
@@ -184,6 +186,8 @@ public final class TerrainSettings {
         generateSpawners = r.booleanValue("generateSpawners", true);
         generateLoot = r.booleanValue("generateLoot", true);
         chestWithoutLootChance = r.floatValue("chestWithoutLootChance", 0.2f, 0f, 1f);
+        vanillaLootCategories = r.booleanValue("vanillaLootCategories", false);
+        enderZooHardMobs = r.booleanValue("enderZooHardMobs", false);
         avoidWater = r.booleanValue("avoidWater", false);
         bridgeSupports = r.booleanValue("bridgeSupports", true);
         randomLeafBlockChance = r.floatValue("randomLeafBlockChance", 0.1f, 0f, 1f);
@@ -268,6 +272,8 @@ public final class TerrainSettings {
         out.put("generateSpawners", Boolean.toString(generateSpawners));
         out.put("generateLoot", Boolean.toString(generateLoot));
         out.put("chestWithoutLootChance", text(chestWithoutLootChance));
+        out.put("vanillaLootCategories", Boolean.toString(vanillaLootCategories));
+        out.put("enderZooHardMobs", Boolean.toString(enderZooHardMobs));
         out.put("avoidWater", Boolean.toString(avoidWater));
         out.put("bridgeSupports", Boolean.toString(bridgeSupports));
         out.put("randomLeafBlockChance", text(randomLeafBlockChance));
@@ -511,6 +517,23 @@ public final class TerrainSettings {
     /** Returns {@code chestWithoutLootChance}: the chance a chest stays empty, 0.2. */
     public float chestWithoutLootChance() {
         return chestWithoutLootChance;
+    }
+
+    /**
+     * Returns {@code vanillaLootCategories}: whether city chests may also draw the pack's vanilla {@code ChestGenHooks}
+     * categories upstream's {@code chestloot} names (off by default; loot-and-mobs.md § Upstream's vanilla-table
+     * entries).
+     */
+    public boolean vanillaLootCategories() {
+        return vanillaLootCategories;
+    }
+
+    /**
+     * Returns {@code enderZooHardMobs}: whether {@code hardmobs} spawners take EnderZoo's overworld mobs instead of
+     * upstream's blaze and witch (off by default; loot-and-mobs.md § Mob design).
+     */
+    public boolean enderZooHardMobs() {
+        return enderZooHardMobs;
     }
 
     /** Returns {@code avoidWater}: whether a part's liquid becomes air. */

@@ -39,6 +39,8 @@ public final class HeightProbe {
         return active;
     }
 
+    private String lastFetchSource = "none";
+
     /**
      * Starts or ends a probe.
      *
@@ -98,14 +100,37 @@ public final class HeightProbe {
         if (fetch == null) {
             return false;
         }
+        String source = sourceOf(fetch);
         boolean was = active;
         active = false;
         try {
             fetch.run();
         } finally {
             active = was;
+            // A fetch that fetches in turn (the highway planner's hub steps, M06) is named by the outer one.
+            lastFetchSource = source;
         }
         return true;
+    }
+
+    /**
+     * Returns the class that asked for the last value fetched: the outer class of its fetch, such as
+     * {@code Rwg2LandmarkOracle}, for the budget report's slow fetches.
+     *
+     * @return the simple class name, or {@code "none"}
+     */
+    public String lastFetchSource() {
+        return lastFetchSource;
+    }
+
+    private static String sourceOf(Runnable fetch) {
+        String name = fetch.getClass()
+            .getName();
+        int lambda = name.indexOf("$$");
+        if (lambda >= 0) {
+            name = name.substring(0, lambda);
+        }
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 
     /**

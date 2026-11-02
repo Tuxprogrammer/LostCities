@@ -1,4 +1,4 @@
-# 0010 · Highway and railway networks: obstacles, deliberate ends, dips under cores
+# 0011 · Highway and railway networks: obstacles, deliberate ends, dips under cores
 
 - Status: Accepted (M06; decision log D-M06-1 to D-M06-15)
 - Gate: M06

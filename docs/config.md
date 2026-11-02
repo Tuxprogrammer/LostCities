@@ -190,10 +190,10 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `avoidWater` | `false` |  | live | The profile's liquid in parts becomes air |
 | `groundLevel` | `71` | 2 to 255 | live | City level 0's ground Y; level n is `groundLevel + 6 × n`. Above 244 rejects the profile (highways would pass Y 255) |
 | `seaLevel` | `-1` | -1 to 255 | live | Water level for parts and explosion damage; -1 means RWG's 63 |
-| `chestWithoutLootChance` | `0.2` | 0 to 1 | live | Chance a loot chest gets no loot table |
+| `chestWithoutLootChance` | `0.2` | 0 to 1 | live | Chance a loot chest stays empty |
 | `buildingWithoutLootChance` | `0.2` | 0 to 1 | live | Chance a single (non-multi) building has no loot and no spawners |
 | `generateSpawners` | `true` |  | live | Place spawners; otherwise spawner positions become air |
-| `generateLoot` | `true` |  | live | Give chests a loot table; otherwise chests stay empty |
+| `generateLoot` | `true` |  | live | Fill chests at generation from this mod's tier-band loot categories (Stone to EV); otherwise chests stay empty |
 | `generateLighting` | `false` |  | live | Keep palette torches and add bridge lighting; otherwise torch entries become air (04-city-layout) |
 | `buildingChance` | `0.3` | 0 to 1 | live | Chance a city chunk holds a building rather than a street. City styles may override |
 | `buildingMinFloors` | `0` | 0 to 60 | live | Minimum floors above ground; 0 means the first floor only. The minimum used is `buildingMinFloors + 1` |
@@ -343,7 +343,7 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 
 | Key | Default | Range | Status | What it does |
 |---|---|---|---|---|
-| `preventLakesInCities` | `true` |  | live | Vetoes RWG's lakes, lava lakes and dungeons and NHCore's oil where a population area touches a city chunk or a scattered structure; not ravines. 1.12's `preventLakesRavinesInCities` still loads |
+| `preventLakesInCities` | `true` |  | live | Vetoes RWG's lakes, lava lakes and dungeons, NHCore's oil and its Railcraft quarried-stone populator where a population area touches a city chunk or a scattered structure; not ravines. 1.12's `preventLakesRavinesInCities` still loads |
 | `highwaysEnabled` | `true` |  | live | Generate highways in this world |
 | `villageTreatment` | `BUILD_AROUND` | BUILD_AROUND, AVOID, IGNORE | live | How cities meet villages: `BUILD_AROUND` (sew them in), `AVOID` (upstream's avoidance), `IGNORE` |
 | `landmarkTreatment` | `BUILD_AROUND` |  | live | The same for other landmarks: one treatment for all, and `<kind>=<treatment>` per kind, comma-separated (`ocean_monument`, `roguelike`, `witchery`, `lootgames`, `meteorite`, `terrain`) |
@@ -352,6 +352,8 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `cityMaxRise` | `2` | 0 to 8 | live | City levels a city chunk may rise above its city's base level; one more is cut down to it, higher ground is left out of the city; 8 is no cap |
 | `villageTransitionRings` | `2` | 0 to 8 | live | Rings of lower building density around a village |
 | `villageLinkDistance` | `4` | 0 to 16 | live | Chunks outside a city a village still gets a lane to it |
+| `vanillaLootCategories` | `false` |  | live | City chests may also draw the pack's vanilla loot categories (`dungeonChest` instead of the supplies band, and the temple, stronghold, bonus-chest and blacksmith categories upstream's `chestloot` names). Off: chests draw only this mod's tier bands, Stone to EV |
+| `enderZooHardMobs` | `false` |  | live | `hardmobs` spawners take EnderZoo's overworld mobs (Fallen Knight, Concussion Creeper, Enderminy, Wither Witch, Dire Wolf) instead of blazes and witches; a skeleton where EnderZoo is absent |
 | `heightSampleSize` | `3` | 1 to 100 | live | Upstream's mod-config key, pinned here: chunks sampled for a city level when `useAvgHeightmap` is on (averaging only above 2) |
 
 ## Development and testing switches
