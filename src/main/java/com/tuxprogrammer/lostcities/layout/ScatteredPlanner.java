@@ -336,6 +336,48 @@ public final class ScatteredPlanner {
         return odds;
     }
 
+    /**
+     * Returns whether a near-highway entry finds a spot in an area: a footprint, in any rotation it allows, whose front
+     * edge meets a highway at one height and whose chunks pass the entry's terrain checks. It takes no draw. For the
+     * near-highway rate check of the {@code scattered.real} scenario: such an entry is placed in about the areas that
+     * have a spot, at the odds they select it.
+     *
+     * @param entryName the entry's name
+     * @param areaX     area X index
+     * @param areaZ     area Z index
+     * @return {@code false} for an entry that does not stand beside highways, or an unknown one
+     */
+    public boolean hasHighwaySpot(String entryName, int areaX, int areaZ) {
+        if (!enabled()) {
+            return false;
+        }
+        for (ScatteredView.Entry entry : settings.entries()) {
+            if (!entry.name()
+                .equals(entryName) || !entry.nearHighway()
+                || entry.asset() == null) {
+                continue;
+            }
+            int width = 1;
+            int depth = 1;
+            if (entry.asset()
+                .multiBuilding() != null) {
+                MultiBuildingView multi = planner.assets.multiBuilding(
+                    entry.asset()
+                        .multiBuilding());
+                if (multi == null) {
+                    return false;
+                }
+                width = multi.dimX();
+                depth = multi.dimZ();
+            }
+            int size = areaSize();
+            return width <= size && depth <= size
+                && !highwayPlacements(entry, areaX * size - AREA_OFFSET, areaZ * size - AREA_OFFSET, size, width, depth)
+                    .isEmpty();
+        }
+        return false;
+    }
+
     // ================================================================== the plan
 
     /** An area's plan before neighboring areas are compared. */

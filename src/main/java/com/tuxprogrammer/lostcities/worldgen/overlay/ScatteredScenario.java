@@ -250,6 +250,10 @@ final class ScatteredScenario implements Scenario {
         double[] expected = new double[names.size()];
         double[] variance = new double[names.size()];
         int[] selected = new int[names.size()];
+        // Near-highway entries: the areas with a spot beside a highway, and the odds summed over them.
+        int[] spots = new int[names.size()];
+        double[] spotExpected = new double[names.size()];
+        double[] spotVariance = new double[names.size()];
         TreeMap<String, Integer> placed = new TreeMap<>();
         TreeMap<String, TreeMap<String, Integer>> reasons = new TreeMap<>();
         int areas = 0;
@@ -264,6 +268,11 @@ final class ScatteredScenario implements Scenario {
                 for (int i = 0; i < odds.length; i++) {
                     expected[i] += odds[i];
                     variance[i] += odds[i] * (1 - odds[i]);
+                    if (odds[i] > 0 && planner.hasHighwaySpot(names.get(i), ax, az)) {
+                        spots[i]++;
+                        spotExpected[i] += odds[i];
+                        spotVariance[i] += odds[i] * (1 - odds[i]);
+                    }
                 }
                 String pick = planner.selected(ax, az);
                 if (pick != null) {
@@ -307,11 +316,51 @@ final class ScatteredScenario implements Scenario {
             String.format(Locale.ROOT, "%.1f", 100.0 * structures / areas),
             line);
         LostCities.LOG.info("[LCNH-SCATTERED] selected but not placed, by reason: {}", reasons);
+        StringBuilder highways = new StringBuilder();
+        boolean highwayRatesHold = true;
+        int highwaySpots = 0;
+        for (int i = 0; i < names.size(); i++) {
+            if (spots[i] == 0) {
+                continue;
+            }
+            highwaySpots += spots[i];
+            double sigma = Math.sqrt(spotVariance[i]);
+            int count = placed.getOrDefault(names.get(i), 0);
+            // Placement can still fail after a spot is found (build height, steep surroundings, a neighbor's
+            // structure), so the expectation is a ceiling with the usual spread.
+            boolean holds = count <= spotExpected[i] + SIGMAS * sigma + 1 && count >= spotExpected[i] / 2 - SIGMAS * sigma - 1;
+            highwayRatesHold &= holds;
+            highways.append(
+                String.format(
+                    Locale.ROOT,
+                    " %s areas with a spot=%d expected=%.1f±%.1f placed=%d%s",
+                    names.get(i),
+                    spots[i],
+                    spotExpected[i],
+                    sigma,
+                    count,
+                    holds ? "" : " OFF"));
+        }
+        LostCities.LOG.info("[LCNH-SCATTERED] beside highways:{}", highways.length() == 0 ? " no spots" : highways);
         for (int i = 0; i < Math.min(EXAMPLES, violations.size()); i++) {
             LostCities.LOG.info("[LCNH-SCATTERED] placement violation: {}", violations.get(i));
         }
         int rigs = placed.getOrDefault("lostcities:oilrig", 0);
         context.check(ratesHold, "expected each entry selected at the world style's odds, found" + line);
+        context.check(
+            highwayRatesHold,
+            "expected near-highway structures placed at the odds of the areas beside highways, found" + highways);
+        if (overlay.cities()
+            .planner()
+            .networks() != null
+            && overlay.cities()
+                .planner()
+                .networks()
+                .highways()
+                .settings()
+                .enabled()) {
+            context.check(highwaySpots > 0, "expected spots beside highways around the spawn, found none");
+        }
         context.check(violations.isEmpty(), violations.size() + " placement violations, first " + first(violations));
         context.check(structures > 0, "expected scattered structures around the spawn, found none");
         if (classic) {

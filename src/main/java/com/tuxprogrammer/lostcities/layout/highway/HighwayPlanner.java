@@ -73,12 +73,13 @@ public final class HighwayPlanner {
      * Cache sizes, in entries. Upstream keeps 4096 hubs, 2048 candidate, selection and route lists and 8192 chunks;
      * here they are smaller, so a world's caches stay within budget B5 (16 MB, 0005 §8): a chunk query reads the hubs
      * of at most 17 × 17 cells and the routes of 9 × 9, and the plan cache shields the chunk cache from most repeats.
+     * Candidate lists are read only to make a selection, which has its own cache, so few of them are kept.
      */
     static final int HUB_CACHE = 1024;
-    static final int CANDIDATE_CACHE = 256;
+    static final int CANDIDATE_CACHE = 64;
     static final int SELECTION_CACHE = 256;
     static final int ROUTE_CACHE = 256;
-    static final int CHUNK_CACHE = 1024;
+    static final int CHUNK_CACHE = 512;
     /** Estimated bytes of a cached hub with its key and map entry. */
     static final int HUB_BYTES = 112;
     /** Estimated bytes of one candidate in a cached list. */

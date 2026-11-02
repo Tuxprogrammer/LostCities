@@ -62,7 +62,7 @@ A railway part whose top is at least 8 blocks under the lowest oracle ground aro
 
 ### 6. Cost (P06-8)
 
-The highway planner's caches are smaller than upstream's, so a world's caches stay within B5 (0005 §8): 1,024 hubs, 256 candidate, selection and route lists, and 1,024 chunks; the railway layout keeps 1,024 entries in each of its two caches. Each estimate is counted in the B5 figure.
+The highway planner's caches are smaller than upstream's, so a world's caches stay within B5 (0005 §8): 1,024 hubs, 64 candidate lists (they are read only to make a selection, which has its own cache), 256 selection and route lists, and 512 chunks; the railway layout keeps 512 entries in each of its two caches. Each estimate is counted in the B5 figure: about 0.8 MB of the world's 15.9 MB with scattered structures on.
 
 A hub cell samples up to 64 city potentials, each of which may need a height, so it is computed through a `PlanningGate`. While the plan prefetcher probes, a missing hub ends the attempt like a missing height. The prefetcher's step then computes the hub with the probe on and fetches the one height it stops at, and asks again. A chunk phase computes a hub only when the prefetcher has not reached it. The city potential is the layout's own city factor, read without caching it; its pruning bound is the raw factor times the world style's largest biome multiplier.
 

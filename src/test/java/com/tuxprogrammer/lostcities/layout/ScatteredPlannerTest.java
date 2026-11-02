@@ -635,6 +635,38 @@ public class ScatteredPlannerTest {
         assertTrue(found > 0);
     }
 
+    @Test
+    public void anAreaHasAHighwaySpotExactlyWhenTheHighwayReachesIt() {
+        FakeScattered gas = new FakeScattered(8, 1f, 0).add(
+            new FakeEntry(
+                new FakeAsset("lostcities:highway_gas_station").building("building1")
+                    .anyRotation(),
+                10).besideHighway())
+            .add(new FakeEntry(new FakeAsset("lostcities:cabin").building("building1"), 10));
+        ScatteredPlanner planner = planner(
+            gas,
+            FLAT,
+            StructureOracle.NONE,
+            ScatteredFixtures.highwayAlongX(3, 1),
+            ScatteredFixtures.noCities());
+        int beside = planner.area(3);
+        // The highway's own area and its neighbors that a footprint can face it from; none far from it.
+        assertTrue(planner.hasHighwaySpot("lostcities:highway_gas_station", 0, beside));
+        assertFalse(planner.hasHighwaySpot("lostcities:highway_gas_station", 0, beside + 3));
+        assertFalse(planner.hasHighwaySpot("lostcities:cabin", 0, beside), "a cabin does not stand beside highways");
+        assertFalse(planner.hasHighwaySpot("lostcities:unknown", 0, beside));
+        // Every placed gas station is in an area that has a spot.
+        for (int ax = -4; ax <= 4; ax++) {
+            for (int az = beside - 2; az <= beside + 2; az++) {
+                ScatteredPlan plan = planner.planOfArea(ax, az);
+                if (plan.valid() && plan.entry()
+                    .equals("lostcities:highway_gas_station")) {
+                    assertTrue(planner.hasHighwaySpot(plan.entry(), ax, az), plan.toString());
+                }
+            }
+        }
+    }
+
     private static String describe(ScatteredPlan plan) {
         StringBuilder out = new StringBuilder(plan.toString());
         for (ScatteredPlan.Share share : plan.shares()) {

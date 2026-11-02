@@ -44,6 +44,23 @@ public class NetworkWriterTest {
 
     private static final List<String> LOG = new ArrayList<>();
     private static final LayoutCityPlan PLAN = networkPlan();
+
+    /**
+     * Budget B5 with every cache a world keeps, as the overlay counts them: the plan cache, the two height caches, the
+     * layout, palette and style caches, the scattered caches and the networks' caches, with a little room to spare.
+     */
+    @Test
+    public void everyCacheTogetherStaysWithinBudgetB5() {
+        long scattered = 2L * LayoutCityPlan.SCATTERED_CACHE_SIZE * LayoutCityPlan.SCATTERED_PLAN_BYTES
+            + (long) ScatteredContent.FIT_CACHE * LayoutCityPlan.GROUND_FIT_BYTES;
+        long planCache = (long) com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan.CAPACITY
+            * (com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan.ESTIMATED_PLAN_BYTES + 16);
+        long heights = com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights.MAX_BYTES + Math.max(
+            com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache.MAX_BYTES,
+            com.tuxprogrammer.lostcities.worldgen.height.ColumnHeightCache.MAX_BYTES);
+        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights;
+        assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, "estimated " + bytes + " bytes");
+    }
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final Networks NETWORKS = PLANNER.networks();
     private static final int SEARCH = 160;

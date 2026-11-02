@@ -53,7 +53,7 @@ public final class RailwayLayout {
     /** Blocks per city level. */
     static final int FLOOR_HEIGHT = 6;
     /** Entries kept in each cache: the generation front's rail chunks and the lines they read along. */
-    static final int CACHE_SIZE = 1024;
+    static final int CACHE_SIZE = 512;
     /** Estimated bytes of one cache entry: the key, the rail chunk and the map entry. */
     static final int ENTRY_BYTES = 112;
 
