@@ -173,6 +173,12 @@ Shot runner: realpack/shots-run.py   (python3 -I; laptop side: lc-remote.sh shot
   run.sh stops the server, and TERMs either script that outlives its grace (90 s client, 300 s server).
   Writes runs/shots-<id>/: <shot>.png, results.json, index.html (review page), runner.log, server.out,
   client-<n>.out and run.done (status ok|partial|aborted, shots_ok, run_dir). --deadline (5400 s) bounds it all.
+  Proof (2026-11-02, tools/remote/shots/synthetic-city.json, seed 4242, render distance 12, fresh worlds):
+    RWG2_CONTINENTS 7/7 ok in 325 s wall (first aerial shot 86 s, the rest about 20 s each);
+    RWG 7/7 ok in 1024 s wall including a 7 min lock wait (first aerial 226 s: Celeritas meshed
+    for about 3 min on llvmpipe). Join first try from Custom Main Menu's GuiCustom. No HUD, hand,
+    toast, chat, InGame Info panel or JourneyMap minimap in any frame. An interrupted run (TERM) and
+    a failed join both stopped the client and server; view-distance and the option files came back.
 
 Rebuild from scratch
   Server: delete server/, unzip dl/*.zip into server/ (python3 zipfile; no unzip on this box), redo
