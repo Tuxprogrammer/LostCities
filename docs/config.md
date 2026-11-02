@@ -353,7 +353,7 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `cityTaper` | `1.0` | 0 to 1 | live | How strongly building heights follow the urban intensity: low at a city's edge, a high-rise core at its center, varied by noise ([0009](design/0009-city-edges-and-character.md)); 0 is upstream's floor count |
 | `edgeLotChance` | `0.45` | 0 to 1 | live | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation instead; it falls to 0 at intensity 0.4, and open lots take half of it |
 | `damageRepairChance` | `0.5` | 0 to 1 | live | Chance that an explosion's damage in a city was partly filled back in with a similar but not identical material, and its windows boarded; 0 leaves all damage |
-| `facadeContrast` | `45.0` | 10 to 200 | live | Most contrast (lightness and saturation) two neighboring buildings' facades may have; palettes are chosen against neighbors to keep it ([0008](design/0008-facade-color-feathering.md)); 200 turns it off |
+| `facadeContrast` | `45.0` | 10 to 200 | live | Most contrast (lightness and saturation) two neighboring buildings' facades may have; palettes are chosen against neighbors to keep it ([0010](design/0010-facade-color-feathering.md)); 200 turns it off |
 | `villageTransitionRings` | `2` | 0 to 8 | live | Rings of lower building density around a village |
 | `villageLinkDistance` | `4` | 0 to 16 | live | Chunks outside a city a village still gets a lane to it |
 | `heightSampleSize` | `3` | 1 to 100 | live | Upstream's mod-config key, pinned here: chunks sampled for a city level when `useAvgHeightmap` is on (averaging only above 2) |

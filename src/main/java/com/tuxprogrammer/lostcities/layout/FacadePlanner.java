@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.layout.view.StyleView;
 /**
  * The facade stage of the layout: the palettes of every building unit (a single building chunk or a whole
  * multibuilding), chosen so that neighboring buildings' facades stay within {@code facadeContrast} of each other
- * across style and biome changes (alpha review AR-17, docs/design/0008-facade-color-feathering.md §4).
+ * across style and biome changes (alpha review AR-17, docs/design/0010-facade-color-feathering.md §4).
  *
  * <ul>
  * <li>Every unit that could hold a building has a priority: units whose facade the palettes cannot change first, then

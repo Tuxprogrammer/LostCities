@@ -43,7 +43,7 @@ public final class ProfileSnapshot {
      * an older version logs that its new chunks may not match (CONTRIBUTING § World generation rules). Version 2 is
      * the alpha review round (M05R): the rise cap, the margin around landmark cores and the leveling fix TERR-39.
      * Version 3 is M12, city edges and character: tapered heights, edge lots, repairs, facade feathering, narrow
-     * roads at a margin and relaxed lanes (docs/design/0008 and 0009).
+     * roads at a margin and relaxed lanes (docs/design/0010 and 0009).
      */
     public static final int LAYOUT_VERSION = 3;
 

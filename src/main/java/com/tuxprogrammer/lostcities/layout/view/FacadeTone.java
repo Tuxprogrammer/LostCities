@@ -4,7 +4,7 @@ import java.util.Locale;
 
 /**
  * The tone of a building's facade: its CIELAB lightness and its saturation, chroma relative to lightness, and the
- * contrast rule between two tones (docs/design/0008-facade-color-feathering.md §2 and §3).
+ * contrast rule between two tones (docs/design/0010-facade-color-feathering.md §2 and §3).
  *
  * <p>
  * Immutable. Side: both (plain Java).

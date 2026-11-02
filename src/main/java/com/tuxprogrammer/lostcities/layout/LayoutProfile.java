@@ -64,7 +64,7 @@ public final class LayoutProfile {
     public final float edgeLotChance;
     /**
      * {@code facadeContrast}: the most contrast two neighboring buildings' facades may have (AR-17,
-     * docs/design/0008-facade-color-feathering.md §3); 200 or more turns feathering off.
+     * docs/design/0010-facade-color-feathering.md §3); 200 or more turns feathering off.
      */
     public final float facadeContrast;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */

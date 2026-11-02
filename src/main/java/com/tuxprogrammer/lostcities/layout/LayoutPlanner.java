@@ -226,7 +226,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /**
      * Returns the facade tone the facade stage chose for the building unit whose top-left chunk is given, or
-     * {@code null} (docs/design/0008-facade-color-feathering.md).
+     * {@code null} (docs/design/0010-facade-color-feathering.md).
      *
      * @param topX top-left chunk X
      * @param topZ top-left chunk Z
@@ -739,7 +739,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
         if (c.isCity && c.couldHaveBuilding && b.hasBuilding) {
-            // Deviation (AR-17, docs/design/0008-facade-color-feathering.md §4): a building's palettes, its
+            // Deviation (AR-17, docs/design/0010-facade-color-feathering.md §4): a building's palettes, its
             // variety included, come from the facade stage, feathered against its neighbors; the draw above still
             // runs, so the rest of the chunk's stream is unchanged.
             List<String> feathered = facades.palettes(x, z);

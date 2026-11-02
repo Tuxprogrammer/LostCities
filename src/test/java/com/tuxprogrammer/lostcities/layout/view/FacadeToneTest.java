@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** The facade tone and its contrast rule (docs/design/0008-facade-color-feathering.md §2 and §3). */
+/** The facade tone and its contrast rule (docs/design/0010-facade-color-feathering.md §2 and §3). */
 public class FacadeToneTest {
 
     @Test

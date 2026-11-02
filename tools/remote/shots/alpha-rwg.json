@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate and M05R review round: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115); M05R adds the rise cap's view; M12 adds the taper, lot, repair and feather views (docs/design/0008, 0009).",
+  "comment": "M05 alpha gate and M05R review round: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115); M05R adds the rise cap's view; M12 adds the taper, lot, repair and feather views (docs/design/0010, 0009).",
   "title": "Alpha review: real cities on classic RWG, seed 4242",
   "world": {
     "name": "alpha-rwg",

@@ -21,7 +21,7 @@ import com.tuxprogrammer.lostcities.layout.view.FacadeView;
 
 /**
  * Measures the tone of a building's facade under a stack of palettes, from the shipped block colors
- * (docs/design/0008-facade-color-feathering.md §2):
+ * (docs/design/0010-facade-color-feathering.md §2):
  * <ul>
  * <li>the building's facade characters are those on the outer ring of its parts, counted over every part;</li>
  * <li>each resolves through the stack as {@code CompiledPalette} resolves it (the topmost defining layer, references
