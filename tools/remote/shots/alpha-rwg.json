@@ -76,7 +76,9 @@
         "match": "kind=softedge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
       "wait": 3,
-      "caption": "Soft edge: the strip where the city slopes to a village's natural ground instead of a wall."
+      "caption": "Soft edge: the strip where the city slopes to a village's natural ground instead of a wall, from above the rooftops.",
+      "pitch": 35,
+      "y": "top+20"
     }
   ]
 }
