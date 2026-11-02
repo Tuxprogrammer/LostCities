@@ -182,7 +182,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - M09's highway and railway options pinned in `ProfileOptions` and checked by `ProfileValidator` (met);
 - the new-spec area [06-highways-railways](new-spec/06-highways-railways/index.md) and [0006](design/0006-build-around-other-worldgen.md) accepted (met).
 
-**Scope** ([0007](design/0007-highway-and-railway-networks.md)):
+**Scope** ([0008](design/0008-highway-and-railway-networks.md)):
 - **The intercity highway planner**, pure Java in `layout.highway`: hubs, candidates, sector-first selection, mutual acceptance, ownership, routes and the chunk query of [intercity-planner.md](original-spec/06-highways-railways/intercity-planner.md); the city potential mirrors the layout's own city factor; bounded least-recently-used caches; overlapping routes share their lowest level (HWY-09).
 - **Obstacles** (0006, D31, alpha review AR-10): a landmark core and its margin (the edge ring) are obstacles. A route prefers a shape that crosses none, detours around one, or ends before it; hubs never lie in one.
 - **Deliberate ends** (AR-10): a highway ends at a hub's city or before an obstacle on a plaza at the ground's level, reached by ramps of one level per chunk with half-slab steps; it is never cut off in the air or inside a hill.
@@ -202,6 +202,21 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [ ] `network.highway` walks a highway deck between two cities, from one city's streets to the other's, with no step higher than half a block; `network.railway` follows a railway line through a station and past a junction with no gap in its track.
 - [ ] Both alpha shot lists add highway, ramp, station and railway shots, rerun with the M06 jar, and every image is looked at.
 
+## M11 · Full asset catalog
+
+**Lane:** Assets. **Parallel with:** M06, M07, M08, M10, M12.
+
+**Entry gate:** the alpha gate; S4's catalog and variety pools written (met); M02's asset system and M05's conversion of the alpha city's assets (met: all 322 upstream files and this mod's five are bundled and load with no error).
+
+**Scope:** every bundled upstream building, part, palette and style converted and checked in the real pack, with palettes drawing the pack's variety ([0007](design/0007-palette-variety.md)): the catalog's pools turned into option palettes a building draws per role (walls, accents and bands per wall family, glass, quartz, interior floors, ceilings, lights, furniture, bookshelves, fences, planters, park flora), with a switch (`worldgen.paletteVariety`). From the alpha review: richer interiors (AR-3), pack variety in the muted desert (D145, AR-16), pack flora in parks (D146). Upstream's other landscape types (floating islands, space, caverns) are after beta (D12). Palette selection across neighbors (feathering, construction lots, repairs) is M12's.
+
+**Exit gate:**
+- [x] Every upstream asset file is bundled and loads with no error over vanilla alone and over the full pack (`AssetValidationTest`); every block an asset or a variety option names is catalogued (`PaletteVarietyTest`), and every part generates under every style's palettes and the variety with no undefined character and no unregistered block (`AssetCatalogCheckTest`). *2026-11-02: 750 tests pass; 327 assets (upstream's 322 and this mod's 5), 359 variety options in 53 groups.*
+- [x] In the real pack on both world types (instance 4, seed 4242): `assets.pack_resolution` finds no fallback, no unresolved pool block and no unavailable variety block; `assets.catalog` passes. *2026-11-02: 0 fallbacks, 0 of 366 pool blocks unresolved, 359 of 359 options available; the catalog wrote 112,896 parts (55 million blocks, 428 distinct) with no undefined character, no unregistered block and no block that can regenerate its own chunk (D165).*
+- [x] The variety follows its rules, with tests: a seed of its own (the layout's draws unchanged), the wall family kept, the baseline's share, unavailable options back to upstream's look, at most 30 of 100 floors spawn-proof, no speed block, a muted desert; the interior characters land only on floors and ceilings inside buildings. *`PaletteVarietyTest`, `LayoutAssetsTest`, `VarietySeedTest`, `InteriorCharactersTest`, `ParkGreeneryTest`, `GenerationSafetyTest`; the layout goldens are unchanged.*
+- [x] M05's exit-gate checks hold on both world types with the variety on: two fresh worlds hash identically (`city.real`), B1 to B5 hold, no cascade warning names this mod first, `city.walk` passes. *2026-11-02, jar `83a6178` (the tree of `256b4233`): RWG2 Continents terrain `ab526d1a…` population `6666e91e…` in both worlds, classic RWG `fad0e8d4…` and `6ea4b3bf…` in both; B3 10.3 % (RWG2) and 13.5 to 13.7 % (classic), B4 at most 4.3 and 7.8 ms; one classic run that shared the box with a shot run had a 17 ms VillageNames start in a prefetch tick (B4), and its rerun passed; 0 cascade warnings with this mod first; `city.walk` as before the variety (floors 95.7 % and 98.9 %, doors 100 % and 97.9 %).*
+- [x] Both review shot lists rerun with the final jar; interiors, facades, parks and the desert checked against AR-3, AR-16 and D146. *2026-11-02, 8 of 8 shots each (`reference/remote/shots/shots-20261102-145549-alpha-rwg2`, `shots-20261102-150836-alpha-rwg`): interiors with panel ceilings and a checkered kitchen floor, pack flowers in parks, concrete and hempcrete facades, a pale desert. The first RWG2 run found the chunk-regeneration crash (D165).*
+
 ## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
@@ -213,7 +228,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 | M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin (which also keeps towers out of scattered footprints, D31), and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
-| M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |
+| M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game, with the pack's variety in palettes, interiors and parks ([M11](#m11--full-asset-catalog)) |
 | M12 · City edges and character | Layout, with Assets | From the alpha review (AR-5, AR-6, AR-9, AR-17): building heights that taper organically from the center toward the edge; empty and construction lots near the edges (bare clay ground with no foliage, some dug 1 to 4 blocks for a basement, a variant with concrete pillars); damage partly repaired with a similar but not identical material; neighboring buildings' colors that feather across biome and style changes (a design record first) |
 
 ## Beta gate (MVP)

@@ -193,7 +193,9 @@ public final class CityChunkWriter {
             }
             Part part = part(plan.floorPart(f));
             if (part != null) {
-                writer.place(placement(part, Transform.ROTATE_NONE, height, HardAir.AIR, buildingId));
+                // Floors below the roof take the interior characters of the palette variety (AR-3, D25).
+                writer.place(
+                    placement(part, Transform.ROTATE_NONE, height, HardAir.AIR, buildingId).interior(f < floors));
             }
             Part overlay = part(plan.floorPart2(f));
             if (overlay != null) {
@@ -624,7 +626,7 @@ public final class CityChunkWriter {
         ParkGreenery.Flora flora = ParkGreenery.floraOf(
             context.biomes()
                 .biomeOfChunk(chunkX, chunkZ));
-        ParkGreenery.plant(target, height, flora, ParkGreenery.random(context.worldSeed(), chunkX, chunkZ));
+        ParkGreenery.plant(target, height, flora, palette, ParkGreenery.random(context.worldSeed(), chunkX, chunkZ));
     }
 
     /**

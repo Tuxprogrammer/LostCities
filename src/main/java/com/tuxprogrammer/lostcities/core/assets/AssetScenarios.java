@@ -2,16 +2,20 @@ package com.tuxprogrammer.lostcities.core.assets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.asset.AssetProblem;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.AssetType;
 import com.tuxprogrammer.lostcities.asset.block.BlockResolver;
+import com.tuxprogrammer.lostcities.asset.block.MetalFlags;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
+import com.tuxprogrammer.lostcities.worldgen.city.AssetCatalogCheck;
 
 /**
  * The asset system's in-world scenarios (docs/testing/README.md, "Scenario list"):
@@ -21,7 +25,11 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
  * RWG chunk manager runs the world;</li>
  * <li>{@code assets.pack_resolution} (manual-only, for the real pack): every block the assets and the variety pools
  * name resolves to its primary, with no fallback taken; the full report goes to the log, so a real-pack run lists every
- * unresolved name.</li>
+ * unresolved name, and every palette-variety option's blocks are registered;</li>
+ * <li>{@code assets.catalog}: every bundled part written under every style's palettes, with the palette variety drawn
+ * for {@link #CATALOG_SEEDS} seeds per style, places only registered blocks and leaves no character undefined
+ * ({@link AssetCatalogCheck}; M11's exit gate), and that no placed block reads the world for its light opacity
+ * ({@link GenerationSafety}).</li>
  * </ul>
  * Side: server.
  */
@@ -29,6 +37,9 @@ public final class AssetScenarios {
 
     /** The fewest assets the loaded set holds: upstream's 322 plus this mod's two rubble variants. */
     static final int MIN_ASSETS = 324;
+
+    /** Variety seeds per style the catalog check draws: enough to reach every option of the larger groups. */
+    static final int CATALOG_SEEDS = 48;
 
     /** How many unresolved names a failure message lists before "and N more". */
     private static final int LISTED = 20;
@@ -43,6 +54,7 @@ public final class AssetScenarios {
     public static void registerAll(ScenarioRegistry registry) {
         registry.register(new Loaded());
         registry.register(new PackResolution());
+        registry.register(new Catalog());
     }
 
     /** The asset set is loaded and complete. */
@@ -138,6 +150,92 @@ public final class AssetScenarios {
             context.check(
                 pool.isEmpty(),
                 "expected every pool block registered, missing " + pool.size() + ": " + first(pool));
+            List<String> variety = set.variety()
+                .unresolved();
+            LostCities.LOG.info(
+                LoadedAssets.TAG + "variety: "
+                    + set.variety()
+                        .availableCount()
+                    + " of "
+                    + set.variety()
+                        .options()
+                        .size()
+                    + " options available, "
+                    + variety.size()
+                    + " blocks unresolved");
+            context.check(
+                variety.isEmpty(),
+                "expected every palette-variety block registered, missing " + variety.size() + ": " + first(variety));
+        }
+    }
+
+    /** Every part generates with registered blocks only, under every style and a range of variety draws. */
+    static final class Catalog implements Scenario {
+
+        @Override
+        public String name() {
+            return "assets.catalog";
+        }
+
+        @Override
+        public int ticks() {
+            return 0;
+        }
+
+        @Override
+        public void setup(ScenarioContext context) {
+            context.check(LoadedAssets.isLoaded(), "expected the assets loaded at postInit, found none");
+        }
+
+        @Override
+        public void verify(ScenarioContext context) {
+            AssetSet set = LoadedAssets.current();
+            AssetCatalogCheck.Report report = AssetCatalogCheck
+                .run(set, MetalFlags.ALL_ON, ForgeBlockRegistry.INSTANCE, CATALOG_SEEDS);
+            LostCities.LOG.info(LoadedAssets.TAG + "catalog: " + report.summary());
+            for (Map.Entry<String, Set<String>> entry : report.undefined()
+                .entrySet()) {
+                LostCities.LOG.info(LoadedAssets.TAG + "catalog undefined: " + entry.getKey() + " " + entry.getValue());
+            }
+            for (Map.Entry<String, Set<String>> entry : report.unregistered()
+                .entrySet()) {
+                LostCities.LOG
+                    .info(LoadedAssets.TAG + "catalog unregistered: " + entry.getKey() + " " + entry.getValue());
+            }
+            context.check(
+                report.unregistered()
+                    .isEmpty(),
+                "expected every written block registered, found " + report.unregistered()
+                    .size()
+                    + " part and style pairs with unregistered blocks: "
+                    + first(
+                        new ArrayList<>(
+                            report.unregistered()
+                                .keySet())));
+            Set<String> placed = new java.util.TreeSet<>(report.distinctBlocks());
+            placed.addAll(
+                set.variety()
+                    .blocks());
+            List<String> unsafe = GenerationSafety.worldAwareOpacity(placed);
+            LostCities.LOG.info(
+                LoadedAssets.TAG + "catalog: "
+                    + placed.size()
+                    + " blocks checked for world-aware light opacity, flagged "
+                    + unsafe);
+            context.check(
+                unsafe.isEmpty(),
+                "expected no block that reads the world for its light opacity (it regenerates its own chunk), found "
+                    + unsafe);
+            context.check(
+                report.undefined()
+                    .isEmpty(),
+                "expected every part character defined, found " + report.undefined()
+                    .size()
+                    + " part and style pairs with undefined characters: "
+                    + first(
+                        new ArrayList<>(
+                            report.undefined()
+                                .keySet())));
         }
     }
 
