@@ -1,3 +1,3 @@
 # Golden chunk terrain_city_street: SHA-256 of the ChunkBufferDigest v1 text.
-# Synthetic test city (M04) on the TestTerrain fixture, after the terrain phase. Change only in a commit that says why.
-865cac2ad984811c2856213504bf0769785e4d0af46ada7bc4a603b44da9a55f
+# Synthetic test city (M04) on the TestTerrain fixture, after the terrain phase. M05 adds the street rubble layer (Ruins.rubble). Change only in a commit that says why.
+1dd31e50a0922b1d73f706eaac219a50939d67a554e73a290ea3af2af0d8f0af

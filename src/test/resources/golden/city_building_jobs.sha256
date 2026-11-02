@@ -1,0 +1,3 @@
+# Golden text city_building_jobs: SHA-256 of the job list text.
+# Real city (M05): the population jobs of the city_building chunk, one per line (0005, "Determinism tests"). Change only in a commit that says why.
+5a70bc35ebdfcad2600a89cadcf140c7924a55dd95897fbd98fa9426697919fe
