@@ -130,6 +130,8 @@ public class CityTerrainTest {
         assertEquals(WorldLimits.BUILDING_BOTTOM_MIN, lowest.buildingBottom());
         ArrayChunkBuffer buffer = new ArrayChunkBuffer();
         CityTerrain.makeRoomForBuilding(buffer, CONTEXT, lowest, sides(lowest), null);
-        assertEquals(BlockRef.of("minecraft:stonebrick", 0), buffer.get(5, 2, 5), "filler at the lowest level");
+        // Upstream puts the filler at the lowest level and then clears the building's volume from that level up, so
+        // the room starts empty at Y 2 and the building's lowest floor is what fills it.
+        assertEquals(BlockRef.AIR, buffer.get(5, 2, 5), "the room starts at Y 2");
     }
 }

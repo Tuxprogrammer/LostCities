@@ -72,7 +72,7 @@ public class DamageAreaTest {
     }
 
     @Test
-    public void doesNotReproduceTERR03_equalMinAndMaxDoNotThrow() {
+    public void doesNotReproducePROF06_equalMinAndMaxDoNotThrow() {
         TerrainSettings equal = settings(
             "explosionChance",
             "1",

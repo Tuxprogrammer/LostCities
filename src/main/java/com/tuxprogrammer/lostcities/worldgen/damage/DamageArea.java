@@ -1,7 +1,7 @@
 // @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/DamageArea.java
-// Avoids: TERR-03, TERR-19
+// Avoids: PROF-06, TERR-19
 // @formatter:on
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * Spec: docs/original-spec/03-terrain/damage-ruins-rubble.md ("Building the DamageArea"); numbers in
  * docs/new-spec/03-terrain/height-mapping.md ("Damage"). Changes from upstream:
  * <ul>
- * <li>TERR-03 (PROF-06): an equal min/max pair gives the minimum instead of throwing; the pairs are ordered when the
+ * <li>PROF-06 (TERR-03): an equal min/max pair gives the minimum instead of throwing; the pairs are ordered when the
  * profile is read ({@link TerrainSettings});</li>
  * <li>TERR-19: the Y range is the 1.7.10 world, named by {@link WorldLimits}, which is upstream's hard-coded 0 to
  * 255;</li>
@@ -156,7 +156,7 @@ public final class DamageArea {
 
     /**
      * Upstream's {@code min + nextInt(max − min)}, with the maximum exclusive as upstream documents it, and the
-     * minimum for an equal pair instead of {@code nextInt(0)}'s exception (TERR-03).
+     * minimum for an equal pair instead of {@code nextInt(0)}'s exception (PROF-06, TERR-03).
      */
     static int between(Random random, int min, int max) {
         return max > min ? min + random.nextInt(max - min) : min;

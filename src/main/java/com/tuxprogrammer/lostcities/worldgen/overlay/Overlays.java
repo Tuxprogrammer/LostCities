@@ -16,7 +16,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.Tags;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
-import com.tuxprogrammer.lostcities.config.WorldgenConfig;
+import com.tuxprogrammer.lostcities.config.ProfilesConfig;
 import com.tuxprogrammer.lostcities.config.profile.BuiltinProfiles;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
@@ -110,7 +110,7 @@ public final class Overlays {
         ProfileSavedData data = ProfileSavedData.get(world);
         ProfileSnapshot snapshot = data.snapshot(dimension);
         if (snapshot == null) {
-            if (!WorldgenConfig.enableOnExistingWorlds) {
+            if (!ProfilesConfig.enableOnExistingWorlds) {
                 LostCities.LOG.info(
                     "Dimension {} has no pinned profile, so no cities generate there; "
                         + "'/lostcities profile pin <profile> confirm' or enableOnExistingWorlds opts it in",
@@ -303,7 +303,7 @@ public final class Overlays {
      * @return the profile's name, or {@code null} when the dimension is not listed
      */
     static String profileFor(int dimension) {
-        for (String entry : WorldgenConfig.dimensionProfiles) {
+        for (String entry : ProfilesConfig.dimensionProfiles) {
             int equals = entry == null ? -1 : entry.indexOf('=');
             if (equals <= 0) {
                 continue;

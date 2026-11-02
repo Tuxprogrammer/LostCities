@@ -30,7 +30,7 @@ lostcitiesnh.scenario.summary=Scenarios: %s passed, %s failed
 
 # Config screen (GTNHLib builds the keys as lostcitiesnh.<category>.<field>)
 lostcitiesnh.worldgen=World generation
-lostcitiesnh.worldgen.tooltip=One switch per feature area, and where cities generate. New worlds only: changes do not affect worlds that already exist.
+lostcitiesnh.worldgen.tooltip=One switch per feature area. New worlds only: changes do not affect worlds that already exist.
 lostcitiesnh.worldgen.cities=Cities
 lostcitiesnh.worldgen.cities.tooltip=Generate cities: buildings, streets, bridges and their parks. New worlds only.
 lostcitiesnh.worldgen.highways=Highways
@@ -39,7 +39,9 @@ lostcitiesnh.worldgen.railways=Railways
 lostcitiesnh.worldgen.railways.tooltip=Generate railways, stations and subways. New worlds only.
 lostcitiesnh.worldgen.scatteredstructures=Scattered structures
 lostcitiesnh.worldgen.scatteredstructures.tooltip=Generate scattered structures outside cities. New worlds only.
-lostcitiesnh.worldgen.dimensionprofiles=Dimension profiles
-lostcitiesnh.worldgen.dimensionprofiles.tooltip=Which dimensions get cities, and with which profile, as <dimension id>=<profile>. New worlds only.
-lostcitiesnh.worldgen.enableonexistingworlds=Enable on existing worlds
-lostcitiesnh.worldgen.enableonexistingworlds.tooltip=Give cities to worlds created before this mod was added. Chunks generated before will not match.
+lostcitiesnh.profiles.dimensionprofiles=Dimension profiles
+lostcitiesnh.profiles.dimensionprofiles.tooltip=Which dimensions get cities, and with which profile, as <dimension id>=<profile>. New worlds only.
+lostcitiesnh.profiles.enableonexistingworlds=Enable on existing worlds
+lostcitiesnh.profiles.enableonexistingworlds.tooltip=Give cities to worlds created before this mod was added. Chunks generated before will not match.
+lostcitiesnh.profiles=Profiles
+lostcitiesnh.profiles.tooltip=Where cities generate and with which profile. New worlds only: changes do not affect worlds that already exist.

@@ -14,21 +14,33 @@ These keys apply to **new worlds only**. A world copies them into its pinned pro
 | `worldgen.highways` | `true` | Generate highways between and through cities |
 | `worldgen.railways` | `true` | Generate railways, stations and subways |
 | `worldgen.scatteredStructures` | `true` | Generate scattered structures outside cities |
-| `worldgen.dimensionProfiles` | `0=default` | Which dimensions get cities and with which profile, one `<dimension id>=<profile>` per entry. The profile is pinned into the world's `data/lostcitiesnh.dat` when the world is created ([0005](design/0005-rwg-overlay.md) §7). Only world types with a height oracle get cities: `RWG2_CONTINENTS`, `RWG2`, `RWG` and `flat` |
-| `worldgen.enableOnExistingWorlds` | `false` | Give cities to worlds created before the mod was added, at their next load. Chunks generated before will not match the new ones at the border. `/lostcities profile pin <profile> confirm` opts in one world instead |
 
 In the file, the keys sit in the `worldgen` category:
 
 ```
 worldgen {
     B:cities=true
+    B:highways=true
+    B:railways=true
+    B:scatteredStructures=true
+}
+```
+
+## `profiles`: where cities generate
+
+These keys too apply to **new worlds only**: the profile is resolved and pinned into the world when the world is created.
+
+| Key | Default | What it does |
+|---|---|---|
+| `profiles.dimensionProfiles` | `0=default` | Which dimensions get cities and with which profile, one `<dimension id>=<profile>` per entry. The profile is pinned into the world's `data/lostcitiesnh.dat` when the world is created ([0005](design/0005-rwg-overlay.md) §7). Only world types with a height oracle get cities: `RWG2_CONTINENTS`, `RWG2`, `RWG` and `flat` |
+| `profiles.enableOnExistingWorlds` | `false` | Give cities to worlds created before the mod was added, at their next load. Chunks generated before will not match the new ones at the border. `/lostcities profile pin <profile> confirm` opts in one world instead |
+
+```
+profiles {
     S:dimensionProfiles <
         0=default
      >
     B:enableOnExistingWorlds=false
-    B:highways=true
-    B:railways=true
-    B:scatteredStructures=true
 }
 ```
 

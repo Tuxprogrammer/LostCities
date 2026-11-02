@@ -58,16 +58,5 @@ public final class WorldgenConfig {
     @Config.DefaultBoolean(true)
     public static boolean scatteredStructures = true;
 
-    @Config.Comment({ "Which dimensions get cities, and with which profile: one '<dimension id>=<profile>' per line.",
-        "The profile is pinned into a world when it is created. New worlds only." })
-    @Config.DefaultStringList({ "0=default" })
-    public static String[] dimensionProfiles = { "0=default" };
-
-    @Config.Comment({ "Give cities to worlds created before this mod was added, at their next load. Off by default:",
-        "already generated chunks will not match the new ones at the border. Use '/lostcities profile pin' to opt in",
-        "one world instead." })
-    @Config.DefaultBoolean(false)
-    public static boolean enableOnExistingWorlds = false;
-
     private WorldgenConfig() {}
 }
