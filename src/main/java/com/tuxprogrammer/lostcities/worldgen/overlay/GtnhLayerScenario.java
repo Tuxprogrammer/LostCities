@@ -37,7 +37,9 @@ import com.tuxprogrammer.lostcities.worldgen.plan.PopulationJob;
  * <li><b>Spawners:</b> every spawner the plan sets names the mob the plan drew (after the registry fallback), from
  * upstream's sets (or EnderZoo's when the profile says so), never a pig, and each name creates an entity;</li>
  * <li><b>Ore veins:</b> GregTech ore blocks stand in the natural stone under the city (veins pass through, D18), and
- * none above the city ground in a building chunk, where only building blocks, which no GT ore replaces, stand.</li>
+ * none above the city ground in a building chunk, where only building blocks, which no GT ore replaces, stand. GT's
+ * boulders replace terracotta and GT stones in buildings (ore-veins.md, the residual conflict option A accepts), and
+ * ore can then form in a boulder: those are counted apart, with the boulder stone in buildings, and do not fail.</li>
  * </ul>
  * One {@code [LCNH-GTNH]} summary line per check goes to the log.
  *
@@ -214,12 +216,21 @@ public final class GtnhLayerScenario implements Scenario {
             for (int lz = 0; lz < 16; lz++) {
                 for (int y = 1; y < 256; y++) {
                     Block block = chunk.getBlock(lx, y, lz);
+                    if (y >= ground && plan.hasBuilding() && isRawGtStone(block, chunk.getBlockMetadata(lx, y, lz))) {
+                        tally.boulderBlocksInBuildings++;
+                        continue;
+                    }
                     if (!isGtOre(block)) {
                         continue;
                     }
                     if (y < ground) {
                         tally.oresBelow++;
                     } else if (plan.hasBuilding()) {
+                        if (besideRawGtStone(chunk, lx, y, lz)) {
+                            // Ore in a GT boulder that cut into the building: boulder damage (ore-veins.md option A).
+                            tally.oresInBoulders++;
+                            continue;
+                        }
                         tally.oresInBuildings++;
                         if (tally.oreExamples.size() < CityScenarios.EXAMPLES) {
                             tally.oreExamples.add(oreExample(chunk, plan, lx, y, lz));
@@ -230,6 +241,33 @@ public final class GtnhLayerScenario implements Scenario {
                 }
             }
         }
+    }
+
+    /**
+     * Whether a block is raw GT granite, marble or basalt (metas 0 and 8 of {@code gt.blockgranites} and
+     * {@code gt.blockstones}): the stone GT's boulders are made of, which no palette places (D28 rule 7, ore-veins.md).
+     */
+    static boolean isRawGtStone(Block block, int meta) {
+        if (meta != 0 && meta != 8) {
+            return false;
+        }
+        Object name = Block.blockRegistry.getNameForObject(block);
+        return "gregtech:gt.blockgranites".equals(String.valueOf(name))
+            || "gregtech:gt.blockstones".equals(String.valueOf(name));
+    }
+
+    private static boolean besideRawGtStone(Chunk chunk, int lx, int y, int lz) {
+        int[][] offsets = { { 0, 1, 0 }, { 0, -1, 0 }, { 1, 0, 0 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 0, -1 } };
+        for (int[] offset : offsets) {
+            int x = lx + offset[0];
+            int yy = y + offset[1];
+            int z = lz + offset[2];
+            if (x >= 0 && x < 16 && z >= 0 && z < 16 && yy > 0 && yy < 256
+                && isRawGtStone(chunk.getBlock(x, yy, z), chunk.getBlockMetadata(x, yy, z))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Describes an ore found above the city ground: where, the plan's facts there, and the blocks around it. */
@@ -291,6 +329,8 @@ public final class GtnhLayerScenario implements Scenario {
         long oresBelow;
         long oresInBuildings;
         long oresAboveOpen;
+        long oresInBoulders;
+        long boulderBlocksInBuildings;
         final Map<String, Integer> categories = new TreeMap<>();
         final Map<LootTier, Integer> tiers = new TreeMap<>();
         final Map<String, Integer> mobs = new TreeMap<>();
