@@ -53,7 +53,8 @@ public final class ColumnOps {
      */
     public static int moveDown(ChunkBuffer buffer, BlockClassifier classes, int x, int z, int height, int top,
         int waterLevel) {
-        int y = Math.min(top, WorldLimits.BUILD_HEIGHT) - 1;
+        // Nothing but air lies above the buffer's top section, so the scan starts there.
+        int y = Math.min(Math.min(top, WorldLimits.BUILD_HEIGHT) - 1, buffer.topY());
         int highestFoliage = NOT_TOUCHED;
         BlockRef liquidAbove = null;
         while (y > height) {
@@ -221,7 +222,7 @@ public final class ColumnOps {
      * @return the Y, or {@code MIN_Y − 1} for an empty column
      */
     public static int surface(ChunkBuffer buffer, BlockClassifier classes, int x, int z, boolean throughFoliage) {
-        for (int y = WorldLimits.MAX_Y; y >= WorldLimits.MIN_Y; y--) {
+        for (int y = Math.min(WorldLimits.MAX_Y, buffer.topY()); y >= WorldLimits.MIN_Y; y--) {
             BlockRef block = buffer.get(x, y, z);
             if (throughFoliage ? !classes.isFoliageOrEmpty(block) : !classes.isEmpty(block)) {
                 return y;

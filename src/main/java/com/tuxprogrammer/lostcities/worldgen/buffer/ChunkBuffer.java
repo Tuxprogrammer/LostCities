@@ -52,6 +52,17 @@ public interface ChunkBuffer {
     void set(int x, int y, int z, BlockRef block);
 
     /**
+     * Returns a Y at or above every non-air block of the buffer, so a scan down from the top can start there instead
+     * of at Y 255. The default is the top of the world; a section-backed buffer answers the top of its highest
+     * section that holds anything. Writing above it raises it.
+     *
+     * @return block Y, 0 to 255
+     */
+    default int topY() {
+        return HEIGHT - 1;
+    }
+
+    /**
      * Returns {@code true} when a position lies inside a chunk column.
      *
      * @param x local X

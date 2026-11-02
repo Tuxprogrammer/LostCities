@@ -65,6 +65,9 @@ public final class OverlayChunkProvider implements IChunkProvider {
         GenerationTimers timers = overlay.timers();
         timers.record(GenerationTimers.Series.PROVIDE, chunkClass, generated - start);
         timers.record(GenerationTimers.Series.TERRAIN, chunkClass, done - generated);
+        if (chunk != null) {
+            overlay.recordTerrain(chunk, chunkClass);
+        }
         return chunk;
     }
 
@@ -102,6 +105,7 @@ public final class OverlayChunkProvider implements IChunkProvider {
         GenerationTimers timers = overlay.timers();
         timers.record(GenerationTimers.Series.POPULATE, chunkClass, populated - start);
         timers.record(GenerationTimers.Series.POPULATION, chunkClass, done - populated);
+        overlay.recordPopulation(chunkX, chunkZ);
     }
 
     @Override

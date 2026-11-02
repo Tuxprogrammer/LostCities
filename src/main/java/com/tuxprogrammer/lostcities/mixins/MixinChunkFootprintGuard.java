@@ -48,6 +48,8 @@ public abstract class MixinChunkFootprintGuard {
         CallbackInfoReturnable<Boolean> callback) {
         if (FootprintGuard.drops(worldObj, xPosition, zPosition, x, y, z)) {
             callback.setReturnValue(false);
+        } else if (FootprintGuard.populating()) {
+            FootprintGuard.noteUnguardedWrite(worldObj, xPosition, zPosition, x, y, z, block);
         }
     }
 }

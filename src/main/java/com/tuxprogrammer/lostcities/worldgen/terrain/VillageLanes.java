@@ -69,7 +69,7 @@ public final class VillageLanes {
         BlockClassifier classes = context.classifier();
         int seaFloor = context.settings()
             .waterLevel() - 1;
-        int top = WorldLimits.MAX_Y;
+        int top = Math.min(WorldLimits.MAX_Y, buffer.topY());
         while (top > WorldLimits.MIN_Y) {
             BlockRef block = buffer.get(x, top, z);
             if (!block.isAir() && !classes.isFoliage(block)) {

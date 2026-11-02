@@ -1,5 +1,8 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.BlockLog;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
@@ -35,6 +38,7 @@ public final class FootprintGuard {
     /** Whether the top frame is active, kept apart so the common "no population" case is one field read. */
     private static boolean topActive;
     private static long dropped;
+    private static long leakedFoliage;
 
     private FootprintGuard() {}
 
@@ -108,6 +112,35 @@ public final class FootprintGuard {
         }
         dropped++;
         return true;
+    }
+
+    /**
+     * Counts a log or leaf block written into a footprint while a population frame is on the stack but not guarding:
+     * after {@code PopulateChunkEvent.Post} or during our own population phase. Neither should ever write one, so the
+     * worldgen scenario fails when this count rises (RWG's decoration must not reach the footprint by any path).
+     *
+     * @param world  the chunk's world
+     * @param chunkX the chunk's X
+     * @param chunkZ the chunk's Z
+     * @param x      local X
+     * @param y      block Y
+     * @param z      local Z
+     * @param block  the block being written
+     */
+    public static void noteUnguardedWrite(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
+        if (depth == 0 || !(block instanceof BlockLog || block instanceof BlockLeavesBase)) {
+            return;
+        }
+        int top = depth - 1;
+        if (WORLDS[top] == world && y >= PLANS[top].chunk(chunkX, chunkZ)
+            .footprintBottom(x & 15, z & 15)) {
+            leakedFoliage++;
+        }
+    }
+
+    /** Returns how many logs and leaves reached a footprint during a population without the guard. */
+    public static long leakedFoliage() {
+        return leakedFoliage;
     }
 
     /** Returns whether any population frame is on the stack. */

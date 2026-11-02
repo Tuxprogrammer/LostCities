@@ -28,6 +28,13 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     private ExtendedBlockStorage[] sections;
     private boolean sky;
     private int writes;
+    private int topY;
+    // The last block read and written: scans and fills meet long runs of one block.
+    private Block lastReadBlock;
+    private int lastReadMeta = -1;
+    private BlockRef lastReadRef;
+    private BlockRef lastWrittenRef;
+    private Block lastWrittenBlock;
 
     /**
      * Creates a buffer that can be pointed at chunks one after another.
@@ -49,6 +56,13 @@ public final class WorldChunkBuffer implements ChunkBuffer {
         this.sections = target.getBlockStorageArray();
         this.sky = !target.worldObj.provider.hasNoSky;
         this.writes = 0;
+        this.topY = -1;
+        for (int i = sections.length - 1; i >= 0; i--) {
+            if (sections[i] != null && !sections[i].isEmpty()) {
+                topY = (i << 4) + 15;
+                break;
+            }
+        }
         return this;
     }
 
@@ -65,7 +79,20 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             return BlockRef.AIR;
         }
         Block block = section.getBlockByExtId(x, y & 15, z);
-        return refs.ref(block, section.getExtBlockMetadata(x, y & 15, z));
+        int meta = section.getExtBlockMetadata(x, y & 15, z);
+        if (block == lastReadBlock && meta == lastReadMeta) {
+            return lastReadRef;
+        }
+        BlockRef ref = refs.ref(block, meta);
+        lastReadBlock = block;
+        lastReadMeta = meta;
+        lastReadRef = ref;
+        return ref;
+    }
+
+    @Override
+    public int topY() {
+        return Math.max(topY, 0);
     }
 
     @Override
@@ -82,7 +109,14 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             section = new ExtendedBlockStorage(y & ~15, sky);
             sections[y >> 4] = section;
         }
-        section.func_150818_a(x, y & 15, z, refs.block(block));
+        if (!block.isAir() && y > topY) {
+            topY = (y & ~15) + 15;
+        }
+        if (block != lastWrittenRef) {
+            lastWrittenBlock = refs.block(block);
+            lastWrittenRef = block;
+        }
+        section.func_150818_a(x, y & 15, z, lastWrittenBlock);
         section.setExtBlockMetadata(x, y & 15, z, block.meta());
         writes++;
     }

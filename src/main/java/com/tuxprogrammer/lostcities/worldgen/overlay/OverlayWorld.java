@@ -98,7 +98,6 @@ public final class OverlayWorld {
         try {
             TerrainPhase.Result result = terrainPhase.run(buffer, chunk.xPosition, chunk.zPosition);
             buffer.finish();
-            recorder.afterTerrain(chunk.xPosition, chunk.zPosition, buffer, result.chunkClass());
             return result.chunkClass();
         } catch (RuntimeException e) {
             timers.countFailure();
@@ -123,17 +122,38 @@ public final class OverlayWorld {
         ChunkPlan chunkPlan = plan.chunk(chunkX, chunkZ);
         try {
             populationPhase.run(chunkX, chunkZ, chunkPlan);
-            if (recorder.covers(chunkX, chunkZ)) {
-                recorder.afterPopulation(
-                    chunkX,
-                    chunkZ,
-                    buffer.attach(world.getChunkFromChunkCoords(chunkX, chunkZ)),
-                    chunkPlan);
-            }
         } catch (RuntimeException e) {
             timers.countFailure();
             LostCities.LOG
                 .error("Population phase failed for chunk ({}, {}) of dimension {}", chunkX, chunkZ, dimension, e);
+        }
+    }
+
+    /**
+     * Records a chunk for the determinism scenario after its terrain phase, outside the timed span.
+     *
+     * @param chunk      the chunk
+     * @param chunkClass how the terrain phase treated it
+     */
+    void recordTerrain(Chunk chunk, TerrainPhase.ChunkClass chunkClass) {
+        if (recorder.covers(chunk.xPosition, chunk.zPosition)) {
+            recorder.afterTerrain(chunk.xPosition, chunk.zPosition, buffer.attach(chunk), chunkClass);
+        }
+    }
+
+    /**
+     * Records a chunk for the determinism scenario after its population phase, outside the timed span.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     */
+    void recordPopulation(int chunkX, int chunkZ) {
+        if (recorder.covers(chunkX, chunkZ)) {
+            recorder.afterPopulation(
+                chunkX,
+                chunkZ,
+                buffer.attach(world.getChunkFromChunkCoords(chunkX, chunkZ)),
+                plan.chunk(chunkX, chunkZ));
         }
     }
 

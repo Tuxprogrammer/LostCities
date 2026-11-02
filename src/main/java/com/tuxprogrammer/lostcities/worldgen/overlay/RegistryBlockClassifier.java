@@ -42,6 +42,8 @@ public final class RegistryBlockClassifier implements BlockClassifier {
     private final BlockRefs refs;
     private final Map<BlockRef, Integer> cache = new IdentityHashMap<>();
     private final Set<Block> oreFoliage = new HashSet<>();
+    private BlockRef lastRef;
+    private int lastFlags;
 
     /**
      * Creates the classifier.
@@ -62,6 +64,16 @@ public final class RegistryBlockClassifier implements BlockClassifier {
 
     @Override
     public int flags(BlockRef ref) {
+        if (ref == lastRef) {
+            return lastFlags;
+        }
+        int flags = lookup(ref);
+        lastRef = ref;
+        lastFlags = flags;
+        return flags;
+    }
+
+    private int lookup(BlockRef ref) {
         Integer cached = cache.get(ref);
         if (cached != null) {
             return cached;

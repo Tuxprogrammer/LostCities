@@ -231,7 +231,7 @@ public final class OverlayScenarios {
                     Locale.ROOT,
                     "[LCNH-OVERLAY] city: %d city chunks, streets at ground %d/%d, RWG foliage in footprint %d,"
                         + " lights lit %d/%d, cores touched %d, lane columns %d, guard dropped %d writes,"
-                        + " cascades during population %d",
+                        + " cascades during population %d, logs and leaves past the guard %d",
                     cityChunks,
                     streetsAtGround,
                     streets,
@@ -241,7 +241,8 @@ public final class OverlayScenarios {
                     coresTouched,
                     laneColumns,
                     FootprintGuard.droppedWrites(),
-                    overlay.cascades()));
+                    overlay.cascades(),
+                    FootprintGuard.leakedFoliage()));
             if (foliageSeen.length() > 0) {
                 LostCities.LOG.info(
                     "[LCNH-OVERLAY] foliage in footprint: {} (right after our population phase: {})",
@@ -263,9 +264,13 @@ public final class OverlayScenarios {
                 "expected at least 3/4 of street chunks paved at the city ground, found " + streetsAtGround
                     + "/"
                     + streets);
+            // RWG's decoration is kept out by the guard during its populate; trees other mods plant afterwards from
+            // their IWorldGenerators (IC2 rubber trees, HarvestCraft, Natura) on park grass may overhang a street.
+            // They are reported above, not failed (other-worldgen.md, T3).
+            context.check(FootprintGuard.droppedWrites() > 0, "expected the write guard to drop RWG's decoration");
             context.check(
-                foliageInFootprint == 0,
-                "expected no RWG logs or leaves in the footprint, found " + foliageInFootprint);
+                FootprintGuard.leakedFoliage() == 0,
+                "expected no log or leaf past the guard during population, found " + FootprintGuard.leakedFoliage());
             context.check(coresTouched == 0, "expected landmark cores untouched, " + coresTouched + " were written");
             context
                 .check(lights == 0 || litLights == lights, "expected every glowstone lit, " + litLights + "/" + lights);
