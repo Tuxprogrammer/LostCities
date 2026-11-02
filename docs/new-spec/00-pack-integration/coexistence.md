@@ -200,7 +200,7 @@ Upstream softens the city's outer edge with its terrain blend ([terrain-blend.md
 | ID | Rule |
 |---|---|
 | E1 | **Cores are fixed ground.** A core chunk is never reshaped. In the blend, a corner shared by a core chunk and a non-city chunk is a fixed corner whose lower and upper heights are the core's own oracle height (offsets −1 to +1), the same way a city corner is fixed at the city ground. The blend between a city and a nearby landmark is spread over the chunks between them. |
-| E2 | **No walls toward a core.** A city chunk's side facing a core gets no border wall. Instead, a soft-edge strip of `softEdgeWidth` columns (default 6) moves the ground from the city ground at its inner edge to the column's own natural height at the core's edge, keeping the column's own surface block. |
+| E2 | **No walls toward a core.** A city chunk's side facing a core gets no border wall. Instead, a soft-edge strip of `softEdgeWidth` columns (default 6) moves the ground from the city ground at its inner edge to the column's own natural height at the core's edge, keeping the column's own surface block. Where water stands on the edge column (a pond or river in the core), its natural height is the water's surface: the strip meets it at the waterline (D-A-5). |
 | E3 | **Steep steps stay walkable or honest.** Where the step is more than twice the strip width, the strip still ramps as far as it can and ends at the inner edge in a retaining border of the city style's border block, at most as tall as the remaining step. These are listed in the alpha screenshot set. |
 | E4 | **No straight lines.** The strip's width is varied by upstream's transition noise (±2 columns), as the blend meshes are. |
 | E5 | **Green on both sides.** Edge-ring parks are outside the city footprint ([0005](../../design/0005-rwg-overlay.md) §3a), so RWG's trees and boulders stay in them and in the strips, continuing the core's own decoration. |
@@ -221,7 +221,7 @@ Settled by the owner in decision log D26 and recorded in [0006](../../design/000
 ## Still open (alpha screenshots and the prototype)
 
 - The Roguelike prediction's hit rate against real placements.
-- How edge strips, plazas and lanes look; whether 6 columns is wide enough; how often E3's retaining borders appear.
+- How edge strips, plazas and lanes look, and how often E3's retaining borders appear. The first alpha set showed a strip of 6 taking 9 to 11 blocks beside a village pond at nearly two blocks a column; 6 stays, since a wider strip in a road passing by takes the road's far lane, and the owner's review decides (D-A-5).
 - Whether empty Witchery and Roguelike lots read as parks or as holes.
 - Whether Thaumcraft mounds appear in city parks.
 - How often the monument oracle (D32) moves an oil rig, measured over many seeds once oil rigs exist (M07).
