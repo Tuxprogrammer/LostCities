@@ -13,6 +13,7 @@
 #                                                      real-pack client under Xvfb, screenshot
 #   lc-remote.sh fetch     <remote path under LC_REMOTE_ROOT>
 #   lc-remote.sh status                                our processes and the latest run markers
+#   lc-remote.sh install-tools                         copy tools/remote/server/ (scripts, README) to the root
 #
 # <rev> is anything `git rev-parse` understands here. It is resolved to a sha on this machine. If the
 # sha is not on the public remote yet, or with --bundle, a git bundle of it is copied over instead.
@@ -139,6 +140,11 @@ case "$cmd" in
         fetch_from_output "$out" run_dir "client" || true
         exit "$rc"
         ;;
+    install-tools)
+        # The remote scripts live in git (tools/remote/server/); this puts them in place. It only adds or
+        # replaces those files: JDKs, the pack, worktrees and logs stay as they are.
+        rsync -rlt --executability --checksum --itemize-changes "$HERE/tools/remote/server/" "$HOST:$ROOT/"
+        ;;
     fetch)
         p="${1:?usage: lc-remote.sh fetch <path under LC_REMOTE_ROOT>}"
         case "$p" in /*|*..*) die "fetch takes a relative path without ..";; esac
@@ -155,7 +161,7 @@ true
 EOS
         ;;
     ""|-h|--help|help)
-        sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+        sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//'
         ;;
     *)
         die "unknown command: $cmd (try --help)"

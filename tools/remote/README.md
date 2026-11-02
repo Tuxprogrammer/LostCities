@@ -15,7 +15,7 @@ LC_REMOTE_ROOT=<project dir on the host>
 
 Environment variables of the same names override `.env`, and `LC_ENV_FILE` points the script at another file. Worktrees read the main checkout's `.env` and write to its `reference/remote/`.
 
-The server side must already exist under `LC_REMOTE_ROOT`. A `README.txt` there documents it:
+The server-side scripts live in [server/](server/), laid out as they sit under `LC_REMOTE_ROOT`; `lc-remote.sh install-tools` copies them there. Each finds the root from its own location, so nothing in them names the host or the path. The rest of the root is set up by hand once (JDKs and the Xvfb userland in `shared/`, the GTNH 2.9.0 server and client in `realpack/`), and [server/README.txt](server/README.txt) records how:
 
 - `env.sh` sets up the toolchain: JDK 21 runs Gradle, the buildscript compiles with the JDK 8 toolchain, and `GRADLE_USER_HOME` is the project's own;
 - `bin/lc-sync.sh`, `bin/lc-build.sh` and `bin/lc-devserver.sh` handle the per-slot checkouts in `wt/<slot>/`;
@@ -33,6 +33,7 @@ The server side must already exist under `LC_REMOTE_ROOT`. A `README.txt` there 
 | `lc-remote.sh client [-- <client-run.sh args>]` | Runs the real-pack client headless and takes a screenshot | `client/<run id>/` |
 | `lc-remote.sh fetch <path>` | Copies a file or folder under `LC_REMOTE_ROOT` | `fetched/` |
 | `lc-remote.sh status` | Lists our running processes and the latest run markers | |
+| `lc-remote.sh install-tools` | Copies `tools/remote/server/` to `LC_REMOTE_ROOT`, adding or replacing only those files | |
 
 `<rev>` is resolved to a sha on the laptop. If an `origin/*` branch already contains the sha, the server fetches it over https. Otherwise, or with `--bundle`, the script copies a git bundle across, so unpushed work can be built.
 

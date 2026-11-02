@@ -1,0 +1,153 @@
+Lost Cities: New Horizons (modid lostcitiesnh) build and test box
+==================================================================
+
+Owned by LostCities sessions only. Everything lives under this directory (LC_REMOTE_ROOT on the laptop) and nowhere
+else. Nothing here depends on another project's directories at runtime: the JDKs, the Xvfb userland
+and the user.home shim were copied (once, read-only) from another project's shared/ folder.
+
+Shared-box rules
+  - Stay inside this directory. Never touch other projects' dirs.
+  - Our ranges: Xvfb displays :80-:89; TCP ports 25800-25899 (25800 real-pack server,
+    25810+ dev servers). Other projects use :90+ and the 25600s/25700s.
+  - Kill only PIDs we started (pid files); never pkill/killall by pattern. Leave nothing running.
+  - Stay under 64 GB RAM in total. Typical: Gradle build ~4-5 GB, real-pack server 8 GB heap
+    (~8 GiB RSS), real-pack client 8 GB heap (~10.5 GiB RSS).
+
+Layout
+  env.sh       source me: JAVA_HOME=shared/jdk21 (runs Gradle 9; RFG toolchains shared/jdk8 to
+               compile Java 8 bytecode), GRADLE_USER_HOME=gradle/, PATH with the Xvfb userland,
+               JAVA_TOOL_OPTIONS=-Duser.home=shared/home (shim; shared/home/.gradle -> gradle/),
+               lc_xvfb N / lc_xvfb_stop N (N in 80-89; pid in logs/xvfb-N.pid).
+  shared/      jdk8 jdk17 jdk21 jdk25 jbr17 xvfb home
+  gradle/      GRADLE_USER_HOME. gradle.properties lists our JDKs as the only toolchains
+               (auto-detect and auto-download off), Gradle heap 4g, daemon off.
+  bin/         lc-sync.sh, lc-build.sh, lc-devserver.sh, lc-leveldat.py (below)
+  wt/<slot>/   one checkout per verification slot (detached HEAD). wt/.bundles/ holds git bundles
+               pushed from a laptop. wt/.<slot>.lock serializes work on a slot.
+  logs/        build-<slot>-<stamp>.log (+ build-<slot>-latest.log link), devserver-<slot>-*.log,
+               devserver-<slot>.done, xvfb-N.log/.pid
+  realpack/    the real GTNH 2.9.0 server and client (below)
+
+bin/lc-sync.sh <slot> <git-rev> [--bundle <file>]
+  Create or update wt/<slot> at <git-rev> (branch, tag or sha) from
+  https://github.com/Tuxprogrammer/LostCities.git, or from a git bundle (--bundle or LC_BUNDLE) when
+  the rev is not pushed. Detached checkout; untracked files cleaned except build/, run/, .gradle/;
+  build/libs/*.jar deleted, so a slot's jar is always from its current checkout.
+  Laptop side: the repo's tools/remote/lc-remote.sh wraps all of this (its README.md).
+
+bin/lc-build.sh <slot> [gradle args...]          (default: spotlessCheck build)
+  Sources env.sh and runs ./gradlew --no-daemon --console=plain in wt/<slot>. No daemon, so
+  nothing outlives the build. Log: logs/build-<slot>-<stamp>.log. Prints BUILD result, test totals
+  and "exit=<rc> log=<path>". LC_BUILD_TIMEOUT (default 3600 s) kills the build's process group
+  (exit 124). Before every run it writes the dev server's eula.txt and server.properties into
+  wt/<slot>/run/ (RFG's run dir) and run/server/: server-port=LC_DEV_PORT (default 25810, must be
+  25810-25899), server-ip=127.0.0.1, online-mode=false, view-distance=6.
+  LC_STDIN / LC_LOG override Gradle's stdin (default /dev/null) and the log path.
+
+bin/lc-devserver.sh <slot> [--timeout <s>] [--cmds '<cmd>; wait:<s>; until:<regex>']
+  Headless dev-server check: gradlew runServer through lc-build.sh with a fifo on stdin, waits for
+  "Done (", sends --cmds, sends stop, waits for Gradle to exit. Writes logs/devserver-<slot>.done
+  (status=ok|died-during-boot|boot-timeout|stop-timeout+killed|gradle-failed, boot_seconds, log).
+
+bin/lc-leveldat.py <level.dat>   prints generatorName, RandomSeed, LevelName (python3 -I).
+
+Proof (2026-11-01, gtnh 5450e6cc, the renamed ExampleMod skeleton)
+  lc-build.sh main spotlessCheck build: BUILD SUCCESSFUL in 1m29s (cold caches); classes are
+  major 52 (Java 8). lc-devserver.sh main: "Starting Minecraft server on 127.0.0.1:25810",
+  Done after 16 s, stop, Gradle exit 0.
+
+Real-pack server: realpack/
+  dl/          GT_New_Horizons_2.9.0_Server_Java_17-26.zip (568,348,402 bytes)
+               from https://downloads.gtnewhorizons.com/ServerPacks/GT_New_Horizons_2.9.0_Server_Java_17-26.zip
+               sha256 0ab3de26e4d0de80a2df286916570d9af31c3394cb1f44aee8b9aa1f2ead9831 (also in dl/*.sha256)
+  server/      the unpacked zip. Edits: eula.txt eula=true; server.properties server-port=25800,
+               server-ip=127.0.0.1, online-mode=false, view-distance=6, white-list=false,
+               snooper-enabled=false. Everything else is the pack's (level-name=World,
+               level-type=rwg, difficulty=3, ...). server.properties.pack-original is the zip's file.
+               The server rewrites server.properties on boot (adds keys, reorders); that is harmless.
+  run.sh       the only supported way to start it (below).
+  runs/<id>/   one folder per run: console.log, fml-server-latest.log, latest.log, new crash
+               reports, server.pid, run.done. Client runs are runs/client-<id>/.
+  run.done     marker of the latest server run (copy of runs/<id>/run.done); deleted when a run
+               starts, written when it ends however it ends. run.lock is run.sh's flock.
+
+World types (verified)
+  The dedicated server takes the world type from server.properties level-type, matched
+  case-insensitively against registered WorldType names (vanilla WorldType.parseWorldType).
+    RWG2 Continents   level-type=RWG2_CONTINENTS   (rwg2-2.0.6, rwg2/RWG.java)
+    RWG2 (no continents) level-type=RWG2           (registered, hidden on the client's screen)
+    classic RWG       level-type=RWG  (or rwg)     (RWG-alpha-1.5.3, rwg/RWG.java)
+  The server zip ships level-type=rwg, so the server pack's default is CLASSIC RWG: a --fresh boot
+  writes generatorName=RWG to level.dat. RWG2_CONTINENTS is the default only on the client's
+  Create World screen, set by config/defaultworldgenerator.cfg ("World Generator"=RWG2_CONTINENTS,
+  whitelist flat/RWG/RWG2_CONTINENTS); DefaultWorldGenerator is a client-only GUI mod.
+  The world type is fixed when a world is created; it only matters with --fresh or a new --world.
+
+run.sh [--mod <jar>] [--jvm '<args>'] [--cmds '<cmd>; ...'] [--fresh] [--world <name>]
+       [--level-type <type>] [--seed <seed>] [--timeout <s>] [--cmd-wait <s>] [--run-timeout <s>]
+  --mod <jar>       install this jar as server/mods/lostcitiesnh-<version>.jar. Old lostcitiesnh-*.jar
+                    are always removed first, so a run without --mod is the bare pack.
+  --jvm '<args>'    extra JVM args (word-split).
+  --cmds '...'      console commands, ';'-separated, sent after "Done (", each followed by
+                    --cmd-wait s (default 2). 'wait:<s>' sleeps; 'until:<regex>' polls the console
+                    every 5 s until an extended-regex match, JVM death or --run-timeout (default
+                    21600 s). Neither is sent to the server. Then "stop" is always sent.
+  --fresh           delete the world folder (server/World, or the --world one) first.
+  --world <name>    use server/<name> (passed as --world <name>); default level-name=World.
+  --level-type <t>  level-type for this run (default rwg, the pack's). Only affects a new world.
+  --seed <seed>     level-seed for this run (default empty = random). Only affects a new world.
+                    level-type and level-seed are put back to the pack's values when the run ends.
+  --timeout <s>     boot timeout (default 900); the server is killed after it.
+  --set-config '<file under config/>:<key>=<value>'  (repeatable) change one config value for this run; the file is
+                    backed up to runs/<id>/cfg-backup/ and restored when the run ends (added for M04's cascade log).
+  Java REALPACK_JAVA (default shared/jdk21), heap REALPACK_HEAP (default 8G, -Xms = -Xmx).
+  Always -Dfml.queryResult=confirm. Kills only the PID it started (TERM, KILL after 30 s) on boot
+  timeout, stop timeout (180 s) or interrupt. Exit 0 only when it booted and stopped cleanly.
+
+  run.done keys: status (ok | died-during-boot | boot-timeout | stop-timeout+killed |
+  interrupted+killed | bad-mod | error), exit_code, run_id, run_dir, log, fml_log, boot_seconds,
+  peak_rss_kb (VmHWM), wall_seconds, mod, jvm_extra, until (matched|timeout|died|none), world,
+  fresh, level_type, seed.
+
+  Examples
+    ./run.sh --fresh                                                  # bare pack, classic RWG
+    ./run.sh --fresh --world rwg2c --level-type RWG2_CONTINENTS --seed 12345
+    ./run.sh --mod ../wt/main/build/libs/lostcitiesnh-<ver>.jar --cmds 'forge tps'
+
+  Proof runs (2026-11-01, JDK 21, 8G heap, bare pack)
+    --fresh, level-type=rwg: status=ok, boot 57 s launch-to-"Done (", peak RSS 8,195,880 kB
+      (7.8 GiB), 73 s wall with 'list; forge tps' and stop; level.dat generatorName=RWG.
+    --fresh --world rwg2c --level-type RWG2_CONTINENTS --seed 12345: status=ok, boot 43 s,
+      peak RSS 6,098,088 kB; level.dat generatorName=RWG2_CONTINENTS RandomSeed=12345.
+  Disk: dl 543M, server ~650M before worlds.
+
+Real-pack client: realpack/client/, client-prepare.py, client-run.sh
+  client/game/      mods/ and config/ of the GTNH 2.9.0 client pack (copied from a laptop's
+                    Prism instance), and everything the client writes (logs/, options.txt, ...).
+  client/instance/  mmc-pack.json, patches/*.json and libraries/ (lwjgl3ify forgePatches jar).
+  client/libraries, assets, natives   fetched by client-prepare.py (Mojang, Forge maven).
+  client/launch.json                  the resolved launch (java args, classpath, main class).
+  python3 -I client-prepare.py client   resolve the Prism patches for linux x86_64 and fetch what is
+                    missing (sha1-checked). Re-run after replacing client/instance.
+  client-run.sh [--display 80-89] [--shot <name>] [--wait <s>] [--timeout <s>]
+                [--server <host:port>] [--user <name>] [--heap <size>] [--extra-shot <name>:<seconds>]...
+    --extra-shot takes another screenshot <seconds> after the previous one (added for M04's viewpoints).
+    --mod <jar> installs a lostcitiesnh jar in client/game/mods for the run and removes it after; a server with the
+    mod rejects clients without it.
+    Starts Xvfb on our display (default :80), runs the client with Mesa llvmpipe
+    (LIBGL_ALWAYS_SOFTWARE=1, __GLX_VENDOR_LIBRARY_NAME=mesa) and OpenAL's null backend, offline
+    account (default LCBot), waits for the main menu (the atlases rebuilt after "Forge Mod Loader has
+    successfully loaded") or, with --server, for the first [CHAT] line after joining; waits --wait s;
+    screenshots the display (xwd | convert) into runs/client-<id>/<shot>.png; stops only its JVM and
+    Xvfb. run.done there: status, ready_seconds, peak_rss_kb, wall_seconds, run_dir, shot.
+    client.lock allows one client at a time.
+  Proof (2026-11-01): main menu in 67 s, 323/323 mods, Angelica on llvmpipe (GL 4.5), peak RSS
+    10.1 GiB. Joined the real-pack server (--server 127.0.0.1:25800) in 57 s; the server's 'op' and
+    'tp' applied and the world rendered. For screenshots use 'gamemode 1' and a safe y (a survival
+    tp to y=120 fell). Not done yet: hiding the HUD (F1 needs key input; no xdotool here), time/
+    weather locking via gamerules, camera pitch/yaw via tp.
+
+Rebuild from scratch
+  Server: delete server/, unzip dl/*.zip into server/ (python3 zipfile; no unzip on this box), redo
+  the eula.txt and server.properties edits above. Client: rsync mods/ config/ and the instance
+  metadata again, then python3 -I client-prepare.py client.
