@@ -29,6 +29,7 @@ final class SyntheticContent {
     static final BlockRef ROOF = BlockRef.of("minecraft:stone_slab", 5);
     static final BlockRef TORCH = BlockRef.of("minecraft:torch", 5);
     static final BlockRef IRON_BARS = BlockRef.of("minecraft:iron_bars", 0);
+    static final BlockRef CHEST = BlockRef.of("minecraft:chest", 2);
 
     /** Height of a lamp post below its light, in blocks. */
     static final int POST_HEIGHT = 3;
@@ -138,6 +139,10 @@ final class SyntheticContent {
             }
         }
         doors(buffer, context, ground);
+        // The plan's chest job fills the container written here (the population phase writes no blocks).
+        if (!context.isSoftEdge(2, 2)) {
+            buffer.set(2, ground + 1, 2, CHEST);
+        }
     }
 
     /** A two-high door in the middle of each side that faces a street or park. */

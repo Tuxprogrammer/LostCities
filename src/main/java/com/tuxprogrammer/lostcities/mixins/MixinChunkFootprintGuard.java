@@ -15,7 +15,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.FootprintGuard;
 
 /**
  * The footprint write guard (docs/design/0005-rwg-overlay.md §3a): drops a block write inside a city's footprint
- * while the wrapped world's delegate runs {@code populate}.
+ * while the wrapped world's delegate runs {@code populate}, and a tree part's write while the other mods'
+ * {@code IWorldGenerator}s run.
  *
  * <p>
  * Why no event works: RWG2 and classic RWG fire {@code DecorateBiomeEvent.Decorate} for their trees, boulders and
@@ -46,7 +47,7 @@ public abstract class MixinChunkFootprintGuard {
     @Inject(method = "func_150807_a", at = @At("HEAD"), cancellable = true)
     private void lostcitiesnh$guardFootprint(int x, int y, int z, Block block, int meta,
         CallbackInfoReturnable<Boolean> callback) {
-        if (FootprintGuard.drops(worldObj, xPosition, zPosition, x, y, z)) {
+        if (FootprintGuard.drops(worldObj, xPosition, zPosition, x, y, z, block)) {
             callback.setReturnValue(false);
         } else if (FootprintGuard.populating()) {
             FootprintGuard.noteUnguardedWrite(worldObj, xPosition, zPosition, x, y, z, block);

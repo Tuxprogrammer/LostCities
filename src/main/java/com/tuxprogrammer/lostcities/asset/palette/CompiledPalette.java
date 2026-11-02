@@ -195,6 +195,22 @@ public final class CompiledPalette {
     }
 
     /**
+     * Returns the resolved choice behind a character at a given slot, for callers that draw the slot themselves
+     * (upstream's per-chunk palette sequence).
+     *
+     * @param c    the character
+     * @param slot 0 to 127; ignored for a single-block character
+     * @return the choice, or null when the character is undefined
+     */
+    public BlockChoice choice(char c, int slot) {
+        BlockChoice[] slots = blocks.get(c);
+        if (slots == null) {
+            return null;
+        }
+        return slots[slots.length == 1 ? 0 : slot];
+    }
+
+    /**
      * Returns every block a character can place, each once (fixes ASSET-02).
      *
      * @param c the character

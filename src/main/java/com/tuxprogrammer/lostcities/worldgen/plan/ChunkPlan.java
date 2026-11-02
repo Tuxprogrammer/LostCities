@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
@@ -57,8 +58,11 @@ public final class ChunkPlan {
     private final ChunkContent content;
     private final short[] footprint;
     private final LanePath lane;
-    private final List<PopulationJob> jobs;
+    private final List<PopulationJob> fixedJobs;
+    private final Supplier<List<PopulationJob>> jobSource;
+    private List<PopulationJob> jobs;
     private final int[] borderOpenings;
+    private final String label;
 
     private ChunkPlan(Builder b) {
         this.chunkX = b.chunkX;
@@ -77,8 +81,11 @@ public final class ChunkPlan {
         this.content = b.content;
         this.footprint = b.footprint == null ? null : b.footprint.clone();
         this.lane = b.lane;
-        this.jobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
+        this.fixedJobs = Collections.unmodifiableList(new ArrayList<>(b.jobs));
+        this.jobSource = b.jobSource;
+        this.jobs = b.jobSource == null ? fixedJobs : null;
         this.borderOpenings = b.borderOpenings.clone();
+        this.label = b.label;
     }
 
     /**
@@ -207,7 +214,10 @@ public final class ChunkPlan {
         return style;
     }
 
-    /** Returns the writer of the chunk's own content. */
+    /**
+     * Returns the writer of the chunk's own content: a city chunk's building or street, or the bridge span over a
+     * non-city chunk ({@link ChunkContent#NONE} otherwise). A landmark core never has content.
+     */
     public ChunkContent content() {
         return content;
     }
@@ -235,9 +245,30 @@ public final class ChunkPlan {
         return lane;
     }
 
-    /** Returns the population jobs, in the order they run. */
+    /**
+     * Returns the population jobs, in the order they run: the jobs added to the builder, then those of its job
+     * source. A job source is asked once, on the first call, so a plan read only for its neighbors' terrain never pays
+     * for enumerating its parts (budget B1). The source is pure, so the list is the same whenever it is made.
+     *
+     * @return the jobs
+     */
     public List<PopulationJob> jobs() {
-        return jobs;
+        List<PopulationJob> list = jobs;
+        if (list == null) {
+            List<PopulationJob> all = new ArrayList<>(fixedJobs);
+            all.addAll(jobSource.get());
+            list = Collections.unmodifiableList(all);
+            jobs = list;
+        }
+        return list;
+    }
+
+    /**
+     * Returns a short description of what stands here, for the finder and logs: the building's or street's asset name,
+     * or the empty string.
+     */
+    public String label() {
+        return label;
     }
 
     /**
@@ -286,7 +317,9 @@ public final class ChunkPlan {
         private short[] footprint;
         private LanePath lane;
         private final List<PopulationJob> jobs = new ArrayList<>();
+        private Supplier<List<PopulationJob>> jobSource;
         private final int[] borderOpenings = new int[4];
+        private String label = "";
 
         private Builder(int chunkX, int chunkZ, ChunkKind kind) {
             this.chunkX = chunkX;
@@ -401,6 +434,23 @@ public final class ChunkPlan {
             return this;
         }
 
+        /**
+         * Sets a pure, lazily asked source of further jobs, which run after the jobs added with {@link #job}.
+         *
+         * @param source the source; asked at most once per plan
+         * @return this
+         */
+        public Builder jobSource(Supplier<List<PopulationJob>> source) {
+            this.jobSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /** Sets the label: what stands here, for the finder and logs. */
+        public Builder label(String value) {
+            this.label = Objects.requireNonNull(value);
+            return this;
+        }
+
         /** Sets the border openings of one side (a 16-bit mask). */
         public Builder borderOpenings(Side side, int mask) {
             borderOpenings[side.ordinal()] = mask & 0xFFFF;
@@ -409,9 +459,12 @@ public final class ChunkPlan {
 
         /** Returns the immutable plan. */
         public ChunkPlan build() {
-            if (kind != ChunkKind.CITY && (building || content != ChunkContent.NONE)) {
-                throw new IllegalStateException(
-                    "only a city chunk has a building or content: " + chunkX + "," + chunkZ);
+            if (kind != ChunkKind.CITY && building) {
+                throw new IllegalStateException("only a city chunk has a building: " + chunkX + "," + chunkZ);
+            }
+            if (kind == ChunkKind.LANDMARK_CORE && content != ChunkContent.NONE) {
+                // 0006 §1: the city writes nothing in a core but a village lane's surface path.
+                throw new IllegalStateException("a landmark core has no content: " + chunkX + "," + chunkZ);
             }
             if (building && groundY - WorldLimits.FLOOR_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
                 // TERR-31: a building that cannot fit is the layout's problem, settled before generation.

@@ -12,6 +12,7 @@ import com.tuxprogrammer.lostcities.scenario.BuiltinScenarios;
 import com.tuxprogrammer.lostcities.scenario.ScenarioAutorun;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
+import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 
@@ -60,6 +61,7 @@ public class CommonProxy {
      */
     public void init(FMLInitializationEvent event) {
         Overlays.register();
+        CityLoot.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
         AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
