@@ -1,0 +1,96 @@
+# Height mapping: Y 0 to 255 on RWG
+
+Every height-dependent number and profile option upstream uses in terrain, layout, damage, highways and railways, with this mod's value and range. [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 sets the rule and assigns the full per-option list to this area.
+
+Status: *Accepted* from 0005 §6 for the rule and the rows it names; rows marked *Proposed* apply the rule where 0005 does not name the option, and are collected in the area's [Proposed, not decided](index.md#proposed-not-decided) or in [06-highways-railways](../06-highways-railways/index.md#proposed-not-decided). Option defaults and ranges are upstream's, from [profile-options.md](../../original-spec/02-profiles-dimensions/profile-options.md); `02-profiles-dimensions` owns the options themselves.
+
+## The rule
+
+1. **Sea level is the same**, so numbers relative to it carry over unchanged. RWG2 and classic RWG fill water for `y < 63`, so the top water block is Y 62, as in the 1.20 overworld ([rwg.md](../00-pack-integration/rwg.md#rwg2-206-one-overworld-chunk)).
+2. **Only the build range changes**: Y 0 to 255 (16 sections) instead of −64 to 319. RWG places bedrock at Y 0 to 4.
+3. **An option whose range reaches above 255 or below 0 is clamped to 0 to 255 at load, with a warning** (0005 §6). For options counted in city levels (6 blocks each), this spec clamps the resulting Y instead (*Proposed*, see the rows).
+4. Hard-coded world limits (0, 1, 255, 256) in upstream's loops become named constants for the 1.7.10 limits, and the 256 "corner exists" sentinel becomes an explicit flag (TERR-24, CITY-22).
+
+## Build range and water
+
+| Number | Upstream 1.20 | Here | Notes |
+|---|---|---|---|
+| Build range | Y −64 to 319 | Y 0 to 255 | 1.7.10 |
+| Sections staged per chunk | 24 | 16 | |
+| Minimum build height (`getMinBuildHeight`) | −64 | 0 | Bottom bounds below |
+| Maximum build height (`getMaxBuildHeight`) | 320 | 256 | Exclusive, as upstream uses it |
+| Sea level (`seaLevel` −1) | 63 (generator) | 63 | RWG's fill |
+| `seaLevel` override | −1 to 256 | −1 to 255 | −1 → 63 |
+| `groundLevel` | 71, range 2 to 256 | 71, range 2 to 255 | Relative to sea level, unchanged |
+| `bedrockLayer` | 1, range 0 to 10, counted from Y −64 | read, no effect (*Proposed*) | RWG's bedrock fills Y 0 to 4; generation places no unbreakable block ([index](index.md#contradictions-with-other-docs)) |
+| Bottom of a building (`minBuild + 2`) | Y −62 | Y 2 | Cellars are dropped one at a time until the bottom is above it |
+| Base under streets (stop) | first solid block or `minBuild + bedrockLayer` | first solid block | On RWG at worst its bedrock |
+
+## City levels
+
+| Option | Upstream default | Upstream range | Here | Notes |
+|---|---|---|---|---|
+| `cityLevel0Height` … `cityLevel7Height` | 75, 83, 91, 99, 107, 115, 123, 131 | 1 to 384 | same defaults, range 1 to 255 | City ground = 71 + 6 × level: Y 71 to 119. Revisited from the S2 height histogram, which decides whether RWG needs a tuned profile ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 3) |
+| `FLOORHEIGHT` | 6 | constant | 6 | Blocks per level and per floor |
+| `cityMinHeight` | 50 | −1024 to 2048 | 50, range 0 to 255 | Keeps cities off deep RWG ocean (floor 34 ± 5.5) |
+| `cityMaxHeight` | 150 | −1024 to 2048 | 150, range 0 to 255 | Keeps cities off RWG2 mountain chains (base 120) and high mountains, as upstream keeps them off peaks |
+| `heightSampleSize` (mod config) | 3 | 1 to 100 | 3, range 1 to 100 | Chunks per side; not a height |
+| `oceanCorrectionBorder` | 4 | −255 to 255 | same | An offset: ocean corner = `groundLevel − 4` = Y 67 |
+
+## Building envelope
+
+| Number | Upstream 1.20 | Here | Notes |
+|---|---|---|---|
+| Height cap per chunk | `cityGround + 6 × floors < maxBuild − 8` (Y 312) | the same formula, so below Y 248 | Floors drop one at a time until it holds. With at most 21 floors at city level 8 (ground Y 119), the top floor's base stays below Y 248 |
+| Part tops | up to `maxBuild − 1` | at most Y 254 | 0005 §6: the layout clamps floors per chunk so nothing passes Y 254; a building whose roof part would pass it drops a floor |
+| `buildingMaxFloors` | 8, range 0 to 60 | 8, range 0 to 22 | 0005 §6 |
+| `buildingMinFloors` | 0, range 0 to 60 | 0, range 0 to 22 (*Proposed*) | Upstream lets the minimum win over the maximum; the per-chunk cap still applies |
+| `buildingMinFloorsChance`, `buildingMaxFloorsChance` | 4 and 6, range 1 to 60 | same | Bounds of a draw, not heights |
+| `buildingMinCellars`, `buildingMaxCellars` | 0 and 3, range 0 to 20; city level added to the maximum | same | The bottom bound (Y 2) drops cellars that would reach it |
+| Clear above the roof (`clearToMax`) | to `min(maxBuild − 8, sampled height + 10)` | to `min(248, oracle height + 10)` | |
+| Corridors | floor at `groundLevel − 6` (Y 65) | same | Relative to the profile ground |
+
+## Blend
+
+| Number | Upstream 1.20 | Here | Notes |
+|---|---|---|---|
+| `terrainFixLowerMinOffset`, `…MaxOffset` | −4, −3 (range −40 to 40) | same | Offsets |
+| `terrainFixUpperMinOffset`, `…MaxOffset` | −1, +1 | same | |
+| L1 and L2 slack | 20 + 0..4 (edge), 25 + 0..4 (diagonal) | same | Blocks |
+| Unconstrained corner substitute | oracle height ± 90 | same, clamped to Y 0 to 255 before use | |
+| "Fixed corner" test | `< 256` | explicit flag | 0005 §5 |
+| Landmark core corner | none | the core's oracle height, offsets −1 to +1 | E1 |
+| Kept surface layers | 6 | 6 | |
+| Soft-edge strip | none | `softEdgeWidth` 6 columns ± 2 | [pipeline-on-rwg.md](pipeline-on-rwg.md#soft-edge-strips) |
+
+## Damage
+
+| Option or number | Upstream default | Upstream range | Here | Notes |
+|---|---|---|---|---|
+| `explosionMinHeight`, `explosionMaxHeight` | 75, 90 | 1 to 256 | same defaults, range 1 to 255 | Center Y = `6 × cityLevel + min + nextInt(max − min)`, absolute, as upstream |
+| `miniExplosionMinHeight`, `miniExplosionMaxHeight` | 60, 100 | 1 to 256 | same defaults, range 1 to 255 | |
+| Explosion radii | 15 to 35, 5 to 12 | 1 to 3000 | same | Blocks, not heights |
+| Damage pass | Y 0 to 255 | Y 0 to 255 | | Upstream's hard-coded range is the 1.7.10 range (TERR-19) |
+| Debris start | neighbor's top + 10, or `minBuild − 1` above the cap | neighbor's top + 10, capped at Y 255 | TERR-04 |
+| Ruin column | `base + noise` to building top + 10 | the same, capped at Y 255 | TERR-29 |
+| Ruin leaves fall | no lower bound | stop at Y 1 | TERR-30 |
+
+## Highways and railways
+
+`06-highways-railways` owns these; they are listed here so every height has one home.
+
+| Option or number | Upstream default | Upstream range | Here | Notes |
+|---|---|---|---|---|
+| Highway ground | `groundLevel + 6 × level` | | same | Level 0 = Y 71 |
+| `highwayNetworkLevel` | 0 | 0 to 32 | 0, range 0 to the highest level whose tallest bundled part (12 blocks, `highway_open`) ends at or below Y 255: 28 at `groundLevel` 71 (*Proposed*) | Upstream's 32 is Y 263 |
+| Highway support columns | at most 40 blocks down while empty | | same | Stop at RWG's bedrock, as at any solid block |
+| Highway support parts | down to the minimum build height while empty | | down to Y 1 | |
+| Highway tunnel test (non-city chunk) | height > `groundLevel + 6 × level + 3` | | same, oracle height | |
+| Railway level | −3 + `railwayLevelOffset` | offset −8 to 2 | same | Y 53 by default; Y 5 to 65 over the offset range at `groundLevel` 71, all above RWG's bedrock |
+| Railway Y floor | none | | *Proposed*: a profile whose `groundLevel` and offset put the railway below Y 5 is rejected at load with a message | |
+| Surface-station clearing | to height + 4 | | same, oracle height | |
+| `monorailOffset` | −2 | −100 to 100 | deferred with monorails | D12 |
+
+## Options that go with the deferred landscapes
+
+`cityAvoidVoid`'s probe from Y 255, the cavern heightmap band (`max(groundLevel − 20, 1)` to 100), the space border cutoff (Y > 5), sphere center Y, `outsideGroundLevel` and `horizon` belong to landscapes and features not ported before beta (D12) or dropped with the world-preset screen ([0005](../../design/0005-rwg-overlay.md#7-profile-selection-q7) §7). Their values stay on file in the original spec.

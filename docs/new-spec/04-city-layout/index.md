@@ -1,0 +1,144 @@
+# 04 · City layout
+
+How Lost Cities: New Horizons decides, chunk by chunk, what a city looks like in plan. Upstream's layout ([04-city-layout](../../original-spec/04-city-layout/index.md)) carries over as it is: city detection, styles, levels, the hierarchical street field, buildings and multibuildings, parks, stairs, bridges, corridors and doors. What changes comes from three places: the 1.7.10 world (Y 0 to 255, metadata, integer dimension IDs, one generation thread), RWG (heights from the height oracle, biomes from RWG's biome provider), and coexistence with other mods' structures (landmark cores, edge rings, transition rings, road detours and plazas, villages sewn in as an old town, crater basins; [0006](../../design/0006-build-around-other-worldgen.md)). The layout stays pure Java in `layout`, with no Minecraft type in its signatures (D6).
+
+Status: *Accepted* where a row links a design record or decision-log row. Rows and items marked *Proposed* are this spec's suggestions, collected with a recommendation in [Proposed, not decided](#proposed-not-decided).
+
+## Sheets
+
+| Sheet | Covers |
+|---|---|
+| [landmark-zones.md](landmark-zones.md) | Every per-chunk layout decision against the zones 0006 puts around other mods' structures (core, edge ring, transition rings, crater basin, village link), how the zones meet the random stream, road detours, plazas and lanes, and the profile options that replace upstream's avoidance keys |
+
+## How to read the table
+
+As in [03-terrain](../03-terrain/index.md#how-to-read-the-table): **Here** is *same*, *changed*, *dropped*, *deferred* or *new*; **Bugs** lists the [BUGS.md](../../original-spec/BUGS.md) IDs the row must not reproduce, with other areas' IDs for the same bug in parentheses. Every `CITY-*` ID appears in at least one row.
+
+## Deviation table
+
+### Cities: detection, styles, levels
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| [city-detection.md](../../original-spec/04-city-layout/city-detection.md): city centers, radii, city factor, raw membership | same | Center mode (`cityChance` 0.01) and Perlin mode as upstream; `cityThreshold` 0.2, `cityMinRadius` 50, `cityMaxRadius` 128, search half-width 8 chunks unchanged | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| Center and radius seeds (`chunkZ × 797003437 + chunkX × 295075153`, `chunkZ × 100001653 + …`) | changed | The world seed is part of every city-placement and radius seed, as on upstream `1.12`, so cities differ between worlds | D10 | CITY-01 (PROF-11) |
+| Perlin rarity map (`PerlinNoiseGenerator14`, 4 octaves) | same | Its same-seed octaves are kept as upstream has them; the map is keyed by the profile, not only the dimension | D16 | (CORE-25), CITY-05 |
+| Height window (`cityMinHeight` 50, `cityMaxHeight` 150) | same | Tested against the height oracle's value for the chunk; 150 keeps cities off RWG2 mountain chains and high mountains ([height-mapping.md](../03-terrain/height-mapping.md#city-levels)) | [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 | none |
+| World-style biome multipliers on the city factor | changed | The chunk's main biome comes from RWG's `WorldChunkManager` (pure on RWG); biome predicates match 1.7.10 biome names and `BiomeDictionary` types (`02-profiles-dimensions` owns world styles) | [0006](../../design/0006-build-around-other-worldgen.md#2-how-the-layout-learns-about-landmarks-structure-oracles) §2 | none |
+| Spawn-distance multipliers (`citySpawnDistance1/2`, `citySpawnMultiplier1/2`) | same | Measured from block (0, 0), as upstream | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| City factor near villages | changed | Not lowered: a village inside a city's radius is surrounded by the city and becomes its old town | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3, D26 | none |
+| Inside and outside profiles of sphere worlds; `space`/`spheres` center rules; void chunks (`floating`) | deferred | Not ported before beta | D12 | CITY-04 (PROF-06), CITY-05 |
+| [city-styles.md](../../original-spec/04-city-layout/city-styles.md): style of a chunk | changed | Each contribution carries the style of its own city center (`getCityStyleForCityCenter(center)`), and center styles are seeded with the world seed, so a city has one style where cities don't overlap | D10 | CITY-01, CITY-03 (PROF-10) |
+| Style cache (`CITY_STYLE_CACHE`, keyed by chunk only) | changed | Bounded, world-owned, keyed by chunk and profile, no time expiry | D9, [0005](../../design/0005-rwg-overlay.md#8-time-budget-and-how-it-is-measured-q10) §8 (B5) | CITY-06 |
+| Weighted picks (`Tools.getRandomFromList` returning `null`) | changed | The picker never returns `null`: float rounding falls to the last entry | none (bug fix) | CITY-09 (CORE-21) |
+| Street-majority vote (3 × 3, own style counted twice) | changed | Ties broken by a fixed rule instead of `HashMap` order ([Proposed](#proposed-not-decided)) | CONTRIBUTING § World generation rules | CITY-21 |
+| `cityStyleThreshold`, `cityStyleAlternative` | same | | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| [city-level.md](../../original-spec/04-city-layout/city-level.md): height to level (thresholds 75 to 131, step 8; 9 levels) | same | Heights from the oracle; city ground Y 71 to 119 | [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 | none |
+| `useAvgHeightmap` (average with up to four sampled city neighbors when `heightSampleSize > 2`) | same | The sample cell uses floor division, so the cells around coordinate 0 are regular | none (bug fix) | CITY-34 |
+| Space rule, floating and cavern levels | deferred | | D12 | none |
+| Multibuilding level (`multiUseCorner`: top-left, else footprint average) | same | | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| City level next to a landmark | new | From the same height oracle as the landmark's ground estimate | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | none |
+
+### Planning stages ([chunk-planner.md](../../original-spec/04-city-layout/chunk-planner.md), [chunk-characteristics.md](../../original-spec/04-city-layout/chunk-characteristics.md))
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| [chunk-planner.md](../../original-spec/04-city-layout/chunk-planner.md): three stages (highway, characteristics, `BuildingInfo`) per chunk, `TimedCache` plans, stage locks, dimension-wide memoization locks | changed | The same stages plus a landmark stage before characteristics ([landmark-zones.md](landmark-zones.md#zones)). Every stage is a pure function, cached in bounded world-owned caches with no time expiry and no locks (one server thread); every value is final once computed | D9, [0005](../../design/0005-rwg-overlay.md#8-time-budget-and-how-it-is-measured-q10) §8 (B5) | CITY-13, CITY-18, CITY-19, CITY-20 |
+| `Staged.cacheable` (provisional results while structure references are unknown) | dropped | The structure oracles are pure and always known, so every result is final | [0006](../../design/0006-build-around-other-worldgen.md#5-order-and-determinism) §5, D9 | CITY-20 |
+| [chunk-characteristics.md](../../original-spec/04-city-layout/chunk-characteristics.md): `computeChunkCharacteristics` | same | Except structure avoidance, below | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| Structure avoidance (`StructureAvoidance.check`, `DIRECT`/`ADJACENT`, the multibuilding clause) | changed | Replaced by landmark zones: a core is not city, an edge-ring chunk can hold no building, transition rings lower building chance and floors ([landmark-zones.md](landmark-zones.md#decisions-by-zone)). Upstream's behavior stays as the `AVOID` treatment | [0006](../../design/0006-build-around-other-worldgen.md#1-landmarks-and-landmark-lots) §1 and §3 | CITY-24 |
+| `checkBuildingPossibility` (building chance 0.3 or the style's; road, highway `cityLevel > level + 1`, railway `cityLevel ≥ railLevel + railpartheight6`) | same | Zone rules apply after the draw | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | none |
+| Candidate building type for every chunk | same | Kept for the random stream; never a reason to throw | none (bug fix) | CITY-11, CITY-17 |
+| `CharacteristicsEvent` (Forge bus) | same | Posted on the 1.7.10 Forge bus; the API is `01-core`'s | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| GUI preview (`getChunkCharacteristicsGui`, `hasBuildingGui`) | dropped | No world-preset screen ([0005](../../design/0005-rwg-overlay.md#7-profile-selection-q7) §7). A later preview (`09-client-ui`) calls the same layout | [0005](../../design/0005-rwg-overlay.md#7-profile-selection-q7) §7 | CITY-33 |
+
+### Buildings ([building-info.md](../../original-spec/04-city-layout/building-info.md), [multibuildings.md](../../original-spec/04-city-layout/multibuildings.md))
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| [building-info.md](../../original-spec/04-city-layout/building-info.md): the per-chunk decisions and their random order | same | Same decisions, same order, same building random (`QualityRandom(seed + chunkZ × 341873128712 + chunkX × 132897987541)`), except the fixes in this table. The plan is immutable | D9 | CITY-13, CITY-18 |
+| Prefers-lonely tests (first draw repeats `bc`; neighbors' candidate buildings) | changed | The constructor's draws do not repeat the characteristics stage's ([Proposed](#proposed-not-decided) how), and only a neighbor that could hold a building counts; that is read from the neighbor's characteristics, so there is no cycle | none (bug fix) | CITY-10, CITY-11 |
+| Floors (`minFloors + nextInt(bound) + 1`, chances 4 and 6, limits from profile, building and style) | same | A bound below 1 is clamped to 1 and the option pair is validated at load | none (bug fix) | CITY-14 (PROF-06) |
+| Height cap (`while cityGround + 6f ≥ maxBuild − 8: f--`) | changed | With 1.7.10's height the cap is Y 248; the loop stops at 0 floors, and a chunk left with no floor holds no building | [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 | CITY-15 |
+| Floors and cellars in zones | new | Transition ring 1 at most 2 floors, ring 2 at most 4; crater basins cap floors under the meteorite's paraboloid; edge rings hold no building or cellar. All after upstream's draws | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | none |
+| Cellars (`mincellars + nextInt(maxcellars + 1)`, then clamped to the maximum) | changed | Drawn uniformly between the minimum and the maximum, so the top value does not absorb the overflow; one draw, as upstream | none (bug fix) | CITY-16 |
+| `getBuildingBottomHeight` (rewrites floors and cellars) | changed | A pure query on the plan; floors and cellars are fitted to the world (bottom above Y 2, cap below Y 248) once, when the plan is built | D9 | CITY-18 |
+| Door block (`nextInt(7)`: birch, acacia, dark oak, spruce, oak, jungle, iron) | changed | Same draw. Woods map to `malisisdoors:door_<wood>` with `minecraft:wooden_door` as the fallback; oak and iron are the vanilla doors, which the pack makes MalisisDoors blocks | D28 rule 5, [block-mapping.md](../00-pack-integration/block-mapping.md#doors-and-trapdoors) | none |
+| Floor parts per level (every chunk, throwing when no condition matches) | changed | The same draws for every chunk, so the stream is unchanged; no exception: a building whose part list matches nothing is an asset error caught at load (`05-assets`) | CONTRIBUTING § Code standards | CITY-17 |
+| Bridge, large bridge, stair, palette, loot, ruin draws; front parts (`frontChance` 0.2); rail dungeon (`railwayDungeonChance` 0.01) | same | Rail dungeons none in edge rings (E7), after the draw | [0006](../../design/0006-build-around-other-worldgen.md#4-edge-rules) §4 | none |
+| Railway collision under `block_railway` (`Railway.removeRailChunkType`) | changed | No cache write: the rail layout's own pure function asks the building plan whether a building blocks the rail | D9 | CITY-19 (HWY-07) |
+| Terrain-correction targets L0, L1, L2 (100000 and the 256 test) | changed | An explicit "constrained" flag instead of 256; corners shared by a core and a non-city chunk are fixed at the core's oracle height (E1) | [0005](../../design/0005-rwg-overlay.md#5-terrain-blend-q2) §5, [0006](../../design/0006-build-around-other-worldgen.md#4-edge-rules) §4 | CITY-22 (TERR-24) |
+| Height and API queries (`isTunnel`, `getRuinLevel`, `getDamage`, `getCityInfo`, `isOcean`) | same | Heights from the oracle; `isOcean` from the `BiomeDictionary` type `OCEAN`; `getSphere` deferred | [0005](../../design/0005-rwg-overlay.md#4-height-oracle) §4, D12 | none |
+| `setBuildingType` (editor) | same | `01-core` | D13 | none |
+| [multibuildings.md](../../original-spec/04-city-layout/multibuildings.md): placement per 10 × 10-chunk multichunk (`areasize` 10, 1 to 5 per area, `correctstylefactor` 0.8, 50 attempts) | same | The multichunk seed includes the world seed and the dimension | D10 | CITY-02 |
+| `canPlaceBuilding` | changed | Also rejects a position whose footprint covers a core or edge-ring chunk; the rail-clearance test uses the city level the multibuilding would have at that position and the chunk's own profile | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | CITY-26 |
+| Style counting and the multibuilding pick | same | Through the fixed style rule and the null-safe picker | D10 | CITY-06, CITY-09 |
+| Bad multibuilding settings (`maximum < minimum`, a multibuilding larger than the area) | changed | Rejected at asset load with the file and field (`05-assets`); never thrown mid-generation | CONTRIBUTING § Code standards | CITY-25 |
+| `MULTI_BUILDING_STREET_CONFLICT` (`OVERRIDE_MINOR`) | same | | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| `MultiChunk.dump` (debug print to `System.out`) | dropped | Unused | CONTRIBUTING § Code standards | none |
+
+### Streets, parks, stairs, bridges ([street-planner.md](../../original-spec/04-city-layout/street-planner.md), [streets-parks-stairs.md](../../original-spec/04-city-layout/streets-parks-stairs.md), [bridges.md](../../original-spec/04-city-layout/bridges.md))
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| [street-planner.md](../../original-spec/04-city-layout/street-planner.md): `HIERARCHICAL_GRID_V1` road field | same | Every setting and hash constant as upstream. The dimension ID hashed into `dimensionSalt` is a 1.20 string; the 1.7.10 input is [Proposed](#proposed-not-decided) | D11 | none |
+| `LEGACY` street mode | dropped | Only upstream's default mode is ported | D11 | CITY-12, CITY-23 |
+| Street-mode persistence (`LostCityWorldGenData` `streetModes`) | dropped | One mode, nothing to pin; the profile snapshot holds every layout input (`03-terrain`) | D11, [0005](../../design/0005-rwg-overlay.md#7-profile-selection-q7) §7 | (TERR-38) |
+| Effective road clip (city, connected, not overridden) | same | A core chunk is not city, so a road is clipped there | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | none |
+| Road detours and plazas | new | A severed primary road detours through edge-ring chunks on the shorter side (ties north, then west); a secondary or tertiary road ends in a plaza (`FULL`) facing the landmark ([landmark-zones.md](landmark-zones.md#roads-around-a-core)) | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3, D26 | none |
+| Village gates and lanes | new | Lanes from the nearest effective road to each gate's edge-ring chunk, tertiary class; a surface path from there to the village path; lanes to villages within `villageLinkDistance` | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3, D26, D27 | none |
+| [streets-parks-stairs.md](../../original-spec/04-city-layout/streets-parks-stairs.md): street type in the constructor | changed | The hierarchical rows only: open lots `PARK` (`openLotParkChance` 0.8), everything else `NORMAL` with the fountain draw (0.05). The legacy row and its `Random.nextInt(int, int)` go with `LEGACY` | D11 | CITY-12 |
+| Generation-time street-type overwrite | dropped | The plan's street type is final | D9 | CITY-13 (TERR-07) |
+| `FULL` street type | changed | Reachable: it is the plaza where a road ends facing a landmark, with the style's `full` parts | [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3 | CITY-12 |
+| Elevated parks (`parkStreetThreshold` 3, `parkElevation`, `parkBorder`), park and fountain parts | same | Park grass is `minecraft:grass` | D19 | none |
+| Slopes (hierarchical full-chunk slopes), stairs and stair priority | same | | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | none |
+| Road continuity (`doesRoadExtendTo`, `hasRoadConnection`) and fronts (`hasFrontPartFrom`) | same | Read from final plans, so fronts no longer change once a neighbor generates | D9 | CITY-13 |
+| Primary-road surface | new | Primary roads may be paved from the primary-roads pool, which holds speed blocks; side streets never are ([03-terrain Proposed](../03-terrain/index.md#proposed-not-decided) for the mechanism) | D28 rule 3 | none |
+| [bridges.md](../../original-spec/04-city-layout/bridges.md): hierarchical bridges (`plannedPrimaryBridgeChance` 1.0, `plannedPrimaryBridgeMaxLength` 12, endpoints primary roads at level 0, salts) | same | Gap chunks are water by `BiomeDictionary` type (`OCEAN`, `BEACH`, `RIVER`, `WATER`) or an oracle height below the water level; a landmark core is never a gap chunk, so a span never crosses one | [0006](../../design/0006-build-around-other-worldgen.md#1-landmarks-and-landmark-lots) §1 | none |
+| Legacy bridges (`calculateXBridge`, `calculateZBridge`, `bridgeChance` 0.7, row walks) | dropped | They exist only for `LEGACY` streets | D11 | CITY-23 |
+| `Bridges.generateBridges`: highway guard | changed | No bridge where any highway part's height range overlaps the bridge part's, instead of only level-0 highways | none (bug fix) | CITY-38 |
+| Z bridges (part read transposed, blocks not rotated) | changed | The block states get the transform that matches the transposed coordinates | none (bug fix) | CITY-30 |
+| Bridge supports (`Supports.generatePart`, 2 × 2 pillars from `waterLevel − 10`, end strips) | same | Supports stop at the first non-empty block, which on RWG is at worst its bedrock; structure void is the asset model's "keep" marker | [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6, D19 | CITY-28 |
+
+### Corridors, doors, predefined content, transforms, settings
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| [corridors.md](../../original-spec/04-city-layout/corridors.md): rail corridors at `groundLevel − 6` between cellared buildings (`corridorChance` 0.7) | same | Rail metadata 0 (north-south) and 1 (east-west); none in edge-ring chunks, whatever the draws say (E7); a walk stops at an edge-ring chunk | [0006](../../design/0006-build-around-other-worldgen.md#4-edge-rules) §4 | none |
+| [doors-and-connections.md](../../original-spec/04-city-layout/doors-and-connections.md): doorway flags (`buildingDoorwayChance` 0.6), passages, doors | same | Door metadata per the block mapping | D19, D28 rule 5 | none |
+| West and north passages (neighbor's `dontconnect` not checked) | changed | Both floors' `dontconnect` checked on every side | none (bug fix) | CITY-36 |
+| Multibuilding doorway guard (last column and row only) | changed | Every internal wall of a multibuilding follows one rule ([Proposed](#proposed-not-decided) which) | none (bug fix) | CITY-35 |
+| [predefined-content.md](../../original-spec/04-city-layout/predefined-content.md): predefined cities, buildings, streets | same | Loaded from the jar and `config/lostcitiesnh/assets/` (D14); the `dimension` field names a 1.7.10 dimension ([Proposed](#proposed-not-decided)) | D14 | none |
+| Predefined multibuilding forcing (only W, NW, N checked) | changed | Every chunk of the predefined multibuilding's footprint is forced to city | none (bug fix) | CITY-07 |
+| Overlapping predefined entries (map order) | changed | Rejected at load with both files named | CONTRIBUTING § Code standards | CITY-08 |
+| Predefined content on a landmark core | new | [Proposed](#proposed-not-decided) | none | none |
+| Predefined spheres, `citySphereOnlyPredefined`, `spawnSphere` | deferred | | D12 | none |
+| [transforms.md](../../original-spec/04-city-layout/transforms.md): rotations, mirrors, rail shapes | changed | Rotations as upstream, applied through per-block-family metadata tables (`05-assets`); rail shapes are 1.7.10 rail metadata 0 to 9. Mirrors mirror block states instead of rotating them, and every transform maps every rail shape | D14 | CITY-27 (ASSET-16), CITY-28 (ASSET-17) |
+| `Transform.randomRotation` (`Math.random`) | dropped | Dead code | CONTRIBUTING § World generation rules | CITY-29 |
+| [city-settings.md](../../original-spec/04-city-layout/city-settings.md): `EffectiveCitySettings`, building, street, park and corridor settings, `StreetParts` defaults, `MultiSettings` | same | Parsed by hand from JSON (Gson), with explicit defaults and validation messages instead of codecs; enum strings parsed with `Locale.ROOT` | D14, CONTRIBUTING § Ported code | CITY-31 (ASSET-19), CITY-32 |
+| `CitySphereSettings` (`centertype`, `centerpart`, `centerpartorigin`, `centerpartoffset`) and `SphereSettings` | deferred | Read from world styles so upstream assets load; no effect before the sphere work | D12 | CITY-31, CITY-32 |
+| `streets.width` (API only) | same | The API returns its documented default when no style sets it (`01-core`) | none (bug fix) | CITY-37 (ASSET-27) |
+
+### Determinism and the 1.7.10 world
+
+| Original | Here | What changes | Decision | Bugs |
+|---|---|---|---|---|
+| Random sources: `QualityRandom` per chunk, `java.util.Random` for centers, radii, styles, multichunks, pure 64-bit hashes for streets and bridges | same | `QualityRandom` is upstream's own generator and ports exactly; the seeds that lacked the world seed now include it | D10 | CITY-01, CITY-02 |
+| Mutable cached state (`streetType`, floors, cellars, rail removal, legacy bridge fields, provisional plans) | dropped | Plans are immutable; legacy bridges are not ported | D9, D11 | CITY-13, CITY-18, CITY-19, CITY-20, CITY-23 |
+| World height (floor cap `maxBuild − 8`, bottom `minBuild + 2`, `Supports` lower bound) | changed | Cap Y 248, bottom Y 2, supports stop at RWG's bedrock ([height-mapping.md](../03-terrain/height-mapping.md#building-envelope)) | [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 | CITY-15, CITY-22 |
+| Biome holders and tags (`#is_ocean`, `#is_deep_ocean`, `#is_beach`, `#is_river`) | changed | `BiomeDictionary` types on RWG's biomes. Whether every RWG2 and classic RWG biome registers its types is *unverified*; M03 checks it from source | [0006](../../design/0006-build-around-other-worldgen.md#2-how-the-layout-learns-about-landmarks-structure-oracles) §2 | none |
+| `ResourceKey<Level>` dimension IDs hashed into roads, bridges and the generation context | changed | [Proposed](#proposed-not-decided) | none | none |
+| Java 16 and 17 API (records, `List.of`, `Stream.toList`, `Random.nextInt(int, int)`) | changed | Java 8 API; the one `nextInt(int, int)` call went with `LEGACY` and the overwrite | CONTRIBUTING § Toolchain | CITY-12 |
+
+## Contradictions with other docs
+
+None found. The floor-cap arithmetic in [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 is discussed in [03-terrain](../03-terrain/index.md#contradictions-with-other-docs).
+
+## Proposed, not decided
+
+1. **The dimension ID in the layout hashes.** Upstream hashes the namespaced dimension ID string into the street field (`dimensionSalt`), bridge spans (`spanHash`), the intercity planner and the per-chunk generation seed. *Recommendation:* hash `minecraft:overworld` for dimension 0 and `lostcitiesnh:dim<id>` for any other dimension a profile is mapped to. The pure planners' unit tests can then compare their output with values recorded from upstream 1.20 for the same seed, which is the strongest check a faithful port of the street and highway field can have. The same mapping reads the `dimension` field of predefined content.
+2. **CITY-10's fix.** *Recommendation:* the characteristics stage and the `BuildingInfo` constructor share one building-random stream in order: the constructor continues after the characteristics stage's draws (one for `bc` when the chunk is city, one for the building pick when the style lists buildings) instead of reseeding. One reading of "one building random per chunk", and it changes nothing else in the order.
+3. **CITY-21's tie-break.** *Recommendation:* on a tie the chunk's own style wins; if the own style is not among the tied, the style whose name sorts first.
+4. **CITY-35's rule for internal walls.** *Recommendation:* every internal wall of a multibuilding may get random doorways, as all but the last column's and row's already can upstream. Multibuildings are authored as single buildings across chunks, and upstream's guard covers an arbitrary subset.
+5. **Multibuildings in transition rings.** *Recommendation:* allowed, with the strictest floor cap of any chunk in the footprint applied to the whole multibuilding, so its floors stay consistent.
+6. **Predefined content on a landmark core.** *Recommendation:* the core wins. A predefined building, street or multibuilding chunk that lands in a core is skipped with one log line naming the asset, as the city never writes in a core (0006 §1).
