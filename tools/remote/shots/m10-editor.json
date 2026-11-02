@@ -1,0 +1,43 @@
+{
+  "comment": "M10: the part editor's output seen in the client. The world is pinned with editMode (test-hook override); the commands.editor scenario edits and exports a generated building's part, places that part with createpart at Y 120 in its arena chunk, and builds building1 (2 floors, 1 cellar) from Y 90 in the chunk east of it. The find takes the createbuilding position from the scenario's [LCNH-COMMANDS] line.",
+  "title": "M10 part editor: createpart and createbuilding, seed 4242",
+  "world": {
+    "name": "shots-m10-editor",
+    "level_type": "RWG2_CONTINENTS",
+    "seed": "4242",
+    "fresh": true
+  },
+  "server_jvm": "-Dlostcitiesnh.profileOverrides=editMode=true",
+  "time": 6000,
+  "render_distance": 8,
+  "fov": 70,
+  "shots": [
+    {
+      "name": "editor",
+      "find": {
+        "cmd": "lostcities test commands.editor",
+        "match": "createbuilding building1 2 1 (?P<x>-?\\d+) (?P<y>\\d+) (?P<z>-?\\d+)",
+        "timeout": 300
+      },
+      "offset": [
+        -4,
+        42,
+        46
+      ],
+      "yaw": 180,
+      "pitch": 38,
+      "wait": 3,
+      "caption": "createbuilding's building1 (from Y 90, right) and createpart's part (at Y 120, left), placed by the commands.editor scenario in its arena; looking north."
+    },
+    {
+      "name": "editor-close",
+      "x": 32846,
+      "z": 32858,
+      "y": 112,
+      "yaw": 180,
+      "pitch": 18,
+      "wait": 3,
+      "caption": "Closer, from the south (arena 0 of a run: the scenario puts the part at x 32833 and the building at x 32849, z 32833): the floating part at Y 120 and the forced building below and right of it."
+    }
+  ]
+}

@@ -324,7 +324,7 @@ public final class ProfileOptions {
         option(c, "highwayRouteCityPenalty", Type.FLOAT, "1.0", d(0), d(1000), Status.PENDING, "M06");
         option(c, "highwayNetworkLevel", Type.INT, "0", d(0), d(32), Status.PENDING, "M06");
         // Modes and switches.
-        flag(c, "editMode", false, Status.PENDING, "M10");
+        flag(c, "editMode", false, Status.LIVE, "01-core");
         dropped(c, "generateNether", Type.BOOLEAN, "false");
     }
 
