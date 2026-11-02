@@ -37,8 +37,8 @@ import com.tuxprogrammer.lostcities.LostCities;
 public final class LostCitiesConfig {
 
     /** Every config class, in the order they are registered. Tests and the dev self-check walk this list. */
-    public static final List<Class<?>> CLASSES = Collections
-        .unmodifiableList(Arrays.<Class<?>>asList(WorldgenConfig.class, DecorativeMetalsConfig.class, ProfilesConfig.class));
+    public static final List<Class<?>> CLASSES = Collections.unmodifiableList(
+        Arrays.<Class<?>>asList(WorldgenConfig.class, DecorativeMetalsConfig.class, ProfilesConfig.class));
 
     /** What FML's config screen appends to an entry's lang key to find its tooltip. */
     public static final String TOOLTIP_SUFFIX = ".tooltip";
