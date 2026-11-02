@@ -82,6 +82,28 @@ class MeteoriteOracleTest {
     }
 
     @Test
+    void farFromCitiesTheBasinIsTheDecaySquareAndReadsNoGrid() {
+        int[] calls = { 0 };
+        com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle counting = (x, z) -> {
+            calls[0]++;
+            return 70;
+        };
+        Landmark far = new MeteoriteOracle(SEED, PACK, counting, 16, (a, b, c, d) -> false).meteoriteAt(0, 0);
+        int farCalls = calls[0];
+        calls[0] = 0;
+        Landmark near = new MeteoriteOracle(SEED, PACK, counting, 16, (a, b, c, d) -> true).meteoriteAt(0, 0);
+        assertTrue(farCalls < calls[0], "far " + farCalls + " near " + calls[0]);
+        BlockRect box = far.footprint()
+            .get(0);
+        assertEquals(CraterBasin.DECAY_HALF_WIDTH, box.maxX() - 286, "the decay square on flat ground");
+        assertTrue(
+            near.footprint()
+                .get(0)
+                .maxX() - 286 >= box.maxX() - 286,
+            "near a city the footprint is never smaller");
+    }
+
+    @Test
     void oneLandmarkPerCell() {
         MeteoriteOracle oracle = oracle(MeteoriteOracle.CACHE_SIZE);
         Landmark landmark = oracle.meteoriteAt(0, 0);
