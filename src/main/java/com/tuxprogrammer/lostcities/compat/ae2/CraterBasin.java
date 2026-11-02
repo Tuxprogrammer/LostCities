@@ -140,7 +140,8 @@ public final class CraterBasin {
             int end = Math.min(CORNERS, rows + ROWS_PER_STEP);
             for (int i = rows; i < end; i++) {
                 for (int k = 0; k < CORNERS; k++) {
-                    grid[i * CORNERS + k] = heights.height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
+                    grid[i * CORNERS + k] = heights
+                        .height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
                 }
             }
             rows = end;
