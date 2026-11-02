@@ -183,9 +183,9 @@ public final class CleanCapture {
      * FML's own route, which the launcher's {@code --server} takes ({@code FMLClientHandler.connectToServerAtStartup}
      * and {@code connectToServer}, Forge 10.13.4.1614), opens the connection before it creates the latch its handshake
      * thread waits on, and its fallback never creates it. Against a server on the same machine the login reply can
-     * arrive first, and the handshake fails with {@code playClientBlock is null}: the real-pack client lost two joins in
-     * a row this way. {@code connectToRealmsServer} only creates that latch, so calling it first and then opening the
-     * connection removes the race.
+     * arrive first, and the handshake fails with {@code playClientBlock is null}; the real-pack client lost two joins
+     * in a row that way. {@code connectToRealmsServer} only creates that latch, so calling it first and then opening
+     * the connection removes the race.
      */
     private void joinFromMenu(Minecraft mc) {
         if (!settings.joinsServer() || joins >= MAX_JOINS) {

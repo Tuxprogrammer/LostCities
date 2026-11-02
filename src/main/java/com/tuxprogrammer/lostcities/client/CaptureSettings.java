@@ -65,7 +65,8 @@ public final class CaptureSettings {
         boolean clouds = Boolean.parseBoolean(properties.getProperty(CLOUDS_PROPERTY, "false"));
         String host = null;
         int port = 0;
-        String server = properties.getProperty(SERVER_PROPERTY, "").trim();
+        String server = properties.getProperty(SERVER_PROPERTY, "")
+            .trim();
         int colon = server.lastIndexOf(':');
         if (colon > 0 && colon < server.length() - 1) {
             int parsed = intValue(server.substring(colon + 1), -1);
