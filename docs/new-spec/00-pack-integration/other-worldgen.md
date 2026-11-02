@@ -145,6 +145,6 @@ Recorded in the [decision log](../../design/decision-log.md) as D21, with D24, D
 
 - Whether Thaumcraft mounds land in city parks or spill onto streets.
 - How often the monument oracle (D32) moves an oil rig, measured once oil rigs exist (M07).
-- The landmark checks in [0006 § Still open](../../design/0006-build-around-other-worldgen.md#still-open): the Roguelike prediction rate (the village rate is measured: [coexistence.md](coexistence.md#predictability)), and how edges, lanes, empty lots and crater basins look.
+- The landmark checks in [0006 § Still open](../../design/0006-build-around-other-worldgen.md#still-open): how edges, lanes, empty lots and crater basins look. The Roguelike prediction rate (60 % on classic RWG, 68 % on RWG2 Continents, [coexistence.md](coexistence.md#roguelike-dungeons)) and the village rate ([coexistence.md](coexistence.md#predictability)) are measured.
 
 [pack-contribution-policy]: ../../../.claude/skills/pack-contribution-policy/SKILL.md
