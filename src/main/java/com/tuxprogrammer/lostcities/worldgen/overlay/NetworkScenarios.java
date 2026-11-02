@@ -393,11 +393,22 @@ public final class NetworkScenarios {
 
         void step(int x, int z, int deck) {
             steps++;
+            // The lowest surface from just under the deck up: a floor with no full block on it. Searching from above
+            // would land on a lamp's arm over the road.
             double standing = Double.NaN;
-            for (int y = deck + SEARCH; y >= deck - SEARCH; y--) {
+            for (int y = deck - 1; y <= deck + SEARCH; y++) {
                 double top = top(x, y, z);
-                if (!Double.isNaN(top)) {
+                if (Double.isNaN(top)) {
+                    continue;
+                }
+                double above = top(x, y + 1, z);
+                if (Double.isNaN(above)) {
                     standing = top;
+                    break;
+                }
+                if (above - (y + 1) < 1.0) {
+                    // A half slab on the floor: the step stands on the slab.
+                    standing = above;
                     break;
                 }
             }
