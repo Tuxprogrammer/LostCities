@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.transform;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Transform.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Transform.java
 // Avoids: CITY-27, CITY-28, ASSET-18
-// spotless:on
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.block.RotationFamily;

@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.model;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/ScatteredBuilding.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/ScatteredBuilding.java
 // Avoids: ASSET-25, CITY-32
-// spotless:on
 
 import java.util.Collections;
 import java.util.List;

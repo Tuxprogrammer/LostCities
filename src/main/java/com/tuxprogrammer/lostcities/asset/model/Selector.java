@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.model;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/CityStyle.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/CityStyle.java
 // Avoids: ASSET-09, ASSET-10, CITY-31
-// spotless:on
 
 import java.util.List;
 import java.util.Random;

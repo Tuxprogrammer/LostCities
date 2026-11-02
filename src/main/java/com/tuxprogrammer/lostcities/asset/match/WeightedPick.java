@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.match;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/varia/Tools.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/varia/Tools.java
 // Avoids: ASSET-10, CORE-21
-// spotless:on
 
 import java.util.List;
 import java.util.Random;

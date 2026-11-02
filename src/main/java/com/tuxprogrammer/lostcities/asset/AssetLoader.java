@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/AssetRegistries.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/AssetRegistries.java
 // Avoids: ASSET-01, ASSET-15, ASSET-28, SCAT-22
-// spotless:on
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

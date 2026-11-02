@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.model;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/ConditionContext.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/cityassets/ConditionContext.java
 // Avoids: ASSET-04, ASSET-05, ASSET-33
-// spotless:on
 
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;

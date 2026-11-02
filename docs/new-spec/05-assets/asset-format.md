@@ -164,6 +164,7 @@ What `layout` and `worldgen` consume, all in plain Java under `com.tuxprogrammer
 | `model.Condition`, `model.ConditionContext` | `randomValue(random, context)`, null when nothing matches; `ConditionContext.floorOf(y, ground)` with floor division |
 | `match.BiomeDescriptor`, `BiomeMatcher`, `BlockMatcher`, `NameMatcher` | The facts and the tests; `core.assets.BiomeDescriptors.at(world, x, z)` builds the facts, with `compat.rwg.RealisticBiomes` for `rwg:` |
 | `transform.Transform`, `transform.MetaRotation` | Part positions and block metadata under the seven transforms |
+| `view.LayoutAssets` | The layout's views (`layout.view`, D51) over an `AssetSet`, the profile's world style and a `match.BiomeSource`: what `layout` reads; names returned are full ids |
 
 ## Writing assets
 

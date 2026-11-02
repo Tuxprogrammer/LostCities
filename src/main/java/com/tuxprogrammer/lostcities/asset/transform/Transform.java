@@ -1,8 +1,7 @@
-// spotless:off
 package com.tuxprogrammer.lostcities.asset.transform;
-// Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Transform.java
+// Ported from Lost Cities (MIT):
+// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Transform.java
 // Avoids: CITY-27, CITY-28, ASSET-22
-// spotless:on
 
 /**
  * How a part is turned or mirrored when it is placed: the four rotations and three mirrors upstream uses, mapping a
