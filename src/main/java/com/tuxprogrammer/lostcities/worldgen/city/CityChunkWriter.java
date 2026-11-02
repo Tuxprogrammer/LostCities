@@ -146,6 +146,33 @@ public final class CityChunkWriter {
             if (plan.maxHighwayLevel() < 0 && layout.slope() == null) {
                 writeStairs();
             }
+            clearDoorSteps();
+        }
+    }
+
+    /**
+     * Keeps the two blocks in front of every street door of the buildings around open, at the door's height: an
+     * elevated park's raised surface and border, a park or fountain part, or a stair would otherwise stand in the
+     * doorway (deviation, decision log M05J rows: upstream let them, so a door into a raised park opened onto a block).
+     */
+    private void clearDoorSteps() {
+        boolean[] approach = doorApproaches(planner, chunkX, chunkZ);
+        if (approach == null) {
+            return;
+        }
+        int ground = plan.cityGroundLevel();
+        for (Direction side : Direction.values()) {
+            for (int d = 0; d < DOOR_STEP; d++) {
+                for (int along = 7; along <= 8; along++) {
+                    int[] column = vegetationColumn(side, d, along);
+                    if (!approach[(column[1] << 4) | column[0]]) {
+                        continue;
+                    }
+                    for (int y = ground + 1; y <= ground + 2; y++) {
+                        target.set(column[0], y, column[1], BlockRef.AIR);
+                    }
+                }
+            }
         }
     }
 
@@ -600,6 +627,8 @@ public final class CityChunkWriter {
 
     /** How deep into a street a door's approach reaches, in blocks from the building's side. */
     static final int DOOR_APPROACH = 3;
+    /** How deep in front of a door the doorway's height is kept open, in blocks. */
+    static final int DOOR_STEP = 2;
 
     /**
      * Returns the columns in front of the street doors of the buildings around a street chunk: the two door columns,
