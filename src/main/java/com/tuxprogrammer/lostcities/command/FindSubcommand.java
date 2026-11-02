@@ -110,7 +110,7 @@ public final class FindSubcommand implements Subcommand {
                 format(result.pitch())));
     }
 
-    /** Whether an explosion that reaches a chunk was repaired (0009 §4), for {@code find repair}. */
+    /** Whether an explosion that reaches a chunk was repaired (0011 §4), for {@code find repair}. */
     private static boolean repaired(OverlayWorld overlay, int chunkX, int chunkZ) {
         long seed = overlay.world()
             .getSeed();

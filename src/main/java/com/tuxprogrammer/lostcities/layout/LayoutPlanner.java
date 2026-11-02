@@ -103,11 +103,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final int MIN_BOTTOM_Y = 2;
     /** Longest corridor walk, in chunks, before the walk gives up. */
     static final int MAX_CORRIDOR_WALK = 512;
-    /** Salt of the separate random the taper's high-rise core draws from (0009 §2). */
+    /** Salt of the separate random the taper's high-rise core draws from (0011 §2). */
     static final long TAPER_SALT = 0x5441504552494e47L;
-    /** Salt of the separate random edge lots draw from (0009 §3). */
+    /** Salt of the separate random edge lots draw from (0011 §3). */
     static final long LOT_SALT = 0x45444745_4c4f5453L;
-    /** Intensity below which a chunk may become an edge lot (0009 §3). */
+    /** Intensity below which a chunk may become an edge lot (0011 §3). */
     static final float LOT_INTENSITY = 0.4f;
     /** An open lot's chance of becoming an edge lot, relative to a building chunk's. */
     static final float OPEN_LOT_SHARE = 0.5f;
@@ -214,7 +214,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /**
      * Returns a chunk's urban intensity: 0 at a city's very edge (and outside cities) to 1 in its dense core
-     * (docs/design/0009-city-edges-and-character.md §1).
+     * (docs/design/0011-city-edges-and-character.md §1).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
@@ -415,12 +415,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         PlannedRoadType planned = effectiveRoad(x, z, isCity, raw, pos);
         if (isCity && lane.role()
             .forcesRoad()) {
-            // Deviation (0006 §3, 0009 §5): detours and village lanes are small roads around the old town.
+            // Deviation (0006 §3, 0011 §5): detours and village lanes are small roads around the old town.
             planned = lane.role() == LaneRole.DETOUR ? PlannedRoadType.TERTIARY
                 : PlannedRoadType.strongest(planned, PlannedRoadType.TERTIARY);
         }
         if (planned == PlannedRoadType.PRIMARY && touchesMargin(x, z)) {
-            // Deviation (0009 §5, AR-7, AR-10): no wide road beside a landmark's margin; it narrows to a small one.
+            // Deviation (0011 §5, AR-7, AR-10): no wide road beside a landmark's margin; it narrows to a small one.
             planned = PlannedRoadType.TERTIARY;
         }
         boolean could = isCity && checkBuildingPossibility(x, z, pos, cityLevel, planned, random, zone);
@@ -666,7 +666,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
-     * Deviation (alpha review AR-6, docs/design/0009-city-edges-and-character.md §3): turns a low-intensity building
+     * Deviation (alpha review AR-6, docs/design/0011-city-edges-and-character.md §3): turns a low-intensity building
      * chunk or open lot into an empty or construction lot, from a separate random so nothing else the chunk draws
      * moves.
      */
@@ -827,7 +827,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         int cityGround = profile.groundLevel + c.cityLevel * ChunkPlan.FLOOR_HEIGHT;
         float cityFactor = cities.cityFactor(x, z);
         float taper = profile.cityTaper;
-        // Deviation (AR-5, 0009 §2): the urban intensity takes the city factor's place, by cityTaper.
+        // Deviation (AR-5, 0011 §2): the urban intensity takes the city factor's place, by cityTaper.
         float intensity = urbanity.intensity(x, z);
         float factor = cityFactor + (intensity - cityFactor) * taper;
         int maxFloors = maxFloors(b.settings, building);
@@ -888,7 +888,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
-     * Deviation (alpha review AR-5, docs/design/0009-city-edges-and-character.md §2): a building in the dense core may
+     * Deviation (alpha review AR-5, docs/design/0011-city-edges-and-character.md §2): a building in the dense core may
      * rise into a high-rise, up to {@code buildingMaxFloors}, and one near the edge is held low, so heights fade from
      * the core to RWG terrain. Draws from a separate random, so the building stream is unchanged.
      *

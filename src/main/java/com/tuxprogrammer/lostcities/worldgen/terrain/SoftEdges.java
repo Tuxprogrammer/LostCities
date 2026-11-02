@@ -252,7 +252,7 @@ public final class SoftEdges {
                     if (depth[index] != NOT_IN_STRIP && depth[index] <= d) {
                         continue;
                     }
-                    // Deviation (M12, 0009 §5): the ramp is dithered per column, so its steps do not run in
+                    // Deviation (M12, 0011 §5): the ramp is dithered per column, so its steps do not run in
                     // straight lines along the core's edge.
                     int sx = (chunkX << 4) + edgeX(side, along, d);
                     int sz = (chunkZ << 4) + edgeZ(side, along, d);

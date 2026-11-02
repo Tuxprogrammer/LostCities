@@ -38,7 +38,7 @@ public interface CityPlan {
     ChunkPlan chunk(int chunkX, int chunkZ);
 
     /**
-     * Returns the world's partial repairs of explosion damage (docs/design/0009-city-edges-and-character.md §4); none
+     * Returns the world's partial repairs of explosion damage (docs/design/0011-city-edges-and-character.md §4); none
      * unless the plan source knows the assets.
      *
      * @return the repairs

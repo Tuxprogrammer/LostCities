@@ -59,7 +59,7 @@ public class SewingTest {
                 plan.lane()
                     .role(),
                 c[0] + "," + c[1]);
-            // M12 (0009 §5): a detour is a small road around the core, not a primary.
+            // M12 (0011 §5): a detour is a small road around the core, not a primary.
             assertEquals(PlannedRoadType.TERTIARY, plan.plannedRoad(), c[0] + "," + c[1]);
             assertFalse(plan.hasBuilding());
         }

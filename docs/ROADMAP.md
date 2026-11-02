@@ -212,7 +212,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Entry gate:** M05R done (met: D148 to D155 merged); the alpha review's notes AR-5, AR-6, AR-9 and AR-17 triaged to M12 ([reviews/2026-11-02-alpha.md](reviews/2026-11-02-alpha.md), D131); [0010](design/0010-facade-color-feathering.md) accepted before its code lands.
 
-**Scope:** the city's character from its center to its edge ([0009](design/0009-city-edges-and-character.md)):
+**Scope:** the city's character from its center to its edge ([0011](design/0011-city-edges-and-character.md)):
 - **Tapering (AR-5):** an urban intensity per chunk from the city factor, the distance to the city's edge (margins, the rise cap and RWG land alike) and low-frequency noise; building heights follow it, with a high-rise core and low buildings at the edge, so the city fades into RWG terrain organically, not in rings.
 - **Edge lots (AR-6):** empty and construction lots where the intensity is low: bare clay-and-dirt ground with no foliage, pits dug 1, 2 or 4 blocks for a basement, and foundations with concrete pillars for a high-rise's first stage, in pack blocks, deterministic.
 - **Partial repairs (AR-9):** some explosions' damage is partly filled back in with a similar but not identical material, a visible patch; windows boarded.

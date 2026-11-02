@@ -170,7 +170,7 @@ public final class VillageLanes {
 
     /**
      * Relaxes a lane's columns so that no two lane neighbors (along X or Z, in this chunk) differ by more than one
-     * block, which the steps can then carry (deviation, M12: docs/design/0009-city-edges-and-character.md §5; D152
+     * block, which the steps can then carry (deviation, M12: docs/design/0011-city-edges-and-character.md §5; D152
      * left rises of two or more as they were). Each column moves to the floor of the mean of the lowest and highest
      * heights a one-block-a-column lane through its neighbors allows, clamped so that the columns on the chunk's
      * border keep their height and the seams with the neighboring chunks do not move. Columns beside the lane then

@@ -100,7 +100,7 @@ public final class ExplosionDamage {
 
     /**
      * Breaks blocks for the explosions that reach the chunk, and fills a repaired explosion's breaks below its repair
-     * line with patches (deviation, alpha review AR-9: docs/design/0009-city-edges-and-character.md §4). A patch
+     * line with patches (deviation, alpha review AR-9: docs/design/0011-city-edges-and-character.md §4). A patch
      * replaces only a block that would have become air or liquid; the damage random is drawn exactly as without
      * repairs.
      *

@@ -10,7 +10,7 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
 
 /**
- * Lane relaxation (M12, docs/design/0009-city-edges-and-character.md §5): no two lane neighbors differ by two blocks
+ * Lane relaxation (M12, docs/design/0011-city-edges-and-character.md §5): no two lane neighbors differ by two blocks
  * or more, so every rise can get its stair or slab, and the chunk's border columns keep their heights.
  */
 public class LaneRelaxTest {

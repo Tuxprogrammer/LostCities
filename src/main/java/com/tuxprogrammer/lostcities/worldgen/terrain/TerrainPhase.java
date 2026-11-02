@@ -223,7 +223,7 @@ public final class TerrainPhase {
         if (plan.lane() != null) {
             if (!plan.isCity()) {
                 changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
-                // M12 (0009 §5): no two lane columns differ by two blocks or more, so every rise gets its step.
+                // M12 (0011 §5): no two lane columns differ by two blocks or more, so every rise gets its step.
                 changed |= VillageLanes.relax(buffer, context, plan.lane()) > 0;
             }
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
@@ -270,7 +270,7 @@ public final class TerrainPhase {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
         if (plan.isLot()) {
-            // An edge lot digs below city ground, so its base is filled first and its pit stays open (0009 §3).
+            // An edge lot digs below city ground, so its base is filled first and its pit stays open (0011 §3).
             CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
         }
         if (events.preCity(buffer, chunkX, chunkZ)) {

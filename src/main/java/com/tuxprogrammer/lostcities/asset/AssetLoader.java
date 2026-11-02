@@ -661,7 +661,7 @@ public final class AssetLoader {
         out.put("rubble.mossy_stone_bricks", "minecraft:mossy_stone_bricks");
         out.put("rubble.mossy_cobblestone", "minecraft:mossy_cobblestone");
         out.put("rubble.moss", "minecraft:moss_block");
-        // Edge lots (docs/design/0009-city-edges-and-character.md §3): clay and dirt ground nothing grows on, concrete.
+        // Edge lots (docs/design/0011-city-edges-and-character.md §3): clay and dirt ground nothing grows on, concrete.
         out.put("lot.coarse_dirt", "minecraft:dirt:1");
         out.put("lot.terracotta", "minecraft:hardened_clay:0");
         out.put("lot.brown_terracotta", "minecraft:stained_hardened_clay:12");
@@ -669,7 +669,7 @@ public final class AssetLoader {
         out.put("lot.gravel", "minecraft:gravel:0");
         out.put("lot.concrete", "minecraft:light_gray_concrete");
         out.put("lot.fence", "minecraft:fence:0");
-        // Repairs (0009 §4): boards for windows, and plain materials a patch is chosen from by color.
+        // Repairs (0011 §4): boards for windows, and plain materials a patch is chosen from by color.
         out.put("repair.boards.oak", "minecraft:planks:0");
         out.put("repair.boards.spruce", "minecraft:planks:1");
         out.put("repair.boards.birch", "minecraft:planks:2");

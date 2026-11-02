@@ -377,7 +377,7 @@ public final class CityChunkWriter {
         }
         int height = plan.cityGroundLevel();
         if (plan.lot() != LotKind.NONE) {
-            // Deviation (AR-6, docs/design/0009-city-edges-and-character.md §3): an edge lot, where nothing grows.
+            // Deviation (AR-6, docs/design/0011-city-edges-and-character.md §3): an edge lot, where nothing grows.
             new EdgeLots(target, plan, assets, context.worldSeed()).write(height);
             return;
         }

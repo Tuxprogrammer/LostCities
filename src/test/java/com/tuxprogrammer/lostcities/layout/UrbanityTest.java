@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Urban intensity, tapered heights and edge lots (alpha review AR-5 and AR-6,
- * docs/design/0009-city-edges-and-character.md §1 to §3).
+ * docs/design/0011-city-edges-and-character.md §1 to §3).
  */
 public class UrbanityTest {
 

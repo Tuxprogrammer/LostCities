@@ -1,4 +1,4 @@
-# 0009 · City edges and character
+# 0011 · City edges and character
 
 - Status: Accepted (M12, decision log D-M12-2 to D-M12-8)
 - Gate: M12 exit

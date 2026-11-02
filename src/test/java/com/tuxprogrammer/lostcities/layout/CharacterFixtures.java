@@ -14,7 +14,7 @@ import com.tuxprogrammer.lostcities.worldgen.city.CityProfiles;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
- * Test worlds for M12's city character (docs/design/0010 and 0009): the bundled assets over the {@link CityFixtures}
+ * Test worlds for M12's city character (docs/design/0010 and 0011): the bundled assets over the {@link CityFixtures}
  * terrain, with desert biomes west of X 0 and plains east of it, so desert and standard cities meet. Test code only.
  */
 final class CharacterFixtures {

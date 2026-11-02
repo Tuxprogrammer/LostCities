@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.BlockClassifier;
 
 /**
  * Partial repairs of explosion damage: some explosions' holes were filled back in with a similar but not identical
- * material, a visible patch (alpha review AR-9, docs/design/0009-city-edges-and-character.md §4).
+ * material, a visible patch (alpha review AR-9, docs/design/0011-city-edges-and-character.md §4).
  *
  * <ul>
  * <li>An explosion is repaired with chance {@code damageRepairChance}, from the world seed and its center, so every

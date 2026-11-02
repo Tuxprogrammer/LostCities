@@ -53,13 +53,13 @@ public final class LayoutProfile {
     public final int cityMaxRise;
     /**
      * {@code cityTaper}, 0 to 1: how strongly building heights follow the urban intensity, low at the city's edge and
-     * high in its core (alpha review AR-5, docs/design/0009-city-edges-and-character.md §1 and §2); 0 is upstream's
+     * high in its core (alpha review AR-5, docs/design/0011-city-edges-and-character.md §1 and §2); 0 is upstream's
      * floor count.
      */
     public final float cityTaper;
     /**
      * {@code edgeLotChance}, 0 to 1: the chance that a building chunk at the very edge of a city is an empty or
-     * construction lot instead (AR-6, 0009 §3); it falls to 0 at an intensity of 0.4.
+     * construction lot instead (AR-6, 0011 §3); it falls to 0 at an intensity of 0.4.
      */
     public final float edgeLotChance;
     /**

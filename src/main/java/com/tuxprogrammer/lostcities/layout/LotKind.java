@@ -2,7 +2,7 @@ package com.tuxprogrammer.lostcities.layout;
 
 /**
  * What an edge lot shows: growth that never happened at a city's edge (alpha review AR-6,
- * docs/design/0009-city-edges-and-character.md §3).
+ * docs/design/0011-city-edges-and-character.md §3).
  *
  * <p>
  * Side: both.

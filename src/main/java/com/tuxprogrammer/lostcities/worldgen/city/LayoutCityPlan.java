@@ -270,7 +270,7 @@ public final class LayoutCityPlan implements CityPlan {
         if (plan.hasBuilding()) {
             Arrays.fill(footprint, plan.buildingBottomHeight() - 1);
         } else if (plan.lot() != LotKind.NONE) {
-            // An edge lot is guarded down to its pit's floor, so RWG grows nothing on it (0009 §3).
+            // An edge lot is guarded down to its pit's floor, so RWG grows nothing on it (0011 §3).
             Arrays.fill(footprint, ground - Math.max(STREET_FOOTPRINT_DEPTH, plan.lotDepth() + 1));
         } else if (isPark(plan, chunkX, chunkZ)) {
             // Parks and open lots keep RWG's decoration (0006 §1, pipeline-on-rwg.md).
