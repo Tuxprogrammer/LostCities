@@ -292,10 +292,21 @@ Scopes are written from S1 to S3 when they land. In outline:
 **Entry gate:** M01 to M12 and M05R done.
 
 **Exit gate:**
-- [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live.
-- [ ] Every reproducible bug in BUGS.md has its regression test.
-- [ ] The full scenario suite passes on fresh worlds; the real-pack server and client run is clean on GTNH 2.9.0, on RWG2 Continents and classic RWG.
+- [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live. *Beta audit, 2026-11-02: areas 01 to 05 and 07 to 09 walked sheet by sheet against the new spec and the code (COVERAGE.md: 0 upstream files unaccounted for). Every original-spec sheet now links its deviation table; about 70 new-spec rows were corrected to what the code does or given a decision (D-BA-1 to D-BA-4); `buildingMinFloors` gained the range the spec promised (D-BA-5). Left: area 06, with M06.*
+- [ ] Every reproducible bug in BUGS.md has its regression test. *Beta audit: [BUGS-COVERAGE.md](original-spec/BUGS-COVERAGE.md) (D-BA-9): 161 IDs tested, 37 cannot occur (each with its decision), CORE-25 kept (D16), HWY-13 not a bug, 0 missing. Left: the 7 highway and railway IDs marked M06 (HWY-01, -02, -06, -08, -09, -10, -15).*
+- [ ] The full scenario suite passes on fresh worlds; the real-pack server and client run is clean on GTNH 2.9.0, on RWG2 Continents and classic RWG. *Needs: M06 merged, then the suite on two fresh worlds per type and a client join on each (the shot lists serve), with budget B3 held on classic RWG (the M08 and M12 boxes above).*
 - [ ] The owner's interactive review: play sessions with back-and-forth on the GTNH integrations and advanced features, each round's findings fixed before the next. It ends with the owner's sign-off and a list of balance items for the polish pass.
+
+**Open boxes before the gate** (beta audit, 2026-11-02):
+
+| Box | What it needs |
+|---|---|
+| M08, M05's checks with the M08 jar | Classic RWG's B3 at or under 15 % (it measured 15.0 %); the performance pass after wave 2 |
+| M12, real-pack hashes, budgets, cascades, walk and sewing | The same: classic RWG's B3 measured 14.4 and 15.2 % |
+| M06 (all) | M06 is still landing; its exit gate is written with it |
+| Beta gate, spec and bugs | Area 06 and the 7 M06 bug IDs, with M06 |
+| Beta gate, suite and real-pack run | M06 merged and B3 held, then the full suite and a client run on both world types |
+| Beta gate, owner's review | The playtest of the beta jar ([README](../README.md), [CHANGELOG](../CHANGELOG.md)) |
 
 ## After beta
 
