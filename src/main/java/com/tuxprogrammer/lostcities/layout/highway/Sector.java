@@ -8,6 +8,7 @@ package com.tuxprogrammer.lostcities.layout.highway;
  * Spec: docs/original-spec/06-highways-railways/intercity-planner.md (steps C5, S). Side: both.
  */
 public enum Sector {
+
     /** Toward −Z. */
     NORTH,
     /** Toward +X. */

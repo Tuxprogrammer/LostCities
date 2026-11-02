@@ -431,12 +431,12 @@ public final class HighwayPlanner {
         long penalty = 0L;
         if (first.chunkZ() == second.chunkZ()) {
             shape = Route.Shape.STRAIGHT;
-            chosen = Collections.singletonList(
-                new Segment(first.chunkX(), first.chunkZ(), second.chunkX(), second.chunkZ(), Axis.X));
+            chosen = Collections
+                .singletonList(new Segment(first.chunkX(), first.chunkZ(), second.chunkX(), second.chunkZ(), Axis.X));
         } else if (first.chunkX() == second.chunkX()) {
             shape = Route.Shape.STRAIGHT;
-            chosen = Collections.singletonList(
-                new Segment(first.chunkX(), first.chunkZ(), second.chunkX(), second.chunkZ(), Axis.Z));
+            chosen = Collections
+                .singletonList(new Segment(first.chunkX(), first.chunkZ(), second.chunkX(), second.chunkZ(), Axis.Z));
         } else {
             List<Segment> horizontal = horizontalFirst(first, second);
             List<Segment> vertical = verticalFirst(first, second);
@@ -755,7 +755,8 @@ public final class HighwayPlanner {
         int radius = settings.hubSearchRadiusCells();
         int candidatesPerHub = (2 * radius + 1) * (2 * radius + 1) - 1;
         int routesPerOwner = settings.maximumConnectionsPerHub();
-        return (long) HUB_CACHE * HUB_BYTES + (long) CANDIDATE_CACHE * (ENTRY_BYTES + candidatesPerHub * CANDIDATE_BYTES)
+        return (long) HUB_CACHE * HUB_BYTES
+            + (long) CANDIDATE_CACHE * (ENTRY_BYTES + candidatesPerHub * CANDIDATE_BYTES)
             + (long) SELECTION_CACHE * (ENTRY_BYTES + routesPerOwner * 16L)
             + (long) ROUTE_CACHE * (ENTRY_BYTES + (long) routesPerOwner * ROUTE_BYTES)
             + (long) ROUTE_CACHE * ENTRY_BYTES

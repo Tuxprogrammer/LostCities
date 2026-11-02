@@ -35,8 +35,8 @@ public final class RailwaySettings {
      * @param spacingEastWest   {@code railwaySpacingEastWest}, even, 4 to 128
      * @throws IllegalArgumentException for an odd or out-of-range spacing
      */
-    public RailwaySettings(boolean enabled, boolean stations, boolean surfaceStations, boolean canEnd,
-        int levelOffset, int spacingNorthSouth, int spacingEastWest) {
+    public RailwaySettings(boolean enabled, boolean stations, boolean surfaceStations, boolean canEnd, int levelOffset,
+        int spacingNorthSouth, int spacingEastWest) {
         if (!even(spacingNorthSouth) || !even(spacingEastWest)) {
             throw new IllegalArgumentException("Railway spacings must be even, 4 to 128");
         }

@@ -25,9 +25,9 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
  * Writes one chunk's highways, railways and rail dungeon from the layout's networks (upstream's
- * {@code Highways.generateHighways}, {@code Railways.generateRailways} and {@code generateRailwayDungeons}). The terrain
- * phase runs it last in the chunk, and the job dry run runs it too, so stations' and dungeons' chests and spawners are
- * population jobs (0005 §2, §3).
+ * {@code Highways.generateHighways}, {@code Railways.generateRailways} and {@code generateRailwayDungeons}). The
+ * terrain phase runs it last in the chunk, and the job dry run runs it too, so stations' and dungeons' chests and
+ * spawners are population jobs (0005 §2, §3).
  *
  * <p>
  * Highways: each piece of {@link HighwayInfo#pieces} is a tunnel where the ground or the city stands above it, an open
@@ -55,7 +55,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * </ul>
  *
  * <p>
- * Spec: docs/original-spec/06-highways-railways/highway-parts.md, railway-parts.md; docs/new-spec/06-highways-railways/.
+ * Spec: docs/original-spec/06-highways-railways/highway-parts.md, railway-parts.md;
+ * docs/new-spec/06-highways-railways/.
  * One instance per chunk and run; not thread-safe. Side: both (plain Java).
  */
 public final class NetworkWriter {
@@ -616,8 +617,12 @@ public final class NetworkWriter {
     }
 
     private BlockRef railMain(RailChunk rail) {
-        return railMainBlock(context, palette, CityPalettes.setting(cityStyle, CityStyle.Setting.RAIL_MAIN),
-            plan.cityStyle(), rail.type());
+        return railMainBlock(
+            context,
+            palette,
+            CityPalettes.setting(cityStyle, CityStyle.Setting.RAIL_MAIN),
+            plan.cityStyle(),
+            rail.type());
     }
 
     /**
@@ -632,12 +637,16 @@ public final class NetworkWriter {
      * @param type      the rail type, for the log line
      * @return the block, or {@code null}
      */
-    static BlockRef railMainBlock(CityWriteContext context, CompiledPalette palette, Character character,
-        String style, RailChunkType type) {
+    static BlockRef railMainBlock(CityWriteContext context, CompiledPalette palette, Character character, String style,
+        RailChunkType type) {
         BlockRef block = character == null ? null : CityPalettes.blockOf(palette, character);
         if (block == null) {
             context.log()
-                .warn("city style " + style + " has no rail main block in its palette; " + type + " rails keep every track");
+                .warn(
+                    "city style " + style
+                        + " has no rail main block in its palette; "
+                        + type
+                        + " rails keep every track");
         }
         return block;
     }

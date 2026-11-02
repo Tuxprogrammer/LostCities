@@ -188,7 +188,13 @@ public final class LayoutCityPlan implements CityPlan {
             footprint = new int[256];
             Arrays.fill(footprint, settings.groundLevel() - 1);
         }
-        footprint = network(builder, chunkX, chunkZ, natural, footprint, bridge ? () -> dryRun(chunkX, chunkZ, false) : null);
+        footprint = network(
+            builder,
+            chunkX,
+            chunkZ,
+            natural,
+            footprint,
+            bridge ? () -> dryRun(chunkX, chunkZ, false) : null);
         boolean[] lane = LaneShapes.forCell(plan.lane(), chunkX, chunkZ);
         if (lane != null) {
             builder.lane(graded(plan.lane(), LaneShapes.path(lane, material(chunkX, chunkZ)), chunkX, chunkZ));
@@ -305,21 +311,21 @@ public final class LayoutCityPlan implements CityPlan {
      * @param ownJobs   the chunk's own job source, or {@code null}
      * @return the footprint with the network's columns added
      */
-    private int[] network(com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Builder builder, int chunkX,
-        int chunkZ, int natural, int[] footprint,
-        java.util.function.Supplier<List<PopulationJob>> ownJobs) {
+    private int[] network(com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Builder builder, int chunkX, int chunkZ,
+        int natural, int[] footprint, java.util.function.Supplier<List<PopulationJob>> ownJobs) {
         if (!NetworkWriter.hasWork(planner, chunkX, chunkZ)) {
             return footprint;
         }
         builder.network(
-            (buffer, contentContext) -> new NetworkWriter(
-                context,
-                chunkX,
-                chunkZ,
-                new BufferTarget(buffer, contentContext),
-                contentContext.random(),
-                new PaletteSequence(context.worldSeed() ^ NETWORK_SEQUENCE, chunkX, chunkZ),
-                natural).write());
+            (buffer,
+                contentContext) -> new NetworkWriter(
+                    context,
+                    chunkX,
+                    chunkZ,
+                    new BufferTarget(buffer, contentContext),
+                    contentContext.random(),
+                    new PaletteSequence(context.worldSeed() ^ NETWORK_SEQUENCE, chunkX, chunkZ),
+                    natural).write());
         builder.highway(
             planner.networks()
                 .highway(chunkX, chunkZ)

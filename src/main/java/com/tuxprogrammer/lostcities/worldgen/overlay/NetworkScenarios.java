@@ -29,11 +29,11 @@ import com.tuxprogrammer.lostcities.layout.highway.Route;
 import com.tuxprogrammer.lostcities.layout.highway.Run;
 import com.tuxprogrammer.lostcities.layout.highway.Segment;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
-import com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
+import com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter;
 
 /**
  * The highway and railway scenarios (M06; docs/testing/README.md), for a world pinned with the layout plan source:

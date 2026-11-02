@@ -19,7 +19,16 @@ public class HighwayInfoTest {
     static Route route(int level, Run... runs) {
         Hub a = new Hub(CELL_A, 0, 0, 1, level);
         Hub b = new Hub(CELL_B, 10, 10, 1, level);
-        return new Route(ConnectionKey.of(CELL_A, CELL_B), a, b, level, Route.Shape.STRAIGHT, 20, 0, Arrays.asList(runs), 0);
+        return new Route(
+            ConnectionKey.of(CELL_A, CELL_B),
+            a,
+            b,
+            level,
+            Route.Shape.STRAIGHT,
+            20,
+            0,
+            Arrays.asList(runs),
+            0);
     }
 
     static Run run(int level, Segment... segments) {
@@ -57,7 +66,10 @@ public class HighwayInfoTest {
         Run run = run(0, new Segment(0, 5, 10, 5, Axis.X));
         Route route = route(0, run);
         Deck end = new Deck(Axis.X, 0, 0, true, route.key());
-        HighwayInfo info = new HighwayInfo(end, null, Collections.singletonList(new HighwayInfo.Hit(route, 0, end, null)));
+        HighwayInfo info = new HighwayInfo(
+            end,
+            null,
+            Collections.singletonList(new HighwayInfo.Hit(route, 0, end, null)));
         HighwayInfo.Piece piece = info.pieces(10, 5)
             .get(0);
         assertEquals(HighwayInfo.Shape.CROSSING, piece.shape());
@@ -99,7 +111,10 @@ public class HighwayInfoTest {
         Run run = run(0, new Segment(0, 5, 10, 5, Axis.X));
         Route route = route(0, run);
         Deck ramp = new Deck(Axis.X, 2, 1, false, route.key());
-        HighwayInfo info = new HighwayInfo(ramp, null, Collections.singletonList(new HighwayInfo.Hit(route, 2, ramp, null)));
+        HighwayInfo info = new HighwayInfo(
+            ramp,
+            null,
+            Collections.singletonList(new HighwayInfo.Hit(route, 2, ramp, null)));
         assertEquals(2, info.xLevel(), "a building keeps clear of the whole ramp");
         assertEquals(-1, info.zLevel());
         assertTrue(info.deckAt(1));

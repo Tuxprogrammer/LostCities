@@ -145,7 +145,11 @@ public final class RailChunk {
 
     @Override
     public String toString() {
-        return type + " " + direction + " level " + level + (topLevel != level ? ".." + topLevel : "")
+        return type + " "
+            + direction
+            + " level "
+            + level
+            + (topLevel != level ? ".." + topLevel : "")
             + " tracks "
             + tracks
             + (alongZ ? " along Z" : "");

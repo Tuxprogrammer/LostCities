@@ -74,8 +74,7 @@ public final class RailwayLayout {
      * @param groundLevel the profile's ground level, block Y of city level 0
      * @param partHeight6 the world style's {@code railpartheight6}: a rail part's height in levels
      */
-    public RailwayLayout(long seed, RailwaySettings settings, RailwayInputs inputs, int groundLevel,
-        int partHeight6) {
+    public RailwayLayout(long seed, RailwaySettings settings, RailwayInputs inputs, int groundLevel, int partHeight6) {
         this.seed = seed;
         this.settings = settings;
         this.inputs = inputs;
@@ -342,7 +341,8 @@ public final class RailwayLayout {
                 false);
         }
         RailChunk underground = new RailChunk(RailChunkType.STATION_UNDERGROUND, RailChunk.Direction.BI, level, tracks);
-        if (cityLevel > MAX_SURFACE_STATION_LEVEL || cityLevel - level > maximumDescent || !settings.surfaceStations()) {
+        if (cityLevel > MAX_SURFACE_STATION_LEVEL || cityLevel - level > maximumDescent
+            || !settings.surfaceStations()) {
             return underground;
         }
         if (atOrBelow(inputs.highwayXLevel(chunkX, chunkZ), cityLevel)
@@ -494,7 +494,8 @@ public final class RailwayLayout {
         }
         if (!fits) {
             // No room to dip before the line's junctions: the shallow core chunks carry no railway.
-            boolean shallow = here >= first && here <= last && inputs.isCore(chunkX, chunkZ)
+            boolean shallow = here >= first && here <= last
+                && inputs.isCore(chunkX, chunkZ)
                 && deepestFit(chunkX, chunkZ) < info.level();
             return shallow ? RailChunk.NONE : info;
         }

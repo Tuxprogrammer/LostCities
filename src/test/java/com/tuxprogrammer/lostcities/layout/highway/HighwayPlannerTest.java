@@ -175,8 +175,14 @@ public class HighwayPlannerTest {
         assertEquals(java.util.Arrays.asList(b, c), planner.selected(a));
         assertEquals(java.util.Arrays.asList(ConnectionKey.of(a, b), ConnectionKey.of(a, c)), planner.accepted(a));
         // The smaller cell owns the route.
-        assertEquals(2, planner.ownedRoutes(a).size());
-        assertEquals(1, planner.ownedRoutes(b).size());
+        assertEquals(
+            2,
+            planner.ownedRoutes(a)
+                .size());
+        assertEquals(
+            1,
+            planner.ownedRoutes(b)
+                .size());
         assertTrue(
             planner.ownedRoutes(c)
                 .isEmpty());
@@ -189,10 +195,16 @@ public class HighwayPlannerTest {
             .get(0);
         assertEquals(Route.Shape.STRAIGHT, route.shape());
         assertEquals(1, route.level(), "(0 + 2) / 2");
-        assertEquals(1, route.runs().size());
+        assertEquals(
+            1,
+            route.runs()
+                .size());
         Run run = route.runs()
             .get(0);
-        assertEquals(Run.EndKind.HUB, run.start().kind());
+        assertEquals(
+            Run.EndKind.HUB,
+            run.start()
+                .kind());
         assertEquals(B[0] - A[0], run.length());
         assertEquals(0, route.detours());
     }
@@ -204,13 +216,18 @@ public class HighwayPlannerTest {
         Route route = planner.ownedRoutes(new HubKey(0, 0))
             .get(0);
         assertEquals(1, route.detours());
-        assertEquals(1, route.runs().size());
+        assertEquals(
+            1,
+            route.runs()
+                .size());
         Run run = route.runs()
             .get(0);
         for (int x = A[0]; x <= B[0]; x++) {
             for (int z = 0; z <= 10; z++) {
                 if (run.contains(x, z)) {
-                    assertFalse(x >= 15 && x <= 20 && z >= 3 && z <= 7, "the run enters the obstacle at " + x + "," + z);
+                    assertFalse(
+                        x >= 15 && x <= 20 && z >= 3 && z <= 7,
+                        "the run enters the obstacle at " + x + "," + z);
                 }
             }
         }
@@ -232,16 +249,32 @@ public class HighwayPlannerTest {
         HighwayPlanner planner = planner(small().build(), peaks(A, B), levels(), blocked(box(15, -8, 20, 18)));
         Route route = planner.ownedRoutes(new HubKey(0, 0))
             .get(0);
-        assertEquals(2, route.runs().size());
+        assertEquals(
+            2,
+            route.runs()
+                .size());
         assertEquals(1, route.deadEnds());
         Run west = route.runs()
             .get(0);
         Run east = route.runs()
             .get(1);
-        assertEquals(Run.EndKind.DEAD_END, west.end().kind());
-        assertEquals(14, west.end().chunkX(), "one chunk before the obstacle");
-        assertEquals(Run.EndKind.DEAD_END, east.start().kind());
-        assertEquals(21, east.start().chunkX());
+        assertEquals(
+            Run.EndKind.DEAD_END,
+            west.end()
+                .kind());
+        assertEquals(
+            14,
+            west.end()
+                .chunkX(),
+            "one chunk before the obstacle");
+        assertEquals(
+            Run.EndKind.DEAD_END,
+            east.start()
+                .kind());
+        assertEquals(
+            21,
+            east.start()
+                .chunkX());
         for (int x = 15; x <= 20; x++) {
             assertFalse(
                 planner.info(x, 5)
@@ -398,8 +431,10 @@ public class HighwayPlannerTest {
                 planner.info(x, z);
             }
         }
-        assertTrue(planner.cacheStats()
-            .contains("chunks " + HighwayPlanner.CHUNK_CACHE), planner.cacheStats());
+        assertTrue(
+            planner.cacheStats()
+                .contains("chunks " + HighwayPlanner.CHUNK_CACHE),
+            planner.cacheStats());
         assertTrue(planner.estimatedCacheBytes() < 4L * 1024 * 1024, "well within B5's 16 MB");
     }
 

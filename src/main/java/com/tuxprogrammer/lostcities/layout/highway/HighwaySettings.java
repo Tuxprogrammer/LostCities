@@ -219,8 +219,8 @@ public final class HighwaySettings {
          * @param cityPenalty        {@code highwayRouteCityPenalty}
          * @return this builder
          */
-        public Builder connections(int minimumDistance, int maximumDistance, int maximumConnections,
-            int minimumLength, float cityPenalty) {
+        public Builder connections(int minimumDistance, int maximumDistance, int maximumConnections, int minimumLength,
+            float cityPenalty) {
             minimumHubDistance = minimumDistance;
             maximumHubDistance = maximumDistance;
             maximumConnectionsPerHub = maximumConnections;

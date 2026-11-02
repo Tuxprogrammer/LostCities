@@ -130,9 +130,15 @@ public class RailwayLayoutTest {
         RailwayLayout on = layout(RailwaySettings.DEFAULTS, new Inputs());
         RailwayLayout off = layout(new RailwaySettings(false, true, true, false, 0, 10, 10), new Inputs());
         // Interleaved: neither answer leaks into the other.
-        assertTrue(on.rail(6, -1).isPresent());
-        assertFalse(off.rail(6, -1).isPresent());
-        assertTrue(on.rail(6, -1).isPresent());
+        assertTrue(
+            on.rail(6, -1)
+                .isPresent());
+        assertFalse(
+            off.rail(6, -1)
+                .isPresent());
+        assertTrue(
+            on.rail(6, -1)
+                .isPresent());
     }
 
     @Test
@@ -174,8 +180,15 @@ public class RailwayLayoutTest {
         assertEquals(-3, before.topLevel());
         assertEquals(RailChunkType.GOING_DOWN_FURTHER, after.type());
         assertEquals(RailChunk.Direction.WEST, after.direction());
-        assertEquals(-3, layout.rail(-1, 9).level(), "the line is at its level again past the slopes");
-        assertEquals(-3, layout.rail(3, 9).level());
+        assertEquals(
+            -3,
+            layout.rail(-1, 9)
+                .level(),
+            "the line is at its level again past the slopes");
+        assertEquals(
+            -3,
+            layout.rail(3, 9)
+                .level());
     }
 
     @Test
@@ -185,9 +198,16 @@ public class RailwayLayoutTest {
         inputs.cores.add(key(3, 9));
         inputs.coreGround = 60;
         RailwayLayout layout = layout(RailwaySettings.DEFAULTS, inputs);
-        assertFalse(layout.rail(3, 9).isPresent());
-        assertTrue(layout.rail(-1, 9).isPresent());
-        assertEquals(RailChunkType.THREE_SPLIT, layout.rail(4, 9).type());
+        assertFalse(
+            layout.rail(3, 9)
+                .isPresent());
+        assertTrue(
+            layout.rail(-1, 9)
+                .isPresent());
+        assertEquals(
+            RailChunkType.THREE_SPLIT,
+            layout.rail(4, 9)
+                .type());
     }
 
     @Test

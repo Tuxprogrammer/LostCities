@@ -170,8 +170,8 @@ final class CityMap {
 
     /**
      * Returns a chunk's city factor before the height window, the rise cap and the biome multiplier: the centers'
-     * overlap (or the Perlin rarity) times the spawn multiplier, 1 on predefined content. The full factor is at most this
-     * times the world style's largest biome multiplier, which the highway planner's pruning relies on (M06).
+     * overlap (or the Perlin rarity) times the spawn multiplier, 1 on predefined content. The full factor is at most
+     * this times the world style's largest biome multiplier, which the highway planner's pruning relies on (M06).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
