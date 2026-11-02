@@ -33,6 +33,12 @@ public final class TimersSubcommand implements Subcommand {
         return "timers";
     }
 
+    /** {@code timings} is the spec's name for it (docs/new-spec/01-core/commands.md). */
+    @Override
+    public List<String> aliases() {
+        return Collections.singletonList("timings");
+    }
+
     @Override
     public void execute(ICommandSender sender, String[] args) throws CommandException {
         if (args.length > 1 || (args.length == 1 && !RESET.equals(args[0]))) {

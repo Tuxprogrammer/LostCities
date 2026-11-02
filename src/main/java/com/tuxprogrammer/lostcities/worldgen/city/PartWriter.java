@@ -158,6 +158,16 @@ public final class PartWriter {
         public AssetId building() {
             return building;
         }
+
+        /** Returns the local X offset of the part's origin. */
+        public int ox() {
+            return ox;
+        }
+
+        /** Returns the local Z offset of the part's origin. */
+        public int oz() {
+            return oz;
+        }
     }
 
     /** The profile and chunk facts a part write depends on. */
@@ -208,6 +218,7 @@ public final class PartWriter {
     private final PaletteSequence sequence;
     private final Rules rules;
     private final LayoutLog log;
+    private java.util.function.Consumer<Placement> listener;
 
     /**
      * Creates the writer of one chunk.
@@ -231,6 +242,9 @@ public final class PartWriter {
      * @return the Y above the part's last slice (upstream's return value)
      */
     public int place(Placement placement) {
+        if (listener != null) {
+            listener.accept(placement);
+        }
         Part part = placement.part;
         CompiledPalette palette = placement.palette;
         boolean nowater = part.metaBoolean(Part.MetaKey.NOWATER);
@@ -268,6 +282,15 @@ public final class PartWriter {
             }
         }
         return placement.oy + part.height();
+    }
+
+    /**
+     * Sets what is told of each part before it is written: the part editor's recorder in an {@code editMode} world.
+     *
+     * @param value the listener, or {@code null} for none
+     */
+    public void onPlace(java.util.function.Consumer<Placement> value) {
+        listener = value;
     }
 
     private void placeOne(Placement placement, CompiledPalette palette, char c, int x, int y, int z, boolean nowater,

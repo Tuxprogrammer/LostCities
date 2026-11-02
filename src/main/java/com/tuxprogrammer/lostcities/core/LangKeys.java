@@ -114,6 +114,92 @@ public final class LangKeys {
     /** A find; arguments: kind, X, Y, Z, label, view X, view Y, view Z, yaw, pitch. */
     public static final String FIND_FOUND = "lostcitiesnh.command.find.found";
 
+    /** A subcommand that needs a player was sent from the console; argument: the subcommand. */
+    public static final String COMMAND_PLAYER_ONLY = "lostcitiesnh.command.player_only";
+    /** The sender's dimension has no real cities; argument: the dimension. */
+    public static final String COMMAND_NO_CITIES = "lostcitiesnh.command.no_cities";
+
+    /** {@code /lostcities debug}: the chunk; arguments: chunk X, chunk Z, dimension, profile. */
+    public static final String DEBUG_CHUNK = "lostcitiesnh.command.debug.chunk";
+    /** The city line; arguments: city, style, city level, city ground Y, kind. */
+    public static final String DEBUG_CITY = "lostcitiesnh.command.debug.city";
+    /** The building line; arguments: building, multibuilding, its position, floors, cellars, ruin height. */
+    public static final String DEBUG_BUILDING = "lostcitiesnh.command.debug.building";
+    /** The street line; arguments: street type, planned road, raw road, highway X, highway Z, rail, rail level. */
+    public static final String DEBUG_STREET = "lostcitiesnh.command.debug.street";
+    /** The landmark line; arguments: zone, landmark, lane role. */
+    public static final String DEBUG_ZONE = "lostcitiesnh.command.debug.zone";
+    /** The damage line; arguments: explosions reaching the chunk, the largest radius. */
+    public static final String DEBUG_DAMAGE = "lostcitiesnh.command.debug.damage";
+    /** Where the full dump went. */
+    public static final String DEBUG_LOG = "lostcitiesnh.command.debug.log";
+
+    /**
+     * {@code /lostcities map}: the summary; arguments: size, size, chunk X, chunk Z, buildings, city, highway, cores.
+     */
+    public static final String MAP_DONE = "lostcitiesnh.command.map.done";
+
+    /** {@code /lostcities locate} usage line. */
+    public static final String LOCATE_USAGE = "lostcitiesnh.command.locate.usage";
+    /** An unknown building; argument: the name. */
+    public static final String LOCATE_UNKNOWN = "lostcitiesnh.command.locate.unknown";
+    /** A hit; arguments: building, X, ground Y, Z. */
+    public static final String LOCATE_FOUND = "lostcitiesnh.command.locate.found";
+    /** No hit; arguments: building, radius in chunks. */
+    public static final String LOCATE_NONE = "lostcitiesnh.command.locate.none";
+
+    /** {@code /lostcities createbuilding} usage line. */
+    public static final String CREATEBUILDING_USAGE = "lostcitiesnh.command.createbuilding.usage";
+    /** An unknown building; argument: the name. */
+    public static final String CREATEBUILDING_UNKNOWN = "lostcitiesnh.command.createbuilding.unknown";
+    /** A level matches no part; argument: the building. */
+    public static final String CREATEBUILDING_NO_PARTS = "lostcitiesnh.command.createbuilding.no_parts";
+    /** Too tall; arguments: floors, cellars, Y, the top Y allowed, the floors that fit. */
+    public static final String CREATEBUILDING_TOO_HIGH = "lostcitiesnh.command.createbuilding.too_high";
+    /** Built; arguments: building, chunk X, chunk Z, floors, cellars, Y. */
+    public static final String CREATEBUILDING_DONE = "lostcitiesnh.command.createbuilding.done";
+
+    /** The world is not a part-editing world. */
+    public static final String EDITOR_NOT_EDIT_MODE = "lostcitiesnh.command.editor.not_edit_mode";
+    /** An unknown part; argument: the name. */
+    public static final String EDITOR_UNKNOWN_PART = "lostcitiesnh.command.editor.unknown_part";
+    /** A record names a part that is not loaded; argument: the part. */
+    public static final String EDITOR_UNKNOWN_IN_CHUNK = "lostcitiesnh.command.editor.unknown_in_chunk";
+    /** No recorded part spans the player; no arguments. */
+    public static final String EDITOR_NOTHING_HERE = "lostcitiesnh.command.editor.nothing_here";
+    /** The player has no session. */
+    public static final String EDITOR_NOT_EDITING = "lostcitiesnh.command.editor.not_editing";
+    /** {@code /lostcities createpart} usage line. */
+    public static final String CREATEPART_USAGE = "lostcitiesnh.command.createpart.usage";
+    /** A part was placed and a session started; arguments: part, X, Y, Z. */
+    public static final String CREATEPART_DONE = "lostcitiesnh.command.createpart.done";
+    /** {@code editpart} started; arguments: part, Y. */
+    public static final String EDITPART_STARTED = "lostcitiesnh.command.editpart.started";
+    /** {@code resumeedit} started; arguments: part, Y. */
+    public static final String RESUMEEDIT_STARTED = "lostcitiesnh.command.resumeedit.started";
+    /** {@code listparts} entry; arguments: part, Y. */
+    public static final String LISTPARTS_ENTRY = "lostcitiesnh.command.listparts.entry";
+    /** {@code listparts} found none; arguments: chunk X, chunk Z. */
+    public static final String LISTPARTS_NONE = "lostcitiesnh.command.listparts.none";
+    /** {@code /lostcities locatepart} usage line. */
+    public static final String LOCATEPART_USAGE = "lostcitiesnh.command.locatepart.usage";
+    /** A hit; arguments: part, X, Y, Z. */
+    public static final String LOCATEPART_FOUND = "lostcitiesnh.command.locatepart.found";
+    /** No hit; arguments: part, radius in chunks. */
+    public static final String LOCATEPART_NONE = "lostcitiesnh.command.locatepart.none";
+    /** {@code /lostcities exportpart} usage line. */
+    public static final String EXPORTPART_USAGE = "lostcitiesnh.command.exportpart.usage";
+    /** A bad file name; argument: the name. */
+    public static final String EXPORTPART_NAME = "lostcitiesnh.command.exportpart.name";
+    /** The file exists; argument: the file. */
+    public static final String EXPORTPART_EXISTS = "lostcitiesnh.command.exportpart.exists";
+    /** The character pool ran out; argument: its size. */
+    public static final String EXPORTPART_POOL = "lostcitiesnh.command.exportpart.pool";
+    /** Exported; arguments: part, file, new blocks. */
+    public static final String EXPORTPART_DONE = "lostcitiesnh.command.exportpart.done";
+    /** The file could not be written; arguments: file, reason. */
+    public static final String EXPORTPART_FAILED = "lostcitiesnh.command.exportpart.failed";
+
     /** One scenario's result; arguments: PASS or FAIL, name, milliseconds, message. */
     public static final String SCENARIO_RESULT = "lostcitiesnh.scenario.result";
     /** A run's summary; arguments: passed, failed. */

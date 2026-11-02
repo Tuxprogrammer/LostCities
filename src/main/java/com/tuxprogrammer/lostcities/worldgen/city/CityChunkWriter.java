@@ -131,6 +131,21 @@ public final class CityChunkWriter {
         this.cityStyle = assets.cityStyle(CityPalettes.id(plan.cityStyle()));
         this.style = context.styleBlocks(plan);
         this.writer = new PartWriter(target, sequence, context.rules(plan, style), context.log());
+        PartRecorder recorder = context.recorder();
+        if (!target.dryRun() && recorder != PartRecorder.NONE) {
+            // Part editor (D13): the real write records its parts; the population dry run never does.
+            recorder.beginChunk(chunkX, chunkZ);
+            writer.onPlace(
+                placement -> recorder.record(
+                    chunkX,
+                    chunkZ,
+                    placement.part()
+                        .id(),
+                    placement.oy(),
+                    placement.transform(),
+                    placement.ox(),
+                    placement.oz()));
+        }
     }
 
     /** Returns the layout of the chunk being written. */

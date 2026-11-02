@@ -75,6 +75,7 @@ public final class ProfileRegistry {
 
     private final Map<String, Profile> files = new TreeMap<>();
     private final Map<String, String> rejected = new TreeMap<>();
+    private final Map<String, Profile> api = new TreeMap<>();
 
     /** Creates an empty registry: only the built-ins. Tests make their own; the game uses {@link #INSTANCE}. */
     public ProfileRegistry() {}
@@ -90,13 +91,18 @@ public final class ProfileRegistry {
             return null;
         }
         Profile builtIn = BuiltinProfiles.get(name);
-        return builtIn != null ? builtIn : files.get(name);
+        if (builtIn != null) {
+            return builtIn;
+        }
+        Profile file = files.get(name);
+        return file != null ? file : api.get(name);
     }
 
     /** Returns the names of every accepted profile, sorted. */
     public synchronized Set<String> names() {
         Set<String> names = new TreeSet<>(BuiltinProfiles.names());
         names.addAll(files.keySet());
+        names.addAll(api.keySet());
         names.removeAll(rejected.keySet());
         return Collections.unmodifiableSet(names);
     }
@@ -207,6 +213,30 @@ public final class ProfileRegistry {
             return;
         }
         files.put(name, load.profile());
+    }
+
+    /**
+     * Replaces the profiles other mods add through the API with a new read of their callbacks (docs/api.md). A name a
+     * built-in or a file already has is left to them; the API profile is reported and dropped.
+     *
+     * @param profiles the API's profiles
+     * @return one line per API profile that could not be added, and per error of the build
+     */
+    public synchronized List<Message> applyApi(ApiProfiles profiles) {
+        for (String name : api.keySet()) {
+            rejected.remove(name);
+        }
+        api.clear();
+        List<Message> report = new ArrayList<>();
+        ApiProfiles.Build build = profiles.build(
+            name -> rejected.containsKey(name) ? null
+                : BuiltinProfiles.get(name) != null ? BuiltinProfiles.get(name) : files.get(name),
+            name -> BuiltinProfiles.get(name) != null || files.containsKey(name));
+        for (String error : build.errors()) {
+            report.add(new Message(true, error));
+        }
+        api.putAll(build.profiles());
+        return report;
     }
 
     private void reject(String name, String reason, List<Message> report) {
