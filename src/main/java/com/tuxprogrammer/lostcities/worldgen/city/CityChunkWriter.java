@@ -412,7 +412,8 @@ public final class CityChunkWriter {
     }
 
     /**
-     * Upstream's {@code canDoStreetOrPark} test, negated: a highway's deck at the city's level anywhere across the chunk
+     * Upstream's {@code canDoStreetOrPark} test, negated: a highway's deck at the city's level anywhere across the
+     * chunk
      * (a ramp reaching it included, M06), a surface station, or a surface station extension at the city's level takes
      * the street's place. Without networks, upstream's two highway levels.
      */
