@@ -366,7 +366,8 @@ public final class LayoutCityPlan implements CityPlan {
                     new BufferTarget(buffer, contentContext),
                     contentContext.random(),
                     new PaletteSequence(context.worldSeed() ^ NETWORK_SEQUENCE, chunkX, chunkZ),
-                    natural).railings(scattered()).write());
+                    natural).railings(scattered())
+                        .write());
         builder.highway(
             planner.networks()
                 .highway(chunkX, chunkZ)
