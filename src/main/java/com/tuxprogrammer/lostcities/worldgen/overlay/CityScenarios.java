@@ -86,6 +86,7 @@ public final class CityScenarios {
         registry.register(new Walk());
         registry.register(new Budget());
         registry.register(new SewingScenario());
+        registry.register(new ScatteredScenario());
     }
 
     private static OverlayWorld requireCities(ScenarioContext context) {

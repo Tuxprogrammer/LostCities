@@ -28,8 +28,10 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ContentContext;
  * <li>A city chunk: high water, leveling to the city ground (soft-edge strips toward cores), room for the building,
  * the plan's content, the street base and borders, the ruin of a ruined building, the street rubble layer, the
  * retaining walls of steep strips, a lane.</li>
+ * <li>A city chunk ends with its finishing step, the stuff columns.</li>
  * <li>Any other chunk: the blend toward nearby cities and cores, then, beside a core (the city's margin), the strip
- * that meets the core's own edge columns; the plan's content (a bridge span), and a village lane with its steps.</li>
+ * that meets the core's own edge columns; the ground fits of scattered structures (0009); the plan's content (a bridge
+ * span or a scattered structure), and a village lane with its steps.</li>
  * <li>Explosion damage, the floating-fragment pass, debris from damaged neighbors, then vines (stages 10 and
  * 13a).</li>
  * </ol>
@@ -173,7 +175,11 @@ public final class TerrainPhase {
             events.postOutside(buffer, chunkX, chunkZ);
             return paved > 0 ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, paved) : UNTOUCHED;
         }
-        if (!plan.isCity() && plan.lane() == null && !nearCityOrCore(chunkX, chunkZ)) {
+        if (!plan.isCity() && plan.lane() == null
+            && plan.groundFits()
+                .isEmpty()
+            && plan.content() == ChunkContent.NONE
+            && !nearCityOrCore(chunkX, chunkZ)) {
             events.postOutside(buffer, chunkX, chunkZ);
             return UNTOUCHED;
         }
@@ -204,6 +210,11 @@ public final class TerrainPhase {
                 // The margin: the blend sloped it from the city toward the core's oracle height; the strip meets the
                 // core's real edge columns (AR-10, AR-13).
                 SoftEdges.stitchToCores(buffer, context, chunkX, chunkZ, coreEdges);
+            }
+            if (!plan.groundFits()
+                .isEmpty()) {
+                // 0009: a scattered structure's ground, leveled under it and faded into RWG's terrain around it.
+                changed |= ScatteredGround.apply(buffer, context, chunkX, chunkZ, plan.groundFits()) > 0;
             }
             if (plan.content() != ChunkContent.NONE) {
                 plan.content()
@@ -297,6 +308,20 @@ public final class TerrainPhase {
         }
         if (strips) {
             SoftEdges.retainingWalls(buffer, plan, targets, depth, inner);
+        }
+        if (plan.finish() != ChunkContent.NONE) {
+            // Upstream's last step of a city chunk: the stuff columns (Stuff.generateStuff).
+            plan.finish()
+                .write(
+                    buffer,
+                    new ContentContext(
+                        chunkX,
+                        chunkZ,
+                        plan,
+                        cityPlan,
+                        context,
+                        contentRandom(chunkX, chunkZ),
+                        skipMask));
         }
     }
 

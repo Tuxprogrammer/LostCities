@@ -170,7 +170,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `spawnCheckRadius` | `200` | 1 to 100000 | live | Blocks the spawn search covers on its first pass, from block (0, 0) |
 | `spawnRadiusIncrease` | `100` | 1 to 100000 | live | Blocks added to the search on each further pass |
 | `spawnCheckAttempts` | `20000` | 1 to 1000000 | live | Chunks the search looks at before it keeps the world's own spawn |
-| `scatteredChanceMultiplier` | `1.0` | 0 to 100 | pinned; read from M07 | Multiplies the world style's scattered-structure chance; 0 disables scattered structures (07-scattered) |
+| `scatteredChanceMultiplier` | `1.0` | 0 to 100 | live | Multiplies the world style's scattered-structure chance; 0 disables scattered structures (07-scattered) |
 | `terrainFixLowerMinOffset` | `-4` | -40 to 40 | live | Lower mesh for raising terrain next to cities, minimum offset from city base level |
 | `terrainFixLowerMaxOffset` | `-3` | -40 to 40 | live | Same, maximum offset |
 | `terrainFixUpperMinOffset` | `-1` | -40 to 40 | live | Upper mesh for lowering terrain next to cities, minimum offset |

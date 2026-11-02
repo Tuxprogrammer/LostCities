@@ -66,6 +66,9 @@ public final class ChunkPlan {
     private Supplier<Edges> edgeSource;
     private final String label;
     private final boolean lot;
+    private final boolean scattered;
+    private final List<GroundFit> groundFits;
+    private final ChunkContent finish;
 
     private ChunkPlan(Builder b) {
         this.chunkX = b.chunkX;
@@ -92,6 +95,10 @@ public final class ChunkPlan {
         this.edgeSource = b.edgeSource;
         this.label = b.label;
         this.lot = b.lot;
+        this.scattered = b.scattered;
+        this.groundFits = b.groundFits.isEmpty() ? Collections.<GroundFit>emptyList()
+            : Collections.unmodifiableList(new ArrayList<>(b.groundFits));
+        this.finish = b.finish;
     }
 
     /**
@@ -234,6 +241,30 @@ public final class ChunkPlan {
      */
     public ChunkContent content() {
         return content;
+    }
+
+    /**
+     * Returns whether a scattered structure stands in this chunk (07-scattered): lakes, lava, dungeons and oil are
+     * denied where a population window touches it (P07-4, D31), and other mods' steering keeps out of it (P07-5).
+     */
+    public boolean isScattered() {
+        return scattered;
+    }
+
+    /**
+     * Returns the ground fits that reach this chunk, in the order they apply: the scattered structures whose ground
+     * the terrain phase sets into RWG's terrain here, before the chunk's content (design record 0009).
+     */
+    public List<GroundFit> groundFits() {
+        return groundFits;
+    }
+
+    /**
+     * Returns the writer of a city chunk's last step, after its ruins and rubble: upstream's stuff columns
+     * ({@code Stuff.generateStuff}); {@link ChunkContent#NONE} for none.
+     */
+    public ChunkContent finish() {
+        return finish;
     }
 
     /**
@@ -405,6 +436,9 @@ public final class ChunkPlan {
         private Supplier<Edges> edgeSource;
         private String label = "";
         private boolean lot;
+        private boolean scattered;
+        private final List<GroundFit> groundFits = new ArrayList<>();
+        private ChunkContent finish = ChunkContent.NONE;
 
         private Builder(int chunkX, int chunkZ, ChunkKind kind) {
             this.chunkX = chunkX;
@@ -556,6 +590,24 @@ public final class ChunkPlan {
         /** Marks the chunk as an edge lot (0011 §3). */
         public Builder lot(boolean value) {
             this.lot = value;
+            return this;
+        }
+
+        /** Marks the chunk as part of a scattered structure's footprint. */
+        public Builder scattered(boolean value) {
+            this.scattered = value;
+            return this;
+        }
+
+        /** Adds a ground fit that reaches this chunk; fits apply in the order added. */
+        public Builder groundFit(GroundFit value) {
+            groundFits.add(Objects.requireNonNull(value));
+            return this;
+        }
+
+        /** Sets the writer of a city chunk's last step. */
+        public Builder finish(ChunkContent value) {
+            this.finish = Objects.requireNonNull(value);
             return this;
         }
 

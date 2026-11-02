@@ -70,8 +70,9 @@ public interface ILostChunkInfo {
     LostLandmarkZone getLandmarkZone();
 
     /**
-     * Returns the scattered structure standing in the chunk, or {@code null}. Scattered structures generate from M07
-     * on; until then this is always {@code null}.
+     * Returns the scattered structure whose footprint holds the chunk: its world-style entry's id, such as
+     * {@code lostcities:cabin}, or {@code null} for none. Pure: a chunk not generated yet answers what will stand
+     * there.
      */
     String getScatteredStructure();
 

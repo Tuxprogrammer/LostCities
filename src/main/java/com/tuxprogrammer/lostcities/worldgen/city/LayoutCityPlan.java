@@ -7,7 +7,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
 import com.tuxprogrammer.lostcities.asset.model.CityStyle;
 import com.tuxprogrammer.lostcities.asset.model.Part;
@@ -15,6 +18,7 @@ import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
@@ -40,7 +44,9 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * assets. For every chunk it answers what the terrain and population phases need: the chunk's kind and city ground,
  * its building's floors and cellars, its ruin fraction and its city style's explosion chance and terrain blocks, the
  * writer of its building, street, park or bridge ({@link CityChunkWriter}), its footprint, its village lane, the
- * openings in its street borders, and its population jobs, listed by a dry run of the same writer.
+ * openings in its street borders, and its population jobs, listed by a dry run of the same writer; a city chunk's
+ * stuff columns ({@link StuffWriter}); and, outside cities, the scattered structures of a {@link ScatteredPlanner}:
+ * a footprint chunk's writer, jobs, guard and veto flag, and every chunk's ground fits ({@link ScatteredContent}).
  *
  * <p>
  * Every value is a pure function of the world seed, the chunk, the pinned settings, the assets, the height oracle and
@@ -72,6 +78,15 @@ public final class LayoutCityPlan implements CityPlan {
     static final int PALETTE_BYTES = 16 * 1024;
     /** Estimated bytes of one style blocks value, with its two 128-slot tables. */
     static final int STYLE_BYTES = 3 * 1024;
+    /**
+     * Entries of each scattered plan cache (raw and final), in areas: 512 areas of 8 × 8 chunks cover a 180-chunk
+     * square, well past any view distance.
+     */
+    public static final int SCATTERED_CACHE_SIZE = 512;
+    /** Estimated bytes of one scattered plan with its shares, its key and its cache entry. */
+    static final int SCATTERED_PLAN_BYTES = 1024;
+    /** Estimated bytes of one cached ground fit. */
+    static final int GROUND_FIT_BYTES = 256;
 
     private final CityWriteContext context;
     private final StructureOracle structures;
@@ -79,6 +94,19 @@ public final class LayoutCityPlan implements CityPlan {
     private final LayoutPlanner planner;
     private final TerrainSettings settings;
     private final Repairs repairs;
+    private final ScatteredContent scattered;
+    private final Function<BlockRef, Set<String>> oreNames;
+
+    /**
+     * Creates the plan source of one world, without scattered structures and with no ore-dictionary lookup.
+     *
+     * @param context    the world's city writing context
+     * @param structures the structure oracle the planner was built with
+     * @param terrain    the terrain view the planner was built with
+     */
+    public LayoutCityPlan(CityWriteContext context, StructureOracle structures, TerrainView terrain) {
+        this(context, structures, terrain, null, StuffWriter.NO_ORES);
+    }
 
     /**
      * Creates the plan source of one world.
@@ -86,19 +114,30 @@ public final class LayoutCityPlan implements CityPlan {
      * @param context    the world's city writing context
      * @param structures the structure oracle the planner was built with
      * @param terrain    the terrain view the planner was built with
+     * @param scattered  the world's scattered planner over the same layout, or {@code null} for none (the module or
+     *                   the world style has none)
+     * @param oreNames   a block's ore-dictionary names, for stuff matchers
      */
-    public LayoutCityPlan(CityWriteContext context, StructureOracle structures, TerrainView terrain) {
+    public LayoutCityPlan(CityWriteContext context, StructureOracle structures, TerrainView terrain,
+        ScatteredPlanner scattered, Function<BlockRef, Set<String>> oreNames) {
         this.context = context;
         this.structures = structures;
         this.terrain = terrain;
         this.planner = context.planner();
         this.settings = context.settings();
         this.repairs = Repairs.of(context.assets(), settings.damageRepairChance());
+        this.scattered = scattered == null || !scattered.enabled() ? null : new ScatteredContent(context, scattered);
+        this.oreNames = oreNames;
     }
 
     @Override
     public Repairs repairs() {
         return repairs;
+    }
+
+    /** Returns the world's scattered planner, or {@code null} when the world has no scattered structures. */
+    public ScatteredPlanner scattered() {
+        return scattered == null ? null : scattered.planner();
     }
 
     /** Returns the world's city writing context. */
@@ -126,7 +165,9 @@ public final class LayoutCityPlan implements CityPlan {
         long layout = (long) LAYOUT_CACHE_SIZE * LAYOUT_CACHES * LAYOUT_ENTRY_BYTES;
         long palettes = (long) (CityPalettes.CHUNK_CAPACITY + CityPalettes.PART_CAPACITY) * PALETTE_BYTES;
         long styles = (long) CityPalettes.STYLE_CAPACITY * STYLE_BYTES;
-        return layout + palettes + styles;
+        long scatteredBytes = scattered == null ? 0
+            : 2L * SCATTERED_CACHE_SIZE * SCATTERED_PLAN_BYTES + (long) ScatteredContent.FIT_CACHE * GROUND_FIT_BYTES;
+        return layout + palettes + styles + scatteredBytes;
     }
 
     @Override
@@ -188,6 +229,10 @@ public final class LayoutCityPlan implements CityPlan {
                 .label("bridge");
             footprint = new int[256];
             Arrays.fill(footprint, settings.groundLevel() - 1);
+        }
+        if (scattered != null) {
+            // 07-scattered: a structure's share, its jobs and guard, and the ground fits that reach this chunk.
+            footprint = scattered.addTo(builder, chunkX, chunkZ, footprint);
         }
         boolean[] lane = LaneShapes.forCell(plan.lane(), chunkX, chunkZ);
         if (lane != null) {
@@ -259,6 +304,9 @@ public final class LayoutCityPlan implements CityPlan {
             .content(cityContent(chunkX, chunkZ))
             .lot(plan.lot() != LotKind.NONE)
             .jobSource(() -> dryRun(chunkX, chunkZ, true))
+            .finish(
+                (buffer, contentContext) -> new StuffWriter(context, chunkX, chunkZ, oreNames)
+                    .write(buffer, contentContext))
             .label(label(plan));
         if (plan.hasBuilding()) {
             builder.building(plan.floors(), plan.cellars());

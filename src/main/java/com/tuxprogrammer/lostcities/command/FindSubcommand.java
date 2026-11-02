@@ -16,7 +16,9 @@ import net.minecraft.world.World;
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.LangKeys;
+import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFinder;
+import com.tuxprogrammer.lostcities.worldgen.city.ScatteredFinder;
 import com.tuxprogrammer.lostcities.worldgen.damage.DamageArea;
 import com.tuxprogrammer.lostcities.worldgen.damage.Explosion;
 import com.tuxprogrammer.lostcities.worldgen.damage.Repairs;
@@ -28,7 +30,9 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * suggested viewpoint, for screenshots and checks (test hooks only, operator level 2). Kinds: {@code center} (city
  * center), {@code street} (primary street), {@code interior} (an enterable building), {@code edge} (where a city meets
  * RWG terrain), {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
- * chunk); the last two find something only where a structure oracle knows a landmark. The radius is in chunks,
+ * chunk); the last two find something only where a structure oracle knows a landmark. {@code scattered} finds the
+ * nearest scattered structure, and {@code scattered:<name>} the nearest of one asset ({@link ScatteredFinder}). The
+ * radius is in chunks,
  * {@value #DEFAULT_RADIUS} by default, at most {@value #MAX_RADIUS}. With {@code best} after the radius, a soft edge,
  * reserved lot or village is the one within the radius that shows the city and the landmark together most clearly,
  * with a view framing both ({@link CityFinder#findBest}), not the nearest.
@@ -65,6 +69,10 @@ public final class FindSubcommand implements Subcommand {
         }
         if (args.length < 1 || args.length > 3) {
             throw new WrongUsageException(LangKeys.FIND_USAGE);
+        }
+        if (ScatteredFinder.handles(args[0])) {
+            findScattered(sender, args);
+            return;
         }
         CityFinder.Kind kind = CityFinder.Kind.of(args[0]);
         boolean best = args.length == 3 && BEST.equalsIgnoreCase(args[2]);
@@ -129,6 +137,47 @@ public final class FindSubcommand implements Subcommand {
     }
 
     /**
+     * {@code find scattered[:<name>] [radius]}: the nearest scattered structure, of one asset when named
+     * (07-scattered), from the plans alone.
+     */
+    private static void findScattered(ICommandSender sender, String[] args) throws CommandException {
+        if (args.length > 2) {
+            throw new WrongUsageException(LangKeys.FIND_USAGE);
+        }
+        int radius = args.length == 2 ? CommandBase.parseIntBounded(sender, args[1], 0, MAX_RADIUS) : DEFAULT_RADIUS;
+        World world = sender.getEntityWorld();
+        OverlayWorld overlay = Overlays.INSTANCE.get(world);
+        if (overlay == null || overlay.cities() == null) {
+            throw new CommandException(LangKeys.FIND_NO_CITIES, world.provider.dimensionId);
+        }
+        String key = args[0].toLowerCase(Locale.ROOT);
+        ScatteredPlanner planner = overlay.cities()
+            .scattered();
+        ChunkCoordinates at = sender.getPlayerCoordinates();
+        ScatteredFinder.Result result = planner == null ? null
+            : new ScatteredFinder(planner).find(ScatteredFinder.nameOf(key), at.posX, at.posZ, radius);
+        if (result == null) {
+            LostCities.LOG.info("{}kind={} none within {} chunks", TAG, key, radius);
+            sender.addChatMessage(new ChatComponentTranslation(LangKeys.FIND_NONE, key, radius));
+            return;
+        }
+        LostCities.LOG.info(TAG + result.format());
+        sender.addChatMessage(
+            new ChatComponentTranslation(
+                LangKeys.FIND_FOUND,
+                key,
+                result.x(),
+                result.y(),
+                result.z(),
+                result.label(),
+                format(result.viewX()),
+                format(result.viewY()),
+                format(result.viewZ()),
+                format(result.yaw()),
+                format(result.pitch())));
+    }
+
+    /**
      * Moves a walking-level viewpoint to the two-high air space (with a floor under it when asked) in the target's
      * chunk nearest to where the finder put the view.
      */
@@ -177,6 +226,7 @@ public final class FindSubcommand implements Subcommand {
         for (CityFinder.Kind kind : CityFinder.Kind.values()) {
             keys.add(kind.key());
         }
+        keys.add(ScatteredFinder.KIND);
         return CommandBase.getListOfStringsMatchingLastWord(args, keys.toArray(new String[0]));
     }
 }

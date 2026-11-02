@@ -66,12 +66,12 @@ if (info != null) {
 | `getHighwayXLevel()`, `getHighwayZLevel()`, `getMaxHighwayLevel()` | The city level of a highway along each axis, −1 for none |
 | `getRailType()`, `getRailLevel()` | The railway piece (`RailChunkType`, with `isStation()` and `isSurface()`) and its level; `NONE` and −1 without one |
 | `getLandmarkZone()` | `LostLandmarkZone`: `CORE` is another mod's structure, `EDGE_RING` the city's margin around it, `AVOID_RING` the ring of a landmark the profile avoids ([0006](design/0006-build-around-other-worldgen.md)) |
-| `getScatteredStructure()` | The scattered structure standing in the chunk, `null` for none |
+| `getScatteredStructure()` | The id of the scattered structure (its world-style entry, such as `lostcities:cabin` or `lostcities:oilrig`) whose footprint holds the chunk, `null` for none. Its blocks, ground and loot stand there in a generated chunk, and lakes, lava, dungeons and oil keep out of it ([0009](design/0009-scattered-structures-in-rwg-terrain.md)) |
 | `getRuinLevel()` | The block Y the ruin of a ruined building centers on, −1 when it is not ruined |
 | `getDamage(chunkY)` | The explosion damage at the center of 16-block section `chunkY` (0 to 15): 0 for none, above 1 destroys blocks |
 | `getExplosions()` | The explosions that reach the chunk: center and radius |
 
-Highways and railways answer from the infrastructure the layout plans around, and scattered structures from their own layout. Until those generate (milestones M06 and M07, [ROADMAP](ROADMAP.md)) every chunk answers none for them.
+Highways and railways answer from the infrastructure the layout plans around, and scattered structures from their own layout, pure like the rest, so a chunk not generated yet answers what will stand there. Until highways and railways generate (milestone M06, [ROADMAP](ROADMAP.md)) every chunk answers none for them, and no gas station or restaurant, which stand beside highways, is placed.
 
 ## Profiles from your mod
 
