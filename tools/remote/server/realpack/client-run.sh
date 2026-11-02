@@ -3,7 +3,8 @@
 #               [--user <name>] [--heap <size>] [--extra-shot <name>:<seconds>] (repeatable)
 #               [--mod <jar>] (a lostcitiesnh jar for this run; servers with it reject clients without it)
 #               [--jvm '<extra jvm args>'] [--hold <file>] (after the shots, stay up until <file> exists)
-#               [--restore-options] (put options.txt and optionsnf.txt back as they were after the run)
+#               [--restore-options] (put options.txt and optionsnf.txt back as they were after the run, and
+#               turn JourneyMap's waypoint beacons and deathpoints off for the run, putting its file back too)
 # Launch the real GTNH 2.9.0 client (client/, built by client-prepare.py) headless on our own Xvfb
 # display with Mesa software GL (llvmpipe), wait until the main menu is up (or, with --server, until
 # the client has joined), wait --wait more seconds, screenshot the display into
@@ -18,6 +19,9 @@ DISP=80 SHOT=menu WAIT=20 TIMEOUT=1200 SERVER="" USER_NAME=LCBot HEAP=8G
 EXTRA=()
 MOD="" JVM_EXTRA="" HOLD="" RESTORE_OPTIONS=0
 OPTION_FILES=(options.txt optionsnf.txt)
+# JourneyMap draws a waypoint's beacon (a translucent colored column) in the world even with the GUI
+# hidden, and makes a deathpoint, with a beacon, wherever the bot dies; neither belongs in a review shot.
+JM_WAYPOINTS=journeymap/config/5.2/journeymap.waypoint.config
 while [ $# -gt 0 ]; do
     case "$1" in
         --display) DISP="$2"; shift 2 ;;
@@ -64,6 +68,8 @@ finish() {
             if [ -f "$RUN_DIR/options-backup/$f" ]; then cp "$RUN_DIR/options-backup/$f" "$CL/game/$f"
             elif [ -f "$RUN_DIR/options-backup/$f.absent" ]; then rm -f "$CL/game/$f"; fi
         done
+        [ -f "$RUN_DIR/options-backup/journeymap.waypoint.config" ] \
+            && cp "$RUN_DIR/options-backup/journeymap.waypoint.config" "$CL/game/$JM_WAYPOINTS"
     fi
     cp "$CL/game/logs/fml-client-latest.log" "$RUN_DIR/" 2>/dev/null
     ls "$CL"/game/crash-reports/*.txt 2>/dev/null | while read -r c; do [ "$c" -nt "$RUN_DIR/stamp" ] && cp "$c" "$RUN_DIR/"; done
@@ -79,6 +85,10 @@ if [ "$RESTORE_OPTIONS" = 1 ]; then
     for f in "${OPTION_FILES[@]}"; do
         if [ -f "$CL/game/$f" ]; then cp "$CL/game/$f" "$RUN_DIR/options-backup/$f"; else touch "$RUN_DIR/options-backup/$f.absent"; fi
     done
+    if [ -f "$CL/game/$JM_WAYPOINTS" ]; then
+        cp "$CL/game/$JM_WAYPOINTS" "$RUN_DIR/options-backup/journeymap.waypoint.config"
+        sed -i -E 's/"(beaconEnabled|createDeathpoints)": true/"\1": false/' "$CL/game/$JM_WAYPOINTS"
+    fi
 fi
 # Our jars never stay in the client: clear old ones, install the one for this run.
 rm -f "$CL"/game/mods/lostcitiesnh-*.jar
