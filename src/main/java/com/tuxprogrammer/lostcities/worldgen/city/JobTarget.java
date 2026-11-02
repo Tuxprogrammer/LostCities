@@ -59,6 +59,8 @@ public final class JobTarget implements CityTarget {
         final boolean noLoot;
         final boolean generateLoot;
         final float chestWithoutLootChance;
+        final boolean vanillaLoot;
+        final boolean enderZooHardMobs;
 
         /**
          * Collects the facts.
@@ -88,6 +90,37 @@ public final class JobTarget implements CityTarget {
             this.noLoot = noLoot;
             this.generateLoot = generateLoot;
             this.chestWithoutLootChance = chestWithoutLootChance;
+            this.vanillaLoot = false;
+            this.enderZooHardMobs = false;
+        }
+
+        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs) {
+            this.worldSeed = base.worldSeed;
+            this.chunkX = base.chunkX;
+            this.chunkZ = base.chunkZ;
+            this.groundLevel = base.groundLevel;
+            this.cityGround = base.cityGround;
+            this.cellars = base.cellars;
+            this.floors = base.floors;
+            this.biome = base.biome;
+            this.noLoot = base.noLoot;
+            this.generateLoot = base.generateLoot;
+            this.chestWithoutLootChance = base.chestWithoutLootChance;
+            this.vanillaLoot = vanillaLoot;
+            this.enderZooHardMobs = enderZooHardMobs;
+        }
+
+        /**
+         * Returns these facts with the profile's loot and mob options (docs/new-spec/08-loot-mobs-blocks/index.md).
+         *
+         * @param vanillaLoot      the profile's {@code vanillaLootCategories}: whether chests may draw the 1.7.10
+         *                         vanilla categories
+         * @param enderZooHardMobs the profile's {@code enderZooHardMobs}: whether {@code hardmobs} spawners take
+         *                         EnderZoo's overworld mobs
+         * @return the facts with the options
+         */
+        public Facts withOptions(boolean vanillaLoot, boolean enderZooHardMobs) {
+            return new Facts(this, vanillaLoot, enderZooHardMobs);
         }
     }
 
@@ -141,9 +174,9 @@ public final class JobTarget implements CityTarget {
         if (!facts.noLoot && facts.generateLoot) {
             Random random = positionRandom(x, y, z);
             if (random.nextFloat() >= facts.chestWithoutLootChance) {
-                category = LootRules.category(
-                    info.loot()
-                        .randomValue(random, context(y, placement)));
+                String value = info.loot()
+                    .randomValue(random, context(y, placement), v -> LootRules.allowed(v, facts.vanillaLoot));
+                category = LootRules.category(value, facts.vanillaLoot, random);
             }
         }
         jobs.add(
@@ -156,9 +189,14 @@ public final class JobTarget implements CityTarget {
         if (!inChunk(x, y, z)) {
             return;
         }
+        Random random = positionRandom(x, y, z);
         String mob = LootRules.entityName(
             info.mob()
-                .randomValue(positionRandom(x, y, z), context(y, placement)));
+                .randomValue(random, context(y, placement)));
+        if (facts.enderZooHardMobs && isHardMobs(info)) {
+            // Drawn after the condition, from the spawner's own random, so the option moves no other draw.
+            mob = LootRules.ENDERZOO_HARDMOBS.get(random.nextInt(LootRules.ENDERZOO_HARDMOBS.size()));
+        }
         jobs.add(PopulationJob.of(PopulationJob.Kind.SPAWNER, x, y, z, mob));
     }
 
@@ -169,6 +207,14 @@ public final class JobTarget implements CityTarget {
                 PopulationJob.of(PopulationJob.Kind.TILE_ENTITY, x, y, z, "")
                     .withTemplate(TileTemplates.rotated(template, transform)));
         }
+    }
+
+    /** Whether a spawner's condition is upstream's {@code hardmobs}, which the EnderZoo option replaces. */
+    private static boolean isHardMobs(PaletteEntry info) {
+        return "hardmobs".equals(
+            info.mob()
+                .id()
+                .path());
     }
 
     private ConditionContext context(int y, PartWriter.Placement placement) {

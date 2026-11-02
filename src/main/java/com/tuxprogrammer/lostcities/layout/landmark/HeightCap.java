@@ -4,8 +4,10 @@ package com.tuxprogrammer.lostcities.layout.landmark;
  * The paraboloid an AE2 meteorite's crater removes everything above: at horizontal distance {@code d} blocks from the
  * impact, Y {@code centerY + curvature * d²}, out to {@code reach} blocks. A city building's roof must stay below it,
  * so the city steps down toward the impact instead of being sliced (0006 §1 and §3; coexistence.md § AE2 meteorites:
- * {@code y - r + 1 + 0.02 d²} within 200 blocks, with the conservative center estimate
- * {@code surface - 14 - 8 + 1}). The compat oracle fills in the center height; the layout only evaluates the surface.
+ * {@code y - r + 1 + 0.02 d²} within 200 blocks). The compat oracle ({@code compat.ae2.CraterBasin}) fills in the
+ * lowest center the crater can have, {@code Tmin - 10 - r + 1} less a block of slack, where {@code Tmin} is the lowest
+ * natural ground in the meteor chunk's sky-count box: AE2 digs a crater only when more than 10 blocks of that box,
+ * which reaches 10 blocks above the meteor, see the sky. The layout only evaluates the surface.
  *
  * <p>
  * Side: both.
@@ -16,6 +18,12 @@ public final class HeightCap {
     public static final double AE2_CURVATURE = 0.02D;
     /** How far AE2's crater pass reaches from the impact, in blocks. */
     public static final int AE2_REACH = 200;
+    /**
+     * Blocks above a chunk's city ground the cap must clear for the chunk to stay city: one city level, for its
+     * street, park furniture and lamps. A chunk whose cap is lower leaves the city, so the crater cuts natural ground
+     * there, not a street (D216).
+     */
+    public static final int CITY_HEADROOM = 6;
 
     private final int centerX;
     private final int centerZ;

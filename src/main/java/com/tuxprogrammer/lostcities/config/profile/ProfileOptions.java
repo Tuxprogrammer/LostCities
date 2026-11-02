@@ -491,6 +491,9 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // M08: the vanilla-category opt-in for chest loot and the EnderZoo hardmobs set, both off (D20).
+        newTerrain("vanillaLootCategories", Type.BOOLEAN, null, null);
+        newTerrain("enderZooHardMobs", Type.BOOLEAN, null, null);
         // Upstream's mod-config key, pinned with the profile so it cannot change an existing world (CORE-10, D73).
         newTerrain("heightSampleSize", Type.INT, d(1), d(100));
     }

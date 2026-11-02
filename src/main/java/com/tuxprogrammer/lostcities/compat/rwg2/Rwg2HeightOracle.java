@@ -40,6 +40,11 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
     private final ChunkGeneratorRealistic sampler;
     private final ChunkManagerRealistic manager;
     private final RealisticBiomeBase[] biomes = new RealisticBiomeBase[256];
+    /** The last chunk's noise, copied: callers ask for many columns of one chunk in a row (a crater's chunk, a lot). */
+    private final float[] lastNoise = new float[256];
+    private int lastChunkX;
+    private int lastChunkZ;
+    private boolean hasLast;
 
     private Rwg2HeightOracle(ChunkGeneratorRealistic sampler, ChunkManagerRealistic manager) {
         this.sampler = sampler;
@@ -66,11 +71,28 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
     public int height(int blockX, int blockZ) {
         int chunkX = blockX >> 4;
         int chunkZ = blockZ >> 4;
-        float[] noise = sampler.getNewNoise(manager, chunkX << 4, chunkZ << 4, biomes, STRIDE);
+        float[] noise = noiseOf(chunkX, chunkZ);
         int localX = blockX & 15;
         int localZ = blockZ & 15;
         // RWG's arrays are x-major: generateTerrain writes column (x, z) from noise[x × 16 + z].
         int index = (localX - localX % STRIDE) * 16 + (localZ - localZ % STRIDE);
         return (int) noise[index] + 1;
+    }
+
+    /**
+     * Returns a chunk's noise, from the one-chunk memo when the chunk is the last one asked for: {@code getNewNoise}
+     * evaluates the chunk's four stride samples whatever column is asked, so a run of columns of one chunk costs one
+     * evaluation instead of one each. The answer is the same.
+     */
+    private float[] noiseOf(int chunkX, int chunkZ) {
+        if (hasLast && chunkX == lastChunkX && chunkZ == lastChunkZ) {
+            return lastNoise;
+        }
+        float[] noise = sampler.getNewNoise(manager, chunkX << 4, chunkZ << 4, biomes, STRIDE);
+        System.arraycopy(noise, 0, lastNoise, 0, Math.min(noise.length, lastNoise.length));
+        lastChunkX = chunkX;
+        lastChunkZ = chunkZ;
+        hasLast = true;
+        return lastNoise;
     }
 }

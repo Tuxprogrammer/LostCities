@@ -18,6 +18,7 @@ import com.tuxprogrammer.lostcities.editor.EditModeData;
 import com.tuxprogrammer.lostcities.editor.EditSessions;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.random.DimensionKey;
@@ -430,6 +431,17 @@ public final class OverlayWorld {
      */
     public LayoutCityPlan cities() {
         return cities;
+    }
+
+    /**
+     * Returns the chunks scattered structures' footprints touch, which the Roguelike steering keeps towers off (D31):
+     * the scattered planner's pure footprints ({@link ScatteredPlanner#inFootprint}), so the answer never depends on
+     * which chunks exist; {@link ScatteredFootprints#NONE} where scattered structures are off or the plan is the
+     * synthetic test city.
+     */
+    public ScatteredFootprints scatteredFootprints() {
+        ScatteredPlanner scattered = cities == null ? null : cities.scattered();
+        return scattered == null ? ScatteredFootprints.NONE : scattered::inFootprint;
     }
 
     /**

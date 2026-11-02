@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
@@ -384,7 +385,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         LaneCell lane = sewing.cell(x, z);
         // Deviation (0006 §1): a core or avoid-ring chunk is never city; this replaces upstream's avoidance.
         boolean isCity = cities.isCityRaw(x, z) && !zone.zone()
-            .forcesNonCity();
+            .forcesNonCity() && !underCrater(x, z, zone);
         MultiPos pos = MultiPos.SINGLE;
         String multi = null;
         if (isCity) {
@@ -541,6 +542,19 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /** Whether a one-floor building (ground floor and roof part) stays under a crater cap at this level. */
+    /**
+     * Whether a meteorite's crater paraboloid would cut this chunk's city ground plus {@link HeightCap#CITY_HEADROOM}:
+     * such a chunk leaves the city (0006 §1, the crater basin; D216), so the crater digs natural ground there, not
+     * a street or a park. The ground is the chunk's own city level, which depends on heights only, never on zones.
+     */
+    private boolean underCrater(int x, int z, ZoneInfo zone) {
+        if (!zone.inCraterBasin()) {
+            return false;
+        }
+        int ground = profile.groundLevel + levels.cityLevel(x, z) * ChunkPlan.FLOOR_HEIGHT;
+        return zone.heightCap() < ground + HeightCap.CITY_HEADROOM;
+    }
+
     private boolean oneFloorFits(int cityLevel, int heightCap) {
         if (heightCap == Integer.MAX_VALUE) {
             return true;
