@@ -162,8 +162,10 @@ Shot runner: realpack/shots-run.py   (python3 -I; laptop side: lc-remote.sh shot
   --lock-wait 1800), runs run.sh (test hooks, --view-distance = render distance, --cmds
   'until:LCSHOTS-END-<id>') and waits for "Done (", then client-run.sh --hold --restore-options with
   -Dlostcitiesnh.capture=true (the mod's clean capture: GUI, hand, toast and overlays hidden, logs
-  "[LCNH-CAPTURE] settled ..." when a viewpoint's chunks are in and built). Retries a failed join once
-  ("<user> lost connection", client exit or crash, --join-timeout 420). Locks time and weather
+  "[LCNH-CAPTURE] settled ..." when a viewpoint's chunks are in and built). No --server: the client joins
+  from the main menu itself (-Dlostcitiesnh.captureServer=127.0.0.1:25800), because FML's startup join
+  races its own handshake latch ("playClientBlock is null"); the runner restarts the client once if it has
+  not joined (dropped twice, exited, crashed, --join-timeout 420). Locks time and weather
   (gamerule doDaylightCycle false, time set, weather clear 1000000), creative mode, no mob spawning.
   Per shot: console "lostcities view" through run.sh's stdin fifo, wait for the settled line at the
   target, the shot's wait, then xwd | convert. Then touches the hold file, says LCSHOTS-END-<id> so

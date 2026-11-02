@@ -66,7 +66,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 - `--hold <file>`: after the screenshots, stays up until `<file>` exists (bounded by `--timeout`), so another script can drive the client. The shot runner uses it.
 - `--restore-options`: backs up `options.txt` and `optionsnf.txt` before the run and puts them back after it, deleting any the run created.
 
-The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` while the server is still starting up sometimes fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server); run the client again. The shot runner avoids it: it starts the client only after the server's "Done", and retries a failed join once.
+The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` often fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server), even once the server is up: FML's startup join opens the connection before it creates the latch the handshake waits on, and a local server answers first. Run the client again. The shot runner avoids it: the capture mode joins from the main menu after creating that latch (`-Dlostcitiesnh.captureServer`, D-M05S-4).
 
 ## Examples
 
@@ -105,7 +105,7 @@ The runner:
 
 1. waits (polling every 45 s, at most `--lock-wait`, default 1800 s) until neither the real-pack server nor the client is in use;
 2. boots the server with `run.sh` for the list's world, the slot's jar, the test hooks, and `view-distance` set to the list's render distance, and waits for "Done";
-3. starts the client with `client-run.sh --hold --restore-options` and the clean capture on; if the join fails (lost connection, client exit, crash or `--join-timeout`), it stops that client and tries once more;
+3. starts the client with `client-run.sh --hold --restore-options` and the clean capture on. The client joins by itself from the main menu, and retries once after a disconnect. If it still has not joined (dropped twice, exited, crashed, or `--join-timeout`, default 420 s), the runner stops that client and starts another once;
 4. sets creative mode, stops the daylight cycle, sets the time, clears the weather for 1,000,000 seconds, turns mob spawning off (unless `"mobs": true`), and runs the list's `setup` commands;
 5. for each shot, moves the player with `lostcities view`, waits until the client logs that the viewpoint has settled (at most the shot's `settle_timeout`), waits the shot's `wait` and screenshots the display (`xwd`);
 6. releases the client, ends the server through its console, and writes the review page.
@@ -119,6 +119,7 @@ The client side is a dev-only mode in the mod ([`client/CleanCapture`](../../src
 - hides the GUI as F1 does. That removes the hotbar, the hand and held item, the crosshair, the chat, and every overlay drawn through Forge's `RenderGameOverlayEvent`, which is not fired while the GUI is hidden: the pack's InGame Info XML panel and JourneyMap's minimap among them;
 - clears vanilla's achievement window every tick and turns off its hint. The "Press 'E' to open your inventory" toast is that window, and it draws even with the GUI hidden;
 - closes any screen that opens in the world;
+- with `-Dlostcitiesnh.captureServer=<host>:<port>`, joins that server from the main menu by itself;
 - sets the field of view, the render distance and clouds (off by default; they hide a city from above) in memory, before any world loads;
 - logs `[LCNH-CAPTURE] settled x=… y=… z=… yaw=… pitch=… top=… ticks=…` once the camera has been still for a second, every chunk within the capture radius has arrived, and the terrain renderer's build queue has stayed empty for a second. With Angelica, as in the pack, that queue is Celeritas's (`isTerrainRenderComplete()`); without it, vanilla's.
 
