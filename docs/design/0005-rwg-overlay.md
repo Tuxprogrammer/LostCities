@@ -1,6 +1,6 @@
 # 0005 · The RWG overlay: hook, terrain blend, heights, profiles and budget
 
-- Status: Accepted; §3 and §3a amended by D31 (saplings, light, the carver, the write guard); §1, §3a, §6, §7 and §8 settled by the M04 implementation (decision log D-M04-3 to D-M04-5, D-M04-11)
+- Status: Accepted; §3 and §3a amended by D31 (saplings, light, the carver, the write guard); §1, §3a, §6, §7 and §8 settled by the M04 implementation (decision log D73 to D75, D81)
 - Gate: S2 → M04 (M04's entry gate needs this record accepted)
 - Amends: none (settles the "Still open" items of [0003](0003-world-presence.md))
 - Date: 2026-11-01
@@ -32,7 +32,7 @@ The overlay is a class in `worldgen` that implements `IChunkProvider` and wraps 
 | Install, new world | In `WorldEvent.CreateSpawnPosition`, subscribed with `priority = HIGHEST, receiveCanceled = true`, before any chunk exists |
 | Install, existing world or other dimension | In `WorldEvent.Load`, if not already wrapped |
 | Idempotence | Never wrap a wrapper; keep one wrapper per `WorldServer`; drop it on `WorldEvent.Unload` |
-| Forwarding | `loadChunk` goes through the wrapper's own `provideChunk`, as vanilla's and RWG's generators define it, so no path skips the terrain phase (D-M04-4). Every other `IChunkProvider` method delegates unchanged, including `chunkExists`, `saveChunks`, `unloadQueuedChunks`, `canSave`, `getPossibleCreatures`, `func_147416_a` (stronghold search), `getLoadedChunkCount`, `recreateStructures` and `saveExtraData`. `makeString` returns the delegate's string |
+| Forwarding | `loadChunk` goes through the wrapper's own `provideChunk`, as vanilla's and RWG's generators define it, so no path skips the terrain phase (D74). Every other `IChunkProvider` method delegates unchanged, including `chunkExists`, `saveChunks`, `unloadQueuedChunks`, `canSave`, `getPossibleCreatures`, `func_147416_a` (stronghold search), `getLoadedChunkCount`, `recreateStructures` and `saveExtraData`. `makeString` returns the delegate's string |
 | Generators without a height oracle | No install; log once at info level |
 
 `provideChunk(x, z)` calls the delegate, then runs the **terrain phase** on the returned chunk. `populate(provider, x, z)` calls the delegate, then runs the **population phase**. Forge then runs the `IWorldGenerator`s, with GT's ore veins last. The overlay therefore sees all of RWG's terrain before writing, and all of RWG's decoration before populating, in the same order upstream 1.20 has over vanilla.
@@ -83,7 +83,7 @@ The owner's rule: RWG builds the landscape first, with its terrain and its decor
 - **Landmark cores** ([0006](0006-build-around-other-worldgen.md) §1) are outside the footprint. Neither the write guard nor the footprint restore acts in them, so RWG's decoration there stays, and other mods' structures (village pieces, which RWG's own `populate` writes, included) land on RWG's untouched ground. Edge-ring parks and soft-edge strips are outside the footprint too.
 - City levels still follow upstream's stepped heights (§6), and edges blend into RWG's ground (§5).
 
-**Mechanism.** A **write guard**: one mixin on the chunk's block setter (`Chunk.func_150807_a`) that drops writes inside footprint volumes. It keeps a stack of frames on the server thread: active around each delegate `populate`, inactive around our population phase, and switched off by `PopulateChunkEvent.Post` at lowest priority so RWG's snow and ice pass. `IWorldGenerator`s run after our wrapper returns and are not guarded: on the real pack IC2 rubber trees and HarvestCraft fruit trees on park grass overhang street footprints, which the alpha screenshots judge (D-M04-5). It is active during every delegate `populate`, wherever the write lands, because decoration spreads over four chunks and cascaded big trees reach chunk +2; the prototype measures that spill with ArchaicFix's `logCascadingWorldgen`. The layout answers "is this block in a footprint" from pure data. It is precise, cheap, and the mixin comment says why no event works: RWG ignores `DecorateBiomeEvent` results. The footprint is every city-written column from its lowest block up to Y 255; parks, yards, edge rings and soft-edge strips are outside it (D31).
+**Mechanism.** A **write guard**: one mixin on the chunk's block setter (`Chunk.func_150807_a`) that drops writes inside footprint volumes. It keeps a stack of frames on the server thread: active around each delegate `populate`, inactive around our population phase, and switched off by `PopulateChunkEvent.Post` at lowest priority so RWG's snow and ice pass. `IWorldGenerator`s run after our wrapper returns and are not guarded: on the real pack IC2 rubber trees and HarvestCraft fruit trees on park grass overhang street footprints, which the alpha screenshots judge (D75). It is active during every delegate `populate`, wherever the write lands, because decoration spreads over four chunks and cascaded big trees reach chunk +2; the prototype measures that spill with ArchaicFix's `logCascadingWorldgen`. The layout answers "is this block in a footprint" from pure data. It is precise, cheap, and the mixin comment says why no event works: RWG ignores `DecorateBiomeEvent` results. The footprint is every city-written column from its lowest block up to Y 255; parks, yards, edge rings and soft-edge strips are outside it (D31).
 
 The **fallback**, only if the prototype shows the guard cannot tell RWG's writes apart, is a footprint restore: a pass after decoration that rewrites the city's blocks inside the footprint from the layout. No mixin, but it costs more. It is the same machinery as the GT boulder restore of [new-spec 00-pack-integration/ore-veins.md](../new-spec/00-pack-integration/ore-veins.md), should that become necessary.
 
@@ -132,7 +132,7 @@ RWG's sea level is 63, the same as the 1.20 overworld's. So upstream's overworld
 | `buildingMaxFloors` | 8 (allowed 0 to 60) | 8 (allowed 0 to 22) | Upstream's per-chunk cap (`cityGround + 6 × floors < maxBuild − 8`, so below Y 248) drops floors one at a time, and it keeps everything below Y 255: at city level 8 (ground Y 119) a building gets at most 21 floors and its roof starts at Y 245; at level 7 and below all 22 fit. Nothing passes Y 254 ([height-mapping.md](../new-spec/03-terrain/height-mapping.md#building-envelope)) |
 | `bedrockLayer` | 1 at Y −64 | read, writes nothing; a warning when above 0 | RWG already places bedrock at Y 0 to 4, and generation never places unbreakable blocks ([0004](0004-gtnh-layer-and-tier-ceiling.md), [block-mapping.md](../new-spec/00-pack-integration/block-mapping.md#blocks-upstreams-code-names)). The key stays in the profile format so upstream profiles load |
 | `terrainFix*Offset`, L1/L2 offsets | −4/−3, −1/+1; 20/25 | same | |
-| `heightSampleSize` | 3 | 3, a pinned profile value (D-M04-3) | Revisited from the prototype's histogram |
+| `heightSampleSize` | 3 | 3, a pinned profile value (D73) | Revisited from the prototype's histogram |
 | `seaLevel` override | −1 = world default | −1 → 63 | |
 | Any option range above 255 or below 0 | up to 384 or 2048 | clamped to 0 to 255 at load, with a warning | |
 
@@ -144,7 +144,7 @@ There is no world-preset screen. The profile is server configuration, pinned int
 
 | Piece | Rule |
 |---|---|
-| Config (GTNHLib, server side, `config/lostcitiesnh.cfg`) | Category `profiles`: `dimensionProfiles = ["0=default"]` (`<dimension id>=<profile>`); `enableOnExistingWorlds = false` (D-M04-3) |
+| Config (GTNHLib, server side, `config/lostcitiesnh.cfg`) | Category `profiles`: `dimensionProfiles = ["0=default"]` (`<dimension id>=<profile>`); `enableOnExistingWorlds = false` (D73) |
 | Profiles | Built-in profiles from the jar. Custom profiles are JSON files in upstream's format in `config/lostcitiesnh/profiles/`. Only profiles whose landscape is an overlay (upstream's `default`-type profiles) are valid on RWG; others are rejected at load with a message |
 | Pinning | When the wrapper is installed on a world that is not initialized (a new world), the profile is resolved and a snapshot is written to the overworld's saved data (`data/lostcitiesnh.dat`): profile name, every resolved value, the asset-set hash, the layout version and the world type. From then on the world uses the snapshot, and config edits do not change it. Classic RWG uses the same pattern for its per-world settings |
 | Existing worlds | No snapshot means no cities. The server owner opts a world in per world with the operator command `/lostcities profile pin <profile> confirm` ([commands.md](../new-spec/01-core/commands.md)), which takes the snapshot then. `enableOnExistingWorlds = true` opts in every world without a snapshot at its next load. Either way, the border between old and new chunks is the owner's concern ([0003](0003-world-presence.md)) |
@@ -187,7 +187,7 @@ Each is split by chunk class: city, blend or untouched. An operator command and 
 
 The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceeded on the build server: `overlay.budget` ([docs/testing/](../testing/README.md)).
 
-**Measured in M04** (D-M04-11): the real GTNH 2.9.0 server on the build server, seed 4242, the synthetic test city, `overlay.budget`: 65 × 65 chunks in spiral order starting 20 chunks beside a 13 × 13-chunk city, the first 512 chunks dropped, no player. RWG's numbers are the same run's delegate timers. Times in milliseconds.
+**Measured in M04** (D81): the real GTNH 2.9.0 server on the build server, seed 4242, the synthetic test city, `overlay.budget`: 65 × 65 chunks in spiral order starting 20 chunks beside a 13 × 13-chunk city, the first 512 chunks dropped, no player. RWG's numbers are the same run's delegate timers. Times in milliseconds.
 
 | | RWG2 Continents | Classic RWG |
 |---|---|---|
@@ -258,7 +258,7 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
    - snow on streets;
    - lamps and glowstone in a fresh city at night, lit by ArchaicFix's Phosphor without a relight (§3).
 
-   *M04, with the synthetic test city on seed 4242:* the guard works on both world types (17,651 and 40,231 writes dropped in the 17 × 17-chunk test region; no log or leaf passes it during a population), every glowstone is lit after the chunk's light pass on both, and landmark cores without a lane are left exactly as RWG made them. Other mods' trees from `IWorldGenerator`s still overhang footprints (D-M04-5). The real-pack screenshots in the M04 report show the city from above, its edge and a village core with its lane; the vetoes, oil, geodes and night shots are left to the alpha set.
+   *M04, with the synthetic test city on seed 4242:* the guard works on both world types (17,651 and 40,231 writes dropped in the 17 × 17-chunk test region; no log or leaf passes it during a population), every glowstone is lit after the chunk's light pass on both, and landmark cores without a lane are left exactly as RWG made them. Other mods' trees from `IWorldGenerator`s still overhang footprints (D75). The real-pack screenshots in the M04 report show the city from above, its edge and a village core with its lane; the vetoes, oil, geodes and night shots are left to the alpha set.
 
 5. **Budget numbers** per §8 (B1 to B5), written back here. *M04: written in §8; all met.*
 6. **Cascades:** zero ArchaicFix warnings attributed to this mod, and Hodgepodge's neighbor-fill count unchanged against the baseline. *M04: with `logCascadingWorldgenStacktrace` on, every warning (55 on RWG2 Continents, 63 on classic RWG, against 49 and 56 for the bare pack on the same seed during the spawn search) loads its chunk from HarvestCraft fruit trees, Forestry and MagicBees hives, ExtraBees water hives, Biomes O' Plenty reeds in RWG's decoration, NewHorizonsCoreMod's oil or RWG itself; the overlay appears only as the frame that passes RWG's `populate` through. The neighbor-fill count is not measured.*

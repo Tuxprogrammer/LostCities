@@ -15,7 +15,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
  * the plan's job sites) right after it. Never the whole chunk after population: {@code IWorldGenerator}s of equal
  * weight run in an order that can change between JVM runs, GT places queued ore veins during later chunks' population
  * (docs/design/0005-rwg-overlay.md, "Determinism tests"), and RWG's own decoration reacts to what those placed in
- * neighbors, so even the writes the guard drops differ from run to run (D-M04-10).
+ * neighbors, so even the writes the guard drops differ from run to run (D80).
  *
  * <p>
  * Recording is off until a scenario asks for a region; it only reads chunks. Server thread only. Side: server.
