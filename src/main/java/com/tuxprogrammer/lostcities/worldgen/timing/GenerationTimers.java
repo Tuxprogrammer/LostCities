@@ -1,9 +1,12 @@
 package com.tuxprogrammer.lostcities.worldgen.timing;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.LongSupplier;
 
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 
@@ -53,20 +56,50 @@ public final class GenerationTimers {
     /** How many of the slowest phase invocations the report names. */
     public static final int SLOWEST_KEPT = 8;
 
+    /**
+     * The JVM's garbage collectors, whose collection counts tell B4 which invocations a stop-the-world pause fell into
+     * (G1's young and remark pauses run 20 to 60 ms on the real pack and land wherever the server thread is).
+     */
+    private static final List<GarbageCollectorMXBean> COLLECTORS = ManagementFactory.getGarbageCollectorMXBeans();
+
     private final Histogram[][] histograms = new Histogram[Series.values().length][ALL + 1];
+    /** Per series, the invocations no garbage-collection pause fell into: what B4 judges. */
+    private final Histogram[] withoutPauses = new Histogram[Series.values().length];
     private final SlowPhase[] slowest = new SlowPhase[SLOWEST_KEPT];
+    private final LongSupplier collections;
     private long failedChunks;
     private long oracleSamples;
     private long oracleNanos;
     private long structureNanos;
+    private long pausedInvocations;
 
-    /** Creates empty timers. */
+    /** Creates empty timers that watch the JVM's garbage collectors. */
     public GenerationTimers() {
+        this(GenerationTimers::jvmCollections);
+    }
+
+    /**
+     * Creates empty timers.
+     *
+     * @param collections the number of garbage collections so far, any collector; an invocation during which it
+     *                    changes may hold a stop-the-world pause and is set apart from B4
+     */
+    public GenerationTimers(LongSupplier collections) {
+        this.collections = collections;
         for (int s = 0; s < histograms.length; s++) {
             for (int c = 0; c <= ALL; c++) {
                 histograms[s][c] = new Histogram();
             }
+            withoutPauses[s] = new Histogram();
         }
+    }
+
+    private static long jvmCollections() {
+        long total = 0;
+        for (GarbageCollectorMXBean bean : COLLECTORS) {
+            total += Math.max(0, bean.getCollectionCount());
+        }
+        return total;
     }
 
     /**
@@ -79,6 +112,7 @@ public final class GenerationTimers {
     public void record(Series series, TerrainPhase.ChunkClass chunkClass, long nanos) {
         histograms[series.ordinal()][chunkClass.ordinal()].record(nanos);
         histograms[series.ordinal()][ALL].record(nanos);
+        withoutPauses[series.ordinal()].record(nanos);
     }
 
     /** Records one structure-oracle call. */
@@ -101,7 +135,7 @@ public final class GenerationTimers {
      * @return the mark
      */
     public PhaseMark mark() {
-        return new PhaseMark(oracleSamples, oracleNanos, structureNanos);
+        return new PhaseMark(oracleSamples, oracleNanos, structureNanos, collections.getAsLong());
     }
 
     /**
@@ -118,10 +152,15 @@ public final class GenerationTimers {
      */
     public void recordPhase(Series series, TerrainPhase.ChunkClass chunkClass, int chunkX, int chunkZ, long nanos,
         PhaseMark start) {
-        if (chunkClass == null) {
-            histograms[series.ordinal()][ALL].record(nanos);
+        histograms[series.ordinal()][ALL].record(nanos);
+        if (chunkClass != null) {
+            histograms[series.ordinal()][chunkClass.ordinal()].record(nanos);
+        }
+        boolean paused = collections.getAsLong() != start.collections;
+        if (paused) {
+            pausedInvocations++;
         } else {
-            record(series, chunkClass, nanos);
+            withoutPauses[series.ordinal()].record(nanos);
         }
         int weakest = 0;
         for (int i = 0; i < slowest.length; i++) {
@@ -144,7 +183,8 @@ public final class GenerationTimers {
             nanos,
             oracleSamples - start.samples,
             oracleNanos - start.oracleNanos,
-            structureNanos - start.structureNanos);
+            structureNanos - start.structureNanos,
+            paused);
     }
 
     /** Counts a chunk whose phase failed and was logged. */
@@ -175,8 +215,12 @@ public final class GenerationTimers {
                 histogram.reset();
             }
         }
+        for (Histogram histogram : withoutPauses) {
+            histogram.reset();
+        }
         Arrays.fill(slowest, null);
         failedChunks = 0;
+        pausedInvocations = 0;
     }
 
     /**
@@ -274,20 +318,23 @@ public final class GenerationTimers {
                     ms(overlayTotal),
                     100 * share,
                     ms(rwgTotal))));
-        long worst = Math.max(
-            Math.max(terrain.quantile(0.999), population.quantile(0.999)),
-            prefetch.count() == 0 ? 0 : prefetch.quantile(0.999));
+        long terrainB4 = p999(withoutPauses[Series.TERRAIN.ordinal()]);
+        long populationB4 = p999(withoutPauses[Series.POPULATION.ordinal()]);
+        long prefetchB4 = p999(withoutPauses[Series.PREFETCH.ordinal()]);
+        long worst = Math.max(Math.max(terrainB4, populationB4), prefetchB4);
         out.add(
             new Verdict(
                 "B4",
                 worst <= B4_LIMIT_NANOS,
                 String.format(
                     Locale.ROOT,
-                    "worst phase p99.9 %.3f ms <= 10 ms (terrain %.3f, population %.3f, prefetch tick %.3f)",
+                    "worst phase p99.9 %.3f ms <= 10 ms (terrain %.3f, population %.3f, prefetch tick %.3f;"
+                        + " %d invocations a GC pause fell into set apart)",
                     ms(worst),
-                    ms(terrain.quantile(0.999)),
-                    ms(population.quantile(0.999)),
-                    ms(prefetch.count() == 0 ? 0 : prefetch.quantile(0.999)))));
+                    ms(terrainB4),
+                    ms(populationB4),
+                    ms(prefetchB4),
+                    pausedInvocations)));
         out.add(
             new Verdict(
                 "B5",
@@ -296,21 +343,27 @@ public final class GenerationTimers {
         return out;
     }
 
+    private static long p999(Histogram histogram) {
+        return histogram.count() == 0 ? 0 : histogram.quantile(0.999);
+    }
+
     private static double ms(long nanos) {
         return nanos / 1_000_000.0;
     }
 
-    /** The oracle counters at the start of a phase invocation ({@link #mark()}). */
+    /** The counters at the start of a phase invocation ({@link #mark()}). */
     public static final class PhaseMark {
 
         private final long samples;
         private final long oracleNanos;
         private final long structureNanos;
+        private final long collections;
 
-        PhaseMark(long samples, long oracleNanos, long structureNanos) {
+        PhaseMark(long samples, long oracleNanos, long structureNanos, long collections) {
             this.samples = samples;
             this.oracleNanos = oracleNanos;
             this.structureNanos = structureNanos;
+            this.collections = collections;
         }
     }
 
@@ -325,9 +378,10 @@ public final class GenerationTimers {
         final long samples;
         final long oracleNanos;
         final long structureNanos;
+        final boolean paused;
 
         SlowPhase(Series series, TerrainPhase.ChunkClass chunkClass, int chunkX, int chunkZ, long nanos, long samples,
-            long oracleNanos, long structureNanos) {
+            long oracleNanos, long structureNanos, boolean paused) {
             this.series = series;
             this.chunkClass = chunkClass;
             this.chunkX = chunkX;
@@ -336,13 +390,14 @@ public final class GenerationTimers {
             this.samples = samples;
             this.oracleNanos = oracleNanos;
             this.structureNanos = structureNanos;
+            this.paused = paused;
         }
 
         @Override
         public String toString() {
             return String.format(
                 Locale.ROOT,
-                "slow %s %s chunk=%d,%d %.3f ms: %d height samples %.3f ms, structures %.3f ms",
+                "slow %s %s chunk=%d,%d %.3f ms: %d height samples %.3f ms, structures %.3f ms%s",
                 series.name()
                     .toLowerCase(Locale.ROOT),
                 chunkClass == null ? "all"
@@ -353,7 +408,8 @@ public final class GenerationTimers {
                 ms(nanos),
                 samples,
                 ms(oracleNanos),
-                ms(structureNanos));
+                ms(structureNanos),
+                paused ? ", a GC pause fell into it" : "");
         }
     }
 

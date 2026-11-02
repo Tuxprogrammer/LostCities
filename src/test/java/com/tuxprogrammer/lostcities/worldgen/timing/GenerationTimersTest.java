@@ -52,8 +52,51 @@ public class GenerationTimersTest {
     }
 
     @Test
+    public void anInvocationAGcPauseFellIntoIsSetApartFromB4ButCountsInB3() {
+        long[] collections = { 0 };
+        GenerationTimers timers = new GenerationTimers(() -> collections[0]);
+        for (int i = 0; i < 100; i++) {
+            timers.record(GenerationTimers.Series.PROVIDE, TerrainPhase.ChunkClass.CITY, 8_000_000L);
+            timers.record(GenerationTimers.Series.POPULATE, TerrainPhase.ChunkClass.CITY, 20_000_000L);
+            timers.recordPhase(
+                GenerationTimers.Series.TERRAIN,
+                TerrainPhase.ChunkClass.CITY,
+                i,
+                0,
+                1_000_000L,
+                timers.mark());
+        }
+        GenerationTimers.PhaseMark mark = timers.mark();
+        collections[0]++;
+        timers.recordPhase(GenerationTimers.Series.PREFETCH, null, 3, 4, 45_000_000L, mark);
+        List<GenerationTimers.Verdict> verdicts = timers.budgets(0);
+        assertTrue(
+            verdicts.get(3)
+                .met(),
+            verdicts.get(3)
+                .toString());
+        assertTrue(
+            verdicts.get(3)
+                .detail()
+                .contains("1 invocations a GC pause fell into set apart"),
+            verdicts.get(3)
+                .toString());
+        assertTrue(
+            verdicts.get(2)
+                .detail()
+                .startsWith("overlay 145.0 ms"),
+            "B3 counts it: " + verdicts.get(2));
+        assertTrue(
+            timers.report()
+                .contains(
+                    "slow prefetch all chunk=3,4 45.000 ms: 0 height samples 0.000 ms, structures 0.000 ms,"
+                        + " a GC pause fell into it"),
+            String.join("\n", timers.report()));
+    }
+
+    @Test
     public void prefetchTicksCountInB3AndB4AndTheSlowestAreNamed() {
-        GenerationTimers timers = new GenerationTimers();
+        GenerationTimers timers = new GenerationTimers(() -> 0L);
         for (int i = 0; i < 100; i++) {
             timers.record(GenerationTimers.Series.PROVIDE, TerrainPhase.ChunkClass.CITY, 8_000_000L);
             timers.record(GenerationTimers.Series.POPULATE, TerrainPhase.ChunkClass.CITY, 20_000_000L);
