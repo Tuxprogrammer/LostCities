@@ -10,6 +10,8 @@ import com.tuxprogrammer.lostcities.scenario.BuiltinScenarios;
 import com.tuxprogrammer.lostcities.scenario.ScenarioAutorun;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
+import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
+import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -45,13 +47,16 @@ public class CommonProxy {
     }
 
     /**
-     * Registers event handlers. The built-in scenarios are always registered, since a registry entry does nothing on
+     * Registers event handlers: the overlay's installer and population vetoes (docs/design/0005-rwg-overlay.md §1),
+     * then the scenarios. The built-in and overlay scenarios are always registered, since a registry entry does nothing on
      * its own; the scenario runner listens to server ticks only where the test hooks are on.
      *
      * @param event FML's initialization event
      */
     public void init(FMLInitializationEvent event) {
+        Overlays.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
         }
@@ -85,11 +90,13 @@ public class CommonProxy {
     }
 
     /**
-     * Forgets any scenario run of the server that stopped, so an integrated server started next starts clean.
+     * Forgets any scenario run and every wrapped world of the server that stopped, so an integrated server started
+     * next starts clean.
      *
      * @param event FML's server-stopped event
      */
     public void serverStopped(FMLServerStoppedEvent event) {
         ScenarioRunner.INSTANCE.reset();
+        Overlays.INSTANCE.reset();
     }
 }
