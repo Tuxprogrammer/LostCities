@@ -71,7 +71,8 @@ public interface ILostChunkInfo {
 
     /**
      * Returns the scattered structure whose footprint holds the chunk: its world-style entry's id, such as
-     * {@code lostcities:cabin}, or {@code null} for none. Pure: a chunk not generated yet answers what will stand there.
+     * {@code lostcities:cabin}, or {@code null} for none. Pure: a chunk not generated yet answers what will stand
+     * there.
      */
     String getScatteredStructure();
 
