@@ -69,12 +69,26 @@ public final class HighwayPlanner {
      */
     static final int OBSTACLE_WINDOW = 16;
 
-    /** Upstream's cache sizes, in entries. */
-    static final int HUB_CACHE = 4096;
-    static final int CANDIDATE_CACHE = 2048;
-    static final int SELECTION_CACHE = 2048;
-    static final int ROUTE_CACHE = 2048;
-    static final int CHUNK_CACHE = 8192;
+    /**
+     * Cache sizes, in entries. Upstream keeps 4096 hubs, 2048 candidate, selection and route lists and 8192 chunks;
+     * here they are smaller, so a world's caches stay within budget B5 (16 MB, 0005 §8): a chunk query reads the hubs
+     * of at most 17 × 17 cells and the routes of 9 × 9, and the plan cache shields the chunk cache from most repeats.
+     */
+    static final int HUB_CACHE = 1024;
+    static final int CANDIDATE_CACHE = 256;
+    static final int SELECTION_CACHE = 256;
+    static final int ROUTE_CACHE = 256;
+    static final int CHUNK_CACHE = 1024;
+    /** Estimated bytes of a cached hub with its key and map entry. */
+    static final int HUB_BYTES = 112;
+    /** Estimated bytes of one candidate in a cached list. */
+    static final int CANDIDATE_BYTES = 80;
+    /** Estimated bytes of a cached route: its hubs, runs, segments and ends. */
+    static final int ROUTE_BYTES = 480;
+    /** Estimated bytes of a cached chunk answer with its decks and hits. */
+    static final int CHUNK_BYTES = 256;
+    /** Estimated bytes of any other cache entry: a key, a small value and the map entry. */
+    static final int ENTRY_BYTES = 96;
 
     private static final Hub NO_HUB = new Hub(new HubKey(0, 0), 0, 0, -1, 0);
 
@@ -724,6 +738,23 @@ public final class HighwayPlanner {
             return candidate;
         }
         return current;
+    }
+
+    /**
+     * Returns the most memory the planner's caches can hold, estimated, in bytes, for budget B5: the caches are
+     * bounded, so this is a ceiling, not a measurement.
+     *
+     * @return bytes
+     */
+    public long estimatedCacheBytes() {
+        int radius = settings.hubSearchRadiusCells();
+        int candidatesPerHub = (2 * radius + 1) * (2 * radius + 1) - 1;
+        int routesPerOwner = settings.maximumConnectionsPerHub();
+        return (long) HUB_CACHE * HUB_BYTES + (long) CANDIDATE_CACHE * (ENTRY_BYTES + candidatesPerHub * CANDIDATE_BYTES)
+            + (long) SELECTION_CACHE * (ENTRY_BYTES + routesPerOwner * 16L)
+            + (long) ROUTE_CACHE * (ENTRY_BYTES + (long) routesPerOwner * ROUTE_BYTES)
+            + (long) ROUTE_CACHE * ENTRY_BYTES
+            + (long) CHUNK_CACHE * CHUNK_BYTES;
     }
 
     /** Returns hub, chunk and route cache counts, for the debug output: hits, misses and sizes. */

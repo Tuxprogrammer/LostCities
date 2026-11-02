@@ -119,7 +119,10 @@ public final class LayoutCityPlan implements CityPlan {
         long layout = (long) LAYOUT_CACHE_SIZE * LAYOUT_CACHES * LAYOUT_ENTRY_BYTES;
         long palettes = (long) (CityPalettes.CHUNK_CAPACITY + CityPalettes.PART_CAPACITY) * PALETTE_BYTES;
         long styles = (long) CityPalettes.STYLE_CAPACITY * STYLE_BYTES;
-        return layout + palettes + styles;
+        long networks = planner.networks() == null ? 0
+            : planner.networks()
+                .estimatedCacheBytes();
+        return layout + palettes + styles + networks;
     }
 
     @Override

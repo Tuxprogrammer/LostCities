@@ -47,7 +47,15 @@ public final class CityFinder {
         /** A landmark core or a chunk of its margin. */
         RESERVED,
         /** A chunk of a village's sewing: a gate, lane or link chunk. */
-        VILLAGE;
+        VILLAGE,
+        /** A straight highway piece above ground with highway ahead of it along its axis (M06). */
+        HIGHWAY,
+        /** A highway ramp above ground: where a highway climbs or falls to a city or a dead end (M06, AR-10). */
+        RAMP,
+        /** A railway station: a surface station, or else an underground one (M06). */
+        STATION,
+        /** A straight railway line in its tunnel, seen from inside (M06). */
+        RAILWAY;
 
         /** Returns the lower-case name the command takes. */
         public String key() {
@@ -373,9 +381,175 @@ public final class CityFinder {
                 return softEdge(chunkX, chunkZ);
             case RESERVED:
                 return reserved(chunkX, chunkZ);
+            case HIGHWAY:
+                return highway(chunkX, chunkZ);
+            case RAMP:
+                return ramp(chunkX, chunkZ);
+            case STATION:
+                return station(chunkX, chunkZ);
+            case RAILWAY:
+                return railway(chunkX, chunkZ);
             default:
                 return village(chunkX, chunkZ);
         }
+    }
+
+    /** Chunks of highway ahead a highway view needs along its axis, its own included. */
+    static final int HIGHWAY_RUN = 4;
+    /** How far behind the chunk's middle along the axis the highway view stands, in blocks. */
+    static final int HIGHWAY_BACK = 12;
+    /** Height of the highway view above the deck. */
+    static final int HIGHWAY_EYE = 9;
+    /** Pitch of the highway view, degrees. */
+    static final float HIGHWAY_PITCH = 18f;
+    /** How far to the side of a ramp its view stands, in blocks. */
+    static final int RAMP_SIDE = 28;
+    /** Height of the ramp view above the ramp's top. */
+    static final int RAMP_EYE = 8;
+    /** Pitch of the ramp view, degrees. */
+    static final float RAMP_PITCH = 15f;
+    /** How far south of a station its view stands, and how high above its floor. */
+    static final int STATION_BACK = 18;
+    static final int STATION_EYE = 11;
+    /** Pitch of the station view, degrees. */
+    static final float STATION_PITCH = 25f;
+
+    private com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece abovePiece(int chunkX, int chunkZ,
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape shape) {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        if (networks == null) {
+            return null;
+        }
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo info = networks.highway(chunkX, chunkZ);
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        int natural = plan.chunk(chunkX, chunkZ)
+            .naturalHeight();
+        for (com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece piece : info.pieces(chunkX, chunkZ)) {
+            if (piece.shape() == shape && !layout.isTunnel(piece.topLevel(), natural)) {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    private Result highway(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece piece = abovePiece(
+            chunkX,
+            chunkZ,
+            com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape.STRAIGHT);
+        if (piece == null) {
+            return null;
+        }
+        boolean alongX = piece.axis() == com.tuxprogrammer.lostcities.layout.highway.Axis.X;
+        for (int ahead = 1; ahead < HIGHWAY_RUN; ahead++) {
+            int x = chunkX + (alongX ? ahead : 0);
+            int z = chunkZ + (alongX ? 0 : ahead);
+            if (!planner.networks()
+                .highway(x, z)
+                .hasHighway()) {
+                return null;
+            }
+        }
+        int deck = planner.profile().groundLevel + piece.level() * ChunkPlan.FLOOR_HEIGHT;
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        // Look east or south along the highway, from behind the chunk's middle.
+        return new Result(
+            Kind.HIGHWAY,
+            chunkX,
+            chunkZ,
+            x,
+            deck,
+            z,
+            x + 0.5 - (alongX ? HIGHWAY_BACK : 0),
+            deck + HIGHWAY_EYE,
+            z + 0.5 - (alongX ? 0 : HIGHWAY_BACK),
+            alongX ? -90f : 0f,
+            HIGHWAY_PITCH,
+            "highway " + piece);
+    }
+
+    private Result ramp(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece piece = abovePiece(
+            chunkX,
+            chunkZ,
+            com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape.RAMP);
+        if (piece == null) {
+            return null;
+        }
+        boolean alongX = piece.axis() == com.tuxprogrammer.lostcities.layout.highway.Axis.X;
+        int top = planner.profile().groundLevel + piece.topLevel() * ChunkPlan.FLOOR_HEIGHT;
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        // Stand to the south of an east-west ramp looking north, or to the west of a north-south one looking east.
+        return new Result(
+            Kind.RAMP,
+            chunkX,
+            chunkZ,
+            x,
+            top,
+            z,
+            x + 0.5 - (alongX ? 0 : RAMP_SIDE),
+            top + RAMP_EYE,
+            z + 0.5 + (alongX ? RAMP_SIDE : 0),
+            alongX ? 180f : -90f,
+            RAMP_PITCH,
+            "ramp " + piece);
+    }
+
+    private Result station(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        if (networks == null) {
+            return null;
+        }
+        com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = networks.railChunk(chunkX, chunkZ);
+        if (rail.type() != com.tuxprogrammer.lostcities.layout.view.RailChunkType.STATION_SURFACE) {
+            return null;
+        }
+        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.FLOOR_HEIGHT;
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        return new Result(
+            Kind.STATION,
+            chunkX,
+            chunkZ,
+            x,
+            floor,
+            z,
+            x + 0.5,
+            floor + STATION_EYE,
+            z + 0.5 + STATION_BACK,
+            180f,
+            STATION_PITCH,
+            "station " + rail);
+    }
+
+    private Result railway(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        if (networks == null) {
+            return null;
+        }
+        com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = networks.railChunk(chunkX, chunkZ);
+        if (rail.type() != com.tuxprogrammer.lostcities.layout.view.RailChunkType.HORIZONTAL) {
+            return null;
+        }
+        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.FLOOR_HEIGHT;
+        int x = (chunkX << 4) + 1;
+        int z = (chunkZ << 4) + 7;
+        // Inside the tunnel at its west edge, beside the middle track, looking east along the line.
+        return new Result(
+            Kind.RAILWAY,
+            chunkX,
+            chunkZ,
+            x,
+            floor + 1,
+            z,
+            x + 0.5,
+            floor + 2,
+            z + 0.5,
+            -90f,
+            5f,
+            "railway " + rail);
     }
 
     private Result center(int chunkX, int chunkZ) {

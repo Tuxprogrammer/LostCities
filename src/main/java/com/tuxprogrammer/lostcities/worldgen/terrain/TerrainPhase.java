@@ -168,10 +168,9 @@ public final class TerrainPhase {
             boolean rail = network(buffer, chunkX, chunkZ, plan);
             return paved > 0 || rail ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, paved) : UNTOUCHED;
         }
-        if (!plan.isCity() && plan.lane() == null
-            && plan.network() == ChunkContent.NONE
-            && !nearCityOrCore(chunkX, chunkZ)) {
-            return UNTOUCHED;
+        if (!plan.isCity() && plan.lane() == null && !nearCityOrCore(chunkX, chunkZ)) {
+            // Far from every city: nothing but a highway or railway passing through (M06).
+            return network(buffer, chunkX, chunkZ, plan) ? new Result(ChunkClass.BLEND, 0, 0, 0, 0, 0) : UNTOUCHED;
         }
         ChunkPlan[] sides = sides(chunkX, chunkZ);
         DamageArea area = damageArea(chunkX, chunkZ);

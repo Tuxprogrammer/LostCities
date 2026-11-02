@@ -153,6 +153,15 @@ public final class Networks implements InfrastructureView {
             planner.worldStyle.railPartHeight6());
     }
 
+    /**
+     * Returns the most memory the networks' caches can hold, estimated, in bytes, for budget B5.
+     *
+     * @return bytes
+     */
+    public long estimatedCacheBytes() {
+        return highways.estimatedCacheBytes() + railways.estimatedCacheBytes();
+    }
+
     /** Returns the highway planner. */
     public HighwayPlanner highways() {
         return highways;

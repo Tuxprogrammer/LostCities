@@ -52,8 +52,10 @@ public final class RailwayLayout {
     public static final int MIN_RAIL_Y = 5;
     /** Blocks per city level. */
     static final int FLOOR_HEIGHT = 6;
-    /** Entries kept in each cache. */
-    static final int CACHE_SIZE = 8192;
+    /** Entries kept in each cache: the generation front's rail chunks and the lines they read along. */
+    static final int CACHE_SIZE = 1024;
+    /** Estimated bytes of one cache entry: the key, the rail chunk and the map entry. */
+    static final int ENTRY_BYTES = 112;
 
     private final long seed;
     private final RailwaySettings settings;
@@ -95,6 +97,15 @@ public final class RailwayLayout {
 
     private static long key(int x, int z) {
         return ((long) x << 32) ^ (z & 0xffffffffL);
+    }
+
+    /**
+     * Returns the most memory the layout's two caches can hold, estimated, in bytes, for budget B5.
+     *
+     * @return bytes
+     */
+    public long estimatedCacheBytes() {
+        return 2L * CACHE_SIZE * ENTRY_BYTES;
     }
 
     /** Returns the settings. */
