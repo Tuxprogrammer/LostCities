@@ -56,7 +56,7 @@ Blocks per role (a block can hold several roles):
 
 - **1.20 `stone_stairs` are raw-stone stairs**, not smooth-stone stairs. `etfuturum:stone_stairs` uses the plain stone texture, so it is a faithful match after all; block-mapping.md's wording ("smooth-stone stairs") is wrong, the mapping itself is right. Neither it nor `etfuturum:stone_slab:0` (the raw-stone slab) is an ore host, since they are different blocks from `minecraft:stone`.
 - **Metal doors and trapdoors exist**: copper doors and trapdoors are on (`enableCopper=true`), which the "Candidates considered and not used" table did not consider.
-- **Copper is a decorative metal (D29).** Every copper block here (blocks, cut and chiseled copper, grates, bulbs, doors, trapdoors, cut copper stairs and slabs) is gated by the `decorativeMetals.copper` flag and placed as accents only, under the per-building metal cap: bands, trims, fittings, never whole walls, floors or roofs ([index](index.md#decorative-metals-d29)).
+- **Copper is a decorative metal (D29).** Every copper block here (blocks, cut and chiseled copper, grates, bulbs, doors, trapdoors, cut copper stairs and slabs) is gated by the `decorativeMetals.copper` flag and placed as accents only, under the per-building metal cap: bands, trims, fittings, never whole walls, floors or roofs ([index](index.md#decorative-metals-d29)). Like every other decorative metal it belongs to no single style: the weathering stages suit old towns and ruins, the waxed and cut forms suit industrial districts and standard buildings. Upstream's cabin is the one exception to the cap ([index](index.md#decorative-metals-d29)).
 
 ## Blocks
 
@@ -197,30 +197,30 @@ Blocks per role (a block can hold several roles):
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
-| `etfuturum:copper_block:0` | Block of Copper | `wall-accent` | partly | standard, new: old town | unwaxed metas 0-7 weather one stage at a time on random ticks; waxed metas 8-15 never change |
-| `etfuturum:copper_block:1` | Exposed Copper | `wall-accent` | yes | standard, new: old town | upstream's `exposed_copper` |
-| `etfuturum:copper_block:2` | Weathered Copper | `wall-accent` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:3` | Oxidized Copper | `wall-accent` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:4` | Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:5` | Exposed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town | the stairs upstream uses are `exposed_cut_copper_stairs`; slabs `cut_copper_slab:0-7` |
-| `etfuturum:copper_block:6` | Weathered Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:7` | Oxidized Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:8` | Waxed Block of Copper | `wall-accent` | partly | standard, new: old town |  |
-| `etfuturum:copper_block:9` | Waxed Exposed Copper | `wall-accent` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:10` | Waxed Weathered Copper | `wall-accent` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:11` | Waxed Oxidized Copper | `wall-accent` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:12` | Waxed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:13` | Waxed Exposed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:14` | Waxed Weathered Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:copper_block:15` | Waxed Oxidized Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: old town |  |
-| `etfuturum:chiseled_copper:0` | Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town | metas 4-7 waxed |
-| `etfuturum:chiseled_copper:1` | Exposed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:2` | Weathered Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:3` | Oxidized Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:4` | Waxed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:5` | Waxed Exposed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:6` | Waxed Weathered Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
-| `etfuturum:chiseled_copper:7` | Waxed Oxidized Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: old town |  |
+| `etfuturum:copper_block:0` | Block of Copper | `wall-accent` | partly | standard, new: industrial, new: old town | unwaxed metas 0-7 weather one stage at a time on random ticks; waxed metas 8-15 never change |
+| `etfuturum:copper_block:1` | Exposed Copper | `wall-accent` | yes | standard, new: industrial, new: old town | upstream's `exposed_copper` |
+| `etfuturum:copper_block:2` | Weathered Copper | `wall-accent` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:3` | Oxidized Copper | `wall-accent` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:4` | Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:5` | Exposed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town | the stairs upstream uses are `exposed_cut_copper_stairs`; slabs `cut_copper_slab:0-7` |
+| `etfuturum:copper_block:6` | Weathered Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:7` | Oxidized Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:8` | Waxed Block of Copper | `wall-accent` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:9` | Waxed Exposed Copper | `wall-accent` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:10` | Waxed Weathered Copper | `wall-accent` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:11` | Waxed Oxidized Copper | `wall-accent` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:12` | Waxed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:13` | Waxed Exposed Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:14` | Waxed Weathered Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:copper_block:15` | Waxed Oxidized Cut Copper | `wall-accent`, `trim-pillar` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:0` | Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town | metas 4-7 waxed |
+| `etfuturum:chiseled_copper:1` | Exposed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:2` | Weathered Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:3` | Oxidized Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:4` | Waxed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:5` | Waxed Exposed Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:6` | Waxed Weathered Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
+| `etfuturum:chiseled_copper:7` | Waxed Oxidized Chiseled Copper | `wall-accent`, `trim-pillar` | partly | standard, new: industrial, new: old town |  |
 | `etfuturum:copper_grate:0` | Copper Grate | `fence-rail`, `special` | partly | new: industrial, standard | see-through lattice block (render pass, not a full occluder); catwalks, vents and railings |
 | `etfuturum:copper_grate:1` | Exposed Copper Grate | `fence-rail`, `special` | partly | new: industrial, standard |  |
 | `etfuturum:copper_grate:2` | Weathered Copper Grate | `fence-rail`, `special` | partly | new: industrial, standard |  |
@@ -358,14 +358,14 @@ Blocks per role (a block can hold several roles):
 | `etfuturum:tuff_slab:0` | Tuff Slab | `stairs-slab` | partly | standard | a slab is a separate block from `etfuturum:tuff`, so not an ore host |
 | `etfuturum:tuff_slab:1` | Polished Tuff Slab | `stairs-slab` | yes | standard |  |
 | `etfuturum:tuff_slab:2` | Tuff Brick Slab | `stairs-slab` | yes | standard |  |
-| `etfuturum:cut_copper_slab:0` | Cut Copper Slab | `stairs-slab` | yes | standard, new: old town | metas 4-7 waxed |
-| `etfuturum:cut_copper_slab:1` | Exposed Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:2` | Weathered Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:3` | Oxidized Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:4` | Waxed Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:5` | Waxed Exposed Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:6` | Waxed Weathered Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:cut_copper_slab:7` | Waxed Oxidized Cut Copper Slab | `stairs-slab` | yes | standard, new: old town |  |
+| `etfuturum:cut_copper_slab:0` | Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town | metas 4-7 waxed |
+| `etfuturum:cut_copper_slab:1` | Exposed Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:2` | Weathered Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:3` | Oxidized Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:4` | Waxed Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:5` | Waxed Exposed Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:6` | Waxed Weathered Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:cut_copper_slab:7` | Waxed Oxidized Cut Copper Slab | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
 | `etfuturum:blackstone_slab:0` | Blackstone Slab | `stairs-slab` | yes | standard, border |  |
 | `etfuturum:blackstone_slab:1` | Polished Blackstone Slab | `stairs-slab` | yes | standard, border | upstream's `polished_blackstone_slab` is meta 1 |
 | `etfuturum:blackstone_slab:2` | Polished Blackstone Brick Slab | `stairs-slab` | yes | standard, border |  |
@@ -386,14 +386,14 @@ Blocks per role (a block can hold several roles):
 | `etfuturum:tuff_stairs:0-7` | Tuff Stairs | `stairs-slab` | partly | standard |  |
 | `etfuturum:polished_tuff_stairs:0-7` | Polished Tuff Stairs | `stairs-slab` | yes | standard |  |
 | `etfuturum:tuff_brick_stairs:0-7` | Tuff Brick Stairs | `stairs-slab` | yes | standard |  |
-| `etfuturum:cut_copper_stairs:0-7` | Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:exposed_cut_copper_stairs:0-7` | Exposed Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town | upstream's; unwaxed stairs weather |
-| `etfuturum:weathered_cut_copper_stairs:0-7` | Weathered Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:oxidized_cut_copper_stairs:0-7` | Oxidized Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:waxed_cut_copper_stairs:0-7` | Waxed Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:waxed_exposed_cut_copper_stairs:0-7` | Waxed Exposed Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:waxed_weathered_cut_copper_stairs:0-7` | Waxed Weathered Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
-| `etfuturum:waxed_oxidized_cut_copper_stairs:0-7` | Waxed Oxidized Cut Copper Stairs | `stairs-slab` | yes | standard, new: old town |  |
+| `etfuturum:cut_copper_stairs:0-7` | Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:exposed_cut_copper_stairs:0-7` | Exposed Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town | upstream's; unwaxed stairs weather |
+| `etfuturum:weathered_cut_copper_stairs:0-7` | Weathered Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:oxidized_cut_copper_stairs:0-7` | Oxidized Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:waxed_cut_copper_stairs:0-7` | Waxed Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:waxed_exposed_cut_copper_stairs:0-7` | Waxed Exposed Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:waxed_weathered_cut_copper_stairs:0-7` | Waxed Weathered Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
+| `etfuturum:waxed_oxidized_cut_copper_stairs:0-7` | Waxed Oxidized Cut Copper Stairs | `stairs-slab` | yes | standard, new: industrial, new: old town |  |
 | `etfuturum:blackstone_stairs:0-7` | Blackstone Stairs | `stairs-slab` | partly | standard |  |
 | `etfuturum:polished_blackstone_stairs:0-7` | Polished Blackstone Stairs | `stairs-slab` | yes | standard, border |  |
 | `etfuturum:polished_blackstone_brick_stairs:0-7` | Polished Blackstone Brick Stairs | `stairs-slab` | yes | standard, border |  |

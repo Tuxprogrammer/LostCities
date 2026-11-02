@@ -1149,7 +1149,7 @@ The other metals at or below EV that the catalogs list (annealed copper, black b
 
 **Above EV, never placed:** tungstensteel (the IV casing metal, blast 4000K: [#L11678-L11700][gt-tungstensteel]), iridium and osmium (blast 4500K: [#L838-L863][gt-iridium], [#L1316-L1342][gt-osmium]), platinum and uranium (D29), and Chisel's rhodium-plated palladium (`rppblock`; bartworks' material is a 4500K blast-furnace metal, [WerkstoffLoader.java#L1311-L1333][bw-rpp], and the group keys `rppBlock`, which nothing registers). That covers Chisel's `tungstensteelblock`, `iridiumblock`, `osmiumblock`, `platinumblock`, `uraniumblock` and `rppblock`, GT's tungstensteel and uranium blocks, and IC2's uranium block.
 
-**Upstream's cabin** is the one building upstream makes of copper (exposed copper walls and cut copper stairs, [cabin](#cabin)). It keeps upstream's palette while `decorativeMetals.copper` is on, which is a wider use than D29's accent cap; with the flag off, it falls back to spruce planks and stairs. That exception needs the owner's confirmation at the M11 palette review.
+**Upstream's cabin** is the one building upstream makes of copper (exposed copper walls and cut copper stairs, [cabin](#cabin)). It keeps upstream's palette while `decorativeMetals.copper` is on, the one exception to D29's accent cap, confirmed by the owner; with the flag off, it falls back to spruce planks and stairs.
 
 [gt-casings]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/postload/recipes/AssemblerRecipes.java#L2570-L2618
 [gt-coils]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/api/enums/HeatingCoilLevel.java#L10-L15
