@@ -70,6 +70,8 @@ public final class WitcheryScenario implements Scenario {
     static final int PREDICTED = 8;
     /** Rejected candidates generated. */
     static final int REJECTED = 6;
+    /** Blocks around a lot scanned for structure blocks that spill out of it. */
+    static final int SPILL_RING = 6;
     /** Heights scanned for Witchery blocks around a structure. */
     static final int SCAN_MIN_Y = 40;
     /** Highest height scanned. */
@@ -371,10 +373,12 @@ public final class WitcheryScenario implements Scenario {
      * Counts structure blocks around a structure in chunks the city does not hold: {@code {inside the lot, outside
      * it}}. Witchery's structures are built mostly of vanilla blocks; the ones counted are those its covens, shacks,
      * wicker men and hobgoblin huts place and RWG's natural decoration does not ({@link #STRUCTURE_BLOCKS}), plus any
-     * block Witchery registers.
+     * block Witchery registers. Only the lot grown by {@value #SPILL_RING} blocks is scanned: a Witchery box cannot
+     * reach farther, and other structures (a village house a few blocks away) would otherwise count.
      */
     private int[] witcheryBlocks(WorldServer world, int[] target) {
         BlockRect lot = oracle.lot(target[0], target[1]);
+        BlockRect scanned = lot.grow(SPILL_RING);
         OverlayWorld overlay = Overlays.INSTANCE.get(world);
         CityPlan plan = overlay == null ? null : overlay.plan();
         int inside = 0;
@@ -398,6 +402,9 @@ public final class WitcheryScenario implements Scenario {
                                 || STRUCTURE_BLOCKS.contains(name))) {
                                 int worldX = (cx << 4) + x;
                                 int worldZ = (cz << 4) + z;
+                                if (!scanned.contains(worldX, worldZ)) {
+                                    continue;
+                                }
                                 if (lot.contains(worldX, worldZ)) {
                                     inside++;
                                 } else {
