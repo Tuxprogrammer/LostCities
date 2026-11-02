@@ -23,6 +23,7 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.GtnhLayerScenario;
+import com.tuxprogrammer.lostcities.worldgen.overlay.OracleCostScenario;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 import com.tuxprogrammer.lostcities.worldgen.overlay.ProfileScenarios;
@@ -89,6 +90,7 @@ public class CommonProxy {
         WitcheryScenario.registerAll(ScenarioRegistry.INSTANCE);
         Rwg2Landmarks.registerScenarios(ScenarioRegistry.INSTANCE);
         GtnhLayerScenario.registerAll(ScenarioRegistry.INSTANCE);
+        OracleCostScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
         }

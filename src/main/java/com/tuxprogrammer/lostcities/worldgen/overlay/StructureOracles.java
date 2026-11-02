@@ -71,6 +71,15 @@ public final class StructureOracles {
     }
 
     /**
+     * Returns the name of each factory of {@link #factories()}, in the same order, for log lines.
+     *
+     * @return the names
+     */
+    public static List<String> factoryNames() {
+        return java.util.Arrays.asList("villagenames", "roguelike", "witchery", "lootgames", "ae2", "rwg2");
+    }
+
+    /**
      * Returns the composite oracle of a world over every factory.
      *
      * @param world          the world
