@@ -142,10 +142,7 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights);
-        PlannerCityNearness nearness = new PlannerCityNearness();
-        StructureOracle structures = timed(
-            StructureOracles.forWorld(world, oracle, settings.landmarkMargin(), nearness),
-            timers);
+        StructureOracle structures = timed(StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(
@@ -163,7 +160,6 @@ public final class OverlayWorld {
                 .log(message -> LostCities.LOG.warn("[layout] {}", message))
                 .cacheSize(LayoutCityPlan.LAYOUT_CACHE_SIZE)
                 .build());
-        nearness.set(planner);
         CityWriteContext context = new CityWriteContext(
             world.getSeed(),
             planner,
