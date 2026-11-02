@@ -243,19 +243,17 @@ public final class LayoutCityPlan implements CityPlan {
             }
         }
         if (!plan.hasBuilding()) {
-            builder.keepClear(CityChunkWriter.doorApproaches(planner, chunkX, chunkZ));
-            for (com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side side : com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side
-                .values()) {
-                builder.borderOpenings(side, borderOpenings(chunkX, chunkZ, side));
-            }
+            builder.edgeSource(() -> edges(chunkX, chunkZ));
         }
+
         return builder.footprint(footprint)
             .build();
     }
 
     /** Returns whether a street chunk is a park or open lot, whose columns stay outside the footprint. */
     private boolean isPark(ChunkPlan plan, int chunkX, int chunkZ) {
-        return plan.streetType() == StreetType.PARK || planner.isElevatedParkSection(chunkX, chunkZ);
+        // An elevated park is a park too (the planner raises only PARK chunks), so no neighbor need be asked.
+        return plan.streetType() == StreetType.PARK;
     }
 
     private ChunkContent cityContent(int chunkX, int chunkZ) {
@@ -314,6 +312,19 @@ public final class LayoutCityPlan implements CityPlan {
             writer.writeBridge();
         }
         return target.jobs();
+    }
+
+    /** The border openings and door approaches of a street chunk, asked only by its own terrain phase. */
+    private com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Edges edges(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side[] sides = com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side
+            .values();
+        int[] openings = new int[sides.length];
+        for (com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Side side : sides) {
+            openings[side.ordinal()] = borderOpenings(chunkX, chunkZ, side);
+        }
+        return new com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Edges(
+            openings,
+            CityChunkWriter.doorApproaches(planner, chunkX, chunkZ));
     }
 
     /**

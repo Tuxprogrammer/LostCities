@@ -61,8 +61,9 @@ public final class ChunkPlan {
     private final List<PopulationJob> fixedJobs;
     private final Supplier<List<PopulationJob>> jobSource;
     private List<PopulationJob> jobs;
-    private final int[] borderOpenings;
-    private final long[] keepClear;
+    private int[] borderOpenings;
+    private long[] keepClear;
+    private Supplier<Edges> edgeSource;
     private final String label;
 
     private ChunkPlan(Builder b) {
@@ -87,6 +88,7 @@ public final class ChunkPlan {
         this.jobs = b.jobSource == null ? fixedJobs : null;
         this.borderOpenings = b.borderOpenings.clone();
         this.keepClear = b.keepClear;
+        this.edgeSource = b.edgeSource;
         this.label = b.label;
     }
 
@@ -274,11 +276,62 @@ public final class ChunkPlan {
      * @return whether the column stays clear
      */
     public boolean keepsClear(int x, int z) {
+        resolveEdges();
         if (keepClear == null) {
             return false;
         }
         int index = (z << 4) | x;
         return (keepClear[index >> 6] & (1L << (index & 63))) != 0;
+    }
+
+    /** Asks the edge source once, the first time a border opening or a kept-clear column is read. */
+    private void resolveEdges() {
+        Supplier<Edges> source = edgeSource;
+        if (source == null) {
+            return;
+        }
+        Edges edges = source.get();
+        for (Side side : Side.values()) {
+            borderOpenings[side.ordinal()] = edges.openings[side.ordinal()] & 0xFFFF;
+        }
+        keepClear = pack(edges.keepClear);
+        edgeSource = null;
+    }
+
+    /**
+     * What a chunk's own terrain phase reads at its edges, made lazily because a plan is asked for far more often as a
+     * neighbor than for its own chunk: the border openings of each side and the door approaches.
+     */
+    public static final class Edges {
+
+        final int[] openings;
+        final boolean[] keepClear;
+
+        /**
+         * Collects the edges.
+         *
+         * @param openings  4 masks in {@link Side} order
+         * @param keepClear 256 flags, or {@code null}
+         */
+        public Edges(int[] openings, boolean[] keepClear) {
+            this.openings = openings.clone();
+            this.keepClear = keepClear;
+        }
+    }
+
+    private static long[] pack(boolean[] columns) {
+        if (columns == null) {
+            return null;
+        }
+        long[] bits = new long[4];
+        boolean any = false;
+        for (int i = 0; i < 256; i++) {
+            if (columns[i]) {
+                bits[i >> 6] |= 1L << (i & 63);
+                any = true;
+            }
+        }
+        return any ? bits : null;
     }
 
     /**
@@ -297,6 +350,7 @@ public final class ChunkPlan {
      * @return a 16-bit mask
      */
     public int borderOpenings(Side side) {
+        resolveEdges();
         return borderOpenings[side.ordinal()];
     }
 
@@ -338,6 +392,7 @@ public final class ChunkPlan {
         private Supplier<List<PopulationJob>> jobSource;
         private final int[] borderOpenings = new int[4];
         private long[] keepClear;
+        private Supplier<Edges> edgeSource;
         private String label = "";
 
         private Builder(int chunkX, int chunkZ, ChunkKind kind) {
@@ -471,19 +526,19 @@ public final class ChunkPlan {
          * @return this
          */
         public Builder keepClear(boolean[] columns) {
-            if (columns == null) {
-                this.keepClear = null;
-                return this;
-            }
-            long[] bits = new long[4];
-            boolean any = false;
-            for (int i = 0; i < 256; i++) {
-                if (columns[i]) {
-                    bits[i >> 6] |= 1L << (i & 63);
-                    any = true;
-                }
-            }
-            this.keepClear = any ? bits : null;
+            this.keepClear = pack(columns);
+            return this;
+        }
+
+        /**
+         * Sets a pure, lazily asked source of the border openings and door approaches, replacing what
+         * {@link #borderOpenings} and {@link #keepClear} set.
+         *
+         * @param source the source; asked at most once per plan
+         * @return this
+         */
+        public Builder edgeSource(Supplier<Edges> source) {
+            this.edgeSource = Objects.requireNonNull(source);
             return this;
         }
 
