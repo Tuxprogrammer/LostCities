@@ -86,7 +86,7 @@ Root package: `com.tuxprogrammer.lostcities`. Target layout:
 | Package | Contents |
 |---|---|
 | `lostcities` | `@Mod` entry class, `CommonProxy`, `Tags` (generated) |
-| `lostcities.api` | Stable interfaces other mods may use, kept minimal and documented |
+| `lostcities.api` | Stable interfaces other mods may use, kept minimal and documented ([docs/api.md](docs/api.md)); the implementation is in `lostcities.core.api` |
 | `lostcities.core` | Module system, registration helpers, logging, the dev self-check |
 | `lostcities.config` | Mod config (GTNHLib) and the profile system |
 | `lostcities.asset` | The JSON asset system: loading, validation and the in-memory model of buildings, parts, palettes and styles. Pure Java |
@@ -94,6 +94,7 @@ Root package: `com.tuxprogrammer.lostcities`. Target layout:
 | `lostcities.worldgen` | Minecraft glue: world type or chunk provider hooks, terrain, writing parts into chunks, population |
 | `lostcities.block`, `lostcities.item` | Blocks and items this mod owns, if any |
 | `lostcities.command` | Operator and debug commands |
+| `lostcities.editor` | The part editor: part records, edit sessions, placing parts and exporting them |
 | `lostcities.network` | Channel, packet base classes, packet types |
 | `lostcities.compat` | Optional integrations, one package per mod, each guarded |
 | `lostcities.scenario` | The dev-only in-world test harness |

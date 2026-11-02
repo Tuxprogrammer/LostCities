@@ -276,6 +276,61 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         return new ChunkLayout(this, chunkX, chunkZ);
     }
 
+    /** Returns the highways and railways the layout plans around (M06's, or none). */
+    public InfrastructureView infrastructure() {
+        return infrastructure;
+    }
+
+    /**
+     * Picks the levels of a building forced into a chunk, as upstream's {@code BuildingInfo.setBuildingType} does for
+     * {@code /lostcities createbuilding}: one part and one overlay part per level, from the lowest cellar up, drawn
+     * from a fresh building random of the chunk, with the chunk's city level. The chunk's cached plan is read, never
+     * changed (avoids CORE-32), so generation and other queries keep seeing the planned chunk.
+     *
+     * @param chunkX   chunk X
+     * @param chunkZ   chunk Z
+     * @param building the building's name
+     * @param floors   floors above ground, at least 1
+     * @param cellars  cellars, at least 0
+     * @return the levels, or {@code null} when the building is unknown or a level matches no part
+     */
+    public ForcedBuilding forcedBuilding(int chunkX, int chunkZ, String building, int floors, int cellars) {
+        BuildingView view = assets.building(building);
+        if (view == null || floors < 1 || cellars < 0) {
+            return null;
+        }
+        int cityLevel = characteristics(chunkX, chunkZ).cityLevel;
+        QualityRandom random = buildingRandom(chunkX, chunkZ);
+        int levels = floors + cellars + 1;
+        String[] parts = new String[levels];
+        String[] parts2 = new String[levels];
+        String below = PartContext.NONE;
+        for (int i = 0; i < levels; i++) {
+            int floor = i - cellars;
+            String part = view.pickPart(
+                random,
+                new PartContext(
+                    cityLevel + floor,
+                    floor,
+                    cellars,
+                    floors,
+                    PartContext.NONE,
+                    below,
+                    view.name(),
+                    chunkX,
+                    chunkZ));
+            if (part == null) {
+                return null;
+            }
+            parts[i] = part;
+            below = part;
+            parts2[i] = view.pickPart2(
+                random,
+                new PartContext(cityLevel + floor, floor, cellars, floors, part, below, view.name(), chunkX, chunkZ));
+        }
+        return new ForcedBuilding(view.name(), floors, cellars, parts, parts2);
+    }
+
     // ================================================================== characteristics
 
     private ChunkCharacteristics computeCharacteristics(int x, int z) {
