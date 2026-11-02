@@ -61,6 +61,16 @@ public class PortedCodeGateTest {
     }
 
     @Test
+    public void headerWrappedBySpotlessPasses() throws Exception {
+        assertEquals(Collections.emptyList(), checkFixture("wrapped", "WrappedPort"));
+    }
+
+    @Test
+    public void wrappedAvoidsIdsAreCheckedToo() throws Exception {
+        assertRule("wrappeduntested", "WrappedUntested", PortedCodeGate.AVOIDS_UNTESTED);
+    }
+
+    @Test
     public void permalinkToAnUncitedCommitFails() throws Exception {
         assertRule("badlink", "BadLink", PortedCodeGate.PERMALINK);
     }
