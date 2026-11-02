@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Accepted (decision log D26)
+- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core)
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01
@@ -39,13 +39,15 @@ Around each landmark the layout derives three zones, whole chunks as upstream's 
 
 | Zone | Chunks | What the city does there |
 |---|---|---|
-| **Core** | Every chunk the footprint, grown by `landmarkMargin` (2 blocks), touches | Nothing but a village lane's surface path (§3). Not a city chunk; no building, street, foundation, cellar, corridor, highway, railway, blend, decoration clearing or T2 denial. RWG's terrain and decoration stay |
+| **Core** | Every chunk the footprint, grown by `landmarkMargin` (2 blocks), touches | Nothing but a village lane's surface path (§3). Not a city chunk; no building, street, foundation, cellar, corridor, highway, railway (except a deep railway, below), blend, decoration clearing or T2 denial. RWG's terrain and decoration stay |
 | **Edge ring** | City chunks among the core's eight-neighbors | City chunks without buildings, cellars, corridors, subways or rail dungeons. Each is a park, a plaza (where a road ends facing the landmark), or a road passing by. Sides facing the core get soft-edge strips (§4) |
 | **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town |
 
 An AE2 meteorite that lands in a city gets a **crater basin**: its core is natural ground for the impact, and its heightCap applies to every city chunk it reaches, capping a building's floors so its roof stays below the paraboloid. The city steps down toward the impact instead of being sliced by the crater (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
 
 Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and no edge ring: the city ends there, and the chunk-scale blend (§4, E1) shapes the land between.
+
+**Deep railways** (decision log D30) are the one exception to "no railway" in a core. A railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground may pass under the core. Nothing changes at the surface: a surface station whose spot is inside a core is still dropped, and a rail line too shallow to pass under ends before the core ([06-highways-railways](../new-spec/06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)).
 
 Chunk granularity keeps upstream's planner, multibuilding placement, street rendering and blend unchanged in kind. The cost is that a small structure on a chunk corner reserves up to four chunks; the soft-edge strip and the edge ring's parks make that space read as a green rather than a gap.
 
@@ -129,7 +131,7 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
   - No writes in cores, including the footprint write guard and T2 denial, apart from village lanes' surface paths.
   - The E1 blend anchor; soft-edge strips; lane writing on blended ground and across village cores.
   - Oracle calls inside the time budget (B1 to B5).
-- **M06 (highways and railways):** cores are obstacles; the planners route around them or end before them.
+- **M06 (highways and railways):** cores are obstacles; the planners route around them or end before them, and deep railways pass under them (§1, D30).
 - **M07 (scattered structures):** upstream's `StructureAvoidance` is replaced by this record, not ported; scattered structures stay out of cores and edge rings.
 - **M08 (GTNH layer):**
   - The per-mod oracles in `compat.villagenames`, `compat.roguelike`, `compat.witchery`, `compat.lootgames`, `compat.ae2` and `compat.rwg2`.

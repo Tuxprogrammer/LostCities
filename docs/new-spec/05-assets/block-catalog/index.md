@@ -153,7 +153,7 @@ Characters that keep upstream's block with no pool: `~` and `b` (structure void)
 4. **GT casings** wait for the GTNH-themed buildings ([below](#reserved-for-the-gtnh-themed-buildings)); machine hulls are never placed.
 5. **MalisisDoors** supplies every wood door and the iron trapdoor ([doors](#doors)).
 6. **Tile entities** are allowed in palette entries. Bulk variety prefers blocks whose look is in metadata, so tile-entity candidates carry low weights and minority roles.
-7. **Never placed**: the [never-place list](#never-placed). D29 relaxes it for metals: each metal at or below EV that a city can use comes back as capped accents behind its own flag ([decorative metals](#decorative-metals-d29)).
+7. **Never placed**: the [never-place list](#never-placed), which exempts vanilla spawners from the hardness rule. D29 relaxes it for metals: each metal at or below EV that a city can use comes back as capped accents behind its own flag ([decorative metals](#decorative-metals-d29)).
 
 ### Brick and stone walls
 
@@ -1100,7 +1100,8 @@ The `oilrig` palette (38 characters). Faithful first; its industrial set dressin
 | `s`, `N`, `U` (barrels) | `etfuturum:barrel` | `ProjRed\|Exploration:projectred.exploration.barrel:0` |
 | `&`, `3` (red, yellow concrete) | `etfuturum:concrete:14`, `:4` | `chisel:hempcrete:14`, `:4` |
 | `E` (oak fence), `\|` (redstone torch), `L`, `r` (levers) | vanilla | `dreamcraft:SteelBars`, `StainlessSteelBars` as guard rails |
-| `M` (diamond block), `q` (obsidian) | vanilla | none; `M` is on the [beta balance list](../../beta-balance-list.md) |
+| `M` (diamond block) | `Ztones:tile.iszmBlock:8` (smooth pale aqua, the closest match to the diamond block's color), then `chisel:hempcrete:3`, then `minecraft:stained_hardened_clay:3` | none. A non-valuable look-alike: no diamond block is placed outside loot (D30) |
+| `q` (obsidian) | vanilla | none |
 | deck | `minecraft:double_stone_slab:8` (`2`) | `GalacticraftMars:tile.walkway`, `Railcraft:cube:8` (creosote block) |
 
 #### Cabin
@@ -1215,7 +1216,7 @@ The casings [gregtech.md](gregtech.md) marks with an unverified tier (`gregtech:
 
 ## Never placed
 
-D28 rule 7, with the pack's other hazards. The never-place list applies to every palette, override and generated part.
+D28 rule 7, with the pack's other hazards. The never-place list applies to every palette, override and generated part. Vanilla spawners (`minecraft:mob_spawner`) are exempt from the hardness rule: GT makes them hardness 500 (`harderMobSpawner`, [loot-and-mobs.md](../../00-pack-integration/loot-and-mobs.md)), but D20 places them at upstream's density, and "Spawner density and GT's spawner hardness" is on the [beta balance list](../../beta-balance-list.md).
 
 | Reason | Blocks |
 |---|---|

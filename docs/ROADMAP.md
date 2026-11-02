@@ -58,7 +58,7 @@ Two gates matter most:
 
 ## Spikes
 
-Status: **S1, S2 and S4 are done; S3's pack research is done** (2026-11-01). S4's catalog and variety pools follow decision log D25, D28 and D29. Open questions Q1 to Q10 are settled ([OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md)). What remains of S3 is the new-spec areas `01` to `09`, each a deviation table built from the decisions already taken.
+Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec areas `00` to `09` are written, each of `01` to `09` a deviation table built from the decisions already taken. S4's catalog and variety pools follow decision log D25, D28 and D29. Open questions Q1 to Q13 are settled; the *Proposed* items the areas leave open are listed in [OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md#open), each with the milestone or owner that settles it.
 
 | Spike | Delivers | Before | Lane |
 |---|---|---|---|
@@ -98,7 +98,7 @@ Status: **S1, S2 and S4 are done; S3's pack research is done** (2026-11-01). S4'
 
 **Lane:** Assets. **Parallel with:** M03, M04.
 
-**Entry gate:** M01 done; S1's `05-assets` area written; S3's block-mapping table drafted.
+**Entry gate:** M01 done; S1's `05-assets` area written (met); S3's block-mapping table drafted (met: accepted as D19).
 
 **Scope:** every asset type loaded and validated in plain Java; 1.20 block names mapped to 1.7.10 pack blocks; palette compilation and variants; asset overrides; the bundled assets converted.
 
@@ -106,7 +106,7 @@ Status: **S1, S2 and S4 are done; S3's pack research is done** (2026-11-01). S4'
 
 **Lane:** Layout. **Parallel with:** M02, M04.
 
-**Entry gate:** M01 done; S1's `02-profiles-dimensions` and `04-city-layout` areas written.
+**Entry gate:** M01 done; S1's `02-profiles-dimensions` and `04-city-layout` areas written (met).
 
 **Scope:** city detection, rarity and spheres; city styles; street and bridge planning; building and multibuilding selection; chunk plans; building around other mods' structures ([0006](design/0006-build-around-other-worldgen.md)): the `StructureOracle` interface and landmark data, landmark cores, edge rings and village transition rings, road detours and plazas, village sewing (gates and lanes), and meteorite height caps; all in `layout`, with golden tests against fake oracles.
 
@@ -114,7 +114,7 @@ Status: **S1, S2 and S4 are done; S3's pack research is done** (2026-11-01). S4'
 
 **Lane:** World. **Parallel with:** M02, M03.
 
-**Entry gate:** M01 done; S2's design record accepted; S1's `03-terrain` area written.
+**Entry gate:** M01 done; S2's design record accepted (met: [0005](design/0005-rwg-overlay.md)); S1's `03-terrain` area written (met).
 
 **Scope:** the overlay hook on RWG2 Continents and classic RWG; city terrain and its blend into RWG terrain; the 1.7.10 height mapping; population; explosions and damage; the per-chunk time budget; around landmarks ([0006](design/0006-build-around-other-worldgen.md)): no writes in cores, soft-edge strips instead of border walls, blend corners fixed at a core's natural height, and village lanes laid on the ground.
 

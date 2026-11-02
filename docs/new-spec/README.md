@@ -4,7 +4,7 @@ How this mod differs from Lost Cities 1.20 and how it fits into GT New Horizons.
 
 Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), with RWG2 Continents as the default overworld generator.
 
-Status: **`00-pack-integration` is written and accepted** (spikes S2 and S3). `05-assets` is started with its block catalog only. Areas `01` to `09` are otherwise still to be written: each is a deviation table against its original-spec area, built from the design records and the [decision log](../design/decision-log.md) ([ROADMAP](../ROADMAP.md)).
+Status: **all areas `00` to `09` are written** (spikes S2 to S4). `00-pack-integration` is accepted. Areas `01` to `09` are deviation tables against their original-spec areas, built from the design records and the [decision log](../design/decision-log.md); their rows are *Accepted* where they cite a decision, and every *Proposed* item they leave open is listed in [OPEN-QUESTIONS](OPEN-QUESTIONS.md#open) with what settles it ([ROADMAP](../ROADMAP.md)).
 
 ## What this mod is for
 
@@ -17,7 +17,7 @@ Every change here serves that, and every system uses what the pack already has b
 - Each area mirrors an original-spec area, plus `00-pack-integration` for cross-cutting pack topics. Its `index.md` has a **deviation table**: every original sheet, what this mod does instead, and the decision behind it.
 - **Status words.**
   - *Accepted* means a decision record in [docs/design/](../design/README.md) settles it; the record is linked.
-  - *Proposed* means this spec suggests it and the owner has not decided. Proposals that need the owner are in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with a recommendation.
+  - *Proposed* means this spec suggests it and the owner has not decided. Every proposal is listed in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with its recommendation and what settles it: the milestone that builds it, or the owner.
   - *Verified* facts about other mods cite the file and line at the pack's tag; *unverified* ones say so and must be checked from source before code (`gtnh-integration-research`).
 - Numbers carry units: blocks, chunks, block-Y levels, ticks.
 
@@ -26,15 +26,15 @@ Every change here serves that, and every system uses what the pack already has b
 | Area | What changes |
 |---|---|
 | [`00-pack-integration`](00-pack-integration/index.md) | RWG2 and classic RWG, GT ore veins, the block-mapping table, loot and mob sources, other pack worldgen and structures, every pack mod this mod touches |
-| `01-core` | 1.7.10 lifecycle and registration, GTNHLib config, commands, network, the API |
-| `02-profiles-dimensions` | Profiles on the overworld only; the Lost City dimension is not ported ([0003](../design/0003-world-presence.md)) |
-| `03-terrain` | The overlay on RWG terrain, the 1.7.10 height range, blending, explosions and damage |
-| `04-city-layout` | Layout carried over as is, apart from 1.7.10 and RWG constraints |
-| `05-assets` | The asset system in plain Java, 1.20 blocks mapped to 1.7.10 pack blocks, the bundled assets. Started, catalog only: the [decorative block catalog](05-assets/block-catalog/index.md) and its variety pools (S4, D25, D28) |
-| `06-highways-railways` | Highways and railways over RWG terrain |
-| `07-scattered` | Scattered structures among pack structures |
-| `08-loot-mobs-blocks` | Pack loot at EV or below, pack mobs and vanilla spawners |
-| `09-client-ui` | Whatever client UI survives without a world type of our own |
+| [`01-core`](01-core/index.md) | 1.7.10 lifecycle and registration, GTNHLib config, commands, network, the API |
+| [`02-profiles-dimensions`](02-profiles-dimensions/index.md) | Profiles on the overworld only; the Lost City dimension is not ported ([0003](../design/0003-world-presence.md)) |
+| [`03-terrain`](03-terrain/index.md) | The overlay on RWG terrain, the 1.7.10 height range, blending, explosions and damage |
+| [`04-city-layout`](04-city-layout/index.md) | Layout carried over as is, apart from 1.7.10 and RWG constraints |
+| [`05-assets`](05-assets/index.md) | The asset system in plain Java, 1.20 blocks mapped to 1.7.10 pack blocks, the bundled assets, and the [decorative block catalog](05-assets/block-catalog/index.md) with its variety pools (S4, D25, D28, D29) |
+| [`06-highways-railways`](06-highways-railways/index.md) | Highways and railways over RWG terrain |
+| [`07-scattered`](07-scattered/index.md) | Scattered structures among pack structures |
+| [`08-loot-mobs-blocks`](08-loot-mobs-blocks/index.md) | Pack loot at EV or below, pack mobs and vanilla spawners |
+| [`09-client-ui`](09-client-ui/index.md) | Whatever client UI survives without a world type of our own |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | What is still undecided, who or what settles it, and the recommendation |
 
 ## Decisions this spec builds on

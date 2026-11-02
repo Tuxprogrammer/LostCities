@@ -84,7 +84,7 @@ Blocks per role (a block can hold several roles):
 | `Ztones:tile.iszmBlock:5` | Iszm 5 | `wall-accent`, `wall-main` | partly | standard | smooth blue |
 | `Ztones:tile.iszmBlock:6` | Iszm 6 | `wall-accent`, `wall-main` | partly | standard | smooth red |
 | `Ztones:tile.iszmBlock:7` | Iszm 7 | `wall-accent`, `wall-main` | partly | standard | smooth orange |
-| `Ztones:tile.iszmBlock:8` | Iszm 8 | `wall-accent`, `wall-main` | partly | standard | smooth aqua |
+| `Ztones:tile.iszmBlock:8` | Iszm 8 | `wall-accent`, `wall-main`, `special` | partly | standard | smooth aqua; the oil rig's diamond-block look-alike (D30, [oil rig](index.md#oil-rig)) |
 | `Ztones:tile.iszmBlock:9` | Iszm 9 | `wall-accent`, `wall-main` | partly | standard | smooth yellow |
 | `Ztones:tile.iszmBlock:10` | Iszm 10 | `wall-main`, `wall-accent` | partly | standard, border | smooth maroon |
 | `Ztones:tile.iszmBlock:11` | Iszm 11 | `wall-accent`, `wall-main` | partly | standard | smooth dark teal |

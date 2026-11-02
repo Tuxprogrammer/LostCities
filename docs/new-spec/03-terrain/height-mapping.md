@@ -22,7 +22,7 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names; rows marked
 | Sea level (`seaLevel` −1) | 63 (generator) | 63 | RWG's fill |
 | `seaLevel` override | −1 to 256 | −1 to 255 | −1 → 63 |
 | `groundLevel` | 71, range 2 to 256 | 71, range 2 to 255 | Relative to sea level, unchanged |
-| `bedrockLayer` | 1, range 0 to 10, counted from Y −64 | read, no effect (*Proposed*) | RWG's bedrock fills Y 0 to 4; generation places no unbreakable block ([index](index.md#contradictions-with-other-docs)) |
+| `bedrockLayer` | 1, range 0 to 10, counted from Y −64 | read, no effect; a warning when above 0 | 0005 §6: RWG's bedrock fills Y 0 to 4, and generation places no unbreakable block |
 | Bottom of a building (`minBuild + 2`) | Y −62 | Y 2 | Cellars are dropped one at a time until the bottom is above it |
 | Base under streets (stop) | first solid block or `minBuild + bedrockLayer` | first solid block | On RWG at worst its bedrock |
 
