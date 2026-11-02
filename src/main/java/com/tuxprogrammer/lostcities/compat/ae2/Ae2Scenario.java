@@ -320,7 +320,8 @@ public final class Ae2Scenario implements Scenario {
                 String where = landmark.id() + ": city chunk " + chunkX + "," + chunkZ + " " + plan.zone();
                 int lowest = cap.lowestCapOver(chunkX, chunkZ);
                 context.check(
-                    plan.cityGroundLevel() + com.tuxprogrammer.lostcities.layout.landmark.HeightCap.CITY_HEADROOM - 1 <= lowest,
+                    plan.cityGroundLevel() + com.tuxprogrammer.lostcities.layout.landmark.HeightCap.CITY_HEADROOM - 1
+                        <= lowest,
                     "expected a street's headroom under the crater at " + where
                         + ", ground "
                         + plan.cityGroundLevel()
