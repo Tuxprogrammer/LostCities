@@ -1,6 +1,8 @@
 package com.tuxprogrammer.lostcities;
 
 import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
+import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
+import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesScenario;
 import com.tuxprogrammer.lostcities.config.LostCitiesConfig;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
@@ -67,14 +69,16 @@ public class CommonProxy {
         AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
         CityScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        VillageNamesScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
         }
     }
 
     /**
-     * Loads the assets against the complete block registry, then runs the dev self-check, which throws and so stops
-     * the dev server when it fails.
+     * Loads the assets against the complete block registry, pins the order of FML's village-creation handlers so
+     * VillageNames villages are reproducible (decision log D86), then runs the dev self-check, which throws and
+     * so stops the dev server when it fails.
      *
      * @param event FML's post-initialization event
      */
@@ -82,6 +86,7 @@ public class CommonProxy {
         LoadedAssets.load(
             Loader.instance()
                 .getConfigDir());
+        VillageNamesOracles.init();
         DevSelfCheck.runIfEnabled();
     }
 

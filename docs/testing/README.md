@@ -91,6 +91,7 @@ Run scenarios on new worlds (`--fresh`, or a new `--world`), on both generators:
 | `city.real` | Cities (M05) | Needs a world pinned with the layout source (the default). Prints `[LCNH-CITY] spawn=… nearestCityChunkFromSpawn=… nearestCityChunkFromOrigin=…` (blocks to the center of the nearest city chunk, D53's measure); generates 21 × 21 chunks around the city center nearest the spawn whose region lies outside the spawn area, and checks the 17 × 17 inside: city chunks and buildings exist, 9 in 10 street chunks are paved at the city ground, no log or leaf passed the guard; prints the buildings it saw and `[LCNH-HASH] … terrain=<sha> population=<sha>`, which two fresh worlds of one seed and world type must share (D-M05J-19) | yes |
 | `city.walk` | Cities (M05) | Walkability over the buildings of the spawn's city and of that city: floors with a floor, outer walls closed but for doorways, stairs or ladders between floors, every ground-floor street door opening onto open space; ruined and explosion-damaged buildings exempt. Prints `[LCNH-WALK]` lines with the pass counts and a few failing places (D-M05J-18) | yes |
 | `city.budget` | Cities (M05) | D81's budget method with real content: 65 × 65 chunks from 20 chunks beside the spawn's city, the first 512 dropped; fails when B1 to B5 are exceeded | no (manual-only) |
+| `oracle.villagenames` | VillageNames oracles (M05) | Needs VillageNames, as in the real pack. Scans the village grid cells within 6 cells and the monument cells within 20 cells of chunk (−4096, 4096) (`-Dlostcitiesnh.vnScenario.center=<x>,<z>` moves it) and checks the scan loaded no chunk, left `world.rand` untouched, gives the same landmarks to a fresh oracle asked tile by tile in reverse order, and keeps every footprint within the oracle's reach. Generates the 6 nearest predicted villages (every chunk their footprint touches, populated), 6 starts whose biome VillageNames rejects (3 × 3 chunks) and the 8 nearest predicted monuments (7 × 7 chunks), then compares with VillageNames' own `data/Village.dat` and `data/Monument.dat`: each predicted village recorded, valid, with exactly the predicted piece boxes, and built blocks in at least half of its buildings (VillageNames leaves pieces over water and some small decorations unbuilt; each is logged with the blocks around it); no rejected start holding a valid village; every valid village and monument recorded anywhere predicted, unless the start chunk's stored biome explains it (an explained miss, logged). Prints `[LCNH-VN] oracle-hash=` and `actual-hash=`: two fresh worlds of one seed and world type print the same pair | no (manual-only) |
 
 Each feature adds its scenarios to this table.
 
@@ -128,6 +129,18 @@ tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --lev
 ```
 
 Repeat with `--level-type RWG`, and run each a second time with `--fresh` to compare the `[LCNH-HASH]` lines. Cascade warnings are attributed by adding `--set-config 'archaicfix.cfg:logCascadingWorldgenStacktrace=true'`: a warning caused by the overlay would show `worldgen.terrain`, `worldgen.overlay.PopulationPhase` or the guard as the frame that loads the chunk; `OverlayChunkProvider.populate` only passes RWG's own population through.
+
+### VillageNames oracle runs on the real pack
+
+The oracle scenario runs on the real GTNH 2.9.0 server with the release jar, on fresh worlds of both types, twice per type to compare the hashes (D33):
+
+```sh
+tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
+    --jvm '-Dlostcitiesnh.testHooks=true' \
+    --cmds 'lostcities test oracle.villagenames; until:\[LCNH-SCENARIO\] Scenarios:; wait:3'
+```
+
+Repeat with `--level-type RWG`. The `[LCNH-VN]` lines give, per world, the scan's verdicts, each generated village (biome, pieces, paths, gates, ground estimate, match against the saved start, buildings with built blocks), each rejected start, each monument, and the counts of predicted against recorded structures. Classic RWG has no oceans, so it predicts and records no monument.
 
 ## Dev client
 
