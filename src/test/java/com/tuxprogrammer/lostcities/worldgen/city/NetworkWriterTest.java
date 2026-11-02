@@ -140,9 +140,7 @@ public class NetworkWriterTest {
         assertTrue(plan.inGuardBand(floor));
         assertFalse(plan.inGuardBand(band[1] + 1));
         // A chunk with no network has no band.
-        int[] none = CityFixtures.first(
-            40,
-            (x, z) -> !NetworkWriter.hasWork(PLANNER, x, z));
+        int[] none = CityFixtures.first(40, (x, z) -> !NetworkWriter.hasWork(PLANNER, x, z));
         assertNotNull(none);
         assertNull(NetworkWriter.guardBand(PLAN.context(), none[0], none[1], 70));
         assertFalse(
