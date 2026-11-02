@@ -20,7 +20,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  * The GTNH pack renders terrain with Angelica's Celeritas renderer, which replaces vanilla's chunk updates. Angelica
  * 2.2.43 exposes it as
  * {@code com.gtnewhorizons.angelica.rendering.celeritas.CeleritasWorldRenderer.getInstanceOrNull()} (Angelica's
- * source at tag 2.2.43, {@code src/main/java/com/gtnewhorizons/angelica/rendering/celeritas/CeleritasWorldRenderer.java}),
+ * source at tag 2.2.43,
+ * {@code src/main/java/com/gtnewhorizons/angelica/rendering/celeritas/CeleritasWorldRenderer.java}),
  * whose superclass {@code org.embeddedt.embeddium.impl.render.terrain.SimpleWorldRenderer} has, in the pack's
  * {@code angelica-2.2.43.jar} (read with javap):
  * <ul>
