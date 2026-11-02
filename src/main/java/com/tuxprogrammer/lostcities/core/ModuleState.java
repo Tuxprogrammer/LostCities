@@ -11,9 +11,9 @@ import com.tuxprogrammer.lostcities.config.WorldgenConfig;
  * (config-safe-registration). Instances are immutable snapshots.
  *
  * <p>
- * Today the snapshot comes from the config ({@link #configured()}). When profile pinning lands (M04,
- * docs/design/0005-rwg-overlay.md §7) a world's generation reads the snapshot pinned into that world instead, so a
- * later config edit cannot change a world that already exists.
+ * A new world copies {@link #configured()} into its pinned profile snapshot (docs/design/0005-rwg-overlay.md §7), and
+ * its generation reads the pinned state ({@code ProfileSnapshot.moduleState()}), so a later config edit cannot change
+ * a world that already exists.
  *
  * <p>
  * Side: both; only the server's state decides generation. No module flag is synced to clients, because no client

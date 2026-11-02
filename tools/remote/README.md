@@ -44,6 +44,7 @@ The server side must already exist under `LC_REMOTE_ROOT`. A `README.txt` there 
 - `--level-type <type>` and `--seed <seed>`: apply only to a new world.
 - `--cmds '<cmd>; wait:<s>; until:<regex>'`: console commands sent once the server is up. `wait:` and `until:` are steps for the script, not commands.
 - `--jvm '<args>'`, `--timeout <s>`, `--run-timeout <s>`.
+- `--set-config '<file under config/>:<key>=<value>'` (repeatable): changes one config value for this run only and puts the file back when the run ends, however it ends. The overlay scenarios use it for ArchaicFix's `logCascadingWorldgen`, which the pack ships off.
 
 Each run writes `runs/<id>/` with the console, the FML log, any crash report and a `run.done` summary: status, boot seconds and peak RSS.
 
@@ -55,6 +56,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 - `--server <host:port>`: joins a server. Without it, the client stops at the main menu.
 - `--shot <name>`, `--wait <s>`: name the screenshot and set how long to wait before taking it.
 - `--timeout <s>`, `--user <name>`, `--heap <size>`.
+- `--extra-shot <name>:<seconds>` (repeatable): another screenshot that many seconds after the one before, for viewpoints the server moves the player to.
 
 The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`.
 
@@ -78,7 +80,7 @@ tools/remote/lc-remote.sh realpack --slot main -- --cmds \
 tools/remote/lc-remote.sh client -- --server 127.0.0.1:25800 --shot spawn --wait 45
 ```
 
-Use creative mode and a safe height. A survival teleport into the air falls.
+Use creative mode and a safe height. A survival teleport into the air falls. Vanilla `tp` cannot set the view direction; with the test hooks on (`--jvm '-Dlostcitiesnh.testHooks=true'`), `lostcities view <player> <x> <y> <z> <yaw> <pitch>` does, so a client run with `--extra-shot` can take several fixed viewpoints.
 
 ## Shared-box rules
 
@@ -92,4 +94,4 @@ The build server is shared with other projects' agents.
 
 ## Not yet built
 
-- The scripted alpha screenshot set: fixed coordinates and view angles, a hidden HUD (F1 needs key input on the X display), and locked time and weather.
+- The scripted alpha screenshot set: a hidden HUD (F1 needs key input on the X display) and locked weather. Fixed coordinates, view angles (`lostcities view`) and time (`time set`, `gamerule doDaylightCycle false`) work.

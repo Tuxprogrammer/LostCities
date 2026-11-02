@@ -15,6 +15,26 @@ The delegating chunk provider ([0005](../../design/0005-rwg-overlay.md#1-hook-a-
 
 During RWG's own `populate`, two of our listeners act without being a phase: the `Populate` vetoes (`LAKE`, `LAVA`, `DUNGEON`, `CUSTOM`) when the population area touches a city chunk, and the footprint write guard, active for the whole of every delegate `populate` ([below](#the-rwg-decoration-footprint)).
 
+## The plan the overlay reads
+
+The overlay asks one pure interface what each chunk holds: `worldgen.plan.CityPlan.chunk(x, z)`, which returns an immutable `ChunkPlan` (decision log D-M04-1). It never reads the world, and the overlay wraps it in a bounded cache (`CachedCityPlan`, 4,096 chunks, budget B5). M05 implements it over M03's `LayoutPlanner` and M02's parts; in M04 the synthetic test city implements it (D-M04-2).
+
+| Field | Meaning | Read by |
+|---|---|---|
+| `kind` | `NONE`, `CITY` or `LANDMARK_CORE` | every step |
+| `cityLevel`, `groundY` | The city level and its ground Y (`groundLevel + 6 × level`); for a core, its oracle height; for land, the level its height gives | leveling, borders, blend corners (L0, E1), explosions' center Y |
+| `naturalHeight`, `ocean` | The oracle height and whether the biome is an ocean | `getMinHeightAt`, `clearToMax`, the blend's free corners and ocean corners |
+| `hasBuilding`, `floors`, `cellars` | The building; its bottom is `groundY − 6 × cellars`, never below Y 2 (TERR-31: the plan rejects a building that cannot fit) | `makeRoomForBuilding`, debris, vines, the fragment pass |
+| `ruinHeight`, `explosionChance` | The ruin fraction; the city style's explosion chance | ruins (M05), `DamageArea` |
+| `style` (`StyleBlocks`) | Base, liquid, border, wall, rubble, filler, iron bars, leaf and rubble tables, damaged forms | street base, borders, skirts, damage, debris |
+| `content` (`ChunkContent`) | Writes the building or street itself into the buffer, after leveling and room-making, skipping soft-edge columns | the city chunk step |
+| `footprintBottom(x, z)` | Lowest Y of a footprint column, or none | the write guard, the population hash |
+| `lane` (`LanePath`) | The village lane's columns and the village's material | lanes |
+| `jobs` (`PopulationJob`) | Torches, chests, spawners, command blocks | the population phase |
+| `borderOpenings(side)` | Columns where a street border is one lower, for slopes, stairs and bridges from the neighbor | borders |
+
+The terrain phase owns everything else upstream's `doCityChunk` and `doNormalChunk` do around the content: high water, leveling, room for buildings, `clearToMax` (exposed for the content's roof), street base and borders, soft-edge strips and their retaining walls, lanes, explosion damage, the fragment pass, debris and vines. The layout's own `TerrainView` (D51) is implemented over the same oracle by `worldgen.overlay.WorldTerrainView`.
+
 ## Stage map
 
 Upstream's stages are numbered as in [generation-pipeline.md](../../original-spec/03-terrain/generation-pipeline.md#lostcityterrainfeaturegenerate-server).
@@ -53,9 +73,9 @@ The population phase, in order: data-bearing tile entities (chests filled from o
 | Corridors | Landmark cores, entirely (village pieces land on RWG's untouched ground) |
 | Highway and railway cross-sections | Chunks the city does not touch |
 
-**Mechanism** (0005 §3a). A write guard: one mixin on the chunk's block setter that drops writes inside footprint volumes, answered from pure layout data. It is active during every delegate `populate`, not only the chunk being populated, because decoration uses the vanilla +8 offset and lands in up to four chunks, and cascaded big trees reach chunk +2; the guard looks up the chunk each write lands in. The same guard covers mineshaft and stronghold pieces RWG writes in `populate` (P03-2). The prototype measures the spill with ArchaicFix's `logCascadingWorldgen`, off in the pack's config and switched on for the scenario. A footprint restore after decoration is the fallback, used only if the guard cannot tell the writes apart.
+**Mechanism** (0005 §3a). A write guard: one mixin on the chunk's block setter (`Chunk.func_150807_a`) that drops writes inside footprint volumes, answered from pure layout data. It keeps a stack of frames: active around each delegate `populate`, inactive around our population phase, and switched off by `PopulateChunkEvent.Post` (lowest priority), so RWG's snow and ice pass (D-M04-5). It is active during every delegate `populate`, not only the chunk being populated, because decoration uses the vanilla +8 offset and lands in up to four chunks, and cascaded big trees reach chunk +2; the guard looks up the chunk each write lands in. The same guard covers mineshaft and stronghold pieces RWG writes in `populate` (P03-2). The prototype measures the spill with ArchaicFix's `logCascadingWorldgen`, off in the pack's config and switched on for the scenario. A footprint restore after decoration is the fallback, used only if the guard cannot tell the writes apart.
 
-**Volume** (*Accepted*, P03-1, D31). The outcome the owner asked for is no trees on streets and roofs (D22), so a footprint column must reach above the surface it protects: for each column the city writes in a building, street, bridge, highway or railway chunk, everything from its lowest written block up to Y 255, plus, for highways, the 15-block clearance above open and bridge parts by the same rule. Park, yard, edge-ring and soft-edge columns are outside it. RWG's snow and ice, added after `PopulateChunkEvent.Post`, pass the guard. Cut canopies where a park tree overhangs a street are judged in the S2 screenshots ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 4).
+**Volume** (*Accepted*, P03-1, D31). The outcome the owner asked for is no trees on streets and roofs (D22), so a footprint column must reach above the surface it protects: for each column the city writes in a building, street, bridge, highway or railway chunk, everything from its lowest written block up to Y 255, plus, for highways, the 15-block clearance above open and bridge parts by the same rule. Park, yard, edge-ring and soft-edge columns are outside it. RWG's snow and ice, added after `PopulateChunkEvent.Post`, pass the guard. `IWorldGenerator`s run after our population phase and are not guarded: on the real pack, IC2 rubber trees and HarvestCraft fruit trees planted on park grass overhang street footprints (31 leaf blocks in the 13 × 13-chunk test city on RWG2 Continents, seed 4242), which the alpha screenshots judge (D-M04-5). Cut canopies where a park tree overhangs a street are judged in the S2 screenshots ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 4).
 
 ## Soft-edge strips
 

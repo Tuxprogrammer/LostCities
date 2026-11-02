@@ -14,8 +14,8 @@ import com.tuxprogrammer.lostcities.asset.BlockRef;
  * generation, CONTRIBUTING § World generation rules).
  *
  * <p>
- * The interface holds no Minecraft type. The world-backed implementation over {@code ExtendedBlockStorage} arrives
- * with the overlay in M04; it must allocate nothing per block.
+ * The interface holds no Minecraft type. The world-backed implementation over {@code ExtendedBlockStorage} is
+ * {@code worldgen.overlay.WorldChunkBuffer}; it allocates nothing per block.
  *
  * <p>
  * Side: server (world generation), and plain Java in tests.
