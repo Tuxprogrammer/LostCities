@@ -108,6 +108,11 @@ public final class RailwayLayout {
         return 2L * CACHE_SIZE * ENTRY_BYTES;
     }
 
+    /** Returns how many entries the two caches hold, for tests of their bound. */
+    int cachedEntries() {
+        return flagged.size() + finals.size();
+    }
+
     /** Returns the settings. */
     public RailwaySettings settings() {
         return settings;

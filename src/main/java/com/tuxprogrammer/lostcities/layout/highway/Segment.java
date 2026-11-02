@@ -106,7 +106,8 @@ public final class Segment {
     }
 
     /**
-     * Returns whether two segments share a chunk along the same axis: the same row or column, overlapping ranges.
+     * Returns whether two segments run together along the same axis: the same row or column, sharing more than one
+     * chunk. Two routes that only meet end to end at a hub share that one chunk and do not overlap.
      *
      * @param other the other segment
      * @return whether they overlap
@@ -117,10 +118,10 @@ public final class Segment {
         }
         if (axis == Axis.X) {
             return startZ == other.startZ && Math.max(Math.min(startX, endX), Math.min(other.startX, other.endX))
-                <= Math.min(Math.max(startX, endX), Math.max(other.startX, other.endX));
+                < Math.min(Math.max(startX, endX), Math.max(other.startX, other.endX));
         }
         return startX == other.startX && Math.max(Math.min(startZ, endZ), Math.min(other.startZ, other.endZ))
-            <= Math.min(Math.max(startZ, endZ), Math.max(other.startZ, other.endZ));
+            < Math.min(Math.max(startZ, endZ), Math.max(other.startZ, other.endZ));
     }
 
     @Override

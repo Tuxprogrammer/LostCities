@@ -729,12 +729,17 @@ public final class HighwayPlanner {
         return new HighwayInfo(bestX, bestZ, hits);
     }
 
-    /** The deck with the lower bottom; the first one (lower connection key) on a tie. */
+    /**
+     * The deck one axis shows where several routes share it: the one with the lower bottom, as upstream keeps the
+     * lowest level; on a tie a flat deck before a ramp, so a route passing through keeps its road where another
+     * climbs to its own hub beside it; then the first (lower connection key).
+     */
     private static Deck lower(Deck current, Deck candidate) {
         if (candidate == null) {
             return current;
         }
-        if (current == null || candidate.min() < current.min()) {
+        if (current == null || candidate.min() < current.min()
+            || candidate.min() == current.min() && candidate.flat() && !current.flat()) {
             return candidate;
         }
         return current;
