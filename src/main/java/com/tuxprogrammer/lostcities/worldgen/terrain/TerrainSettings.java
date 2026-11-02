@@ -131,7 +131,10 @@ public final class TerrainSettings {
         rubbleDirtScale = r.floatValue("rubbleDirtScale", 3.0f, 0f, 100f);
         rubbleLeaveScale = r.floatValue("rubbleLeaveScale", 6.0f, 0f, 100f);
         vineChance = r.floatValue("vineChance", 0.009f, 0f, 1f);
-        preventLakesRavinesInCities = r.booleanValue("preventLakesRavinesInCities", true);
+        // The profile key is preventLakesInCities (P-PROF-6); 1.12's name, which worlds pinned before M09 hold, still
+        // reads.
+        preventLakesRavinesInCities = r
+            .booleanValue("preventLakesInCities", r.booleanValue("preventLakesRavinesInCities", true));
         softEdgeWidth = r.intValue("softEdgeWidth", 6, 2, 12);
         landmarkMargin = r.intValue("landmarkMargin", 2, 0, 16);
         generateLighting = r.booleanValue("generateLighting", false);
@@ -197,7 +200,7 @@ public final class TerrainSettings {
         out.put("rubbleDirtScale", Float.toString(rubbleDirtScale));
         out.put("rubbleLeaveScale", Float.toString(rubbleLeaveScale));
         out.put("vineChance", Float.toString(vineChance));
-        out.put("preventLakesRavinesInCities", Boolean.toString(preventLakesRavinesInCities));
+        out.put("preventLakesInCities", Boolean.toString(preventLakesRavinesInCities));
         out.put("softEdgeWidth", Integer.toString(softEdgeWidth));
         out.put("landmarkMargin", Integer.toString(landmarkMargin));
         out.put("generateLighting", Boolean.toString(generateLighting));

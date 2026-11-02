@@ -55,6 +55,41 @@ public final class LangKeys {
     public static final String PROFILE_PINNED = "lostcitiesnh.command.profile.pinned";
     /** The world type has no height oracle; arguments: the dimension, the world type. */
     public static final String PROFILE_UNSUPPORTED = "lostcitiesnh.command.profile.unsupported";
+    /** One line of a profile's text; argument: the text, as a component. */
+    public static final String PROFILE_TEXT = "lostcitiesnh.command.profile.text";
+    /** The profile list's header; argument: the count. */
+    public static final String PROFILE_LIST = "lostcitiesnh.command.profile.list";
+    /** One profile of the list; arguments: the name, where it comes from, the description. */
+    public static final String PROFILE_LIST_ENTRY = "lostcitiesnh.command.profile.list_entry";
+    /** Where a built-in comes from. */
+    public static final String PROFILE_BUILT_IN = "lostcitiesnh.command.profile.built_in";
+    /** Where a profile file comes from. */
+    public static final String PROFILE_FILE = "lostcitiesnh.command.profile.file";
+    /** A profile's first info line; arguments: the name, the source, the description. */
+    public static final String PROFILE_INFO = "lostcitiesnh.command.profile.info";
+    /** A profile's warning; argument: the warning. */
+    public static final String PROFILE_INFO_WARNING = "lostcitiesnh.command.profile.info_warning";
+    /** A profile changes nothing from the defaults. */
+    public static final String PROFILE_INFO_DEFAULTS = "lostcitiesnh.command.profile.info_defaults";
+    /** The options a profile changes; arguments: the count, the list. */
+    public static final String PROFILE_INFO_CHANGES = "lostcitiesnh.command.profile.info_changes";
+    /** A rejected profile; arguments: the name, the reason. */
+    public static final String PROFILE_REJECTED = "lostcitiesnh.command.profile.rejected";
+    /** The profiles were read again; arguments: accepted, rejected, report lines. */
+    public static final String PROFILE_RELOADED = "lostcitiesnh.command.profile.reloaded";
+
+    /** {@code /lostcities saveprofile} usage line. */
+    public static final String SAVEPROFILE_USAGE = "lostcitiesnh.command.saveprofile.usage";
+    /** A new name with characters outside {@code [a-z0-9_]}; argument: the name. */
+    public static final String SAVEPROFILE_NAME = "lostcitiesnh.command.saveprofile.name";
+    /** A new name that is a built-in's; argument: the name. */
+    public static final String SAVEPROFILE_BUILT_IN = "lostcitiesnh.command.saveprofile.built_in";
+    /** The file exists; argument: the file. */
+    public static final String SAVEPROFILE_EXISTS = "lostcitiesnh.command.saveprofile.exists";
+    /** The file was written; arguments: the profile, the file, the new name. */
+    public static final String SAVEPROFILE_SAVED = "lostcitiesnh.command.saveprofile.saved";
+    /** The file could not be written; arguments: the file, the reason. */
+    public static final String SAVEPROFILE_FAILED = "lostcitiesnh.command.saveprofile.failed";
 
     /** {@code /lostcities timers} usage line. */
     public static final String TIMERS_USAGE = "lostcitiesnh.command.timers.usage";
