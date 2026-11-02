@@ -7,6 +7,8 @@ package com.tuxprogrammer.lostcities.worldgen.terrain;
 
 import java.util.Random;
 
+import com.tuxprogrammer.lostcities.layout.random.StableHash;
+
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
@@ -58,6 +60,14 @@ public final class TerrainBlend {
     /** Corridor width over which the transition noise ramps to full strength, in blocks. */
     static final float NOISE_RAMP = 20.0f;
 
+    /**
+     * Amplitude of the bank wobble, as a share of the transition noise (about ±4): up to ±1.4 blocks away from city
+     * corners, so a blended bank's 1-block steps follow ragged contours (M12, 0008 §5).
+     */
+    static final float BANK_WOBBLE = 0.35f;
+    /** Salt of the per-column dither of the blend's cut. */
+    static final long DITHER_SALT = 0x44495448_45524544L;
+
     /** How far around a chunk the plans are read: L0 of the corners two corners out needs chunks three out. */
     static final int REACH = 3;
 
@@ -79,6 +89,7 @@ public final class TerrainBlend {
     private final int[] l2Min = new int[4];
     private final int[] l2Max = new int[4];
     private final boolean[] l2Fixed = new boolean[4];
+    private final boolean[] l2City = new boolean[4];
 
     private static final byte FREE = 0;
     private static final byte CITY_CORNER = 1;
@@ -196,6 +207,7 @@ public final class TerrainBlend {
             for (int cx = 0; cx < 2; cx++) {
                 int index = cz * 2 + cx;
                 int l1Index = (cz + 1) * 4 + cx + 1;
+                l2City[index] = l1Fixed[l1Index] && l0Kind[(cz + 2) * 6 + cx + 2] == CITY_CORNER;
                 if (l1Fixed[l1Index]) {
                     l2Min[index] = l1Min[l1Index];
                     l2Max[index] = l1Max[l1Index];
@@ -316,9 +328,15 @@ public final class TerrainBlend {
         BlockClassifier classes = context.classifier();
         int waterLevel = context.settings()
             .waterLevel();
+        float city00 = l2City[0] ? 1f : 0f;
+        float city10 = l2City[1] ? 1f : 0f;
+        float city01 = l2City[2] ? 1f : 0f;
+        float city11 = l2City[3] ? 1f : 0f;
         boolean moved = false;
         for (int x = 0; x < 16; x++) {
             float factor = (15.0f - x) / 15.0f;
+            float city0 = city11 + (city01 - city11) * factor;
+            float city1 = city10 + (city00 - city10) * factor;
             float maxh0 = max11 + (max01 - max11) * factor;
             float maxh1 = max10 + (max00 - max10) * factor;
             float minh0 = min11 + (min01 - min11) * factor;
@@ -330,17 +348,40 @@ public final class TerrainBlend {
                 float freedom = Math.max(0.0f, maxHeight - minHeight - NOISE_FREE_WIDTH);
                 float strength = Math.min(1.0f, freedom / NOISE_RAMP);
                 float offset = context.transitionNoise((chunkX << 4) + x, (chunkZ << 4) + z) * strength;
-                maxHeight = Math.min(maxHeight + offset, WorldLimits.BUILD_HEIGHT);
-                minHeight = Math.max(minHeight + offset, WorldLimits.MIN_Y);
+                // Deviation (M12, 0008 §5): away from city corners the cut is dithered per column and wobbled by the
+                // transition noise, so a bank's 1-block steps follow ragged contours instead of straight terraces;
+                // at a city corner the weight is 0 and the street's edge keeps its height.
+                float bank = 1f - (city0 + ((city1 - city0) * (15.0f - z) / 15.0f));
+                int worldX = (chunkX << 4) + x;
+                int worldZ = (chunkZ << 4) + z;
+                float rough = bank <= 0f ? 0f
+                    : bank * (dither(worldX, worldZ)
+                        + BANK_WOBBLE * context.transitionNoise(worldX * 3 + 7, worldZ * 3 + 7));
+                maxHeight = Math.min(maxHeight + offset + rough, WorldLimits.BUILD_HEIGHT);
+                minHeight = Math.max(minHeight + offset + rough, WorldLimits.MIN_Y);
                 int touched = ColumnOps
-                    .moveDown(buffer, classes, x, z, (int) maxHeight, WorldLimits.BUILD_HEIGHT, waterLevel);
+                    .moveDown(buffer, classes, x, z, (int) Math.floor(maxHeight), WorldLimits.BUILD_HEIGHT, waterLevel);
                 if (touched == ColumnOps.NOT_TOUCHED) {
-                    touched = ColumnOps.moveUp(buffer, classes, x, z, (int) minHeight);
+                    touched = ColumnOps.moveUp(buffer, classes, x, z, (int) Math.floor(minHeight));
                 }
                 moved |= touched != ColumnOps.NOT_TOUCHED;
             }
         }
         return moved;
+    }
+
+    /**
+     * A per-column value in [0, 1) from the world seed and the column: adding it before the floor rounds the cut
+     * stochastically, so a gentle ramp's steps scatter rather than run in straight lines.
+     *
+     * @param worldX block X
+     * @param worldZ block Z
+     * @return the dither
+     */
+    float dither(int worldX, int worldZ) {
+        long hash = StableHash
+            .mix64(context.worldSeed() ^ DITHER_SALT ^ (long) worldX * 341873128712L ^ (long) worldZ * 132897987541L);
+        return (float) StableHash.unitDouble(hash);
     }
 
     /**

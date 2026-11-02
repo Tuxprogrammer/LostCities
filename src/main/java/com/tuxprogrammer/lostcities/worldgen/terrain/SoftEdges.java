@@ -2,6 +2,7 @@ package com.tuxprogrammer.lostcities.worldgen.terrain;
 
 import java.util.Arrays;
 
+import com.tuxprogrammer.lostcities.layout.random.StableHash;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 
@@ -36,6 +37,9 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  * {@link #retainingWalls} adds the walls afterwards. Side: both (plain Java).
  */
 public final class SoftEdges {
+
+    /** Salt of the per-column dither of the margin's stitch ramp. */
+    static final long STITCH_SALT = 0x53544954_43484544L;
 
     /** Most a strip's width varies from {@code softEdgeWidth} along a side, in columns (E4). */
     static final int WIDTH_VARIATION = 2;
@@ -248,7 +252,15 @@ public final class SoftEdges {
                     if (depth[index] != NOT_IN_STRIP && depth[index] <= d) {
                         continue;
                     }
-                    targets[index] = WorldLimits.clampY(outer + Math.round((inner - outer) * d / (float) width));
+                    // Deviation (M12, 0008 §5): the ramp is dithered per column, so its steps do not run in
+                    // straight lines along the core's edge.
+                    int sx = (chunkX << 4) + edgeX(side, along, d);
+                    int sz = (chunkZ << 4) + edgeZ(side, along, d);
+                    long hash = StableHash.mix64(
+                        context.worldSeed() ^ STITCH_SALT ^ (long) sx * 341873128712L ^ (long) sz * 132897987541L);
+                    float ramp = outer + (inner - outer) * d / (float) width;
+                    targets[index] = WorldLimits
+                        .clampY((int) Math.floor(ramp + (d == 0 ? 0.5 : StableHash.unitDouble(hash))));
                     depth[index] = d;
                 }
             }

@@ -211,6 +211,8 @@ public final class TerrainPhase {
         if (plan.lane() != null) {
             if (!plan.isCity()) {
                 changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
+                // M12 (0008 §5): no two lane columns differ by two blocks or more, so every rise gets its step.
+                changed |= VillageLanes.relax(buffer, context, plan.lane()) > 0;
             }
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
             changed |= paved > 0;
@@ -220,7 +222,7 @@ public final class TerrainPhase {
         int damaged = 0;
         int moved = 0;
         if (area.hasExplosions()) {
-            damaged = damage.breakBlocks(buffer, area, plan, random);
+            damaged = damage.breakBlocks(buffer, area, plan, random, cityPlan.repairs());
             moved = fragments.apply(buffer, area, plan, sides, random);
         }
         int debris = damage.debris(buffer, plan, debrisNeighbors, debrisAreas, random);
@@ -249,16 +251,20 @@ public final class TerrainPhase {
         if (plan.hasBuilding()) {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
+        if (plan.isLot()) {
+            // An edge lot digs below city ground, so its base is filled first and its pit stays open (0008 §3).
+            CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
+        }
         plan.content()
             .write(
                 buffer,
                 new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), skipMask));
-        if (!plan.hasBuilding()) {
+        if (!plan.hasBuilding() && !plan.isLot()) {
             CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
         }
         Random ruinRandom = ruins.random(chunkX, chunkZ);
         ruins.ruin(buffer, chunkX, chunkZ, plan, ruinRandom, skipMask);
-        if (!plan.hasBuilding() || plan.ruinHeight() >= 0) {
+        if (!plan.isLot() && (!plan.hasBuilding() || plan.ruinHeight() >= 0)) {
             ruins.rubble(buffer, chunkX, chunkZ, plan, around(chunkX, chunkZ), ruinRandom, skipMask);
         }
         if (strips) {

@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.asset.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +20,7 @@ import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.layout.view.AssetView;
 import com.tuxprogrammer.lostcities.layout.view.BuildingView;
 import com.tuxprogrammer.lostcities.layout.view.CityStyleView;
+import com.tuxprogrammer.lostcities.layout.view.FacadeView;
 import com.tuxprogrammer.lostcities.layout.view.MultiBuildingView;
 import com.tuxprogrammer.lostcities.layout.view.MultiSettings;
 import com.tuxprogrammer.lostcities.layout.view.PartContext;
@@ -42,13 +44,15 @@ import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
  * (ASSET-10); {@link CityStyleView#pick} documents {@code null} only for an empty list.
  *
  * <p>
- * Immutable. Side: both (server-side use).
+ * Immutable but for the facade view's bounded tone cache (docs/design/0007-facade-color-feathering.md). Side: both
+ * (server-side use).
  */
 public final class LayoutAssets implements AssetView {
 
     private final AssetSet assets;
     private final WorldStyle worldStyle;
     private final BiomeSource biomes;
+    private final FacadeTones facades;
 
     /**
      * Creates the view.
@@ -61,6 +65,7 @@ public final class LayoutAssets implements AssetView {
         this.assets = assets;
         this.worldStyle = worldStyle;
         this.biomes = biomes;
+        this.facades = new FacadeTones(assets, assets.colors());
     }
 
     @Override
@@ -89,15 +94,12 @@ public final class LayoutAssets implements AssetView {
     @Override
     public StyleView style(String name) {
         Style style = assets.style(id(name));
-        return style == null ? null : random -> {
-            List<String> out = new ArrayList<>();
-            for (Palette palette : style.randomPalettes(random)) {
-                out.add(
-                    palette.id()
-                        .toString());
-            }
-            return out;
-        };
+        return style == null ? null : new StyleAdapter(style);
+    }
+
+    @Override
+    public FacadeView facades() {
+        return facades;
     }
 
     @Override
@@ -414,6 +416,47 @@ public final class LayoutAssets implements AssetView {
             return building == null ? null
                 : building.id()
                     .toString();
+        }
+    }
+
+    /** A style as the layout reads it: its draw, and its groups for the facade stage. */
+    private static final class StyleAdapter implements StyleView {
+
+        private final Style style;
+        private final List<List<StyleView.Choice>> groups;
+
+        StyleAdapter(Style style) {
+            this.style = style;
+            List<List<StyleView.Choice>> out = new ArrayList<>();
+            for (List<Style.Choice> group : style.groups()) {
+                List<StyleView.Choice> choices = new ArrayList<>();
+                for (Style.Choice choice : group) {
+                    choices.add(
+                        new StyleView.Choice(
+                            choice.palette()
+                                .id()
+                                .toString(),
+                            choice.factor()));
+                }
+                out.add(Collections.unmodifiableList(choices));
+            }
+            this.groups = Collections.unmodifiableList(out);
+        }
+
+        @Override
+        public List<String> pickPalettes(Random random) {
+            List<String> out = new ArrayList<>();
+            for (Palette palette : style.randomPalettes(random)) {
+                out.add(
+                    palette.id()
+                        .toString());
+            }
+            return out;
+        }
+
+        @Override
+        public List<List<StyleView.Choice>> groups() {
+            return groups;
         }
     }
 }

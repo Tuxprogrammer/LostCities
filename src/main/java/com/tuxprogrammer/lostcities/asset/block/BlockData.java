@@ -14,7 +14,7 @@ import com.tuxprogrammer.lostcities.asset.json.JsonFields;
 
 /**
  * The bundled block data the asset system reads besides the assets: the block-name map, the decorative-metal catalog,
- * the never-place list and the raw variety pools, all under {@code data/lostcitiesnh/blockmap/} in the jar. They are
+ * the never-place list, the raw variety pools and the measured block colors, all under {@code data/lostcitiesnh/blockmap/} in the jar. They are
  * this mod's own data, not upstream assets, so they are never overridden from the config folder: a pack that needs a
  * different block writes it in its asset overrides as {@code modid:name:meta}.
  *
@@ -27,9 +27,10 @@ public final class BlockData {
     private final MetalCatalog metals;
     private final NeverPlaceList neverPlace;
     private final JsonElement pools;
+    private final BlockColors colors;
 
     /**
-     * Holds already-read block data, for tests that build their own.
+     * Holds already-read block data, for tests that build their own; no block colors.
      *
      * @param mapping    the block-name map
      * @param metals     the decorative-metal catalog
@@ -37,10 +38,25 @@ public final class BlockData {
      * @param pools      the raw pools document, or an empty object
      */
     public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools) {
+        this(mapping, metals, neverPlace, pools, BlockColors.EMPTY);
+    }
+
+    /**
+     * Holds already-read block data.
+     *
+     * @param mapping    the block-name map
+     * @param metals     the decorative-metal catalog
+     * @param neverPlace the never-place list
+     * @param pools      the raw pools document, or an empty object
+     * @param colors     the measured block colors
+     */
+    public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools,
+        BlockColors colors) {
         this.mapping = mapping;
         this.metals = metals;
         this.neverPlace = neverPlace;
         this.pools = pools;
+        this.colors = colors;
     }
 
     /**
@@ -59,7 +75,8 @@ public final class BlockData {
             BlockMapping.parse(mapping, problems.in(origin(BlockMapping.RESOURCE))),
             MetalCatalog.parse(metals, problems.in(origin(MetalCatalog.RESOURCE))),
             NeverPlaceList.parse(never, problems.in(origin(NeverPlaceList.RESOURCE))),
-            pools);
+            pools,
+            BlockColors.bundled(anchor, problems));
     }
 
     /** Returns the block-name map. */
@@ -75,6 +92,11 @@ public final class BlockData {
     /** Returns the never-place list. */
     public NeverPlaceList neverPlace() {
         return neverPlace;
+    }
+
+    /** Returns the measured block colors (docs/design/0007-facade-color-feathering.md §1). */
+    public BlockColors colors() {
+        return colors;
     }
 
     /** Returns the raw pools document, resolved by the loader against the registry. */

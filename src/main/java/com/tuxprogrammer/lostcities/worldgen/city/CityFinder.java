@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.city;
 
 import java.util.Locale;
+import java.util.function.BiPredicate;
 
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
@@ -47,7 +48,18 @@ public final class CityFinder {
         /** A landmark core or a chunk of its margin. */
         RESERVED,
         /** A chunk of a village's sewing: a gate, lane or link chunk. */
-        VILLAGE;
+        VILLAGE,
+        /**
+         * A city center seen from outside the city, low over the land: the skyline that tapers from the core to the
+         * edge (alpha review AR-5).
+         */
+        TAPER,
+        /** An edge lot: an empty lot, an excavation or a foundation (AR-6); dug ones first. */
+        LOT,
+        /** A building chunk an explosion reached whose damage was partly repaired (AR-9). */
+        REPAIR,
+        /** A building beside a building of another city style: where facade colors feather (AR-17). */
+        FEATHER;
 
         /** Returns the lower-case name the command takes. */
         public String key() {
@@ -245,12 +257,37 @@ public final class CityFinder {
     static final int STREET_EYE = 2;
     /** Pitch of the street view, degrees. */
     static final float STREET_PITCH = 8f;
+    /** How far beyond a city's radius the taper view stands, in blocks. */
+    static final int TAPER_BACK = 48;
+    /** How far above the city's ground the taper view stands. */
+    static final int TAPER_HEIGHT = 38;
+    /** Pitch of the taper view, degrees: nearly level, so the skyline shows. */
+    static final float TAPER_PITCH = 12f;
+    /** How far beside a lot the lot view stands, on each horizontal axis. */
+    static final int LOT_BACK = 14;
+    /** How far above the city's ground the lot view stands. */
+    static final int LOT_HEIGHT = 18;
+    /** Pitch of the lot view, degrees. */
+    static final float LOT_PITCH = 40f;
+    /** How far beside a building the repair view stands, on each horizontal axis. */
+    static final int REPAIR_BACK = 18;
+    /** How far above the city's ground the repair view stands. */
+    static final int REPAIR_HEIGHT = 20;
+    /** Pitch of the repair view, degrees. */
+    static final float REPAIR_PITCH = 25f;
+    /** How far to the side of a pair of buildings the feather view stands. */
+    static final int FEATHER_BACK = 34;
+    /** How far above the city's ground the feather view stands. */
+    static final int FEATHER_HEIGHT = 22;
+    /** Pitch of the feather view, degrees. */
+    static final float FEATHER_PITCH = 15f;
     /** Fewest floors of a building worth entering. */
     static final int INTERIOR_MIN_FLOORS = 2;
 
     private final LayoutPlanner planner;
     private final CityPlan plan;
     private final StructureOracle structures;
+    private BiPredicate<Integer, Integer> repaired = (x, z) -> false;
 
     /**
      * Creates the finder of one world, without its structure oracle: {@link #findBest} finds nothing.
@@ -273,6 +310,17 @@ public final class CityFinder {
         this.planner = planner;
         this.plan = plan;
         this.structures = structures;
+    }
+
+    /**
+     * Sets how the finder tells a chunk with a repaired explosion ({@link Kind#REPAIR}); without it, none is found.
+     *
+     * @param test whether an explosion reaching the chunk was repaired
+     * @return this finder
+     */
+    public CityFinder withRepairs(BiPredicate<Integer, Integer> test) {
+        this.repaired = test;
+        return this;
     }
 
     /**
@@ -373,9 +421,133 @@ public final class CityFinder {
                 return softEdge(chunkX, chunkZ);
             case RESERVED:
                 return reserved(chunkX, chunkZ);
+            case TAPER:
+                return taper(chunkX, chunkZ);
+            case LOT:
+                return lot(chunkX, chunkZ);
+            case REPAIR:
+                return repair(chunkX, chunkZ);
+            case FEATHER:
+                return feather(chunkX, chunkZ);
             default:
                 return village(chunkX, chunkZ);
         }
+    }
+
+    /** A city center seen from outside its radius, low over the land, looking north at the skyline. */
+    private Result taper(int chunkX, int chunkZ) {
+        Result center = center(chunkX, chunkZ);
+        if (center == null) {
+            return null;
+        }
+        double back = planner.cityRadius(chunkX, chunkZ) + TAPER_BACK;
+        double viewZ = center.z + back + 0.5;
+        return new Result(
+            Kind.TAPER,
+            chunkX,
+            chunkZ,
+            center.x,
+            center.y,
+            center.z,
+            center.x + 0.5,
+            center.y + TAPER_HEIGHT,
+            viewZ,
+            180f,
+            TAPER_PITCH,
+            "city skyline from " + Math.round(back) + " blocks south of its center");
+    }
+
+    /** An edge lot, seen from beside it; a lot that is not dug only when no dug one is near (scored by distance). */
+    private Result lot(int chunkX, int chunkZ) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        if (layout.lot() == com.tuxprogrammer.lostcities.layout.LotKind.NONE) {
+            return null;
+        }
+        int ground = layout.cityGroundLevel();
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        double viewX = x + LOT_BACK + 0.5;
+        double viewZ = z + LOT_BACK + 0.5;
+        String label = layout.lot()
+            .label() + (layout.lotDepth() > 0 ? ", depth " + layout.lotDepth() : "")
+            + (layout.lotColumnFloors() > 0 ? ", columns " + layout.lotColumnFloors() + " floors" : "")
+            + String.format(Locale.ROOT, ", intensity %.2f", layout.intensity());
+        return new Result(
+            Kind.LOT,
+            chunkX,
+            chunkZ,
+            x,
+            ground,
+            z,
+            viewX,
+            ground + LOT_HEIGHT,
+            viewZ,
+            yawToward(viewX, viewZ, x, z),
+            LOT_PITCH,
+            label);
+    }
+
+    /** A building chunk with a repaired explosion, seen from above beside it. */
+    private Result repair(int chunkX, int chunkZ) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        if (!layout.hasBuilding() || !repaired.test(chunkX, chunkZ)) {
+            return null;
+        }
+        int ground = layout.cityGroundLevel();
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        double viewX = x + REPAIR_BACK + 0.5;
+        double viewZ = z + REPAIR_BACK + 0.5;
+        return new Result(
+            Kind.REPAIR,
+            chunkX,
+            chunkZ,
+            x,
+            ground,
+            z,
+            viewX,
+            ground + REPAIR_HEIGHT,
+            viewZ,
+            yawToward(viewX, viewZ, x, z),
+            REPAIR_PITCH,
+            "repaired damage on building " + layout.building() + ", " + layout.floors() + " floors");
+    }
+
+    /** A building beside a building of another city style, seen from above across the pair. */
+    private Result feather(int chunkX, int chunkZ) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        if (!layout.hasBuilding()) {
+            return null;
+        }
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            ChunkPlan other = planner.plan(chunkX + side.stepX(), chunkZ + side.stepZ());
+            if (!other.hasBuilding() || layout.cityStyle() == null
+                || layout.cityStyle()
+                    .equals(other.cityStyle())) {
+                continue;
+            }
+            int x = (chunkX << 4) + 8 + side.stepX() * 8;
+            int z = (chunkZ << 4) + 8 + side.stepZ() * 8;
+            int ground = layout.cityGroundLevel();
+            // Stand off to the side of the pair, so both facades face the camera.
+            double viewX = x + side.stepZ() * FEATHER_BACK + 0.5;
+            double viewZ = z + side.stepX() * FEATHER_BACK + 0.5;
+            return new Result(
+                Kind.FEATHER,
+                chunkX,
+                chunkZ,
+                x,
+                ground,
+                z,
+                viewX,
+                ground + FEATHER_HEIGHT,
+                viewZ,
+                yawToward(viewX, viewZ, x, z),
+                FEATHER_PITCH,
+                layout.cityStyle() + " beside " + other.cityStyle() + " toward " + side.name());
+        }
+        return null;
     }
 
     private Result center(int chunkX, int chunkZ) {

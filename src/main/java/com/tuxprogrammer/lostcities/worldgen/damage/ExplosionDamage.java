@@ -95,6 +95,23 @@ public final class ExplosionDamage {
      * @return the number of blocks changed
      */
     public int breakBlocks(ChunkBuffer buffer, DamageArea area, ChunkPlan plan, Random random) {
+        return breakBlocks(buffer, area, plan, random, Repairs.NONE);
+    }
+
+    /**
+     * Breaks blocks for the explosions that reach the chunk, and fills a repaired explosion's breaks below its repair
+     * line with patches (deviation, alpha review AR-9: docs/design/0008-city-edges-and-character.md §4). A patch
+     * replaces only a block that would have become air or liquid; the damage random is drawn exactly as without
+     * repairs.
+     *
+     * @param buffer  the chunk
+     * @param area    the chunk's damage area
+     * @param plan    the chunk's plan, for its damaged forms and liquid
+     * @param random  the damage random
+     * @param repairs the world's repairs
+     * @return the number of blocks changed
+     */
+    public int breakBlocks(ChunkBuffer buffer, DamageArea area, ChunkPlan plan, Random random, Repairs repairs) {
         if (!area.hasExplosions()) {
             return 0;
         }
@@ -105,6 +122,7 @@ public final class ExplosionDamage {
         int originZ = area.chunkZ() << 4;
         float factor = 1.0f;
         boolean carrying = false;
+        boolean repairing = repairs.active() && plan.isCity();
         Arrays.fill(collected, 0f);
         int changed = 0;
         for (int section = 0; section < DamageArea.SECTIONS; section++) {
@@ -141,6 +159,13 @@ public final class ExplosionDamage {
                             float damage = collected[index];
                             if (damage >= DAMAGE_FLOOR) {
                                 BlockRef result = damageBlock(block, classes, random, y, damage, plan, waterLevel);
+                                if (result != block && repairing && isHole(result, plan)) {
+                                    BlockRef patch = repairs
+                                        .patch(context.worldSeed(), plan, area, classes, block, x, y, z);
+                                    if (patch != null) {
+                                        result = patch;
+                                    }
+                                }
                                 if (result != block) {
                                     buffer.set(x, y, z, result);
                                     damaged++;
@@ -170,6 +195,13 @@ public final class ExplosionDamage {
             }
         }
         return changed;
+    }
+
+    /** Whether a damage result leaves a hole: air, or the chunk's liquid below the water level. */
+    private static boolean isHole(BlockRef result, ChunkPlan plan) {
+        return result.isAir() || result.equals(
+            plan.style()
+                .liquid());
     }
 
     /**

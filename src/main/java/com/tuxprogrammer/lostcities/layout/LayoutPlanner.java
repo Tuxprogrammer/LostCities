@@ -6,6 +6,7 @@ package com.tuxprogrammer.lostcities.layout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -30,6 +31,7 @@ import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 import com.tuxprogrammer.lostcities.layout.view.AssetView;
 import com.tuxprogrammer.lostcities.layout.view.BuildingView;
 import com.tuxprogrammer.lostcities.layout.view.CityStyleView;
+import com.tuxprogrammer.lostcities.layout.view.FacadeTone;
 import com.tuxprogrammer.lostcities.layout.view.InfrastructureView;
 import com.tuxprogrammer.lostcities.layout.view.MultiBuildingView;
 import com.tuxprogrammer.lostcities.layout.view.PartContext;
@@ -95,6 +97,22 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final int MIN_BOTTOM_Y = 2;
     /** Longest corridor walk, in chunks, before the walk gives up. */
     static final int MAX_CORRIDOR_WALK = 512;
+    /** Salt of the separate random the taper's high-rise core draws from (0008 §2). */
+    static final long TAPER_SALT = 0x5441504552494e47L;
+    /** Salt of the separate random edge lots draw from (0008 §3). */
+    static final long LOT_SALT = 0x45444745_4c4f5453L;
+    /** Intensity below which a chunk may become an edge lot (0008 §3). */
+    static final float LOT_INTENSITY = 0.4f;
+    /** An open lot's chance of becoming an edge lot, relative to a building chunk's. */
+    static final float OPEN_LOT_SHARE = 0.5f;
+    /** Weights of a lot's kinds: bare, pit, foundation. */
+    static final float[] LOT_KIND_WEIGHTS = { 0.35f, 0.35f, 0.30f };
+    /** A dug lot's depths, in blocks. */
+    static final int[] LOT_DEPTHS = { 1, 2, 4 };
+    /** The weights of {@link #LOT_DEPTHS}. */
+    static final float[] LOT_DEPTH_WEIGHTS = { 0.30f, 0.35f, 0.35f };
+    /** Most floors a foundation's columns rise above city ground. */
+    static final int LOT_MAX_COLUMN_FLOORS = 3;
 
     final long seed;
     final DimensionKey dimension;
@@ -111,6 +129,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     final CityMap cities;
     final CityLevels levels;
     final Sewing sewing;
+    final Urbanity urbanity;
+    final FacadePlanner facades;
     private final ChunkCache<MultiChunk> multiChunks;
     private final ChunkCache<ChunkCharacteristics> characteristicsCache;
     private final ChunkCache<ChunkPlan> plans;
@@ -144,6 +164,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.cities = new CityMap(seed, profile, worldStyle, terrain, predefined, cache);
         this.levels = new CityLevels(profile, terrain, cities, cache);
         this.sewing = new Sewing(profile, cities, zones, streets, predefined, cache);
+        this.urbanity = new Urbanity(seed, profile, cities, this::isCityForRoads, cache);
+        this.facades = new FacadePlanner(this, cache);
         this.multiChunks = new ChunkCache<>(Math.max(64, cache / 64));
         this.characteristicsCache = new ChunkCache<>(cache);
         this.plans = new ChunkCache<>(cache);
@@ -182,6 +204,30 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      */
     public float cityFactor(int chunkX, int chunkZ) {
         return cities.cityFactor(chunkX, chunkZ);
+    }
+
+    /**
+     * Returns a chunk's urban intensity: 0 at a city's very edge (and outside cities) to 1 in its dense core
+     * (docs/design/0008-city-edges-and-character.md §1).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the intensity
+     */
+    public float intensity(int chunkX, int chunkZ) {
+        return urbanity.intensity(chunkX, chunkZ);
+    }
+
+    /**
+     * Returns the facade tone the facade stage chose for the building unit whose top-left chunk is given, or
+     * {@code null} (docs/design/0007-facade-color-feathering.md).
+     *
+     * @param topX top-left chunk X
+     * @param topZ top-left chunk Z
+     * @return the tone, or {@code null}
+     */
+    public FacadeTone facadeTone(int topX, int topZ) {
+        return facades.active() ? facades.tone(topX, topZ) : null;
     }
 
     /**
@@ -308,9 +354,13 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         PlannedRoadType planned = effectiveRoad(x, z, isCity, raw, pos);
         if (isCity && lane.role()
             .forcesRoad()) {
-            // Deviation (0006 §3): detours are primary roads, village lanes at least tertiary.
-            planned = lane.role() == LaneRole.DETOUR ? PlannedRoadType.PRIMARY
+            // Deviation (0006 §3, 0008 §5): detours and village lanes are small roads around the old town.
+            planned = lane.role() == LaneRole.DETOUR ? PlannedRoadType.TERTIARY
                 : PlannedRoadType.strongest(planned, PlannedRoadType.TERTIARY);
+        }
+        if (planned == PlannedRoadType.PRIMARY && touchesMargin(x, z)) {
+            // Deviation (0008 §5, AR-7, AR-10): no wide road beside a landmark's margin; it narrows to a small one.
+            planned = PlannedRoadType.TERTIARY;
         }
         boolean could = isCity && checkBuildingPossibility(x, z, pos, cityLevel, planned, random, zone);
         // Zone rules, after upstream's draw (landmark-zones.md, "Random consumption").
@@ -334,6 +384,19 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             style,
             building,
             random.drawCount());
+    }
+
+    /** Whether a chunk's 3 × 3 window holds a landmark's margin (an edge ring). */
+    private boolean touchesMargin(int x, int z) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (zones.zone(x + dx, z + dz)
+                    .zone() == Zone.EDGE_RING) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private MultiChunk multiChunk(int x, int z) {
@@ -535,8 +598,79 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         drawLevels(b, x, z, random, building);
         drawTail(b, x, z, random, style);
+        b.intensity = c.isCity ? urbanity.intensity(x, z) : 0f;
+        drawLot(b, x, z);
         applyPlaza(b, x, z);
         return new ChunkPlan(b);
+    }
+
+    /**
+     * Deviation (alpha review AR-6, docs/design/0008-city-edges-and-character.md §3): turns a low-intensity building
+     * chunk or open lot into an empty or construction lot, from a separate random so nothing else the chunk draws
+     * moves.
+     */
+    private void drawLot(ChunkPlan.Builder b, int x, int z) {
+        ChunkCharacteristics c = b.characteristics;
+        if (!c.isCity || profile.edgeLotChance <= 0
+            || b.intensity >= LOT_INTENSITY
+            || c.multiPos.isMulti()
+            || predefined.occupant(x, z) != null
+            || b.highwayXLevel >= 0
+            || b.highwayZLevel >= 0
+            || c.lane.role() != LaneRole.NONE
+            || c.zone.zone()
+                .isTransition()) {
+            return;
+        }
+        boolean building = b.hasBuilding;
+        boolean open = !building && b.hierarchicalOpen && b.parkPart == null && b.streetType == StreetType.PARK;
+        if (!building && !open || infrastructure.rail(x, z)
+            .isPresent()) {
+            return;
+        }
+        QualityRandom lots = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ LOT_SALT);
+        float chance = profile.edgeLotChance * (1f - b.intensity / LOT_INTENSITY) * (building ? 1f : OPEN_LOT_SHARE);
+        float roll = lots.nextFloat();
+        float kindRoll = lots.nextFloat();
+        float depthRoll = lots.nextFloat();
+        float columnRoll = lots.nextFloat();
+        if (roll >= chance) {
+            return;
+        }
+        LotKind kind = kindRoll < LOT_KIND_WEIGHTS[0] ? LotKind.BARE
+            : kindRoll < LOT_KIND_WEIGHTS[0] + LOT_KIND_WEIGHTS[1] ? LotKind.PIT : LotKind.FOUNDATION;
+        if (b.xRailCorridor || b.zRailCorridor || b.railDungeonPart != null) {
+            // A corridor or rail dungeon runs under the lot: nothing is dug into it.
+            kind = LotKind.BARE;
+        }
+        if (building) {
+            becomeOpenLot(b);
+            b.floors = 0;
+            b.cellars = 0;
+        }
+        b.streetType = StreetType.NORMAL;
+        b.parkPart = null;
+        b.fountainPart = null;
+        b.frontPart = null;
+        b.lot = kind;
+        if (kind.isDug()) {
+            b.lotDepth = lotDepth(depthRoll);
+        }
+        if (kind == LotKind.FOUNDATION) {
+            b.lotColumnFloors = 1 + Math.min(LOT_MAX_COLUMN_FLOORS - 1, (int) (columnRoll * LOT_MAX_COLUMN_FLOORS));
+        }
+    }
+
+    /** A dug lot's depth for a roll in [0, 1). */
+    static int lotDepth(float roll) {
+        float running = 0;
+        for (int i = 0; i < LOT_DEPTHS.length; i++) {
+            running += LOT_DEPTH_WEIGHTS[i];
+            if (roll < running) {
+                return LOT_DEPTHS[i];
+            }
+        }
+        return LOT_DEPTHS[LOT_DEPTHS.length - 1];
     }
 
     /** Upstream's prefers-lonely value of a neighbor; avoids CITY-11: 0 unless the neighbor could hold a building. */
@@ -598,6 +732,14 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         StyleView palettes = assets
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
+        if (c.isCity && c.couldHaveBuilding) {
+            // Deviation (AR-17, 0007 §4): a building's palettes come from the facade stage, feathered against its
+            // neighbors; the draw above still runs, so the rest of the chunk's stream is unchanged.
+            List<String> feathered = facades.palettes(x, z);
+            if (feathered != null) {
+                b.palettes = new ArrayList<>(feathered);
+            }
+        }
         float loot = random.nextFloat();
         // Avoids LOOT-10: a multibuilding's top-left chunk rolls too, and its other chunks copy the result.
         b.noLoot = loot < profile.buildingWithoutLootChance;
@@ -615,12 +757,19 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         ChunkCharacteristics c = b.characteristics;
         int cityGround = profile.groundLevel + c.cityLevel * ChunkPlan.FLOOR_HEIGHT;
         float cityFactor = cities.cityFactor(x, z);
+        float taper = profile.cityTaper;
+        // Deviation (AR-5, 0008 §2): the urban intensity takes the city factor's place, by cityTaper.
+        float intensity = urbanity.intensity(x, z);
+        float factor = cityFactor + (intensity - cityFactor) * taper;
         int maxFloors = maxFloors(b.settings, building);
         int bound = (int) (profile.buildingMinFloorsChance
-            + (cityFactor + .1f) * (profile.buildingMaxFloorsChance - profile.buildingMinFloorsChance));
+            + (factor + .1f) * (profile.buildingMaxFloorsChance - profile.buildingMinFloorsChance));
         // Avoids CITY-14: a bound below 1 would throw in nextInt.
         bound = Math.max(1, bound);
         int f = profile.buildingMinFloors + random.nextInt(bound) + 1;
+        if (taper > 0) {
+            f = taperFloors(f, intensity, taper, x, z);
+        }
         f = Math.min(f, maxFloors);
         f = Math.max(f, minFloors(b.settings, building));
         // Avoids CITY-15: the cap loop stops at 0, and a chunk it empties holds no building.
@@ -667,6 +816,31 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             cellars--;
         }
         b.cellars = cellars;
+    }
+
+    /**
+     * Deviation (alpha review AR-5, docs/design/0008-city-edges-and-character.md §2): a building in the dense core may
+     * rise into a high-rise, up to {@code buildingMaxFloors}, and one near the edge is held low, so heights fade from
+     * the core to RWG terrain. Draws from a separate random, so the building stream is unchanged.
+     *
+     * @param drawn     upstream's floor count
+     * @param intensity the chunk's urban intensity
+     * @param taper     {@code cityTaper}
+     * @param x         chunk X
+     * @param z         chunk Z
+     * @return the tapered floor count
+     */
+    private int taperFloors(int drawn, float intensity, float taper, int x, int z) {
+        QualityRandom core = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ TAPER_SALT);
+        float rise = core.nextFloat();
+        float height = core.nextFloat();
+        int f = drawn;
+        if (rise < Urbanity.coreChance(intensity, taper) && f < profile.buildingMaxFloors) {
+            f += 1 + (int) (height * (profile.buildingMaxFloors - f));
+        }
+        return Math.min(
+            f,
+            Urbanity.floorCap(intensity, profile.buildingMaxFloors, profile.buildingMinFloors + 1, taper));
     }
 
     /** The most floors a zone allows at this chunk (all of a multibuilding's chunks, for its top-left). */

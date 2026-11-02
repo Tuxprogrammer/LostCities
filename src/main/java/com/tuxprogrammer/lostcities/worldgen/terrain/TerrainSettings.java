@@ -69,6 +69,10 @@ public final class TerrainSettings {
     private final int cityMinHeight;
     private final int cityMaxHeight;
     private final int cityMaxRise;
+    private final float cityTaper;
+    private final float edgeLotChance;
+    private final float damageRepairChance;
+    private final float facadeContrast;
     private final int heightSampleSize;
     private final int bedrockLayer;
     private final int terrainFixLowerMinOffset;
@@ -119,6 +123,10 @@ public final class TerrainSettings {
         cityMinHeight = r.intValue("cityMinHeight", 50, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxRise = r.intValue("cityMaxRise", DEFAULT_MAX_RISE, 0, CITY_LEVEL_THRESHOLDS);
+        cityTaper = r.floatValue("cityTaper", 1.0f, 0f, 1f);
+        edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
+        damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
+        facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
         bedrockLayer = r.intValue("bedrockLayer", 1, 0, 10);
         if (bedrockLayer > 0 && r.values.containsKey("bedrockLayer")) {
@@ -235,6 +243,10 @@ public final class TerrainSettings {
         out.put("cityMinHeight", Integer.toString(cityMinHeight));
         out.put("cityMaxHeight", Integer.toString(cityMaxHeight));
         out.put("cityMaxRise", Integer.toString(cityMaxRise));
+        out.put("cityTaper", text(cityTaper));
+        out.put("edgeLotChance", text(edgeLotChance));
+        out.put("damageRepairChance", text(damageRepairChance));
+        out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
         out.put("bedrockLayer", Integer.toString(bedrockLayer));
         out.put("terrainFixLowerMinOffset", Integer.toString(terrainFixLowerMinOffset));
@@ -335,6 +347,32 @@ public final class TerrainSettings {
      */
     public int cityMaxRise() {
         return cityMaxRise;
+    }
+
+    /**
+     * Returns how strongly building heights follow the urban intensity ({@code cityTaper}, 0 to 1; alpha review AR-5,
+     * docs/design/0008-city-edges-and-character.md §2).
+     */
+    public float cityTaper() {
+        return cityTaper;
+    }
+
+    /** Returns the chance of an edge lot at a city's very edge ({@code edgeLotChance}; AR-6, 0008 §3). */
+    public float edgeLotChance() {
+        return edgeLotChance;
+    }
+
+    /** Returns the chance an explosion's damage is partly repaired ({@code damageRepairChance}; AR-9, 0008 §4). */
+    public float damageRepairChance() {
+        return damageRepairChance;
+    }
+
+    /**
+     * Returns the most contrast two neighboring facades may have ({@code facadeContrast}; AR-17,
+     * docs/design/0007-facade-color-feathering.md §3); 200 turns feathering off.
+     */
+    public float facadeContrast() {
+        return facadeContrast;
     }
 
     /** Returns the highest oracle height a city chunk may have ({@code cityMaxHeight}). */

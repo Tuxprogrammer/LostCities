@@ -173,6 +173,29 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] A server and a client with different configs still join. *Real pack: the server with `highways` and `iron` off and `nodamage` mapped to dimension 0, the client with its default config; the client joined and played until the server stopped.*
 - [x] Two fresh worlds of the same seed and a non-default profile hash identically (`city.real`). *`tallbuildings` with `forceSpawnInBuilding`, RWG2 Continents, seed 4242: terrain `c2fbbf50…`, population `7ab26747…` in both.*
 
+## M12 · City edges and character
+
+**Lane:** Layout, with Assets and World. **Parallel with:** M06, M07, M08, M10, M11.
+
+**Entry gate:** M05R done (met: D148 to D155 merged); the alpha review's notes AR-5, AR-6, AR-9 and AR-17 triaged to M12 ([reviews/2026-11-02-alpha.md](reviews/2026-11-02-alpha.md), D131); [0007](design/0007-facade-color-feathering.md) accepted before its code lands.
+
+**Scope:** the city's character from its center to its edge ([0008](design/0008-city-edges-and-character.md)):
+- **Tapering (AR-5):** an urban intensity per chunk from the city factor, the distance to the city's edge (margins, the rise cap and RWG land alike) and low-frequency noise; building heights follow it, with a high-rise core and low buildings at the edge, so the city fades into RWG terrain organically, not in rings.
+- **Edge lots (AR-6):** empty and construction lots where the intensity is low: bare clay-and-dirt ground with no foliage, pits dug 1, 2 or 4 blocks for a basement, and foundations with concrete pillars for a high-rise's first stage, in pack blocks, deterministic.
+- **Partial repairs (AR-9):** some explosions' damage is partly filled back in with a similar but not identical material, a visible patch; windows boarded.
+- **Color feathering (AR-17):** a building's facade is one color, and neighboring buildings' facades stay within a contrast limit across style and biome changes ([0007](design/0007-facade-color-feathering.md)): block colors measured from the pack's textures and shipped as data, and palettes chosen against neighbors in an order-independent way.
+- **M05R leftovers:** the margin's bank no longer steps down in long straight 1-block terraces; a lane never rises two blocks between neighboring columns without a step; no wide road runs along or into a village's margin.
+
+**Exit gate:**
+- [ ] 0007 is accepted and live: `colors.tsv` holds every contact-sheet block, measured by `tools/block-colors/measure.py`; palette choice keeps every pair of neighboring buildings with palette freedom within `facadeContrast`, deterministically and independent of the order chunks are planned in (unit tests over the test world, a style boundary and reversed planning order).
+- [ ] Tapering is live: mean floors rise with the intensity, buildings beside the city's edge stay low, and the intensity varies along a ring of equal distance from the center (unit tests).
+- [ ] Edge lots are live: bare, dug (1, 2, 4) and foundation lots appear only where the intensity is low, in pack blocks that resolve on the real pack, with no foliage and RWG's decoration guarded out (unit tests; `find lot` in the real pack).
+- [ ] Repairs are live: a repaired explosion's patch is the same across chunk borders, similar but not identical to what it replaces, and only in buildings and city ground (unit tests).
+- [ ] The M05R leftovers are fixed, each with a test.
+- [ ] Every new option is pinned, ranged and documented (`ProfileOptionsDocsTest`); the layout version is raised.
+- [ ] On real-pack instance 5, seed 4242, RWG2 Continents and classic RWG: two fresh worlds per type print the same `city.real` hashes; B1 to B5 hold (D81's method); no cascade warning names this mod's code first; `city.walk` and `city.sewing` pass.
+- [ ] Both alpha shot lists rerun with the final jar, with shots added for tapering, a construction lot, a repair and a style boundary, and every image checked.
+
 ## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
@@ -185,7 +208,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
 | M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |
-| M12 · City edges and character | Layout, with Assets | From the alpha review (AR-5, AR-6, AR-9, AR-17): building heights that taper organically from the center toward the edge; empty and construction lots near the edges (bare clay ground with no foliage, some dug 1 to 4 blocks for a basement, a variant with concrete pillars); damage partly repaired with a similar but not identical material; neighboring buildings' colors that feather across biome and style changes (a design record first) |
+| M12 · City edges and character | Layout, with Assets | Written in full [above](#m12--city-edges-and-character) |
 
 ## Beta gate (MVP)
 

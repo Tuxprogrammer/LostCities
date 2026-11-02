@@ -168,6 +168,166 @@ public final class VillageLanes {
         return moved;
     }
 
+    /**
+     * Relaxes a lane's columns so that no two lane neighbors (along X or Z, in this chunk) differ by more than one
+     * block, which the steps can then carry (deviation, M12: docs/design/0008-city-edges-and-character.md §5; D152
+     * left rises of two or more as they were). Each column moves to the floor of the mean of the lowest and highest
+     * heights a one-block-a-column lane through its neighbors allows, clamped so that the columns on the chunk's
+     * border keep their height and the seams with the neighboring chunks do not move. Columns beside the lane then
+     * meet it halfway where they differ by more than a block, as {@link #grade} does.
+     *
+     * @param buffer  the chunk, before the lane is laid
+     * @param context the world's terrain context
+     * @param lane    the lane
+     * @return the number of columns moved
+     */
+    public static int relax(ChunkBuffer buffer, TerrainContext context, LanePath lane) {
+        BlockClassifier classes = context.classifier();
+        int waterLevel = context.settings()
+            .waterLevel();
+        int[] heights = new int[256];
+        boolean[] mask = new boolean[256];
+        boolean any = false;
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                int index = (z << 4) | x;
+                if (!lane.contains(x, z)) {
+                    continue;
+                }
+                int surface = ColumnOps.surface(buffer, classes, x, z, true);
+                if (surface < WorldLimits.MIN_Y) {
+                    continue;
+                }
+                heights[index] = surface;
+                mask[index] = true;
+                any = true;
+            }
+        }
+        if (!any) {
+            return 0;
+        }
+        int[] targets = relaxedTargets(heights, mask);
+        int moved = 0;
+        int[] laneTargets = new int[256];
+        Arrays.fill(laneTargets, NO_TARGET);
+        for (int index = 0; index < 256; index++) {
+            if (!mask[index]) {
+                continue;
+            }
+            laneTargets[index] = targets[index];
+            if (targets[index] != heights[index]) {
+                moved += moveTo(buffer, classes, index & 15, index >> 4, targets[index], waterLevel) ? 1 : 0;
+            }
+        }
+        if (moved > 0) {
+            moved += shoulders(buffer, classes, lane, laneTargets, waterLevel);
+        }
+        return moved;
+    }
+
+    /**
+     * The relaxed heights of a lane's columns: {@code floor((L + U) / 2)}, where {@code U} is the largest and
+     * {@code L} the smallest one-block-a-column surface through the lane that stays under, and over, every column's
+     * height; then clamped to what the border columns' fixed heights allow. Lane neighbors in the result differ by at
+     * most one wherever the border heights are themselves reachable from each other.
+     *
+     * @param heights the columns' heights, index {@code z × 16 + x}
+     * @param mask    which columns are lane
+     * @return the targets; columns outside the mask are 0
+     */
+    static int[] relaxedTargets(int[] heights, boolean[] mask) {
+        int[] upper = envelope(heights, mask, false, true);
+        int[] lower = envelope(heights, mask, true, true);
+        int[] borderUpper = envelope(heights, mask, false, false);
+        int[] borderLower = envelope(heights, mask, true, false);
+        int[] out = new int[256];
+        for (int index = 0; index < 256; index++) {
+            if (!mask[index]) {
+                continue;
+            }
+            int target = Math.floorDiv(lower[index] + upper[index], 2);
+            if (borderLower[index] != Integer.MIN_VALUE) {
+                target = Math.max(target, borderLower[index]);
+            }
+            if (borderUpper[index] != Integer.MAX_VALUE) {
+                target = Math.min(target, borderUpper[index]);
+            }
+            out[index] = target;
+        }
+        return out;
+    }
+
+    /**
+     * A one-block-a-column envelope over the lane: the lowest ({@code fromBelow}) of {@code h(d) − dist} or the
+     * highest of {@code h(d) + dist}, over every lane column {@code d}, or only the border columns.
+     */
+    private static int[] envelope(int[] heights, boolean[] mask, boolean fromBelow, boolean everyColumn) {
+        int[] values = new int[256];
+        int none = fromBelow ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        for (int index = 0; index < 256; index++) {
+            int x = index & 15;
+            int z = index >> 4;
+            boolean border = x == 0 || x == 15 || z == 0 || z == 15;
+            values[index] = mask[index] && (everyColumn || border) ? heights[index] : none;
+        }
+        boolean changed = true;
+        while (changed) {
+            changed = false;
+            for (int index = 0; index < 256; index++) {
+                if (!mask[index]) {
+                    continue;
+                }
+                int x = index & 15;
+                int z = index >> 4;
+                for (int[] step : STEPS) {
+                    int nx = x + step[0];
+                    int nz = z + step[1];
+                    if (!inChunk(nx, nz) || !mask[(nz << 4) | nx]) {
+                        continue;
+                    }
+                    int neighbor = values[(nz << 4) | nx];
+                    if (neighbor == none) {
+                        continue;
+                    }
+                    int candidate = fromBelow ? neighbor - 1 : neighbor + 1;
+                    if (fromBelow ? candidate > values[index] : candidate < values[index]) {
+                        values[index] = candidate;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        return values;
+    }
+
+    /** Moves the columns beside a lane halfway to it where they differ by more than a block. */
+    private static int shoulders(ChunkBuffer buffer, BlockClassifier classes, LanePath lane, int[] targets,
+        int waterLevel) {
+        int moved = 0;
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                if (lane.contains(x, z)) {
+                    continue;
+                }
+                int laneTarget = NO_TARGET;
+                for (int[] step : STEPS) {
+                    int nx = x + step[0];
+                    int nz = z + step[1];
+                    if (inChunk(nx, nz) && targets[(nz << 4) | nx] != NO_TARGET) {
+                        laneTarget = targets[(nz << 4) | nx];
+                        break;
+                    }
+                }
+                int own = ColumnOps.surface(buffer, classes, x, z, true);
+                if (laneTarget == NO_TARGET || own < WorldLimits.MIN_Y || Math.abs(own - laneTarget) <= 1) {
+                    continue;
+                }
+                moved += moveTo(buffer, classes, x, z, Math.round((own + laneTarget) / 2f), waterLevel) ? 1 : 0;
+            }
+        }
+        return moved;
+    }
+
     /** Moves a column's top to a height, keeping its top blocks; returns whether anything moved. */
     private static boolean moveTo(ChunkBuffer buffer, BlockClassifier classes, int x, int z, int target,
         int waterLevel) {

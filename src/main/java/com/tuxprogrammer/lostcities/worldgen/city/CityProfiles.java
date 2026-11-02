@@ -53,6 +53,7 @@ public final class CityProfiles {
             .cityLevelHeights(settings.cityLevelHeights())
             .cityHeightWindow(settings.cityMinHeight(), settings.cityMaxHeight())
             .cityMaxRise(settings.cityMaxRise())
+            .character(settings.cityTaper(), settings.edgeLotChance(), settings.facadeContrast())
             .averageHeightmap(values.getBoolean("useAvgHeightmap"), settings.heightSampleSize())
             .ruins(settings.ruinChance(), settings.ruinMinlevelPercent(), settings.ruinMaxlevelPercent())
             .oceanCorrectionBorder(settings.oceanCorrectionBorder())
