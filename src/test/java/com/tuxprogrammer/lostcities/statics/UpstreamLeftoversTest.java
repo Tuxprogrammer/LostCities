@@ -99,9 +99,7 @@ public class UpstreamLeftoversTest {
     public void doesNotReproduceUI11_everyStringIsAKeyInTheLangFileThatThisGameVersionLoads() throws Exception {
         // 1.7.10 reads assets/<domain>/lang/<locale>.lang; upstream shipped JSON lang files and five .lang files
         // that 1.20 never loaded, and hard-coded its UI text.
-        assertTrue(
-            Files.isRegularFile(ProjectFiles.resolve("src/main/resources" + LangFile.EN_US)),
-            LangFile.EN_US);
+        assertTrue(Files.isRegularFile(ProjectFiles.resolve("src/main/resources" + LangFile.EN_US)), LangFile.EN_US);
         Set<String> defined = LangKeysTest.definedKeys();
         for (String key : defined) {
             assertFalse(key.startsWith("generator."), key + " names a world type this mod does not add");

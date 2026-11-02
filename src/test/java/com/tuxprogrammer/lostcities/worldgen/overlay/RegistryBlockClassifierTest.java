@@ -74,10 +74,7 @@ public class RegistryBlockClassifierTest {
         }
         for (String name : new String[] { "minecraft:stone", "minecraft:ice", "minecraft:redstone_lamp",
             "minecraft:quartz_block", "minecraft:iron_bars" }) {
-            assertEquals(
-                0,
-                NameBlockClassifier.classify(BlockRef.of(name, 0)) & BlockClassifier.EASY_BREAKABLE,
-                name);
+            assertEquals(0, NameBlockClassifier.classify(BlockRef.of(name, 0)) & BlockClassifier.EASY_BREAKABLE, name);
         }
     }
 

@@ -29,10 +29,7 @@ public class ChunkCacheTest {
         ChunkCache<Integer> cache = new ChunkCache<>(64);
         assertEquals(20, fill(cache, 20));
         for (int x = 0; x <= 20; x++) {
-            assertEquals(
-                Integer.valueOf(x),
-                cache.get(x, 0),
-                "entry " + x + " was stored while another was computed");
+            assertEquals(Integer.valueOf(x), cache.get(x, 0), "entry " + x + " was stored while another was computed");
         }
     }
 

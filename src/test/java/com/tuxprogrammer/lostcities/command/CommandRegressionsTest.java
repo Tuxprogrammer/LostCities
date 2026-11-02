@@ -53,9 +53,8 @@ public class CommandRegressionsTest {
             () -> new LostCitiesCommand().processCommand(TestSenders.console(4, chat), new String[] { "resetchunks" }));
         assertEquals(LangKeys.COMMAND_UNKNOWN, error);
         @SuppressWarnings("unchecked")
-        List<String> names = new LostCitiesCommand().addTabCompletionOptions(
-            TestSenders.console(4, new ArrayList<IChatComponent>()),
-            new String[] { "" });
+        List<String> names = new LostCitiesCommand()
+            .addTabCompletionOptions(TestSenders.console(4, new ArrayList<IChatComponent>()), new String[] { "" });
         assertFalse(names.isEmpty());
         for (String name : names) {
             assertFalse(name.contains("reset"), "no subcommand regenerates chunks: " + names);

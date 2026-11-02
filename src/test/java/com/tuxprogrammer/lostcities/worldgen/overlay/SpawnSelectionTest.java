@@ -119,8 +119,7 @@ public class SpawnSelectionTest {
             if (Modifier.isStatic(field.getModifiers())) {
                 assertTrue(Modifier.isFinal(field.getModifiers()), field.getName() + " is mutable static state");
                 assertFalse(
-                    Map.class.isAssignableFrom(field.getType())
-                        || Collection.class.isAssignableFrom(field.getType()),
+                    Map.class.isAssignableFrom(field.getType()) || Collection.class.isAssignableFrom(field.getType()),
                     field.getName() + " would keep spawns past the world");
             } else {
                 throw new AssertionError("SpawnSelection keeps state in " + field.getName());

@@ -59,10 +59,8 @@ public class ProfileRegressionsTest {
     @Test
     public void doesNotReproduceCORE09_aBadTreatmentRejectsTheProfileAtLoadAndEachProfileKeepsItsOwn() {
         // Upstream parsed a JVM-wide set of structure IDs on first use and threw from generation on a bad one.
-        ProfileJson.Load misspelled = ProfileJson.read(
-            "huts",
-            "huts.json",
-            "{ \"lostcity\": { \"landmarkTreatment\": \"minecraft:swamp_huts=AVOID\" } }");
+        ProfileJson.Load misspelled = ProfileJson
+            .read("huts", "huts.json", "{ \"lostcity\": { \"landmarkTreatment\": \"minecraft:swamp_huts=AVOID\" } }");
         assertNull(misspelled.profile(), "an unknown landmark kind rejects the profile when it loads");
         assertFalse(
             misspelled.errors()

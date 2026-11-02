@@ -50,8 +50,7 @@ public class SeaLevelDamageTest {
             new NameBlockClassifier(),
             BlockAvailability.VANILLA);
         ArrayChunkBuffer buffer = solid(100);
-        DamageArea area = DamageArea
-            .withExplosions(0, 0, Collections.singletonList(new Explosion(8, CENTER_Y, 8, 10)));
+        DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, CENTER_Y, 8, 10)));
         ChunkPlan plan = ChunkPlan.builder(0, 0, ChunkKind.CITY)
             .groundY(71)
             .build();

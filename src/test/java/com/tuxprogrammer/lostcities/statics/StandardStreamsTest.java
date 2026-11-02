@@ -40,8 +40,8 @@ public class StandardStreamsTest {
     public void fixtureReadingSystemErrFails() {
         ClassNode fixture = fixture("PrintsToErr");
         MethodNode method = method(fixture);
-        method.instructions.add(
-            new FieldInsnNode(Opcodes.GETSTATIC, "java/lang/System", "err", "Ljava/io/PrintStream;"));
+        method.instructions
+            .add(new FieldInsnNode(Opcodes.GETSTATIC, "java/lang/System", "err", "Ljava/io/PrintStream;"));
         method.instructions.add(new InsnNode(Opcodes.POP));
         method.instructions.add(new InsnNode(Opcodes.RETURN));
         assertEquals(
@@ -54,8 +54,8 @@ public class StandardStreamsTest {
         ClassNode fixture = fixture("PrintsStackTrace");
         MethodNode method = method(fixture);
         method.instructions.add(new InsnNode(Opcodes.ACONST_NULL));
-        method.instructions.add(
-            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable", "printStackTrace", "()V", false));
+        method.instructions
+            .add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "java/lang/Throwable", "printStackTrace", "()V", false));
         method.instructions.add(new InsnNode(Opcodes.RETURN));
         assertEquals(
             Collections.singletonList("fixtures.PrintsStackTrace -> java.lang.Throwable#printStackTrace()V"),
