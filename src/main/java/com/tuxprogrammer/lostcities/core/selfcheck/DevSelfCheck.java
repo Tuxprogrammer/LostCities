@@ -13,6 +13,8 @@ import com.tuxprogrammer.lostcities.config.WorldgenConfig;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.LangFile;
 import com.tuxprogrammer.lostcities.core.LangKeys;
+import com.tuxprogrammer.lostcities.core.assets.AssetSelfCheck;
+import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
 
 /**
@@ -20,9 +22,10 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
  * server or client, when something the mod ships is inconsistent (CONTRIBUTING § Testing, layer 3).
  *
  * <p>
- * M01's checks: every lang key the code and the config screen use is in the jar's {@code en_US.lang}; the module flags
- * and the config agree; every scenario is registered under a valid, unique name. Later milestones add theirs here: M02
- * every asset resolves and every palette block exists, M08 the loot tier ceiling.
+ * Checks: every lang key the code and the config screen use is in the jar's {@code en_US.lang}; the module flags
+ * and the config agree; every scenario is registered under a valid, unique name; every asset loads and every block it
+ * names resolves, to its primary or a documented fallback (M02, {@link AssetSelfCheck}). M08 adds the loot tier
+ * ceiling.
  *
  * <p>
  * Runs in the development environment, or wherever {@code -Dlostcitiesnh.selfCheck=true} asks for it
@@ -56,10 +59,15 @@ public final class DevSelfCheck {
     static List<SelfCheck> checks() {
         List<String> required = new ArrayList<>(LangKeys.all());
         required.addAll(LostCitiesConfig.langKeys());
-        return Arrays.asList(
-            new LangCheck(required, jarLangKeys()),
-            new ModuleConfigCheck(WorldgenConfig.class),
-            ScenarioRegistry.selfCheck());
+        List<SelfCheck> checks = new ArrayList<>(
+            Arrays.asList(
+                new LangCheck(required, jarLangKeys()),
+                new ModuleConfigCheck(WorldgenConfig.class),
+                ScenarioRegistry.selfCheck()));
+        if (LoadedAssets.isLoaded()) {
+            checks.add(new AssetSelfCheck(LoadedAssets.current()));
+        }
+        return checks;
     }
 
     private static Set<String> jarLangKeys() {

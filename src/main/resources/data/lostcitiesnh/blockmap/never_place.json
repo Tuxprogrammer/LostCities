@@ -1,0 +1,19 @@
+{
+  "comment": "Blocks generation never places (D28 rule 7 as amended by D29, D19): every palette, variant, override and generated part is checked at load, and an entry naming one is rejected and takes its fallback. 'modid:name' covers every metadata, 'modid:name:meta' one, and a trailing '*' a name prefix. Vanilla spawners are exempt from the hardness rule (D20). Rows: docs/new-spec/05-assets/block-catalog/index.md, 'Never placed'.",
+  "reasons": {
+    "unbreakable": ["minecraft:bedrock", "minecraft:command_block", "etfuturum:barrier", "etfuturum:light", "Thaumcraft:blockWarded", "Thaumcraft:blockArcaneDoor", "ThaumicHorizons:evanescent", "GalacticraftCore:tile.spaceStationBase", "HardcoreEnderExpansion:biome_core"],
+    "explosive": ["gregtech:gt.blockreinforced:5", "BloodArsenal:blood_tnt", "HardcoreEnderExpansion:energy_cluster", "HardcoreEnderExpansion:enhanced_tnt", "Natura:Dark Tree:1"],
+    "too hard (hardness above 50)": [
+      "TwilightForest:tile.CastleBrick", "TwilightForest:tile.CastleMagic", "TwilightForest:tile.TFMazestone", "TwilightForest:tile.TFDeadrock", "TwilightForest:tile.GiantCobble", "TwilightForest:tile.GiantLog", "TwilightForest:tile.GiantLeaves", "TwilightForest:tile.GiantObsidian",
+      "gregtech:gt.blockreinforced:0", "gregtech:gt.blockreinforced:1", "gregtech:gt.blockreinforced:8", "gregtech:gt.blockreinforced:9", "gregtech:gt.blockreinforced:11", "gregtech:gt.blockreinforced:12",
+      "dreamcraft:BronzePlatedReinforcedStone", "dreamcraft:SteelPlatedReinforcedStone", "dreamcraft:TitaniumPlatedReinforcedStone", "dreamcraft:TungstensteelPlatedReinforcedStone", "dreamcraft:NaquadahPlatedReinforcedStone", "dreamcraft:NeutroniumPlatedReinforcedStone", "dreamcraft:BloodyIchorium",
+      "IC2:blockAlloy", "openmodularturrets:hardWallTierFive", "openmodularturrets:fenceTierFive", "ExtraUtilities:block_bedrockium", "HardcoreEnderExpansion:ender_goo"
+    ],
+    "valuable storage outside loot": ["minecraft:diamond_block", "minecraft:emerald_block", "minecraft:lapis_block", "minecraft:redstone_block", "gregtech:gt.blockgem1", "gregtech:gt.blockgem2", "gregtech:gt.blockgem3", "chisel:diamond_block", "chisel:emerald_block", "chisel:lapis_block", "chisel:redstone_block", "thaumicbases:quicksilverBlock", "thaumicbases:quicksilverBrick", "thaumicbases:oldDiamond", "thaumicbases:oldLapis", "ironchest:BlockIronChest:1", "ironchest:BlockIronChest:2", "ironchest:BlockIronChest:6"],
+    "metal above EV": ["chisel:tungstensteelblock", "chisel:iridiumblock", "chisel:osmiumblock", "chisel:platinumblock", "chisel:uraniumblock", "chisel:rppblock", "IC2:blockMetal:3"],
+    "GT ore host": ["minecraft:stone:0", "minecraft:netherrack", "minecraft:end_stone", "gregtech:gt.blockgranites:0", "gregtech:gt.blockgranites:8", "gregtech:gt.blockstones:0", "gregtech:gt.blockstones:8", "etfuturum:deepslate", "etfuturum:tuff:0", "GalacticraftCore:tile.moonBlock:4", "GalacticraftMars:tile.mars:6", "GalacticraftMars:tile.mars:9", "GalacticraftMars:tile.asteroidsBlock:1"],
+    "infested": ["minecraft:monster_egg", "TwilightForest:tile.TFTowerStone:4"],
+    "casing or machine": ["gregtech:gt.blockcasings*", "gregtech:gt.blockmachines"],
+    "gameplay hazard": ["Ztones:booster", "ExtraUtilities:spike_base", "ExtraUtilities:spike_base_diamond", "ExtraUtilities:spike_base_gold", "ExtraUtilities:spike_base_wood", "ExtraUtilities:magnumTorch", "ExtraUtilities:chandelier", "ExtraUtilities:etherealglass", "Natura:NetherGlass", "Natura:heatsand", "Natura:Thornvines", "AWWayofTime:spectralBlock", "gregtech:gt.blockpad"]
+  }
+}
