@@ -368,8 +368,7 @@ public final class CityFinder {
             .values()) {
             int run = 0;
             while (run < STREET_RUN_MAX) {
-                ChunkPlan next = planner
-                    .plan(chunkX + side.stepX() * (run + 1), chunkZ + side.stepZ() * (run + 1));
+                ChunkPlan next = planner.plan(chunkX + side.stepX() * (run + 1), chunkZ + side.stepZ() * (run + 1));
                 if (!openStreet(next) || next.cityGroundLevel() != ground) {
                     break;
                 }
@@ -405,9 +404,7 @@ public final class CityFinder {
 
     /** Returns whether a chunk is open street: city, no building, no park or fountain. */
     private static boolean openStreet(ChunkPlan layout) {
-        return layout.isCity() && !layout.hasBuilding()
-            && layout.parkPart() == null
-            && layout.fountainPart() == null;
+        return layout.isCity() && !layout.hasBuilding() && layout.parkPart() == null && layout.fountainPart() == null;
     }
 
     private Result interior(int chunkX, int chunkZ) {
