@@ -38,7 +38,8 @@ import rwg2.world.ChunkManagerRealistic;
  * <li><b>City.</b> Where the world's city layout already knows the landmarks (the oracle wired into the structure
  * oracles), no chunk a landmark's core touches may be a city chunk.</li>
  * </ol>
- * The oracle must load no chunk.
+ * The oracle must load no chunk. On another world type (classic RWG) the scenario checks only that the oracle is
+ * empty there.
  *
  * <p>
  * Side: server. Load only when RWG2 is present.
@@ -82,6 +83,8 @@ public final class Rwg2LandmarkScenario implements Scenario {
     private int checkIndex;
     private boolean checksPlanned;
     private boolean done;
+    private boolean otherWorldType;
+    private boolean noneHere;
 
     /**
      * Adds the scenario to a registry.
@@ -126,7 +129,14 @@ public final class Rwg2LandmarkScenario implements Scenario {
         checksPlanned = false;
         done = false;
         WorldServer world = context.world();
-        context.check(Rwg2Landmarks.applies(world), "expected an RWG2 world, found another type");
+        otherWorldType = !Rwg2Landmarks.applies(world);
+        if (otherWorldType) {
+            // Classic RWG and other types have none of these landmarks: the oracle must be empty there.
+            noneHere = Rwg2Landmarks.forWorld(world, null, LayoutProfile.defaults().landmarkMargin)
+                == StructureOracle.NONE;
+            done = true;
+            return;
+        }
         StructureOracle built = Rwg2Landmarks.forWorld(world, null, LayoutProfile.defaults().landmarkMargin);
         context.check(built instanceof Rwg2LandmarkOracle, "expected an RWG2 landmark oracle, found none");
         oracle = (Rwg2LandmarkOracle) built;
@@ -143,6 +153,9 @@ public final class Rwg2LandmarkScenario implements Scenario {
 
     @Override
     public void tick(ScenarioContext context) {
+        if (otherWorldType) {
+            return;
+        }
         long start = System.nanoTime();
         int side = 2 * SEARCH_RADIUS / SEARCH_SPACING + 1;
         while (searchCursor < side * side && System.nanoTime() - start < TICK_BUDGET_NANOS) {
@@ -264,6 +277,11 @@ public final class Rwg2LandmarkScenario implements Scenario {
 
     @Override
     public void verify(ScenarioContext context) {
+        if (otherWorldType) {
+            LostCities.LOG.info("[LCNH-RWG2] not an RWG2 world: landmark oracle empty {}", noneHere);
+            context.check(noneHere, "expected no RWG2 landmark oracle on another world type, found one");
+            return;
+        }
         context.check(done, "expected every check run, finished " + checkIndex + "/" + checks.size());
         WorldServer world = context.world();
         int chunksAfter = world.theChunkProviderServer.getLoadedChunkCount();

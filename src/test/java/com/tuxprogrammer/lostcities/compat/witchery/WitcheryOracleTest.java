@@ -45,7 +45,9 @@ class WitcheryOracleTest {
                 oracle.grid()
                     .isCandidate(chunkX, chunkZ),
                 landmark.id());
-            assertTrue(chunkX * 16 + WitcheryOracle.BIOME_OFFSET >= 0, "biome rejected west of X 0: " + landmark.id());
+            assertTrue(
+                chunkX * 16 + WitcheryOracle.BLEND_WINDOW_HIGH >= 0,
+                "no allowed biome in the blend window: " + landmark.id());
             BlockRect lot = landmark.footprint()
                 .get(0);
             assertEquals(new BlockRect(chunkX * 16 - 9, chunkZ * 16 - 9, chunkX * 16 + 13, chunkZ * 16 + 13), lot);
@@ -56,7 +58,7 @@ class WitcheryOracleTest {
         for (int cellX = grid.cellOf(-200); cellX <= grid.cellOf(200); cellX++) {
             for (int cellZ = grid.cellOf(-200); cellZ <= grid.cellOf(200); cellZ++) {
                 int[] candidate = grid.candidateChunk(cellX, cellZ);
-                if (candidate[0] * 16 + 5 >= 0 && candidate[0] >= -200
+                if (candidate[0] * 16 + WitcheryOracle.BLEND_WINDOW_HIGH >= 0 && candidate[0] >= -200
                     && candidate[0] <= 200
                     && candidate[1] >= -200
                     && candidate[1] <= 200) {
@@ -124,6 +126,23 @@ class WitcheryOracleTest {
             off.landmarksTouching(-300, -300, 300, 300)
                 .isEmpty());
         assertNull(off.structureAt(0, 0));
+    }
+
+    @Test
+    void anyAllowedBiomeInTheBlendWindowKeepsTheLot() {
+        // RWG's stored biome is a weighted pick among the provider's samples from −72 to +88 blocks of the origin.
+        WitcheryOracle oracle = oracle(WitcherySettings.pack(), 16);
+        int[] candidate = oracle.grid()
+            .candidateChunk(0, 0);
+        int originX = candidate[0] * 16;
+        int originZ = candidate[1] * 16;
+        WitcheryBiomes oneSample = (x, z) -> x == originX + 88 && z == originZ - 72;
+        WitcheryOracle edge = new WitcheryOracle(99L, WitcherySettings.pack(), oneSample, null, 16);
+        assertTrue(edge.biomeAccepts(candidate[0], candidate[1]), "the window's far corner allows");
+        WitcheryBiomes outside = (x, z) -> x > originX + 88;
+        WitcheryOracle none = new WitcheryOracle(99L, WitcherySettings.pack(), outside, null, 16);
+        assertFalse(none.biomeAccepts(candidate[0], candidate[1]), "nothing allowed in the window");
+        assertNull(none.structureAt(candidate[0], candidate[1]));
     }
 
     @Test

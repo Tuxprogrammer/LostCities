@@ -302,15 +302,14 @@ public final class WitcheryScenario implements Scenario {
             boolean stands = recorded.contains(BoundedCache.key(target[0], target[1]));
             if (!stands) {
                 rejectedClear++;
-            } else if (storedBiomeDisallowed(world, target, disallowed)) {
-                failures.add(target[0] + "," + target[1] + " recorded although its stored biome is disallowed");
             } else {
-                explained++;
-                LostCities.LOG.info(
-                    "[LCNH-WITCHERY] unpredicted structure at {},{}: stored biome {} differs from the provider's",
-                    target[0],
-                    target[1],
-                    storedBiome(world, target));
+                // The oracle keeps a lot wherever any biome RWG can store there passes: none may stand outside one.
+                BiomeGenBase biome = storedBiome(world, target);
+                failures.add(
+                    target[0] + "," + target[1]
+                        + " holds a structure but no lot was kept (stored biome "
+                        + (biome == null ? "none" : biome.biomeName)
+                        + ")");
             }
         }
         String cityCheck = cityCheck(world, failures);
@@ -380,6 +379,9 @@ public final class WitcheryScenario implements Scenario {
         CityPlan plan = overlay == null ? null : overlay.plan();
         int inside = 0;
         int outside = 0;
+        TreeMap<String, Integer> outsideNames = new TreeMap<>();
+        int[] outsideBox = { Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE,
+            Integer.MIN_VALUE, Integer.MIN_VALUE };
         for (int cx = target[0] - 1; cx <= target[0] + 1; cx++) {
             for (int cz = target[1] - 1; cz <= target[1] + 1; cz++) {
                 if (!world.theChunkProviderServer.chunkExists(cx, cz) || plan != null && plan.chunk(cx, cz)
@@ -394,16 +396,34 @@ public final class WitcheryScenario implements Scenario {
                             String name = Block.blockRegistry.getNameForObject(block);
                             if (name != null && (name.startsWith(WitcheryOracles.MOD_ID + ":")
                                 || STRUCTURE_BLOCKS.contains(name))) {
-                                if (lot.contains((cx << 4) + x, (cz << 4) + z)) {
+                                int worldX = (cx << 4) + x;
+                                int worldZ = (cz << 4) + z;
+                                if (lot.contains(worldX, worldZ)) {
                                     inside++;
                                 } else {
                                     outside++;
+                                    outsideNames.merge(name, 1, Integer::sum);
+                                    outsideBox[0] = Math.min(outsideBox[0], worldX);
+                                    outsideBox[1] = Math.min(outsideBox[1], y);
+                                    outsideBox[2] = Math.min(outsideBox[2], worldZ);
+                                    outsideBox[3] = Math.max(outsideBox[3], worldX);
+                                    outsideBox[4] = Math.max(outsideBox[4], y);
+                                    outsideBox[5] = Math.max(outsideBox[5], worldZ);
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+        if (outside > 0) {
+            LostCities.LOG.info(
+                "[LCNH-WITCHERY] {} structure blocks outside lot {} of {}: {} in box {}",
+                outside,
+                lot,
+                WitcheryOracle.id(target[0], target[1]),
+                outsideNames,
+                Arrays.toString(outsideBox));
         }
         return new int[] { inside, outside };
     }

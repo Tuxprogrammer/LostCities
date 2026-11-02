@@ -11,6 +11,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.Certainty;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
@@ -19,7 +20,17 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  *
  * <p>
  * For each cell near the rectangle, the candidate chunk ({@link WitcheryGrid#candidateChunk}) holds a structure when
- * the biome at block {@code (x0 + 5, z0 + 5)} passes Witchery's test ({@link WitcheryBiomes}). The structure's type
+ * the biome at block {@code (x0 + 5, z0 + 5)} passes Witchery's test ({@link WitcheryBiomes}). Witchery reads that
+ * biome from the chunk's stored biome array, which RWG fills by a weighted random pick among the biomes its provider
+ * reports on an 8-block grid from {@value #BLEND_WINDOW_LOW} to {@value #BLEND_WINDOW_HIGH} blocks around the chunk's
+ * origin (both RWG versions' {@code getNewNoise}), so the stored biome can be any of them. The oracle therefore
+ * accepts a candidate when its own column or any of those samples passes: a lot may stay empty, but no structure
+ * stands where no lot was kept (Source: RWG alpha-1.5.3,
+ * https://github.com/GTNewHorizons/Realistic-World-Gen/blob/alpha-1.5.3/src/main/java/rwg/world/ChunkGeneratorRealistic.java#L232-L240
+ * and #L346-L380; RWG2 2.0.6,
+ * https://github.com/GTNewHorizons/Realistic-World-Gen-2/blob/2.0.6/src/main/java/rwg2/world/ChunkGeneratorRealistic.java#L324-L336).
+ * The up to 441 samples of a candidate are fetched apart while the plan prefetcher probes (0005 §8). The structure's
+ * type
  * comes from a shuffle with {@code world.rand} drawn before the grid reseeds it, so it is not predictable; the
  * landmark {@code witchery@<chunkX>,<chunkZ>} is of kind {@link LandmarkKind#WITCHERY}, certainty
  * {@link Certainty#UNION}, its footprint the union of every enabled type's box in every facing
@@ -43,6 +54,12 @@ public final class WitcheryOracle implements StructureOracle {
     public static final int CACHE_SIZE = 512;
     /** Witchery's biome test column, blocks from the candidate chunk's origin on each axis (its {@code midX}). */
     public static final int BIOME_OFFSET = 5;
+    /** Spacing of the biome samples RWG blends a chunk's stored biomes from, blocks. */
+    public static final int BLEND_SPACING = 8;
+    /** The lowest biome sample RWG reads for a chunk, blocks from its origin ({@code (−8) × 8 − 8}). */
+    public static final int BLEND_WINDOW_LOW = -72;
+    /** The highest biome sample RWG reads for a chunk, blocks from its origin ({@code 12 × 8 − 8}). */
+    public static final int BLEND_WINDOW_HIGH = 88;
 
     private static final Landmark NONE = Landmark.builder("none", LandmarkKind.WITCHERY)
         .footprint(new BlockRect(0, 0, 0, 0))
@@ -55,6 +72,7 @@ public final class WitcheryOracle implements StructureOracle {
     private final int[] offsets;
     private final int reachChunks;
     private final BoundedCache<Landmark> cache;
+    private final HeightProbe probe;
 
     /**
      * Creates the oracle of a world.
@@ -78,6 +96,8 @@ public final class WitcheryOracle implements StructureOracle {
         }
         this.reachChunks = reach / 16 + 1;
         this.cache = new BoundedCache<>(cacheSize);
+        HeightProbe guard = heights == null ? null : heights.probe();
+        this.probe = guard == null ? new HeightProbe() : guard;
     }
 
     /** Returns the grid this oracle reads. */
@@ -132,6 +152,10 @@ public final class WitcheryOracle implements StructureOracle {
         long key = BoundedCache.key(chunkX, chunkZ);
         Landmark cached = cache.get(key);
         if (cached == null) {
+            if (probe.active() && grid.isCandidate(chunkX, chunkZ)) {
+                // Up to 441 biome samples: the plan prefetcher fetches them apart (0005 §8, B4).
+                throw probe.miss(() -> structureAt(chunkX, chunkZ));
+            }
             // Computed whole before it is cached: a height probe abandoning the ground estimate leaves nothing.
             cached = cache.put(key, compute(chunkX, chunkZ));
         }
@@ -146,7 +170,19 @@ public final class WitcheryOracle implements StructureOracle {
      * @return whether Witchery's biome test passes there
      */
     public boolean biomeAccepts(int chunkX, int chunkZ) {
-        return biomes.allows((chunkX << 4) + BIOME_OFFSET, (chunkZ << 4) + BIOME_OFFSET);
+        int originX = chunkX << 4;
+        int originZ = chunkZ << 4;
+        if (biomes.allows(originX + BIOME_OFFSET, originZ + BIOME_OFFSET)) {
+            return true;
+        }
+        for (int a = BLEND_WINDOW_LOW; a <= BLEND_WINDOW_HIGH; a += BLEND_SPACING) {
+            for (int b = BLEND_WINDOW_LOW; b <= BLEND_WINDOW_HIGH; b += BLEND_SPACING) {
+                if (biomes.allows(originX + a, originZ + b)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
