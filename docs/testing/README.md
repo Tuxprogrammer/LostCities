@@ -19,7 +19,7 @@ The static checks live in `src/test/java/com/tuxprogrammer/lostcities/statics/`.
 - On a mismatch the test fails with both hashes and writes the actual text form to `build/golden-actual/<case>.txt`, so the change can be read.
 - `./gradlew test -PupdateGoldens` rewrites every golden it checks instead of failing. A golden changes only in a commit that says why; keep the comment lines at the top of the file current.
 
-The M01 goldens pin `GoldenFixtureTerrain`, a stand-in generator, at three seeds and chunk positions. Their hashes were computed outside Java by an independent re-implementation of the generator (including `java.util.Random`) and of the text form, so they check the format as well as its stability. M04 adds ten `terrain_*` goldens: the terrain phase over the synthetic test city on the `TestTerrain` fixture (a street, three lots, a soft-edge strip, a landmark core with and without a lane, an edge ring and two blended chunks). M05 adds goldens for real city chunks: taken after the terrain phase, and separately after our population phase ([0005](../design/0005-rwg-overlay.md), "Determinism tests").
+The M01 goldens pin `GoldenFixtureTerrain`, a stand-in generator, at three seeds and chunk positions. Their hashes were computed outside Java by an independent re-implementation of the generator (including `java.util.Random`) and of the text form, so they check the format as well as its stability. M04 adds ten `terrain_*` goldens: the terrain phase over the synthetic test city on the `TestTerrain` fixture (a street, three lots, a soft-edge strip, a landmark core with and without a lane, an edge ring and two blended chunks). M05 adds `CityGoldenTest`: real city chunks of the `CityFixtures` world (the bundled assets resolved for the full pack, the layout over `TestTerrain`, seed 4242) after the terrain phase (`city_building`, `city_primary_street`, `city_park`, `city_ruin`), and the population jobs of the building and the street as text goldens (`city_building_jobs`, `city_primary_street_jobs`, through `GoldenChunks.assertTextMatches`), the second hash of [0005](../design/0005-rwg-overlay.md), "Determinism tests".
 
 ## Asset validation and palette goldens
 
@@ -88,8 +88,33 @@ Run scenarios on new worlds (`--fresh`, or a new `--world`), on both generators:
 | `overlay.installed` | Overlay (M04) | The overworld's chunk provider is the overlay's wrapper, with a pinned snapshot; logs how many chunks were loaded before it was installed (0 on a new world) | yes |
 | `overlay.city` | Overlay (M04) | Needs a world pinned with the synthetic test city (`-Dlostcitiesnh.planSource=synthetic`). Generates 25 × 25 chunks around the city at chunk (2048, 2048) and checks the 17 × 17 inside: street chunks paved at the city ground, the write guard dropped RWG's decoration and no log or leaf passed it, landmark cores without a lane left exactly as RWG made them, the lane laid, every glowstone lit after the chunk's light pass (ArchaicFix's Phosphor, P03-8). Prints `[LCNH-HASH] … terrain=<sha> population=<sha>` (every chunk right after the terrain phase; every population job's site right after our population phase): two fresh worlds of the same seed and world type must print the same pair | yes |
 | `overlay.budget` | Overlay (M04) | Needs the synthetic city. Generates 65 × 65 chunks in spiral order beside a dry synthetic city, drops the first 512 as warm-up, prints `[LCNH-BUDGET]` timer lines and the verdicts B1 to B5, and fails when B1 to B4 are exceeded (0005 §8) | no (manual-only) |
+| `city.real` | Cities (M05) | Needs a world pinned with the layout source (the default). Prints `[LCNH-CITY] spawn=… nearestCityChunkFromSpawn=… nearestCityChunkFromOrigin=…` (blocks to the center of the nearest city chunk, D53's measure); generates 21 × 21 chunks around the city center nearest the spawn whose region lies outside the spawn area, and checks the 17 × 17 inside: city chunks and buildings exist, 9 in 10 street chunks are paved at the city ground, no log or leaf passed the guard; prints the buildings it saw and `[LCNH-HASH] … terrain=<sha> population=<sha>`, which two fresh worlds of one seed and world type must share (D-M05J-19) | yes |
+| `city.walk` | Cities (M05) | Walkability over the buildings of the spawn's city and of that city: floors with a floor, outer walls closed but for doorways, stairs or ladders between floors, every ground-floor street door opening onto open space; ruined and explosion-damaged buildings exempt. Prints `[LCNH-WALK]` lines with the pass counts and a few failing places (D-M05J-18) | yes |
+| `city.budget` | Cities (M05) | D81's budget method with real content: 65 × 65 chunks from 20 chunks beside the spawn's city, the first 512 dropped; fails when B1 to B5 are exceeded | no (manual-only) |
 
 Each feature adds its scenarios to this table.
+
+### Finding things to look at
+
+`/lostcities find <kind> [radius]` (test hooks only, operator level 2) prints the nearest `center` (city center), `street` (primary street), `interior` (a building of two floors or more with a street door), `edge` (a city chunk beside RWG land), `reserved` (a landmark core or its edge ring) or `village` (a village's gate, lane or link chunk) from the sender, within `radius` chunks (48 by default, at most 256). The log line is machine-readable:
+
+```
+[LCNH-FIND] kind=interior block=-24,71,-8 chunk=-2,-1 view=-23.5,72.0,-7.5,0,0 label=building lostcities:building2, 2 floors, door ZMIN
+[LCNH-FIND] kind=village none within 48 chunks
+```
+
+`view=X,Y,Z,YAW,PITCH` feeds `/lostcities view <player> X Y Z YAW PITCH`. `reserved` and `village` find something only where a structure oracle knows a landmark (D-M05J-9, D-M05J-17).
+
+### City runs on the real pack
+
+```sh
+tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
+    --set-config 'archaicfix.cfg:logCascadingWorldgen=true' --set-config 'archaicfix.cfg:logCascadingWorldgenStacktrace=true' \
+    --jvm '-Dlostcitiesnh.testHooks=true' \
+    --cmds 'lostcities test city.real; until:\[LCNH-SCENARIO\] Scenarios:; lostcities test city.walk; until:\[LCNH-SCENARIO\] Scenarios:; lostcities find interior; lostcities timers reset; lostcities test city.budget; until:\[LCNH-SCENARIO\] Scenarios:; wait:5'
+```
+
+Repeat with `--level-type RWG`, and once more per world type with only `city.real` to compare the `[LCNH-HASH]` lines of two fresh worlds.
 
 ### Overlay runs on the real pack
 

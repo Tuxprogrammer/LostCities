@@ -379,6 +379,7 @@ public final class CityFinder {
             return null;
         }
         String door = null;
+        float yaw = 0f;
         for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
             .values()) {
             ChunkPlan neighbor = planner.plan(chunkX + side.stepX(), chunkZ + side.stepZ());
@@ -386,6 +387,7 @@ public final class CityFinder {
                 && neighbor.isCity()
                 && !neighbor.hasBuilding()) {
                 door = side.name();
+                yaw = doorYaw(side);
                 break;
             }
         }
@@ -405,7 +407,7 @@ public final class CityFinder {
             x + 0.5,
             ground + FEET,
             z + 0.5,
-            0f,
+            yaw,
             0f,
             "building " + layout.building() + ", " + layout.floors() + " floors, door " + door);
     }
@@ -495,6 +497,20 @@ public final class CityFinder {
             180f,
             LANDMARK_PITCH,
             label);
+    }
+
+    /** Returns the yaw that looks from a building's middle toward its door on a side. */
+    static float doorYaw(com.tuxprogrammer.lostcities.layout.Direction side) {
+        switch (side) {
+            case XMIN:
+                return 90f;
+            case XMAX:
+                return 270f;
+            case ZMIN:
+                return 180f;
+            default:
+                return 0f;
+        }
     }
 
     /**

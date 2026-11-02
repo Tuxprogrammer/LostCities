@@ -43,7 +43,7 @@ public final class ProfileSnapshot {
      */
     public static final int LAYOUT_VERSION = 1;
 
-    /** Plan source of real cities: the layout (M03), joined to the overlay in M05; until then it plans none. */
+    /** Plan source of real cities: the layout (M03) and the assets (M02), joined by {@code worldgen.city} (M05). */
     public static final String PLAN_LAYOUT = "layout";
 
     /** Plan source of the synthetic test city (M04), selectable only with the test hooks. */

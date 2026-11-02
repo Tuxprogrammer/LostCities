@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
+import com.tuxprogrammer.lostcities.worldgen.damage.SpeedBlocks;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.StyleBlocks;
 
@@ -139,6 +140,11 @@ public final class Ruins {
                     leafBudget = (int) (leavesBuffer[x + z * 16] / settings.rubbleLeaveScale());
                 }
                 boolean doRubble = rubble != null;
+                // D28 rule 3: the cut turns the floor below it into a walking surface, which holds no speed block.
+                BlockRef floor = buffer.get(x, y - 1, z);
+                if (SpeedBlocks.isSpeedBlock(floor)) {
+                    buffer.set(x, y - 1, z, SpeedBlocks.withoutSpeed(floor));
+                }
                 while (steps > 0 && y <= WorldLimits.MAX_Y) {
                     BlockRef current = buffer.get(x, y, z);
                     BlockRef below = buffer.get(x, y - 1, z);
