@@ -99,7 +99,7 @@
         "timeout": 240
       },
       "wait": 3,
-      "caption": "Highway (M06): the straight highway piece above ground nearest the spawn with highway ahead of it, from behind it along its axis, 9 blocks above the deck. Open road in a city, a bridge with railings and supports outside one; the surface is upstream's cyan terracotta."
+      "caption": "Highway (M06): the straight highway piece above ground nearest the spawn with highway ahead of it, from behind it along its axis, 15 blocks above the deck. Open road in a city, a bridge with railings and supports outside one; the surface is upstream's cyan terracotta."
     },
     {
       "name": "ramp",
@@ -119,7 +119,7 @@
         "timeout": 240
       },
       "wait": 3,
-      "caption": "Railway station (M06): the surface station nearest the spawn, from 18 blocks south of it."
+      "caption": "Railway station (M06): the surface station nearest the spawn, from above and 22 blocks south of it."
     },
     {
       "name": "railway",

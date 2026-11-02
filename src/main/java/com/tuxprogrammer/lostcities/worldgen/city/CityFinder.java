@@ -397,22 +397,22 @@ public final class CityFinder {
     /** Chunks of highway ahead a highway view needs along its axis, its own included. */
     static final int HIGHWAY_RUN = 4;
     /** How far behind the chunk's middle along the axis the highway view stands, in blocks. */
-    static final int HIGHWAY_BACK = 12;
+    static final int HIGHWAY_BACK = 20;
     /** Height of the highway view above the deck. */
-    static final int HIGHWAY_EYE = 9;
+    static final int HIGHWAY_EYE = 15;
     /** Pitch of the highway view, degrees. */
-    static final float HIGHWAY_PITCH = 18f;
+    static final float HIGHWAY_PITCH = 25f;
     /** How far to the side of a ramp its view stands, in blocks. */
     static final int RAMP_SIDE = 28;
     /** Height of the ramp view above the ramp's top. */
     static final int RAMP_EYE = 8;
     /** Pitch of the ramp view, degrees. */
     static final float RAMP_PITCH = 15f;
-    /** How far south of a station its view stands, and how high above its floor. */
-    static final int STATION_BACK = 18;
-    static final int STATION_EYE = 11;
+    /** How far south of a station its view stands, and how high above its floor: above the roofs around it. */
+    static final int STATION_BACK = 22;
+    static final int STATION_EYE = 26;
     /** Pitch of the station view, degrees. */
-    static final float STATION_PITCH = 25f;
+    static final float STATION_PITCH = 45f;
 
     private com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece abovePiece(int chunkX, int chunkZ,
         com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape shape) {
