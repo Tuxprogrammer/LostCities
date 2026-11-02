@@ -14,6 +14,7 @@ These keys apply to **new worlds only**. A world copies them into its pinned pro
 | `worldgen.highways` | `true` | Generate highways between and through cities |
 | `worldgen.railways` | `true` | Generate railways, stations and subways |
 | `worldgen.scatteredStructures` | `true` | Generate scattered structures outside cities |
+| `worldgen.paletteVariety` | `true` | Draw building walls, glass, interior floors, ceilings, lights, furniture and park flora from the pack's decorative blocks ([palette variety](new-spec/05-assets/asset-format.md#palette-variety)). Off, cities use upstream Lost Cities' blocks only |
 
 In the file, the keys sit in the `worldgen` category:
 
@@ -23,6 +24,7 @@ worldgen {
     B:highways=true
     B:railways=true
     B:scatteredStructures=true
+    B:paletteVariety=true
 }
 ```
 
@@ -348,10 +350,10 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `landmarkMargin` | `2` | 0 to 16 | live | Blocks a landmark's footprint grows by before it becomes core chunks |
 | `softEdgeWidth` | `6` | 2 to 12 | live | Columns of the strip in a landmark core's margin that meets the blended ground to the core's own edge |
 | `cityMaxRise` | `2` | 0 to 8 | live | City levels a city chunk may rise above its city's base level; one more is cut down to it, higher ground is left out of the city; 8 is no cap |
-| `cityTaper` | `1.0` | 0 to 1 | live | How strongly building heights follow the urban intensity: low at a city's edge, a high-rise core at its center, varied by noise ([0008](design/0008-city-edges-and-character.md)); 0 is upstream's floor count |
+| `cityTaper` | `1.0` | 0 to 1 | live | How strongly building heights follow the urban intensity: low at a city's edge, a high-rise core at its center, varied by noise ([0009](design/0009-city-edges-and-character.md)); 0 is upstream's floor count |
 | `edgeLotChance` | `0.45` | 0 to 1 | live | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation instead; it falls to 0 at intensity 0.4, and open lots take half of it |
 | `damageRepairChance` | `0.5` | 0 to 1 | live | Chance that an explosion's damage in a city was partly filled back in with a similar but not identical material, and its windows boarded; 0 leaves all damage |
-| `facadeContrast` | `45.0` | 10 to 200 | live | Most contrast (lightness and saturation) two neighboring buildings' facades may have; palettes are chosen against neighbors to keep it ([0007](design/0007-facade-color-feathering.md)); 200 turns it off |
+| `facadeContrast` | `45.0` | 10 to 200 | live | Most contrast (lightness and saturation) two neighboring buildings' facades may have; palettes are chosen against neighbors to keep it ([0008](design/0008-facade-color-feathering.md)); 200 turns it off |
 | `villageTransitionRings` | `2` | 0 to 8 | live | Rings of lower building density around a village |
 | `villageLinkDistance` | `4` | 0 to 16 | live | Chunks outside a city a village still gets a lane to it |
 | `heightSampleSize` | `3` | 1 to 100 | live | Upstream's mod-config key, pinned here: chunks sampled for a city level when `useAvgHeightmap` is on (averaging only above 2) |

@@ -374,15 +374,12 @@ public final class CompiledPalette {
         return current;
     }
 
+    /**
+     * Returns an entry's slots, shared by every palette compiled from the entry: compiled palettes only read them, and
+     * a
+     * building's palette variety makes most chunks compile their own palette (M11), so the arrays are built once.
+     */
     private static BlockChoice[] slots(PaletteEntry entry) {
-        if (entry.kind() == PaletteEntry.Kind.BLOCK) {
-            return new BlockChoice[] { entry.block() };
-        }
-        RandomList random = entry.random();
-        BlockChoice[] slots = new BlockChoice[RandomList.SLOTS];
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = random.slot(i);
-        }
-        return slots;
+        return entry.slots();
     }
 }

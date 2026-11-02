@@ -442,14 +442,14 @@ public final class ChunkPlan {
     }
 
     /**
-     * Returns the chunk's urban intensity, 0 at a city's very edge to 1 in its core (docs/design/0008, §1); 0 outside
+     * Returns the chunk's urban intensity, 0 at a city's very edge to 1 in its core (docs/design/0009, §1); 0 outside
      * cities.
      */
     public float intensity() {
         return intensity;
     }
 
-    /** Returns the chunk's edge lot, {@link LotKind#NONE} for every other chunk (0008 §3). */
+    /** Returns the chunk's edge lot, {@link LotKind#NONE} for every other chunk (0009 §3). */
     public LotKind lot() {
         return lot;
     }

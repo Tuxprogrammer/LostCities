@@ -58,7 +58,7 @@ public interface AssetView {
     boolean partDontConnect(String partName);
 
     /**
-     * Returns the facade colors the facade stage feathers palettes with (docs/design/0007-facade-color-feathering.md).
+     * Returns the facade colors the facade stage feathers palettes with (docs/design/0008-facade-color-feathering.md).
      * A view without colors returns {@link FacadeView#NONE}, and palettes are then drawn as upstream draws them.
      *
      * @return the facade view

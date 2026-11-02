@@ -6,7 +6,7 @@ import com.tuxprogrammer.lostcities.layout.noise.SimplexNoise;
 
 /**
  * A city chunk's urban intensity, from 0 at the very edge of a city to 1 in its dense core: what building heights and
- * edge lots follow (alpha review AR-5 and AR-6, docs/design/0008-city-edges-and-character.md §1).
+ * edge lots follow (alpha review AR-5 and AR-6, docs/design/0009-city-edges-and-character.md §1).
  *
  * <p>
  * {@code I = clamp(e^0.8 × (0.25 + 0.75 c) + 0.18 n × cityTaper, 0, 1)}, where
@@ -143,7 +143,7 @@ final class Urbanity {
 
     /**
      * Returns the taper's floor cap at an intensity: {@code max(minimum, ⌈maxFloors × (0.18 + 0.82 I)⌉)}, blended
-     * with {@code maxFloors} by {@code 1 − cityTaper} (0008 §2).
+     * with {@code maxFloors} by {@code 1 − cityTaper} (0009 §2).
      *
      * @param intensity the intensity
      * @param maxFloors the profile's {@code buildingMaxFloors}
@@ -166,7 +166,7 @@ final class Urbanity {
     static final float CORE_CHANCE = 0.7f;
 
     /**
-     * Returns the chance that a building at an intensity rises into the high-rise core (0008 §2).
+     * Returns the chance that a building at an intensity rises into the high-rise core (0009 §2).
      *
      * @param intensity the intensity
      * @param taper     {@code cityTaper}

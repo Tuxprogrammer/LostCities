@@ -54,7 +54,7 @@ public interface StyleView {
     List<String> pickPalettes(Random random);
 
     /**
-     * Returns the style's groups with their weights, in group order, for the facade stage (0007 §4). A view that
+     * Returns the style's groups with their weights, in group order, for the facade stage (0008 §4). A view that
      * does not expose them returns an empty list, and its chunks keep their own draw.
      *
      * @return the groups
@@ -97,5 +97,19 @@ public interface StyleView {
             }
         }
         return last;
+    }
+
+    /**
+     * Picks the palette variety a building adds over the style's palettes (D25; the asset model's
+     * {@code PaletteVariety}): no draw from the chunk's random, so the layout's draws are upstream's whatever the
+     * variety holds.
+     *
+     * @param chosen   the palette names {@link #pickPalettes} returned for the chunk
+     * @param building whether the chunk holds a building
+     * @param seed     the building's variety seed, a function of the world seed and its (top-left) chunk
+     * @return the option palettes' names, lowest layer first, appended after the chosen palettes; empty by default
+     */
+    default List<String> pickVariety(List<String> chosen, boolean building, long seed) {
+        return Collections.emptyList();
     }
 }

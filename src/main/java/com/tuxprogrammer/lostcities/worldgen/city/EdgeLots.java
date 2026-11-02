@@ -10,7 +10,7 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
  * Writes an edge lot: an empty or construction lot at a city's edge, growth that never happened (alpha review AR-6,
- * docs/design/0008-city-edges-and-character.md §3).
+ * docs/design/0009-city-edges-and-character.md §3).
  *
  * <ul>
  * <li><b>Ground:</b> at city ground, per column, coarse dirt, terracotta, brown and red terracotta and a little

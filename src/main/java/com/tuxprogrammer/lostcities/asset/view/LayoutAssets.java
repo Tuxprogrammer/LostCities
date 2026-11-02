@@ -44,7 +44,7 @@ import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
  * (ASSET-10); {@link CityStyleView#pick} documents {@code null} only for an empty list.
  *
  * <p>
- * Immutable but for the facade view's bounded tone cache (docs/design/0007-facade-color-feathering.md). Side: both
+ * Immutable but for the facade view's bounded tone cache (docs/design/0008-facade-color-feathering.md). Side: both
  * (server-side use).
  */
 public final class LayoutAssets implements AssetView {
@@ -53,6 +53,18 @@ public final class LayoutAssets implements AssetView {
     private final WorldStyle worldStyle;
     private final BiomeSource biomes;
     private final FacadeTones facades;
+    private final boolean variety;
+
+    /**
+     * Creates the view, with the palette variety on.
+     *
+     * @param assets     the loaded asset set
+     * @param worldStyle the profile's world style
+     * @param biomes     the world's chunk biomes
+     */
+    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes) {
+        this(assets, worldStyle, biomes, true);
+    }
 
     /**
      * Creates the view.
@@ -60,11 +72,13 @@ public final class LayoutAssets implements AssetView {
      * @param assets     the loaded asset set
      * @param worldStyle the profile's world style
      * @param biomes     the world's chunk biomes
+     * @param variety    whether styles draw the palette variety (the world's pinned {@code paletteVariety} module)
      */
-    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes) {
+    public LayoutAssets(AssetSet assets, WorldStyle worldStyle, BiomeSource biomes, boolean variety) {
         this.assets = assets;
         this.worldStyle = worldStyle;
         this.biomes = biomes;
+        this.variety = variety;
         this.facades = new FacadeTones(assets, assets.colors());
     }
 
@@ -94,7 +108,7 @@ public final class LayoutAssets implements AssetView {
     @Override
     public StyleView style(String name) {
         Style style = assets.style(id(name));
-        return style == null ? null : new StyleAdapter(style);
+        return style == null ? null : new StyleAdapter(style, assets, variety);
     }
 
     @Override
@@ -419,14 +433,18 @@ public final class LayoutAssets implements AssetView {
         }
     }
 
-    /** A style as the layout reads it: its draw, and its groups for the facade stage. */
+    /** A style as the layout reads it: its draw, its palette variety, and its groups for the facade stage. */
     private static final class StyleAdapter implements StyleView {
 
         private final Style style;
+        private final AssetSet assets;
+        private final boolean variety;
         private final List<List<StyleView.Choice>> groups;
 
-        StyleAdapter(Style style) {
+        StyleAdapter(Style style, AssetSet assets, boolean variety) {
             this.style = style;
+            this.assets = assets;
+            this.variety = variety;
             List<List<StyleView.Choice>> out = new ArrayList<>();
             for (List<Style.Choice> group : style.groups()) {
                 List<StyleView.Choice> choices = new ArrayList<>();
@@ -452,6 +470,15 @@ public final class LayoutAssets implements AssetView {
                         .toString());
             }
             return out;
+        }
+
+        @Override
+        public List<String> pickVariety(List<String> chosen, boolean building, long seed) {
+            if (!variety) {
+                return Collections.emptyList();
+            }
+            return assets.variety()
+                .pick(style.id(), chosen, building, seed);
         }
 
         @Override

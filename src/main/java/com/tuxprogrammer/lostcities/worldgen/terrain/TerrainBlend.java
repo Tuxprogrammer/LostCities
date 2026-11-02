@@ -61,7 +61,7 @@ public final class TerrainBlend {
 
     /**
      * Amplitude of the bank wobble, as a share of the transition noise (about ±4): up to ±1.4 blocks away from city
-     * corners, so a blended bank's 1-block steps follow ragged contours (M12, 0008 §5).
+     * corners, so a blended bank's 1-block steps follow ragged contours (M12, 0009 §5).
      */
     static final float BANK_WOBBLE = 0.35f;
     /** Salt of the per-column dither of the blend's cut. */
@@ -347,7 +347,7 @@ public final class TerrainBlend {
                 float freedom = Math.max(0.0f, maxHeight - minHeight - NOISE_FREE_WIDTH);
                 float strength = Math.min(1.0f, freedom / NOISE_RAMP);
                 float offset = context.transitionNoise((chunkX << 4) + x, (chunkZ << 4) + z) * strength;
-                // Deviation (M12, 0008 §5): away from city corners the cut is dithered per column and wobbled by the
+                // Deviation (M12, 0009 §5): away from city corners the cut is dithered per column and wobbled by the
                 // transition noise, so a bank's 1-block steps follow ragged contours instead of straight terraces;
                 // at a city corner the weight is 0 and the street's edge keeps its height.
                 float bank = 1f - (city0 + ((city1 - city0) * (15.0f - z) / 15.0f));

@@ -89,6 +89,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final long BUILDING_X = 132897987541L;
     /** "LARGEBRG": salt of the separate large-bridge random. */
     static final long LARGE_BRIDGE_SALT = 0x4c41524745425247L;
+    /** Salt of a building's palette-variety seed ("VARIETY "), distinct from every other per-chunk draw. */
+    static final long VARIETY_SALT = 0x5641524945545920L;
+    /** Salt of a street or park block's palette-variety seed ("STREETS "). */
+    static final long STREET_VARIETY_SALT = 0x5354524545545320L;
+    /** Streets and parks share their variety per 2^2 = 4 chunks on each axis. */
+    static final int STREET_VARIETY_SHIFT = 2;
     /** Salt of the separate random a capped building's roof part is drawn from (decision log D49). */
     static final long ROOF_SALT = 0x524f4f4643415050L;
     /** Highest floor block Y a building's roof part may start below: 1.7.10's {@code 256 - 2 - 6}. */
@@ -97,11 +103,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final int MIN_BOTTOM_Y = 2;
     /** Longest corridor walk, in chunks, before the walk gives up. */
     static final int MAX_CORRIDOR_WALK = 512;
-    /** Salt of the separate random the taper's high-rise core draws from (0008 §2). */
+    /** Salt of the separate random the taper's high-rise core draws from (0009 §2). */
     static final long TAPER_SALT = 0x5441504552494e47L;
-    /** Salt of the separate random edge lots draw from (0008 §3). */
+    /** Salt of the separate random edge lots draw from (0009 §3). */
     static final long LOT_SALT = 0x45444745_4c4f5453L;
-    /** Intensity below which a chunk may become an edge lot (0008 §3). */
+    /** Intensity below which a chunk may become an edge lot (0009 §3). */
     static final float LOT_INTENSITY = 0.4f;
     /** An open lot's chance of becoming an edge lot, relative to a building chunk's. */
     static final float OPEN_LOT_SHARE = 0.5f;
@@ -208,7 +214,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /**
      * Returns a chunk's urban intensity: 0 at a city's very edge (and outside cities) to 1 in its dense core
-     * (docs/design/0008-city-edges-and-character.md §1).
+     * (docs/design/0009-city-edges-and-character.md §1).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
@@ -220,7 +226,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /**
      * Returns the facade tone the facade stage chose for the building unit whose top-left chunk is given, or
-     * {@code null} (docs/design/0007-facade-color-feathering.md).
+     * {@code null} (docs/design/0008-facade-color-feathering.md).
      *
      * @param topX top-left chunk X
      * @param topZ top-left chunk Z
@@ -354,12 +360,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         PlannedRoadType planned = effectiveRoad(x, z, isCity, raw, pos);
         if (isCity && lane.role()
             .forcesRoad()) {
-            // Deviation (0006 §3, 0008 §5): detours and village lanes are small roads around the old town.
+            // Deviation (0006 §3, 0009 §5): detours and village lanes are small roads around the old town.
             planned = lane.role() == LaneRole.DETOUR ? PlannedRoadType.TERTIARY
                 : PlannedRoadType.strongest(planned, PlannedRoadType.TERTIARY);
         }
         if (planned == PlannedRoadType.PRIMARY && touchesMargin(x, z)) {
-            // Deviation (0008 §5, AR-7, AR-10): no wide road beside a landmark's margin; it narrows to a small one.
+            // Deviation (0009 §5, AR-7, AR-10): no wide road beside a landmark's margin; it narrows to a small one.
             planned = PlannedRoadType.TERTIARY;
         }
         boolean could = isCity && checkBuildingPossibility(x, z, pos, cityLevel, planned, random, zone);
@@ -605,7 +611,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
-     * Deviation (alpha review AR-6, docs/design/0008-city-edges-and-character.md §3): turns a low-intensity building
+     * Deviation (alpha review AR-6, docs/design/0009-city-edges-and-character.md §3): turns a low-intensity building
      * chunk or open lot into an empty or construction lot, from a separate random so nothing else the chunk draws
      * moves.
      */
@@ -732,13 +738,21 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         StyleView palettes = assets
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
-        if (c.isCity && c.couldHaveBuilding) {
-            // Deviation (AR-17, 0007 §4): a building's palettes come from the facade stage, feathered against its
-            // neighbors; the draw above still runs, so the rest of the chunk's stream is unchanged.
+        if (c.isCity && c.couldHaveBuilding && b.hasBuilding) {
+            // Deviation (AR-17, docs/design/0008-facade-color-feathering.md §4): a building's palettes, its
+            // variety included, come from the facade stage, feathered against its neighbors; the draw above still
+            // runs, so the rest of the chunk's stream is unchanged.
             List<String> feathered = facades.palettes(x, z);
             if (feathered != null) {
                 b.palettes = new ArrayList<>(feathered);
+            } else if (palettes != null) {
+                b.palettes.addAll(palettes.pickVariety(b.palettes, true, varietySeed(x, z)));
             }
+        } else if (palettes != null) {
+            // Deviation (D25, M11): the palette variety, drawn from a seed of its own so the stream above is
+            // upstream's; a building's per chunk, a street's or park's per four-by-four block of chunks.
+            long variety = b.hasBuilding ? varietySeed(x, z) : streetVarietySeed(x, z);
+            b.palettes.addAll(palettes.pickVariety(b.palettes, b.hasBuilding, variety));
         }
         float loot = random.nextFloat();
         // Avoids LOOT-10: a multibuilding's top-left chunk rolls too, and its other chunks copy the result.
@@ -758,7 +772,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         int cityGround = profile.groundLevel + c.cityLevel * ChunkPlan.FLOOR_HEIGHT;
         float cityFactor = cities.cityFactor(x, z);
         float taper = profile.cityTaper;
-        // Deviation (AR-5, 0008 §2): the urban intensity takes the city factor's place, by cityTaper.
+        // Deviation (AR-5, 0009 §2): the urban intensity takes the city factor's place, by cityTaper.
         float intensity = urbanity.intensity(x, z);
         float factor = cityFactor + (intensity - cityFactor) * taper;
         int maxFloors = maxFloors(b.settings, building);
@@ -819,7 +833,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
-     * Deviation (alpha review AR-5, docs/design/0008-city-edges-and-character.md §2): a building in the dense core may
+     * Deviation (alpha review AR-5, docs/design/0009-city-edges-and-character.md §2): a building in the dense core may
      * rise into a high-rise, up to {@code buildingMaxFloors}, and one near the edge is held low, so heights fade from
      * the core to RWG terrain. Draws from a separate random, so the building stream is unchanged.
      *
@@ -1555,6 +1569,31 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      */
     QualityRandom buildingRandom(int chunkX, int chunkZ) {
         return new QualityRandom(seed + chunkZ * BUILDING_Z + chunkX * BUILDING_X);
+    }
+
+    /**
+     * Returns a chunk's palette-variety seed: a function of the world seed and the chunk alone, so a building's variety
+     * never depends on generation order (a multibuilding's chunks copy their top-left chunk's palettes).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the seed
+     */
+    long varietySeed(int x, int z) {
+        return seed ^ VARIETY_SALT ^ (long) x * BUILDING_Z ^ (long) z * BUILDING_X;
+    }
+
+    /**
+     * Returns the palette-variety seed of a chunk without a building: shared by each four-by-four block of chunks, so a
+     * park that spans chunks keeps one planting scheme and neighboring streets share their fittings (and their compiled
+     * palette).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the seed
+     */
+    long streetVarietySeed(int x, int z) {
+        return varietySeed(x >> STREET_VARIETY_SHIFT, z >> STREET_VARIETY_SHIFT) ^ STREET_VARIETY_SALT;
     }
 
     /** Looks up a city style, reporting an unknown name once. */

@@ -38,7 +38,10 @@ public class SelfCheckTest {
     public void moduleWithoutConfigOptionIsReported() {
         // A config class with none of the module options: every module is reported missing.
         List<String> problems = new ModuleConfigCheck(Empty.class).problems();
-        assertEquals(4, problems.size(), "problems: " + problems);
+        assertEquals(
+            com.tuxprogrammer.lostcities.core.Module.values().length,
+            problems.size(),
+            "problems: " + problems);
         assertTrue(
             problems.get(0)
                 .startsWith("module "),

@@ -14,6 +14,7 @@
     "GT ore host": ["minecraft:stone:0", "minecraft:netherrack", "minecraft:end_stone", "gregtech:gt.blockgranites:0", "gregtech:gt.blockgranites:8", "gregtech:gt.blockstones:0", "gregtech:gt.blockstones:8", "etfuturum:deepslate", "etfuturum:tuff:0", "GalacticraftCore:tile.moonBlock:4", "GalacticraftMars:tile.mars:6", "GalacticraftMars:tile.mars:9", "GalacticraftMars:tile.asteroidsBlock:1"],
     "infested": ["minecraft:monster_egg", "TwilightForest:tile.TFTowerStone:4"],
     "casing or machine": ["gregtech:gt.blockcasings*", "gregtech:gt.blockmachines"],
+    "regenerates its own chunk": ["Thaumcraft:blockCosmeticOpaque", "Automagy:blockTranslucent"],
     "gameplay hazard": ["Ztones:booster", "ExtraUtilities:spike_base", "ExtraUtilities:spike_base_diamond", "ExtraUtilities:spike_base_gold", "ExtraUtilities:spike_base_wood", "ExtraUtilities:magnumTorch", "ExtraUtilities:chandelier", "ExtraUtilities:etherealglass", "Natura:NetherGlass", "Natura:heatsand", "Natura:Thornvines", "AWWayofTime:spectralBlock", "gregtech:gt.blockpad"]
   }
 }

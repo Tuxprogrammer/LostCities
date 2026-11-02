@@ -19,7 +19,7 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 
-/** Partial repairs of explosion damage (alpha review AR-9, docs/design/0008-city-edges-and-character.md §4). */
+/** Partial repairs of explosion damage (alpha review AR-9, docs/design/0009-city-edges-and-character.md §4). */
 public class RepairsTest {
 
     private static final long SEED = 4242L;

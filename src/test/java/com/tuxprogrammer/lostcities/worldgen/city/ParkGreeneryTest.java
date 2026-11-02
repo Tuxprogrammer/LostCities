@@ -137,4 +137,55 @@ public class ParkGreeneryTest {
         assertTrue(grass > 100, "a park's grass: " + grass);
         assertTrue(planted * 10 >= grass * 4, "at least 40 % of the grass holds something: " + planted + "/" + grass);
     }
+
+    @Test
+    public void thePaletteVarietysFloraReplacesTheTableWithTheSameDraws() {
+        com.tuxprogrammer.lostcities.asset.AssetSet set = com.tuxprogrammer.lostcities.asset.TestAssets.loadFiles(
+            "lostcities/palettes/flora.json",
+            "{\"palette\": [{\"char\": \"\\ue010\", \"blocks\": [{\"random\": 64, \"block\": \"minecraft:red_flower:4\"},"
+                + " {\"random\": 1000, \"block\": \"minecraft:red_flower:6\"}]}]}");
+        com.tuxprogrammer.lostcities.asset.palette.CompiledPalette palette = com.tuxprogrammer.lostcities.asset.palette.CompiledPalette
+            .compile(
+                com.tuxprogrammer.lostcities.asset.block.MetalFlags.ALL_ON,
+                set.palette(com.tuxprogrammer.lostcities.asset.AssetId.parse("flora")));
+        ArrayChunkBuffer vanilla = lawn();
+        ArrayChunkBuffer pack = lawn();
+        int vanillaPlaced = ParkGreenery
+            .plant(new BufferTarget(vanilla, null), Y, ParkGreenery.Flora.TEMPERATE, ParkGreenery.random(4242L, 1, 2));
+        int packPlaced = ParkGreenery.plant(
+            new BufferTarget(pack, null),
+            Y,
+            ParkGreenery.Flora.TEMPERATE,
+            palette,
+            ParkGreenery.random(4242L, 1, 2));
+        assertEquals(vanillaPlaced, packPlaced, "the same columns are planted");
+        boolean tulips = false;
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                BlockRef plant = pack.get(x, Y, z);
+                assertEquals(
+                    vanilla.get(x, Y, z)
+                        .isAir(),
+                    plant.isAir(),
+                    "same column " + x + ", " + z);
+                if (!plant.isAir()) {
+                    assertEquals("minecraft:red_flower", plant.name());
+                    tulips = true;
+                }
+            }
+        }
+        assertTrue(tulips);
+        ArrayChunkBuffer arid = lawn();
+        ParkGreenery
+            .plant(new BufferTarget(arid, null), Y, ParkGreenery.Flora.ARID, palette, ParkGreenery.random(4242L, 1, 2));
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                BlockRef plant = arid.get(x, Y, z);
+                assertTrue(
+                    plant.isAir() || ParkGreenery.table(ParkGreenery.Flora.ARID)
+                        .contains(plant),
+                    "a flora the palette leaves undefined keeps the vanilla table");
+            }
+        }
+    }
 }

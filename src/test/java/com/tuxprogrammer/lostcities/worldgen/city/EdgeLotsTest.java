@@ -20,7 +20,7 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBufferDigest;
 
 /**
- * Edge lots in the world (alpha review AR-6, docs/design/0008-city-edges-and-character.md §3): bare clay and dirt
+ * Edge lots in the world (alpha review AR-6, docs/design/0009-city-edges-and-character.md §3): bare clay and dirt
  * ground with nothing growing, pits dug 1, 2 or 4 blocks with their walls and ramp, foundations with concrete columns,
  * written through the terrain phase on the test world.
  */

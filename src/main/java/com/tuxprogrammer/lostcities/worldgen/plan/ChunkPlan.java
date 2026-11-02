@@ -95,7 +95,7 @@ public final class ChunkPlan {
     }
 
     /**
-     * Returns whether the chunk is an edge lot (docs/design/0008-city-edges-and-character.md §3): its writer digs below
+     * Returns whether the chunk is an edge lot (docs/design/0009-city-edges-and-character.md §3): its writer digs below
      * city ground, so the street base is filled before it writes, and no rubble or leaves are laid on it.
      */
     public boolean isLot() {
@@ -553,7 +553,7 @@ public final class ChunkPlan {
             return this;
         }
 
-        /** Marks the chunk as an edge lot (0008 §3). */
+        /** Marks the chunk as an edge lot (0009 §3). */
         public Builder lot(boolean value) {
             this.lot = value;
             return this;

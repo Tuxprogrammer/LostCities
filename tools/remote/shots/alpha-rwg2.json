@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view; M12 adds the taper, lot, repair and feather views (docs/design/0007, 0008).",
+  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view; M12 adds the taper, lot, repair and feather views (docs/design/0008, 0009).",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",

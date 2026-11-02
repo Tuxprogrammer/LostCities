@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * The layout's view of facade colors: the tone of a building's outer walls under a stack of palettes
- * (docs/design/0007-facade-color-feathering.md §2). The asset side measures it from the shipped block colors.
+ * (docs/design/0008-facade-color-feathering.md §2). The asset side measures it from the shipped block colors.
  *
  * <p>
  * Side: both.

@@ -351,25 +351,25 @@ public final class TerrainSettings {
 
     /**
      * Returns how strongly building heights follow the urban intensity ({@code cityTaper}, 0 to 1; alpha review AR-5,
-     * docs/design/0008-city-edges-and-character.md §2).
+     * docs/design/0009-city-edges-and-character.md §2).
      */
     public float cityTaper() {
         return cityTaper;
     }
 
-    /** Returns the chance of an edge lot at a city's very edge ({@code edgeLotChance}; AR-6, 0008 §3). */
+    /** Returns the chance of an edge lot at a city's very edge ({@code edgeLotChance}; AR-6, 0009 §3). */
     public float edgeLotChance() {
         return edgeLotChance;
     }
 
-    /** Returns the chance an explosion's damage is partly repaired ({@code damageRepairChance}; AR-9, 0008 §4). */
+    /** Returns the chance an explosion's damage is partly repaired ({@code damageRepairChance}; AR-9, 0009 §4). */
     public float damageRepairChance() {
         return damageRepairChance;
     }
 
     /**
      * Returns the most contrast two neighboring facades may have ({@code facadeContrast}; AR-17,
-     * docs/design/0007-facade-color-feathering.md §3); 200 turns feathering off.
+     * docs/design/0008-facade-color-feathering.md §3); 200 turns feathering off.
      */
     public float facadeContrast() {
         return facadeContrast;

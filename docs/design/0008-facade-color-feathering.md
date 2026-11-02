@@ -1,8 +1,8 @@
-# 0007 · Facade color feathering
+# 0008 · Facade color feathering
 
 - Status: Accepted (M12, decision log D-M12-1)
 - Gate: M12 exit (color feathering)
-- Amends: none; refines how [building-info.md](../original-spec/04-city-layout/building-info.md) step 12.13 picks a chunk's palettes
+- Amends: refines how [building-info.md](../original-spec/04-city-layout/building-info.md) step 12.13 picks a chunk's palettes, and how [0007](0007-palette-variety.md) §2 draws a building's variety (its "Still open": feathering chooses among the variety by the neighbors' colors)
 - Date: 2026-11-02
 
 ## Context
@@ -45,7 +45,8 @@ Palette choice for buildings becomes its own cached stage of the layout, `facade
 2. **Default picks.** The unit draws one float per palette group from its own facade random (seeded from the world seed and the unit), and each group's default is upstream's weighted pick with that float.
 3. **Constraints.** The unit reads the chosen tones of its neighboring units with a higher priority. Each of those is the same stage, asked recursively; every step goes to a strictly higher priority, so the recursion ends, and its depth is the longest increasing-priority path, a handful of units in practice.
 4. **Feathered picks.** Groups are taken in order. For each group with more than one palette, a candidate's tone is the facade tone of the stack with that candidate and the picks made so far. The default is kept when its tone is within `facadeContrast` of every constraint. Otherwise the pick is redrawn, with the same float and the original weights, among the candidates that are; when none is, the candidate with the smallest worst contrast is taken.
-5. **Use.** The plan stage still draws its palette floats from the building random, so its stream is unchanged, and then takes the facade stage's palettes for every chunk that could hold a building. A multibuilding's chunks share their top-left's palettes, as before. Street chunks keep the plan's own draw.
+5. **The palette variety.** M11's option palettes ([0007](0007-palette-variety.md)) sit above the style's palettes and change wall, accent and band blocks, so every tone above is the tone of the whole list: the style's picks, then the variety drawn for them with the unit's variety seed. When the feathered picks with the default variety still clash, up to 8 further variety draws, from seeds derived from the unit's variety seed, are tried in order and the first that fits is kept (else the least bad). Each is a weighted draw of the same variety, so a clash-free choice keeps the variety's own weights.
+6. **Use.** The plan stage still draws its palette floats from the building random, so its stream is unchanged, and then takes the facade stage's palettes, variety included, for every chunk that holds a building. A multibuilding's chunks share their top-left's palettes, as before. Street chunks keep the plan's own draw.
 
 Every pair of neighbors is then checked once, by the one with the lower priority, against the choice of the one with the higher; a unit's choice never depends on what was generated before it, only on what its higher-priority neighbors would choose, which is itself a pure function. Planning chunks in a different order, or with a different cache size, gives the same palettes.
 

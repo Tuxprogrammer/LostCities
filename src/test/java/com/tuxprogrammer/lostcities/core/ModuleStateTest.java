@@ -28,7 +28,9 @@ public class ModuleStateTest {
             ModuleState state = ModuleState.configured();
             assertFalse(state.isActive(Module.RAILWAYS));
             assertTrue(state.isActive(Module.CITIES));
-            assertEquals(EnumSet.of(Module.CITIES, Module.HIGHWAYS, Module.SCATTERED_STRUCTURES), state.active());
+            assertEquals(
+                EnumSet.of(Module.CITIES, Module.HIGHWAYS, Module.SCATTERED_STRUCTURES, Module.PALETTE_VARIETY),
+                state.active());
         } finally {
             WorldgenConfig.railways = true;
         }

@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.layout.view.StyleView;
 /**
  * The facade stage of the layout: the palettes of every building unit (a single building chunk or a whole
  * multibuilding), chosen so that neighboring buildings' facades stay within {@code facadeContrast} of each other
- * across style and biome changes (alpha review AR-17, docs/design/0007-facade-color-feathering.md §4).
+ * across style and biome changes (alpha review AR-17, docs/design/0008-facade-color-feathering.md §4).
  *
  * <ul>
  * <li>Every unit that could hold a building has a priority: units whose facade the palettes cannot change first, then
@@ -48,6 +48,12 @@ final class FacadePlanner {
      * sets its main wall moves only by its accents, so it chooses first and its neighbors adapt to it.
      */
     static final float SAME_TONE = 12f;
+    /** Further palette-variety draws tried when a unit's default variety still clashes with its neighbors. */
+    static final int VARIETY_TRIES = 8;
+    /** The variety seed a style and building's fixedness is judged with. */
+    static final long FIXED_VARIETY_SEED = 0x46495845_44564152L;
+    /** Salt of those draws' seeds. */
+    static final long VARIETY_TRY_SALT = 0x56545259_46454154L;
     /** Deepest recursion followed; beyond it a neighbor imposes nothing (never reached in practice). */
     static final int MAX_DEPTH = 256;
 
@@ -166,18 +172,41 @@ final class FacadePlanner {
                     .get(StyleView.weightedIndex(groups.get(g), floats[g]))
                     .palette());
         }
+        long variety = planner.varietySeed(topX, topZ);
         List<FacadeTone> constraints = constraints(unit);
-        if (!constraints.isEmpty()) {
-            for (int g = 0; g < groups.size(); g++) {
-                feather(unit, groups.get(g), g, floats[g], picks, constraints);
+        if (constraints.isEmpty()) {
+            List<String> chosen = Collections.unmodifiableList(full(unit, picks, variety));
+            return new Choice(chosen, facades.tone(chosen, unit.building));
+        }
+        for (int g = 0; g < groups.size(); g++) {
+            feather(unit, groups.get(g), g, floats[g], picks, variety, constraints);
+        }
+        // The palette variety (M11, docs/design/0007-palette-variety.md) layers wall, accent and band options over the
+        // style's palettes; when its default draw still clashes, further draws from seeds derived from the unit's
+        // variety seed are tried in order, each a weighted draw of the same variety, and the first that fits is kept.
+        List<String> best = full(unit, picks, variety);
+        float bestWorst = worstContrast(facades.tone(best, unit.building), constraints);
+        for (int k = 1; k <= VARIETY_TRIES && bestWorst > limit; k++) {
+            List<String> candidate = full(unit, picks, StableHash.mix64(variety ^ (VARIETY_TRY_SALT * k)));
+            float worst = worstContrast(facades.tone(candidate, unit.building), constraints);
+            if (worst < bestWorst) {
+                best = candidate;
+                bestWorst = worst;
             }
         }
-        List<String> chosen = Collections.unmodifiableList(picks);
+        List<String> chosen = Collections.unmodifiableList(best);
         return new Choice(chosen, facades.tone(chosen, unit.building));
     }
 
+    /** A unit's whole palette list: the style's picks, then the palette variety drawn for them with a seed. */
+    private List<String> full(Unit unit, List<String> picks, long varietySeed) {
+        List<String> out = new ArrayList<>(picks);
+        out.addAll(unit.style.pickVariety(picks, true, varietySeed));
+        return out;
+    }
+
     /** Re-picks one group against the constraints, keeping the default when it fits. */
-    private void feather(Unit unit, List<StyleView.Choice> group, int g, float u, List<String> picks,
+    private void feather(Unit unit, List<StyleView.Choice> group, int g, float u, List<String> picks, long variety,
         List<FacadeTone> constraints) {
         if (group.size() < 2) {
             return;
@@ -189,7 +218,7 @@ final class FacadePlanner {
                 g,
                 group.get(i)
                     .palette());
-            FacadeTone tone = facades.tone(picks, unit.building);
+            FacadeTone tone = facades.tone(full(unit, picks, variety), unit.building);
             worst[i] = worstContrast(tone, constraints);
             anyKnown |= tone != null;
         }
@@ -326,7 +355,9 @@ final class FacadePlanner {
                 group.get(0)
                     .palette());
         }
-        FacadeTone base = facades.tone(picks, unit.building);
+        // Cached per style and building, so judged with one fixed variety draw, never a unit's own (order-independent).
+        long variety = FIXED_VARIETY_SEED;
+        FacadeTone base = facades.tone(full(unit, picks, variety), unit.building);
         for (int g = 0; g < groups.size(); g++) {
             List<StyleView.Choice> group = groups.get(g);
             for (int i = 1; i < group.size(); i++) {
@@ -334,7 +365,7 @@ final class FacadePlanner {
                     g,
                     group.get(i)
                         .palette());
-                FacadeTone tone = facades.tone(picks, unit.building);
+                FacadeTone tone = facades.tone(full(unit, picks, variety), unit.building);
                 if (base == null ? tone != null : tone == null || FacadeTone.contrast(base, tone) > SAME_TONE) {
                     return false;
                 }

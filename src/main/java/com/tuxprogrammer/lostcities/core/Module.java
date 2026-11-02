@@ -20,7 +20,9 @@ public enum Module {
     /** Railways, stations and subways (M06). */
     RAILWAYS("railways"),
     /** Scattered structures outside cities (M07). */
-    SCATTERED_STRUCTURES("scatteredStructures");
+    SCATTERED_STRUCTURES("scatteredStructures"),
+    /** The pack's variety in building palettes, interiors and park flora (M11, D25). */
+    PALETTE_VARIETY("paletteVariety");
 
     private final String configKey;
 
