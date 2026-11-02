@@ -19,6 +19,9 @@ import com.tuxprogrammer.lostcities.core.LangKeys;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFinder;
 import com.tuxprogrammer.lostcities.worldgen.city.ScatteredFinder;
+import com.tuxprogrammer.lostcities.worldgen.damage.DamageArea;
+import com.tuxprogrammer.lostcities.worldgen.damage.Explosion;
+import com.tuxprogrammer.lostcities.worldgen.damage.Repairs;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayWorld;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 
@@ -88,7 +91,7 @@ public final class FindSubcommand implements Subcommand {
                 .planner(),
             overlay.plan(),
             overlay.cities()
-                .structures());
+                .structures()).withRepairs((cx, cz) -> repaired(overlay, cx, cz));
         CityFinder.Result result = best ? finder.findBest(kind, at.posX, at.posZ, radius)
             : finder.find(kind, at.posX, at.posZ, radius);
         if (result == null) {
@@ -113,6 +116,24 @@ public final class FindSubcommand implements Subcommand {
                 format(result.viewZ()),
                 format(result.yaw()),
                 format(result.pitch())));
+    }
+
+    /** Whether an explosion that reaches a chunk was repaired (0011 §4), for {@code find repair}. */
+    private static boolean repaired(OverlayWorld overlay, int chunkX, int chunkZ) {
+        long seed = overlay.world()
+            .getSeed();
+        Repairs repairs = overlay.plan()
+            .repairs();
+        if (!repairs.active()) {
+            return false;
+        }
+        DamageArea area = DamageArea.of(seed, chunkX, chunkZ, overlay.settings(), overlay.plan());
+        for (Explosion explosion : area.explosions()) {
+            if (repairs.isRepaired(seed, explosion)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

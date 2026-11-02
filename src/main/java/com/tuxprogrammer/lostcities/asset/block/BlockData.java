@@ -15,7 +15,8 @@ import com.tuxprogrammer.lostcities.asset.variety.PaletteVariety;
 
 /**
  * The bundled block data the asset system reads besides the assets: the block-name map, the decorative-metal catalog,
- * the never-place list, the raw variety pools and the palette variety drawn from them, all under
+ * the never-place list, the raw variety pools, the palette variety drawn from them and the measured block
+ * colors, all under
  * {@code data/lostcitiesnh/blockmap/} in the jar. They are
  * this mod's own data, not upstream assets, so they are never overridden from the config folder: a pack that needs a
  * different block writes it in its asset overrides as {@code modid:name:meta}.
@@ -30,9 +31,10 @@ public final class BlockData {
     private final NeverPlaceList neverPlace;
     private final JsonElement pools;
     private final JsonElement variety;
+    private final BlockColors colors;
 
     /**
-     * Holds already-read block data, for tests that build their own; no palette variety.
+     * Holds already-read block data, for tests that build their own; no palette variety and no block colors.
      *
      * @param mapping    the block-name map
      * @param metals     the decorative-metal catalog
@@ -40,7 +42,7 @@ public final class BlockData {
      * @param pools      the raw pools document, or an empty object
      */
     public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools) {
-        this(mapping, metals, neverPlace, pools, emptyVariety());
+        this(mapping, metals, neverPlace, pools, emptyVariety(), BlockColors.EMPTY);
     }
 
     /**
@@ -54,11 +56,27 @@ public final class BlockData {
      */
     public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools,
         JsonElement variety) {
+        this(mapping, metals, neverPlace, pools, variety, BlockColors.EMPTY);
+    }
+
+    /**
+     * Holds already-read block data.
+     *
+     * @param mapping    the block-name map
+     * @param metals     the decorative-metal catalog
+     * @param neverPlace the never-place list
+     * @param pools      the raw pools document, or an empty object
+     * @param variety    the raw palette-variety document
+     * @param colors     the measured block colors
+     */
+    public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools,
+        JsonElement variety, BlockColors colors) {
         this.mapping = mapping;
         this.metals = metals;
         this.neverPlace = neverPlace;
         this.pools = pools;
         this.variety = variety;
+        this.colors = colors;
     }
 
     /** Returns a palette-variety document with no options and no styles. */
@@ -87,7 +105,8 @@ public final class BlockData {
             MetalCatalog.parse(metals, problems.in(origin(MetalCatalog.RESOURCE))),
             NeverPlaceList.parse(never, problems.in(origin(NeverPlaceList.RESOURCE))),
             pools,
-            variety);
+            variety,
+            BlockColors.bundled(anchor, problems));
     }
 
     /** Returns the block-name map. */
@@ -103,6 +122,11 @@ public final class BlockData {
     /** Returns the never-place list. */
     public NeverPlaceList neverPlace() {
         return neverPlace;
+    }
+
+    /** Returns the measured block colors (docs/design/0012-facade-color-feathering.md §1). */
+    public BlockColors colors() {
+        return colors;
     }
 
     /** Returns the raw pools document, resolved by the loader against the registry. */

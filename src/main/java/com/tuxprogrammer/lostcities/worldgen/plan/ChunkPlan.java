@@ -65,6 +65,7 @@ public final class ChunkPlan {
     private long[] keepClear;
     private Supplier<Edges> edgeSource;
     private final String label;
+    private final boolean lot;
     private final boolean scattered;
     private final List<GroundFit> groundFits;
     private final ChunkContent finish;
@@ -93,10 +94,19 @@ public final class ChunkPlan {
         this.keepClear = b.keepClear;
         this.edgeSource = b.edgeSource;
         this.label = b.label;
+        this.lot = b.lot;
         this.scattered = b.scattered;
         this.groundFits = b.groundFits.isEmpty() ? Collections.<GroundFit>emptyList()
             : Collections.unmodifiableList(new ArrayList<>(b.groundFits));
         this.finish = b.finish;
+    }
+
+    /**
+     * Returns whether the chunk is an edge lot (docs/design/0011-city-edges-and-character.md §3): its writer digs below
+     * city ground, so the street base is filled before it writes, and no rubble or leaves are laid on it.
+     */
+    public boolean isLot() {
+        return lot;
     }
 
     /**
@@ -425,6 +435,7 @@ public final class ChunkPlan {
         private long[] keepClear;
         private Supplier<Edges> edgeSource;
         private String label = "";
+        private boolean lot;
         private boolean scattered;
         private final List<GroundFit> groundFits = new ArrayList<>();
         private ChunkContent finish = ChunkContent.NONE;
@@ -573,6 +584,12 @@ public final class ChunkPlan {
          */
         public Builder edgeSource(Supplier<Edges> source) {
             this.edgeSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /** Marks the chunk as an edge lot (0011 §3). */
+        public Builder lot(boolean value) {
+            this.lot = value;
             return this;
         }
 

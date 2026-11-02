@@ -51,6 +51,22 @@ public final class LayoutProfile {
      * {@link #cityLevelThresholds()} or more there is no cap, as upstream.
      */
     public final int cityMaxRise;
+    /**
+     * {@code cityTaper}, 0 to 1: how strongly building heights follow the urban intensity, low at the city's edge and
+     * high in its core (alpha review AR-5, docs/design/0011-city-edges-and-character.md §1 and §2); 0 is upstream's
+     * floor count.
+     */
+    public final float cityTaper;
+    /**
+     * {@code edgeLotChance}, 0 to 1: the chance that a building chunk at the very edge of a city is an empty or
+     * construction lot instead (AR-6, 0011 §3); it falls to 0 at an intensity of 0.4.
+     */
+    public final float edgeLotChance;
+    /**
+     * {@code facadeContrast}: the most contrast two neighboring buildings' facades may have (AR-17,
+     * docs/design/0012-facade-color-feathering.md §3); 200 or more turns feathering off.
+     */
+    public final float facadeContrast;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -156,6 +172,9 @@ public final class LayoutProfile {
         cityMinHeight = b.cityMinHeight;
         cityMaxHeight = b.cityMaxHeight;
         cityMaxRise = b.cityMaxRise;
+        cityTaper = b.cityTaper;
+        edgeLotChance = b.edgeLotChance;
+        facadeContrast = b.facadeContrast;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -323,6 +342,9 @@ public final class LayoutProfile {
         private int cityMinHeight = 50;
         private int cityMaxHeight = 150;
         private int cityMaxRise = 2;
+        private float cityTaper = 1f;
+        private float edgeLotChance = .45f;
+        private float facadeContrast = 45f;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -414,6 +436,19 @@ public final class LayoutProfile {
         /** @param levels {@code cityMaxRise}, city levels @return this builder */
         public Builder cityMaxRise(int levels) {
             cityMaxRise = levels;
+            return this;
+        }
+
+        /**
+         * @param taper    {@code cityTaper}, 0 to 1
+         * @param lots     {@code edgeLotChance}, 0 to 1
+         * @param contrast {@code facadeContrast}
+         * @return this builder
+         */
+        public Builder character(float taper, float lots, float contrast) {
+            cityTaper = taper;
+            edgeLotChance = lots;
+            facadeContrast = contrast;
             return this;
         }
 

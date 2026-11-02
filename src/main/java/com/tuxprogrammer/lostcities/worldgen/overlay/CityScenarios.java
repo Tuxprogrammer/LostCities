@@ -495,7 +495,7 @@ public final class CityScenarios {
                 floors.add(floorShare(baseX, y, baseZ) >= FLOOR_SOLID_SHARE, where);
                 walls.add(wallShare(plan, chunkX, chunkZ, f, y) >= WALL_CLOSED_SHARE, where);
                 if (f + 1 < plan.floors()) {
-                    stairs.add(hasClimb(baseX, y, baseZ), where);
+                    stairs.add(hasClimb(plan, chunkX, chunkZ, y), where);
                 }
                 if (f == 0) {
                     doors(plan, chunkX, chunkZ, y);
@@ -550,7 +550,33 @@ public final class CityScenarios {
             return counted == 0 ? 1.0 : (double) closed / counted;
         }
 
-        /** Whether stairs or a ladder rise from a floor toward the next. */
+        /**
+         * Whether stairs or a ladder rise from a floor toward the next, anywhere in the building: a multibuilding is
+         * one building, whose stairwell stands in one of its chunks (M12: its floors grew with the high-rise core, and
+         * counting each chunk alone failed every chunk without the stairwell).
+         */
+        private boolean hasClimb(ChunkPlan plan, int chunkX, int chunkZ, int y) {
+            if (plan.multiPos()
+                .isSingle()) {
+                return hasClimb(chunkX << 4, y, chunkZ << 4);
+            }
+            int topX = chunkX - plan.multiPos()
+                .x();
+            int topZ = chunkZ - plan.multiPos()
+                .z();
+            for (int dx = 0; dx < plan.multiPos()
+                .width(); dx++) {
+                for (int dz = 0; dz < plan.multiPos()
+                    .height(); dz++) {
+                    if (hasClimb((topX + dx) << 4, y, (topZ + dz) << 4)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /** Whether stairs or a ladder rise from a floor toward the next within one chunk. */
         private boolean hasClimb(int baseX, int y, int baseZ) {
             for (int dy = 1; dy <= ChunkPlan.FLOOR_HEIGHT; dy++) {
                 for (int z = 0; z < 16; z++) {

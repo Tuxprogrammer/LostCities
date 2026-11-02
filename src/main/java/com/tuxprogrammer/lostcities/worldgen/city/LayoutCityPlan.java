@@ -17,6 +17,7 @@ import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
@@ -28,6 +29,7 @@ import com.tuxprogrammer.lostcities.layout.street.Orientation;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
 import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
+import com.tuxprogrammer.lostcities.worldgen.damage.Repairs;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
@@ -91,6 +93,7 @@ public final class LayoutCityPlan implements CityPlan {
     private final TerrainView terrain;
     private final LayoutPlanner planner;
     private final TerrainSettings settings;
+    private final Repairs repairs;
     private final ScatteredContent scattered;
     private final Function<BlockRef, Set<String>> oreNames;
 
@@ -122,8 +125,14 @@ public final class LayoutCityPlan implements CityPlan {
         this.terrain = terrain;
         this.planner = context.planner();
         this.settings = context.settings();
+        this.repairs = Repairs.of(context.assets(), settings.damageRepairChance());
         this.scattered = scattered == null || !scattered.enabled() ? null : new ScatteredContent(context, scattered);
         this.oreNames = oreNames;
+    }
+
+    @Override
+    public Repairs repairs() {
+        return repairs;
     }
 
     /** Returns the world's scattered planner, or {@code null} when the world has no scattered structures. */
@@ -293,6 +302,7 @@ public final class LayoutCityPlan implements CityPlan {
             .style(context.styleBlocks(plan))
             .explosionChance(explosion == null ? Float.NaN : explosion)
             .content(cityContent(chunkX, chunkZ))
+            .lot(plan.lot() != LotKind.NONE)
             .jobSource(() -> dryRun(chunkX, chunkZ, true))
             .finish(
                 (buffer, contentContext) -> new StuffWriter(context, chunkX, chunkZ, oreNames)
@@ -307,6 +317,9 @@ public final class LayoutCityPlan implements CityPlan {
         int[] footprint = new int[256];
         if (plan.hasBuilding()) {
             Arrays.fill(footprint, plan.buildingBottomHeight() - 1);
+        } else if (plan.lot() != LotKind.NONE) {
+            // An edge lot is guarded down to its pit's floor, so RWG grows nothing on it (0011 §3).
+            Arrays.fill(footprint, ground - Math.max(STREET_FOOTPRINT_DEPTH, plan.lotDepth() + 1));
         } else if (isPark(plan, chunkX, chunkZ)) {
             // Parks and open lots keep RWG's decoration (0006 §1, pipeline-on-rwg.md).
             Arrays.fill(footprint, com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT);
@@ -548,6 +561,16 @@ public final class LayoutCityPlan implements CityPlan {
             return plan.plannedRoad()
                 .name()
                 .toLowerCase(java.util.Locale.ROOT) + " street";
+        }
+        if (plan.lot() != LotKind.NONE) {
+            return plan.lot()
+                .isDug()
+                    ? plan.lot()
+                        .label() + " (depth "
+                        + plan.lotDepth()
+                        + ")"
+                    : plan.lot()
+                        .label();
         }
         switch (plan.streetType()) {
             case PARK:

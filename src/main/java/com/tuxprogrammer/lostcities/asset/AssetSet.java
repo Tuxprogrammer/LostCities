@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import com.tuxprogrammer.lostcities.asset.AssetProblem.Severity;
 import com.tuxprogrammer.lostcities.asset.block.BlockChoice;
+import com.tuxprogrammer.lostcities.asset.block.BlockColors;
 import com.tuxprogrammer.lostcities.asset.block.BlockMapping;
 import com.tuxprogrammer.lostcities.asset.block.BlockResolver;
 import com.tuxprogrammer.lostcities.asset.block.VarietyPools;
@@ -56,12 +57,13 @@ public final class AssetSet {
     private final Map<String, BlockChoice> codeBlocks;
     private final RandomList defaultLeaves;
     private final RandomList defaultRubble;
+    private final BlockColors colors;
 
     AssetSet(Map<AssetType, SortedMap<AssetId, Object>> assets, Map<String, List<Stuff>> stuffByTag,
         SortedMap<String, String> fileHashes, String hash, List<AssetProblem> problems,
         List<BlockResolver.Fallback> fallbacks, List<String> unreachable, BlockMapping mapping, VarietyPools pools,
-        PaletteVariety variety, Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves,
-        RandomList defaultRubble) {
+        PaletteVariety variety, Map<String, BlockChoice> codeBlocks, RandomList defaultLeaves, RandomList defaultRubble,
+        BlockColors colors) {
         this.assets = assets;
         this.stuffByTag = stuffByTag;
         this.fileHashes = fileHashes;
@@ -75,6 +77,12 @@ public final class AssetSet {
         this.codeBlocks = codeBlocks;
         this.defaultLeaves = defaultLeaves;
         this.defaultRubble = defaultRubble;
+        this.colors = colors;
+    }
+
+    /** Returns the measured block colors (docs/design/0012-facade-color-feathering.md §1). */
+    public BlockColors colors() {
+        return colors;
     }
 
     /**

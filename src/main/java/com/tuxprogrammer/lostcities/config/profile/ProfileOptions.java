@@ -461,6 +461,10 @@ public final class ProfileOptions {
         newTerrain("landmarkMargin", Type.INT, d(0), d(16));
         newTerrain("softEdgeWidth", Type.INT, d(2), d(12));
         newTerrain("cityMaxRise", Type.INT, d(0), d(TerrainSettings.CITY_LEVEL_THRESHOLDS));
+        newTerrain("cityTaper", Type.FLOAT, d(0), d(1));
+        newTerrain("edgeLotChance", Type.FLOAT, d(0), d(1));
+        newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
+        newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
             new ProfileOption(
                 "villageTransitionRings",

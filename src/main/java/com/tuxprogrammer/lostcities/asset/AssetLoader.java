@@ -210,7 +210,8 @@ public final class AssetLoader {
             variety,
             Collections.unmodifiableMap(code),
             leaves,
-            rubble);
+            rubble,
+            data.colors());
     }
 
     /** Returns the key of a file: {@code <folder>/<id>}. */
@@ -660,6 +661,46 @@ public final class AssetLoader {
         out.put("rubble.mossy_stone_bricks", "minecraft:mossy_stone_bricks");
         out.put("rubble.mossy_cobblestone", "minecraft:mossy_cobblestone");
         out.put("rubble.moss", "minecraft:moss_block");
+        // Edge lots (docs/design/0011-city-edges-and-character.md §3): clay and dirt ground nothing grows on, concrete.
+        out.put("lot.coarse_dirt", "minecraft:dirt:1");
+        out.put("lot.terracotta", "minecraft:hardened_clay:0");
+        out.put("lot.brown_terracotta", "minecraft:stained_hardened_clay:12");
+        out.put("lot.red_terracotta", "minecraft:stained_hardened_clay:14");
+        out.put("lot.gravel", "minecraft:gravel:0");
+        out.put("lot.concrete", "minecraft:light_gray_concrete");
+        out.put("lot.fence", "minecraft:fence:0");
+        // Repairs (0011 §4): boards for windows, and plain materials a patch is chosen from by color.
+        out.put("repair.boards.oak", "minecraft:planks:0");
+        out.put("repair.boards.spruce", "minecraft:planks:1");
+        out.put("repair.boards.birch", "minecraft:planks:2");
+        String[] plain = { "minecraft:cobblestone:0", "minecraft:stonebrick:0", "minecraft:brick_block:0",
+            "minecraft:hardened_clay:0", "minecraft:sandstone:0", "minecraft:sandstone:2",
+            "minecraft:double_stone_slab:8", "minecraft:quartz_block:0" };
+        for (String block : plain) {
+            out.put("repair.material." + block.substring("minecraft:".length()), block);
+        }
+        for (int color = 0; color < 16; color++) {
+            out.put("repair.material.stained_hardened_clay:" + color, "minecraft:stained_hardened_clay:" + color);
+        }
+        for (String color : Arrays.asList(
+            "white",
+            "orange",
+            "magenta",
+            "light_blue",
+            "yellow",
+            "lime",
+            "pink",
+            "gray",
+            "light_gray",
+            "cyan",
+            "purple",
+            "blue",
+            "brown",
+            "green",
+            "red",
+            "black")) {
+            out.put("repair.material.concrete." + color, "minecraft:" + color + "_concrete");
+        }
         return Collections.unmodifiableMap(out);
     }
 }
