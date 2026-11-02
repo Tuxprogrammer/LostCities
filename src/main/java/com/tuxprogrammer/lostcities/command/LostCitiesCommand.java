@@ -19,8 +19,7 @@ import com.tuxprogrammer.lostcities.scenario.TestSubcommand;
  * {@code /lostcities}, with the aliases {@code /lost} and {@code /lostcitiesnh}: one 1.7.10 command that dispatches on
  * its first argument (docs/new-spec/01-core/commands.md, "Shape"). M04 adds {@code profile} and {@code timers} to M01's
  * {@code test} (alias {@code scenario}), and the test-hook-only {@code view}; M05 adds the test-hook-only {@code find};
- * M09
- * and M10 add the rest.
+ * M09 adds {@code saveprofile} and the profile listing, and M10 adds the rest.
  *
  * <p>
  * Every subcommand needs operator level 2, checked per subcommand before it runs. Errors are {@link CommandException}s
@@ -42,6 +41,7 @@ public final class LostCitiesCommand extends CommandBase {
     /** Creates the command with every subcommand. */
     public LostCitiesCommand() {
         add(new ProfileSubcommand());
+        add(new SaveProfileSubcommand());
         add(new TimersSubcommand());
         add(new TestSubcommand());
         add(new ViewSubcommand());

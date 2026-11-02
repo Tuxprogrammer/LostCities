@@ -4,6 +4,7 @@ import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesScenario;
 import com.tuxprogrammer.lostcities.config.LostCitiesConfig;
+import com.tuxprogrammer.lostcities.config.profile.ProfileSetup;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
 import com.tuxprogrammer.lostcities.core.assets.AssetScenarios;
@@ -18,6 +19,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
+import com.tuxprogrammer.lostcities.worldgen.overlay.ProfileScenarios;
+import com.tuxprogrammer.lostcities.worldgen.overlay.SpawnSelection;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -44,12 +47,15 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 public class CommonProxy {
 
     /**
-     * Loads the GTNHLib config and opens the network channel.
+     * Loads the GTNHLib config, reads the profile files and opens the network channel.
      *
      * @param event FML's pre-initialization event
      */
     public void preInit(FMLPreInitializationEvent event) {
         LostCitiesConfig.register();
+        ProfileSetup.preInit(
+            Loader.instance()
+                .getConfigDir());
         LostCitiesNetwork.init();
         LostCities.LOG.info("{} {}: modules {}", LostCities.NAME, Tags.VERSION, ModuleState.configured());
     }
@@ -64,11 +70,13 @@ public class CommonProxy {
      */
     public void init(FMLInitializationEvent event) {
         Overlays.register();
+        SpawnSelection.register();
         CityLoot.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
         AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
         CityScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        ProfileScenarios.registerAll(ScenarioRegistry.INSTANCE);
         VillageNamesScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
@@ -76,7 +84,8 @@ public class CommonProxy {
     }
 
     /**
-     * Loads the assets against the complete block registry, pins the order of FML's village-creation handlers so
+     * Loads the assets against the complete block registry, checks the profiles against them, pins the order of FML's
+     * village-creation handlers so
      * VillageNames villages are reproducible (decision log D86), then runs the dev self-check, which throws and
      * so stops the dev server when it fails.
      *
@@ -86,6 +95,7 @@ public class CommonProxy {
         LoadedAssets.load(
             Loader.instance()
                 .getConfigDir());
+        ProfileSetup.postInit(LoadedAssets.current());
         VillageNamesOracles.init();
         DevSelfCheck.runIfEnabled();
     }

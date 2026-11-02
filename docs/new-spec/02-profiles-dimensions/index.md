@@ -13,7 +13,7 @@ Status: rows that cite a design record or a decision-log row are *Accepted*. The
 ## Contents
 
 - [pinned-profile.md](pinned-profile.md): how a world's profile is resolved, pinned, shown and re-pinned, what the snapshot holds, and what happens when something changes later
-- [profile-options.md](profile-options.md): all 163 upstream options, option by option, and the new ones (8, and a ninth if M03 needs the near-spawn city of D30)
+- [profile-options.md](profile-options.md): all 163 upstream options, option by option, and the new ones
 
 ## How to read the deviation table
 
@@ -42,7 +42,7 @@ Upstream: [profile-options.md](../../original-spec/02-profiles-dimensions/profil
 
 | Original | Here | What changes | Decision | Avoids |
 |---|---|---|---|---|
-| [The 163 options](../../original-spec/02-profiles-dimensions/profile-options.md) | same | 134 kept, with upstream's defaults and meanings. | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | |
+| [The 163 options](../../original-spec/02-profiles-dimensions/profile-options.md) | same | 133 kept, with upstream's defaults and meanings; `spawnSphere` is deferred with the spheres. | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §1 | |
 | [Height-dependent options](../../original-spec/02-profiles-dimensions/profile-options.md#120-height-assumptions) | changed | RWG's sea level is 63, so upstream's numbers carry over; `buildingMaxFloors` is limited to 22; `bedrockLayer` is read and writes nothing, with a warning when above 0 (RWG places bedrock at Y 0 to 4); `seaLevel` −1 means 63; every range above 255 or below 0 is clamped to 0 to 255 at load, with a warning. | [0005](../../design/0005-rwg-overlay.md) §6 | PROF-14 |
 | [Dead and config-only options](../../original-spec/02-profiles-dimensions/index.md#key-facts) (`horizon`, `fogRed`, `fogGreen`, `fogBlue`, `fogDensity`, `sphereSurfaceVariation`, `outsideSurfaceVariation`, `outsideGroundLevel`, `generateNether`) | dropped | Read and ignored. | D12 | PROF-08, PROF-17 |
 | [Legacy street and highway options](../../original-spec/02-profiles-dimensions/profile-options.md#highways-read-by-06-highways-railways) (`streetGenerationMode`, `highwayGenerationMode`, `highwayRequiresTwoCities`, the three highway noise options, `highwayDistanceMask`) | dropped | Only the hierarchical streets and the intercity highway planner are ported. `highwayDistanceMask` goes with legacy highways: the intercity planner never reads it, and the profile option `highwaysEnabled` switches highways off, so HWY-06's "0 = off" intent holds in every mode (P-PROF-5, D31). | D11, D31 | |
@@ -69,7 +69,7 @@ Upstream: [builtin-profiles.md](../../original-spec/02-profiles-dimensions/built
 
 | Original | Here | What changes | Decision | Avoids |
 |---|---|---|---|---|
-| [`default`](../../original-spec/02-profiles-dimensions/builtin-profiles.md#overrides) | same | The profile `dimensionProfiles` names by default. Spawn is the pack's. A city near spawn comes from the layout: M03 measures the distance from spawn to the nearest city center, and if it is too far a new seeded option, on by default, guarantees a city center within a set distance of (0, 0) (D30). | [0005](../../design/0005-rwg-overlay.md) §7, D21, D30 | |
+| [`default`](../../original-spec/02-profiles-dimensions/builtin-profiles.md#overrides) | same | The profile `dimensionProfiles` names by default. Spawn is the pack's. A city near spawn comes from the layout: M03 measured the distance from spawn to the nearest city center and found no option is needed (D30, D53). | [0005](../../design/0005-rwg-overlay.md) §7, D21, D30 | |
 | [`nodamage`, `rarecities`, `onlycities`, `safe`, `ancient`](../../original-spec/02-profiles-dimensions/builtin-profiles.md#overrides) | same | `rarecities`' `highwayRequiresTwoCities = false` has no effect (legacy highways, D11). `nodamage`'s text no longer promises disabled ravines, since the lake veto does not cover them (P-PROF-6). | D11, D31 | PROF-18 |
 | [`tallbuildings`](../../original-spec/02-profiles-dimensions/builtin-profiles.md#overrides) | changed | `explosionMaxHeight` and `miniExplosionMaxHeight` 255 instead of 256 (the 1.7.10 build limit); `buildingMaxFloors` 19 is inside the new 0 to 22 range. | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | [`wasteland`](../../original-spec/02-profiles-dimensions/builtin-profiles.md#identity) | changed | Values as upstream. The extra description's advice (Biomes O' Plenty and the Wastify mod) is dropped: Wastify is not in the pack. | [CONTRIBUTING § Assets and localization](../../../CONTRIBUTING.md#assets-and-localization) | PROF-18 |

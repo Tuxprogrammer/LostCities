@@ -55,7 +55,7 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | Options | Here | What changes | Owner | Decision | Avoids |
 |---|---|---|---|---|---|
 | `cityChance`, `cityMinRadius`, `cityMaxRadius`, `cityPerlinScale`, `cityPerlinOffset`, `cityPerlinInnerScale`, `cityThreshold`, `oceanCorrectionBorder` | same | City placement and city-center styles mix in the world seed; each chunk takes its city center's style. The radius pair is checked at load. | 04 | D10 | PROF-06, PROF-10, PROF-11 |
-| `citySpawnDistance1`, `citySpawnDistance2`, `citySpawnMultiplier1`, `citySpawnMultiplier2` | same | Upstream's semantics: they only scale cities that already exist, so they cannot place one near spawn. A city near spawn comes from a new seeded option, on by default, if M03's measurement shows it is needed (D30). | 04 | D21, D30 | |
+| `citySpawnDistance1`, `citySpawnDistance2`, `citySpawnMultiplier1`, `citySpawnMultiplier2` | same | Upstream's semantics: they only scale cities that already exist, so they cannot place one near spawn. M03's measurement showed no near-spawn option is needed (D30, D53). | 04 | D21, D30 | |
 | `cityStyleThreshold` | changed | Accepted range is −1 (off) or 0 to 1, so the default is inside it. | 04 | Bug register | PROF-16 |
 | `cityStyleAlternative` | changed | Must name an existing city style whenever `cityStyleThreshold` is on; checked at load. | 04 | Bug register | PROF-12 |
 | `cityAvoidVoid` | deferred | Acts only in the `floating` landscape. | 03 | D12 | |
@@ -89,16 +89,15 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `preventLakesInCities` (upstream 1.12's `preventLakesRavinesInCities`, renamed because the cave carver is not wrapped, so ravines are not covered: P-PROF-6, P03-2) | `lostcity` | on | Vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` populate steps and NHCore's oil deposits wherever a population area touches a city chunk or a scattered structure's footprint (P07-4); landmark cores get no veto | 03 | [0005](../../design/0005-rwg-overlay.md) §3, D31 |
 | `highwaysEnabled` | `lostcity` | true | A per-world switch for highways; false generates none (P06-5, HWY-06) | 06 | D31 |
 | `villageTreatment` | `lostcity` | `BUILD_AROUND` | `BUILD_AROUND`, `AVOID` (upstream's avoidance), `IGNORE`; replaces `avoidVillages` | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
-| `landmarkTreatment` | `lostcity` | `BUILD_AROUND` per kind | The same three values for each landmark kind; replaces `avoidStructures` | 04, 07 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
+| `landmarkTreatment` | `lostcity` | `BUILD_AROUND` | The same three values for each landmark kind other than villages: a comma-separated list of a bare treatment, which sets every kind, and `<kind>=<treatment>` entries (`ocean_monument=AVOID`); replaces `avoidStructures` | 04, 07 | [0006](../../design/0006-build-around-other-worldgen.md) §3, D138 |
 | `landmarkMargin` | `lostcity` | 2 blocks | Growth of a landmark footprint before it is turned into core chunks | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
 | `softEdgeWidth` | `lostcity` | 6 columns | Width of the strip that steps city ground down to natural ground facing a core | 03 | [0006](../../design/0006-build-around-other-worldgen.md) §4 |
 | `villageTransitionRings` | `lostcity` | 2 | Rings of lower building density around a village | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
 | `villageLinkDistance` | `lostcity` | 4 chunks | How far outside a city a village still gets a lane | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
-| Vanilla loot categories opt-in (name `08-loot-mobs-blocks`') | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |
-| A city near spawn (name and distance set at M03; added only if M03's measurement shows the nearest city center is too far from spawn) | `lostcity` | on | Guarantees a city center within a set distance of (0, 0), seeded from the world seed | 04 | D30 |
+| Vanilla loot categories opt-in (name `08-loot-mobs-blocks`'; M08 adds it) | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |
 
-Every new option is in the `lostcity` category (P-PROF-6, D31). The mod-config keys that are pinned with the profile (module flags, the decorative metal flags, `heightSampleSize`) are in [01-core § Mod config](../01-core/index.md#mod-config) and [pinned-profile.md](pinned-profile.md).
+Every new option is in the `lostcity` category (P-PROF-6, D31), and so is `heightSampleSize`, upstream's mod-config key, which is a pinned profile option here (D73). The module flags and the decorative metal flags are mod config, pinned with the profile ([01-core § Mod config](../01-core/index.md#mod-config), [pinned-profile.md](pinned-profile.md)). The catalog of every option, its default, range and status is [docs/config.md § Every profile option](../../config.md#every-profile-option).
 
 ## Count
 
-107 + 12 + 25 + 14 + 5 = 163 upstream options: 134 kept (same or changed), 17 dropped, 12 deferred; 9 new options, and a ninth, the near-spawn city, if M03 needs it (D30).
+107 + 12 + 25 + 14 + 5 = 163 upstream options: 133 kept (same or changed), 17 dropped, 13 deferred (`spawnSphere` waits with the spheres); 9 options of this port's own (the eight above that M09 builds, and `heightSampleSize`), and the vanilla loot opt-in that M08 adds.

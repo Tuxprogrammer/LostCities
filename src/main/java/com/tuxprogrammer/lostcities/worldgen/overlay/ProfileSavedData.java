@@ -38,7 +38,11 @@ public final class ProfileSavedData extends WorldSavedData {
     static final String KEY_WORLD_TYPE = "worldType";
     static final String KEY_CREATED_BY = "createdBy";
 
+    /** The spawns chosen from the profile's spawn options, per dimension, as {@code [x, y, z]} (D21). */
+    static final String KEY_SPAWNS = "spawns";
+
     private final Map<Integer, ProfileSnapshot> snapshots = new TreeMap<>();
+    private final Map<Integer, int[]> spawns = new TreeMap<>();
 
     /**
      * Creates empty data; the name is what {@code MapStorage} passes back when loading.
@@ -86,8 +90,45 @@ public final class ProfileSavedData extends WorldSavedData {
         markDirty();
     }
 
+    /**
+     * Returns the spawn the profile's spawn options chose for a dimension when it was created.
+     *
+     * @param dimension the dimension ID
+     * @return {@code [x, y, z]}, the block the feet stand in, or {@code null} when none was chosen
+     */
+    public int[] spawn(int dimension) {
+        int[] spawn = spawns.get(dimension);
+        return spawn == null ? null : spawn.clone();
+    }
+
+    /**
+     * Records the spawn chosen for a dimension and marks the data for saving.
+     *
+     * @param dimension the dimension ID
+     * @param x         block X
+     * @param y         the feet's block Y
+     * @param z         block Z
+     */
+    public void setSpawn(int dimension, int x, int y, int z) {
+        spawns.put(dimension, new int[] { x, y, z });
+        markDirty();
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound tag) {
+        spawns.clear();
+        NBTTagCompound spawnTag = tag.getCompoundTag(KEY_SPAWNS);
+        for (Object key : spawnTag.func_150296_c()) {
+            int[] position = spawnTag.getIntArray((String) key);
+            if (position.length == 3) {
+                try {
+                    spawns.put(Integer.parseInt((String) key), position);
+                } catch (NumberFormatException e) {
+                    // Not a dimension written by this class; skipped like any foreign key.
+                    continue;
+                }
+            }
+        }
         snapshots.clear();
         NBTTagCompound dimensions = tag.getCompoundTag(KEY_DIMENSIONS);
         for (Object key : dimensions.func_150296_c()) {
@@ -110,6 +151,11 @@ public final class ProfileSavedData extends WorldSavedData {
             dimensions.setTag(Integer.toString(entry.getKey()), write(entry.getValue()));
         }
         tag.setTag(KEY_DIMENSIONS, dimensions);
+        NBTTagCompound spawnTag = new NBTTagCompound();
+        for (Map.Entry<Integer, int[]> entry : spawns.entrySet()) {
+            spawnTag.setIntArray(Integer.toString(entry.getKey()), entry.getValue());
+        }
+        tag.setTag(KEY_SPAWNS, spawnTag);
     }
 
     static ProfileSnapshot read(NBTTagCompound tag) {

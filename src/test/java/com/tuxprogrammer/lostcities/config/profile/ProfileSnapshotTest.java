@@ -51,7 +51,52 @@ public class ProfileSnapshotTest {
         assertThrows(
             IllegalArgumentException.class,
             () -> ProfileSnapshot
-                .resolve("atlantis", ProfileSnapshot.PLAN_LAYOUT, ModuleState.allActive(), "none", "RWG", "test"));
+                .resolve("cavern", ProfileSnapshot.PLAN_LAYOUT, ModuleState.allActive(), "none", "RWG", "test"));
+    }
+
+    @Test
+    public void aBuiltInProfilePinsEveryKeptOption() {
+        ProfileSnapshot snapshot = ProfileSnapshot
+            .resolve("atlantis", ProfileSnapshot.PLAN_LAYOUT, ModuleState.allActive(), "none", "RWG", "test");
+        assertEquals(
+            "89",
+            snapshot.values()
+                .get("seaLevel"));
+        assertEquals(
+            89,
+            snapshot.terrainSettings()
+                .waterLevel());
+        for (ProfileOption option : ProfileOptions.all()) {
+            assertEquals(
+                option.kept(),
+                snapshot.values()
+                    .containsKey(option.key()),
+                option.key());
+        }
+    }
+
+    @Test
+    public void aSnapshotPinnedBeforeM09ReadsMissingOptionsAsDefaults() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        old.put("preventLakesRavinesInCities", "false");
+        ProfileSnapshot snapshot = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertEquals(
+            0.3f,
+            snapshot.profileValues()
+                .getFloat("buildingChance"));
+        assertFalse(
+            snapshot.terrainSettings()
+                .preventLakesRavinesInCities(),
+            "1.12's key, pinned by M04 worlds, still reads");
     }
 
     @Test

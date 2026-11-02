@@ -33,19 +33,24 @@ Assets themselves are not copied into the snapshot: only their hash. A world cre
 
 ## Stored layout
 
-*Accepted* (P-PROF-7, D31). The profile is stored as its upstream-format JSON, so one loader reads files and snapshots, with one entry per dimension for the PersonalSpace work. One `WorldSavedData` named `lostcitiesnh` in the overworld's `MapStorage`, so the file is `data/lostcitiesnh.dat`, as [0005](../../design/0005-rwg-overlay.md) §7 names it:
+*Accepted* (P-PROF-7, D31, D73, D136). One `WorldSavedData` named `lostcitiesnh` in the overworld's `MapStorage`, so the file is `data/lostcitiesnh.dat`, as [0005](../../design/0005-rwg-overlay.md) §7 names it, with one entry per dimension for the PersonalSpace work. The profile is stored as one string per option, by option key, in the same canonical text the profile loader produces, so a value reads back exactly; the snapshot pins every option the port keeps (format 3), and a key it lacks (a world pinned by an older version) reads as the option's default.
 
 | NBT key | Type | Content |
 |---|---|---|
-| `formatVersion` | int | 1; readers accept older versions and tolerate missing keys ([CONTRIBUTING § Code standards](../../../CONTRIBUTING.md#code-standards)) |
+| `format` | int | 3; readers accept formats 1 and 2 and tolerate missing keys ([CONTRIBUTING § Code standards](../../../CONTRIBUTING.md#code-standards)) |
 | `dimensions` | compound | One entry per pinned dimension, keyed by the decimal dimension ID (`"0"` by default; PersonalSpace dimensions after beta) |
-| `dimensions.<id>.profileName` | string | The resolved profile's name |
-| `dimensions.<id>.profile` | string | The resolved profile as upstream-format JSON, the same text `saveprofile` writes, read back through the same loader |
-| `dimensions.<id>.config` | compound | The pinned mod-config keys and metal flags, by config key name |
-| `dimensions.<id>.assetHash` | string | SHA-256 over the loaded asset files, in sorted path order |
+| `dimensions.<id>.profile` | string | The resolved profile's name |
+| `dimensions.<id>.values` | compound | Every kept profile option, by key, as canonical text |
+| `dimensions.<id>.modules` | compound | The worldgen module flags, by config key |
+| `dimensions.<id>.decorativeMetals` | compound | The decorative metal flags, by config key |
+| `dimensions.<id>.assetSetHash` | string | SHA-256 over the loaded asset files, in sorted path order |
+| `dimensions.<id>.assetFiles` | compound | Every asset file's SHA-256, by `<folder>/<id>` (P05-3) |
+| `dimensions.<id>.structureSettings` | string | The structure oracles' config inputs, one line (VillageNames' today, D119) |
+| `dimensions.<id>.planSource` | string | `layout`, or `synthetic` for the M04 test city |
 | `dimensions.<id>.layoutVersion` | int | The mod's layout version at pin time |
 | `dimensions.<id>.worldType` | string | `WorldType.getWorldTypeName()` |
-| `dimensions.<id>.oracleInputs` | compound | Per oracle mod ID, the config values it reads |
+| `dimensions.<id>.createdBy` | string | The mod version that pinned it |
+| `spawns.<id>` | int array | The spawn the profile's spawn options chose, `[x, y, z]` (the feet's block), when they chose one ([01-core § Spawn selection](../01-core/index.md#spawn-selection)) |
 
 ## On a later load
 
@@ -56,7 +61,7 @@ Assets themselves are not copied into the snapshot: only their hash. A world cre
 | Oracle inputs differ | Log that structure sites have moved for new chunks; carry on |
 | Asset hash differs | Log one warning that new chunks may not match old ones at the border; carry on with the loaded assets |
 | Layout version differs | The same warning, naming both versions; carry on with the current code, since old layout code is not kept |
-| Pinned profile JSON fails to load (a key a newer version dropped, a value out of range) | Load what parses, log each problem once; never refuse to load the world |
+| A pinned value does not read (a key a newer version dropped, a value out of range, a key an older version lacked) | Unknown keys are ignored; a missing or unreadable value reads as the option's default, an out-of-range one is clamped, and each problem is logged once; never refuse to load the world |
 | World type differs from the pinned one | Log and install with the oracle for the current type |
 
 ## Bugs this design must not reproduce

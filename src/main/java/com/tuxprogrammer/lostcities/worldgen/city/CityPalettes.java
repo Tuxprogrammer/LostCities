@@ -66,19 +66,35 @@ public final class CityPalettes {
 
     private final AssetSet assets;
     private final MetalFlags flags;
+    private final BlockRef base;
+    private final BlockRef liquid;
     private final LruCache<String, ChunkPalette> chunks = new LruCache<>(CHUNK_CAPACITY);
     private final LruCache<String, CompiledPalette> parts = new LruCache<>(PART_CAPACITY);
     private final LruCache<String, StyleBlocks> styles = new LruCache<>(STYLE_CAPACITY);
+
+    /**
+     * Creates the caches of one world, with upstream's base and liquid blocks (stone and water).
+     *
+     * @param assets the loaded assets
+     * @param flags  the world's pinned decorative-metal flags
+     */
+    public CityPalettes(AssetSet assets, MetalFlags flags) {
+        this(assets, flags, null, null);
+    }
 
     /**
      * Creates the caches of one world.
      *
      * @param assets the loaded assets
      * @param flags  the world's pinned decorative-metal flags
+     * @param base   the profile's {@code baseBlock}, resolved; {@code null} for stone
+     * @param liquid the profile's {@code liquidBlock}, resolved; {@code null} for water
      */
-    public CityPalettes(AssetSet assets, MetalFlags flags) {
+    public CityPalettes(AssetSet assets, MetalFlags flags, BlockRef base, BlockRef liquid) {
         this.assets = assets;
         this.flags = flags;
+        this.base = base;
+        this.liquid = liquid;
     }
 
     /** Returns the decorative-metal flags palettes are compiled for. */
@@ -154,6 +170,12 @@ public final class CityPalettes {
 
     private StyleBlocks buildStyle(CompiledPalette palette, CityStyle cityStyle, Building building) {
         StyleBlocks.Builder out = StyleBlocks.builder();
+        if (base != null) {
+            out.base(base);
+        }
+        if (liquid != null) {
+            out.liquid(liquid);
+        }
         BlockRef border = blockOf(palette, setting(cityStyle, CityStyle.Setting.STREET_BORDER));
         if (border != null) {
             out.border(border);

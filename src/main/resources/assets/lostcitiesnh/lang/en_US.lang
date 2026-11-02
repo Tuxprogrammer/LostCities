@@ -1,7 +1,7 @@
 # Lost Cities: New Horizons, English (US). The source of truth for every player-visible string.
 
 # Commands
-lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: profile, timers, test, view, find
+lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: profile, saveprofile, timers, test, view, find
 lostcitiesnh.command.unknown=Unknown subcommand: %s
 lostcitiesnh.command.no_permission=You do not have permission to use this subcommand.
 lostcitiesnh.command.test.usage=/lostcities test <scenario|prefix|all|list>
@@ -10,13 +10,43 @@ lostcitiesnh.command.test.no_match=No scenario matches '%s'. Try /lostcities tes
 lostcitiesnh.command.test.busy=A scenario run is already in progress.
 lostcitiesnh.command.test.list=Scenarios: %s
 lostcitiesnh.command.test.started=Running %s scenario(s); results follow.
-lostcitiesnh.command.profile.usage=/lostcities profile [pin <profile> confirm]
+lostcitiesnh.command.profile.usage=/lostcities profile [list | info <profile> | pin <profile> [confirm] | reload]
 lostcitiesnh.command.profile.none=Dimension %s has no pinned profile, so no cities generate there.
 lostcitiesnh.command.profile.show=Dimension %s: %s
 lostcitiesnh.command.profile.unknown=Unknown profile '%s'. Known profiles: %s
 lostcitiesnh.command.profile.confirm=Pinning %s changes what new chunks of dimension %s generate, and chunks generated before will not match them. Add 'confirm' to pin it.
 lostcitiesnh.command.profile.pinned=Pinned profile %s into dimension %s.
 lostcitiesnh.command.profile.unsupported=Dimension %s cannot have cities: world type %s has no height oracle.
+lostcitiesnh.command.profile.text=  %s
+lostcitiesnh.command.profile.list=%s profiles can be pinned:
+lostcitiesnh.command.profile.list_entry=%s (%s): %s
+lostcitiesnh.command.profile.built_in=built in
+lostcitiesnh.command.profile.file=file
+lostcitiesnh.command.profile.info=Profile %s (%s): %s
+lostcitiesnh.command.profile.info_warning=  Warning: %s
+lostcitiesnh.command.profile.info_defaults=Every option is at its default.
+lostcitiesnh.command.profile.info_changes=It sets %s option(s) away from the defaults: %s
+lostcitiesnh.command.profile.rejected=Profile '%s' was rejected: %s
+lostcitiesnh.command.profile.reloaded=Read the profiles again: %s can be pinned, %s rejected (%s line(s) in the log). Worlds already pinned are unchanged.
+lostcitiesnh.command.saveprofile.usage=/lostcities saveprofile <profile> <newName> [confirm]
+lostcitiesnh.command.saveprofile.name='%s' is not a valid profile name: use lower-case letters, digits and _ only.
+lostcitiesnh.command.saveprofile.built_in='%s' is a built-in profile's name; choose another.
+lostcitiesnh.command.saveprofile.exists=%s already exists. Add 'confirm' to replace it.
+lostcitiesnh.command.saveprofile.saved=Saved profile %s to %s. Edit it, then name it in dimensionProfiles or pin it with '/lostcities profile pin %s confirm'.
+lostcitiesnh.command.saveprofile.failed=Could not write %s: %s
+
+# Built-in profiles: the texts /lostcities profile shows
+lostcitiesnh.profile.default.description=Default generation, common cities, explosions
+lostcitiesnh.profile.nodamage.description=Like default but no explosion damage
+lostcitiesnh.profile.nodamage.extra=Ruins and rubble are disabled
+lostcitiesnh.profile.rarecities.description=Cities are rare
+lostcitiesnh.profile.onlycities.description=The entire world is a city
+lostcitiesnh.profile.tallbuildings.description=Very tall buildings (performance heavy)
+lostcitiesnh.profile.safe.description=Safe mode: no spawners, lighting but no loot
+lostcitiesnh.profile.ancient.description=Ancient jungle city, vines and leaves, ruined buildings
+lostcitiesnh.profile.wasteland.description=Wasteland, no water, bare land
+lostcitiesnh.profile.atlantis.description=Drowned cities, raised water level (to 89)
+lostcitiesnh.profile.largecities.description=Large cities with a border style toward their edges, more buildings and lighting
 lostcitiesnh.command.timers.usage=/lostcities timers [reset]
 lostcitiesnh.command.timers.none=Cities are not generating in dimension %s.
 lostcitiesnh.command.timers.line=%s
