@@ -660,8 +660,8 @@ public final class AssetLoader {
         out.put("repair.boards.oak", "minecraft:planks:0");
         out.put("repair.boards.spruce", "minecraft:planks:1");
         out.put("repair.boards.birch", "minecraft:planks:2");
-        String[] plain = { "minecraft:cobblestone:0", "minecraft:stonebrick:0",
-            "minecraft:brick_block:0", "minecraft:hardened_clay:0", "minecraft:sandstone:0", "minecraft:sandstone:2",
+        String[] plain = { "minecraft:cobblestone:0", "minecraft:stonebrick:0", "minecraft:brick_block:0",
+            "minecraft:hardened_clay:0", "minecraft:sandstone:0", "minecraft:sandstone:2",
             "minecraft:double_stone_slab:8", "minecraft:quartz_block:0", "minecraft:planks:0", "minecraft:planks:1",
             "minecraft:planks:5" };
         for (String block : plain) {

@@ -44,7 +44,9 @@ public class RepairsTest {
             repaired += half.isRepaired(SEED, new Explosion(i * 37, 70 + i % 20, i * 11, 5 + i % 7)) ? 1 : 0;
         }
         assertTrue(repaired > 850 && repaired < 1150, "repaired " + repaired + " of 2000");
-        assertTrue(!Repairs.of(CityFixtures.ASSETS, 0f).active());
+        assertTrue(
+            !Repairs.of(CityFixtures.ASSETS, 0f)
+                .active());
     }
 
     @Test

@@ -32,8 +32,8 @@ public class FacadeTonesTest {
 
     @Test
     public void aBuildingsFacadeCharactersAreOnItsOuterRing() {
-        Map<Character, Integer> counts = TONES.facadeCharacters(
-            CityFixtures.ASSETS.building(AssetId.parse("lostcities:building1")));
+        Map<Character, Integer> counts = TONES
+            .facadeCharacters(CityFixtures.ASSETS.building(AssetId.parse("lostcities:building1")));
         assertFalse(counts.isEmpty());
         assertTrue(counts.containsKey('#'), "the main wall: " + counts);
     }
@@ -44,9 +44,7 @@ public class FacadeTonesTest {
         FacadeTone taupe = TONES.tone(stack("bricks_desert_taupe"), "lostcities:building1");
         assertNotNull(sandstone);
         assertNotNull(taupe);
-        assertTrue(
-            sandstone.lightness() > taupe.lightness() + 10,
-            "sandstone " + sandstone + ", taupe " + taupe);
+        assertTrue(sandstone.lightness() > taupe.lightness() + 10, "sandstone " + sandstone + ", taupe " + taupe);
     }
 
     @Test

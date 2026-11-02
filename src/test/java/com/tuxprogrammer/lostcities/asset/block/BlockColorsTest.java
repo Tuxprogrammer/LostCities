@@ -57,8 +57,9 @@ public class BlockColorsTest {
 
     @Test
     public void parsesLinesAndFallsBackToMetaZero() throws IOException {
-        BlockColors colors = BlockColors
-            .parse(new StringReader("# comment\nmod:block:0\t#ffffff\t100\nmod:glass:0\t#808080\t20\n"), new Problems());
+        BlockColors colors = BlockColors.parse(
+            new StringReader("# comment\nmod:block:0\t#ffffff\t100\nmod:glass:0\t#808080\t20\n"),
+            new Problems());
         assertEquals(2, colors.size());
         BlockColors.Entry white = colors.get(BlockRef.of("mod:block", 7));
         assertNotNull(white, "meta 7 falls back to meta 0");

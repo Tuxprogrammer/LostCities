@@ -515,8 +515,11 @@ public final class LayoutCityPlan implements CityPlan {
         }
         if (plan.lot() != LotKind.NONE) {
             return plan.lot()
-                .isDug() ? plan.lot()
-                    .label() + " (depth " + plan.lotDepth() + ")"
+                .isDug()
+                    ? plan.lot()
+                        .label() + " (depth "
+                        + plan.lotDepth()
+                        + ")"
                     : plan.lot()
                         .label();
         }

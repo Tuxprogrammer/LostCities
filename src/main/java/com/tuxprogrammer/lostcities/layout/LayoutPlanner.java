@@ -838,9 +838,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (rise < Urbanity.coreChance(intensity, taper) && f < profile.buildingMaxFloors) {
             f += 1 + (int) (height * (profile.buildingMaxFloors - f));
         }
-        return Math.min(
-            f,
-            Urbanity.floorCap(intensity, profile.buildingMaxFloors, profile.buildingMinFloors + 1, taper));
+        return Math
+            .min(f, Urbanity.floorCap(intensity, profile.buildingMaxFloors, profile.buildingMinFloors + 1, taper));
     }
 
     /** The most floors a zone allows at this chunk (all of a multibuilding's chunks, for its top-left). */

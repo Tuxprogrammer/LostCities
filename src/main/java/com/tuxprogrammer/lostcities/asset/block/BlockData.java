@@ -14,7 +14,8 @@ import com.tuxprogrammer.lostcities.asset.json.JsonFields;
 
 /**
  * The bundled block data the asset system reads besides the assets: the block-name map, the decorative-metal catalog,
- * the never-place list, the raw variety pools and the measured block colors, all under {@code data/lostcitiesnh/blockmap/} in the jar. They are
+ * the never-place list, the raw variety pools and the measured block colors, all under
+ * {@code data/lostcitiesnh/blockmap/} in the jar. They are
  * this mod's own data, not upstream assets, so they are never overridden from the config folder: a pack that needs a
  * different block writes it in its asset overrides as {@code modid:name:meta}.
  *

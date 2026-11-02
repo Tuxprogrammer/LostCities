@@ -36,8 +36,11 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.BlockClassifier;
 public final class Repairs {
 
     /** No repairs: every explosion's damage stays. */
-    public static final Repairs NONE = new Repairs(0f, Collections.<Material>emptyList(),
-        Collections.<BlockRef>emptyList(), BlockColors.EMPTY);
+    public static final Repairs NONE = new Repairs(
+        0f,
+        Collections.<Material>emptyList(),
+        Collections.<BlockRef>emptyList(),
+        BlockColors.EMPTY);
 
     /** The color difference a patch aims for: visibly different, clearly related. */
     static final float TARGET_DIFFERENCE = 12f;
@@ -108,11 +111,11 @@ public final class Repairs {
                 boards.add(block);
             } else if (entry.getKey()
                 .startsWith("repair.material.")) {
-                BlockColors.Entry color = colors.get(block);
-                if (color != null && color.isOpaque()) {
-                    materials.add(new Material(block, color));
+                    BlockColors.Entry color = colors.get(block);
+                    if (color != null && color.isOpaque()) {
+                        materials.add(new Material(block, color));
+                    }
                 }
-            }
         }
         return new Repairs(chance, materials, boards, colors);
     }

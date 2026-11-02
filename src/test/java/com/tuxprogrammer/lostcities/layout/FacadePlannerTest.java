@@ -180,12 +180,22 @@ public class FacadePlannerTest {
         }
         List<String> a = new ArrayList<>();
         for (int[] c : chunks) {
-            a.add(c[0] + "," + c[1] + " " + forward.plan(c[0], c[1]).palettes());
+            a.add(
+                c[0] + ","
+                    + c[1]
+                    + " "
+                    + forward.plan(c[0], c[1])
+                        .palettes());
         }
         Collections.reverse(chunks);
         List<String> b = new ArrayList<>();
         for (int[] c : chunks) {
-            b.add(c[0] + "," + c[1] + " " + backward.plan(c[0], c[1]).palettes());
+            b.add(
+                c[0] + ","
+                    + c[1]
+                    + " "
+                    + backward.plan(c[0], c[1])
+                        .palettes());
         }
         Collections.sort(a);
         Collections.sort(b);

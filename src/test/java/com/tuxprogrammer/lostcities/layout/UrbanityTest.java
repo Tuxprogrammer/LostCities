@@ -138,8 +138,7 @@ public class UrbanityTest {
 
     @Test
     public void noLotsWhenTheChanceIsZero() {
-        LayoutPlanner planner = CharacterFixtures
-            .planner(SEED, LayoutInputs.DEFAULT_CACHE_SIZE, "edgeLotChance", "0");
+        LayoutPlanner planner = CharacterFixtures.planner(SEED, LayoutInputs.DEFAULT_CACHE_SIZE, "edgeLotChance", "0");
         for (int x = -20; x <= 20; x++) {
             for (int z = -20; z <= 20; z++) {
                 assertEquals(

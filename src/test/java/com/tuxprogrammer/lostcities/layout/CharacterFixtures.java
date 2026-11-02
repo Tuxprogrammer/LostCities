@@ -23,7 +23,8 @@ final class CharacterFixtures {
 
     /** Desert (sandy) west of block X 0, plains east of it. */
     static BiomeSource desertWest() {
-        BiomeDescriptor desert = BiomeDescriptor.of(new HashSet<>(Arrays.asList("SANDY", "HOT", "DRY")), "Desert", null);
+        BiomeDescriptor desert = BiomeDescriptor
+            .of(new HashSet<>(Arrays.asList("SANDY", "HOT", "DRY")), "Desert", null);
         BiomeDescriptor plains = BiomeDescriptor.of(new HashSet<>(Arrays.asList("PLAINS")), "Plains", null);
         return (x, z) -> x < 0 ? desert : plains;
     }

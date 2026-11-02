@@ -125,7 +125,11 @@ public class EdgeLotsTest {
                 int[] grid = depth >= 4 ? EdgeLots.DEEP_COLUMNS : EdgeLots.SHALLOW_COLUMNS;
                 BlockRef column = buffer.get(grid[0], top, grid[0]);
                 assertFalse(column.isAir(), "a column rises to " + top);
-                assertEquals("minecraft:iron_bars", buffer.get(grid[0], top + 1, grid[0]).name(), "rebar on top");
+                assertEquals(
+                    "minecraft:iron_bars",
+                    buffer.get(grid[0], top + 1, grid[0])
+                        .name(),
+                    "rebar on top");
             }
         }
         assertTrue(dug > 0, "the test world has dug lots");

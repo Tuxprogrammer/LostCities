@@ -8,7 +8,6 @@ package com.tuxprogrammer.lostcities.worldgen.terrain;
 import java.util.Random;
 
 import com.tuxprogrammer.lostcities.layout.random.StableHash;
-
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;

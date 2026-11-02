@@ -43,7 +43,8 @@ final class FacadePlanner {
     /** Salt of a unit's priority hash. */
     static final long PRIORITY_SALT = 0x5052494f_52495459L;
     /**
-     * Most contrast any palette choice can move a unit's facade by and still count as fixed: a building whose own palette
+     * Most contrast any palette choice can move a unit's facade by and still count as fixed: a building whose own
+     * palette
      * sets its main wall moves only by its accents, so it chooses first and its neighbors adapt to it.
      */
     static final float SAME_TONE = 12f;
@@ -124,7 +125,8 @@ final class FacadePlanner {
     /** The style and building of a unit, or {@code null} when it is not a unit. */
     private Unit unit(int topX, int topZ) {
         ChunkCharacteristics c = planner.characteristics(topX, topZ);
-        if (!c.isCity || !c.couldHaveBuilding || c.buildingType == null
+        if (!c.isCity || !c.couldHaveBuilding
+            || c.buildingType == null
             || c.multiPos.isMulti() && !c.multiPos.isTopLeft()) {
             return null;
         }
@@ -137,7 +139,13 @@ final class FacadePlanner {
             .isEmpty()) {
             return null;
         }
-        return new Unit(topX, topZ, c.multiPos.width(), c.multiPos.height(), cityStyle.styleName(), style,
+        return new Unit(
+            topX,
+            topZ,
+            c.multiPos.width(),
+            c.multiPos.height(),
+            cityStyle.styleName(),
+            style,
             c.buildingType);
     }
 
