@@ -190,7 +190,7 @@ case "$cmd" in
         "${SSH[@]}" bash -s -- "$(printf '%q' "$ROOT")" <<'EOS'
 root="$1"
 ps -eo pid,etime,rss,args | grep -F -- "$root" | grep -v -e 'grep -F' -e 'bash -s' || echo "nothing running under the project root"
-for f in "$root"/realpack/run.done "$root"/logs/devserver-*.done; do
+for f in "$root"/realpack/run.done "$root"/realpack/instances/*/run.done "$root"/logs/devserver-*.done; do
     [ -f "$f" ] && { echo "== $f"; cat "$f"; }
 done
 true

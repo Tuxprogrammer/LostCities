@@ -10,5 +10,9 @@ Accepted design decisions for Lost Cities: New Horizons. Larger decisions get a 
 | [0004](0004-gtnh-layer-and-tier-ceiling.md) | Accepted | Faithful cities with a GTNH layer; nothing above EV in the overworld, weighted low; balance waits for beta; buildings players can move into |
 | [0005](0005-rwg-overlay.md) | Accepted | The RWG overlay: a chunk-provider wrapper installed at world creation; RWG's landscape first, the city set into it and its footprint cleared; height oracle; profile pinning; the time budget |
 | [0006](0006-build-around-other-worldgen.md) | Accepted | Cities build around other mods' structures: pure structure oracles, landmark cores the city never writes in, edge rings of parks and plazas, soft edges, villages sewn in as old towns; deep railways may pass under a core (D30) and shallow ones dip under it (D31) |
+<<<<<<< HEAD
 | [0007](0007-loot-tier-map.md) | Accepted | City loot: six `ChestGenHooks` categories in tier bands, Steam to EV plus rail; one bundled file is the defaults and the tier map; the ceiling checked by a unit test and the dev self-check; upstream's `chestloot` value converted to a band |
 | [decision-log.md](decision-log.md) | Running | Process, spec depth, tooling, code layout and testing, gate, scope, asset, loot, worldgen, licensing, coexistence and block decisions (D1 to D155) |
+=======
+| [decision-log.md](decision-log.md) | Running | Process, spec depth, tooling, code layout and testing, gate, scope, asset, loot, worldgen, licensing, coexistence and block decisions (D1 to D156) |
+>>>>>>> gtnh
