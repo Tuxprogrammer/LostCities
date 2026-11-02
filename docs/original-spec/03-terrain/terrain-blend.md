@@ -115,4 +115,4 @@ Normal chunks near cities whose top terrain fits between the meshes. Nothing is 
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Terrain blend](../../new-spec/03-terrain/index.md#terrain-blend-terrain-blendmd).

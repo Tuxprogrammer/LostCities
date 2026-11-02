@@ -65,7 +65,7 @@ A road that would continue only into a core is a stub and is clipped (D52).
 
 ## Profile options
 
-Upstream's avoidance keys are replaced ([0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3); `02-profiles-dimensions` owns them, M09 ships them, and the structure oracles' inputs from other mods' config join the pinned profile snapshot.
+Upstream's avoidance keys are replaced ([0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3); `02-profiles-dimensions` owns them, and the structure oracles' inputs from other mods' config are part of the pinned profile snapshot.
 
 | Upstream key | Here |
 |---|---|

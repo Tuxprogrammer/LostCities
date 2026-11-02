@@ -34,7 +34,11 @@ public class JobTargetTest {
         "lostcities/conditions/mobs.json",
         "{\"values\": [{\"factor\": 1, \"value\": \"minecraft:cave_spider\"}]}",
         "lostcities/parts/room.json",
-        "{\"xsize\": 4, \"zsize\": 1, \"slices\": [[\"C1T;\"]]}");
+        "{\"xsize\": 4, \"zsize\": 1, \"slices\": [[\"C1T;\"]]}",
+        "lostcities/parts/after.json",
+        "{\"xsize\": 3, \"zsize\": 1, \"slices\": [[\"1TC\"]]}",
+        "lostcities/parts/lone.json",
+        "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"C\"]]}");
 
     private static final CompiledPalette PALETTE = CompiledPalette
         .compile(MetalFlags.ALL_ON, SET.palette(AssetId.parse("p")));
@@ -147,9 +151,57 @@ public class JobTargetTest {
             "the ground floor is outside the range");
     }
 
+    /**
+     * Returns the category a chest at local (2, 65, 0) of a chunk draws: alone ({@code lone} placed at X 2), or after a
+     * spawner and a torch the same part lists first ({@code after} placed at X 0).
+     */
+    private static String chestAtTwo(String part, int ox, int chunkX) {
+        JobTarget target = new JobTarget(
+            new JobTarget.Facts(9, chunkX, 0, 71, 71, 2, 3, BiomeDescriptor.NONE, false, true, 0.5f));
+        PartWriter writer = new PartWriter(
+            target,
+            new PaletteSequence(9, chunkX, 0),
+            new PartWriter.Rules(true, true, false, false, false, 63, com.tuxprogrammer.lostcities.asset.BlockRef.AIR),
+            LayoutLog.SILENT);
+        writer.place(
+            new PartWriter.Placement(
+                SET.part(AssetId.parse(part)),
+                PALETTE,
+                Transform.ROTATE_NONE,
+                ox,
+                65,
+                0,
+                HardAir.AIR,
+                null));
+        for (PopulationJob job : target.jobs()) {
+            if (job.kind() == PopulationJob.Kind.CHEST) {
+                return job.argument();
+            }
+        }
+        throw new AssertionError("no chest in " + part);
+    }
+
+    /**
+     * LOOT-05: upstream's chests drew from the chunk's random after vines and other post-steps, in hash-map order, so
+     * anything listed before a chest changed its draw. Here a spawner's draw and a torch listed first leave the chest's
+     * category, and whether it stays empty, as they are for the chest alone.
+     */
+    @Test
+    public void doesNotReproduceLOOT05_jobsListedBeforeAChestDoNotMoveItsDraw() {
+        int empty = 0;
+        for (int chunkX = 0; chunkX < 32; chunkX++) {
+            String alone = chestAtTwo("lone", 2, chunkX);
+            assertEquals(alone, chestAtTwo("after", 0, chunkX), "chunk " + chunkX);
+            if (alone.isEmpty()) {
+                empty++;
+            }
+        }
+        assertTrue(empty > 0 && empty < 32, "both filled and empty chests are drawn: " + empty + " empty");
+    }
+
     @Test
     public void doesNotReproduceLOOT05_eachChestDrawsFromItsOwnPosition() {
-        // The same chest gets the same draw whatever else the chunk lists before it.
+        // The same chest gets the same draw however often it is asked.
         String alone = jobs(65, 3, 4, false, 0.5f).get(0)
             .argument();
         for (int i = 0; i < 5; i++) {

@@ -140,7 +140,9 @@ Real-pack client: realpack/client/, client-prepare.py, client-run.sh
     --hold <file> (under this root) after the shots, stays up until <file> exists, the client dies or --timeout;
     status hold-timeout / died-while-holding otherwise. shots-run.py drives the client this way.
     --restore-options backs up client/game/options.txt and optionsnf.txt into the run dir first and puts them back
-    (or deletes them, if they did not exist) when the run ends.
+    (or deletes them, if they did not exist) when the run ends. It also turns JourneyMap's waypoint beacons and
+    deathpoints off for the run (game/journeymap/config/5.2/journeymap.waypoint.config, put back at the end): a
+    deathpoint's beacon is a translucent red column in the world that hiding the GUI does not hide.
     Starts Xvfb on our display (default :80), runs the client with Mesa llvmpipe
     (LIBGL_ALWAYS_SOFTWARE=1, __GLX_VENDOR_LIBRARY_NAME=mesa) and OpenAL's null backend, offline
     account (default LCBot), waits for the main menu (the atlases rebuilt after "Forge Mod Loader has

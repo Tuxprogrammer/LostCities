@@ -37,4 +37,4 @@ How the configuration screen is reached: a **Cities** button and a picture added
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 09-client-ui). [0003](../../design/0003-world-presence.md) makes cities an overlay on RWG rather than a world type, which changes where this entry point can live.
+See [new-spec 09-client-ui § World-creation hook and client events](../../new-spec/09-client-ui/index.md#world-creation-hook-and-client-events). [0003](../../design/0003-world-presence.md) makes cities an overlay on RWG rather than a world type, so the profile is pinned from server configuration ([0005](../../design/0005-rwg-overlay.md) §7).

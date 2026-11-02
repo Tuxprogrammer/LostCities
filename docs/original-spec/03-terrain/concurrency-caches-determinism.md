@@ -118,4 +118,4 @@ All sheets in this area; 04-city-layout (`BuildingInfo` locking, `ChunkPlanner` 
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Concurrency, caches, determinism](../../new-spec/03-terrain/index.md#concurrency-caches-determinism-concurrency-caches-determinismmd).

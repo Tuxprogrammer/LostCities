@@ -125,4 +125,4 @@ CITY-10, CITY-11, CITY-17, CITY-20, CITY-21, CITY-24, CITY-33.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Planning stages](../../new-spec/04-city-layout/index.md#planning-stages-chunk-plannermd-chunk-characteristicsmd) and [landmark-zones.md](../../new-spec/04-city-layout/landmark-zones.md).

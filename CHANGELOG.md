@@ -2,56 +2,56 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
-## Unreleased
+## 0.1.0-beta (unreleased)
+
+The first build for playtesting: the whole mod, unpolished, for GT New Horizons 2.9.0. Install the same jar on the server and every client, and use a new world ([README](README.md#installing)).
 
 ### Added
 
-- The foundation (milestone M01): the mod loads on GTNH 2.9.0 with GTNHLib as its one hard dependency, and generates nothing yet.
-- `config/lostcitiesnh.cfg` with one switch per feature area in the `worldgen` category (cities, highways, railways, scattered structures), all on by default and applying to new worlds only; editable from the Mods list through GTNHLib's config screen. See [docs/config.md](docs/config.md).
-- The `lostcitiesnh` network channel, with no packets yet.
-- `/lostcities test` (aliases `/lost`, `/lostcitiesnh`; subcommand alias `scenario`): the in-world scenario harness for development and real-pack testing, operator only and off in a normal game.
+- **Cities** in the overworld on RWG2 Continents, RWG2, classic RWG and flat worlds: upstream Lost Cities' buildings floor by floor with cellars, doors, fillers and stairwells; streets, plazas, parks, fountains, stairs, building fronts and rail corridors; bridges with supports over water; ruined buildings, explosion craters, debris and rubble; cobwebs and chains hanging in buildings. All 322 of upstream's asset files are bundled.
+- **Cities set into RWG terrain:** a city levels its ground, blends into the land around it, and stops or steps down before high ground instead of climbing it. RWG's trees, boulders and ruins, and other mods' trees and cacti, stay off streets and buildings; lakes, lava lakes, dungeons, NHCore's oil and Railcraft's quarried stone keep out of cities.
+- **City edges and character:** building heights taper from a high-rise core to low buildings at the edge, by district rather than in rings; empty lots, excavations dug 1, 2 or 4 blocks and unfinished concrete foundations appear where a city thins out; some explosion damage was partly repaired with a similar material, and broken windows boarded up.
+- **The pack's variety:** walls, trims, bands, glass and quartz from GTNH's decorative blocks (Chisel, Railcraft, Et Futurum, Botania, Ztones, Tinkers', Thaumcraft, GregTech stones and more), each building its own mix within its upstream color family, about two in five keeping upstream's look; interiors with wood, tile and stone floors, office ceilings, ceiling lights, kitchens, workshops and studies; flowers and shrubs from Et Futurum, Biomes O' Plenty and Botania in parks. Neighboring buildings' colors stay within a contrast limit, also where a desert city meets a standard one. Desert cities are pale and muted.
+- **GTNH loot and mobs:** city chests draw from six categories, `lostcitiesnh:city_supplies`, `city_lv`, `city_mv`, `city_hv`, `city_ev` and `rail_dungeon`: GT components, circuits and materials, the pack's loot bags, food and supplies, Railcraft gear for rail dungeons; nothing above EV, and EV rarely, on high floors and in deep cellars. Server owners retune a category with a TooMuchLoot file of the same name. Spawners use upstream's mobs; a mob missing from the pack becomes a skeleton or no spawner, never a pig spawner. GT ore veins pass through cities.
+- **Building around other mods:** VillageNames villages are sewn into cities as an old town, with lanes to their gates; cities leave room for ocean monuments, Roguelike Dungeons towers (which no longer land inside cities), Witchery's structures, LootGames dungeons, AE2 meteorites (stepping down so a crater cuts nothing) and RWG2's volcanoes, lava caves and river junctions, meeting them with soft slopes instead of walls.
+- **Scattered structures:** cabins and radio towers in the countryside between cities, oil rigs in RWG2's deep ocean, each set level into the land with slopes back to the terrain around it.
+- **Profiles:** ten built-in profiles (`default`, `nodamage`, `rarecities`, `onlycities`, `tallbuildings`, `safe`, `ancient`, `wasteland`, `atlantis`, `largecities`) and your own in `config/lostcitiesnh/profiles/`, in upstream's JSON format; every value is checked on load, and a broken file is rejected with one log line. A world keeps every option it was created with. Profile options of this port: `preventLakesInCities`, `villageTreatment`, `landmarkTreatment`, `landmarkMargin`, `softEdgeWidth`, `cityMaxRise`, `cityTaper`, `edgeLotChance`, `damageRepairChance`, `facadeContrast`, `villageTransitionRings`, `villageLinkDistance`, `vanillaLootCategories`, `enderZooHardMobs`.
+- **Spawn options:** a profile can ask for a spawn in a biome, in a city, never in a building or inside one; the spawn is found from the city plan without generating chunks, and the bonus chest still comes when asked for.
+- **Config** (`config/lostcitiesnh.cfg`, also from the Mods list's Config button): module switches (`worldgen`), the profile per dimension (`profiles`), and one switch per decorative metal at or below EV (`decorativeMetals`). All apply to new worlds only. See [docs/config.md](docs/config.md).
+- **Operator commands** (`/lostcities`, aliases `/lost` and `/lostcitiesnh`): `profile`, `saveprofile`, `locate`, `debug`, `map`, `timers` (`timings`), `createbuilding`, and the part editor's `listparts`, `locatepart`, `editpart`, `resumeedit`, `createpart` and `exportpart`, which write only under `config/lostcitiesnh/`.
+- **An API** for other mods ([docs/api.md](docs/api.md)): what Lost Cities planned for any chunk, extra profiles, and four generation events.
 - English lang file for every message and config label.
-- The asset system (milestone M02): upstream Lost Cities' 322 JSON assets (buildings, parts, palettes, styles, city and world styles, conditions, scattered structures and stuff) load at startup, validated and resolved to GTNH 2.9.0 blocks, with a vanilla fallback for every block when its mod is absent. Asset overrides go in `config/lostcitiesnh/assets/<namespace>/<type>/<name>.json` and replace the bundled file of the same name.
-- Desert cities get rubble on their ruined buildings, from new sandstone rubble mixes.
-- `decorativeMetals` config category: one switch per metal at or below EV for metal accents in buildings, all on by default, new worlds only.
-- The RWG overlay (milestone M04): on RWG2 Continents, RWG2 and classic RWG worlds, the mod wraps the overworld's generator and, after RWG builds each chunk, levels city chunks to their ground, blends the land around them, writes their content, breaks it with explosions and debris, removes floating fragments and grows vines; after RWG populates a chunk it fixes torches and places chests and spawners. RWG's trees, boulders and ruins are kept off streets and buildings, and lakes, lava lakes, dungeons and oil deposits are kept out of cities. Other mods' landmarks are left untouched, met with soft slopes instead of walls, and reached by village lanes. A world pins its profile when it is created.
-- The `profiles` config category: `dimensionProfiles` and `enableOnExistingWorlds`. See [docs/config.md](docs/config.md).
-- `/lostcities profile` (and `profile pin <profile> confirm`) and `/lostcities timers`, operator only.
-- Real cities (milestone M05, the World lane's half): on RWG2 Continents, RWG2 and classic RWG worlds, the city layout and the bundled assets now generate upstream Lost Cities' cities: buildings floor by floor with their cellars, doors, fillers and corridor openings; streets, plazas, parks, fountains, stairs, building fronts and rail corridors; bridges with their supports over water; ruined buildings and rubble on the streets. Chests hold a small set of low-tier loot until the GTNH loot tables come, spawners spawn upstream's mobs, and other mods' trees no longer overhang streets and roofs. A world also remembers the asset set and the decorative-metal switches it was created with, and warns at start when the assets have changed since.
-- `/lostcities find` (test hooks only): where the nearest city center, primary street, building, city edge, soft-edge strip, reserved lot or sewn village is, with a viewpoint for `/lostcities view`; with `best` after the radius, the soft edge, reserved lot or village gate in that radius that shows the city and the landmark together most clearly, with a view that frames both.
-- Cities plan their ground a few chunks ahead of world generation, a little each server tick, so a city reaching new land (a village's lanes, a block of large buildings) no longer stalls the generation of one chunk on classic RWG.
-- A soft-edge slope beside a pond or river in a village meets the water at its waterline, as a shore.
-- The city layout (milestone M03): upstream Lost Cities' city detection, city styles, hierarchical streets and bridges, buildings and multibuildings, parks, stairs and corridors, with every upstream bug in that logic fixed; and the rules for building cities around other mods' structures: villages sewn in as a city's old town with lanes to their gates, plazas and road detours around landmarks, and buildings that step down toward an AE2 meteorite's crater.
-- VillageNames structure oracles (milestone M05): where VillageNames villages and ocean monuments will generate, predicted from the seed, VillageNames' config and the biome provider without generating anything, with each village's full plan, its gates and its ground height.
-- For development only, off in a normal game: a clean screenshot mode for the client (`-Dlostcitiesnh.capture=true` with the test hooks), which hides the GUI, hand, chat, tutorial toast and HUD overlays and reports when a viewpoint has loaded, and a shot-list runner that takes review screenshots on the real pack (`tools/remote/lc-remote.sh shots`).
-- With VillageNames installed, a seed now builds the same villages on every server run: the order in which Forge asks mods for village buildings is fixed, where before it changed from run to run.
-- Profiles (milestone M09): ten built-in profiles (`default`, `nodamage`, `rarecities`, `onlycities`, `tallbuildings`, `safe`, `ancient`, `wasteland`, `atlantis`, `largecities`) and your own in `config/lostcitiesnh/profiles/`, in upstream Lost Cities' JSON format, so upstream profile files load. Every option is checked when a profile is read: numbers out of range are clamped, and a broken file is rejected with one log line without stopping the game. Each world keeps every option it was created with. Choose a world's profile with `dimensionProfiles` (on a server, or from the Mods list's config screen before creating a world in single player). See [docs/config.md](docs/config.md#profiles).
-- `/lostcities profile list`, `profile info <profile>`, `profile reload` and `/lostcities saveprofile <profile> <newName>`, operator only.
-- Spawn options: a profile can ask for a spawn in a biome, in a predefined city, never in a building, or inside a building (placing each player exactly on their first join); the spawn is found from the city layout without generating chunks, and the bonus chest still comes when asked for.
-- The GTNH layer (milestone M08): city chests hold GTNH loot in tier bands, from supplies, food, bronze and iron up to LV, MV, HV and, rarely on high floors and in deep cellars, EV components, circuits, materials and the pack's loot bags; nothing above EV. Rail dungeons hold Railcraft rails, ties, carts and tools. Server owners can retune each category with a TooMuchLoot file of the same name (`lostcitiesnh:city_supplies`, `city_lv`, `city_mv`, `city_hv`, `city_ev`, `rail_dungeon`). Two new profile options, both off: `vanillaLootCategories` (chests may also draw the pack's vanilla loot) and `enderZooHardMobs` (EnderZoo's mobs in the harder spawners). A spawner whose mob is missing from the pack falls back to a skeleton or is left out, never a pig spawner.
-- Cities now also build around Roguelike Dungeons towers, LootGames puzzle dungeons, AE2 meteorites (stepping down so a crater cuts nothing), Witchery's structures and, on RWG2, its volcanoes, lava caves and river junctions; Roguelike towers no longer land inside cities.
-- Railcraft's quarried-stone patches are kept out of cities, like lakes and oil.
-- Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
-- Scattered structures (milestone M07): upstream Lost Cities' cabins and radio towers stand in the countryside between cities, and oil rigs in RWG2's deep ocean (classic RWG has no ocean, so no oil rigs); gas stations and restaurants stand beside highways once highways generate. Each is set into the land: the ground under it is leveled and slopes gently back to the natural terrain around it, with no cliff, nothing inside it and no floating foundation. They keep away from villages and other mods' structures and two chunks clear of cities, never touch each other, and lakes, lava lakes, dungeons and oil deposits keep out of them. `scatteredChanceMultiplier` in a profile makes them rarer or more common.
-- Cobwebs and chains hang from the ceilings of city buildings, as in upstream Lost Cities.
-- `/lostcities find scattered` and `scattered:<name>` (test hooks only): the nearest scattered structure, with a viewpoint.
-- The pack's variety in cities (milestone M11): buildings draw their walls, trims, bands, glass and quartz from GTNH's decorative blocks (Chisel, Railcraft, Et Futurum, Botania, Ztones, Tinkers', Thaumcraft, GregTech stones and more), each building its own mix within its upstream color family, and about two in five keep upstream's walls. Desert cities stay pale and muted. Interiors get wood, tile and stone floors, office ceilings, ceiling lights in nearly half the buildings, kitchens, workshops and studies, and varied bookshelves and fences; parks and planters get flowers from Et Futurum, Biomes O' Plenty and Botania. Without one of those mods, its blocks give way to upstream's. `worldgen.paletteVariety` switches it off for new worlds; see [docs/config.md](docs/config.md).
-- Commands for asset authors and server owners (milestone M10), operator only: `/lostcities debug` (the layout of the chunk you stand in, in full in the server log), `map` (a 41 × 41-chunk map of cities, highways and landmarks in the log), `locate <building>` (the nearest places a building stands, without generating anything) and `createbuilding <building> <floors> <cellars> <x> <y> <z>`; `timings` is another name for `timers`.
-- The part editor: pin a profile with `editMode` to a new world and generation records which part went where; `/lostcities listparts`, `locatepart`, `editpart`, `resumeedit` and `createpart` let you place a part and change it by hand, and `exportpart <name>` writes it, with the blocks its palette lacks, to `config/lostcitiesnh/export/parts/<name>.json`.
-- An API for other mods ([docs/api.md](docs/api.md)): ask what Lost Cities planned for any chunk (city, building, floors, street, road, highway and railway levels, landmark zone, explosions), add profiles, and listen to four generation events.
-- City edges (milestone M12): empty lots, excavations dug 1, 2 or 4 blocks for a basement, and concrete foundations of high-rises that were never finished appear where a city thins out, on bare clay and dirt that nothing grows on.
-- Some explosion damage in cities was partly repaired: holes filled in with a similar but not identical material, and broken windows boarded up.
-- Profile options `cityTaper`, `edgeLotChance`, `damageRepairChance` and `facadeContrast`. See [docs/config.md](docs/config.md).
+- For development and real-pack testing only, off in a normal game: the scenario harness (`/lostcities test`), `view` and `find`, and a clean screenshot mode, all behind `-Dlostcitiesnh.testHooks=true`.
 
 ### Changed
 
-- Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
-- Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.
-- Building heights taper: low buildings where a city meets the land around it, a dense high-rise core at its center, rising and falling by district rather than in rings.
-- Neighboring buildings' colors feather: a pale building no longer stands beside a dark, saturated one, also where a desert city meets a standard one.
-- Roads beside a village are small streets: a road that goes around a village, or passes beside it, narrows instead of running there as a wide avenue.
-- Slopes at a city's edge step down in ragged contours instead of long straight terraces, and village lanes never climb two blocks at once.
+From upstream Lost Cities:
+
+- Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an accent, not the look of a city. A profile can still ask for upstream's amounts.
+- Desert cities use a muted palette (sandstone, white and light gray terracotta, smooth sandstone) without red, orange or red-brick buildings.
+- Roads beside a village are small streets; slopes at a city's edge step down in ragged contours; village lanes climb one block at a time inside a chunk.
+- Every command needs operator level 2.
+- `buildingMaxFloors` and `buildingMinFloors` take 0 to 22, so no building passes the 1.7.10 height limit.
 
 ### Fixed
 
-- A street stair no longer loses one of its steps when an explosion lands nearby: the cleanup after explosions only removes loose blocks that the explosion could have reached.
+Upstream bugs this port does not have are listed with their tests in [docs/original-spec/BUGS-COVERAGE.md](docs/original-spec/BUGS-COVERAGE.md). Among them: city layouts that ignored the world seed, crashes on malformed profiles and assets, unknown blocks silently becoming air, `exportpart` writing anywhere in the server directory, and loot that changed with unrelated blocks nearby.
+
+### Upgrade notes
+
+- **Use a new world.** Alpha-era worlds keep their pinned profile but were made with city layout version 1 to 3; this build is version 4, and desert facades and the palette variety changed. New chunks beside old ones will show seams (cut streets and buildings). The server logs a warning per dimension when this applies. Nothing is removed from a save: the mod registers no blocks or items.
+- Config keys of the alpha builds are unchanged.
+- Requires GTNH 2.9.0 (GTNHLib 0.11.54 or newer).
+
+### Known issues
+
+- No highways, railways, subways, stations, gas stations or restaurants yet; the `highways` and `railways` switches do nothing.
+- A village lane can rise two blocks where it crosses a chunk border.
+- Where an AE2 meteorite's crater cuts city ground, the city ends at the pit's edge with no slope.
+- Other mods' trees beside a cabin can lean over it; a GregTech boulder can cut into a building.
+- On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region.
+- Loot, spawners and city density are not balanced yet ([beta balance list](docs/new-spec/beta-balance-list.md)). No achievements or in-game guide yet.
+
+### Provenance
+
+Ported from McJty's Lost Cities (MIT, branch `1.20` at `f18a094d`) and rewritten for 1.7.10 with AI assistance (Claude); see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and [docs/assets/CREDITS.md](docs/assets/CREDITS.md).

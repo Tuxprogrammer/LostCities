@@ -96,4 +96,4 @@ CITY-27, CITY-28, CITY-29.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Corridors, doors, predefined content, transforms, settings](../../new-spec/04-city-layout/index.md#corridors-doors-predefined-content-transforms-settings).

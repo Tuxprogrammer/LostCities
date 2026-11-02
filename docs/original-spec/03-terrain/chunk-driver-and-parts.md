@@ -118,4 +118,4 @@ Every generator in every area writes through the driver (`LostCityTerrainFeature
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Chunk buffer and part writing](../../new-spec/03-terrain/index.md#chunk-buffer-and-part-writing-chunk-driver-and-partsmd).

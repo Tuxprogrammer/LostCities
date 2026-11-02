@@ -2519,70 +2519,6 @@
       ]
     },
     {
-      "name": "wall_taupe_chisel_hardened_clay_lightgray_2",
-      "pool": "taupe-desert-walls",
-      "palette": [
-        {
-          "char": "#",
-          "block": "chisel:hardened_clay_lightgray:2",
-          "damaged": "minecraft:iron_bars"
-        },
-        {
-          "char": "}",
-          "variant": "sandstone_rubble",
-          "damaged": "minecraft:iron_bars"
-        }
-      ]
-    },
-    {
-      "name": "wall_taupe_chisel_hardened_clay_lightgray_4",
-      "pool": "taupe-desert-walls",
-      "palette": [
-        {
-          "char": "#",
-          "block": "chisel:hardened_clay_lightgray:4",
-          "damaged": "minecraft:iron_bars"
-        },
-        {
-          "char": "}",
-          "variant": "sandstone_rubble",
-          "damaged": "minecraft:iron_bars"
-        }
-      ]
-    },
-    {
-      "name": "wall_taupe_chisel_hardened_clay_lightgray_6",
-      "pool": "taupe-desert-walls",
-      "palette": [
-        {
-          "char": "#",
-          "block": "chisel:hardened_clay_lightgray:6",
-          "damaged": "minecraft:iron_bars"
-        },
-        {
-          "char": "}",
-          "variant": "sandstone_rubble",
-          "damaged": "minecraft:iron_bars"
-        }
-      ]
-    },
-    {
-      "name": "wall_taupe_chisel_hardened_clay_lightgray_8",
-      "pool": "taupe-desert-walls",
-      "palette": [
-        {
-          "char": "#",
-          "block": "chisel:hardened_clay_lightgray:8",
-          "damaged": "minecraft:iron_bars"
-        },
-        {
-          "char": "}",
-          "variant": "sandstone_rubble",
-          "damaged": "minecraft:iron_bars"
-        }
-      ]
-    },
-    {
       "name": "wall_taupe_ztones_tile_krypblock_3",
       "pool": "taupe-desert-walls",
       "palette": [
@@ -8013,23 +7949,7 @@
           "options": [
             {
               "option": "none",
-              "weight": 45
-            },
-            {
-              "option": "wall_taupe_chisel_hardened_clay_lightgray_2",
-              "weight": 4
-            },
-            {
-              "option": "wall_taupe_chisel_hardened_clay_lightgray_4",
-              "weight": 4
-            },
-            {
-              "option": "wall_taupe_chisel_hardened_clay_lightgray_6",
-              "weight": 4
-            },
-            {
-              "option": "wall_taupe_chisel_hardened_clay_lightgray_8",
-              "weight": 3
+              "weight": 60
             },
             {
               "option": "wall_taupe_ztones_tile_krypblock_3",

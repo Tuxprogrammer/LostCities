@@ -247,7 +247,9 @@ public final class ProfileOptions {
         terrain(c, "generateLighting", Type.BOOLEAN, null, null);
         // Buildings.
         chance(c, "buildingChance", "0.3", "04-city-layout");
-        live(c, "buildingMinFloors", Type.INT, "0", d(0), d(60), "04-city-layout");
+        // Deviation: 0 to 22 instead of 0 to 60, as buildingMaxFloors, since upstream lets the minimum win over the
+        // maximum (height-mapping.md, P03-14, D31).
+        live(c, "buildingMinFloors", Type.INT, "0", d(0), d(22), "04-city-layout");
         // Deviation: 0 to 22 instead of 0 to 60, so no building passes Y 255 (0005 §6).
         live(c, "buildingMaxFloors", Type.INT, "8", d(0), d(22), "04-city-layout");
         live(c, "buildingMinFloorsChance", Type.INT, "4", d(1), d(60), "04-city-layout");

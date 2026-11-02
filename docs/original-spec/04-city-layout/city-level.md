@@ -126,4 +126,4 @@ CITY-34.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Cities: detection, styles, levels](../../new-spec/04-city-layout/index.md#cities-detection-styles-levels) and [height-mapping.md](../../new-spec/03-terrain/height-mapping.md#city-levels).

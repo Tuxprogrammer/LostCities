@@ -105,4 +105,4 @@ CITY-02, CITY-06, CITY-09, CITY-25, CITY-26.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Buildings](../../new-spec/04-city-layout/index.md#buildings-building-infomd-multibuildingsmd).

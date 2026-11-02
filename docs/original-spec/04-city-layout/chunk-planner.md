@@ -108,4 +108,4 @@ CITY-13, CITY-18, CITY-19, CITY-20.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Planning stages](../../new-spec/04-city-layout/index.md#planning-stages-chunk-plannermd-chunk-characteristicsmd).

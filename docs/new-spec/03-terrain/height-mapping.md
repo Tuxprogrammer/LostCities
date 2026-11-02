@@ -30,12 +30,12 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows th
 
 | Option | Upstream default | Upstream range | Here | Notes |
 |---|---|---|---|---|
-| `cityLevel0Height` … `cityLevel7Height` | 75, 83, 91, 99, 107, 115, 123, 131 | 1 to 384 | same defaults, range 1 to 255 | City ground = 71 + 6 × level: Y 71 to 119. Revisited from the S2 height histogram, which decides whether RWG needs a tuned profile ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 3) |
+| `cityLevel0Height` … `cityLevel7Height` | 75, 83, 91, 99, 107, 115, 123, 131 | 1 to 384 | same defaults, range 1 to 255 | City ground = 71 + 6 × level: Y 71 to 119. Upstream's thresholds; no RWG-tuned profile ships (D73), and the [rise cap](#rise-cap) keeps a city from climbing RWG's relief (D148) |
 | `FLOORHEIGHT` | 6 | constant | 6 | Blocks per level and per floor |
 | `cityMinHeight` | 50 | −1024 to 2048 | 50, range 0 to 255 | Keeps cities off deep RWG ocean (floor 34 ± 5.5) |
 | `cityMaxHeight` | 150 | −1024 to 2048 | 150, range 0 to 255 | Keeps cities off RWG2 mountain chains (base 120) and high mountains, as upstream keeps them off peaks |
 | `cityMaxRise` | none | none | 2 city levels, range 0 to 8 (8: no cap) | New ([Rise cap](#rise-cap)): how far a city chunk's level may rise above its city's base level |
-| `heightSampleSize` (mod config) | 3 | 1 to 100 | 3, range 1 to 100 | Chunks per side; not a height |
+| `heightSampleSize` (upstream's mod config) | 3 | 1 to 100 | 3, range 1 to 100, a pinned profile value (D73) | Chunks per side; not a height |
 | `oceanCorrectionBorder` | 4 | −255 to 255 | same | An offset: ocean corner = `groundLevel − 4` = Y 67 |
 
 ## Rise cap

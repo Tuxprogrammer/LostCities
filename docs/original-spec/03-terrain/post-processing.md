@@ -91,4 +91,4 @@ Oriented torches; vines on the sides of buildings that face +X and +Z neighbors;
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Post-processing](../../new-spec/03-terrain/index.md#post-processing-post-processingmd).

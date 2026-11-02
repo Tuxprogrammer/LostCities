@@ -214,7 +214,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] No lake, lava lake, dungeon or oil under a footprint, and every generated structure stands whole on ground that meets RWG's terrain without a cliff (`scattered.real` on both world types). *Three radio towers and an oil rig on RWG2, two radio towers and a cabin on classic RWG: every block standing (472/472, 3996/3996, 536/536), no dungeon spawner, lava or lake water, no terrain inside; steps of 3+ blocks the fit made: 0 of 7,820 on five, 28 of 7,820 (0.4 %) on the classic tower at Y 145. 112 and 63 populate steps denied beside them.*
 - [x] Oil rigs: some on RWG2 Continents, only in deep ocean; none on classic RWG. *RWG2: 86 in the 65 × 65 areas, all over an oracle floor of Y 45 or lower; classic RWG: 0.*
 - [x] M05's checks still hold on both world types, seed 4242, on instance 2: fresh-world hashes match (`city.real` and `scattered.real`), B1 to B5 hold, no cascade warning has this mod's code first, `city.walk` passes. *2026-11-02, the M07 jar merged with M11 and M10: fresh worlds per type print the same hashes, three each (RWG2 `city.real` 55dc1557…/6666e91e…, `scattered.real` e934d9dd…; classic 44e77e87…/6ea4b3bf…, 12244d01…); B1 to B5 pass (B3 10.1 to 10.6 % RWG2, 12.8 to 13.7 % classic, as M11's 13.5 to 13.7 %; B4 at most 5.0 ms; B5 15.1 MB); 64 to 85 cascade traces per run, none with this mod's code first; `city.walk`, `city.sewing` and `assets.catalog` pass.*
-- [x] The review shot lists take a scattered structure (and an oil rig on RWG2), run with the M07 jar, every image looked at. *2026-11-02: `scattered`, `tower` and `oilrig` on RWG2 (`reference/remote/shots/shots-20261102-153203-alpha-rwg2`), `scattered` and `tower` on classic RWG (`shots-20261102-155133-alpha-rwg`), all settled: each structure whole on level ground that slopes into the land around it; the oil rig in open deep ocean. Cacti stand between the classic radio tower's legs: a decoration the write guard does not stop yet.*
+- [x] The review shot lists take a scattered structure (and an oil rig on RWG2), run with the M07 jar, every image looked at. *2026-11-02: `scattered`, `tower` and `oilrig` on RWG2 (`reference/remote/shots/shots-20261102-153203-alpha-rwg2`), `scattered` and `tower` on classic RWG (`shots-20261102-155133-alpha-rwg`), all settled: each structure whole on level ground that slopes into the land around it; the oil rig in open deep ocean. Cacti stood between the classic radio tower's legs: Natura's saguaros, which the write guard's tree frame now drops too (D-BA-7).*
 
 
 ## M10 · Commands, API and editor
@@ -292,10 +292,21 @@ Scopes are written from S1 to S3 when they land. In outline:
 **Entry gate:** M01 to M12 and M05R done.
 
 **Exit gate:**
-- [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live.
-- [ ] Every reproducible bug in BUGS.md has its regression test.
-- [ ] The full scenario suite passes on fresh worlds; the real-pack server and client run is clean on GTNH 2.9.0, on RWG2 Continents and classic RWG.
+- [ ] Every original-spec sheet is implemented or has a recorded deviation; every new-spec sheet is live. *Beta audit, 2026-11-02: areas 01 to 05 and 07 to 09 walked sheet by sheet against the new spec and the code (COVERAGE.md: 0 upstream files unaccounted for). Every original-spec sheet now links its deviation table; about 70 new-spec rows were corrected to what the code does or given a decision (D-BA-1 to D-BA-4); `buildingMinFloors` gained the range the spec promised (D-BA-5). Left: area 06, with M06.*
+- [ ] Every reproducible bug in BUGS.md has its regression test. *Beta audit: [BUGS-COVERAGE.md](original-spec/BUGS-COVERAGE.md) (D-BA-9): 161 IDs tested, 37 cannot occur (each with its decision), CORE-25 kept (D16), HWY-13 not a bug, 0 missing. Left: the 7 highway and railway IDs marked M06 (HWY-01, -02, -06, -08, -09, -10, -15).*
+- [ ] The full scenario suite passes on fresh worlds; the real-pack server and client run is clean on GTNH 2.9.0, on RWG2 Continents and classic RWG. *Beta audit, jar `afb4264` (the audit branch before M06), real-pack instance 7, seed 4242, fresh worlds: `all` on the layout plan passes 14 of 15 on both world types (the 15th, `overlay.city`, needs the synthetic plan and passes on a fresh synthetic world of each type); the dev self-check passes; `city.real` terrain hashes `7dd4b58a…` (RWG2 Continents) and `28e38a4e…` (classic RWG), M12's; 48 and 49 cascade traces, none with this mod's code first. Needs: M06 merged, then the suite on two fresh worlds per type and a client join on each (the shot lists serve), with budget B3 held on classic RWG (the M08 and M12 boxes above).*
 - [ ] The owner's interactive review: play sessions with back-and-forth on the GTNH integrations and advanced features, each round's findings fixed before the next. It ends with the owner's sign-off and a list of balance items for the polish pass.
+
+**Open boxes before the gate** (beta audit, 2026-11-02):
+
+| Box | What it needs |
+|---|---|
+| M08, M05's checks with the M08 jar | Classic RWG's B3 at or under 15 % (it measured 15.0 %); the performance pass after wave 2 |
+| M12, real-pack hashes, budgets, cascades, walk and sewing | The same: classic RWG's B3 measured 14.4 and 15.2 % |
+| M06 (all) | M06 is still landing; its exit gate is written with it |
+| Beta gate, spec and bugs | Area 06 and the 7 M06 bug IDs, with M06 |
+| Beta gate, suite and real-pack run | M06 merged and B3 held, then the full suite and a client run on both world types |
+| Beta gate, owner's review | The playtest of the beta jar ([README](../README.md), [CHANGELOG](../CHANGELOG.md)) |
 
 ## After beta
 

@@ -96,4 +96,4 @@ The scattered entries are consumed by 07-scattered; this table records the value
 
 ## Deviations in the new mod
 
-To be decided in `docs/new-spec/02-profiles-dimensions`. None recorded here.
+See [new-spec 02-profiles-dimensions § World styles and biomes](../../new-spec/02-profiles-dimensions/index.md#world-styles-and-biomes).

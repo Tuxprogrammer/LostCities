@@ -47,4 +47,4 @@ In `upstream/1.12` the landscape types are produced by Lost Cities' own chunk ge
 
 ## Deviations in the new mod
 
-To be decided in `docs/new-spec/02-profiles-dimensions`. None recorded here.
+See [new-spec 02-profiles-dimensions § Landscape types](../../new-spec/02-profiles-dimensions/index.md#landscape-types): only `default` is ported (decision log D12).

@@ -311,9 +311,9 @@ BLEACHED_WALLS = desert_walls("wall_bleached", "bleached-desert-walls", [
     ("Botania:biomeStoneA:5", 5),
 ])
 
+# No Chisel light gray terracotta bricks here: in 1.7.10 light gray terracotta has vanilla brick's color (CIE76 under
+# 10 from minecraft:brick_block), so its brick patterns read as red brick in a desert city (beta audit, D-BA-6).
 TAUPE_WALLS = desert_walls("wall_taupe", "taupe-desert-walls", [
-    ("chisel:hardened_clay_lightgray:2", 4), ("chisel:hardened_clay_lightgray:4", 4),
-    ("chisel:hardened_clay_lightgray:6", 4), ("chisel:hardened_clay_lightgray:8", 3),
     ("Ztones:tile.krypBlock:3", 10),
     ("chisel:hempcrete:8", 8),
     ("Ztones:tile.mystBlock:15", 4), ("Ztones:tile.crayBlock:0", 4),
@@ -654,7 +654,8 @@ STYLES = [
         group("wall_desert", [("none", 34)] + DESERT_WALLS, "bricks_desert"),
         group("wall_desert_rough", [("none", 50)] + ROUGH_WALLS, "bricks_desert_rough"),
         group("wall_bleached", [("none", 45)] + BLEACHED_WALLS, "bricks_desert_bleached"),
-        group("wall_taupe", [("none", 45)] + TAUPE_WALLS, "bricks_desert_taupe"),
+        # The 15 the brick patterns had go to the baseline, so every other draw lands where it did.
+        group("wall_taupe", [("none", 60)] + TAUPE_WALLS, "bricks_desert_taupe"),
         group("accent_desert", [("none", 42)] + DESERT_ACCENTS),
         group("band_desert", [("none", 50)] + DESERT_BANDS),
         group("quartz", [("none", 50)] + QUARTZ, "default_desert"),

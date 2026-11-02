@@ -79,4 +79,4 @@ A pretty-printed JSON object without HTML escaping:
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Part editor](../../new-spec/01-core/index.md#part-editor).

@@ -94,4 +94,4 @@ Thin wrappers: `translatable(key)`, `literal(text)`, `keybind(name)`. Only `lite
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Utilities](../../new-spec/01-core/index.md#utilities).

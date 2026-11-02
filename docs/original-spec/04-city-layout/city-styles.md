@@ -104,4 +104,4 @@ CITY-01, CITY-03, CITY-06, CITY-09, CITY-21.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Cities: detection, styles, levels](../../new-spec/04-city-layout/index.md#cities-detection-styles-levels).

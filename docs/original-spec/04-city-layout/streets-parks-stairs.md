@@ -138,4 +138,4 @@ CITY-12, CITY-13.
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 04-city-layout § Streets, parks, stairs, bridges](../../new-spec/04-city-layout/index.md#streets-parks-stairs-bridges-street-plannermd-streets-parks-stairsmd-bridgesmd).

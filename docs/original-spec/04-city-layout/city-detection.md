@@ -137,4 +137,4 @@ CITY-01, CITY-04, CITY-05, CITY-07, CITY-34 (heightmap sample grid; see [city-le
 
 ## Deviations in the new mod
 
-None recorded yet; the new spec decides.
+See [new-spec 04-city-layout § Cities: detection, styles, levels](../../new-spec/04-city-layout/index.md#cities-detection-styles-levels).

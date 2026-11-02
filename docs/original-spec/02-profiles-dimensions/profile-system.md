@@ -101,4 +101,4 @@ None. Profile descriptions, warnings and option comments are hard-coded English 
 
 ## Deviations in the new mod
 
-To be decided in `docs/new-spec/02-profiles-dimensions`. None recorded here.
+See [new-spec 02-profiles-dimensions § Profile system](../../new-spec/02-profiles-dimensions/index.md#profile-system) and [profile-options.md](../../new-spec/02-profiles-dimensions/profile-options.md).

@@ -44,4 +44,4 @@ Validation: none needed at the pin, because both handlers ignore their content. 
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Network](../../new-spec/01-core/index.md#network).

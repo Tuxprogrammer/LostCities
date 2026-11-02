@@ -84,4 +84,4 @@ So every `RandomSource` choice upstream makes can be reproduced with `java.util.
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Noise and random](../../new-spec/01-core/index.md#noise-and-random).

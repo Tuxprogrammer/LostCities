@@ -65,7 +65,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 
 - `--jvm '<args>'`: extra JVM arguments for the client, such as the clean capture's properties.
 - `--hold <file>`: after the screenshots, stays up until `<file>` exists (bounded by `--timeout`), so another script can drive the client. The shot runner uses it.
-- `--restore-options`: backs up `options.txt` and `optionsnf.txt` before the run and puts them back after it, deleting any the run created.
+- `--restore-options`: backs up `options.txt` and `optionsnf.txt` before the run and puts them back after it, deleting any the run created. It also turns JourneyMap's waypoint beacons and deathpoints off for the run and puts its waypoint config back afterwards: a deathpoint from an earlier run draws a translucent red column in the world, which hiding the GUI does not hide.
 
 The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`. Joining with `--server` often fails in FML's handshake (`playClientBlock is null` in the client log, `LCBot lost connection: Disconnected` on the server), even once the server is up: FML's startup join opens the connection before it creates the latch the handshake waits on, and a local server answers first. Run the client again. The shot runner avoids it: the capture mode joins from the main menu after creating that latch (`-Dlostcitiesnh.captureServer`, D96).
 

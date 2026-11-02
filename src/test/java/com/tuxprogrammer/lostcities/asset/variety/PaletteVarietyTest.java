@@ -24,6 +24,7 @@ import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.Problems;
 import com.tuxprogrammer.lostcities.asset.TestAssets;
+import com.tuxprogrammer.lostcities.asset.block.BlockColors;
 import com.tuxprogrammer.lostcities.asset.block.BlockData;
 import com.tuxprogrammer.lostcities.asset.json.JsonFields;
 
@@ -321,6 +322,50 @@ public class PaletteVarietyTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void noDesertOptionReadsAsRedBrick() {
+        // The beta audit's red-brick building: 1.7.10's light gray terracotta has vanilla brick's color, so Chisel's
+        // brick patterns of it read as red brick in a desert city. No desert facade option may come within CIE76 10 of
+        // brick.
+        BlockColors colors = BlockColors.bundled(PaletteVarietyTest.class, new Problems());
+        BlockColors.Entry brick = colors.get(BlockRef.of("minecraft:brick_block", 0));
+        assertNotNull(brick, "colors.tsv measures vanilla brick");
+        int checked = 0;
+        for (PaletteVariety.Group group : PACK.variety()
+            .groups(DESERT)) {
+            String name = group.name();
+            if (!name.startsWith("wall_") && !name.startsWith("accent_") && !name.startsWith("band_")) {
+                continue; // facades only: interiors may keep light gray terracotta floors (D161)
+            }
+            for (PaletteVariety.Choice choice : group.choices()) {
+                if (choice.option() == null) {
+                    continue;
+                }
+                for (com.tuxprogrammer.lostcities.asset.model.PaletteEntry entry : choice.option()
+                    .palette()
+                    .entries()
+                    .values()) {
+                    if (entry.block() == null) {
+                        continue;
+                    }
+                    BlockRef block = entry.block()
+                        .block(com.tuxprogrammer.lostcities.asset.block.MetalFlags.ALL_ON);
+                    BlockColors.Entry color = colors.get(block);
+                    if (color == null || !color.isOpaque()) {
+                        continue;
+                    }
+                    checked++;
+                    double dl = color.lightness() - brick.lightness();
+                    double da = color.a() - brick.a();
+                    double db = color.b() - brick.b();
+                    double distance = Math.sqrt(dl * dl + da * da + db * db);
+                    assertTrue(distance >= 10, group.name() + ": " + block + " is " + distance + " from brick");
+                }
+            }
+        }
+        assertTrue(checked > 20, "the desert's facade options are measured: " + checked);
     }
 
     // ------------------------------------------------------------------ hand-written catalogs

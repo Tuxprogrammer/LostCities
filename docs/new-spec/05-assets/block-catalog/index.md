@@ -2,7 +2,7 @@
 
 The entry point to the catalog of every decorative and construction block GTNH 2.9.0 enables, judged against upstream Lost Cities' look ([decision log](../../../design/decision-log.md) D25). Upstream's cities feel synthetic partly because every building is made of the same handful of blocks; the catalog exists so palettes can draw weighted variety for each role instead of one stand-in per missing block. The [D19 block mapping](../../00-pack-integration/block-mapping.md) stays the baseline and the fallback when a mod is absent. D28 sets the rules the [variety pools](#variety-pools) below follow.
 
-Status: the pools are *live*: M11 turned their candidates into the [palette variety](../asset-format.md#palette-variety) ([0007](../../../design/0007-palette-variety.md)), option palettes a building draws per role, and `tools/asset-convert/variety.py` names the candidates it uses as these tables do. Weights are first judgments, tuned at the beta review. The D28 rules they apply are accepted. City styles that would use distinct pools wait until after beta, with the GTNH-themed buildings ([ROADMAP](../../../ROADMAP.md)).
+Status: the wall, accent, band, glass, quartz, interior floor, ceiling, light, furniture, bookshelf, fence, planter and park flora pools are *live*: M11 turned their candidates into the [palette variety](../asset-format.md#palette-variety) ([0007](../../../design/0007-palette-variety.md)), option palettes a building draws per role, and `tools/asset-convert/variety.py` names the candidates it uses as these tables do. The other pools have no variety group yet and keep their baseline until after beta (D162 for speed blocks, tile-entity blocks, metals, streets, torches and ladders; [decision log](../../../design/decision-log.md) D-BA-1 for the rest). Weights are first judgments, tuned at the beta review. The D28 rules they apply are accepted. City styles that would use distinct pools wait until after beta, with the GTNH-themed buildings ([ROADMAP](../../../ROADMAP.md)).
 
 ## How to read the catalog
 
@@ -385,8 +385,8 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:stained_hardened_clay:8` | 45 | | BH | The palette's block (AR-16) |
-| `chisel:hardened_clay_lightgray:2` to `:8` | 15 | baseline | SP | Patterned |
+| Baseline: `minecraft:stained_hardened_clay:8` | 60 | | BH | The palette's block (AR-16); takes the 15 the brick patterns had (D-BA-6) |
+| `chisel:hardened_clay_lightgray:2` to `:8` | 0 | baseline | SP | Left out (D-BA-6): 1.7.10's light gray terracotta has vanilla brick's color, so its brick patterns read as red brick in a desert city |
 | `Ztones:tile.krypBlock:3` | 10 | baseline | | Taupe tiles |
 | `chisel:hempcrete:8` | 8 | baseline | SP | Hard colored concrete |
 | `Ztones:tile.mystBlock:15`, `Ztones:tile.crayBlock:0` | 8 | baseline | | Matte warm gray |
@@ -1241,7 +1241,7 @@ D28 rule 7, with the pack's other hazards. The never-place list applies to every
 
 ## City styles that would gain a distinct pool
 
-Candidates only: styles are an M11 or post-beta decision. Upstream's three city styles take the pools above as written; the candidates group blocks the catalogs suggest.
+Candidates only: new city styles wait until after beta (D162). Upstream's three city styles take the pools above as written; the candidates group blocks the catalogs suggest.
 
 | Style | Status | Pool emphasis |
 |---|---|---|
@@ -1273,7 +1273,7 @@ Upstream roles where the pack still has no good block:
 
 What M02 must support before these pools can become palettes ([ROADMAP](../../../ROADMAP.md)):
 
-Status after M02: items 2, 3, 7 and 11 are in the asset system (exact registry names with spaces, pipes and dots; metadata up to 32767 with an extended-metadata flag; multi-step fallback chains reported in the asset report; one `decorativeMetals.<metal>` flag per metal, resolved per world). Item 1 is in the format (a `tag` template on any palette entry, and on map rows such as the potted cactus) and waits for the writer (M04, M05). The pools themselves are loaded from `data/lostcitiesnh/blockmap/pools.json`, which `tools/asset-convert/pools_from_catalog.py` builds from the tables below, and resolved against the registry: in GTNH 2.9.0 every candidate block named in the pool tables is registered. Item 5 is in only for dye-order colors (`{color}` rows); per-mod color orders, the per-building accent cap and the spawn-proof floor share (items 9 and 11) are M11's, with the pools becoming palettes.
+Status: items 1, 2, 3, 7 and 9 are in the asset system, with item 11's flags: tile-entity templates on any palette entry, written in the population phase with the facing turned by the part (item 1, [asset-format.md § Tile-entity data](../asset-format.md#tile-entity-data)); exact registry names with spaces, pipes and dots (2); metadata up to 32767 with an extended-metadata flag (3); multi-step fallback chains reported in the asset report (7); per-building weighted option palettes with the spawn-proof floor share, the palette variety (9, M11, [0007](../../../design/0007-palette-variety.md)); one `decorativeMetals.<metal>` flag per metal, resolved per world (11). The pools themselves are loaded from `data/lostcitiesnh/blockmap/pools.json`, which `tools/asset-convert/pools_from_catalog.py` builds from the tables below, and resolved against the registry: in GTNH 2.9.0 every candidate block named in the pool tables is registered. Item 5 is in for dye-order colors (`{color}` rows); variety options name each block's own metadata, so no other color order is needed. The per-building cap on metal accents (item 11) is not built, so metal accents stay out of the variety until after beta ([0007](../../../design/0007-palette-variety.md), Still open). Item 8 is M06's; item 10 is after beta.
 
 1. **Tile-entity data in palette entries.** Upstream's palettes already carry block-entity data for chests, spawners and the furnace; generalize it to a per-entry NBT template, with facing derived from the part's rotation and item names resolved to IDs at placement. Needed for Binnie (`meta`), Forestry woods and candles (`WT`), Railcraft slabs and stairs (material), BiblioCraft (facing keys), Carpenter's Blocks (`cbAttrList`, `cbMetadata`), ArchitectureCraft (shape and material), FloodLights (`teDirection`), ProjectRed lamps (`inv`), Computronics lamps (`clc`), OpenBlocks flags, banners, Storage Drawers (`Dir`), JABBA and Iron Chests facing, and IC2 foam walls. Blocks whose tile entity `setBlock` creates correctly by itself (MalisisDoors doors, the canvas, most kitchen furniture) need no data, but the writer must not assume they are tile-entity free.
 2. **Exact registry names.** The block-name map keeps every name verbatim: `tile.` prefixes (`appliedenergistics2:tile.BlockSkyStone`, `Ztones:tile.agonBlock`, `modernmarkings:tile.floor_marking_white_lane`, `TwilightForest:tile.TFPlank`, `GalacticraftCore:tile.gcBlockCore`, `GalacticraftAmunRa:tile.baseBlockRock`, `thaumicinsurgence:tile.arcaneMarble`, and *unverified* `vendingmachine:tile.casing`), dotted names (`gregtech:gt.blockcasings`, `Railcraft:brick.abyssal`, `Natura:Natura.fence`), spaces (`Natura:Rare Tree`, `BiblioCraft:Armor Stand`, `BiblioCraft:Printing Press`), pipes in mod IDs (`ProjRed|Exploration:projectred.exploration.stone`), concatenated names (`AWWayofTime:AlchemicalWizardrybloodRune`), and case-sensitive mod IDs (`Botania`, `Ztones`, `TConstruct`, `etfuturum`, `chisel`).

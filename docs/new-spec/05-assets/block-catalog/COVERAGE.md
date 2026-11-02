@@ -2,7 +2,7 @@
 
 Which of GTNH 2.9.0's 243 mods register placeable blocks, and which catalog family covers each one (decision log D25). The catalog judges every decorative and construction block in the pack against upstream's look, so palettes can draw weighted variety for each role. The D19 mapping in [block-mapping.md](../../00-pack-integration/block-mapping.md) stays the baseline and the fallback.
 
-Status: *Proposed* (catalog work for D25). The rows below were counted on 2026-11-01.
+Status: *Accepted* (spike S4, decision log D25, D28 and D29; built into the palette variety by M11, [0007](../../../design/0007-palette-variety.md)). The rows below were counted on 2026-11-01.
 
 ## Families
 

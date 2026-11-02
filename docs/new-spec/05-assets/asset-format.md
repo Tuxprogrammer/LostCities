@@ -116,7 +116,7 @@ Every problem has a severity (`asset.AssetProblem`):
 - **Warning**: logged once; the asset is used. Optional references that do not resolve, properties with no 1.7.10 meaning, buildings with no part for some floor, and dead fields in an override are warnings.
 - **Note**: a fact for the report, logged at debug level: a fallback block taken because a mod is absent, an override replacing a jar file, an asset nothing reaches, and the dead `width` and `streetvariant` fields of upstream's own bundled city styles (bundled files carry them as upstream does, so the boot has no warnings).
 
-One summary line always reaches the log (`[LCNH-ASSETS] loaded 324 assets {...}, 0 errors, 0 warnings, 0 fallbacks, ...`). `-Dlostcitiesnh.assetReport=true` logs the full report at `postInit`, and the manual-only scenario `assets.pack_resolution` logs it and fails if any fallback was taken or any variety-pool block is not registered ([docs/testing/](../../testing/README.md)).
+One summary line always reaches the log (`[LCNH-ASSETS] loaded 327 assets {...}, 0 errors, 0 warnings, 0 fallbacks, ...`). `-Dlostcitiesnh.assetReport=true` logs the full report at `postInit`, and the manual-only scenario `assets.pack_resolution` logs it and fails if any fallback was taken or any variety-pool block is not registered ([docs/testing/](../../testing/README.md)).
 
 An unknown block name, a direct reference to an absent mod, the 1.12 `@meta` form, or a never-placed block in a direct reference is an error: there is no last-resort block, so the asset is rejected rather than built with a guessed block. Inside a mapping chain, a candidate whose mod is absent or which the never-place list forbids is skipped and the next one is used, which is how the documented fallbacks work.
 
@@ -134,7 +134,7 @@ The D19 mapping, the decorative metals, the never-place list, the variety pools 
 
 Metadata rules (`asset.block.MetaRule`), one per D19 property set: `stairs`, `slab`, `door`, `torch`, `wall_torch`, `facing` (ladders, furnaces, chests), `lever`, `rail`, `powered_rail`, `trapdoor`, `sapling`, `leaves`, `barrel`, `chain`, `lantern`, `anvil`, `vine`, and `plain`. The values are the pre-flattening encodings 1.8 to 1.12 kept from 1.7.10 for the same blocks, which the 1.13 flattening turned into these properties; `MetaRuleTest` has a test per rule. A candidate may name its own rule where its block encodes differently from the primary (the barrel's fallback chest uses `facing`). Each rule also gives the block's rotation family, from which `asset.transform.MetaRotation` turns metadata with a part's transform.
 
-Resolution is checked twice. `AssetValidationTest` loads every bundled asset over a registry of vanilla 1.7.10 alone, where every name must resolve through its vanilla fallback, and over the full map, where every name must take its primary. The real-pack scenario `assets.pack_resolution` checks the live GTNH 2.9.0 registry: in M02 every mapped primary resolved with no fallback, on classic RWG and RWG2 Continents worlds.
+Resolution is checked twice. `AssetValidationTest` loads every bundled asset over a registry of vanilla 1.7.10 alone, where every name must resolve through its vanilla fallback, and over the full map, where every name must take its primary. The real-pack scenario `assets.pack_resolution` checks the live GTNH 2.9.0 registry: every mapped primary and every variety option resolves with no fallback, on classic RWG and RWG2 Continents worlds ([ROADMAP](../../ROADMAP.md) M11 exit gate).
 
 ## Bundled assets
 
@@ -193,4 +193,4 @@ What `layout` and `worldgen` consume, all in plain Java under `com.tuxprogrammer
 
 ## Writing assets
 
-The editor and the part-export commands are ported (D13) and write JSON. Any writer writes every field's real value, and a round-trip test (parse, write, parse) covers each asset type (fixes ASSET-19 and CITY-31).
+The editor and the part-export commands are ported (D13). `exportpart` is the only writer, and it writes parts only ([01-core § Part editor](../01-core/index.md#part-editor)); nothing writes selectors or sphere settings, the fields upstream's encoders wrote wrongly. `model.Selector` still keeps the real `minSpawnDistance`, `maxSpawnDistance` and `feather` values, so a future writer has them (ASSET-19, CITY-31).

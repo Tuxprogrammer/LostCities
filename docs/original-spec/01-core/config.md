@@ -100,4 +100,4 @@ Consequences:
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Mod config](../../new-spec/01-core/index.md#mod-config) and [02 · pinned profile](../../new-spec/02-profiles-dimensions/pinned-profile.md).

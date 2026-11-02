@@ -39,4 +39,4 @@ State: `profiles` (list of names, or `null` until first needed), `profile` (name
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 09-client-ui).
+See [new-spec 09-client-ui § Profile configuration screen](../../new-spec/09-client-ui/index.md#profile-configuration-screen).

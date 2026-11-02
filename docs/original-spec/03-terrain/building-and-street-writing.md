@@ -134,4 +134,4 @@ Buildings floor by floor with doors, fillers and corridor connections; streets, 
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § Building and street writing](../../new-spec/03-terrain/index.md#building-and-street-writing-building-and-street-writingmd).

@@ -79,4 +79,4 @@ The exact 62 × 58 grid is `NullDimensionInfo.biomeMap` at the pin.
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 09-client-ui).
+See [new-spec 09-client-ui § Preview](../../new-spec/09-client-ui/index.md#preview).

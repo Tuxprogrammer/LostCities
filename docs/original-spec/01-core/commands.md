@@ -103,4 +103,4 @@ For each of the 125 positions in the cube, picks a block uniformly from the pool
 
 ## Deviations in the new mod
 
-Not decided here; see `docs/new-spec/` (area 01-core).
+See [new-spec 01-core § Commands](../../new-spec/01-core/index.md#commands) and its [commands sheet](../../new-spec/01-core/commands.md).

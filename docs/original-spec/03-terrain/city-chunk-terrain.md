@@ -134,4 +134,4 @@ In 1.12 a `DEFAULT` city chunk started from an **empty** primer, not from genera
 
 ## Deviations in the new mod
 
-None recorded yet.
+See [new-spec 03-terrain § City chunk terrain](../../new-spec/03-terrain/index.md#city-chunk-terrain-city-chunk-terrainmd), and [pipeline-on-rwg.md](../../new-spec/03-terrain/pipeline-on-rwg.md) for soft-edge strips and village lanes.

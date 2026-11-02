@@ -76,4 +76,14 @@ public class FootprintGuardTest {
         assertFalse(FootprintGuard.topIsTrees(null));
         assertFalse(FootprintGuard.drops(null, 0, 0, 3, 80, 3, leaves));
     }
+
+    /** Beta audit: Natura's saguaros (material cactus, its tree world generator) grew inside a radio tower's legs. */
+    @Test
+    public void aTreeFrameDropsCacti() {
+        Block saguaro = new Block(Material.cactus) {};
+        FootprintGuard.pushTrees(null, PLAN);
+        assertTrue(FootprintGuard.drops(null, 0, 0, 3, 80, 3, saguaro), "a saguaro inside a footprint");
+        assertFalse(FootprintGuard.drops(null, 1, 0, 3, 80, 3, saguaro), "the desert outside keeps its saguaros");
+        FootprintGuard.pop();
+    }
 }

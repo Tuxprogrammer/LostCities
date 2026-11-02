@@ -26,7 +26,7 @@ Upstream's format gives one lever: a style draws one palette per group, and a bu
 7. **Park flora (D146).** Options may define five flora lists, one per ParkGreenery table; a park chunk's flora list replaces the vanilla table, with the same two draws per grass block. Planters (`p`, `K`) get pack flower options. Only flowers that stay on grass are used (Et Futurum's cornflower and lily of the valley, Biomes O' Plenty's ground flowers but miner's delight, Botania's mystical flowers); `avoidFoliage` removes them like upstream's flowers.
 8. **The desert stays muted (AR-16).** Desert walls draw from the desert, bleached and taupe pools only, trims and bands from the desert pools, floors from pale woods, sandstone, white and light gray terracotta and pale tiles; no red, orange or saturated block.
 9. **Never a block that regenerates its own chunk.** A fresh chunk's sky light is built before the chunk is registered, and it asks each block for its world-aware light opacity; a block whose override reads the world at its own position generates the chunk again until the stack overflows. Automagy's glowing amber (a Thaumcraft `blockCosmeticOpaque`) did that in the first M11 shot run. Both are on the never-place list, and `assets.catalog` fails on any placed block whose class overrides that method.
-10. **Excluded on purpose.** No speed block (D28 rule 3), not even in walls, because a wall is also a roof and a ruin; no tile-entity block that needs data to look right (D28 rule 6); no decorative metal (D29), whose capped accents need a per-building cap the variety does not have; streets, highways, rails, bridges and building-local palettes keep their blocks (M06 and M12 own those surfaces).
+10. **Excluded on purpose.** No speed block (D28 rule 3), not even in walls, because a wall is also a roof and a ruin; no tile-entity block that needs data to look right (D28 rule 6); no decorative metal (D29), whose capped accents need a per-building cap the variety does not have; streets, highways, rails, bridges and building-local palettes keep their blocks (M06 owns the highway and rail surfaces).
 11. **A switch.** `worldgen.paletteVariety` (on by default), a module flag pinned at world creation, turns the draw off.
 
 Content at this record's date: 359 options in 53 groups across the standard and desert styles (14 to 16 wall, accent and band options per wall family, 10 glass groups, 41 interior floors, 15 ceilings, 12 lights, 9 furniture lists, 10 bookshelves, 7 fences, 4 planters, 2 park flora).
@@ -37,6 +37,7 @@ Content at this record's date: 359 options in 53 groups across the standard and 
 - Block content changes for the same seed, the layout does not: the city goldens and `city.real`'s hashes change, the layout goldens do not. The variety file is part of the asset-set hash a world pins.
 - `assets.pack_resolution` reports palette-variety blocks too; `assets.catalog` writes every part under every style's palettes and the variety and fails on an undefined character or an unregistered block, in the real pack.
 - The interior characters are a deviation from upstream's interiors, recorded in [05-assets](../new-spec/05-assets/index.md#styles-and-city-styles).
+- Color feathering ([0012](0012-facade-color-feathering.md) §5) takes the variety into a facade's tone and, when the default draw clashes with a neighbor, tries further draws of the same groups; the groups and options stay as they are.
 
 ## Alternatives considered
 
@@ -49,4 +50,3 @@ Content at this record's date: 359 options in 53 groups across the standard and 
 
 - Weights are first judgments; the beta review tunes them (the catalog's status).
 - D29's metal accents need a per-building cap before they join the variety.
-- M12's color feathering may choose among a group's options by the neighbors' colors instead of the seed; the groups and options stay as they are.
