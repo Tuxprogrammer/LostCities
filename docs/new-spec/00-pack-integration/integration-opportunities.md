@@ -2,7 +2,7 @@
 
 This sheet covers GTNH 2.9.0 mods that this mod does not yet integrate with, what each integration would give players, and where it fits the roadmap. The goal is the owner's "seamless and tight": abandoned cities, highways and railways in the RWG overworld that look lived-in, hold pack loot at EV or below, and can become a player's base ([0003](../../design/0003-world-presence.md), [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)).
 
-Status: *Proposed*. Nothing here is accepted. The rows marked "owner" in the ranked table need a decision ([Needs an owner decision](#needs-an-owner-decision)), and the rest follow the roadmap slot given. Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
+Status: *Proposed*, except the five rows the owner decided in decision log D28 ([Owner decisions](#owner-decisions)); the rest follow the roadmap slot given. Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
 
 ## Scope
 
@@ -30,22 +30,22 @@ Top recommendations first. The ranking weighs value against effort and risk, and
 
 | # | Opportunity | Mods | Value | Effort | Risk | Kind | Slot |
 |---|---|---|---|---|---|---|---|
-| 1 | [Wood-variant doors and the iron trapdoor](#doors-malisisdoors) that the D19 mapping dropped | MalisisDoors | Upstream's random door woods come back; two recorded deviations disappear | S | Low: blocks by name and metadata, TE created automatically | Faithful | M02 (amend D19), owner |
+| 1 | [Wood-variant doors and the iron trapdoor](#doors-malisisdoors) that the D19 mapping dropped | MalisisDoors | Upstream's random door woods come back; two recorded deviations disappear | S | Low: blocks by name and metadata, TE created automatically | Faithful | M02 (D28 rule 5) |
 | 2 | [Loot shown in NEI](#loot-extensions) through NEI Custom Diagram's worldgen-loot diagrams | NEI Custom Diagram | Players can look up what each city chest band holds, as they do for every other `ChestGenHooks` category | S (lang keys only) | Low: automatic, reads Forge's map | Meta | M08 |
 | 3 | [Furniture pools](#furniture-and-fittings) for upstream's random-furniture and fitting characters (`F`, `L`, `T`, `h`, `p`) | Et Futurum Requiem, CookingForBlockheads, Chisel, Railcraft, AE2 | Interiors read as offices, kitchens and workshops rather than vanilla-only rooms; usable workstations for a new base | S to M | Low for name-and-metadata blocks; M for blocks that keep facing in a TE | Faithful (same characters, wider pools) | S4, M11 |
 | 4 | [City names](#names-signs-and-discovery) from VillageNames' name generator, with entrance signs | VillageNames (optional) | Every city has a name the player can tell others, put on a map or read on a sign; the anchor for maps, quests, notes and the HUD | S to M | Medium: names depend on the pack's syllable config; GPL-3 API call only | GTNH layer | M08 |
-| 5 | [Highways and streets as asphalt](#streets-and-highways) with lane markings | Chisel (`road`, `road_line`), GT concrete | Highways become fast roads (a 1.4× walking-speed block), and their surface stops being a GT boulder host | S | Low; changes upstream's cyan-terracotta look | GTNH layer | M06, owner |
+| 5 | [Highways and streets as asphalt](#streets-and-highways) with lane markings | Chisel (`road`, `road_line`), GT concrete | Highways become fast roads (a 1.4× walking-speed block), and their surface stops being a GT boulder host | S | Low; changes upstream's cyan-terracotta look | GTNH layer | M06 (D28 rule 3) |
 | 6 | [Discovered cities on the map](#maps) through a Navigator layer on JourneyMap | Navigator, JourneyMap | Outlines and names of visited cities on the minimap and the full map, like VisualProspecting's veins and ServerUtilities' claims | M (needs a server-to-client city sync) | Medium: client mixin library, GTNH-maintained | Meta | Beta |
 | 7 | [Railway and station dressing](#railways-and-stations): buffer stops, platform posts and lanterns, signals, abandoned chest minecarts | Railcraft, vanilla, IronChestMinecarts | Railways read as a rail network, not a vanilla minecart line; carts carry rail loot | M | Medium: Railcraft tracks need their TE set explicitly | GTNH layer | M06, M08 |
 | 8 | [Achievements and an in-game guide](#quests-achievements-and-the-guide) | Amazing-Trophies, GuideNH | "Discover a lost city" sits on the pack's own achievement page; a guide explains cities, loot bands and moving in | S each | Low: public APIs, jar-shipped resources | Meta | Beta |
 | 9 | [Overgrowth](#overgrowth-and-gardens): ivy and moss in the ruin pass, weathered and overgrown road | Biomes O' Plenty, Chisel | The abandoned look; ruins that read as years old | S | Low; vines spread as vanilla vines do | GTNH layer | S4, M11 |
 | 10 | [Lighting for the pack's darkness](#lighting-and-atmosphere) | Darkerer (behavior), Chisel, Railcraft, AE2, Twilight Forest | Under Darkerer's pitch-black nights, a lit city is a landmark and a refuge | S (pool choice) | Low | Faithful plus variety | S4 |
-| 11 | [Move-in kit](#moving-in): beds, an elevator column in tall towers, sleeping bags in loot | Et Futurum Requiem, vanilla, OpenBlocks, SleepingBags | A tower becomes livable: respawn point, fast travel between floors | M | Medium: changes or overlays upstream's parts | GTNH layer | After beta, owner |
-| 12 | [A quest line from the jar](#quests-achievements-and-the-guide) through BetterQuesting's scoreboard task | BetterQuesting | Discovering and looting cities is acknowledged in the questbook, with loot-bag rewards | M | Medium: first jar-shipped quest line in the pack; no code dependency on BetterQuesting | Meta | After beta, owner |
+| 11 | [Move-in kit](#moving-in): beds, an elevator column in tall towers, sleeping bags in loot | Et Futurum Requiem, vanilla, OpenBlocks, SleepingBags | A tower becomes livable: respawn point, fast travel between floors | M | Medium: changes or overlays upstream's parts | GTNH layer | After beta (D28 rule 8) |
+| 12 | [A quest line from the jar](#quests-achievements-and-the-guide) through BetterQuesting's scoreboard task | BetterQuesting | Discovering and looting cities is acknowledged in the questbook, with loot-bag rewards | M | Medium: first jar-shipped quest line in the pack; no code dependency on BetterQuesting | Meta | After beta (D28 rule 8) |
 | 13 | ["Claim this building" command](#moving-in) | ServerUtilities | On servers with claims on, one command claims a building's chunks within the player's limits | S | Low; the pack ships claims off | Meta | Beta |
 | 14 | [Lore notes in chests](#loot-extensions) | OpenPrinter | Printed pages naming the city and its last days; storytelling without new blocks | S (code) plus writing | Low | GTNH layer | After beta |
 | 15 | [Roof gardens and parks with pack crops](#overgrowth-and-gardens) | HarvestCraft, Et Futurum Requiem | A food source for a new base | S | Low; gardens spread, up to a limit | GTNH layer | M11 |
-| 16 | [Abandoned GT machine hulls and cables](#abandoned-industry) up to EV | GT5-Unofficial (bartworks precedent) | Salvageable industry: the strongest "GTNH city" signal, and real early-game value | M to L | High: GT internals, machine-update thread, balance | GTNH layer | After beta, owner |
+| 16 | [Abandoned GT machine hulls and cables](#abandoned-industry) up to EV | GT5-Unofficial (bartworks precedent) | Salvageable industry: the strongest "GTNH city" signal, and real early-game value | M to L | High: GT internals, machine-update thread, balance | GTNH layer | Hulls never; casings after beta (D28 rule 4) |
 | 17 | [Office computers](#abandoned-industry): cases, screens, keyboards, inactive | OpenComputers | Offices that look like offices; salvage | M | Medium: placing OpenComputers blocks during population is untested | GTNH layer | After beta |
 | 18 | [Current city on the HUD and in Waila](#names-signs-and-discovery) | Waila, InGame-Info-XML | "You are in Ashford, library" at a glance | S once the sync exists | Low; InGame-Info-XML needs a pack-side XML line | Meta | After beta |
 | 19 | [Coke ovens and blast furnaces](#railways-and-stations) as intact multiblocks in industrial buildings | Railcraft | A working steam-age facility to move into | M | Medium: forming by itself is untested | GTNH layer | After beta (GTNH-themed buildings) |
@@ -53,15 +53,17 @@ Top recommendations first. The ranking weighs value against effort and risk, and
 
 Not recommended, with reasons: [Not recommended or note only](#not-recommended-or-note-only).
 
-## Needs an owner decision
+## Owner decisions
 
-| Decision | Recommendation | Trade-off |
-|---|---|---|
-| **Amend the D19 mapping to use MalisisDoors' wood doors and iron trapdoor** (row 1) | Yes. Map each upstream door wood to `malisisdoors:door_<wood>`, and `iron_trapdoor` to `malisisdoors:iron_trapdoor`, each with D19's current choice (`minecraft:wooden_door`, `minecraft:trapdoor`) as the fallback. | One more optional block source. Malisis doors animate and carry a TE. In this pack the vanilla door is already a Malisis block, so the TE is there either way ([Doors](#doors-malisisdoors)). |
-| **Asphalt highways** (row 5) | Make Chisel asphalt with road lines a weighted option in the highway palette of the GTNH world style, alongside upstream's cyan terracotta; judge it at the M06 screenshot review. | Faster travel and no boulder-host surface on highways, against upstream's recognizable look. Chisel's concrete-family blocks speed up walking by the amount `chisel.cfg` sets; whether players welcome that on every highway is a feel question. |
-| **Move-in additions that change upstream's parts** (row 11): beds on apartment floors, an elevator column in towers | After beta, as a "lived-in" overlay pass with its own profile toggle, never by editing upstream's part files. | Record 0004 allows additions beside upstream's content, later. An overlay keeps the assets diffable against upstream (D14) but needs a placement rule (which column, which floor) that works for every building family. |
-| **Abandoned GT machines and cables** (row 16) | After beta, inside GTNH-themed buildings only, LV and MV hulls and tin or copper cable, weighted low; no machines with recipes. | Hulls and cables are real early-game value, and GT's internals are not a public API. The bartworks ruins are a precedent at the same EV ceiling, but only on Ross128b, a mid-game planet. |
-| **A BetterQuesting quest line shipped in the jar** (row 12) | Achievements (Amazing-Trophies) and the GuideNH guide at beta; a quest line after beta, behind a hidden config key that is off by default (`in-pack-content-delivery`). | The questbook is curated by the pack team, and no pack mod ships its own line today. Achievements and a guide give the acknowledgment without touching it. |
+Decision log D28 settles the rows that needed the owner.
+
+| Row | Decision |
+|---|---|
+| 1, MalisisDoors' wood doors and iron trapdoor | Adopted (D28 rule 5): the pack already replaces vanilla doors with MalisisDoors' tile-entity doors, and the [block mapping](block-mapping.md) uses them with the vanilla door and trapdoor as fallbacks |
+| 5, asphalt highways | Speed blocks (Chisel concrete and road, GT concrete, the speeding Tinkers' brownstone) are walked on only on highways and primary city roads, as a weighted option judged at the M06 screenshots; elsewhere they may sit in walls and trims, never where players walk (D28 rule 3) |
+| 11, beds and elevator columns | After beta, as an overlay pass with its own toggle, never by editing upstream's part files (D28 rule 8) |
+| 12, a quest line in the jar | Achievements and an in-game guide at beta; a BetterQuesting quest line in the jar behind a hidden config key after beta, as in GregGuns (D28 rule 8) |
+| 16, abandoned GT industry | Machine hulls are never placed. GT casings ULV to EV wait for the GTNH-themed buildings after beta (D28 rule 4). Cables are decided with those buildings |
 
 ## Shared prerequisites
 
@@ -79,7 +81,7 @@ Two pieces of machinery unlock most of the rows above. Building them once, early
 - **Beyond faithful.** Glass sliding doors (`iron_sliding_door`, `wood_sliding_door`), `garage_door`, `jail_door`, `laboratory_door`, `factory_door`, `shoji_door`, `saloon` and curtains ([#L176-L221](https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/Registers.java#L176-L221), [#L357-L366](https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/Registers.java#L357-L366)) suit shopping malls, the gas station and GTNH-themed buildings. These are block choices for the S4 catalog.
 - **Avoid.** `carriage_door`, `medieval_door` and `rustyHatch` build their multiblock in `onBlockPlacedBy`, which needs a placing entity ([BigDoor.java#L147-L166](https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/door/block/BigDoor.java#L147-L166)).
 
-Effort S: mapping rows plus the fallback. Slot: M02, as an amendment to D19 (owner).
+Effort S: mapping rows plus the fallback. Slot: M02; adopted by D28 rule 5.
 
 ## Furniture and fittings
 
@@ -120,7 +122,7 @@ Player value is travel: a city-to-city highway becomes the fastest road in the o
 
 One caution: upstream's `clearRailing` finds highway railings by `Blocks.IRON_BARS` identity ([highway-parts.md](../../original-spec/06-highways-railways/highway-parts.md)), so railing blocks stay iron bars whatever the surface becomes.
 
-Effort S. Slot: M06, with the look decided by the owner (see the [decisions](#needs-an-owner-decision)).
+Effort S. Slot: M06, a weighted option judged at the M06 screenshots (D28 rule 3, [Owner decisions](#owner-decisions)).
 
 ## Railways and stations
 
@@ -146,7 +148,7 @@ Effort M. Slot: M06 for the parts, M08 for the cart loot. Railcraft stays an opt
 
 ## Abandoned industry
 
-The strongest "this is a GTNH city" signal is industry left behind. Everything here is a GTNH-layer addition for after beta, inside GTNH-themed buildings; upstream's buildings have no machine rooms.
+The strongest "this is a GTNH city" signal is industry left behind. Everything here is a GTNH-layer addition for after beta, inside GTNH-themed buildings; upstream's buildings have no machine rooms. D28 rule 4 rules out machine hulls: the bartworks recipe below is recorded as research, not a plan.
 
 - **GT machine hulls and cables: bartworks is the precedent.** Bartworks' ruins on Ross128b place GT machines and cables at a random tier from high-pressure steam to EV, the same ceiling as ours ([MapGenRuins.java#L228-L232](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/bartworks/system/worldgen/MapGenRuins.java#L228-L232)). The recipe, from [MapGenRuins.java#L106-L125](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/bartworks/system/worldgen/MapGenRuins.java#L106-L125), [#L182-L200](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/bartworks/system/worldgen/MapGenRuins.java#L182-L200):
   1. Disable GT's machine-update runnable while placing; the code throws otherwise.
@@ -232,10 +234,10 @@ Effort M, mostly the sync. Slot: beta.
 Record 0004 says buildings are meant to be lived in. Today that means "ordinary breakable blocks". These integrations make it easier.
 
 - **Beds and respawn.** Upstream places no beds ([block-inventory.md](../../original-spec/05-assets/block-inventory.md)). Vanilla `minecraft:bed` and Et Futurum's 15 dyed beds (`enableDyedBeds`, `config/etfuturum/blocksitems.cfg` line 141) are plain `BlockBed`s with no TE ([ModBlocks.java#L840-L854](https://github.com/GTNewHorizons/Et-Futurum-Requiem/blob/2.6.65-GTNH/src/main/java/ganymedes01/etfuturum/ModBlocks.java#L840-L854)). A bed sets the player's respawn point, which is the first act of moving in.
-  - Placing beds means adding to apartment floors, an overlay on upstream's parts (owner).
+  - Placing beds means adding to apartment floors, an overlay on upstream's parts, after beta with its own toggle (D28 rule 8).
   - SleepingBags' sleeping bag in `city_supplies` loot is the no-overlay alternative. It returns to the inventory on waking ([BlockSleepingBag.java#L70-L91](https://github.com/GTNewHorizons/SleepingBags/blob/0.3.1/src/main/java/ru/npo6ka/sleepingbag/blocks/BlockSleepingBag.java#L70-L91)), and a loot entry is S effort.
 - **Elevators in towers.** OpenBlocks' `elevator` is a plain block with the color in metadata, and it is enabled ([BlockElevator.java#L30-L73](https://github.com/GTNewHorizons/OpenBlocks/blob/1.12.22-GTNH/src/main/java/openblocks/common/block/BlockElevator.java#L30-L73); `config/OpenBlocks.cfg` line 23). It reaches the next same-colored elevator within 20 blocks (line 97), more than the 6-block floor height. One elevator column per tower turns a 10-floor building into one players can live in.
-  - Choosing the column for every building family is the hard part (owner, after beta).
+  - Choosing the column for every building family is the hard part (after beta, D28 rule 8).
   - Avoid OpenBlocks' `scaffolding`, which removes itself on random ticks ([BlockScaffolding.java#L31-L36](https://github.com/GTNewHorizons/OpenBlocks/blob/1.12.22-GTNH/src/main/java/openblocks/common/block/BlockScaffolding.java#L31-L36)).
 - **Claim this building.** Generation never claims land (0004), but a player can ask to claim.
   - ServerUtilities exposes `ClaimedChunks.instance.claimChunk(ForgePlayer, ChunkDimPos)` with the player's limits checked and a cancellable claim event ([ClaimedChunks.java#L309-L343](https://github.com/GTNewHorizons/ServerUtilities/blob/2.4.22/src/main/java/serverutils/data/ClaimedChunks.java#L309-L343), [ChunkModifiedEvent.java#L30-L60](https://github.com/GTNewHorizons/ServerUtilities/blob/2.4.22/src/main/java/serverutils/events/chunks/ChunkModifiedEvent.java#L30-L60)).
