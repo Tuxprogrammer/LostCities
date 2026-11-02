@@ -11,8 +11,10 @@ import com.tuxprogrammer.lostcities.asset.AssetLoader;
 import com.tuxprogrammer.lostcities.asset.AssetProblem;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.AssetSource;
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.BlockRegistryView;
 import com.tuxprogrammer.lostcities.asset.Problems;
+import com.tuxprogrammer.lostcities.asset.block.BlockChoice;
 import com.tuxprogrammer.lostcities.asset.block.BlockData;
 import com.tuxprogrammer.lostcities.asset.block.BlockResolver;
 
@@ -123,5 +125,31 @@ public final class LoadedAssets {
             LostCities.LOG.log(notes, TAG + "pool block not registered: " + block);
         }
         LostCities.LOG.info(TAG + "loaded " + set.summary());
+    }
+
+    /**
+     * Resolves one block name through the block-name map against Forge's registry, as an asset's block would be: a
+     * 1.20 name such as a profile's {@code liquidBlock} or {@code baseBlock} (D14, D19), or a direct
+     * {@code modid:name:meta} reference.
+     *
+     * @param name     the name
+     * @param problems where an unresolvable name's reason goes
+     * @return the block, or {@code null} when it cannot be resolved
+     */
+    public static BlockRef resolveBlock(String name, List<String> problems) {
+        Problems collected = new Problems();
+        BlockData data = BlockData.bundled(LoadedAssets.class, collected);
+        BlockResolver resolver = new BlockResolver(
+            data.mapping(),
+            data.metals(),
+            data.neverPlace(),
+            ForgeBlockRegistry.INSTANCE);
+        BlockChoice choice = resolver.resolve(name, null, null, collected.in("profile"), "block");
+        for (AssetProblem problem : collected.all()) {
+            if (problem.isError()) {
+                problems.add(problem.message());
+            }
+        }
+        return choice == null ? null : choice.block();
     }
 }

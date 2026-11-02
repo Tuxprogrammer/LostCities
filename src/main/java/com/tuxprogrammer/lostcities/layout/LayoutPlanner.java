@@ -152,6 +152,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     // ================================================================== public stages
 
+    /** Returns the profile the layout reads (M09: the world's pinned profile). */
+    public LayoutProfile profile() {
+        return profile;
+    }
+
     /** Returns the street field (raw roads) of this dimension. */
     public HierarchicalStreetPlanner streets() {
         return streets;

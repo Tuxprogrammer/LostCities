@@ -30,9 +30,10 @@ public final class ProfileSnapshot {
 
     /**
      * Version of the snapshot format; a reader treats missing keys of older versions as their defaults. Format 2 adds
-     * the asset files' hashes and the decorative-metal flags.
+     * the asset files' hashes and the decorative-metal flags; format 3 pins every kept profile option, not only the
+     * terrain's (M09).
      */
-    public static final int FORMAT = 2;
+    public static final int FORMAT = 3;
 
     /** Asset-set hash of a world pinned before assets were pinned (M04 worlds): no change warning is possible. */
     public static final String NO_ASSETS = "none";
@@ -155,11 +156,13 @@ public final class ProfileSnapshot {
      * @param worldType    the world type's name
      * @param createdBy    the mod version
      * @return the snapshot
-     * @throws IllegalArgumentException for an unknown profile
+     * @throws IllegalArgumentException for an unknown or rejected profile
      */
     public static ProfileSnapshot resolve(String profile, String planSource, ModuleState moduleState,
         String assetSetHash, Map<String, String> assetFiles, MetalFlags metals, String worldType, String createdBy) {
-        Map<String, String> values = BuiltinProfiles.values(profile);
+        Map<String, String> values = ProfileRegistry.INSTANCE.require(profile)
+            .values()
+            .asMap();
         Map<String, Boolean> modules = new LinkedHashMap<>();
         for (Module module : Module.values()) {
             modules.put(module.configKey(), moduleState.isActive(module));
@@ -213,6 +216,14 @@ public final class ProfileSnapshot {
         return ModuleState.of(active);
     }
 
+    /**
+     * Returns the pinned values as a profile: every option a world reads, with an option the snapshot lacks (pinned by
+     * an older version) at its default.
+     */
+    public ProfileValues profileValues() {
+        return ProfileValues.of(values);
+    }
+
     /** Returns the terrain settings the pinned values give. */
     public TerrainSettings terrainSettings() {
         return TerrainSettings.fromValues(values);
@@ -256,6 +267,28 @@ public final class ProfileSnapshot {
             worldType,
             createdBy);
         copy.structureSettings = Objects.requireNonNull(summary);
+        return copy;
+    }
+
+    /**
+     * Returns this snapshot with other profile values: for the test hooks' overrides, applied before a world is pinned.
+     *
+     * @param newValues every value, by option key
+     * @return a copy with the values
+     */
+    public ProfileSnapshot withValues(Map<String, String> newValues) {
+        ProfileSnapshot copy = new ProfileSnapshot(
+            profile,
+            planSource,
+            newValues,
+            modules,
+            assetSetHash,
+            assetFiles,
+            metals,
+            layoutVersion,
+            worldType,
+            createdBy);
+        copy.structureSettings = structureSettings;
         return copy;
     }
 

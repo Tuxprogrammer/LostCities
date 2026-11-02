@@ -156,6 +156,23 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] M05's exit-gate checks still hold on both world types: hashes match between fresh worlds, budgets B1 to B5, no cascades, `city.walk`. *2026-11-02, the World half's jar: two fresh worlds per world type on seed 4242 print the same `city.real` hashes; B1 to B5 hold (B3 9.1 % on RWG2 Continents and 12.8 % on classic RWG, B4 at most 3.9 and 7.5 ms; [0005](design/0005-rwg-overlay.md) §8); no cascade warning names this mod first; `city.walk` and `city.sewing` pass, with no margin chunk city.*
 - [ ] Both review shot lists rerun with the final jar, and every M05R note checked against them.
 
+## M09 · Profiles and config
+
+**Lane:** Core. **Parallel with:** M05R, M08.
+
+**Entry gate:** the alpha gate; [02-profiles-dimensions](new-spec/02-profiles-dimensions/index.md) and [01-core § Mod config](new-spec/01-core/index.md#mod-config) written (met).
+
+**Scope:** every upstream profile option that survives, in upstream's JSON format, with ranges enforced and upstream's checks plus the missing ones; the ten built-in profiles RWG can carry; profile files in `config/lostcitiesnh/profiles/`, `saveprofile`, `profile list`, `profile info` and `profile reload`; every kept option pinned and read from the pin (the layout, the terrain, the world style, `liquidBlock` and `baseBlock`); spawn selection from the profile's spawn options ([01-core § Spawn selection](new-spec/01-core/index.md#spawn-selection)); profile selection without a world-preset screen (`dimensionProfiles`, checked at start, and the Mods list's config screen in single player); server-owner config documented in full. Options whose readers belong to M06, M07 or M10 are checked and pinned here, and read there.
+
+**Exit gate:**
+- [x] Every option of new-spec [profile-options.md](new-spec/02-profiles-dimensions/profile-options.md) is in the option catalog with its type, default, range and status; the counts match upstream's (107, 12, 25, 14, 5); every live option reaches its reader; docs/config.md documents every option and config key with its default (`ProfileOptionsDocsTest`, `ConfigDocsTest`). *`ProfileOptionsTest`: 172 options, 142 live or pinned for M06, M07 and M10, 13 deferred, 17 dropped.*
+- [x] Profile files in upstream's format load; ranges clamp, and wrong types, unknown values, inverted pairs and failed checks reject one file without stopping the game; the ported code passes the gate with a `doesNotReproduce` test for each bug it avoids. *`ProfileJsonTest`, `ProfileValidatorTest`, `ProfileRegistryTest`, `BuiltinProfilesTest`, `SpawnSearchTest`: PROF-02, 03, 04, 06, 09, 12, 13, 15, 16, 18 and 22, CORE-13 to 16.*
+- [x] The default profile moves no city: the layout goldens and `city.real`'s hashes are unchanged. *Real pack, RWG2 Continents, seed 4242: terrain `c19b9656…`, population `3ad82cc0…`, the alpha's values.*
+- [x] A non-default profile changes generation as specified: unit tests per built-in, and `profile.effects` on the dev server and the real-pack server with a non-default profile. *`CityProfilesTest`; real pack, 48 × 48 chunks at seed 4242: `default` at most 6 floors, 20 ruined buildings, 153 damaged chunks; `tallbuildings` at most 19 floors, 5 ruined, 412 damaged. The dev server's world has no pinned profile, so there it ran the profile commands (`list`, `info`, `saveprofile`, `reload`) only.*
+- [x] Spawn options pick the spawn from the layout without generating chunks (`profile.spawn` with `forceSpawnInBuilding` in the real pack). *Spawn at 40 78 40, a building chunk, after 18 chunks of the spiral, in both fresh worlds.*
+- [x] A server and a client with different configs still join. *Real pack: the server with `highways` and `iron` off and `nodamage` mapped to dimension 0, the client with its default config; the client joined and played until the server stopped.*
+- [x] Two fresh worlds of the same seed and a non-default profile hash identically (`city.real`). *`tallbuildings` with `forceSpawnInBuilding`, RWG2 Continents, seed 4242: terrain `c2fbbf50…`, population `7ab26747…` in both.*
+
 ## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
