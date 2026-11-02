@@ -1,0 +1,9 @@
+# Minecraft 1.20.1 new ResourceLocation(ns, path).hashCode(): id hash
+# Recorded by tools/upstream-parity (Recorder.java); do not edit by hand.
+minecraft:overworld -672727247
+minecraft:the_nether 1344729049
+minecraft:the_end -1277684736
+lostcities:lostcity 629441730
+lostcitiesnh:dim0 748112801
+lostcitiesnh:dim7 748112808
+lostcitiesnh:dim-1 840615717
