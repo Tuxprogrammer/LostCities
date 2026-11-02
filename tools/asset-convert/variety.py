@@ -654,7 +654,8 @@ STYLES = [
         group("wall_desert", [("none", 34)] + DESERT_WALLS, "bricks_desert"),
         group("wall_desert_rough", [("none", 50)] + ROUGH_WALLS, "bricks_desert_rough"),
         group("wall_bleached", [("none", 45)] + BLEACHED_WALLS, "bricks_desert_bleached"),
-        group("wall_taupe", [("none", 45)] + TAUPE_WALLS, "bricks_desert_taupe"),
+        # The 15 the brick patterns had go to the baseline, so every other draw lands where it did.
+        group("wall_taupe", [("none", 60)] + TAUPE_WALLS, "bricks_desert_taupe"),
         group("accent_desert", [("none", 42)] + DESERT_ACCENTS),
         group("band_desert", [("none", 50)] + DESERT_BANDS),
         group("quartz", [("none", 50)] + QUARTZ, "default_desert"),

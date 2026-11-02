@@ -385,7 +385,7 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:stained_hardened_clay:8` | 45 | | BH | The palette's block (AR-16) |
+| Baseline: `minecraft:stained_hardened_clay:8` | 60 | | BH | The palette's block (AR-16); takes the 15 the brick patterns had (D-BA-6) |
 | `chisel:hardened_clay_lightgray:2` to `:8` | 0 | baseline | SP | Left out (D-BA-6): 1.7.10's light gray terracotta has vanilla brick's color, so its brick patterns read as red brick in a desert city |
 | `Ztones:tile.krypBlock:3` | 10 | baseline | | Taupe tiles |
 | `chisel:hempcrete:8` | 8 | baseline | SP | Hard colored concrete |
