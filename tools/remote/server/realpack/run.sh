@@ -8,7 +8,8 @@
 #               [--set-config '<file under config/>:<key>=<value>'] (repeatable; restored after the run)
 #               [--view-distance <3-15>] (server.properties view-distance for this run; restored after it)
 # In --cmds, 'wait:<s>' sleeps s seconds and 'until:<regex>' waits (polling every 5 s, at most
-# --run-timeout seconds) for a console line matching the extended regex; neither is sent to the server.
+# --run-timeout seconds) for a console line written since the last command was sent that matches the
+# extended regex; neither is sent to the server.
 set -u
 
 RP="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -181,6 +182,9 @@ echo "server up after ${BOOT_S}s"
 
 if [ -n "$CMDS" ]; then
     IFS=';' read -r -a parts <<< "$CMDS"
+    # An until looks only at console lines written since the last command was sent, so a second
+    # 'until:' with the same regex waits for that command's line, not an earlier one.
+    since=0
     for c in "${parts[@]}"; do
         c="$(echo "$c" | sed 's/^ *//; s/ *$//')"
         [ -z "$c" ] && continue
@@ -193,7 +197,7 @@ if [ -n "$CMDS" ]; then
                 re="${c#until:}"; udl=$(( $(date +%s) + RUN_TIMEOUT )); echo ">> (until /$re/)"
                 UNTIL="timeout"
                 while alive && [ "$(date +%s)" -lt "$udl" ]; do
-                    if grep -aqE "$re" "$CONSOLE"; then UNTIL="matched"; break; fi
+                    if tail -n +"$((since + 1))" "$CONSOLE" | grep -aqE "$re"; then UNTIL="matched"; break; fi
                     sample_rss; sleep 5
                 done
                 alive || UNTIL="died"
@@ -201,6 +205,7 @@ if [ -n "$CMDS" ]; then
                 continue ;;
         esac
         echo ">> $c"
+        since=$(wc -l < "$CONSOLE")
         printf '%s\n' "$c" >&3
         for _ in $(seq 1 "$CMD_WAIT"); do sample_rss; sleep 1; done
     done
