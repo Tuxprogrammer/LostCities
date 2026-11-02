@@ -87,12 +87,12 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - CI green.
 
 **Exit gate:**
-- [ ] `./gradlew spotlessApply build` passes, with at least one real unit test and every static check running (each proven by a fixture that makes it fail).
-- [ ] `./gradlew runServer` boots with the pack's core dependencies and no errors from this mod.
-- [ ] `./gradlew runClient` reaches the main menu.
-- [ ] The scenario harness runs a trivial scenario on a fresh world and reports its result.
-- [ ] Module flags load, save and are documented.
-- [ ] Packet base classes reject out-of-range, wrong-dimension and unauthorized requests, with tests.
+- [x] `./gradlew spotlessApply build` passes, with at least one real unit test and every static check running (each proven by a fixture that makes it fail).
+- [x] `./gradlew runServer` boots with the pack's core dependencies and no errors from this mod.
+- [x] `./gradlew runClient` reaches the main menu.
+- [x] The scenario harness runs a trivial scenario on a fresh world and reports its result.
+- [x] Module flags load, save and are documented.
+- [x] Packet base classes reject out-of-range, wrong-dimension and unauthorized requests, with tests.
 
 ## M02 · Asset system
 

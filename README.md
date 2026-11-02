@@ -5,7 +5,7 @@ Abandoned cities, highways and railways for the **GT New Horizons** overworld (M
 Explore cities that were here before you, salvage what they left behind, or move into a block of buildings and build your base inside it.
 
 > [!NOTE]
-> The mod is in its planning phase. Nothing is playable yet; see the [roadmap](docs/ROADMAP.md).
+> The foundation is in place (milestone M01): the mod loads in GTNH 2.9.0, but it generates nothing yet. See the [roadmap](docs/ROADMAP.md).
 
 ## What it is
 
