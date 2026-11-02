@@ -53,6 +53,11 @@ public final class OverlayScenarios {
     static final int CITY_RADIUS = SyntheticCityPlan.RADIUS + 6;
     /** First candidate center of the budget scenario's region, in chunks; later candidates step along X. */
     static final int BUDGET_CENTER = 1024;
+    /**
+     * Offset of the budget region's center from its city, in chunks on both axes: the spiral's first 512 chunks
+     * (radius 11) stay clear of the city and its blend, and the whole city still lies inside the region.
+     */
+    static final int BUDGET_CITY_OFFSET = 20;
     /** Candidate city centers the budget scenario tries, one city period apart. */
     static final int BUDGET_CANDIDATES = 24;
     /** City chunks the budget region's city must have: most of its 13 × 13 square, not an ocean. */
@@ -394,9 +399,20 @@ public final class OverlayScenarios {
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireOverlay(context);
             requireSynthetic(context, overlay);
-            int center = budgetCenter(context, overlay.plan());
-            LostCities.LOG.info("[LCNH-BUDGET] region centered on the synthetic city at chunk ({}, {})", center, BUDGET_CENTER);
-            generator = new RegionGenerator(context.world(), center, BUDGET_CENTER, BUDGET_RADIUS);
+            int city = budgetCenter(context, overlay.plan());
+            // The spiral starts in open country beside the city, so the city is generated after the warm-up chunks.
+            int center = city + BUDGET_CITY_OFFSET;
+            LostCities.LOG.info(
+                "[LCNH-BUDGET] 65 x 65 chunks around ({}, {}), synthetic city at ({}, {})",
+                center,
+                BUDGET_CENTER + BUDGET_CITY_OFFSET,
+                city,
+                BUDGET_CENTER);
+            generator = new RegionGenerator(
+                context.world(),
+                center,
+                BUDGET_CENTER + BUDGET_CITY_OFFSET,
+                BUDGET_RADIUS);
         }
 
         @Override

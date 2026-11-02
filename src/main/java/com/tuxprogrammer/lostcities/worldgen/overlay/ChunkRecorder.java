@@ -124,7 +124,10 @@ public final class ChunkRecorder {
         return ((long) chunkX << 32) | (chunkZ & 0xFFFFFFFFL);
     }
 
-    /** A read-only view that shows a chunk's blocks inside its footprint and air elsewhere. */
+    /**
+     * A read-only view that shows a chunk's blocks inside its footprint from its city ground up, without logs and
+     * leaves, and air elsewhere: the part of the chunk only RWG's guarded decoration and our phases decide.
+     */
     private static final class FootprintView implements ChunkBuffer {
 
         private final ChunkBuffer chunk;
@@ -137,7 +140,16 @@ public final class ChunkRecorder {
 
         @Override
         public BlockRef get(int x, int y, int z) {
-            return y >= plan.footprintBottom(x, z) ? chunk.get(x, y, z) : BlockRef.AIR;
+            if (y < plan.groundY() || y < plan.footprintBottom(x, z)) {
+                // Below the ground, GT's ore veins and other IWorldGenerators may already have written, in an
+                // order that changes between JVM runs.
+                return BlockRef.AIR;
+            }
+            BlockRef block = chunk.get(x, y, z);
+            String name = block.name();
+            // Trees other mods plant from IWorldGenerators on park grass may overhang a footprint (T3); which one
+            // wins a spot depends on that same order, so they are left out of the hash.
+            return name.endsWith(":log") || name.endsWith(":log2") || name.contains("eaves") ? BlockRef.AIR : block;
         }
 
         @Override
