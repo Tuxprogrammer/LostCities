@@ -69,6 +69,7 @@ public final class CleanCapture {
     private boolean announced;
     private int joins;
     private int idleTicks;
+    private GuiScreen lastScreen;
 
     private CleanCapture(CaptureSettings settings, TerrainProbe probe) {
         this.settings = settings;
@@ -186,6 +187,11 @@ public final class CleanCapture {
      * arrive first, and the handshake fails with {@code playClientBlock is null}; the real-pack client lost two joins
      * in a row that way. {@code connectToRealmsServer} only creates that latch, so calling it first and then opening
      * the connection removes the race.
+     *
+     * <p>
+     * The "main menu" is any screen that is not part of a connection, held for {@link #MENU_TICKS}: the GTNH pack
+     * replaces vanilla's {@code GuiMainMenu} with Custom Main Menu's {@code lumien.custommainmenu.gui.GuiCustom}
+     * (custommainmenu-1.14.1, a plain {@code GuiScreen}), so the class cannot tell.
      */
     private void joinFromMenu(Minecraft mc) {
         if (!settings.joinsServer() || joins >= MAX_JOINS) {
@@ -193,11 +199,14 @@ public final class CleanCapture {
         }
         GuiScreen screen = mc.currentScreen;
         boolean dropped = screen instanceof GuiDisconnected;
-        boolean menu = screen instanceof GuiMainMenu || screen != null && screen.getClass()
-            .getSimpleName()
-            .contains("MainMenu");
-        if (!menu && !dropped) {
+        boolean menu = screen != null && !dropped
+            && !(screen instanceof GuiConnecting)
+            && !(screen instanceof GuiDownloadTerrain);
+        if (screen != lastScreen) {
+            lastScreen = screen;
             idleTicks = 0;
+        }
+        if (!menu && !dropped) {
             return;
         }
         if (++idleTicks < (dropped ? RETRY_TICKS : MENU_TICKS)) {
@@ -207,7 +216,15 @@ public final class CleanCapture {
         joins++;
         String host = settings.serverHost();
         int port = settings.serverPort();
-        LostCities.LOG.info("{} joining {}:{} (attempt {} of {})", TAG, host, port, joins, MAX_JOINS);
+        LostCities.LOG.info(
+            "{} joining {}:{} from {} (attempt {} of {})",
+            TAG,
+            host,
+            port,
+            screen.getClass()
+                .getName(),
+            joins,
+            MAX_JOINS);
         FMLClientHandler.instance()
             .connectToRealmsServer(host, port);
         mc.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), mc, host, port));
