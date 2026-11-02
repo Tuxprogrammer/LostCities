@@ -46,6 +46,10 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.14.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // GTNHLib's config code uses fastutil, which the game gets from GTNHLib's dependency loader at launch; unit tests
+    // run outside that loader. Same pin and reason as GTNHLib's own build:
+    // https://github.com/GTNewHorizons/GTNHLib/blob/0.11.54/dependencies.gradle
+    testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 
 // The GTNH buildscript does not switch the JUnit platform on; without this the tests silently never run.
