@@ -147,9 +147,9 @@
           "tier": "STEAM"
         },
         {
-          "ore": "ingotWroughtIron",
+          "ore": "plateCopper",
           "min": 1,
-          "max": 4,
+          "max": 3,
           "weight": 3,
           "tier": "STEAM"
         },

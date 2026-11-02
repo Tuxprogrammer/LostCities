@@ -22,7 +22,7 @@ The facts that shaped the build:
 
    | Category | Band | Holds |
    |---|---|---|
-   | `lostcitiesnh:city_supplies` | Steam | Vanilla supplies and tools, food, tin, copper, bronze, iron, wrought iron, coke; loot bags 1, 2, 28, 35, 36, 51 |
+   | `lostcitiesnh:city_supplies` | Steam | Vanilla supplies and tools, food, tin, copper, bronze and iron ingots and plates, coke; loot bags 1, 2, 28, 35, 36, 51 |
    | `lostcitiesnh:city_lv` | LV | LV components (motor, pump, conveyor, piston, robot arm, sensor, emitter), LV circuits, steel, tin cable; bags 4, 45, 46 |
    | `lostcitiesnh:city_mv` | MV | MV components and circuits, aluminium, copper cable; bag 5 |
    | `lostcitiesnh:city_hv` | HV | HV components and circuits, stainless steel, gold cable; bag 6 |

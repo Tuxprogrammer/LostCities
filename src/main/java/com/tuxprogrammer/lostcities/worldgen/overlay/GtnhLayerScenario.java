@@ -221,12 +221,48 @@ public final class GtnhLayerScenario implements Scenario {
                         tally.oresBelow++;
                     } else if (plan.hasBuilding()) {
                         tally.oresInBuildings++;
+                        if (tally.oreExamples.size() < CityScenarios.EXAMPLES) {
+                            tally.oreExamples.add(oreExample(chunk, plan, lx, y, lz));
+                        }
                     } else {
                         tally.oresAboveOpen++;
                     }
                 }
             }
         }
+    }
+
+    /** Describes an ore found above the city ground: where, the plan's facts there, and the blocks around it. */
+    private static String oreExample(Chunk chunk, ChunkPlan plan, int lx, int y, int lz) {
+        StringBuilder out = new StringBuilder();
+        out.append((chunk.xPosition << 4) + lx)
+            .append(',')
+            .append(y)
+            .append(',')
+            .append((chunk.zPosition << 4) + lz)
+            .append(" ground ")
+            .append(plan.groundY())
+            .append(" floors ")
+            .append(plan.floors())
+            .append(" footprintBottom ")
+            .append(plan.hasFootprint() ? plan.footprintBottom(lx, lz) : -1)
+            .append(" ruin ")
+            .append(plan.ruinHeight())
+            .append(" around");
+        int[][] offsets = { { 0, 1, 0 }, { 0, -1, 0 }, { 1, 0, 0 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 0, -1 } };
+        for (int[] offset : offsets) {
+            int x = lx + offset[0];
+            int z = lz + offset[2];
+            int yy = y + offset[1];
+            if (x < 0 || x > 15 || z < 0 || z > 15 || yy < 0 || yy > 255) {
+                continue;
+            }
+            out.append(' ')
+                .append(Block.blockRegistry.getNameForObject(chunk.getBlock(x, yy, z)))
+                .append(':')
+                .append(chunk.getBlockMetadata(x, yy, z));
+        }
+        return out.toString();
     }
 
     /** Whether a block is a GregTech ore block: GT's and bartworks' ore families ({@code gt.blockores…}). */
@@ -260,6 +296,7 @@ public final class GtnhLayerScenario implements Scenario {
         final Map<String, Integer> mobs = new TreeMap<>();
         final List<String> badItems = new ArrayList<>();
         final List<String> badSpawners = new ArrayList<>();
+        final List<String> oreExamples = new ArrayList<>();
 
         String chestLine() {
             return "chests filled " + filledChests
@@ -292,7 +329,7 @@ public final class GtnhLayerScenario implements Scenario {
             out.add("city chunks " + cityChunks);
             out.add("loot: " + chestLine() + "; bad " + badItems);
             out.add("spawners: " + spawnerLine() + "; bad " + badSpawners);
-            out.add("ores: " + oreLine());
+            out.add("ores: " + oreLine() + "; in buildings " + oreExamples);
             return out;
         }
     }

@@ -133,7 +133,7 @@ This mod registers its own categories in postInit, with defaults built from pack
 
 | Category | Band | Item categories |
 |---|---|---|
-| `lostcitiesnh:city_supplies` | Stone and Steam | Pack food (Pam's HarvestCraft meals, the fast-food loot bag 28), torches, building blocks, vanilla tools, coal and coke, tin, copper, bronze, iron and wrought iron ingots and plates, stone- and steam-age loot bags (1, 2), farming bags (35, 36, 51) |
+| `lostcitiesnh:city_supplies` | Stone and Steam | Pack food (Pam's HarvestCraft meals, the fast-food loot bag 28), torches, building blocks, vanilla tools, coal and coke, tin, copper, bronze and iron ingots and plates (GT 5.09.54.265 makes wrought iron an alias of cast iron, which has no ingot), stone- and steam-age loot bags (1, 2), farming bags (35, 36, 51) |
 | `lostcitiesnh:city_lv` | LV | LV components (motor, pump, conveyor, piston, robot arm, sensor, emitter), LV circuits, steel ingots and plates, tin cable, LV loot bag (4), OpenComputers bags (45, 46) |
 | `lostcitiesnh:city_mv` | MV | MV components, MV circuits, aluminum ingots and plates, copper cable, MV loot bag (5) |
 | `lostcitiesnh:city_hv` | HV | HV components, HV circuits, stainless steel, gold cable, HV loot bag (6) |
