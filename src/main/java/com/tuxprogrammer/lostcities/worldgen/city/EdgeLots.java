@@ -85,6 +85,9 @@ final class EdgeLots {
      * @param height the block Y of the city's ground surface
      */
     void write(int height) {
+        // Nothing stands on a lot: whatever the ground held above city level (trees, the terrain the leveling left)
+        // is cleared first.
+        target.clearToMax(height + 1);
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 target.set(x, height, z, ground(x, z));

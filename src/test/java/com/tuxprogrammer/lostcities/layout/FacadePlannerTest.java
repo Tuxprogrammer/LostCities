@@ -97,15 +97,35 @@ public class FacadePlannerTest {
     }
 
     private static int clashes(LayoutPlanner planner, List<Pair> pairs, float limit) {
-        int clashes = 0;
+        return clashList(planner, pairs, limit).size();
+    }
+
+    /** The pairs over the limit, described for a failure message. */
+    private static List<String> clashList(LayoutPlanner planner, List<Pair> pairs, float limit) {
+        List<String> out = new ArrayList<>();
         for (Pair pair : pairs) {
             FacadeTone a = tone(planner, pair.ax, pair.az);
             FacadeTone b = tone(planner, pair.bx, pair.bz);
             if (a != null && b != null && FacadeTone.contrast(a, b) > limit + 1e-3f) {
-                clashes++;
+                ChunkPlan pa = planner.plan(pair.ax, pair.az);
+                ChunkPlan pb = planner.plan(pair.bx, pair.bz);
+                out.add(
+                    String.format(
+                        "%n  %d,%d %s %s %s | %d,%d %s %s %s | %.1f",
+                        pair.ax,
+                        pair.az,
+                        pa.building(),
+                        pa.palettes(),
+                        a,
+                        pair.bx,
+                        pair.bz,
+                        pb.building(),
+                        pb.palettes(),
+                        b,
+                        FacadeTone.contrast(a, b)));
             }
         }
-        return clashes;
+        return out;
     }
 
     @Test
@@ -124,7 +144,7 @@ public class FacadePlannerTest {
         assertTrue(before > 0, "without feathering some neighbors clash");
         assertTrue(
             after * 5 <= before,
-            "feathering leaves at most a fifth of the clashes: " + after + " of " + before);
+            "feathering leaves at most a fifth of the clashes: " + after + " of " + before + clashList(on, pairs, 45f));
     }
 
     @Test

@@ -59,7 +59,8 @@ public class SewingTest {
                 plan.lane()
                     .role(),
                 c[0] + "," + c[1]);
-            assertEquals(PlannedRoadType.PRIMARY, plan.plannedRoad(), c[0] + "," + c[1]);
+            // M12 (0008 §5): a detour is a small road around the core, not a primary.
+            assertEquals(PlannedRoadType.TERTIARY, plan.plannedRoad(), c[0] + "," + c[1]);
             assertFalse(plan.hasBuilding());
         }
         LaneCell corner = p.plan(px - 2, z - 2)

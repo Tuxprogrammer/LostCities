@@ -1220,7 +1220,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             return null;
         }
         ChunkPlan plan = plan(chunkX, chunkZ);
-        if (plan.streetType == StreetType.PARK || plan.hasBuilding || !plan.isCity) {
+        if (plan.streetType == StreetType.PARK || plan.hasBuilding || !plan.isCity || plan.lot != LotKind.NONE) {
             return null;
         }
         for (Direction side : Direction.values()) {
