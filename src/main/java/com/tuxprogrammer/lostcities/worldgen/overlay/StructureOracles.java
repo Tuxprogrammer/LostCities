@@ -7,6 +7,9 @@ import java.util.List;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.compat.ae2.Ae2Oracles;
+import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesOracles;
+import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
@@ -53,11 +56,13 @@ public final class StructureOracles {
      */
     public static List<Factory> factories() {
         List<Factory> factories = new ArrayList<>();
-        // One line per mod. VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the overload with
-        // the
-        // height oracle, since the one without builds a second classic RWG generator. M08 adds Roguelike Dungeons,
-        // Witchery, LootGames, AE2 and RWG2 here.
+        // One line per mod (0006 §2). VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the
+        // overload with the height oracle, since the one without builds a second classic RWG generator. Roguelike
+        // Dungeons, LootGames and AE2 (M08).
         factories.add(VillageNamesOracles::forWorld);
+        factories.add(RoguelikeOracles::forWorld);
+        factories.add(LootGamesOracles::forWorld);
+        factories.add(Ae2Oracles::forWorld);
         return factories;
     }
 
@@ -75,13 +80,19 @@ public final class StructureOracles {
 
     /**
      * Returns the settings of every wired structure generator that decide where its structures go, one line, for the
-     * pinned snapshot: today VillageNames' (D119).
+     * pinned snapshot (D119): VillageNames', Roguelike Dungeons', LootGames' and AE2's.
      *
      * @param world the world
      * @return the summary
      */
     public static String settingsSummary(World world) {
-        return "villagenames=" + VillageNamesOracles.settingsSummary(world);
+        return "villagenames=" + VillageNamesOracles.settingsSummary(world)
+            + " roguelike="
+            + RoguelikeOracles.settingsSummary(world)
+            + " lootgames="
+            + LootGamesOracles.settingsSummary(world)
+            + " ae2="
+            + Ae2Oracles.settingsSummary(world);
     }
 
     /**

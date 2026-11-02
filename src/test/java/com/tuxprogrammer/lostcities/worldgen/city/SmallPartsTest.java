@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.city;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,17 +18,11 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 public class SmallPartsTest {
 
     @Test
-    public void lootValuesMapToTheTwoAlphaCategories() {
-        assertEquals(LootRules.CITY, LootRules.category("lostcities:chests/lostcitychest"));
-        assertEquals(LootRules.CITY, LootRules.category("minecraft:chests/simple_dungeon"));
-        assertEquals(LootRules.RAIL_DUNGEON, LootRules.category("lostcities:chests/raildungeonchest"));
-        assertEquals("", LootRules.category(null), "a condition that picks nothing leaves the chest empty");
-    }
-
-    @Test
     public void doesNotReproduceLOOT06_theDispenserTableNeverFillsAChestWithArrowsOnly() {
-        // Upstream offered minecraft:chests/jungle_temple_dispenser to chests; here every non-rail value is city loot.
-        assertEquals(LootRules.CITY, LootRules.category("minecraft:chests/jungle_temple_dispenser"));
+        // Upstream offered minecraft:chests/jungle_temple_dispenser to chests; it has no 1.7.10 chest category and
+        // never enters the draw, opt-in or not.
+        assertFalse(LootRules.allowed("minecraft:chests/jungle_temple_dispenser", false));
+        assertFalse(LootRules.allowed("minecraft:chests/jungle_temple_dispenser", true));
     }
 
     @Test

@@ -1,0 +1,904 @@
+{
+  "_comment": "Default contents of this mod's ChestGenHooks loot categories, one tier band each (docs/new-spec/00-pack-integration/loot-and-mobs.md; decision log D20). Every entry's tier is the tier map the EV ceiling is checked against (docs/design/0004). Server owners retune a category with a TooMuchLoot XML file of the same name. Quantities and weights wait for the beta balance pass.",
+  "categories": {
+    "lostcitiesnh:city_supplies": {
+      "band": "STEAM",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:torch",
+          "min": 4,
+          "max": 16,
+          "weight": 10,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:coal",
+          "min": 2,
+          "max": 8,
+          "weight": 10,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:bread",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:cooked_beef",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:apple",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:paper",
+          "min": 2,
+          "max": 6,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:string",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:ladder",
+          "min": 2,
+          "max": 8,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:glass",
+          "min": 2,
+          "max": 8,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "min": 1,
+          "max": 4,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:gold_ingot",
+          "min": 1,
+          "max": 3,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:redstone",
+          "min": 2,
+          "max": 8,
+          "weight": 4,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:bucket",
+          "min": 1,
+          "max": 1,
+          "weight": 2,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:iron_axe",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:iron_pickaxe",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:fuel.coke",
+          "min": 2,
+          "max": 8,
+          "weight": 4,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotTin",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "ore": "ingotCopper",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "ore": "ingotBronze",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "plateBronze",
+          "min": 1,
+          "max": 3,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotWroughtIron",
+          "min": 1,
+          "max": 4,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "plateIron",
+          "min": 1,
+          "max": 3,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "item": "harvestcraft:boiledeggItem",
+          "min": 1,
+          "max": 3,
+          "weight": 3,
+          "tier": "STONE"
+        },
+        {
+          "item": "harvestcraft:carrotsoupItem",
+          "min": 1,
+          "max": 2,
+          "weight": 3,
+          "tier": "STONE"
+        },
+        {
+          "item": "harvestcraft:chocolatebarItem",
+          "min": 1,
+          "max": 2,
+          "weight": 2,
+          "tier": "STONE"
+        },
+        {
+          "item": "harvestcraft:applejuiceItem",
+          "min": 1,
+          "max": 2,
+          "weight": 2,
+          "tier": "STONE"
+        },
+        {
+          "lootbag": 1,
+          "min": 1,
+          "max": 1,
+          "weight": 2,
+          "tier": "STONE"
+        },
+        {
+          "lootbag": 2,
+          "min": 1,
+          "max": 1,
+          "weight": 2,
+          "tier": "STEAM"
+        },
+        {
+          "lootbag": 28,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "STONE"
+        },
+        {
+          "lootbag": 35,
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "STONE"
+        },
+        {
+          "lootbag": 36,
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "STONE"
+        },
+        {
+          "lootbag": 51,
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "STONE"
+        }
+      ]
+    },
+    "lostcitiesnh:city_lv": {
+      "band": "LV",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:iron_ingot",
+          "min": 2,
+          "max": 6,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:redstone",
+          "min": 4,
+          "max": 12,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotTin",
+          "min": 2,
+          "max": 6,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "ore": "ingotCopper",
+          "min": 2,
+          "max": 6,
+          "weight": 4,
+          "tier": "STONE"
+        },
+        {
+          "ore": "ingotSteel",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "LV"
+        },
+        {
+          "ore": "plateSteel",
+          "min": 1,
+          "max": 3,
+          "weight": 6,
+          "tier": "LV"
+        },
+        {
+          "ore": "cableGt01Tin",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "LV"
+        },
+        {
+          "ore": [
+            "circuitLV",
+            "circuitBasic"
+          ],
+          "min": 1,
+          "max": 2,
+          "weight": 4,
+          "tier": "LV"
+        },
+        {
+          "gt": "Electric_Motor_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "gt": "Electric_Pump_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "gt": "Conveyor_Module_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "gt": "Electric_Piston_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "gt": "Robot_Arm_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "LV"
+        },
+        {
+          "gt": "Sensor_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "LV"
+        },
+        {
+          "gt": "Emitter_LV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "LV"
+        },
+        {
+          "lootbag": 4,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "lootbag": 45,
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "LV"
+        },
+        {
+          "lootbag": 46,
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "LV"
+        }
+      ]
+    },
+    "lostcitiesnh:city_mv": {
+      "band": "MV",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:redstone",
+          "min": 4,
+          "max": 16,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:gold_ingot",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotSteel",
+          "min": 2,
+          "max": 6,
+          "weight": 6,
+          "tier": "LV"
+        },
+        {
+          "ore": "ingotAluminium",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "MV"
+        },
+        {
+          "ore": "plateAluminium",
+          "min": 1,
+          "max": 3,
+          "weight": 6,
+          "tier": "MV"
+        },
+        {
+          "ore": "cableGt01Copper",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "MV"
+        },
+        {
+          "ore": [
+            "circuitMV",
+            "circuitGood"
+          ],
+          "min": 1,
+          "max": 2,
+          "weight": 4,
+          "tier": "MV"
+        },
+        {
+          "gt": "Electric_Motor_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "MV"
+        },
+        {
+          "gt": "Electric_Pump_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "MV"
+        },
+        {
+          "gt": "Conveyor_Module_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "MV"
+        },
+        {
+          "gt": "Electric_Piston_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "MV"
+        },
+        {
+          "gt": "Robot_Arm_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "MV"
+        },
+        {
+          "gt": "Sensor_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "MV"
+        },
+        {
+          "gt": "Emitter_MV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "MV"
+        },
+        {
+          "lootbag": 5,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "MV"
+        }
+      ]
+    },
+    "lostcitiesnh:city_hv": {
+      "band": "HV",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:redstone",
+          "min": 8,
+          "max": 16,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotSteel",
+          "min": 2,
+          "max": 8,
+          "weight": 5,
+          "tier": "LV"
+        },
+        {
+          "ore": "ingotAluminium",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "MV"
+        },
+        {
+          "ore": "ingotStainlessSteel",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "HV"
+        },
+        {
+          "ore": "plateStainlessSteel",
+          "min": 1,
+          "max": 3,
+          "weight": 6,
+          "tier": "HV"
+        },
+        {
+          "ore": "cableGt01Gold",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "HV"
+        },
+        {
+          "ore": [
+            "circuitHV",
+            "circuitAdvanced"
+          ],
+          "min": 1,
+          "max": 2,
+          "weight": 4,
+          "tier": "HV"
+        },
+        {
+          "gt": "Electric_Motor_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "HV"
+        },
+        {
+          "gt": "Electric_Pump_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "HV"
+        },
+        {
+          "gt": "Conveyor_Module_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "HV"
+        },
+        {
+          "gt": "Electric_Piston_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "HV"
+        },
+        {
+          "gt": "Robot_Arm_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "HV"
+        },
+        {
+          "gt": "Sensor_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "HV"
+        },
+        {
+          "gt": "Emitter_HV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "HV"
+        },
+        {
+          "lootbag": 6,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "HV"
+        }
+      ]
+    },
+    "lostcitiesnh:city_ev": {
+      "band": "EV",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:redstone",
+          "min": 8,
+          "max": 16,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "ore": "ingotAluminium",
+          "min": 2,
+          "max": 6,
+          "weight": 5,
+          "tier": "MV"
+        },
+        {
+          "ore": "ingotStainlessSteel",
+          "min": 1,
+          "max": 4,
+          "weight": 4,
+          "tier": "HV"
+        },
+        {
+          "ore": "ingotTitanium",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "EV"
+        },
+        {
+          "ore": "plateTitanium",
+          "min": 1,
+          "max": 3,
+          "weight": 6,
+          "tier": "EV"
+        },
+        {
+          "ore": "cableGt01Aluminium",
+          "min": 1,
+          "max": 4,
+          "weight": 5,
+          "tier": "EV"
+        },
+        {
+          "ore": [
+            "circuitEV",
+            "circuitData"
+          ],
+          "min": 1,
+          "max": 2,
+          "weight": 4,
+          "tier": "EV"
+        },
+        {
+          "gt": "Electric_Motor_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "EV"
+        },
+        {
+          "gt": "Electric_Pump_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "EV"
+        },
+        {
+          "gt": "Conveyor_Module_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "EV"
+        },
+        {
+          "gt": "Electric_Piston_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "EV"
+        },
+        {
+          "gt": "Robot_Arm_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "EV"
+        },
+        {
+          "gt": "Sensor_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "EV"
+        },
+        {
+          "gt": "Emitter_EV",
+          "min": 1,
+          "max": 1,
+          "weight": 1,
+          "tier": "EV"
+        },
+        {
+          "lootbag": 7,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "EV"
+        }
+      ]
+    },
+    "lostcitiesnh:rail_dungeon": {
+      "band": "LV",
+      "min": 2,
+      "max": 4,
+      "entries": [
+        {
+          "item": "minecraft:rail",
+          "min": 8,
+          "max": 32,
+          "weight": 30,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:coal",
+          "min": 8,
+          "max": 16,
+          "weight": 20,
+          "tier": "STONE"
+        },
+        {
+          "item": "minecraft:minecart",
+          "min": 1,
+          "max": 1,
+          "weight": 10,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:chest_minecart",
+          "min": 1,
+          "max": 1,
+          "weight": 10,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:hopper",
+          "min": 1,
+          "max": 4,
+          "weight": 8,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:piston",
+          "min": 1,
+          "max": 2,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:hopper_minecart",
+          "min": 1,
+          "max": 1,
+          "weight": 4,
+          "tier": "STEAM"
+        },
+        {
+          "item": "minecraft:iron_ingot",
+          "min": 2,
+          "max": 6,
+          "weight": 8,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:fluid.creosote.bottle",
+          "min": 4,
+          "max": 16,
+          "weight": 15,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:tool.crowbar",
+          "min": 1,
+          "max": 1,
+          "weight": 8,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:armor.overalls",
+          "min": 1,
+          "max": 1,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.tie",
+          "min": 4,
+          "max": 16,
+          "weight": 15,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.tie",
+          "meta": 1,
+          "min": 4,
+          "max": 16,
+          "weight": 8,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.rail",
+          "min": 6,
+          "max": 18,
+          "weight": 12,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.rail",
+          "meta": 1,
+          "min": 6,
+          "max": 18,
+          "weight": 12,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.rail",
+          "meta": 2,
+          "min": 6,
+          "max": 18,
+          "weight": 12,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.rail",
+          "meta": 3,
+          "min": 6,
+          "max": 18,
+          "weight": 12,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:part.rail",
+          "meta": 4,
+          "min": 6,
+          "max": 18,
+          "weight": 12,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:fuel.coke",
+          "min": 4,
+          "max": 16,
+          "weight": 15,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:cart.work",
+          "min": 1,
+          "max": 1,
+          "weight": 5,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:tool.surveyor",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:tool.signal.tuner",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "STEAM"
+        },
+        {
+          "item": "Railcraft:tool.electric.meter",
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        },
+        {
+          "lootbag": 32,
+          "min": 1,
+          "max": 1,
+          "weight": 6,
+          "tier": "STEAM"
+        },
+        {
+          "lootbag": 33,
+          "min": 1,
+          "max": 1,
+          "weight": 3,
+          "tier": "LV"
+        }
+      ]
+    }
+  }
+}
