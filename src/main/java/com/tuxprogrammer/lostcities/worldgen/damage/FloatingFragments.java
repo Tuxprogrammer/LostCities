@@ -15,8 +15,9 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
  * The floating-fragment pass upstream 1.12 ran after explosion damage ({@code fixAfterExplosionNew}) and 1.20 lost
- * (TERR-28): connected blobs of solid blocks in the damaged band are found, and each poorly supported blob is
- * removed or dropped onto the next solid block, so explosions leave no floating debris (0004 §5).
+ * (TERR-28): connected blobs of solid blocks in the damaged band are found, and each poorly supported blob that
+ * damage can have reached is removed or dropped onto the next solid block, so explosions leave no floating debris
+ * (0004 §5).
  *
  * <p>
  * A blob's support is its count of "connections": a block next to a chunk side counts one when it is no higher than
@@ -29,7 +30,10 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  *
  * <p>
  * Spec: docs/new-spec/03-terrain/index.md ("Floating fragments after explosions", P03-11, D31), which keeps 1.12's
- * three numbers as constants. Changes from 1.12: falling blocks move bottom first in a fixed order instead of a hash
+ * three numbers as constants. Changes from 1.12: only a blob with a block where damage can have reached
+ * ({@link DamageArea#mayHaveDamaged}) is judged, so structure no explosion touched keeps its designed shape (AR-1: on
+ * 1.12 every blob of the band was judged, and a street stair's slab steps, each its own blob by design, lost the one
+ * step that fell inside a far explosion's band); falling blocks move bottom first in a fixed order instead of a hash
  * set's, so the result does not depend on hash layout; a fallen block lands on the first block that is neither air nor
  * liquid, without 1.12's check against the set's old positions, which bottom-first order makes empty already.
  *
@@ -66,6 +70,7 @@ public final class FloatingFragments {
     private int[] blobSize = new int[64];
     private int[] blobConnections = new int[64];
     private int[] blobLowest = new int[64];
+    private boolean[] blobTouched = new boolean[64];
 
     /**
      * Creates the pass of one world.
@@ -103,7 +108,7 @@ public final class FloatingFragments {
                         continue;
                     }
                     ensureCapacity(blobs + 1);
-                    scan(buffer, classes, sides, x, y, z, start, blobs);
+                    scan(buffer, classes, sides, area, x, y, z, start, blobs);
                     blobs++;
                 }
             }
@@ -121,6 +126,10 @@ public final class FloatingFragments {
         boolean[] fall = new boolean[blobs];
         boolean anyFall = false;
         for (Integer blob : order) {
+            if (!blobTouched[blob]) {
+                // AR-1: no explosion came near this blob, so how it is held up is the assets' design, not damage.
+                continue;
+            }
             int size = blobSize[blob];
             int connections = blobConnections[blob];
             boolean unsupported = connections < MIN_CONNECTIONS
@@ -170,12 +179,13 @@ public final class FloatingFragments {
         return changed;
     }
 
-    private void scan(ChunkBuffer buffer, BlockClassifier classes, ChunkPlan[] sides, int startX, int startY,
-        int startZ, int bandBottom, int blob) {
+    private void scan(ChunkBuffer buffer, BlockClassifier classes, ChunkPlan[] sides, DamageArea area, int startX,
+        int startY, int startZ, int bandBottom, int blob) {
         int head = 0;
         int tail = 0;
         int size = 0;
         int connections = 0;
+        boolean touched = false;
         int lowest = WorldLimits.BUILD_HEIGHT;
         int first = index(startX, startY, startZ);
         stamp[first] = epoch;
@@ -188,6 +198,7 @@ public final class FloatingFragments {
             int y = index >> 8;
             size++;
             lowest = Math.min(lowest, y);
+            touched = touched || area.mayHaveDamaged(x, y, z);
             for (int direction = 0; direction < 6; direction++) {
                 int nx = x + (direction == 0 ? 1 : direction == 1 ? -1 : 0);
                 int ny = y + (direction == 2 ? 1 : direction == 3 ? -1 : 0);
@@ -218,6 +229,7 @@ public final class FloatingFragments {
         blobSize[blob] = size;
         blobConnections[blob] = connections;
         blobLowest[blob] = lowest;
+        blobTouched[blob] = touched;
     }
 
     private static boolean isEmpty(BlockClassifier classes, BlockRef block) {
@@ -230,6 +242,7 @@ public final class FloatingFragments {
             blobSize = Arrays.copyOf(blobSize, capacity);
             blobConnections = Arrays.copyOf(blobConnections, capacity);
             blobLowest = Arrays.copyOf(blobLowest, capacity);
+            blobTouched = Arrays.copyOf(blobTouched, capacity);
         }
     }
 

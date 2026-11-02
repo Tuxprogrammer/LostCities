@@ -7,7 +7,7 @@
     },
     {
       "char": "$",
-      "block": "minecraft:red_sandstone_slab[type=double]",
+      "block": "minecraft:smooth_sandstone",
       "damaged": "minecraft:iron_bars"
     },
     {

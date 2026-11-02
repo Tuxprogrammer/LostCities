@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
+
 /**
  * One profile option: its key, the JSON category it sits in, its type, its default, its range or allowed values, and
  * what this port does with it (docs/new-spec/02-profiles-dimensions/profile-options.md). The catalog of every option
@@ -199,7 +201,8 @@ public final class ProfileOption {
                 }
                 return Integer.toString(truncated);
             case FLOAT:
-                return Float.toString((float) clamped);
+                // Plain decimal, as TerrainSettings writes its defaults: 0.0004, not 4.0E-4.
+                return TerrainSettings.text((float) clamped);
             case DOUBLE:
                 return Double.toString(clamped);
             default:

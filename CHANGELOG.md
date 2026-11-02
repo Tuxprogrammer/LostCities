@@ -28,3 +28,13 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - Profiles (milestone M09): ten built-in profiles (`default`, `nodamage`, `rarecities`, `onlycities`, `tallbuildings`, `safe`, `ancient`, `wasteland`, `atlantis`, `largecities`) and your own in `config/lostcitiesnh/profiles/`, in upstream Lost Cities' JSON format, so upstream profile files load. Every option is checked when a profile is read: numbers out of range are clamped, and a broken file is rejected with one log line without stopping the game. Each world keeps every option it was created with. Choose a world's profile with `dimensionProfiles` (on a server, or from the Mods list's config screen before creating a world in single player). See [docs/config.md](docs/config.md#profiles).
 - `/lostcities profile list`, `profile info <profile>`, `profile reload` and `/lostcities saveprofile <profile> <newName>`, operator only.
 - Spawn options: a profile can ask for a spawn in a biome, in a predefined city, never in a building, or inside a building (placing each player exactly on their first join); the spawn is found from the city layout without generating chunks, and the bonus chest still comes when asked for.
+- Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
+
+### Changed
+
+- Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
+- Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.
+
+### Fixed
+
+- A street stair no longer loses one of its steps when an explosion lands nearby: the cleanup after explosions only removes loose blocks that the explosion could have reached.

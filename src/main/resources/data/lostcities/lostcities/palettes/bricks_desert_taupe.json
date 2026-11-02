@@ -1,0 +1,29 @@
+{
+  "palette": [
+    {
+      "char": "X",
+      "block": "minecraft:cut_sandstone",
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "$",
+      "block": "minecraft:smooth_sandstone",
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "#",
+      "blocks": [
+        {
+          "random": 2000,
+          "block": "minecraft:light_gray_terracotta"
+        }
+      ],
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "}",
+      "variant": "sandstone_rubble",
+      "damaged": "minecraft:iron_bars"
+    }
+  ]
+}

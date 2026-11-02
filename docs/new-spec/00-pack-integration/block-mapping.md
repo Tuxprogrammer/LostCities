@@ -100,6 +100,7 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `rail` | `minecraft:rail` : shape | |
 | `redstone_torch`, `redstone_wall_torch` | `minecraft:redstone_torch` : 5 standing, 1 to 4 on a wall | |
 | `sandstone` | `minecraft:sandstone` : 0 | |
+| `smooth_sandstone` | `minecraft:double_stone_slab` : 9 | Not in upstream's assets: only this mod's muted desert palettes name it ([05-assets](../05-assets/index.md), AR-16). The smooth sandstone double slab shows the sandstone top on every face; Et Futurum's smooth sandstone is off in the pack (`enableSmoothSandStone=false`) |
 | `smooth_stone_slab` | `minecraft:stone_slab` : 0 (+8 top); `type=double` is `minecraft:double_stone_slab` : 0 | The 1.7.10 stone slab is the smooth stone slab |
 | `spawner` | `minecraft:mob_spawner` plus its tile entity | Mobs: [loot-and-mobs.md](loot-and-mobs.md) |
 | `stone_brick_slab` | `minecraft:stone_slab` : 5 (+8 top) | |

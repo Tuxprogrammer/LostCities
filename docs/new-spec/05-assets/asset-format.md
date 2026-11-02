@@ -106,7 +106,7 @@ The checks below are implemented in `lostcities.asset` (M02). Every check report
 | `range` tests parse | (upstream already throws at load) |
 | No entry names a never-placed block or a GT ore host | D18, D28 rule 7, D29 |
 | Dead fields (`streetblocks.width`, `streetvariant`) warn that they have no effect | ASSET-22, ASSET-27 |
-| Reachability: the asset report lists, as notes, assets nothing reachable from a world style or predefined city names (upstream's `stuff/example`, `glass_side_variant_street`, `bricks_desert_redsand`, and `citystyle_border` with its style, palettes and variants, which only a profile's alternative city style names: profiles are not assets, so the report cannot see that use) | ASSET-22 |
+| Reachability: the asset report lists, as notes, assets nothing reachable from a world style or predefined city names (upstream's `stuff/example`, `glass_side_variant_street`, `bricks_desert_redsand`, `bricks_desert_red` and `bricks_desert_orange`, which the muted desert style no longer lists (AR-16), and `citystyle_border` with its style, palettes and variants, which only a profile's alternative city style names: profiles are not assets, so the report cannot see that use) | ASSET-22 |
 
 ### Severity, rejection and the report
 
@@ -137,7 +137,7 @@ Resolution is checked twice. `AssetValidationTest` loads every bundled asset ove
 
 ## Bundled assets
 
-`tools/asset-convert/convert.py` builds `src/main/resources/data/lostcities/lostcities/` from upstream's tree at the pinned commit (`git show 1.20:...`): it copies every file byte for byte, applies the conversions below as exact text patches that must each match, adds this mod's two rubble variants, and writes `data/lostcitiesnh/assets.index`, the list of bundled files the mod reads from the jar (a jar cannot be listed portably). A re-pin reruns the script; a patch that no longer matches stops it.
+`tools/asset-convert/convert.py` builds `src/main/resources/data/lostcities/lostcities/` from upstream's tree at the pinned commit (`git show 1.20:...`): it copies every file byte for byte, applies the conversions below as exact text patches that must each match, adds this mod's two rubble variants and three muted desert palettes, and writes `data/lostcitiesnh/assets.index`, the list of bundled files the mod reads from the jar (a jar cannot be listed portably). A re-pin reruns the script; a patch that no longer matches stops it.
 
 | File | Conversion | Why |
 |---|---|---|
@@ -146,6 +146,9 @@ Resolution is checked twice. `AssetValidationTest` loads every bundled asset ove
 | `palettes/bricks_desert_redsand.json` | `minecraft:red_sandstone@2` to `minecraft:cut_red_sandstone` | ASSET-03 |
 | `palettes/bricks_desert.json`, `bricks_desert_orange.json`, `default_desert.json`, `bricks_desert_red.json` | A `}` rubble character from `variants/sandstone_rubble` (`red_sandstone_rubble` for the red palette) | P05-5, D31; ASSET-20 |
 | `variants/sandstone_rubble.json`, `red_sandstone_rubble.json` (new) | Shaped like `stonebrick_rubble`: about 70 % cut sandstone, the rest sandstone, slabs and stairs | P05-5 |
+| `styles/desert.json` | The building group lists `bricks_desert` 1.0, `bricks_desert_rough` 0.6, `bricks_desert_bleached` 0.8 and `bricks_desert_taupe` 0.5 instead of `bricks_desert_red` and `bricks_desert_orange` | AR-16 ([05-assets](index.md#styles-and-city-styles)) |
+| `palettes/bricks_desert.json`, `default_desert.json` | `$` (and `S` in `default_desert`) from `minecraft:red_sandstone_slab[type=double]` to `minecraft:smooth_sandstone`; `default_desert`'s `B` from `minecraft:red_nether_bricks` to `minecraft:sandstone` | AR-16 |
+| `palettes/bricks_desert_rough.json`, `bricks_desert_bleached.json`, `bricks_desert_taupe.json` (new) | `#` walls of layered sandstone (with 40 in 128 cut), white terracotta or light gray terracotta; `X` trim chiseled or cut sandstone; `$` band cut or smooth sandstone; `}` sandstone rubble | AR-16 |
 
 Block names stay 1.20 names in every file; the map turns them into 1.7.10 blocks at load. Condition values stay upstream's 1.20 loot-table and entity ids; `08-loot-mobs-blocks` maps them (D20). Provenance: [docs/assets/CREDITS.md](../../assets/CREDITS.md) and [THIRD-PARTY-NOTICES.md](../../../THIRD-PARTY-NOTICES.md).
 

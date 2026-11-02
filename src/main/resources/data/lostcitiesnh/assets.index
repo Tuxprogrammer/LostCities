@@ -61,9 +61,12 @@ lostcities/lostcities/multibuildings/townhall.json
 lostcities/lostcities/palettes/bricks_border.json
 lostcities/lostcities/palettes/bricks_cyan.json
 lostcities/lostcities/palettes/bricks_desert.json
+lostcities/lostcities/palettes/bricks_desert_bleached.json
 lostcities/lostcities/palettes/bricks_desert_orange.json
 lostcities/lostcities/palettes/bricks_desert_red.json
 lostcities/lostcities/palettes/bricks_desert_redsand.json
+lostcities/lostcities/palettes/bricks_desert_rough.json
+lostcities/lostcities/palettes/bricks_desert_taupe.json
 lostcities/lostcities/palettes/bricks_gray.json
 lostcities/lostcities/palettes/bricks_silver.json
 lostcities/lostcities/palettes/bricks_standard.json

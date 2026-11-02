@@ -22,6 +22,7 @@
     { "id": "minecraft:crafting_table", "to": ["minecraft:crafting_table:0"] },
     { "id": "minecraft:cut_sandstone", "to": ["minecraft:sandstone:2"] },
     { "id": "minecraft:chiseled_sandstone", "to": ["minecraft:sandstone:1"] },
+    { "comment": "Only this mod's muted desert palettes name it (AR-16): the 1.7.10 smooth sandstone double slab, the sandstone top on every face. Et Futurum's smooth sandstone is off in the pack (enableSmoothSandStone=false).", "id": "minecraft:smooth_sandstone", "to": ["minecraft:double_stone_slab:9"] },
     { "id": "minecraft:dandelion", "to": ["minecraft:yellow_flower:0"] },
     { "id": "minecraft:poppy", "to": ["minecraft:red_flower:0"] },
     { "id": "minecraft:diamond_block", "to": ["minecraft:diamond_block:0"] },
