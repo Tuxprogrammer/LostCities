@@ -199,17 +199,20 @@ public final class TerrainSettings {
     }
 
     /**
-     * Returns a float as a snapshot and the docs write it: plain decimal, never scientific notation, so the default
-     * {@code explosionChance} reads {@code 0.0004} rather than {@code Float.toString}'s {@code 4.0E-4}.
+     * Returns a float as a snapshot, a profile's canonical text and the docs write it: {@code Float.toString}'s text,
+     * except that scientific notation becomes plain decimal, so the default {@code explosionChance} reads
+     * {@code 0.0004} rather than {@code 4.0E-4}.
      *
      * @param value the value
      * @return its shortest plain decimal text
      */
-    static String text(float value) {
-        if (Float.isNaN(value) || Float.isInfinite(value)) {
-            return Float.toString(value);
+    public static String text(float value) {
+        String text = Float.toString(value);
+        if (text.indexOf('E') < 0 || Float.isNaN(value) || Float.isInfinite(value)) {
+            return text;
         }
-        return new BigDecimal(Float.toString(value)).toPlainString();
+        return new BigDecimal(text).stripTrailingZeros()
+            .toPlainString();
     }
 
     /** Returns every resolved value by option name, in name order, as a snapshot stores them. */
