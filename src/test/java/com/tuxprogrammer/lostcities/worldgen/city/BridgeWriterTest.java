@@ -27,7 +27,7 @@ public class BridgeWriterTest {
     private static final AssetSet SET = TestAssets.loadFiles(
         "lostcities/palettes/p.json",
         "{\"palette\": [{\"char\": \"s\", \"block\": \"minecraft:oak_stairs[facing=east]\"},"
-            + " {\"char\": \"a\", \"block\": \"minecraft:stone\"}]}",
+            + " {\"char\": \"a\", \"block\": \"minecraft:cobblestone\"}]}",
         "lostcities/parts/deck.json",
         "{\"xsize\": 3, \"zsize\": 1, \"slices\": [[\"saQ\"]]}");
 
@@ -56,10 +56,10 @@ public class BridgeWriterTest {
     public void doesNotReproduceCITY30_aSpanAlongZTurnsItsBlocksAsWellAsItsPositions() {
         ArrayChunkBuffer x = span(Orientation.X);
         assertEquals(BlockRef.of("minecraft:oak_stairs", 0), x.get(0, 71, 0), "along X the stair faces east");
-        assertEquals(BlockRef.of("minecraft:stone", 0), x.get(1, 71, 0));
+        assertEquals(BlockRef.of("minecraft:cobblestone", 0), x.get(1, 71, 0));
         ArrayChunkBuffer z = span(Orientation.Z);
         // Transposed: the part's (1, 0) lands on (0, 1); the stair turns from east to south (metadata 2).
-        assertEquals(BlockRef.of("minecraft:stone", 0), z.get(0, 71, 1));
+        assertEquals(BlockRef.of("minecraft:cobblestone", 0), z.get(0, 71, 1));
         assertEquals(BlockRef.of("minecraft:oak_stairs", 2), z.get(0, 71, 0), "along Z it faces along the span");
     }
 

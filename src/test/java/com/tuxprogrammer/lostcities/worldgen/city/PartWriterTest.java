@@ -22,14 +22,14 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 /** Upstream's {@code generatePart} as {@link PartWriter} (chunk-driver-and-parts.md). */
 public class PartWriterTest {
 
-    private static final BlockRef STONE = BlockRef.of("minecraft:stone", 0);
+    private static final BlockRef STONE = BlockRef.of("minecraft:cobblestone", 0);
     private static final BlockRef WATER = BlockRef.of("minecraft:water", 0);
     private static final BlockRef DIRT = BlockRef.of("minecraft:dirt", 0);
 
     /** A palette with one of each kind of character, and three parts over it. */
     private static final AssetSet SET = TestAssets.loadFiles(
         "lostcities/palettes/p.json",
-        "{\"palette\": [{\"char\": \"a\", \"block\": \"minecraft:stone\"},"
+        "{\"palette\": [{\"char\": \"a\", \"block\": \"minecraft:cobblestone\"},"
             + " {\"char\": \"s\", \"block\": \"minecraft:oak_stairs[facing=east]\"},"
             + " {\"char\": \"h\", \"block\": \"minecraft:structure_void\"},"
             + " {\"char\": \"w\", \"block\": \"minecraft:water\"},"
