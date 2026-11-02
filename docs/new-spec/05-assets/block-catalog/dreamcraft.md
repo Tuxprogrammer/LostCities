@@ -4,7 +4,7 @@ GT New Horizons' core mod 2.9.99, mod ID `dreamcraft`, jar `GTNewHorizonsCoreMod
 
 ## Summary
 
-**50 block+meta entries from 50 registry blocks** (the Baby Chest, a tile-entity chest, is not catalogued). Fit with upstream's look: 3 yes, 17 partly, 30 no. NHCore is mostly a store of crafting-material blocks; its building value is the metal bars (a nine-step fence and window-grille family) and the first three plated reinforced stones.
+**50 block+meta entries from 50 registry blocks** (the Baby Chest, a tile-entity chest, is not catalogued). Fit with upstream's look: 3 yes, 17 partly, 30 no. NHCore is mostly a store of crafting-material blocks; its building value is the metal bars (a nine-step fence and window-grille family) and compressed graphite as a dark accent. The plated reinforced stones would make good industrial cladding, but every one is harder than obsidian and never placed (D28 rule 7).
 
 | Role | Count |
 |---|---|
@@ -22,7 +22,7 @@ Flags:
 - **Tile entities:** none (the Baby Chest, left out, has one).
 - **Light:** none.
 - **Gravity:** `ZincGravelOre` only (`BlockFalling`). The sand-material blocks (`SandClayMix`, `ManaPowder`, `PixieDust`) are plain blocks and do not fall.
-- **Very hard to move:** the six plated reinforced stones have hardness 60 (bronze), 150 (steel), 200 (titanium), 250 (tungstensteel), 500 (naquadah) and 750 (neutronium), against obsidian's 50, with harvest levels 3 to 5 and explosion resistance above 300. A building made of them is effectively permanent; use them as accents, never as the main wall of a building meant to be moved into. The diamond frame box has hardness 25; the quintuple compressed fuel blocks up to 30.
+- **Very hard to move:** the six plated reinforced stones have hardness 60 (bronze), 150 (steel), 200 (titanium), 250 (tungstensteel), 500 (naquadah) and 750 (neutronium), against obsidian's 50, with harvest levels 3 to 5 and explosion resistance above 300. A building made of them is effectively permanent, so none of them is placed (D28 rule 7: hardness above 50). The diamond frame box has hardness 25; the quintuple compressed fuel blocks up to 30.
 - **Value:** the resource blocks (`Ledox`, `Mytryl`, `Quantinum`, `BlackPlutonium`, `MysteriousCrystalBlock`, `CallistoColdIce`) are compressed space-tier materials, the coal, charcoal and coke blocks are compressed fuel (a triple-compressed coal block is 729 coal), the diamond frame box holds diamonds, and the Blood Magic and Botania blocks are compressed magic materials. Placing any of them in quantity hands out late-game or bulk resources; keep them out of worldgen except, at most, single treasure blocks.
 - **Tier (record 0004, nothing above EV in the overworld):** within EV: bronze, steel and titanium plated stone; steel, aluminium, stainless steel and titanium bars. Above EV: tungstensteel (IV), naquadah and neutronium plated stone; tungstensteel, iridium, osmium and neutronium bars. Chrome bars sit at the EV/IV boundary (chrome is processed at EV in GTNH) and need an owner call.
 - **GT ore or boulder hosts:** none.
@@ -103,7 +103,7 @@ Sheet `resource-blocks.json`. Compressed materials; none belongs in a city excep
 |---|---|
 | Iron bars `:` (also the `iron_bars` "damaged to" block) | `SteelBars`, `AluminiumBars`, `StainlessSteelBars` (urban); add `TitaniumBars` in an industrial style |
 | Fence `.` and railings | `AluminiumBars`, `StainlessSteelBars` (chain-link look) |
-| `X` accent in an industrial style | `SteelPlatedReinforcedStone`, `BronzePlatedReinforcedStone`, `CompressedGraphite` (accents only: very hard) |
+| `X` accent in an industrial style | `CompressedGraphite` (hardness 5). The plated reinforced stones are never placed (hardness 60 and up, D28 rule 7) |
 | `}` rubble, ruined variants | `PistonBlock`, `Charcoal` (burnt-out ruins, sparingly) |
 | Oil rig | `SteelBars` and `StainlessSteelBars` for guard rails |
-| Treasure `!` | none recommended; if the owner wants pack-flavored treasure, single `CompressedCoalCoke` or `CompressedCoal` blocks are the cheapest |
+| Treasure `!` | single `CompressedCoalCoke` blocks, the cheapest pack-flavored treasure ([index](index.md#treasure)); `CompressedCoal` likewise |

@@ -72,7 +72,7 @@ One registry block, `EnderIO:blockElectricLight`; metadata is the facing, the ki
 
 ## Alloy blocks
 
-Storage blocks for EnderIO's alloys; hardness per alloy (1 to 10), resistance twice the hardness. These are valuable resource blocks: a building made of them is a loot pile. They fit only as industrial accents or as treasure (`!`).
+Storage blocks for EnderIO's alloys; hardness per alloy (1 to 10), resistance twice the hardness. These are valuable resource blocks: a building made of them is a loot pile. D29 brings Dark Steel and Electrical Steel back as accents behind their metal flags, under a per-building cap ([D29](index.md#decorative-metals-d29)); the other alloys get no flag and go only in treasure (`!`) and chest loot.
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -117,4 +117,4 @@ Not catalogued: machines, conduits, capacitor banks, travel anchors and telepads
 - **Iron bars `:`:** Dark Steel Bars as the main variant; Soularium Bars for rusty ruins.
 - **Furniture `F`:** Dark Steel Anvil (and its damaged forms in ruins).
 - **Ladder `l`:** Dark Steel Ladder.
-- **Industrial set dressing:** Dark Steel and Electrical Steel blocks as rare wall accents in an industrial style; the rest of the alloy blocks only as treasure.
+- **Industrial set dressing:** Dark Steel and Electrical Steel blocks as capped accents behind `decorativeMetals.darkSteel` and `decorativeMetals.electricalSteel` ([D29](index.md#decorative-metals-d29)); the other alloy blocks only as treasure.

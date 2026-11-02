@@ -34,9 +34,9 @@ Family D. Mod ID `malisisdoors`, jar `malisisdoors-1.19.13-GTNH.jar`. Source rea
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
 | `malisisdoors:garage_door` | Garage Door | door-trap | yes | modern, industrial | stacks vertically into a roll-up door; each block is a TE |
-| `malisisdoors:carriage_door` | Carriage Door | door-trap | partly | urban-brick | 3x3 double door with stone frame; old warehouses, stations. Needs `carriage_door_collisionHelper` blocks filling the frame |
+| `malisisdoors:carriage_door` | Carriage Door | door-trap | partly | urban-brick | 3x3 double door with stone frame; old warehouses, stations. Builds its frame of `carriage_door_collisionHelper` blocks in `onBlockPlacedBy`, only when a player places it |
 | `malisisdoors:medieval_door` | Medieval Door | door-trap | no | fantasy | |
-| `malisisdoors:rustyHatch` | Rusty Hatch | door-trap | yes | industrial, ruin | manholes, basement hatches |
+| `malisisdoors:rustyHatch` | Rusty Hatch | door-trap | yes | industrial, ruin | manholes, basement hatches; forms its 2x3 multiblock in `onBlockPlacedBy` (`RustyHatch.java` L87-L96), only when a player places it, so worldgen cannot place it |
 | `malisisdoors:rustyLadder` | Rusty Ladder | special | yes | industrial, ruin | plain `BlockLadder` subclass, no TE; manholes, service shafts |
 | `malisisdoors:forcefieldDoor` | Forcefield | off-theme | no | | sci-fi |
 
@@ -65,7 +65,7 @@ Family D. Mod ID `malisisdoors`, jar `malisisdoors-1.19.13-GTNH.jar`. Source rea
 
 - **door-trap, storefronts and offices**: iron and wood glass sliding doors, laboratory door; oak and dark oak doors for older buildings.
 - **door-trap, homes**: the five wood doors weighted by building style (dark oak and spruce for brick, birch for modern).
-- **door-trap, industrial**: factory door, garage door, iron trapdoor, rusty hatch with rusty ladder below.
+- **door-trap, industrial**: factory door, garage door, iron trapdoor; the rusty ladder alone for manholes and service shafts.
 - **door-trap, police and prisons**: jail door.
 - **furniture-deco, windows**: curtains in white, silver, gray, red, brown, blue, green; occasional bright colors.
 
@@ -73,6 +73,6 @@ Family D. Mod ID `malisisdoors`, jar `malisisdoors-1.19.13-GTNH.jar`. Source rea
 
 - Doors are cheap: one non-ticking TE per lower half (animation ticks only while moving). Curtains count as doors.
 - Use vanilla door metadata. Write the lower half then the upper half; the lower half creates the TE.
-- Big doors (carriage) are multi-block: placing only the main block leaves the frame unfilled; generate them as a small structure with the collision helpers, or skip them.
+- The carriage door, the medieval door and the rusty hatch build their multiblock in `onBlockPlacedBy`, which runs only when a player places the block ([integration-opportunities.md](../../00-pack-integration/integration-opportunities.md#doors-malisisdoors)). `setBlock` leaves them incomplete, so worldgen skips all three, as the [index](index.md#doors) does.
 - Garage doors are one block per row and open as a stack; generate the full column (how a partial column behaves is unverified).
 - A server without the mod: vanilla door names still resolve (they are vanilla names); the `malisisdoors:*` names need the fallbacks above.

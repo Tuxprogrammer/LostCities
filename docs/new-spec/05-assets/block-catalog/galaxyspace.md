@@ -4,7 +4,7 @@ GalaxySpace 1.1.144-GTNH, mod ID `GalaxySpace`, jar `GalaxySpace-1.1.144-GTNH.ja
 
 ## Summary
 
-**108 block+meta entries from 43 registry blocks.** Ores, machines, treasure chests, geysers, crystals, fluids and plants are left out ([Not catalogued](#not-catalogued)). Fit with upstream's look: 13 yes, 43 partly, 52 no. Most of the "no" are planet terrain; GalaxySpace's real contribution is decorative metal, a 17-color glass family, five glowstones and a handful of dungeon bricks.
+**108 block+meta entries from 43 registry blocks.** Ores, machines, treasure chests, geysers, crystals, fluids and plants are left out ([Not catalogued](#not-catalogued)). Fit with upstream's look: 13 yes, 41 partly, 54 no. Most of the "no" are planet terrain; GalaxySpace's real contribution is decorative metal, a 17-color glass family, five glowstones and a handful of dungeon bricks.
 
 | Role | Count |
 |---|---|
@@ -16,7 +16,7 @@ GalaxySpace 1.1.144-GTNH, mod ID `GalaxySpace`, jar `GalaxySpace-1.1.144-GTNH.ja
 | glass | 17 |
 | street | 2 |
 | sidewalk | 1 |
-| rubble-ruin | 3 |
+| rubble-ruin | 1 |
 | light | 5 |
 | industrial-dressing | 9 |
 | foliage | 2 |
@@ -31,7 +31,7 @@ Flags:
 - **Light:** the five space glowstones emit 15 (`setLightLevel(1.0F)`, glass material, hardness 1).
 - **Gravity:** none.
 - **Hard to move:** nothing unusual. Planet blocks have hardness 2 to 3 and harvest levels 1 to 3 (Vega B, Barnarda E and F, Alpha Centauri Bb need level 3, a diamond-level pick).
-- **Hazards:** Ceres Web withers and Io Web burns whoever touches it.
+- **Hazards:** Ceres Web withers and Io Web burns whoever touches it, so neither is rubble or ruin dressing: both are never placed.
 - **GT ore hosts, in every dimension including the overworld:** 33 planet stones. GT's `StoneType` registers each GalaxySpace body's main and extra stones (`StoneBuilder.galaxySpace(name, main, extras…)`) without a dimension restriction, and `OreManager` places ore into any stone type valid in the dimension ([StoneType.java#L98-L127](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/api/enums/StoneType.java#L98-L127), [#L462-L474](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/api/enums/StoneType.java#L462-L474)). They are marked in the planet table and must never be building blocks. The overworld host table in [ore-veins.md](../../00-pack-integration/ore-veins.md) lists only overworld-native stones; these are additional hosts any city could create by placing them. The surface blocks ("grunt", meta 0 or the plain `…grunt` block; except `haumeablocks`, Haumea's only block, which is its main stone), dungeon bricks, dungeon floors and tops, metals, glass and glowstones are not hosts. Nothing here is a GT boulder host. GalacticGreg (inside GT5-Unofficial) generates the space ores into these stones; its own stone blocks are ore hosts by definition and are not catalogued.
 - **Tier:** nothing machine-like. The decorative metal blocks are named after space-tier materials (adamantite, mithril, oriharukon, platinum, tungsten) but contain no material: they are crafted decoration and carry no value, so the EV ceiling of record 0004 does not apply.
 
@@ -101,8 +101,8 @@ Sheet `dungeon-and-light.json`.
 | `GalaxySpace:barnardaCleaves` | Barnarda C Leaves | foliage | no: violet | space | Leaves; may decay away from a log |
 | `GalaxySpace:barnardaCgrass` | Barnarda C Grass | foliage | no: purple turf | space | |
 | `GalaxySpace:barnardaCdirt` | Barnarda C Dirt | off-theme | no | space | |
-| `GalaxySpace:ceresweb` | Ceres Web | rubble-ruin, special | partly: a cobweb that withers | ruined | Applies wither for 80 ticks on contact |
-| `GalaxySpace:ioweb` | Io Web | rubble-ruin, special | partly: a red cobweb that burns | ruined | Fire damage on contact |
+| `GalaxySpace:ceresweb` | Ceres Web | special | no: a cobweb that withers | none | Applies wither for 80 ticks on contact: never placed |
+| `GalaxySpace:ioweb` | Io Web | special | no: a red cobweb that burns | none | Fire damage on contact: never placed |
 
 ## Planet and moon terrain
 
@@ -183,7 +183,7 @@ Sheet `planet-stone.json`. Every entry is a body's surface, subsurface or stone 
 |---|---|
 | `bricks_standard` `#` main wall | `proteusblocks:3` (dark brick), `enceladusblocks:2` (white brick), `ioblocks:7` (red quarry tile) |
 | `X` accent | `ceresblocks:2`, `plutoblocks:6`, `metalsblock:8` (industrial) |
-| `}` rubble | `proteusblocks:3`, `ceresweb`, `ioweb` (ruined variants only, they hurt) |
+| `}` rubble | `proteusblocks:3` (the webs hurt on contact and stay out) |
 | `bricks_cyan`, `bricks_gray`, `bricks_silver` (terracotta colors) | `oberonblocks:0` (brown), `tritonblocks:0` (light gray), `vegabgrunt` (slate blue), `phobosblocks:0` (gray-brown): flat colors that are neither ore nor boulder hosts |
 | `glass_*` (`+`, `a`) | `futureglass`, `futureglasses:15` (white), `:8` (gray), `:12` (light blue), `:4` (blue), `:0` (black) |
 | `Z` city-sphere glass | `futureglasses:4`, `:6`, `:8`, `:12` |

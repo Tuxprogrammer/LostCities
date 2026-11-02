@@ -7,7 +7,7 @@ Family D. Mod ID `TwilightForest`, jar `TwilightForest-2.7.45.jar`. Source read:
 - **125 registry names, about 264 block+meta entries** (orientation metas collapsed), **about 95 useful** for cities. This is the GTNH fork of TF: it adds eight wood types' doors, trapdoors, chests, stairs and slabs, and the nagastone, spiral-brick and castle sets.
 - **Registry names carry the `tile.` prefix.** TF registers each block under `block.getUnlocalizedName()` (`TFBlocks.java` lines 457-471), so the names are `TwilightForest:tile.TFPlank`, `TwilightForest:tile.CastleBrick` and so on. The mod ID is case-sensitive `TwilightForest`.
 - **Look.** Two genuinely urban sets: **underbrick** (brown-red brick with mossy and cracked variants: a ready-made ruined brick wall) and **castle brick** (pale limestone-like bricks, worn and cracked variants, a near-black roof tile). Mazestone is a gray-green stone brick family of eight. Eight plank colors (twilight oak, canopy, mangrove, darkwood, timewood, transwood, minewood, sortingwood) read as ordinary planks. The rest is fantasy (nagastone, aurora, trollsteinn, magic logs) or dangerous.
-- **Hardness trap.** Castle brick, castle rune brick, mazestone and deadrock have **hardness 100** (obsidian is 50), and castle brick and mazestone **wear a pickaxe 16 times per block** unless it is TF's mazebreaker (`BlockTFCastleBlock.harvestBlock`, `BlockTFMazestone.harvestBlock`). Towerwood is hardness 40. Players are meant to move into city buildings, so these must stay accents (a few blocks per building) or be left out; the look is good, the mining is not.
+- **Hardness trap.** Castle brick, castle rune brick, mazestone and deadrock have **hardness 100** (obsidian is 50), and castle brick and mazestone **wear a pickaxe 16 times per block** unless it is TF's mazebreaker (`BlockTFCastleBlock.harvestBlock`, `BlockTFMazestone.harvestBlock`). Towerwood is hardness 40. Players are meant to move into city buildings, so these are never placed (D28 rule 7: hardness above obsidian's 50); the look is good, the mining is not. Towerwood (40) and thorns (50) are under the ceiling, but thorns are a hazard.
 - **Wood doors fill a pack gap.** The pack disables Et Futurum's wood-variant doors ([block-mapping.md](../../00-pack-integration/block-mapping.md)), so TF's eight `TFDoor*` blocks are among the few non-oak wooden doors in the pack. They are a custom `Block` copied from vanilla's door (`BlockTFDoor.java`), metadata assumed vanilla's (unverified), and **drop a vanilla oak door item** when broken (`getItemDropped`, line 329).
 - **Dangers.** Hedge meta 0/2 and thorns deal cactus damage on contact (`BlockTFHedge.onEntityCollidedWithBlock`, `BlockTFThorns` line 122; thorns are hardness 50 and spread when broken). Towerwood meta 4 spawns a tower termite when broken. Knightmetal blocks hurt on contact; fiery-metal blocks set entities on fire. Force fields, stronghold shields, castle doors, boss spawners, tower devices and slide traps are progression machinery: never.
 - **Tile entities:** chests (`TFChest*`), firefly, cicada, moonworm, boss spawner, trophy, magic-log cores, cinder furnace. None of the useful construction blocks needs one; the firefly jar does not (`BlockTFFireflyJar` extends `Block`, light 15).
@@ -24,12 +24,12 @@ Family D. Mod ID `TwilightForest`, jar `TwilightForest-2.7.45.jar`. Source read:
 | `TwilightForest:tile.TFUnderBrick:0` | Underbrick | wall-main, wall-accent | yes | urban-brick, ruin | Brown-red brick, hardness 1.5. Fallback `minecraft:brick_block` |
 | `TwilightForest:tile.TFUnderBrick:1` | Mossy Underbrick | wall-main, rubble-ruin | yes | ruin, overgrown | The only mossy *red* brick in the pack outside Chisel. Fallback `minecraft:brick_block` |
 | `TwilightForest:tile.TFUnderBrick:2` | Cracked Underbrick | wall-main, rubble-ruin | yes | ruin | Fallback `minecraft:brick_block` |
-| `TwilightForest:tile.CastleBrick:0` | Castle Brick | wall-accent, trim-pillar | yes | urban-stone | Pale limestone bricks. **Hardness 100, wears pickaxes 16x.** Fallback `minecraft:stonebrick:0` |
+| `TwilightForest:tile.CastleBrick:0` | Castle Brick | wall-accent, trim-pillar | yes | urban-stone | Pale limestone bricks. **Hardness 100, wears pickaxes 16x: never placed (D28 rule 7).** |
 | `TwilightForest:tile.CastleBrick:1` | Worn Castle Brick | wall-accent | yes | urban-stone, ruin | As above |
-| `TwilightForest:tile.CastleBrick:2` | Cracked Castle Brick | wall-accent, rubble-ruin | yes | ruin | As above. Fallback `minecraft:stonebrick:2` |
-| `TwilightForest:tile.CastleBrick:3` | Castle Roof Tile | roof | partly | urban-stone | Near-black tile; a good flat-roof cap. Same hardness trap. Fallback `etfuturum:blackstone:1` then `minecraft:stonebrick` |
+| `TwilightForest:tile.CastleBrick:2` | Cracked Castle Brick | wall-accent, rubble-ruin | yes | ruin | As above |
+| `TwilightForest:tile.CastleBrick:3` | Castle Roof Tile | roof | partly | urban-stone | Near-black tile; would be a good flat-roof cap, but the same hardness trap: never placed |
 | `TwilightForest:tile.CastleMagic:0-3` | Castle Rune Brick (blue, yellow, pink, violet) | off-theme | no | magic | Glowing rune overlay on castle brick; hardness 100 |
-| `TwilightForest:tile.TFMazestone:0` | Mazestone | wall-main | partly | urban-stone | Gray-green smooth stone. **Hardness 100, wears pickaxes 16x** |
+| `TwilightForest:tile.TFMazestone:0` | Mazestone | wall-main | partly | urban-stone | Gray-green smooth stone. **Hardness 100, wears pickaxes 16x: never placed (D28 rule 7), like every mazestone meta** |
 | `TwilightForest:tile.TFMazestone:1` | Mazestone Brick | wall-main | yes | urban-stone | Gray-green stone brick; same trap |
 | `TwilightForest:tile.TFMazestone:2` | Chiseled Mazestone | trim-pillar | yes | urban-stone | Pillar sides |
 | `TwilightForest:tile.TFMazestone:3` | Decorative Mazestone Brick | wall-accent | yes | urban-stone | Carved band |
@@ -94,16 +94,16 @@ Family D. Mod ID `TwilightForest`, jar `TwilightForest-2.7.45.jar`. Source read:
 ## Best variety pools
 
 - **Ruined brick walls (`wall-main`, `rubble-ruin`):** underbrick 0, 1, 2. Weight the plain one highest; together they are the best TF addition.
-- **Pale stone accents (`wall-accent`, `trim-pillar`):** castle brick 0, 1, 2 and mazestone 1, 2, 3, used sparingly because of hardness.
-- **Flat roofs (`roof`):** castle roof tile, sparingly.
 - **Wood floors and interiors (`floor`):** the eight TF planks, slabs and stairs.
 - **Doors (`door-trap`):** the eight TF wood doors and trapdoors, a real gap in the pack's wood-door set.
 - **Lights (`light`):** firefly jar.
-- **Overgrowth (`foliage`):** roots, root strands, moss patch, darkwood hedge, mossy nagastone pillars for park follies.
+- **Overgrowth (`foliage`):** roots, root strands, moss patch, darkwood hedge (meta 1), mossy nagastone pillars for park follies.
+
+Castle brick, castle rune brick, the castle roof tile, mazestone and deadrock would fit as pale stone accents and roofs, but at hardness 100 they are never placed (D28 rule 7), and they appear in no pool.
 
 ## Worldgen notes
 
 - Write the `tile.`-prefixed names exactly; resolve them at load like every other mod block, with the fallbacks above.
-- Keep hardness-100 blocks (castle, mazestone, deadrock) to small accents, or out of anything a player is expected to strip. Never place infested towerwood, thorns, force fields, shields, castle doors, boss spawners or tower devices.
+- Never place the hardness-100 blocks (castle brick and rune brick, castle roof tile, mazestone, deadrock), the giant blocks, infested towerwood, thorns, knightmetal and fiery blocks, force fields, shields, castle doors, boss spawners or tower devices.
 - Hedge meta 0 damages on contact; use meta 1 at reachable heights.
 - TF doors are two blocks like vanilla doors; write both halves.
