@@ -115,9 +115,33 @@ public final class ProfileSetup {
     public static List<ProfileRegistry.Message> reload(File configDir, AssetSet assets) {
         List<ProfileRegistry.Message> report = new ArrayList<>(
             ProfileRegistry.INSTANCE.load(new File(configDir, ProfileRegistry.FOLDER).toPath()));
+        if (ApiProfiles.INSTANCE.frozen()) {
+            report.addAll(ProfileRegistry.INSTANCE.applyApi(ApiProfiles.INSTANCE));
+        }
         report.addAll(checkAssets(assets));
         log(report);
         return report;
+    }
+
+    /**
+     * Freezes the API's profile callbacks and adds their profiles, checked against the loaded assets. Call when a
+     * server is about to start: after every mod's {@code postInit}, before any world is pinned (P-CORE-3).
+     *
+     * @param assets the loaded assets, or {@code null} when they failed to load
+     */
+    public static void serverAboutToStart(AssetSet assets) {
+        ApiProfiles.INSTANCE.freeze();
+        if (ApiProfiles.INSTANCE.size() == 0) {
+            return;
+        }
+        List<ProfileRegistry.Message> report = new ArrayList<>(ProfileRegistry.INSTANCE.applyApi(ApiProfiles.INSTANCE));
+        if (assets != null) {
+            report.addAll(checkAssets(assets));
+        }
+        log(report);
+        for (String line : describeDimensions()) {
+            LostCities.LOG.info("[profiles] {}", line);
+        }
     }
 
     private static List<ProfileRegistry.Message> checkAssets(AssetSet assets) {

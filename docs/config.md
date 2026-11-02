@@ -258,7 +258,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `highwayMinimumRouteLength` | `40` | 0 to 4096 | pinned; read from M06 | Minimum Manhattan length of an inter-city route |
 | `highwayRouteCityPenalty` | `1.0` | 0 to 1000 | pinned; read from M06 | Weight of city potential when choosing an L-route bend |
 | `highwayNetworkLevel` | `0` | 0 to 32 | pinned; read from M06 | Fixed highway level when `highwayLevelFromCities` is 4; lowered, with a warning, so highways stay below Y 255 (28 at ground 71) |
-| `editMode` | `false` |  | pinned; read from M10 | The world is a part-editing world; gates the part editor's commands |
+| `editMode` | `false` |  | live | The world is a part-editing world: generation records every part it writes in `data/lostcitiesnh_edit.dat`, and the part editor's commands work ([commands.md](new-spec/01-core/commands.md)) |
 | `generateNether` | `false` |  | dropped | Dead upstream; overworld only |
 
 #### `explosions`
@@ -373,4 +373,5 @@ JVM properties, not config keys. They exist for development and real-pack testin
 | `-Dlostcitiesnh.planSource=synthetic` | With the test hooks on, pins the synthetic test city (M04) into new worlds instead of the real cities of the layout, for the overlay scenarios and screenshots ([docs/testing/](testing/README.md)) |
 | `-Dlostcitiesnh.capture=true` | Client, with the test hooks on: clean screenshot capture. Hides the GUI, hand, chat, achievement toast and HUD overlays, and logs `[LCNH-CAPTURE] settled` when a viewpoint has loaded ([tools/remote/README.md](../tools/remote/README.md#clean-capture)) |
 | `-Dlostcitiesnh.captureFov=<30-110>`, `captureRenderDistance=<2-16>`, `captureChunkRadius=<n>`, `captureClouds=true` | The capture's field of view (default 70), render distance (default 10), the radius of chunks that must arrive before a viewpoint settles (default render distance − 1), and clouds (default off) |
+| `-Dlostcitiesnh.configScreenProbe=true` | Client, with the test hooks on: at the title screen, opens the Mods list, presses Config for this mod and checks that every label and tooltip of GTNHLib's config screen translates, logging `[LCNH-CLIENT] config` lines ([docs/testing/](testing/README.md#scenario-list)) |
 | `-Dlostcitiesnh.captureServer=<host>:<port>` | With the capture on, the client joins that server from the main menu by itself, and retries once after a disconnect |

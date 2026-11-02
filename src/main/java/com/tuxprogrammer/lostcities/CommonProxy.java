@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities;
 
+import com.tuxprogrammer.lostcities.command.CommandScenarios;
 import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
 import com.tuxprogrammer.lostcities.compat.ae2.Ae2Scenario;
 import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesScenario;
@@ -12,9 +13,11 @@ import com.tuxprogrammer.lostcities.config.LostCitiesConfig;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSetup;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
+import com.tuxprogrammer.lostcities.core.api.ApiScenario;
 import com.tuxprogrammer.lostcities.core.assets.AssetScenarios;
 import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.core.selfcheck.DevSelfCheck;
+import com.tuxprogrammer.lostcities.editor.EditorEvents;
 import com.tuxprogrammer.lostcities.network.LostCitiesNetwork;
 import com.tuxprogrammer.lostcities.scenario.BuiltinScenarios;
 import com.tuxprogrammer.lostcities.scenario.ScenarioAutorun;
@@ -33,6 +36,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
@@ -78,6 +82,7 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         Overlays.register();
         SpawnSelection.register();
+        EditorEvents.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
         AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
@@ -91,6 +96,8 @@ public class CommonProxy {
         Rwg2Landmarks.registerScenarios(ScenarioRegistry.INSTANCE);
         GtnhLayerScenario.registerAll(ScenarioRegistry.INSTANCE);
         OracleCostScenario.registerAll(ScenarioRegistry.INSTANCE);
+        CommandScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        ApiScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
             ScenarioRunner.subscribe();
         }
@@ -112,6 +119,15 @@ public class CommonProxy {
         CityLoot.register();
         VillageNamesOracles.init();
         DevSelfCheck.runIfEnabled();
+    }
+
+    /**
+     * Freezes the API's profile callbacks and adds the profiles they create (P-CORE-3, docs/api.md).
+     *
+     * @param event FML's server-about-to-start event
+     */
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
+        ProfileSetup.serverAboutToStart(LoadedAssets.isLoaded() ? LoadedAssets.current() : null);
     }
 
     /**

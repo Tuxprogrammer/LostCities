@@ -1,4 +1,4 @@
-# 0008 · City loot: tier bands and the tier map
+# 0009 · City loot: tier bands and the tier map
 
 - Status: Accepted
 - Gate: M08 exit (loot at EV or below)

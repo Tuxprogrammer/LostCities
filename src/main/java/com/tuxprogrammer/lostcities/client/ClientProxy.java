@@ -12,8 +12,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
  * <p>
  * The client needs almost nothing of its own: the config screen comes from GTNHLib, which opens it from the Mods list
  * for any registered config when the mod has no {@code guiFactory} (docs/new-spec/09-client-ui/index.md, D31). The
- * only client code is dev-only: the {@link MainMenuProbe} and the {@link CleanCapture} for review screenshots, each
- * registered only with the test hooks and its own property on.
+ * only client code is dev-only: the {@link MainMenuProbe}, the {@link CleanCapture} for review screenshots and the
+ * {@link ConfigScreenProbe} that opens that config screen from the Mods list, each registered only with the test hooks
+ * and its own property on.
  *
  * <p>
  * Side: client.
@@ -33,6 +34,9 @@ public class ClientProxy extends CommonProxy {
         }
         if (DevEnvironment.testHooksEnabled() && Boolean.getBoolean(CaptureSettings.PROPERTY)) {
             CleanCapture.register();
+        }
+        if (DevEnvironment.testHooksEnabled() && Boolean.getBoolean(ConfigScreenProbe.PROPERTY)) {
+            ConfigScreenProbe.register();
         }
     }
 }

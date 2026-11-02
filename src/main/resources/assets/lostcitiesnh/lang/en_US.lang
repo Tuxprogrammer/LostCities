@@ -1,7 +1,7 @@
 # Lost Cities: New Horizons, English (US). The source of truth for every player-visible string.
 
 # Commands
-lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: profile, saveprofile, timers, test, view, find
+lostcitiesnh.command.usage=/lostcities <subcommand>. Subcommands: profile, saveprofile, timers (timings), debug, map, locate, createbuilding, createpart, editpart, resumeedit, listparts, locatepart, exportpart, test, view, find
 lostcitiesnh.command.unknown=Unknown subcommand: %s
 lostcitiesnh.command.no_permission=You do not have permission to use this subcommand.
 lostcitiesnh.command.test.usage=/lostcities test <scenario|prefix|all|list>
@@ -57,6 +57,47 @@ lostcitiesnh.command.find.usage=/lostcities find <center|street|interior|edge|ri
 lostcitiesnh.command.find.no_cities=Dimension %s has no real cities to search.
 lostcitiesnh.command.find.none=No %s within %s chunks.
 lostcitiesnh.command.find.found=%s at %s %s %s (%s); view from %s %s %s, yaw %s, pitch %s.
+
+# Commands of M10: debug, map, locate, createbuilding and the part editor
+lostcitiesnh.command.player_only=Only a player can use /lostcities %s.
+lostcitiesnh.command.no_cities=Dimension %s does not support Lost Cities: it has no pinned profile with real cities.
+lostcitiesnh.command.debug.chunk=Chunk %s, %s of dimension %s (profile %s):
+lostcitiesnh.command.debug.city=  City: %s; style %s; city level %s; city ground at Y %s; chunk kind %s.
+lostcitiesnh.command.debug.building=  Building: %s; multibuilding %s at %s; %s floor(s), %s cellar(s); ruin height %s.
+lostcitiesnh.command.debug.street=  Street: type %s; planned road %s (raw %s); highway levels X %s, Z %s; rail %s at level %s.
+lostcitiesnh.command.debug.zone=  Landmark zone: %s (%s); village lane: %s.
+lostcitiesnh.command.debug.damage=  Explosions reaching the chunk: %s; largest radius %s.
+lostcitiesnh.command.debug.log=  Every field is in the server log.
+lostcitiesnh.command.map.done=The %s x %s chunk map around chunk %s, %s is in the server log: %s with a building (B), %s other city chunks (+), %s with a highway (.), %s landmark cores (#).
+lostcitiesnh.command.locate.usage=/lostcities locate <building>
+lostcitiesnh.command.locate.unknown=Cannot find building %s.
+lostcitiesnh.command.locate.found=Found %s at %s, %s, %s.
+lostcitiesnh.command.locate.none=No %s within %s chunks.
+lostcitiesnh.command.createbuilding.usage=/lostcities createbuilding <building> <floors 1-20> <cellars 0-10> <x> <y> <z>
+lostcitiesnh.command.createbuilding.unknown=Cannot find building %s.
+lostcitiesnh.command.createbuilding.no_parts=Building %s has a level no part matches in this chunk.
+lostcitiesnh.command.createbuilding.too_high=%s floor(s) and %s cellar(s) from Y %s would build past Y %s; %s floor(s) fit there.
+lostcitiesnh.command.createbuilding.done=Built %s in chunk %s, %s: %s floor(s), %s cellar(s), from Y %s.
+lostcitiesnh.command.editor.not_edit_mode=This world was not created with edit mode enabled: the part editor needs a world pinned with a profile that sets editMode.
+lostcitiesnh.command.editor.unknown_part=Error finding part '%s'.
+lostcitiesnh.command.editor.unknown_in_chunk=Unknown part '%s' in this chunk.
+lostcitiesnh.command.editor.nothing_here=Could not find a part to edit in this chunk.
+lostcitiesnh.command.editor.not_editing=You are not editing anything.
+lostcitiesnh.command.createpart.usage=/lostcities createpart <part> <x> <y> <z>
+lostcitiesnh.command.createpart.done=Placed part %s at %s, %s, %s; you are editing it.
+lostcitiesnh.command.editpart.started=Start editing part '%s' (from Y %s).
+lostcitiesnh.command.resumeedit.started=Resumed editing part '%s' (from Y %s).
+lostcitiesnh.command.listparts.entry=Found '%s' at Y %s.
+lostcitiesnh.command.listparts.none=No part is recorded in chunk %s, %s.
+lostcitiesnh.command.locatepart.usage=/lostcities locatepart <part>
+lostcitiesnh.command.locatepart.found=Found %s at %s, %s, %s.
+lostcitiesnh.command.locatepart.none=No recorded %s within %s chunks.
+lostcitiesnh.command.exportpart.usage=/lostcities exportpart <name> [confirm]
+lostcitiesnh.command.exportpart.name='%s' is not a valid file name: use lower-case letters, digits and _ only.
+lostcitiesnh.command.exportpart.exists=%s already exists. Add 'confirm' to replace it.
+lostcitiesnh.command.exportpart.pool=The part uses more different blocks than the %s characters a palette can give; nothing was exported.
+lostcitiesnh.command.exportpart.done=Exported part %s to %s, with %s new block(s) in its missingpalette.
+lostcitiesnh.command.exportpart.failed=Error writing file '%s': %s
 
 # Scenario harness
 lostcitiesnh.scenario.result=%s %s (%s ms): %s

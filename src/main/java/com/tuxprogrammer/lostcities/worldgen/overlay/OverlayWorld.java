@@ -14,6 +14,8 @@ import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
 import com.tuxprogrammer.lostcities.core.Module;
 import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
+import com.tuxprogrammer.lostcities.editor.EditModeData;
+import com.tuxprogrammer.lostcities.editor.EditSessions;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
@@ -49,6 +51,9 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
  */
 public final class OverlayWorld {
 
+    /** The profile option that makes a world a part-editing world (docs/new-spec/01-core/index.md, Part editor). */
+    public static final String EDIT_MODE = "editMode";
+
     private final WorldServer world;
     private final int dimension;
     private final ProfileSnapshot snapshot;
@@ -67,6 +72,8 @@ public final class OverlayWorld {
     private final WorldBiomes biomes;
     private final LayoutCityPlan cities;
     private final int chunksBeforeInstall;
+    private final EditSessions editSessions = new EditSessions();
+    private final boolean editMode;
     private long cascades;
 
     OverlayWorld(WorldServer world, ProfileSnapshot snapshot, TerrainHeightOracle oracle, int chunksBeforeInstall) {
@@ -90,6 +97,16 @@ public final class OverlayWorld {
         this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
         this.biomes = new WorldBiomes(world);
         this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers);
+        this.editMode = snapshot.profileValues()
+            .getBoolean(EDIT_MODE);
+        if (editMode && cities != null) {
+            // Part editor (D13): an editMode world records every part its terrain phase writes.
+            cities.context()
+                .recorder(
+                    EditModeData.get(world)
+                        .records()
+                        .recorder(dimension));
+        }
         this.plan = new CachedCityPlan(planSource(world.getSeed(), snapshot, settings, heights, cities));
         this.prefetcher = new PlanPrefetcher(
             plan,
@@ -97,6 +114,10 @@ public final class OverlayWorld {
             timers,
             (x, z) -> world.theChunkProviderServer != null && world.theChunkProviderServer.chunkExists(x, z));
         this.terrainPhase = new TerrainPhase(context, plan);
+        if (cities != null) {
+            // The API's generation events (docs/api.md); with no listener they change nothing.
+            terrainPhase.events(com.tuxprogrammer.lostcities.core.api.ForgeChunkEvents.forWorld(this));
+        }
         this.populationPhase = new PopulationPhase(world, refs);
         this.buffer = new WorldChunkBuffer(refs);
     }
@@ -409,6 +430,17 @@ public final class OverlayWorld {
             .hasExplosions();
     }
 
+    /**
+     * Returns the explosions that reach a chunk, from the terrain phase's cache, as generation computes them.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the chunk's damage area
+     */
+    public com.tuxprogrammer.lostcities.worldgen.damage.DamageArea damageArea(int chunkX, int chunkZ) {
+        return terrainPhase.damageArea(chunkX, chunkZ);
+    }
+
     /** Returns the timers. */
     public GenerationTimers timers() {
         return timers;
@@ -464,8 +496,24 @@ public final class OverlayWorld {
             + (cities == null ? 0 : cities.estimatedCacheBytes());
     }
 
+    /** Returns whether the pinned profile has {@code editMode}: the part editor's commands work here. */
+    public boolean editMode() {
+        return editMode;
+    }
+
+    /** Returns the part-editing sessions of this world, dropped with it (avoids CORE-35). */
+    public EditSessions editSessions() {
+        return editSessions;
+    }
+
+    /** Returns the world's block references, shared by the chunk buffer and the commands that read blocks. */
+    public BlockRefs refs() {
+        return refs;
+    }
+
     /** Frees the caches; the world is unloading. */
     void close() {
+        editSessions.clear();
         plan.clear();
         heights.clear();
         biomes.clear();
