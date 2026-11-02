@@ -109,4 +109,4 @@ SCAT-01, SCAT-02, SCAT-03, SCAT-04, SCAT-16.
 
 ## Deviations in the new mod
 
-None recorded yet.
+Recorded in the new spec: [07-scattered § Deviations](../../new-spec/07-scattered/index.md#deviations) and [0009](../../design/0009-scattered-structures-in-rwg-terrain.md).
