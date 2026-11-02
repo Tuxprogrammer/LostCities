@@ -73,11 +73,11 @@ public final class VillageNamesScenario implements Scenario {
     /** Monument grid cells scanned on each side of the center's cell. */
     static final int MONUMENT_SCAN_CELLS = 20;
     /** Predicted villages generated. */
-    static final int VILLAGES = 3;
+    static final int VILLAGES = 6;
     /** Rejected start chunks generated. */
-    static final int REJECTED = 3;
+    static final int REJECTED = 6;
     /** Predicted monuments generated. */
-    static final int MONUMENTS = 2;
+    static final int MONUMENTS = 8;
     /** Share of a village's buildings that must show built blocks. */
     static final double BUILT_SHARE = 0.8;
     /** Monument blocks a generated monument must show at least. */
@@ -317,6 +317,7 @@ public final class VillageNamesScenario implements Scenario {
         }
 
         int monumentsMatched = 0;
+        int monumentsAbsent = 0;
         for (Landmark monument : monumentTargets) {
             BlockRect box = monument.footprint()
                 .get(0);
@@ -328,6 +329,9 @@ public final class VillageNamesScenario implements Scenario {
             if (actual == null) {
                 boolean storedAccepts = MonumentGrid.siteAccepts(startX, startZ, stored);
                 verdict = storedAccepts ? "missing" : "missing (explained: the chunk's stored biomes fail the test)";
+                if (!storedAccepts) {
+                    monumentsAbsent++;
+                }
                 if (storedAccepts) {
                     failures.add(monument.id() + " predicted but VillageNames recorded no monument");
                 }
@@ -369,8 +373,8 @@ public final class VillageNamesScenario implements Scenario {
             String.format(
                 Locale.ROOT,
                 "[LCNH-VN] result %s: villages generated %d, matched %d; rejected starts %d; valid villages recorded"
-                    + " %d, unpredicted %d (explained %d); monuments generated %d, matched %d, recorded %d,"
-                    + " unpredicted %d",
+                    + " %d, unpredicted %d (explained %d); monuments generated %d, matched %d, absent as explained %d,"
+                    + " recorded %d, unpredicted %d",
                 HeightOracles.worldType(world),
                 villageTargets.size(),
                 matched,
@@ -380,6 +384,7 @@ public final class VillageNamesScenario implements Scenario {
                 explained,
                 monumentTargets.size(),
                 monumentsMatched,
+                monumentsAbsent,
                 actualMonuments.size(),
                 monumentsUnpredicted));
         context.check(failures.isEmpty(), String.join("; ", failures));
@@ -560,9 +565,49 @@ public final class VillageNamesScenario implements Scenario {
             total++;
             if (hasBlock(world, piece.box(), 1, 255, false)) {
                 built++;
+            } else {
+                LostCities.LOG.info(
+                    "[LCNH-VN] {} building {} without built blocks; blocks around the ground: {}",
+                    target.landmark()
+                        .id(),
+                    piece.box(),
+                    blockCounts(
+                        world,
+                        piece.box(),
+                        target.landmark()
+                            .groundEstimate() - 4,
+                        target.landmark()
+                            .groundEstimate() + 16));
             }
         }
         return new int[] { built, total };
+    }
+
+    /** Returns the commonest non-air blocks in a box between two heights, for a failure's diagnosis. */
+    private static String blockCounts(WorldServer world, BlockRect box, int minY, int maxY) {
+        Map<String, Integer> counts = new TreeMap<>();
+        ChunkProviderServer server = world.theChunkProviderServer;
+        for (int x = box.minX(); x <= box.maxX(); x++) {
+            for (int z = box.minZ(); z <= box.maxZ(); z++) {
+                if (!server.chunkExists(x >> 4, z >> 4)) {
+                    counts.merge("(unloaded)", 1, Integer::sum);
+                    continue;
+                }
+                Chunk chunk = server.provideChunk(x >> 4, z >> 4);
+                for (int y = Math.max(1, minY); y <= Math.min(255, maxY); y++) {
+                    String name = Block.blockRegistry.getNameForObject(chunk.getBlock(x & 15, y, z & 15));
+                    if (!"minecraft:air".equals(name)) {
+                        counts.merge(name, 1, Integer::sum);
+                    }
+                }
+            }
+        }
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(counts.entrySet());
+        entries.sort(
+            Map.Entry.<String, Integer>comparingByValue()
+                .reversed());
+        return entries.subList(0, Math.min(8, entries.size()))
+            .toString();
     }
 
     private static boolean hasBlock(WorldServer world, BlockRect box, int minY, int maxY, boolean monument) {
