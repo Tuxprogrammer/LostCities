@@ -32,8 +32,10 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * Pure, as {@link StructureOracle} requires: the answer depends on the world seed, Roguelike's settings, the biome
  * provider and the height oracle; no chunk is loaded and {@code world.rand} is never touched. Each cell's answer is
  * cached in a bounded cache owned by this object ({@value #CACHE_SIZE} cells). While the plan prefetcher probes
- * (0005 §8), a cell not cached yet is fetched apart, whole ({@link HeightProbe#missHeavy}), so a probe never runs the
- * 50 candidates piecemeal.
+ * (0005 §8), a cell not cached yet is worked through in steps of {@value #CANDIDATES_PER_STEP} candidates, one step
+ * per probe miss ({@link HeightProbe#miss}), its progress kept in a small bounded map, so no prefetch tick runs all
+ * 50 candidates at once (budget B4). The steps test the candidates in the same order as one pass does, so the
+ * prediction is the same either way.
  *
  * <p>
  * Server thread; synchronized, as the other oracles. Side: server (world generation), and plain Java in tests.
@@ -49,6 +51,10 @@ public final class RoguelikeOracle implements StructureOracle {
      * blocks into the chunk, and the lot 10 blocks further.
      */
     public static final int REACH_CHUNKS = 7;
+    /** Candidates one prefetch step tests: up to about 2 ms of height samples on RWG2 Continents. */
+    public static final int CANDIDATES_PER_STEP = 3;
+    /** Cells whose candidates are part-way tested, kept at most. */
+    static final int PROGRESS_SIZE = 32;
 
     private final int dimension;
     private final RoguelikeGrid grid;
@@ -56,6 +62,7 @@ public final class RoguelikeOracle implements StructureOracle {
     private final TerrainHeightOracle heights;
     private final HeightProbe probe;
     private final BoundedCache<Prediction> cache;
+    private final BoundedCache<Progress> progress = new BoundedCache<>(PROGRESS_SIZE);
 
     /**
      * Creates the oracle of a world.
@@ -132,10 +139,27 @@ public final class RoguelikeOracle implements StructureOracle {
             return Prediction.none(cellX, cellZ, grid.dungeonChunk(cellX, cellZ), Collections.emptyMap());
         }
         if (probe.active()) {
-            // Up to 50 × 81 height samples: fetched whole, with the probe off, as VillageNames' starts are (D125).
-            throw probe.missHeavy(() -> fetch(cellX, cellZ));
+            // Up to 50 × 81 height samples: tested a few candidates per prefetch step, with the probe off.
+            throw probe.miss(() -> step(cellX, cellZ));
         }
         return fetch(cellX, cellZ);
+    }
+
+    /** Tests the next few candidates of a cell, and caches its prediction once one passes or none is left. */
+    private synchronized void step(int cellX, int cellZ) {
+        long key = BoundedCache.key(cellX, cellZ);
+        if (cache.get(key) != null) {
+            return;
+        }
+        Progress state = progress.get(key);
+        if (state == null) {
+            state = progress.put(key, new Progress(cellX, cellZ));
+        }
+        Prediction done = state.advance(CANDIDATES_PER_STEP);
+        if (done != null) {
+            cache.put(key, done);
+            progress.remove(key);
+        }
     }
 
     /**
@@ -154,19 +178,43 @@ public final class RoguelikeOracle implements StructureOracle {
     }
 
     private Prediction compute(int cellX, int cellZ) {
-        int[] chunk = grid.dungeonChunk(cellX, cellZ);
-        int[][] candidates = grid.candidates(chunk[0], chunk[1]);
-        Map<SiteRules.Verdict, Integer> rejected = new EnumMap<>(SiteRules.Verdict.class);
-        for (int i = 0; i < candidates.length; i++) {
-            int x = candidates[i][0];
-            int z = candidates[i][1];
-            SiteRules.Verdict verdict = rules.test(x, z);
-            if (verdict == SiteRules.Verdict.PASS) {
-                return new Prediction(cellX, cellZ, chunk, i, x, z, landmark(x, z), rejected);
-            }
-            rejected.merge(verdict, 1, Integer::sum);
+        return new Progress(cellX, cellZ).advance(Integer.MAX_VALUE);
+    }
+
+    /** One cell's candidates, tested in order, part-way or whole. */
+    private final class Progress {
+
+        private final int cellX;
+        private final int cellZ;
+        private final int[] chunk;
+        private final int[][] candidates;
+        private final Map<SiteRules.Verdict, Integer> rejected = new EnumMap<>(SiteRules.Verdict.class);
+        private int next;
+
+        Progress(int cellX, int cellZ) {
+            this.cellX = cellX;
+            this.cellZ = cellZ;
+            this.chunk = grid.dungeonChunk(cellX, cellZ);
+            this.candidates = grid.candidates(chunk[0], chunk[1]);
         }
-        return Prediction.none(cellX, cellZ, chunk, rejected);
+
+        /**
+         * Tests up to {@code count} more candidates.
+         *
+         * @return the prediction once a candidate passes or none is left; {@code null} while candidates remain
+         */
+        Prediction advance(int count) {
+            for (int tested = 0; tested < count && next < candidates.length; tested++, next++) {
+                int x = candidates[next][0];
+                int z = candidates[next][1];
+                SiteRules.Verdict verdict = rules.test(x, z);
+                if (verdict == SiteRules.Verdict.PASS) {
+                    return new Prediction(cellX, cellZ, chunk, next, x, z, landmark(x, z), rejected);
+                }
+                rejected.merge(verdict, 1, Integer::sum);
+            }
+            return next >= candidates.length ? Prediction.none(cellX, cellZ, chunk, rejected) : null;
+        }
     }
 
     private Landmark landmark(int x, int z) {

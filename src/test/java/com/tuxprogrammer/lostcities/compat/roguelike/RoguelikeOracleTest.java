@@ -186,15 +186,17 @@ class RoguelikeOracleTest {
     }
 
     @Test
-    void aProbeFetchesACellWholeAndNeverHalfway() {
+    void aProbeWorksThroughACellInStepsAndCachesTheSamePrediction() {
         HeightProbe probe = new HeightProbe();
         int[] calls = { 0 };
+        // Mostly too low for a site (ground below Y 60), so several steps are needed before one passes.
+        TerrainHeightOracle rough = (x, z) -> Math.floorMod(x * 31 + z * 17, 7) == 0 ? 72 : 50;
         TerrainHeightOracle heights = new TerrainHeightOracle() {
 
             @Override
             public int height(int blockX, int blockZ) {
                 calls[0]++;
-                return 72;
+                return rough.height(blockX, blockZ);
             }
 
             @Override
@@ -203,16 +205,26 @@ class RoguelikeOracleTest {
             }
         };
         RoguelikeOracle oracle = oracle(heights, 16);
+        RoguelikeOracle.Prediction whole = oracle(rough, 16).predict(0, 0);
         probe.setActive(true);
-        assertThrows(HeightProbe.NotCached.class, () -> oracle.predict(0, 0));
-        assertEquals(0, calls[0], "nothing computed while probing");
-        assertTrue(probe.fetchMissing());
-        assertTrue(calls[0] > 0);
-        int after = calls[0];
-        RoguelikeOracle.Prediction prediction = oracle.predict(0, 0);
-        assertTrue(prediction.hasSite());
-        assertEquals(after, calls[0], "the fetched cell is cached");
+        int steps = 0;
+        RoguelikeOracle.Prediction stepped = null;
+        while (stepped == null && steps < 100) {
+            try {
+                stepped = oracle.predict(0, 0);
+            } catch (HeightProbe.NotCached missing) {
+                int before = calls[0];
+                assertTrue(probe.fetchMissing());
+                steps++;
+                assertTrue(calls[0] > before, "each step tests candidates");
+            }
+        }
         probe.setActive(false);
+        assertTrue(steps >= 1, "nothing is computed inside a probe");
+        assertEquals(whole.toString(), stepped.toString(), "steps give the one-pass prediction");
+        int after = calls[0];
+        oracle.predict(0, 0);
+        assertEquals(after, calls[0], "the finished cell is cached");
     }
 
     @Test
