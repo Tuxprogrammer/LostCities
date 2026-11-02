@@ -222,20 +222,20 @@ class RoguelikeOracleTest {
         RoguelikeOracle a = oracle((x, z) -> 72, 16);
         RoguelikeOracle b = oracle((x, z) -> 72, 16);
         assertEquals(
-            a.predict(-3, 4)
+            a.predict(3, 4)
                 .toString(),
-            b.predict(-3, 4)
+            b.predict(3, 4)
                 .toString());
         assertEquals(
             Collections.singletonList(
-                a.predict(-3, 4)
+                a.predict(3, 4)
                     .landmark()
                     .id()),
             Collections.singletonList(
                 b.predictForChunk(
-                    b.predict(-3, 4)
+                    b.predict(3, 4)
                         .chunkX(),
-                    b.predict(-3, 4)
+                    b.predict(3, 4)
                         .chunkZ())
                     .landmark()
                     .id()));
