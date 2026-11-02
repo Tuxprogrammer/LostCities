@@ -2,8 +2,13 @@ package com.tuxprogrammer.lostcities;
 
 import com.tuxprogrammer.lostcities.command.CommandScenarios;
 import com.tuxprogrammer.lostcities.command.LostCitiesCommand;
+import com.tuxprogrammer.lostcities.compat.ae2.Ae2Scenario;
+import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesScenario;
+import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeScenario;
+import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesScenario;
+import com.tuxprogrammer.lostcities.compat.witchery.WitcheryScenario;
 import com.tuxprogrammer.lostcities.config.LostCitiesConfig;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSetup;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
@@ -20,6 +25,8 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityScenarios;
+import com.tuxprogrammer.lostcities.worldgen.overlay.GtnhLayerScenario;
+import com.tuxprogrammer.lostcities.worldgen.overlay.OracleCostScenario;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
 import com.tuxprogrammer.lostcities.worldgen.overlay.ProfileScenarios;
@@ -76,13 +83,19 @@ public class CommonProxy {
         Overlays.register();
         SpawnSelection.register();
         EditorEvents.register();
-        CityLoot.register();
         BuiltinScenarios.registerAll(ScenarioRegistry.INSTANCE);
         AssetScenarios.registerAll(ScenarioRegistry.INSTANCE);
         OverlayScenarios.registerAll(ScenarioRegistry.INSTANCE);
         CityScenarios.registerAll(ScenarioRegistry.INSTANCE);
         ProfileScenarios.registerAll(ScenarioRegistry.INSTANCE);
         VillageNamesScenario.registerAll(ScenarioRegistry.INSTANCE);
+        RoguelikeScenario.registerAll(ScenarioRegistry.INSTANCE);
+        LootGamesScenario.registerAll(ScenarioRegistry.INSTANCE);
+        Ae2Scenario.registerAll(ScenarioRegistry.INSTANCE);
+        WitcheryScenario.registerAll(ScenarioRegistry.INSTANCE);
+        Rwg2Landmarks.registerScenarios(ScenarioRegistry.INSTANCE);
+        GtnhLayerScenario.registerAll(ScenarioRegistry.INSTANCE);
+        OracleCostScenario.registerAll(ScenarioRegistry.INSTANCE);
         CommandScenarios.registerAll(ScenarioRegistry.INSTANCE);
         ApiScenario.registerAll(ScenarioRegistry.INSTANCE);
         if (DevEnvironment.testHooksEnabled()) {
@@ -91,10 +104,10 @@ public class CommonProxy {
     }
 
     /**
-     * Loads the assets against the complete block registry, checks the profiles against them, pins the order of FML's
-     * village-creation handlers so
-     * VillageNames villages are reproducible (decision log D86), then runs the dev self-check, which throws and
-     * so stops the dev server when it fails.
+     * Loads the assets against the complete block registry, checks the profiles against them, registers the loot
+     * categories once every mod's items and ore names exist (D20), pins the order of FML's village-creation handlers
+     * so VillageNames villages are reproducible (decision log D86), then runs the dev self-check, which throws and so
+     * stops the dev server when it fails.
      *
      * @param event FML's post-initialization event
      */
@@ -103,6 +116,7 @@ public class CommonProxy {
             Loader.instance()
                 .getConfigDir());
         ProfileSetup.postInit(LoadedAssets.current());
+        CityLoot.register();
         VillageNamesOracles.init();
         DevSelfCheck.runIfEnabled();
     }

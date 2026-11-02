@@ -7,7 +7,12 @@ import java.util.List;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.compat.ae2.Ae2Oracles;
+import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesOracles;
+import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
+import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
+import com.tuxprogrammer.lostcities.compat.witchery.WitcheryOracles;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
@@ -53,12 +58,25 @@ public final class StructureOracles {
      */
     public static List<Factory> factories() {
         List<Factory> factories = new ArrayList<>();
-        // One line per mod. VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the overload with
-        // the
-        // height oracle, since the one without builds a second classic RWG generator. M08 adds Roguelike Dungeons,
-        // Witchery, LootGames, AE2 and RWG2 here.
+        // One line per mod (0006 §2). VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the
+        // overload with the height oracle, since the one without builds a second classic RWG generator. Roguelike
+        // Dungeons, Witchery, LootGames, AE2 and RWG2's terrain landmarks (M08).
         factories.add(VillageNamesOracles::forWorld);
+        factories.add(RoguelikeOracles::forWorld);
+        factories.add(WitcheryOracles::forWorld);
+        factories.add(LootGamesOracles::forWorld);
+        factories.add(Ae2Oracles::forWorld);
+        factories.add(Rwg2Landmarks::forWorld);
         return factories;
+    }
+
+    /**
+     * Returns the name of each factory of {@link #factories()}, in the same order, for log lines.
+     *
+     * @return the names
+     */
+    public static List<String> factoryNames() {
+        return java.util.Arrays.asList("villagenames", "roguelike", "witchery", "lootgames", "ae2", "rwg2");
     }
 
     /**
@@ -75,13 +93,23 @@ public final class StructureOracles {
 
     /**
      * Returns the settings of every wired structure generator that decide where its structures go, one line, for the
-     * pinned snapshot: today VillageNames' (D119).
+     * pinned snapshot (D119): VillageNames', Roguelike Dungeons', Witchery's, LootGames', AE2's and RWG2's landmarks'.
      *
      * @param world the world
      * @return the summary
      */
     public static String settingsSummary(World world) {
-        return "villagenames=" + VillageNamesOracles.settingsSummary(world);
+        return "villagenames=" + VillageNamesOracles.settingsSummary(world)
+            + " roguelike="
+            + RoguelikeOracles.settingsSummary(world)
+            + " witchery="
+            + WitcheryOracles.settingsSummary(world)
+            + " lootgames="
+            + LootGamesOracles.settingsSummary(world)
+            + " ae2="
+            + Ae2Oracles.settingsSummary(world)
+            + " rwg2="
+            + Rwg2Landmarks.settingsSummary(world);
     }
 
     /**

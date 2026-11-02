@@ -52,6 +52,52 @@ public class JobTargetTest {
         return target.jobs();
     }
 
+    /** A spawner on upstream's {@code hardmobs} condition. */
+    private static final AssetSet HARD = TestAssets.loadFiles(
+        "lostcities/palettes/h.json",
+        "{\"palette\": [{\"char\": \"4\", \"block\": \"minecraft:spawner\", \"mob\": \"hardmobs\"}]}",
+        "lostcities/conditions/hardmobs.json",
+        "{\"values\": [{\"factor\": 1, \"value\": \"minecraft:blaze\"},"
+            + " {\"factor\": 1, \"value\": \"minecraft:witch\"}]}",
+        "lostcities/parts/cell.json",
+        "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"4\"]]}");
+
+    private static String hardMob(int x, boolean enderZoo) {
+        JobTarget target = new JobTarget(
+            new JobTarget.Facts(9, x, 0, 71, 71, 0, 3, BiomeDescriptor.NONE, false, true, 0f)
+                .withOptions(false, enderZoo));
+        PartWriter writer = new PartWriter(
+            target,
+            new PaletteSequence(9, x, 0),
+            new PartWriter.Rules(true, true, false, false, false, 63, com.tuxprogrammer.lostcities.asset.BlockRef.AIR),
+            LayoutLog.SILENT);
+        writer.place(
+            new PartWriter.Placement(
+                HARD.part(AssetId.parse("cell")),
+                CompiledPalette.compile(MetalFlags.ALL_ON, HARD.palette(AssetId.parse("h"))),
+                Transform.ROTATE_NONE,
+                0,
+                75,
+                0,
+                HardAir.AIR,
+                null));
+        return target.jobs()
+            .get(0)
+            .argument();
+    }
+
+    @Test
+    public void hardMobsAreBlazesAndWitchesUnlessTheEnderZooSetIsOn() {
+        java.util.Set<String> plain = new java.util.TreeSet<>();
+        java.util.Set<String> enderZoo = new java.util.TreeSet<>();
+        for (int x = 0; x < 64; x++) {
+            plain.add(hardMob(x, false));
+            enderZoo.add(hardMob(x, true));
+        }
+        assertEquals(new java.util.TreeSet<>(java.util.Arrays.asList("Blaze", "Witch")), plain);
+        assertEquals(new java.util.TreeSet<>(LootRules.ENDERZOO_HARDMOBS), enderZoo);
+    }
+
     @Test
     public void listsEachSpecialBlockAsAJob() {
         List<PopulationJob> jobs = jobs(65, 0, 0, false, 0f);
@@ -88,10 +134,12 @@ public class JobTargetTest {
     public void doesNotReproduceASSET05_aCellarChestIsOnFloorMinusOne() {
         // Y 70 is one block below the city ground 71: the first cellar, floor −1, which the loot range -100..-1
         // includes; upstream's truncating division called it floor 0 and the chest stayed empty.
-        assertEquals(
-            LootRules.CITY,
-            jobs(70, 0, 0, false, 0f).get(0)
-                .argument());
+        assertTrue(
+            java.util.Arrays.asList(LootRules.CITY_MV, LootRules.CITY_HV, LootRules.CITY_EV)
+                .contains(
+                    jobs(70, 0, 0, false, 0f).get(0)
+                        .argument()),
+            "lostcitychest becomes one of the MV to EV bands");
         assertEquals(
             "",
             jobs(71, 0, 0, false, 0f).get(0)

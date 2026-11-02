@@ -148,7 +148,8 @@ public final class PopulationPhase {
     }
 
     /**
-     * Sets the mob of the spawner the terrain phase wrote; a spawner whose condition picked no mob becomes air
+     * Sets the mob of the spawner the terrain phase wrote, checked against the entity registry ({@link SpawnerMobs});
+     * a spawner whose condition picked no mob, or a mob this pack lacks with no fallback, becomes air
      * (ASSET-29
      * is fixed by the condition returning nothing, and nothing must not mean a pig spawner).
      */
@@ -156,14 +157,14 @@ public final class PopulationPhase {
         if (world.getBlock(x, job.y(), z) != Blocks.mob_spawner) {
             return false;
         }
-        if (job.argument()
-            .isEmpty()) {
+        String mob = SpawnerMobs.resolve(job.argument());
+        if (mob.isEmpty()) {
             return world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
         }
         TileEntity tile = tileAt(x, job.y(), z);
         if (tile instanceof TileEntityMobSpawner spawner) {
             spawner.func_145881_a()
-                .setEntityName(job.argument());
+                .setEntityName(mob);
             world.getChunkFromChunkCoords(x >> 4, z >> 4)
                 .setChunkModified();
             return true;

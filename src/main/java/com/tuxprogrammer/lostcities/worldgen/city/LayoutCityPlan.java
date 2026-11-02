@@ -382,7 +382,8 @@ public final class LayoutCityPlan implements CityPlan {
                 biome,
                 plan.noLoot(),
                 settings.generateLoot(),
-                settings.chestWithoutLootChance()));
+                settings.chestWithoutLootChance())
+                    .withOptions(settings.vanillaLootCategories(), settings.enderZooHardMobs()));
         CityChunkWriter writer = new CityChunkWriter(
             context,
             chunkX,

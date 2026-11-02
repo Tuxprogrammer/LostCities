@@ -43,7 +43,7 @@ Around each landmark the layout derives three zones, whole chunks as upstream's 
 | **Edge ring (the margin)** | The core's eight-neighbors | Never city: the city builds inside it (alpha review AR-10). Natural ground with RWG's decoration, which the blend slopes from the city's edge to the core's ground and a soft-edge strip meets to the core's own edge columns (§4). Nothing city-made but a village lane, graded down the slope with stairs and half slabs (§3) |
 | **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks, outside the margin | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town. A street that runs toward the margin ends in a plaza in the first ring, and a primary road's detour runs through it (§3) |
 
-An AE2 meteorite that lands in a city gets a **crater basin**: its core is natural ground for the impact, and its heightCap applies to every city chunk it reaches, capping a building's floors so its roof stays below the paraboloid. The city steps down toward the impact instead of being sliced by the crater (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
+An AE2 meteorite that lands in a city gets a **crater basin**: its core is natural ground for the impact, and its heightCap applies to every city chunk it reaches, capping a building's floors so its roof stays below the paraboloid; a chunk whose city ground plus 6 blocks the cap would cut leaves the city (D-M08-23). The city steps down toward the impact instead of being sliced by the crater (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
 
 Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and a margin like every other kind: the city ends a chunk short of them, and the blend (§4, E1) shapes the land between.
 
@@ -64,8 +64,8 @@ Chunk granularity keeps upstream's planner, multibuilding placement, street rend
 | Roguelike Dungeons | `compat.roguelike` | Reproduces the grid and the FML generator seed, generates the 50 candidates, and tests each against the biome provider and the height oracle with `validLocation`'s rules. The first that passes is a `CANDIDATE` landmark: 21 × 21 blocks around it |
 | Witchery | `compat.witchery` | The 20-chunk grid and the biome-type test, from the contract read from the decompiled jar (no code copied). A `UNION` landmark: 23 × 23 blocks over the candidate chunk and its west, north and north-west neighbors |
 | LootGames | `compat.lootgames` | The rhomb-grid test. An `EXACT` landmark: the 21 × 21 room and the +Z entrance tunnel |
-| AE2 | `compat.ae2` | The grid cell's position, size and lava from the seeded draws. An `EXACT` core of the crater size, and a heightCap paraboloid with the conservative center height (surface − 14 − r + 1) |
-| RWG2 landmarks | `compat.rwg2` | The world-less chunk manager the height oracle already builds: volcano vicinity, lava-cave opening (70 blocks), river junction (strength ≥ 0.70 near a mountain chain), each grown by 8 blocks |
+| AE2 | `compat.ae2` | The grid cell's position, size and lava from the seeded draws. An `EXACT` core of the ground AE2 rebuilds: the decay square (61 × 61 blocks), which holds the crater. A heightCap paraboloid with the lowest center a crater can have (the lowest ground of the meteor chunk's sky box − 10 − r + 1, less a block of slack) |
+| RWG2 landmarks | `compat.rwg2` | The world's own `ChunkManagerRealistic`, the one the height oracle samples (its predicates are pure functions of the seed and the coordinates): volcanoes (radius 160) and lava-cave openings (70 blocks) as discs grown by 13 blocks, found by 32-block sampling; river junctions from 8-block sampling refined to 2 blocks, kept at strength ≥ 0.60 under a mountain-chain test that is a superset of RWG2's (0.70 near a chain), so every column RWG2 protects with its 8-block margin is covered. Cached per 64-block region |
 
 The values each oracle reads from another mod's config are added to the pinned profile snapshot ([0005](0005-rwg-overlay.md) §7). If they differ at a later load, the server logs that structure sites have moved for new chunks.
 
@@ -168,7 +168,5 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
 
 For the prototype and the alpha screenshots:
 
-- The Roguelike prediction's hit rate.
 - The look of margins, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers (the alpha review round's shots, M05R, show the margins and lanes).
 - Thaumcraft mounds in city parks.
-- The oracles' cost against the budget.

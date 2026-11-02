@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.json.JsonFields;
@@ -103,9 +104,23 @@ public final class Condition {
      * @return the value, or null when none holds or every weight is zero
      */
     public String randomValue(Random random, ConditionContext context) {
+        return randomValue(random, context, value -> true);
+    }
+
+    /**
+     * Picks a value among those a caller allows: keeps the values whose test holds and that {@code allowed} accepts,
+     * in file order, and draws one by weight. The loot glue uses it to leave out values with no 1.7.10 counterpart
+     * before the draw, so they never take a chest's share (docs/new-spec/08-loot-mobs-blocks/index.md).
+     *
+     * @param random  the caller's random
+     * @param context the facts
+     * @param allowed which values may be drawn
+     * @return the value, or null when none holds or every weight is zero
+     */
+    public String randomValue(Random random, ConditionContext context, Predicate<String> allowed) {
         List<Value> passing = new ArrayList<>();
         for (Value value : values) {
-            if (value.test.test(context)) {
+            if (allowed.test(value.value) && value.test.test(context)) {
                 passing.add(value);
             }
         }
