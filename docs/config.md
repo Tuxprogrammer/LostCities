@@ -28,6 +28,39 @@ worldgen {
 
 `ConfigDocsTest` keeps this table in step with the code: every option has a row here with its default.
 
+## `decorativeMetals`: metal accents
+
+One switch per decorative metal at or below EV (decision log D29). With a switch on, that metal's blocks, from every mod, may appear in buildings as small accents under a per-building cap: stripe bands, trims, crates and the odd panel, never whole walls, floors or roofs. With it off, each of those accents uses another block instead. Treasure and chest loot are loot and ignore the switches. Two places keep upstream's look while their metal is on: the cabin's copper walls and stairs, and the highway gas station's and restaurant parking's iron canopy columns, pumps and lamp posts.
+
+These keys apply to **new worlds only**, like the `worldgen` keys: a world pins them when it is created. The config screen marks the category as needing a world restart.
+
+| Key | Default | What it does |
+|---|---|---|
+| `decorativeMetals.iron` | `true` | Iron accents, and the gas station's iron canopy and pumps |
+| `decorativeMetals.gold` | `true` | Gold accents |
+| `decorativeMetals.castIron` | `true` | Cast iron accents |
+| `decorativeMetals.copper` | `true` | Copper accents, and the cabin's copper walls and stairs |
+| `decorativeMetals.tin` | `true` | Tin accents |
+| `decorativeMetals.bronze` | `true` | Bronze accents |
+| `decorativeMetals.lead` | `true` | Lead accents |
+| `decorativeMetals.silver` | `true` | Silver accents |
+| `decorativeMetals.nickel` | `true` | Nickel accents |
+| `decorativeMetals.invar` | `true` | Invar accents |
+| `decorativeMetals.electrum` | `true` | Electrum accents |
+| `decorativeMetals.steel` | `true` | Steel accents |
+| `decorativeMetals.blackSteel` | `true` | Black steel accents |
+| `decorativeMetals.damascusSteel` | `true` | Damascus steel accents |
+| `decorativeMetals.meteoricIron` | `true` | Meteoric iron accents |
+| `decorativeMetals.electricalSteel` | `true` | Electrical steel accents |
+| `decorativeMetals.darkSteel` | `true` | Dark steel accents |
+| `decorativeMetals.aluminum` | `true` | Aluminum accents |
+| `decorativeMetals.aluminumBrass` | `true` | Aluminum brass accents |
+| `decorativeMetals.cobalt` | `true` | Cobalt accents |
+| `decorativeMetals.stainlessSteel` | `true` | Stainless steel accents |
+| `decorativeMetals.titanium` | `true` | Titanium accents |
+| `decorativeMetals.desh` | `true` | Desh accents |
+| `decorativeMetals.thaumium` | `true` | Thaumium accents |
+
 ## Development and testing switches
 
 JVM properties, not config keys. They exist for development and real-pack testing and are off in a normal game.
@@ -38,3 +71,4 @@ JVM properties, not config keys. They exist for development and real-pack testin
 | `-Dlostcitiesnh.selfCheck=true` or `false` | Runs the dev self-check at `postInit` outside the development environment, or skips it inside |
 | `-Dlostcitiesnh.scenarios=<selector>` | Runs the selected scenarios once the server has started, where the test hooks are on |
 | `-Dlostcitiesnh.stopAfterScenarios=true` | Stops the server after that run's summary line |
+| `-Dlostcitiesnh.assetReport=true` | Logs the full asset report at `postInit`: every problem, every fallback block taken and every variety-pool block the registry lacks ([asset-format.md](new-spec/05-assets/asset-format.md#the-block-name-map)) |

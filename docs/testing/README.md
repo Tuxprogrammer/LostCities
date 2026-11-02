@@ -21,6 +21,16 @@ The static checks live in `src/test/java/com/tuxprogrammer/lostcities/statics/`.
 
 The M01 goldens pin `GoldenFixtureTerrain`, a stand-in generator, at three seeds and chunk positions. Their hashes were computed outside Java by an independent re-implementation of the generator (including `java.util.Random`) and of the text form, so they check the format as well as its stability. M03 to M05 add goldens for real city chunks: taken after the terrain phase, and separately after our population phase ([0005](../design/0005-rwg-overlay.md), "Determinism tests").
 
+## Asset validation and palette goldens
+
+`AssetValidationTest` loads every bundled asset with the game's own loader over two registries, vanilla 1.7.10 alone (`src/test/resources/vanilla-1.7.10-blocks.txt`) and the full block-name map, and checks the bundled index against the tree. `PaletteGoldenTest` hashes `CompiledPalette.describe()` for a few representative buildings into `src/test/resources/golden/palette_<case>.sha256`, with the same `-PupdateGoldens` and `build/golden-actual/` conventions as the golden chunks. In the real pack, run the resolution report with:
+
+```sh
+tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG \
+    --jvm '-Dlostcitiesnh.testHooks=true -Dlostcitiesnh.selfCheck=true' \
+    --cmds 'lostcities test assets.pack_resolution; until:Scenarios: ; wait:3'
+```
+
 ## Layout goldens
 
 The city layout (`layout`, M03) has its own goldens, one text file per case in `src/test/resources/golden/layout/` (decision log D47), written by `LayoutGoldenTest` through `LayoutGoldens`:
@@ -73,6 +83,8 @@ Run scenarios on new worlds (`--fresh`, or a new `--world`), on both generators:
 | `harness.trivial` | Harness | The overworld is loaded and ticking: setup, 20 ticks, verify | yes |
 | `harness.fresh_chunk` | Harness | The arena's corner chunk is generated and loaded on demand, outside any generation step, and holds terrain | yes |
 | `harness.must_fail` | Harness | Fails on purpose, to show that FAIL lines and the summary count reach the log | no (manual-only) |
+| `assets.loaded` | Assets | The asset set loaded at `postInit` holds every bundled asset (at least 324) with no error, every code-named block resolved, and a biome descriptor for the arena, with an RWG realistic biome wherever an RWG chunk manager runs the world | yes |
+| `assets.pack_resolution` | Assets | In the real pack: every block the assets and the variety pools name resolves to its primary, with no fallback taken; logs the full asset report, so a run lists every unresolved name | no (manual-only) |
 
 Each feature adds its scenarios to this table.
 

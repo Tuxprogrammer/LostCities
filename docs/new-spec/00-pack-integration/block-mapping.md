@@ -24,7 +24,7 @@ Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D19, 
 - **Fallback chain.** A mapping lists a primary and a fallback. Resolution takes the first that exists; the fallback is always a vanilla block, so resolution never fails.
 - **Blockstate properties become metadata** by the rules in [Blockstate properties](#blockstate-properties-to-metadata). Properties that 1.7.10 computes from neighbors (stair `shape`, fence and pane connections, `waterlogged`) are dropped.
 - **`minecraft:structure_void` is not a block.** Upstream uses it in palettes to mean "leave what is there". The asset model keeps it as a marker that writes nothing.
-- **Block-entity data** (palette `tag` objects: furnace contents, spawner mobs, chest loot) names items by string ID in 1.20. 1.7.10 item NBT stores a numeric ID that differs per world, so the writer resolves item names to IDs when it places the block, never in the asset. *Unverified:* 1.7.10 `ItemStack.readFromNBT` reads `id` as a short; check in M02. Chests and spawners are covered in [loot-and-mobs.md](loot-and-mobs.md). Doors, trapdoors and fence gates are tile-entity blocks in this pack ([Doors and trapdoors](#doors-and-trapdoors)); `setBlock` creates their tile entity, so they need no data.
+- **Block-entity data** (palette `tag` objects: furnace contents, spawner mobs, chest loot) names items by string ID in 1.20. 1.7.10 item NBT stores a numeric ID that differs per world, so the writer resolves item names to IDs when it places the block, never in the asset. 1.7.10 `ItemStack.readFromNBT` reads `id` as a short, `Count` as a byte and `Damage` as a short (*decompiled:* `net.minecraft.item.ItemStack` of the 1.7.10 workspace the build decompiles; inferred from decompiled bytecode and may be wrong). Chests and spawners are covered in [loot-and-mobs.md](loot-and-mobs.md). Doors, trapdoors and fence gates are tile-entity blocks in this pack ([Doors and trapdoors](#doors-and-trapdoors)); `setBlock` creates their tile entity, so they need no data.
 
 ## Pack configuration that decides availability
 
@@ -51,7 +51,7 @@ The Java flag names behind these keys: [ConfigBlocksItems.java#L185-L328][efr-co
 
 ## Vanilla blocks with a 1.7.10 equivalent
 
-Registry names *verified* against the block registry of the Minecraft 1.7.10 client jar. Metadata values follow the Minecraft Wiki's pre-flattening data values and are *unverified* until M02 checks them against the 1.7.10 block classes. Colors use dye order (white 0, orange 1, magenta 2, light blue 3, yellow 4, lime 5, pink 6, gray 7, light gray 8, cyan 9, purple 10, blue 11, brown 12, green 13, red 14, black 15), which Et Futurum's concrete also follows ([ModBlocks.java#L268-L271][efr-concrete]).
+Registry names *verified* against the block registry of the Minecraft 1.7.10 client jar. Metadata values follow the pre-flattening data values; M02 checked the directional ones against the 1.7.10 block classes ([Blockstate properties](#blockstate-properties-to-metadata)). Colors use dye order (white 0, orange 1, magenta 2, light blue 3, yellow 4, lime 5, pink 6, gray 7, light gray 8, cyan 9, purple 10, blue 11, brown 12, green 13, red 14, black 15), which Et Futurum's concrete also follows ([ModBlocks.java#L268-L271][efr-concrete]).
 
 | 1.20 block | 1.7.10 block : meta | Note |
 |---|---|---|
@@ -92,7 +92,7 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `oak_sapling`, `spruce_sapling`, `birch_sapling`, `acacia_sapling` | `minecraft:sapling` : 0, 1, 2, 4 (+8 for `stage=1`) | |
 | `obsidian` | `minecraft:obsidian` | |
 | `poppy` | `minecraft:red_flower` : 0 | |
-| `potted_cactus` | `minecraft:flower_pot` plus its tile entity holding a cactus | *Unverified:* 1.7.10 keeps pot contents in a tile entity, not metadata |
+| `potted_cactus` | `minecraft:flower_pot` plus its tile entity holding a cactus | 1.7.10 keeps pot contents in `TileEntityFlowerPot`, as `Item` and `Data` integers, not metadata (*decompiled:* `net.minecraft.tileentity.TileEntityFlowerPot`); the map's row carries the template `{"Item": "minecraft:cactus", "Data": 0}`, with the item named and resolved at placement |
 | `powered_rail` | `minecraft:golden_rail` : shape (+8 powered) | |
 | `quartz_block` | `minecraft:quartz_block` : 0 | |
 | `quartz_slab` | `minecraft:stone_slab` : 7 (+8 top) | |
@@ -187,12 +187,12 @@ Upstream's Java places a few blocks directly. These map as follows. The rest of 
 | `moss_block` (68 of the rubble table's 128 slots; no asset names it) | `moss_block` | `chisel:moss` : 0, Chisel's plain moss, whose texture matches the modern moss block, with `minecraft:mossy_cobblestone` as the fallback (D31; [03-terrain](../03-terrain/index.md), [05-assets](../05-assets/index.md)). It joins the set of blocks the rubble pass recognizes as rubble. Et Futurum's moss block is behind `enableMossAzalea=false` ([etfuturum.md](../05-assets/block-catalog/etfuturum.md)), and 1.7.10 vanilla has none | [LostCityTerrainFeature.java#L171][up-moss]; [Features.java#L4658-L4679][chisel-moss] |
 | Park grass, when the city style sets no `grass` block | `grass_block` | `minecraft:grass` | [LostCityTerrainFeature.java#L1546-L1548][up-grass] |
 | Torch fix-ups (`fixTorches`) | `torch`, `wall_torch` | `minecraft:torch` : 5 standing, 1 to 4 on a wall | [LostCityTerrainFeature.java#L393-L412][up-torches] |
-| Vines on building walls (the world style's default `vine*` settings) | `vine` with one side set | `minecraft:vine` : the side bit (south 1, west 2, north 4, east 8; *unverified*, M02) | [WorldSettings.java#L40-L52][up-vines] |
+| Vines on building walls (the world style's default `vine*` settings) | `vine` with one side set | `minecraft:vine` : the side bit (south 1, west 2, north 4, east 8; checked in M02 against `BlockVine.onBlockPlaced`) | [WorldSettings.java#L40-L52][up-vines] |
 | Bottom of the world | `bedrock` | not placed: the overlay leaves RWG's bedrock alone, and generation never places unbreakable blocks ([0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)) | [ChunkDriver.java#L47][up-chunkdriver] |
 
 ## Blockstate properties to metadata
 
-*Unverified* (Minecraft Wiki pre-flattening data values); M02 checks each against the 1.7.10 block classes and adds a unit test per rule.
+Checked in M02. Each rule is implemented by `asset.block.MetaRule`, with a unit test per rule (`MetaRuleTest`). The directional encodings were read from the 1.7.10 block classes the build decompiles (*decompiled:* `BlockStairs.onBlockPlacedBy`, `BlockTorch.onBlockPlaced`, `BlockLadder.onBlockPlaced`, `BlockLever.onBlockPlaced`, `BlockTrapDoor.onBlockPlaced`, `BlockAnvil.onBlockPlacedBy`, `BlockVine.onBlockPlaced`, `ItemDoor`'s placement; inferred from decompiled bytecode and may be wrong): they match the encodings 1.8 to 1.12 kept for the same blocks, which the 1.13 flattening turned into these properties. Anvils are symmetric front to back, so the anvil's two opposite encodings look the same. The mapping data is `data/lostcitiesnh/blockmap/mapping.json` ([asset-format.md § The block-name map](../05-assets/asset-format.md#the-block-name-map)).
 
 | Property set | 1.7.10 metadata |
 |---|---|
@@ -235,7 +235,7 @@ To record in `05-assets` when it is written:
 
 ## To check in game (alpha)
 
-- Every primary resolves in the real pack, and the dev self-check reports no fallback.
+- Every primary resolves in the real pack, and the dev self-check reports no fallback. *Checked in M02:* the real-pack scenario `assets.pack_resolution` took no fallback on a fresh classic RWG world and a fresh RWG2 Continents world.
 - The `!` treasure mix and other valuable blocks: note how often they appear, for the [beta balance list](../beta-balance-list.md).
 - Botania's diorite next to Chisel and vanilla quartz: whether the polished-diorite family reads as one material.
 - Copper weathers in place over time, as in upstream.
