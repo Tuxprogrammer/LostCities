@@ -1,0 +1,75 @@
+# An AE2 meteorite in a city (impact at block 160,160, cap center Y 49): buildings step down toward
+# the impact so every roof stays under the crater paraboloid.
+# chunks: . not city   C core   a avoid ring   L link path   G gate   l lane   D detour
+#         P/S/T primary/secondary/tertiary road   F plaza   p park   o open lot without a park part
+#         B building   M multibuilding   = street without a road (predefined or capped)
+# zones:  C core   E edge ring   1 2 transition rings   a avoid ring   ^ crater cap   . none
+# floors: building floors 1-9, + for 10 or more, 0 for a roof-only building, . no building
+# region x 0..20, z 0..20
+chunks
+SpopBPSSSSSMMPppBSMMp
+SppBpPoBSBpMMPBppSMMB
+SpoBpPppSBpBpPpBpSpBp
+SppBoPpBSppooPppMMBBM
+SBBppPBBSBBopPBpMMpBM
+SppppPppSppMMPpppSppp
+SBpBpPBpSppMMPpopSBpB
+PPPPPPPPPPPPPPPPPPPPP
+MMBpBPppSpopoPpppMMpB
+MMopBPpoSCCFTPoppMMpo
+ppppBPBpSCCppPMMTpSBp
+MMBpBPSSSSSSSPMMTMMpp
+MMMMBPppSpppBPBpTMMpp
+ppMMBPpBSoBBBPoMMBSBp
+poppBPpBSBBBoPoMMpSB.
+PPPPPPPPPPPPPPPPPPP..
+BBoppPpBBoBppPMMoo...
+oooopPpBpBMMpPMMp....
+pppopPpBpBMMoPoB.....
+ppopBPooBppoBPS......
+SSSSSPpMMoBpBP.......
+zones
+.^^^^^^^^^^^^^^^^^^..
+^^^^^^^^^^^^^^^^^^^^.
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^EEEE^^^^^^^^^
+^^^^^^^^ECCE^^^^^^^^^
+^^^^^^^^ECCE^^^^^^^^^
+^^^^^^^^EEEE^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^.
+.^^^^^^^^^^^^^^^^^^..
+..^^^^^^^^^^^^^^^^...
+floors
+....1......22...3.33.
+...1...1.4.22.5...331
+...5.....5.1...3...2.
+...4...3........11223
+.33...41.13...4.11.13
+...........44........
+.4.3..3....44.....1.4
+.....................
+441.3............11.1
+44..4............11..
+....4.3.......44...3.
+551.5.........44.22..
+55441.......2.3..22..
+..442..5..233..113.4.
+....4..5.415...11..4.
+.....................
+15.....35.4...33.....
+.......1.233..33.....
+.......1.233...4.....
+....3...4...1........
+.......11.2.1........
+details-sha256: eee669134958c6eb3de862c1b5f58a7d243bc4a1362393cebb15d3973f453f0b
