@@ -106,16 +106,16 @@ Sheet `cube.json`. `Railcraft:cube`, meta = `EnumCube` ordinal. Hardness and res
 |---|---|---|---|---|---|
 | `Railcraft:cube:0` | Block of Coal Coke | industrial-dressing | partly: dark lumpy gray, reads as stockpile | industrial | Flammable, burns as fuel; hardness 2 |
 | `Railcraft:cube:1` | Block of Concrete | wall-main, floor, street, sidewalk | yes | urban, industrial, ruined | Plain mid-gray concrete; hardness 3. Strong upstream fit for streets and plain facades |
-| `Railcraft:cube:2` | Block of Steel | industrial-dressing, wall-accent | partly: metal plate with a beveled frame | industrial | Hardness 5. Treasure-block candidate (upstream `!`) |
+| `Railcraft:cube:2` | Block of Steel | industrial-dressing, wall-accent | partly: metal plate with a beveled frame | industrial | Hardness 5. A storage block: an accent behind `decorativeMetals.steel` ([D29](index.md#decorative-metals-d29)), or treasure (`!`) |
 | `Railcraft:cube:3` | Infernal Brick (obsolete) | off-theme | no | none | Deprecated `ReplacerCube`: converts to `Railcraft:brick.infernal`. Do not place |
 | `Railcraft:cube:4` | Crushed Obsidian | special, rubble-ruin | partly: purple-black gravel | ruined | **Falls like sand**; never allows mob spawns |
 | `Railcraft:cube:5` | Sandy Brick (obsolete) | off-theme | no | none | Deprecated `ReplacerCube`. Do not place |
 | `Railcraft:cube:6` | Abyssal Stone | wall-main, rubble-ruin | partly: raw dark stone | ruined, industrial | Not a GT host |
 | `Railcraft:cube:7` | Quarried Stone | wall-main, rubble-ruin | partly: raw pale stone | ruined | Not a GT host |
 | `Railcraft:cube:8` | Creosote Wood Block | floor, wall-accent, industrial-dressing | yes | industrial, urban | Dark tarred wood (uses the wooden-post texture), like railroad ties; **flammable** (`FlammableCube(5, 300)`) |
-| `Railcraft:cube:9` | Block of Copper | industrial-dressing, wall-accent | partly: bright orange metal | industrial | Treasure candidate |
+| `Railcraft:cube:9` | Block of Copper | industrial-dressing, wall-accent | partly: bright orange metal | industrial | A storage block: an accent behind `decorativeMetals.copper` ([D29](index.md#decorative-metals-d29)), or treasure |
 | `Railcraft:cube:10` | Block of Tin | industrial-dressing | partly: near-white metal | industrial | |
-| `Railcraft:cube:11` | Block of Lead | industrial-dressing, wall-accent | partly: dull blue-gray plate | industrial | Reads as a zinc or lead roof |
+| `Railcraft:cube:11` | Block of Lead | industrial-dressing, wall-accent | partly: dull blue-gray plate | industrial | A storage block: an accent behind `decorativeMetals.lead`, never a roof ([D29](index.md#decorative-metals-d29)) |
 
 ## Strengthened glass
 
@@ -295,10 +295,10 @@ Weights are suggestions out of the role's total, beside the D19 baseline block.
 - **Light `h`:** iron, steel and stone lanterns (`lantern.metal:0,5`, `lantern.stone:9,6,0`) for street lights on a metal or wooden post (`post:2`, `post.metal:0,2`); bleached bone and sandy lanterns in deserts.
 - **Iron bars `:` and fence `.`:** metal posts (`post:2`, `post.metal:0,2,7,8`), wooden post (`post:0`), and the brick and stone walls.
 - **Furniture `F`:** steel anvil.
-- **Oil rig / industrial style:** creosote block (`cube:8`) decks, steel and lead blocks, metal platforms, yellow metal posts, and (owner decision) tank walls and the water tower siding.
+- **Oil rig / industrial style:** creosote block (`cube:8`) decks, metal platforms, yellow metal posts, and tank walls and the water tower siding once multiblock parts are placed (decision 2 below). The steel, copper, tin and lead blocks (`cube:2`, `:9` to `:11`) are accents only, behind their D29 metal flags and under the per-building cap ([D29](index.md#decorative-metals-d29)).
 
-## Owner decisions
+## Decisions (D28)
 
-1. **Railcraft slabs and stairs need tile-entity NBT.** Use them (asset model gains a TE-material field) or rely on vanilla, Et Futurum and Chisel plain-metadata stairs and slabs only.
-2. **Multiblock parts as set dressing.** The water tank siding (rooftop water towers), tank walls and gauges (tank farms) and the advanced coke oven brick are distinctive but are tile entities that try to form multiblocks.
-3. **No-spawn floors.** With `cannotMobsSpawnOnDecorBlocks=true`, buildings floored in Railcraft bricks or cubes get no natural spawns. Either accept that, or keep Railcraft blocks off floors where upstream expects mobs.
+1. **Railcraft slabs and stairs need tile-entity NBT.** D28 rule 6 allows tile-entity data in palette entries, so they come once the asset model gains a TE-material field; until then vanilla, Et Futurum and Chisel plain-metadata stairs and slabs stand in.
+2. **Multiblock parts as set dressing.** The water tank siding (rooftop water towers), tank walls and gauges (tank farms) and the advanced coke oven brick are distinctive but are tile entities that try to form multiblocks; they wait with the GTNH-themed industrial dressing ([index](index.md#reserved-for-the-gtnh-themed-buildings)).
+3. **No-spawn floors.** With `cannotMobsSpawnOnDecorBlocks=true`, buildings floored in Railcraft bricks or cubes get no natural spawns. D28 rule 2 puts Railcraft decorative blocks freely in walls, trims and roofs and keeps them to the minority spawn-proof share of floors.

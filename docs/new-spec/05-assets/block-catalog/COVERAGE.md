@@ -59,7 +59,7 @@ All 243 mods are assigned. No mod with placeable blocks is left without a family
 | [witchery.md](witchery.md) | Witchery | `witchery/` (1) |
 | [hardcoreenderexpansion.md](hardcoreenderexpansion.md) | Hardcore Ender Expansion | `hardcoreenderexpansion/` (1) |
 | [bloodmagic.md](bloodmagic.md) | Blood Magic, Blood Arsenal | `bloodmagic/` (1) |
-| [thaumic-addons.md](thaumic-addons.md) | Thaumic Bases, Thaumic Tinkerer, Salis Arcana, Automagy, Thaumic Insurgence, Thaumic Horizons, Thaumic Exploration, and one-line verdicts for the other Thaumcraft add-ons | `thaumic-addons/` (2) |
+| [thaumic-addons.md](thaumic-addons.md) | Every Thaumcraft add-on: Thaumic Bases, Thaumic Tinkerer, Salis Arcana, Automagy, Thaumic Insurgence, Thaumic Horizons, Thaumic Exploration, Witching Gadgets, Forbidden Magic, Tainted Magic, and one-line verdicts for the rest | `thaumic-addons/` (2), `thaumicbases/`, `thaumictinkerer/`, `forbiddenmagic/`, `taintedmagic/`, `thaumichorizons/`, `thaumcraft-addons/` (1 each) |
 
 Sheets kept for reference without a catalog file: `adventurebackpack/`, `forgerelocation/`, `irontanks/`, `lootgames/`, `solarpanels/` (Advanced Solar Panel and supersolarpanels). Render any sheet with `python3 -I tools/block-contact-sheet/contact_sheet.py <sheet.json> --mods <pack mods dir> --out docs/previews/blocks/<mod>/<group>.png` ([README](../../../../tools/block-contact-sheet/README.md)).
 
@@ -76,7 +76,7 @@ The 15 additions from family D that add the most variety to upstream's urban loo
 | 5 | CookingForBlockheads kitchen floors and kitchen furniture ([cookingforblockheads.md](cookingforblockheads.md)) | floor, furniture-deco | 16 checkerboard floors with no tile entity (diners, bathrooms, shops); counters, fridges, ovens and sinks with facing in metadata | The furniture blocks have tile entities with inventories |
 | 6 | BiblioCraft furniture with the BiblioWoods editions ([bibliocraft.md](bibliocraft.md)) | furniture-deco, light | Bookcases, desks, chairs, tables, display cases, typewriters, clocks, lamps and lanterns (light 15, no power) in about 60 woods: the strongest lived-in interior set in the pack | Facing and contents live in TE NBT; the models are costly to render; a "filled" bookcase starts empty under worldgen |
 | 7 | Catwalks 2 catwalks, caged ladders, scaffolds and support columns ([catwalks.md](catwalks.md)) | fence-rail, special, light | Fire escapes, rooftop walkways, factory mezzanines. No tile entity; lit variants give light 12 | Catwalk metadata encodes which sides are open |
-| 8 | MalisisDoors doors, hatches and curtains ([malisisdoors.md](malisisdoors.md)) | door-trap, furniture-deco | Glass sliding doors, garage, jail, lab and factory doors, a rusty hatch, 16 curtain colors, an iron trapdoor and wood-variant doors, which D19 found missing | Every door is a tile entity, and the mod replaces the vanilla doors, trapdoor and fence gate (`modifyVanillaDoors=true`) |
+| 8 | MalisisDoors doors, hatches and curtains ([malisisdoors.md](malisisdoors.md)) | door-trap, furniture-deco | Glass sliding doors, garage, jail, lab and factory doors, a rusty ladder, 16 curtain colors, an iron trapdoor and wood-variant doors, which D19 found missing | Every door is a tile entity, and the mod replaces the vanilla doors, trapdoor and fence gate (`modifyVanillaDoors=true`) |
 | 9 | Natura doors, bookshelves, workbenches, trapdoors, fences and gates ([natura.md](natura.md)) | door-trap, furniture-deco, fence-rail | Seven wood doors, 13 bookshelves and 13 workbenches with no tile entity: variety for upstream's `L` and `F` characters at no cost | Natura's soul glass has no collision and its heat glass burns; neither is a window |
 | 10 | Hardcore Ender Expansion ravaged brick ([hardcoreenderexpansion.md](hardcoreenderexpansion.md)) | wall-main, rubble-ruin, stairs-slab, fence-rail | A complete ruined-brick kit: plain, cracked and four damaged states, smooth, slab, stairs and fence | Crimson; keep it to a minority of brick buildings |
 | 11 | OpenModularTurrets hard walls tiers 1-3 and fences tiers 1-2 ([openmodularturrets.md](openmodularturrets.md)) | wall-main, wall-accent, fence-rail | Plain and riveted steel cladding and chain-link mesh with no tile entity: the best industrial set in family D | Tier 3-5 fences damage on contact; tier 4-5 walls are very hard |
@@ -94,7 +94,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 - **Wood is cheap or expensive by mod.** Natura, Biomes O' Plenty, Twilight Forest, Witchery and the Storage Drawers trims store wood type in metadata. Every Forestry wood block (planks, logs, stairs, slabs and fences, fireproof included) and every decorative Binnie block is a tile entity, with the type in NBT (`WT` for Forestry, `meta` for Binnie). A Forestry block without its NBT turns into larch, and one without its tile entity drops nothing. Prefer the metadata woods for walls and floors.
 - **Furniture is tile entities.** BiblioCraft, Carpenter's Blocks, ArchitectureCraft, MalisisDoors, the OpenComputers family, Iron Chests and JABBA all need tile entities, mostly with facing or material in NBT. Natura's bookshelves and workbenches, HarvestCraft's candles, CookingForBlockheads' floors and the Catwalks blocks do not. The furniture files list, per block, what worldgen must write.
 - **Hazards to keep out of cities:** OpenSecurity's security door (hardness 400, cannot be opened by hand), OpenModularTurrets' tier 3-5 fences (contact damage) and turrets, OpenBlocks elevators (same-colored blocks in a column become a lift) and its scaffolding (decays on random ticks), Natura's fusewood logs (explode when harvested) and heat glass, Witchery's brambles (spread or teleport), Blood Magic's spectral block (vanishes), Thaumic Tinkerer's travel slabs (speed boost), Twilight Forest's infested towerwood (termite, the same rule as no silverfish) and its hardness-100 castle brick, mazestone and deadrock, Biomes O' Plenty's quicksand, poison ivy, thorns and similar blocks, and LootGames' unbreakable dungeon floor.
-- **Ore and boulder hosts.** No family D block was found to be a GT ore host or boulder host. Thaumic Bases' old cobblestone is ore-dictionaried as cobblestone but is a separate block; that GT's boulders ignore it is *unverified*.
+- **Ore and boulder hosts.** No family D block was found to be a GT ore host or boulder host. Thaumic Bases' old cobblestone is ore-dictionaried as cobblestone but is a separate block, and GT's boulders test block identity against `minecraft:cobblestone` (`WorldgenStone.java` L223-L229 with the vanilla `isReplaceableOreGen`), so they ignore it.
 - **Absent mods.** Every family D block is a pack mod's block, so each palette entry needs a vanilla fallback per D19. Each file names one.
 
 ## All mods
@@ -128,7 +128,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | Amazing-Trophies | `amazingtrophies-1.4.10.jar` | D | 1 | 1 | Nothing useful: Trophy pedestal TE that needs a trophy ID |
 | amunra | `AmunRa-GC-0.8.14.jar` | D | 77 | 10 | [amunra.md](amunra.md): ~43 registry names, 14 useful. Basalt bricks, smooth basalt, weathered concrete, aluminum box; `tile.` names |
 | ArchitectureCraft | `ArchitectureCraft-1.12.19.jar` | D | 2 | 5 | [architecturecraft.md](architecturecraft.md): 3 registry names, ~70 shapes useful. Cornices, balustrades, columns, arches, roof slopes; shape and material in TE NBT |
-| Automagy-GTNH | `Automagy-0.29.8-GTNH.jar` | D | 95 | 13 | [thaumic-addons.md](thaumic-addons.md): 53 registry names, 2 useful. Two bookshelves |
+| Automagy-GTNH | `Automagy-0.29.8-GTNH.jar` | D | 95 | 13 | [thaumic-addons.md](thaumic-addons.md): 53 registry names, 6 rows (3 yes, 1 partly). Glowing amber (light 15) and two bookshelves |
 | Avaritia | `Avaritia-1.100.jar` | D | 24 | 9 | Nothing useful: Machines and compressed blocks |
 | Avaritiaddons | `Avaritiaddons-1.9.6-GTNH.jar` | D | 3 | 3 | Nothing useful: Chests and a crafter |
 | Battlegear2-for-Backhand | `battlegear2-1.6.8-backhand.jar` | D | 0 | 1 | [battlegear2.md](battlegear2.md): 1 registry names, 1-7 useful. Flag pole in 7 woods and metals |
@@ -182,7 +182,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | OCGlasses | `OpenGlasses-1.6.9-GTNH.jar` | D | 3 | 1 | Nothing useful: One machine |
 | OpenBlocks | `OpenBlocks-1.12.22-GTNH.jar` | D | 127 | 0 | [openblocks.md](openblocks.md): 36 registry names, ~7 useful. Canvas, elevator colors, ladder, flag, guide; scaffolding decays |
 | OpenComputers | `OpenComputers-1.12.68-GTNH.jar` | D | 145 | 9 | [opencomputers.md](opencomputers.md): 38 registry names, 9 useful. Cases, screens, keyboards, racks as office and server-room dressing; chamelium |
-| OpenModularTurrets | `OpenModularTurrets-2.4.8.jar` | D | 41 | 36 | [openmodularturrets.md](openmodularturrets.md): 36 registry names, 7 useful. Steel hard walls tiers 1-3, chain-link fences tiers 1-2; no TE |
+| OpenModularTurrets | `OpenModularTurrets-2.4.8.jar` | D | 41 | 36 | [openmodularturrets.md](openmodularturrets.md): 36 registry names, 6 useful. Steel hard walls tiers 1-3, chain-link fences tiers 1-2; no TE |
 | OpenPrinter | `openprinter-0.3.1-GTNH.jar` | D | 6 | 3 | [opencomputers.md](opencomputers.md): 3 registry names, 3 useful. File cabinet, printer, shredder |
 | OpenSecurity | `opensecurity-1.2.2-GTNH.jar` | D | 26 | 15 | [opencomputers.md](opencomputers.md): 14 registry names, 2 useful. Office dressing; the security door seals rooms |
 | PersonalSpace | `personalspace-1.0.41.jar` | D | 0 | 4 | Nothing useful: Portal blocks |
@@ -190,7 +190,7 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | Random-Things | `RandomThings-2.7.13.jar` | D | 46 | 7 | Nothing useful: Mostly machines; its lapis lamp lights only on the client, so mobs still spawn |
 | RemoteIO | `RemoteIO-2.7.11.jar` | D | 32 | 6 | Nothing useful: Machines; the skylight is transparent only when powered |
 | Roguelike-Dungeons | `roguelike-1.6.6-GTNH.jar` | D | 0 | 0 | Nothing useful: Registers no blocks (places vanilla blocks); checked |
-| Salis Arcana | `salisarcana-v2.7.0.jar` | D | 0 | 1 | [thaumic-addons.md](thaumic-addons.md): 1 registry names, 2 useful. Greatwood and silverwood planks |
+| Salis Arcana | `salisarcana-v2.7.0.jar` | D | 0 | 1 | [thaumic-addons.md](thaumic-addons.md): 1 registry name, 2 rows (1 yes, 1 partly). Greatwood and silverwood planks |
 | SC2 | `StevesCarts-2.3.15.jar` | D | 82 | 1 | Nothing useful: Cart machines, rails, metal storage blocks |
 | SGCraft | `SGCraft-1.4.14-GTNH.jar` | D | 26 | 1 | Nothing useful: Stargate and naquadah blocks |
 | SleepingBags | `sleepingbag-0.3.1.jar` | D | 6 | 1 | Nothing useful: Temporary sleeping-bag block |
@@ -200,18 +200,18 @@ Close runners-up: Twilight Forest underbrick and its wood doors and trapdoors; T
 | StructureLib | `structurelib-1.4.47.jar` | D | 16 | 1 | Nothing useful: One hint block for multiblock previews |
 | supersolarpanels | `supersolarpanel-1.1.5.jar` | D | 12 | 4 | Nothing useful: Ticking generators; free high-tier loot against the EV ceiling (sheet `solarpanels/`) |
 | Tainted-Magic | `Tainted-Magic-7.7.8-GTNH.jar` | D | 8 | 6 | Nothing useful: Purple warpwood, shadowmetal, an ore |
-| Thaumic_Exploration | `Thaumic-Exploration-1.5.29-GTNH.jar` | D | 54 | 14 | [thaumic-addons.md](thaumic-addons.md): 11 registry names, 0 useful. Floating candles only partly fit |
-| ThaumicBases | `Thaumic-Based-1.9.22.jar` | D | 219 | 53 | [thaumic-addons.md](thaumic-addons.md): 53 registry names, 12 useful. Beta-era old bricks, cobblestone, mossy cobblestone, gravel |
+| Thaumic_Exploration | `Thaumic-Exploration-1.5.29-GTNH.jar` | D | 54 | 14 | [thaumic-addons.md](thaumic-addons.md): 11 registry names, 1 row (partly). Floating candles only partly fit |
+| ThaumicBases | `Thaumic-Based-1.9.22.jar` | D | 219 | 53 | [thaumic-addons.md](thaumic-addons.md): 53 registry names, 37 rows (4 yes, 17 partly). Beta-era ancient bricks, cobblestone, mossy cobblestone, gravel |
 | ThaumicBoots | `thaumicboots-1.5.13.jar` | D | 64 | 0 | Nothing useful: Ships 64 block textures but registers no blocks |
 | ThaumicEnergistics | `thaumicenergistics-1.7.68-GTNH.jar` | D | 42 | 1 | Nothing useful: Machines |
-| ThaumicHorizons | `ThaumicHorizons-1.8.28.jar` | D | 90 | 40 | [thaumic-addons.md](thaumic-addons.md): 40 registry names, 0 useful. 16 crystal glasses only partly fit |
-| thaumicinsurgence | `thaumicinsurgence-0.4.1.jar` | D | 60 | 6 | [thaumic-addons.md](thaumic-addons.md): 6 registry names, 2 useful. Arcane marble; `tile.` names |
+| ThaumicHorizons | `ThaumicHorizons-1.8.28.jar` | D | 90 | 40 | [thaumic-addons.md](thaumic-addons.md): 40 registry names, 34 rows (7 yes, 11 partly). Frosted crystal glass in 16 colors |
+| thaumicinsurgence | `thaumicinsurgence-0.4.1.jar` | D | 60 | 6 | [thaumic-addons.md](thaumic-addons.md): 6 registry names, 2 rows (2 yes). Arcane marble; `tile.` names |
 | ThaumicMachina | `ThaumicMachina-0.2.6-GTNH.jar` | D | 2 | 2 | Nothing useful: Near-black brick and a rose; nothing fits |
-| ThaumicTinkerer | `ThaumicTinkerer-2.12.34.jar` | D | 91 | 6 | [thaumic-addons.md](thaumic-addons.md): ~40 registry names, 4 useful. Smokey (black) quartz set |
+| ThaumicTinkerer | `ThaumicTinkerer-2.12.34.jar` | D | 91 | 6 | [thaumic-addons.md](thaumic-addons.md): about 40 registry names, 9 rows (5 yes, 1 partly). Smokey (black) quartz set |
 | Tinkers-Defense | `tinkersdefense-1.3.4.jar` | D | 12 | 9 | Nothing useful: Stations and metal blocks |
 | TinkersMechworks | `TMechworks-0.4.2.jar` | D | 37 | 5 | Nothing useful: Machines |
 | Translocators | `Translocator-1.4.5.jar` | D | 1 | 2 | Nothing useful: Machine and crafting grid |
-| twilightforest | `TwilightForest-2.7.45.jar` | D | 366 | 5 | [twilightforest.md](twilightforest.md): 125 registry names, ~95 useful. Underbrick, castle brick, mazestone, 8 woods with doors; very hard blocks flagged |
+| twilightforest | `TwilightForest-2.7.45.jar` | D | 366 | 5 | [twilightforest.md](twilightforest.md): 125 registry names, ~95 useful. Underbrick, 8 woods with doors; castle brick and mazestone are hardness 100 and never placed |
 | VendingMachine | `vendingmachine-0.4.103.jar` | D | 15 | 0 | [vendingmachine.md](vendingmachine.md): 2 registry names, 1 useful. A GT multiblock vending machine; depends on family C's GT-machine approach |
 | VillageNames | `VillageNames-4.5.21-GTNH.jar` | D | 72 | 11 | [villagenames.md](villagenames.md): 3 registry names, 1-2 useful. Lunarin bricks only; its other blocks are off with Et Futurum present |
 | WarpTheory | `WarpTheory-1.5.8-GTNH.jar` | D | 1 | 1 | Nothing useful: One vanishing block |

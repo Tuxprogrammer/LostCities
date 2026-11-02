@@ -63,8 +63,8 @@ Sheets show no lighting, connected textures, models or in-game tints (the `tint`
 | Ztones | [ztones.md](ztones.md) | 551 of 567 | 118 / 195 / 238 | Matte color sets (Agon, Iszm, Myst, Cray), Lave and Ztyl panels, Ztone Tile paving, Glaxx tinted glass, flush flat lamps |
 | Et Futurum Requiem | [etfuturum.md](etfuturum.md) | 478 rows (340 of 532 blocks registered) | 169 / 249 / 60 | Concrete, smooth stone and quartz, deepslate, tuff and blackstone bricks, copper doors and trapdoors, lantern, chain, stripped logs |
 | Botania | [botania.md](botania.md) | 501 block+meta | 152 / 212 / 62 | Sea lantern, 1.8 stones and bricks, smokey and sunny quartz, roof tile, Portuguese pavement, managlass |
-| Thaumcraft (with add-on rows) | [thaumcraft.md](thaumcraft.md) | 58 rows, plus 105 add-on rows | 15 / 27 / 16 | Arcane stone bricks, ancient rock, greatwood, old urns and crates as ruin loot |
-| Thaumcraft add-ons | [thaumic-addons.md](thaumic-addons.md) | about 22 useful | partly | Thaumic Bases old bricks and cobblestone, Thaumic Tinkerer smokey quartz, Salis Arcana planks |
+| Thaumcraft | [thaumcraft.md](thaumcraft.md) | 58 rows | 15 / 27 / 16 | Arcane stone bricks, ancient rock, greatwood, old urns and crates as ruin loot |
+| Thaumcraft add-ons | [thaumic-addons.md](thaumic-addons.md) | 108 rows | 22 / 36 / 50 | Thaumic Bases ancient bricks and cobblestone, Thaumic Tinkerer smokey quartz, Automagy glowing amber, Salis Arcana planks |
 | GregTech 5 Unofficial | [gregtech.md](gregtech.md) | 247 entries in 35 blocks | 58 / 111 / 78 | Tinted industrial glass, GT stones (boulder hosts), GT concrete (speed), frame boxes and sheetmetal; casings [reserved](#reserved-for-the-gtnh-themed-buildings) |
 | bartworks | [bartworks.md](bartworks.md) | 23 | 1 / 3 / 19 | Borosilicate glass |
 | GT++ | [gtplusplus.md](gtplusplus.md) | 36 | 3 / 13 / 20 | Casings only ([reserved](#reserved-for-the-gtnh-themed-buildings)) |
@@ -77,7 +77,7 @@ Sheets show no lighting, connected textures, models or in-game tints (the `tint`
 | Tinkers' Construct | [tinkers.md](tinkers.md) | 212 | 58 / 97 / 57 | Polished stone brick, sandstone brick, clear glass and panes, stone torch and ladder |
 | Extra Utilities | [extrautilities.md](extrautilities.md) | 296 | 36 / 140 / 120 | Edged stone bricks, border stone, colored stone and quartz, glass variants, Lapis Caelestis panels |
 | Galacticraft | [galacticraft.md](galacticraft.md) | 72 | 16 / 39 / 17 | Tin decoration panel, moon rock slab and wall, moon dungeon brick, asteroid rock as asphalt, arc lamp |
-| GalaxySpace | [galaxyspace.md](galaxyspace.md) | 108 | 13 / 43 / 52 | Future glass (reverse color order), dungeon bricks, space glowstones |
+| GalaxySpace | [galaxyspace.md](galaxyspace.md) | 108 | 13 / 41 / 54 | Future glass (reverse color order), dungeon bricks, space glowstones |
 | Amun-Ra | [amunra.md](amunra.md) | about 96, 14 useful | partly | Basalt brick, smooth basalt, weathered concrete |
 | ArchitectureCraft | [architecturecraft.md](architecturecraft.md) | 106 shapes, about 70 useful | yes, after a new entry kind | Cornices, balustrades, columns, roof slopes (shape and material in NBT) |
 | Battlegear 2 | [battlegear2.md](battlegear2.md) | 7 | partly | Iron flag pole |
@@ -103,7 +103,7 @@ Sheets show no lighting, connected textures, models or in-game tints (the `tint`
 | Nuclear Control | [nuclearcontrol.md](nuclearcontrol.md) | 16, about 7 useful | partly | White and orange panel lamps |
 | OpenBlocks | [openblocks.md](openblocks.md) | about 51, about 7 useful | partly | Canvas, path, ladder |
 | OpenComputers and add-ons | [opencomputers.md](opencomputers.md) | 72 registry names, 17 useful | partly, tile entities | Cases, screens, racks, file cabinet, chamelium (reverse color order) |
-| OpenModularTurrets | [openmodularturrets.md](openmodularturrets.md) | 36 names, 7 useful | yes, industrial | Hard walls tiers 1 to 3, chain-link fences tiers 1 and 2 |
+| OpenModularTurrets | [openmodularturrets.md](openmodularturrets.md) | 36 names, 6 useful | yes, industrial | Hard walls tiers 1 to 3, chain-link fences tiers 1 and 2 |
 | Storage Drawers | [storagedrawers.md](storagedrawers.md) | about 507, about 90 useful | yes | 83 framed-plank trims with no tile entity |
 | Twilight Forest | [twilightforest.md](twilightforest.md) | about 264, about 95 useful | partly | Underbrick, eight woods with doors and trapdoors, firefly jar |
 | VendingMachine | [vendingmachine.md](vendingmachine.md) | 2 names, 1 useful | partly | A GT multiblock vending machine |
@@ -112,7 +112,7 @@ Sheets show no lighting, connected textures, models or in-game tints (the `tint`
 
 ## Variety pools
 
-One pool per upstream palette family or character role in [catalog-palettes.md](../../../original-spec/05-assets/catalog-palettes.md), drawn across all 52 catalogs. 62 pools, in six groups:
+One pool per upstream palette family or character role in [catalog-palettes.md](../../../original-spec/05-assets/catalog-palettes.md), drawn across all 52 catalogs. 63 pools, in seven groups:
 
 | Group | Pools |
 |---|---|
@@ -122,6 +122,7 @@ One pool per upstream palette family or character role in [catalog-palettes.md](
 | [Interiors and roofs](#interiors-and-roofs) | [interior floors](#interior-floors), [ceilings](#ceilings), [roofs](#roofs), [doors](#doors), [trapdoors and hatches](#trapdoors-and-hatches), [wood trim](#wood-trim) |
 | [Lights and fittings](#lights-and-fittings) | [glowstone](#glowstone), [torches](#torches), [hanging lights](#hanging-lights), [furniture](#furniture), [bookshelves](#bookshelves), [chests and barrels](#chests-and-barrels), [ladders](#ladders), [pressure plates](#pressure-plates), [fences](#fences), [chains and cobwebs](#chains-and-cobwebs), [treasure](#treasure), [colored concrete](#colored-concrete) |
 | [Plants, ruins and set pieces](#plants-ruins-and-set-pieces) | [flowers and planters](#flowers-and-planters), [overgrowth](#overgrowth), [ruin dressing](#ruin-dressing), [oil rig](#oil-rig), [cabin](#cabin) |
+| [Decorative metals (D29)](#decorative-metals-d29) | metal accents behind one flag per metal |
 
 Characters that keep upstream's block with no pool: `~` and `b` (structure void), `1` and `4` (spawners, [loot-and-mobs.md](../../00-pack-integration/loot-and-mobs.md)), `W` (water), the `rails` palette (vanilla `rail` and `golden_rail`; Railcraft tracks need their own placement call, see [Prerequisites](#prerequisites-for-the-asset-system)), and `@` in `glass_side_variant_bricks` and `_glass`, which copy `#` and `a`.
 
@@ -142,16 +143,17 @@ Characters that keep upstream's block with no pool: `~` and `b` (structure void)
 | H | Slow to mine: hardness 10 to 50, or a diamond-level pick |
 | XM | Extended metadata above 15 (EndlessIDs) |
 | T | Tinted at render time; the contact sheet only approximates it |
+| DM | Decorative metal: placed only while its D29 metal flag is on, as a capped accent ([decorative metals](#decorative-metals-d29)); otherwise the fallback |
 
 #### D28 as applied here
 
 1. **Spawn-proof blocks** go freely in walls, trims and roofs. **Floors** (`S` and `u` in buildings, the [interior floors](#interior-floors) pool) draw from a weighted mix that keeps spawnable floor in at least 70 of every 100 buildings by default; kept-up or lit buildings may be fully spawn-proof, and the share is tunable per city style. Bottom slabs (`_`, `=`) take no spawns in vanilla anyway.
-2. **Speed blocks** appear only in the [highway surface](#highway-surface) and [primary roads](#primary-roads) pools, as weighted options judged at the M06 screenshots. The rule is applied by block, not by face: a speed block goes in no wall, roof, rubble, sidewalk, side street or interior, because roofs and ruin damage turn those into walking surfaces. That keeps GT concrete bricks and Tinkers' brownstone out of the wall pools although their colors fit.
+2. **Speed blocks** are walked on only in the [highway surface](#highway-surface) and [primary roads](#primary-roads) pools, as weighted options judged at the M06 screenshots. Elsewhere they may stand in walls and trims (GT concrete bricks and the brownstone blocks in the brick and desert pools, marked SPD), never in floors, roofs, sidewalks, side streets, stairs or rubble. A wall of speed blocks brings a non-speed rubble set, and ruin damage swaps a speed block for a normal block, because roofs and ruins turn walls into walking surfaces.
 3. **GT stones** (`gregtech:gt.blockgranites` and `gt.blockstones`, every meta except the raw ore hosts 0 and 8) join on terracotta's terms (D18): they are boulder hosts, kept, and covered by the restore pass if the alpha screenshots show boulder damage ([ore-veins.md](../../00-pack-integration/ore-veins.md)). Black and red granite need a diamond-level pick, so they stay accents.
 4. **GT casings** wait for the GTNH-themed buildings ([below](#reserved-for-the-gtnh-themed-buildings)); machine hulls are never placed.
 5. **MalisisDoors** supplies every wood door and the iron trapdoor ([doors](#doors)).
 6. **Tile entities** are allowed in palette entries. Bulk variety prefers blocks whose look is in metadata, so tile-entity candidates carry low weights and minority roles.
-7. **Never placed**: the [never-place list](#never-placed).
+7. **Never placed**: the [never-place list](#never-placed). D29 relaxes it for metals: each metal at or below EV that a city can use comes back as capped accents behind its own flag ([decorative metals](#decorative-metals-d29)).
 
 ### Brick and stone walls
 
@@ -238,7 +240,7 @@ Characters that keep upstream's block with no pool: `~` and `b` (structure void)
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: variant `bricks` → `minecraft:brick_block`, `minecraft:stained_hardened_clay:14` | 40 | | BH | Upstream |
+| Baseline: variant `bricks` → `minecraft:brick_block`, `minecraft:stained_hardened_clay:14` | 37 | | BH | Upstream |
 | `chisel:hardened_clay_red:3` to `:8` (red terracotta bricks) | 12 | baseline | SP | Upstream's color as brick, not a boulder host |
 | `chisel:brickCustom:1`, `:2`, `:3`, `:9`, `:10` (large, mortarless, varied, brown, modern) | 10 | `minecraft:brick_block` | SP | Brick bonds |
 | `chisel:hardened_clay:3` to `:8` (natural terracotta bricks) | 5 | `minecraft:hardened_clay` | SP | Tan brick |
@@ -251,6 +253,7 @@ Characters that keep upstream's block with no pool: `~` and `b` (structure void)
 | `Railcraft:brick.bloodstained:0` | 3 | `minecraft:brick_block` | SP, H | Dark red brick |
 | `chisel:brickCustom:11`, `:12` (white, black) | 3 | `minecraft:brick_block` | SP | Contrast buildings |
 | `GalaxySpace:ioblocks:7` (Io dungeon top) | 2 | `minecraft:brick_block` | | Red-brown quarry tile; not a host |
+| `gregtech:gt.blockconcretes:3` (dark concrete bricks) | 3 | `minecraft:brick_block` | SPD, SP | Brown brick; walls only (D28 rule 3) |
 
 GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings ([reserved](#reserved-for-the-gtnh-themed-buildings)).
 
@@ -265,6 +268,7 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 | Ravaged brick | `HardcoreEnderExpansion:ravaged_brick:1` to `:5`, its slab and stairs | |
 | Underbrick | `TwilightForest:tile.TFUnderBrick:1`, `:2` | |
 | Old brick | `thaumicbases:oldBrick:0`, `thaumicbases:genericSlab:1` to `:3` | |
+| GT dark concrete bricks | the baseline set: concrete speeds walking, so it brings no concrete rubble | |
 
 #### Cyan terracotta walls
 
@@ -332,8 +336,8 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:sandstone:2` with `:0` | 40 | | | Upstream |
-| `chisel:sandstone:8`, `:12`, `:13`, `:15`, `chisel:sandstone2:0`, `:1` | 12 | baseline | SP | Sandstone bricks and blocks |
+| Baseline: `minecraft:sandstone:2` with `:0` | 34 | | | Upstream |
+| `chisel:sandstone:8`, `:12`, `:13`, `:15`, `chisel:sandstone2:0`, `:1` | 10 | baseline | SP | Sandstone bricks and blocks |
 | `Railcraft:brick.sandy:0`, `:1`, `:2` | 10 | baseline | SP, H | A full sandy brick family |
 | `TConstruct:decoration.multibrick:1`, `TConstruct:decoration.multibrickfancy:1` | 8 | baseline | | Sandstone brick |
 | `Ztones:tile.roenBlock:0`, `:7`, `Ztones:tile.solsBlock:3`, `:4` | 8 | baseline | | Chalk and cream masonry |
@@ -342,6 +346,8 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 | `GalaxySpace:ioblocks:0`, `GalaxySpace:mercuryblocks:0` | 4 | baseline | | Flat sandstone stand-ins; not hosts |
 | `TConstruct:decoration.multibrick:9` (bone brick), `Railcraft:brick.bleachedbone:0` | 4 | baseline | SP (Railcraft) | Pale cream brick |
 | `chisel:sandstone:0`, `chisel:sandstone_scribbles` | 4 | baseline | SP | Ancient quarter only |
+| `TConstruct:SpeedBlock:2`, `:3` (brownstone, brownstone brick) | 4 | baseline | SPD | Tan stone and brick; walls only (D28 rule 3) |
+| `gregtech:gt.blockconcretes:11` (light concrete bricks) | 4 | baseline | SPD, SP | Reads as cut sandstone; walls only |
 
 #### Desert accent and trim
 
@@ -349,14 +355,16 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:sandstone:2` | 40 | | | Upstream |
+| Baseline: `minecraft:sandstone:2` | 34 | | | Upstream |
 | `minecraft:sandstone:1` (chiseled) | 12 | baseline | | Vanilla variety |
 | `chisel:sandstone:4` to `:7`, `:9` to `:11` (pillars) | 12 | baseline | SP | Columns and trims |
 | `Railcraft:brick.sandy:3` (ornate) | 8 | baseline | SP, H | Carved band |
 | `Ztones:tile.solsBlock:4`, `Ztones:tile.roenBlock:9` | 8 | baseline | | Framed cream panels |
 | `etfuturum:red_sandstone:1`, `:2` | 8 | `minecraft:sandstone:2` | | Red desert trim |
 | `Botania:biomeStoneA:5` | 6 | baseline | SP | Botania's desert stone |
-| `Ztones:tile.krypBlock:5` | 6 | baseline | | Smooth tan framed |
+| `Ztones:tile.krypBlock:5` | 4 | baseline | | Smooth tan framed |
+| `TConstruct:SpeedBlock:5`, `:6` (fancy, chiseled brownstone) | 5 | baseline | SPD | Panel and relief trims |
+| `gregtech:gt.blockconcretes:14` (chiseled light concrete) | 3 | baseline | SPD, SP | Carved tan trim |
 
 #### Orange desert walls
 
@@ -712,7 +720,7 @@ Bottom slabs take no mob spawns in vanilla, so this pool is spawn-neutral. `chis
 | `dreamcraft:SteelBars`, `dreamcraft:AluminiumBars`, `dreamcraft:StainlessSteelBars` | 12 | baseline | | Pack metal bars |
 | `EnderIO:blockDarkIronBars:0` (dark steel bars), `EnderIO:blockSoulariumBars:0` in ruins | 8 | baseline | | Dark and rusty bars |
 | `gregtech:gt.blockfencemetal:0`, `IC2:blockFenceIron:0` | 8 | baseline | | Iron railings |
-| `etfuturum:copper_grate:4` (waxed) | 4 | baseline | | Copper grille |
+| `etfuturum:copper_grate:4` (waxed) | 4 | baseline | DM | Copper grille |
 | `openmodularturrets:fenceTierOne`, `fenceTierTwo` | 3 | baseline | | Chain-link |
 
 Only `:` in building parts takes the pool; the damage block stays `minecraft:iron_bars`.
@@ -809,16 +817,15 @@ A role upstream lacks: its roofs are flat walls and slabs. Stairs, slabs and roo
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
 | Baseline: flat roof in the wall block and `minecraft:stone_slab:0` | 50 | | | Upstream |
-| `minecraft:brick_stairs`, `minecraft:spruce_stairs`, `minecraft:dark_oak_stairs`, `minecraft:stone_slab:4` | 12 | baseline | | Vanilla pitched roofs |
+| `minecraft:brick_stairs`, `minecraft:spruce_stairs`, `minecraft:dark_oak_stairs`, `minecraft:stone_slab:4` | 16 | baseline | | Vanilla pitched roofs |
 | `Botania:customBrick:3` (roof tile) with `Botania:customBrick3Stairs`, `customBrick3Slab` | 10 | `minecraft:brick_stairs` | SP | Terracotta-red roof tile |
-| `etfuturum:cut_copper_stairs`, `etfuturum:cut_copper_slab` and the weathered and oxidized forms (unwaxed keeps weathering) | 8 | `minecraft:brick_stairs` | | Copper roofs |
-| `etfuturum:deepslate_tile_stairs`, `etfuturum:deepslate_brick_slab:1` | 6 | `minecraft:stone_brick_stairs` | | Slate roofs |
+| `etfuturum:deepslate_tile_stairs`, `etfuturum:deepslate_brick_slab:1` | 10 | `minecraft:stone_brick_stairs` | | Slate roofs |
 | `Ztones:tile.venaBlock:14`, `:15` | 4 | baseline | | Verdigris that never weathers |
 | `gregtech:gt.sheetmetal:305`, `:19`, `:36`, `:57` (steel, aluminum, zinc, tin) | 4 | baseline | XM, T | Corrugated warehouse roofs |
 | `ThaumicTinkerer:darkQuartzStairs`, `Botania:quartzStairsDark` | 3 | `minecraft:quartz_stairs` | SP (Botania) | Modern parapets |
 | `IC2:blockRubber:0` (rubber sheet membrane) | 3 | baseline | | Flat-roof membrane, industrial |
 
-Twilight Forest's castle roof tile is hardness 100 and stays out ([never placed](#never-placed)). True slopes from ArchitectureCraft and Carpenter's Blocks need a "shape of material" palette entry ([Prerequisites](#prerequisites-for-the-asset-system)).
+Twilight Forest's castle roof tile is hardness 100 and stays out ([never placed](#never-placed)). Copper and other metal roofs stay out too: D29 keeps metal blocks to capped accents ([decorative metals](#decorative-metals-d29)). True slopes from ArchitectureCraft and Carpenter's Blocks need a "shape of material" palette entry ([Prerequisites](#prerequisites-for-the-asset-system)).
 
 #### Doors
 
@@ -829,7 +836,7 @@ Upstream places random building doors in birch, acacia, dark oak, spruce, oak an
 | Baseline: the upstream wood → `malisisdoors:door_<wood>` (oak: `minecraft:wooden_door`); iron → `minecraft:iron_door` | 50 | `minecraft:wooden_door` | TE | Upstream (D19 as amended by D28) |
 | `Natura:door.ghostwood`, `door.sakura`, `door.redwood`, `door.hopseed`, `door.redwoodbark` | 10 | `minecraft:wooden_door` | | Metadata-only wood doors |
 | `malisisdoors:wood_sliding_door`, `iron_sliding_door` (storefronts, offices) | 10 | `minecraft:wooden_door`, `minecraft:iron_door` | TE | Glass sliding doors |
-| `etfuturum:copper_door` to `waxed_oxidized_copper_door` | 8 | `minecraft:iron_door` | | Hand-opened metal doors; weathered in ruins |
+| `etfuturum:copper_door` to `waxed_oxidized_copper_door` | 8 | `minecraft:iron_door` | DM | Hand-opened metal doors; weathered in ruins |
 | `TwilightForest:tile.TFDoor<wood>` (eight woods) | 6 | `minecraft:wooden_door` | | More wood doors |
 | `malisisdoors:laboratory_door` (hospitals, labs), `factory_door`, `jail_door` (police) | 6 | `minecraft:iron_door` | TE | Themed doors |
 | `malisisdoors:garage_door` (full column) | 4 | air | TE | Garages and loading bays |
@@ -844,8 +851,8 @@ Upstream's oil-rig `V` (iron trapdoor), plus hatches and shutters a part may ask
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `malisisdoors:iron_trapdoor` | 50 | `etfuturum:waxed_copper_trapdoor`, then `minecraft:trapdoor` | TE | Upstream (D19 as amended) |
-| `etfuturum:copper_trapdoor` and its weathered and waxed forms | 15 | `minecraft:trapdoor` | | Metal hatches, railings, shutters |
+| Baseline: `malisisdoors:iron_trapdoor` | 50 | `etfuturum:waxed_copper_trapdoor` (while the D29 copper flag is on), then `minecraft:trapdoor` | TE | Upstream (D19 as amended) |
+| `etfuturum:copper_trapdoor` and its weathered and waxed forms | 15 | `minecraft:trapdoor` | DM | Metal hatches, railings, shutters |
 | `malisisdoors:trapdoor_<wood>` (acacia, birch, dark oak, jungle, spruce) | 12 | `minecraft:trapdoor` | TE | Wood shutters |
 | `Natura:trapdoor.<wood>` (13 woods) | 10 | `minecraft:trapdoor` | | Metadata-only shutters |
 | `TwilightForest:tile.TFTrapDoor<wood>` | 8 | `minecraft:trapdoor` | | More woods |
@@ -879,13 +886,13 @@ Upstream's oak planks (`top1x1_5` local `o`), fence posts and the wood in its fu
 | `chisel:glowstone:3`, `:4`, `:8`, `:9`, `chisel:froglight:0`, `:4` | 10 | baseline | L15, SP | Panel and froglight looks |
 | `Ztones:lampf:6`, `Ztones:lampt:6` (flush ceiling panels) | 8 | baseline | L15 | Office lighting; no collision |
 | `Railcraft:lantern.metal:0`, `:5`, `Railcraft:lantern.stone:6`, `:9` | 6 | baseline | L15 | Caged lanterns |
-| `etfuturum:copper_bulb:12` (waxed, lit) | 5 | baseline | L15 | Copper fittings |
+| `etfuturum:copper_bulb:12` (waxed, lit) | 5 | baseline | L15, DM | Copper fittings |
 | `appliedenergistics2:tile.BlockQuartzLamp:0` | 5 | baseline | L15 | Lit glass panels |
 | `ExtraUtilities:greenscreen:0` (white Lapis Caelestis), `ExtraUtilities:color_lightgem:0` | 4 | baseline | L15 | White ceiling panels |
 | `IC2NuclearControl:blockNuclearControlLight:1` | 4 | baseline | L15 | White panel lamp; goes dark if tinkered |
 | `EnderIO:blockFusedQuartz:3` (enlightened clear glass) | 3 | baseline | L15, TE | Lit windows |
 | `GalaxySpace:proteusglowstone`, `GalaxySpace:enceladusglowstone` | 3 | baseline | L15 | Neutral lamp blocks |
-| `Automagy:blockTranslucent:0` (glowing amber) | 2 | baseline | L15 | Warm lamp block |
+| `Automagy:blockTranslucent:0`, `:1` (glowing amber, amber bricks) | 2 | baseline | L15 | Warm lamp block, no tile entity |
 
 `ProjRed|Illumination` lamps (tile entity, lit through `inv`), Computronics' colorful lamp (`clc` NBT) and BiblioCraft lamps are low-weight options once tile-entity palette data exists.
 
@@ -1008,7 +1015,7 @@ Fence gates: `malisisdoors:<wood>FenceGate` and `Natura:fenceGate.<wood>`, with 
 
 #### Treasure
 
-`!` in `common`: diamond 15, gold 20, emerald 15, iron 78 of 128. Treasure is loot, so storage blocks belong here and nowhere else (D28 rule 7). The mix goes on the [beta balance list](../../beta-balance-list.md).
+`!` in `common`: diamond 15, gold 20, emerald 15, iron 78 of 128. Treasure is loot, so storage blocks of any kind may go here, whatever the D29 flags say; elsewhere only the flagged metals appear, as capped accents ([decorative metals](#decorative-metals-d29)), and gem blocks never. The mix goes on the [beta balance list](../../beta-balance-list.md).
 
 | Candidate | Slots of 128 | Fallback | Flags | Why |
 |---|---|---|---|---|
@@ -1102,8 +1109,85 @@ Part `cabin` local palette: exposed copper and its cut stairs, quartz, barrel, i
 
 | Character | Baseline (D19) | Variety |
 |---|---|---|
-| `c`, `1` to `4` (exposed copper, exposed cut copper stairs) | `etfuturum:copper_block:1`, `etfuturum:exposed_cut_copper_stairs` | the other unwaxed stages (the cabin keeps weathering, as upstream) |
-| `D`, `d` (iron door) | `minecraft:iron_door` | `etfuturum:exposed_copper_door` |
+| `c`, `1` to `4` (exposed copper, exposed cut copper stairs; DM, see [decorative metals](#decorative-metals-d29)) | `etfuturum:copper_block:1`, `etfuturum:exposed_cut_copper_stairs`; with the copper flag off, `minecraft:planks:1` and `minecraft:spruce_stairs` | the other unwaxed stages (the cabin keeps weathering, as upstream) |
+| `D`, `d` (iron door) | `minecraft:iron_door` | `etfuturum:exposed_copper_door` (DM) |
+
+### Decorative metals (D29)
+
+Metal storage blocks and their decorative variants come back as accents. Each metal at or below EV that the catalogs place has its own worldgen flag, on by default and pinned into the world profile at creation; one flag covers that metal's blocks in every mod. A flagged metal appears only as accents under a per-building cap: stripe bands, trims, crates and ingot stacks as props, the odd vent or panel, never whole walls, floors or roofs. The roles are `wall-accent`, `trim-pillar`, `furniture-deco` and `special`; the per-mod catalogs drop `wall-main`, `floor` and `roof` from these blocks. With a flag off, each candidate takes its fallback, so a metal accent becomes the building's own accent block. The defaults and the cap are on the [beta balance list](../../beta-balance-list.md). Treasure (`!`) and chest loot are loot, not decoration, and ignore the flags.
+
+**How the tiers are set.** GT's machine casings fix the ladder: the ULV to IV casings are made of cast iron, steel, aluminium, stainless steel, titanium and tungstensteel plates ([AssemblerRecipes.java#L2570-L2618][gt-casings]). A metal that needs no blast furnace (furnace-smelted or alloyed) is steam age. A blast-furnace metal is placed by its blast temperature against that ladder: up to aluminium and stainless steel's 1700K it is at most HV, and up to 2700K, the Kanthal coil titanium already needs (cupronickel gives 1801K, Kanthal 2701K: [HeatingCoilLevel.java#L10-L15][gt-coils]), it is at most EV. Tungstensteel (4000K) and anything above it is IV or later. Platinum and uranium need no blast furnace but stay out by D29's own list.
+
+| Metal | Flag | Blocks it covers | Accent roles | Tier (GT source at 5.09.54.265) |
+|---|---|---|---|---|
+| Iron | `decorativeMetals.iron` | `minecraft:iron_block`; Chisel `iron_block:0` to `:15`, `iron2:0` to `:5`; Tinkers `decoration.multibrick:4`, `multibrickfancy:4`; IC2 `blockMetal:5` (refined iron); Thaumic Bases `oldIron:0` | `wall-accent` (vents, gears, caution stripes), `furniture-deco` (crates), `special` (ingot and coin stacks as props) | steam: no blast furnace ([MaterialsInit.java#L865-L897][gt-iron]) |
+| Gold | `decorativeMetals.gold` | `minecraft:gold_block`; Chisel `gold_block`, `gold2`; Tinkers `decoration.multibrick:5`, `multibrickfancy:5` (gold bricks); Thaumic Bases `oldGold:0` | `special` (ingot and coin stacks), `wall-accent` | steam ([#L725-L759][gt-gold]) |
+| Cast iron | `decorativeMetals.castIron` | Chisel `castironblock:0` to `:7` (its group keys `blockCastIron`, [Features.java#L4833][ch-castiron], which GT's block registers); GT `gt.blockmetal8:2` ([LoaderGTBlockFluid.java#L836-L844][gt-metal8]) | `wall-accent`, `furniture-deco`, `special` | ULV: the ULV casing metal; no blast furnace ([MaterialsInit.java#L9648-L9668][gt-castiron]) |
+| Copper | `decorativeMetals.copper` | Et Futurum copper blocks, cut and chiseled copper, grates, bulbs, doors, trapdoors, cut copper stairs and slabs; Chisel `copperblock`; GT `gt.blockmetal2:7`; Railcraft `cube:9`; IC2 `blockMetal:0`; Galacticraft `tile.gcBlockCore:9`; Tinkers `MetalBlock:3`; ProjectRed `projectred.exploration.stone:8` | `wall-accent`, `trim-pillar`, `furniture-deco`, `special`; Et Futurum's doors, trapdoors, bulbs and grates as fittings | steam ([#L500-L531][gt-copper]) |
+| Tin | `decorativeMetals.tin` | Chisel `tinblock`; GT `gt.blockmetal7:7`; Railcraft `cube:10`; IC2 `blockMetal:1`; Galacticraft `tile.gcBlockCore:10`; Tinkers `MetalBlock:5`; ProjectRed `projectred.exploration.stone:9` | `wall-accent`, `trim-pillar`, `furniture-deco` | steam ([#L1797-L1822][gt-tin]) |
+| Bronze | `decorativeMetals.bronze` | Chisel `bronzeblock`; GT `gt.blockmetal2:0`; IC2 `blockMetal:2`; Tinkers `MetalBlock:4` | `wall-accent`, `furniture-deco` | steam: an alloy ([#L5894-L5917][gt-bronze]) |
+| Lead | `decorativeMetals.lead` | Chisel `leadblock`; GT `gt.blockmetal4:2`; Railcraft `cube:11`; IC2 `blockMetal:4` | `wall-accent`, `furniture-deco` | steam ([#L919-L945][gt-lead]) |
+| Silver | `decorativeMetals.silver` | Chisel `silverblock`; GT `gt.blockmetal6:10`; ProjectRed `projectred.exploration.stone:10` | `wall-accent`, `special` | steam ([#L1610-L1636][gt-silver]) |
+| Nickel | `decorativeMetals.nickel` | Chisel `nickelblock`; GT `gt.blockmetal5:4` | `wall-accent`, `furniture-deco` | steam ([#L1212-L1239][gt-nickel]) |
+| Invar | `decorativeMetals.invar` | Chisel `invarblock`; GT `gt.blockmetal3:11` | `wall-accent`, `furniture-deco` | steam: an alloy ([#L6604-L6624][gt-invar]) |
+| Electrum | `decorativeMetals.electrum` | Chisel `electrumblock`; GT `gt.blockmetal2:15`. Chisel's group keys the misspelled `blockElectrun` ([Features.java#L4754][ch-electrum]), so it does not take GT's block in this pack | `wall-accent`, `furniture-deco` | steam: an alloy ([#L6325-L6346][gt-electrum]) |
+| Steel | `decorativeMetals.steel` | Chisel `steelblock`; GT `gt.blockmetal6:13`; Railcraft `cube:2`; Tinkers `MetalBlock:9` | `wall-accent`, `trim-pillar`, `furniture-deco` | LV: the LV casing metal, also made in the steam-age primitive blast furnace ([BlastFurnaceRecipes.java#L740-L760][gt-steel-pbf]) |
+| Black steel | `decorativeMetals.blackSteel` | GT `gt.blockmetal1:12` | `wall-accent` | MV at most: blast 1200K ([MaterialsInit.java#L10095-L10117][gt-blacksteel]) |
+| Damascus steel | `decorativeMetals.damascusSteel` | GT `gt.blockmetal2:9` | `wall-accent` | MV at most: blast 1500K ([#L10262-L10283][gt-damascus]) |
+| Meteoric iron | `decorativeMetals.meteoricIron` | Galacticraft `tile.gcBlockCore:12`; GT `gt.blockmetal4:7` | `wall-accent` | MV at most: blast 1000K ([#L1077-L1105][gt-meteoric]) |
+| Electrical steel | `decorativeMetals.electricalSteel` | EnderIO `blockIngotStorage:0` | `wall-accent` | MV at most: blast 1000K ([#L10314-L10336][gt-electricalsteel]) |
+| Dark steel | `decorativeMetals.darkSteel` | EnderIO `blockIngotStorage:6` | `wall-accent` | HV at most: blast 1800K ([#L11991-L12012][gt-darksteel]) |
+| Aluminum | `decorativeMetals.aluminum` | Chisel `aluminumblock` (GTNH adds GT's block to the group, [ScriptChisel.java#L383][nh-chisel]); GT `gt.blockmetal1:1`; Galacticraft `tile.gcBlockCore:11`; Tinkers `MetalBlock:6` | `wall-accent`, `trim-pillar`, `furniture-deco` | MV: the MV casing metal; blast 1700K ([MaterialsInit.java#L159-L183][gt-aluminium]) |
+| Aluminum brass | `decorativeMetals.aluminumBrass` | Tinkers `MetalBlock:7` | `wall-accent` | steam: an alloy, no blast furnace ([#L5341-L5352][gt-albrass]) |
+| Cobalt | `decorativeMetals.cobalt` | Chisel `cobaltblock` (keys `blockCobalt`, [Features.java#L4993][ch-cobalt]); GT `gt.blockmetal2:5`; Tinkers `MetalBlock:0` | `wall-accent`, `furniture-deco` | HV at most: blast 1700K, as aluminium ([MaterialsInit.java#L473-L498][gt-cobalt]) |
+| Stainless steel | `decorativeMetals.stainlessSteel` | Chisel `stainlesssteelblock`; GT `gt.blockmetal6:12` | `wall-accent`, `trim-pillar`, `furniture-deco` | HV: the HV casing metal; blast 1700K ([#L9337-L9360][gt-stainless]) |
+| Titanium | `decorativeMetals.titanium` | Chisel `titaniumblock`; GT `gt.blockmetal7:9`. Chisel's group keys `titaniumBlock` ([Features.java#L4854][ch-titanium]), not GT's `blockTitanium`, so it does not take GT's block | `wall-accent`, `furniture-deco` | EV: the EV casing metal; blast 1940K ([MaterialsInit.java#L1824-L1849][gt-titanium]) |
+| Desh | `decorativeMetals.desh` | Galacticraft `tile.mars:8` | `wall-accent` | EV at most: blast 2500K, Kanthal coils ([#L533-L558][gt-desh]) |
+| Thaumium | `decorativeMetals.thaumium` | Chisel `thaumium:0` to `:5` and Thaumcraft `blockCosmeticSolid:4`, one carving group ([Features.java#L4055-L4068][ch-thaumium]) | `wall-accent`, `trim-pillar` | steam: GT gives it no blast furnace ([MaterialsInit.java#L11562-L11583][gt-thaumium]); Thaumcraft makes it in the crucible, with no GT voltage |
+
+The other metals at or below EV that the catalogs list (annealed copper, black bronze, blue and red steel, brass, chrome, cupronickel, magnalium, nichrome, pig iron, red alloy, rose gold, soldering alloy, sterling silver, tin alloy, tungsten, zinc and vanadium steel in GT; Tinkers' ardite and alumite; EnderIO's other alloys; magic metals such as Thaumic Bases' void metal and thauminite, Witching Gadgets' void metal and Tainted Magic's shadowmetal) look off-theme in a city and get no flag: they stay loot. Gem blocks (diamond, emerald, lapis, redstone, Chisel's mineral groups, Thaumic Bases' old diamond and lapis, GT's gem blocks), quicksilver blocks, GT++ compressed obsidian, and gold, diamond and obsidian chests and barrels stay loot only.
+
+**Above EV, never placed:** tungstensteel (the IV casing metal, blast 4000K: [#L11678-L11700][gt-tungstensteel]), iridium and osmium (blast 4500K: [#L838-L863][gt-iridium], [#L1316-L1342][gt-osmium]), platinum and uranium (D29), and Chisel's rhodium-plated palladium (`rppblock`; bartworks' material is a 4500K blast-furnace metal, [WerkstoffLoader.java#L1311-L1333][bw-rpp], and the group keys `rppBlock`, which nothing registers). That covers Chisel's `tungstensteelblock`, `iridiumblock`, `osmiumblock`, `platinumblock`, `uraniumblock` and `rppblock`, GT's tungstensteel and uranium blocks, and IC2's uranium block.
+
+**Upstream's cabin** is the one building upstream makes of copper (exposed copper walls and cut copper stairs, [cabin](#cabin)). It keeps upstream's palette while `decorativeMetals.copper` is on, which is a wider use than D29's accent cap; with the flag off, it falls back to spruce planks and stairs. That exception needs the owner's confirmation at the M11 palette review.
+
+[gt-casings]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/postload/recipes/AssemblerRecipes.java#L2570-L2618
+[gt-coils]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/api/enums/HeatingCoilLevel.java#L10-L15
+[gt-steel-pbf]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/postload/recipes/BlastFurnaceRecipes.java#L740-L760
+[gt-metal8]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/preload/LoaderGTBlockFluid.java#L836-L844
+[gt-iron]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L865-L897
+[gt-gold]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L725-L759
+[gt-castiron]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L9648-L9668
+[gt-copper]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L500-L531
+[gt-tin]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1797-L1822
+[gt-bronze]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L5894-L5917
+[gt-lead]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L919-L945
+[gt-silver]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1610-L1636
+[gt-nickel]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1212-L1239
+[gt-invar]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L6604-L6624
+[gt-electrum]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L6325-L6346
+[gt-blacksteel]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L10095-L10117
+[gt-damascus]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L10262-L10283
+[gt-meteoric]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1077-L1105
+[gt-electricalsteel]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L10314-L10336
+[gt-darksteel]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L11991-L12012
+[gt-aluminium]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L159-L183
+[gt-albrass]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L5341-L5352
+[gt-cobalt]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L473-L498
+[gt-stainless]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L9337-L9360
+[gt-titanium]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1824-L1849
+[gt-desh]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L533-L558
+[gt-thaumium]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L11562-L11583
+[gt-tungstensteel]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L11678-L11700
+[gt-iridium]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L838-L863
+[gt-osmium]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/materials/MaterialsInit.java#L1316-L1342
+[bw-rpp]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/bartworks/system/material/WerkstoffLoader.java#L1311-L1333
+[nh-chisel]: https://github.com/GTNewHorizons/NewHorizonsCoreMod/blob/2.9.99/src/main/java/com/dreammaster/scripts/ScriptChisel.java#L383
+[ch-castiron]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4833
+[ch-electrum]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4754
+[ch-titanium]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4854
+[ch-cobalt]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4993
+[ch-thaumium]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4055-L4068
 
 ## Reserved for the GTNH-themed buildings
 
@@ -1137,12 +1221,13 @@ D28 rule 7, with the pack's other hazards. The never-place list applies to every
 |---|---|
 | Unbreakable | `minecraft:bedrock`, Et Futurum `barrier` and `light`, Thaumcraft warded glass and arcane door (hardness -1 with `allow_warded_stone=true`), Thaumic Horizons `evanescent`, Galacticraft `tile.spaceStationBase`, Hardcore Ender Expansion `biome_core`, LootGames' shielded dungeon floor |
 | Explosive | `gregtech:gt.blockreinforced:5` (Powderbarrel), Blood Magic `blood_tnt`, EnderZoo charges, Hardcore Ender Expansion `energy_cluster` and `enhanced_tnt`, Natura `Dark Tree:1` (fusewood logs explode when broken) |
-| Hardness above 50 | Twilight Forest castle brick, castle rune brick, roof tile, mazestone and deadrock (100), giant blocks; GT reinforced blocks `gt.blockreinforced:0` (60), `:1`, `:8`, `:9`, `:11`, `:12`; NewHorizonsCoreMod plated reinforced stones (60 to 750); IC2 reinforced stone `IC2:blockAlloy` (80); OpenModularTurrets `hardWallTierFive` (80); Extra Utilities bedrockium; Hardcore Ender Expansion `ender_goo`; NewHorizonsCoreMod `BloodyIchorium` (120) |
-| Valuable storage outside loot | Every metal and gem storage block: GT `gt.blockmetal*` and `gt.blockgem*`, IC2 `blockMetal`, Railcraft `cube:2` and `:9` to `:11`, EnderIO alloy blocks, Tinkers' metal blocks and metal and gem bricks, ProjectRed metal and gem blocks, Galacticraft `tile.gcBlockCore:9` to `:12` and `tile.mars:8`, Thaumic Bases old storage blocks, GT++ compressed obsidian, Chisel's metal and mineral blocks (`chisel:iron2`, `chisel:steelblock` and the other metal groups chisel back to the storage block), gold, diamond and obsidian chests and barrels. Treasure (`!`) and chest loot only |
+| Hardness above 50 | Twilight Forest castle brick, castle rune brick, roof tile, mazestone and deadrock (100), giant blocks; GT reinforced blocks `gt.blockreinforced:0` (60), `:1`, `:8`, `:9`, `:11`, `:12`; NewHorizonsCoreMod plated reinforced stones (60 to 750); IC2 reinforced stone `IC2:blockAlloy` (80); OpenModularTurrets `hardWallTierFive` and `fenceTierFive` (80); Extra Utilities bedrockium; Hardcore Ender Expansion `ender_goo`; NewHorizonsCoreMod `BloodyIchorium` (120) |
+| Valuable storage outside loot | Gem storage blocks (diamond, emerald, lapis, redstone; GT `gt.blockgem*`; Chisel's mineral groups; Tinkers' gem bricks; Thaumic Bases' old diamond and lapis), quicksilver blocks, GT++ compressed obsidian, and gold, diamond and obsidian chests and barrels: treasure (`!`) and chest loot only. Metal blocks at or below EV are no longer here: each goes behind its D29 flag as a capped accent ([decorative metals](#decorative-metals-d29)), and metals with no flag stay loot |
+| Metals above EV | Tungstensteel, iridium, osmium, platinum, uranium and rhodium-plated palladium blocks in every mod (D29) |
 | GT ore hosts | Raw `minecraft:stone`, `netherrack`, `end_stone`, `gregtech:gt.blockgranites:0`, `:8`, `gregtech:gt.blockstones:0`, `:8`, `etfuturum:deepslate` (any meta), `etfuturum:tuff:0`, and the planet stones GT treats as hosts in every dimension: Galacticraft `tile.moonBlock:4`, `tile.mars:6`, `tile.mars:9`, `tile.asteroidsBlock:1`, and the 33 GalaxySpace stones in [galaxyspace.md](galaxyspace.md) ([ore-veins.md](../../00-pack-integration/ore-veins.md#which-blocks-gt-replaces)) |
 | Infested | Every `minecraft:monster_egg` (D19); Twilight Forest infested towerwood (`tile.TFTowerStone:4`) |
 | Casings and machines | GT casings until the GTNH-themed buildings ([above](#reserved-for-the-gtnh-themed-buildings)); machine hulls never; any machine, turret, portal or ticking generator |
-| Gameplay hazards | Speed blocks off highways and primary roads (D28 rule 3); Thaumcraft and Thaumic Tinkerer travel paving, slabs and stairs; OpenBlocks elevators in same-colored columns and scaffolding; OpenModularTurrets fences tier 3 to 5; Extra Utilities ethereal glass, spikes, chandelier and magnum torch (spawn suppression), colored redstone blocks; Natura soul glass, heat glass, heat sand and thornvines; Twilight Forest thorns and hedge meta 0 at reachable height; Witchery brambles; Blood Magic spectral block; Biomes O' Plenty quicksand, poison ivy and thorns; GalaxySpace webs; Galacticraft cavernous vines; crusted taint and tainted soil; OpenSecurity security doors on paths; Ztones `booster`; GT bounce and sticky pads |
+| Gameplay hazards | Speed blocks as floors, roofs, sidewalks, side streets, stairs or rubble (D28 rule 3: they are walked on only on highways and primary roads, and may stand in walls and trims); Thaumcraft and Thaumic Tinkerer travel paving, slabs and stairs; OpenBlocks elevators in same-colored columns and scaffolding; OpenModularTurrets fences tier 3 to 5; Extra Utilities ethereal glass, spikes, chandelier and magnum torch (spawn suppression), colored redstone blocks; Natura soul glass, heat glass, heat sand and thornvines; Twilight Forest thorns and hedge meta 0 at reachable height; Witchery brambles; Blood Magic spectral block; Biomes O' Plenty quicksand, poison ivy and thorns; GalaxySpace webs; Galacticraft cavernous vines; crusted taint and tainted soil; OpenSecurity security doors on paths; Ztones `booster`; GT bounce and sticky pads |
 
 ## City styles that would gain a distinct pool
 
@@ -1190,16 +1275,7 @@ What M02 must support before these pools can become palettes ([ROADMAP](../../..
    - GT casings, frame boxes, sheetmetal and Plascrete queue a machine-update scan from `onBlockAdded` when placed after `provideChunk`.
    - Overlays (ModernMarkings, Chisel `road_line`, Ztones flat lamps, plants, carpets) are placed after the block that supports them; doors write both halves; leaves carry their no-decay bit.
 7. **Fallback chains of more than one step** (mod block, second mod block, vanilla), with the dev self-check reporting each fallback taken.
-8. **Primary roads as a layout fact.** Speed blocks belong only on highways and primary roads, while upstream uses `S` for every street and for building floors. The city style needs a separate street block or character for primary roads, which M04 and M06 provide.
+8. **Primary roads as a layout fact.** Speed blocks are walked on only on highways and primary roads, while upstream uses `S` for every street and for building floors. The city style needs a separate street block or character for primary roads, which M04 and M06 provide.
 9. **Per-building palette choice with weights**, per style, with the spawn-proof floor share as a tunable (D28 rule 1).
 10. **A "shape of material" palette entry** (ArchitectureCraft, Carpenter's Blocks) for true roof slopes and cornices, after beta.
-
-## Where D28 overrides a catalog's pool
-
-The per-mod pools were written before D28; where they disagree, this index follows D28:
-
-- **Hardness above 50:** Twilight Forest castle brick, mazestone and castle roof tile ([twilightforest.md](twilightforest.md)), OpenModularTurrets tier 5 walls ([openmodularturrets.md](openmodularturrets.md)), NewHorizonsCoreMod bronze- and steel-plated reinforced stone ([dreamcraft.md](dreamcraft.md)) and IC2 reinforced stone ([ic2.md](ic2.md)) are out.
-- **Speed blocks:** GT concrete in walls, sidewalks, desert bricks and rubble ([gregtech.md](gregtech.md)), Chisel concrete in walls, bands and sidewalks ([chisel.md](chisel.md)) and Tinkers' brownstone in desert walls ([tinkers.md](tinkers.md)) are out; they stay in the road pools.
-- **Casings:** GT's solid steel casing as a wall, firebricks and coke oven bricks as brick, yellow stripes as curbs and Plascrete as a white panel ([gregtech.md](gregtech.md)), and GT++ casings ([gtplusplus.md](gtplusplus.md)) wait for the GTNH-themed buildings.
-- **Valuable storage:** GT steel and lead blocks as roofing ([gregtech.md](gregtech.md)), Railcraft steel and lead blocks ([railcraft.md](railcraft.md)), Galacticraft copper, tin and aluminum blocks ([galacticraft.md](galacticraft.md)), Tinkers', EnderIO and ProjectRed metal blocks, Thaumic Bases old iron ([thaumcraft.md](thaumcraft.md)) and Chisel's metal blocks ([chisel.md](chisel.md)) are loot only.
-- **Hazards:** GalaxySpace's withering and burning webs as rubble ([galaxyspace.md](galaxyspace.md)) and Thaumcraft travel paving in the arcane quarter ([thaumcraft.md](thaumcraft.md)) are out.
+11. **Decorative metal flags (D29).** One `decorativeMetals.<metal>` worldgen flag per metal in the [decorative metals](#decorative-metals-d29) table, pinned into the world profile at creation, and a per-building cap on metal accents. A palette entry marked DM resolves to its fallback when its flag is off.

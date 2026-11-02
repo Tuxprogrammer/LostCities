@@ -35,11 +35,11 @@ Variants per role (a variant with two roles counts in both; slabs also count as 
 
 | Role | Variants | | Role | Variants |
 |---|---|---|---|---|
-| wall-main | 608 | | glass | 97 |
-| wall-accent | 496 | | trim-pillar | 87 |
+| wall-main | 562 | | glass | 97 |
+| wall-accent | 542 | | trim-pillar | 87 |
 | off-theme | 344 | | ceiling | 69 |
-| floor | 317 | | foliage | 67 |
-| rubble-ruin | 202 | | street | 45 |
+| floor | 306 | | foliage | 67 |
+| rubble-ruin | 201 | | street | 45 |
 | stairs-slab | 140 | | light | 41 |
 | special | 130 | | fence-rail | 27 |
 | pane | 115 | | sidewalk | 26 |
@@ -50,8 +50,8 @@ Chisel has no doors, trapdoors, walls or fences, and almost no roof blocks: its 
 
 ## Behavior to know before placing Chisel blocks
 
-1. **No mob spawns on Chisel blocks.** The pack's `chisel.cfg` sets `canMobsSpawnOnTheChiselBlocks=false`, and every `BlockCarvable` returns that from `canCreatureSpawn` ([BlockCarvable.java#L173-L176][carvable]); anti blocks, GloTek and Neonite refuse spawns unconditionally. A building floored with Chisel blocks gets no natural spawns on those floors. Upstream's dark ruins do spawn mobs, so this is a gameplay change the owner should decide on (use Chisel mostly for walls and facades, or accept it). Glass, panes, ice, packed ice, carpets, torches and pumpkins are not `BlockCarvable` and follow vanilla rules.
-2. **Concrete and road blocks speed players up.** `chisel:concrete`, `chisel:road` and `chisel:road2` are `BlockConcrete`, which multiplies a walking player's horizontal motion by `concreteVelocityMult + 0.05` = 1.4 every tick, before ground friction ([BlockConcrete.java][concrete]). By our arithmetic that nearly doubles ground speed (steady state about 1.9 times vanilla); it is client-side and applies only to players. Streets and sidewalks made of these blocks change how a city plays. The block is a full cube in this version: `fullBlockConcrete` is read from the config but used nowhere, so [block-mapping.md](../../00-pack-integration/block-mapping.md)'s note that it is "slightly lower than a full block" is wrong for 2.17.34-GTNH.
+1. **No mob spawns on Chisel blocks.** The pack's `chisel.cfg` sets `canMobsSpawnOnTheChiselBlocks=false`, and every `BlockCarvable` returns that from `canCreatureSpawn` ([BlockCarvable.java#L173-L176][carvable]); anti blocks, GloTek and Neonite refuse spawns unconditionally. A building floored with Chisel blocks gets no natural spawns on those floors. Upstream's dark ruins do spawn mobs, so D28 rule 2 uses Chisel freely in walls, trims and roofs and keeps it to a minority share of floors ([index](index.md#d28-as-applied-here)). Glass, panes, ice, packed ice, carpets, torches and pumpkins are not `BlockCarvable` and follow vanilla rules.
+2. **Concrete and road blocks speed players up.** `chisel:concrete`, `chisel:road` and `chisel:road2` are `BlockConcrete`, which multiplies a walking player's horizontal motion by `concreteVelocityMult + 0.05` = 1.4 every tick, before ground friction ([BlockConcrete.java][concrete]). By our arithmetic that nearly doubles ground speed (steady state about 1.9 times vanilla); it is client-side and applies only to players. Streets and sidewalks made of these blocks change how a city plays, so D28 rule 3 walks players over them only on highways and primary roads; elsewhere they may stand in walls and trims, never in floors, roofs, sidewalks, stairs or rubble. The block is a full cube in this version: `fullBlockConcrete` is read from the config but used nowhere, so [block-mapping.md](../../00-pack-integration/block-mapping.md)'s note that it is "slightly lower than a full block" is wrong for 2.17.34-GTNH.
 3. **Light.** Light 15: glowstone variants, lanterns, froglights, jack o'lanterns, lavastone. Light 14: torches. Light 7: Futura circuits, hex plating. Light 3: holystone. The Chisel beacon sets `setLightLevel(5.0F)`, a light value of 75, outside the 0 to 15 range; avoid it. Anti blocks, GloTek and Neonite render full-bright but emit no light. Laboratory "panels" and glowing vents look lit and are not.
 4. **Gravity, tile entities, power.** Hempcrete powder falls like sand. The beacon, the present (a chest with an inventory) and the auto chisel have tile entities. The Chisel redstone block emits redstone power 15.
 5. **Ice.** `chisel:ice` and `chisel:ice_pillar` behave like vanilla ice: translucent, slippery, melt near block light above 11 and leave water when broken. Packed ice variants and both ice stair sets are slippery and do not melt.
@@ -1523,19 +1523,21 @@ Behavior: translucent (render pass 1); panes are pane-shaped. No connected textu
 
 Sheets: `mineral-blocks.png`.
 
+Every group here chisels back to a vanilla storage block, so each variant is nine ingots or gems. The iron and gold groups are accents behind `decorativeMetals.iron` and `decorativeMetals.gold`, under a per-building cap and never whole walls, floors or roofs ([D29](index.md#decorative-metals-d29)); the diamond, emerald, lapis and redstone groups stay loot.
+
 #### `IRON_BLOCK` feature: `chisel:iron_block`, `chisel:iron2`
 
 Beacon base.
 
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
-| `chisel:iron_block:0` | Rusted Block | wall-accent, rubble-ruin | partly | industrial, ruin | rusted |
+| `chisel:iron_block:0` | Rusted Block | wall-accent | partly | industrial, ruin | rusted |
 | `chisel:iron_block:1` | Large Iron Ingots | special | partly | standard | ingot stack: treasure (!) variety |
 | `chisel:iron_block:2` | Small Iron Ingots | special | partly | standard | ingot stack: treasure (!) variety |
 | `chisel:iron_block:3` | Iron Gears | wall-accent | partly | industrial | gears |
-| `chisel:iron_block:4` | Iron Bricks | wall-main | yes | industrial, standard | beacon base |
-| `chisel:iron_block:5` | Iron Plates | wall-main, floor | yes | industrial, standard | beacon base |
-| `chisel:iron_block:6` | Iron Plates with Rivets | wall-main, floor | yes | industrial, standard | beacon base |
+| `chisel:iron_block:4` | Iron Bricks | wall-accent | yes | industrial, standard | beacon base |
+| `chisel:iron_block:5` | Iron Plates | wall-accent | yes | industrial, standard | beacon base |
+| `chisel:iron_block:6` | Iron Plates with Rivets | wall-accent | yes | industrial, standard | beacon base |
 | `chisel:iron_block:7` | Iron Coin Stack Heads-up | special | partly | standard | coin stack |
 | `chisel:iron_block:8` | Iron Coin Stack Heads-down | special | partly | standard | coin stack |
 | `chisel:iron_block:9` | Dark Iron Crate | furniture-deco | yes | industrial, standard | metal-banded crate |
@@ -1544,13 +1546,13 @@ Beacon base.
 | `chisel:iron_block:12` | Iron Moon in Purple Obsidian | off-theme | no | - | moon on obsidian |
 | `chisel:iron_block:13` | Iron Moon in Obsidian | off-theme | no | - | moon on obsidian |
 | `chisel:iron_block:14` | Iron Vents | wall-accent | yes | industrial, standard | vents |
-| `chisel:iron_block:15` | Simple Iron Block | wall-main | yes | standard, industrial | plain iron |
+| `chisel:iron_block:15` | Simple Iron Block | wall-accent | yes | standard, industrial | plain iron |
 | `chisel:iron2:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:iron2:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:iron2:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:iron2:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:iron2:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:iron2:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:iron2:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:iron2:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `GOLD_BLOCK` feature: `chisel:gold_block`, `chisel:gold2`
 
@@ -1661,6 +1663,8 @@ Emits redstone power 15 like the vanilla block: powers adjacent rails, lamps and
 
 Sheets: `metals-1.png`, `metals-2.png`.
 
+Each group is a decorative metal (D29): accents only, behind one flag per metal and under a per-building cap, never whole walls, floors or roofs ([D29](index.md#decorative-metals-d29)). Tiers are settled there from GT source. Most groups key GT's ore name (`blockCopper`, `blockSteel`, ...) and chisel back to its storage block; the electrum group keys the misspelled `blockElectrun` and the titanium, tungstensteel, rhodium-plated palladium, iridium and osmium groups key `titaniumBlock`-style names that appear nowhere in the pack's sources but Chisel's, so they do not take a storage block. Tungstensteel, rhodium-plated palladium, iridium, osmium, platinum and uranium are above EV and never placed.
+
 #### `ALUMINUM` feature: `chisel:aluminumblock`, `chisel:aluminum_stairs`
 
 Beacon base; named after a GT material: fits a GTNH tier-themed district; also has stairs. Stairs: each `_stairs.N` block holds two variants, item meta 0 for variant 2N and 8 for variant 2N+1; in the world the low three bits are the stair facing and half, as for vanilla stairs.
@@ -1669,10 +1673,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district; also h
 |---|---|---|---|---|---|
 | `chisel:aluminumblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:aluminumblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:aluminumblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:aluminumblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:aluminumblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:aluminumblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:aluminumblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:aluminumblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 | `chisel:aluminum_stairs.0:0` | Caution Stripes | stairs-slab | partly | industrial | stairs of `chisel:aluminumblock:0` (Caution Stripes); connected texture |
 | `chisel:aluminum_stairs.0:8` | Shipping Crate | stairs-slab | partly | industrial | stairs of `chisel:aluminumblock:1` (Shipping Crate); connected texture |
 | `chisel:aluminum_stairs.1:0` | Thermal | stairs-slab | partly | industrial | stairs of `chisel:aluminumblock:2` (Thermal) |
@@ -1688,10 +1692,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:bronzeblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:bronzeblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:bronzeblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:bronzeblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:bronzeblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:bronzeblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:bronzeblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:bronzeblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `COPPER` feature: `chisel:copperblock`
 
@@ -1701,10 +1705,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:copperblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:copperblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:copperblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:copperblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:copperblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:copperblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:copperblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:copperblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `LEAD` feature: `chisel:leadblock`
 
@@ -1714,10 +1718,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:leadblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:leadblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:leadblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:leadblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:leadblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:leadblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:leadblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:leadblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `SILVER` feature: `chisel:silverblock`
 
@@ -1727,10 +1731,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:silverblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:silverblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:silverblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:silverblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:silverblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:silverblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:silverblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:silverblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `STEEL` feature: `chisel:steelblock`
 
@@ -1740,10 +1744,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:steelblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:steelblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:steelblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:steelblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:steelblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:steelblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:steelblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:steelblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `TIN` feature: `chisel:tinblock`
 
@@ -1753,10 +1757,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:tinblock:0` | Caution Stripes | wall-accent | partly | industrial | caution stripes; connected texture |
 | `chisel:tinblock:1` | Shipping Crate | furniture-deco | partly | industrial | shipping crate; connected texture |
-| `chisel:tinblock:2` | Thermal | wall-main | partly | industrial | smooth thermal finish |
+| `chisel:tinblock:2` | Thermal | wall-accent | partly | industrial | smooth thermal finish |
 | `chisel:tinblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | - | relic emblem |
 | `chisel:tinblock:4` | Egregiously Bordered Block | wall-accent | partly | industrial | bordered plate; connected texture |
-| `chisel:tinblock:5` | Fancy Bolted Plating | wall-main, floor | partly | industrial | bolted plating |
+| `chisel:tinblock:5` | Fancy Bolted Plating | wall-accent | partly | industrial | bolted plating |
 
 #### `URANIUM` feature: `chisel:uraniumblock`
 
@@ -1766,10 +1770,10 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:uraniumblock:0` | Caution Stripes | wall-accent | no | industrial, scifi | caution stripes; connected texture |
 | `chisel:uraniumblock:1` | Shipping Crate | furniture-deco | no | industrial, scifi | shipping crate; connected texture |
-| `chisel:uraniumblock:2` | Thermal | wall-main | no | industrial, scifi | smooth thermal finish |
+| `chisel:uraniumblock:2` | Thermal | wall-accent | no | industrial, scifi | smooth thermal finish |
 | `chisel:uraniumblock:3` | An Old Relic from the land of Oneteufyv | off-theme | no | industrial, scifi | relic emblem |
 | `chisel:uraniumblock:4` | Egregiously Bordered Block | wall-accent | no | industrial, scifi | bordered plate; connected texture |
-| `chisel:uraniumblock:5` | Fancy Bolted Plating | wall-main, floor | no | industrial, scifi | bolted plating |
+| `chisel:uraniumblock:5` | Fancy Bolted Plating | wall-accent | no | industrial, scifi | bolted plating |
 
 #### `ELECTRUM` feature: `chisel:electrumblock`
 
@@ -1778,12 +1782,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
 | `chisel:electrumblock:0` | Egregious | wall-accent | no | industrial, luxury | connected texture |
-| `chisel:electrumblock:1` | Bolted Casing | wall-main | no | industrial, luxury |  |
+| `chisel:electrumblock:1` | Bolted Casing | wall-accent | no | industrial, luxury |  |
 | `chisel:electrumblock:2` | Caution Stripes | wall-accent | no | industrial, luxury | connected texture |
 | `chisel:electrumblock:3` | Shipping Crate | furniture-deco | no | industrial, luxury | connected texture |
 | `chisel:electrumblock:4` | Machinery | special | no | industrial, luxury |  |
 | `chisel:electrumblock:5` | Scaffolding | fence-rail, special | no | industrial, luxury | connected texture |
-| `chisel:electrumblock:6` | Thermal | wall-main | no | industrial, luxury |  |
+| `chisel:electrumblock:6` | Thermal | wall-accent | no | industrial, luxury |  |
 
 #### `INVAR` feature: `chisel:invarblock`
 
@@ -1792,12 +1796,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
 | `chisel:invarblock:0` | Egregious | wall-accent | partly | industrial | connected texture |
-| `chisel:invarblock:1` | Bolted Casing | wall-main | partly | industrial |  |
+| `chisel:invarblock:1` | Bolted Casing | wall-accent | partly | industrial |  |
 | `chisel:invarblock:2` | Caution Stripes | wall-accent | partly | industrial | connected texture |
 | `chisel:invarblock:3` | Shipping Crate | furniture-deco | partly | industrial | connected texture |
 | `chisel:invarblock:4` | Machinery | special | partly | industrial |  |
 | `chisel:invarblock:5` | Scaffolding | fence-rail, special | partly | industrial | connected texture |
-| `chisel:invarblock:6` | Thermal | wall-main | partly | industrial |  |
+| `chisel:invarblock:6` | Thermal | wall-accent | partly | industrial |  |
 
 #### `NICKEL` feature: `chisel:nickelblock`
 
@@ -1806,12 +1810,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
 | `chisel:nickelblock:0` | Egregious | wall-accent | no | industrial | connected texture |
-| `chisel:nickelblock:1` | Bolted Casing | wall-main | no | industrial |  |
+| `chisel:nickelblock:1` | Bolted Casing | wall-accent | no | industrial |  |
 | `chisel:nickelblock:2` | Caution Stripes | wall-accent | no | industrial | connected texture |
 | `chisel:nickelblock:3` | Shipping Crate | furniture-deco | no | industrial | connected texture |
 | `chisel:nickelblock:4` | Machinery | special | no | industrial |  |
 | `chisel:nickelblock:5` | Scaffolding | fence-rail, special | no | industrial | connected texture |
-| `chisel:nickelblock:6` | Thermal | wall-main | no | industrial |  |
+| `chisel:nickelblock:6` | Thermal | wall-accent | no | industrial |  |
 
 #### `PLATINUM` feature: `chisel:platinumblock`
 
@@ -1820,12 +1824,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
 | `chisel:platinumblock:0` | Egregious | wall-accent | no | industrial, scifi | connected texture |
-| `chisel:platinumblock:1` | Bolted Casing | wall-main | no | industrial, scifi |  |
+| `chisel:platinumblock:1` | Bolted Casing | wall-accent | no | industrial, scifi |  |
 | `chisel:platinumblock:2` | Caution Stripes | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:platinumblock:3` | Shipping Crate | furniture-deco | no | industrial, scifi | connected texture |
 | `chisel:platinumblock:4` | Machinery | special | no | industrial, scifi |  |
 | `chisel:platinumblock:5` | Scaffolding | fence-rail, special | no | industrial, scifi | connected texture |
-| `chisel:platinumblock:6` | Thermal | wall-main | no | industrial, scifi |  |
+| `chisel:platinumblock:6` | Thermal | wall-accent | no | industrial, scifi |  |
 
 #### `CAST_IRON` feature: `chisel:castironblock`
 
@@ -1835,12 +1839,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:castironblock:0` | Machinery | special | partly | industrial |  |
 | `chisel:castironblock:1` | Egregiously Modern | wall-accent | partly | industrial | connected texture |
-| `chisel:castironblock:2` | Bolted Casing | wall-main | partly | industrial |  |
+| `chisel:castironblock:2` | Bolted Casing | wall-accent | partly | industrial |  |
 | `chisel:castironblock:3` | Caution Stripes | wall-accent | partly | industrial | connected texture |
 | `chisel:castironblock:4` | Shipping Crate | furniture-deco | partly | industrial | connected texture |
 | `chisel:castironblock:5` | Egregious | wall-accent | partly | industrial | connected texture |
 | `chisel:castironblock:6` | Scaffolding | fence-rail, special | partly | industrial | connected texture |
-| `chisel:castironblock:7` | Thermal | wall-main | partly | industrial |  |
+| `chisel:castironblock:7` | Thermal | wall-accent | partly | industrial |  |
 
 #### `TITANIUM` feature: `chisel:titaniumblock`
 
@@ -1850,12 +1854,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:titaniumblock:0` | Machinery | special | no | industrial, scifi |  |
 | `chisel:titaniumblock:1` | Egregiously Modern | wall-accent | no | industrial, scifi | connected texture |
-| `chisel:titaniumblock:2` | Bolted Casing | wall-main | no | industrial, scifi |  |
+| `chisel:titaniumblock:2` | Bolted Casing | wall-accent | no | industrial, scifi |  |
 | `chisel:titaniumblock:3` | Caution Stripes | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:titaniumblock:4` | Shipping Crate | furniture-deco | no | industrial, scifi | connected texture |
 | `chisel:titaniumblock:5` | Egregious | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:titaniumblock:6` | Scaffolding | fence-rail, special | no | industrial, scifi | connected texture |
-| `chisel:titaniumblock:7` | Thermal | wall-main | no | industrial, scifi |  |
+| `chisel:titaniumblock:7` | Thermal | wall-accent | no | industrial, scifi |  |
 
 #### `STAINLESS_STEEL` feature: `chisel:stainlesssteelblock`
 
@@ -1865,12 +1869,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:stainlesssteelblock:0` | Machinery | special | partly | industrial, modern |  |
 | `chisel:stainlesssteelblock:1` | Egregiously Modern | wall-accent | partly | industrial, modern | connected texture |
-| `chisel:stainlesssteelblock:2` | Bolted Casing | wall-main | partly | industrial, modern |  |
+| `chisel:stainlesssteelblock:2` | Bolted Casing | wall-accent | partly | industrial, modern |  |
 | `chisel:stainlesssteelblock:3` | Caution Stripes | wall-accent | partly | industrial, modern | connected texture |
 | `chisel:stainlesssteelblock:4` | Shipping Crate | furniture-deco | partly | industrial, modern | connected texture |
 | `chisel:stainlesssteelblock:5` | Egregious | wall-accent | partly | industrial, modern | connected texture |
 | `chisel:stainlesssteelblock:6` | Scaffolding | fence-rail, special | partly | industrial, modern | connected texture |
-| `chisel:stainlesssteelblock:7` | Thermal | wall-main | partly | industrial, modern |  |
+| `chisel:stainlesssteelblock:7` | Thermal | wall-accent | partly | industrial, modern |  |
 
 #### `TUNGSTENSTEEL` feature: `chisel:tungstensteelblock`
 
@@ -1880,12 +1884,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:tungstensteelblock:0` | Machinery | special | no | industrial, scifi |  |
 | `chisel:tungstensteelblock:1` | Egregiously Modern | wall-accent | no | industrial, scifi | connected texture |
-| `chisel:tungstensteelblock:2` | Bolted Casing | wall-main | no | industrial, scifi |  |
+| `chisel:tungstensteelblock:2` | Bolted Casing | wall-accent | no | industrial, scifi |  |
 | `chisel:tungstensteelblock:3` | Caution Stripes | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:tungstensteelblock:4` | Shipping Crate | furniture-deco | no | industrial, scifi | connected texture |
 | `chisel:tungstensteelblock:5` | Egregious | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:tungstensteelblock:6` | Scaffolding | fence-rail, special | no | industrial, scifi | connected texture |
-| `chisel:tungstensteelblock:7` | Thermal | wall-main | no | industrial, scifi |  |
+| `chisel:tungstensteelblock:7` | Thermal | wall-accent | no | industrial, scifi |  |
 
 #### `RPP` feature: `chisel:rppblock`
 
@@ -1895,12 +1899,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:rppblock:0` | Machinery | special | no | industrial, scifi |  |
 | `chisel:rppblock:1` | Egregiously Modern | wall-accent | no | industrial, scifi | connected texture |
-| `chisel:rppblock:2` | Bolted Casing | wall-main | no | industrial, scifi |  |
+| `chisel:rppblock:2` | Bolted Casing | wall-accent | no | industrial, scifi |  |
 | `chisel:rppblock:3` | Caution Stripes | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:rppblock:4` | Shipping Crate | furniture-deco | no | industrial, scifi | connected texture |
 | `chisel:rppblock:5` | Egregious | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:rppblock:6` | Scaffolding | fence-rail, special | no | industrial, scifi | connected texture |
-| `chisel:rppblock:7` | Thermal | wall-main | no | industrial, scifi |  |
+| `chisel:rppblock:7` | Thermal | wall-accent | no | industrial, scifi |  |
 
 #### `IRIDIUM` feature: `chisel:iridiumblock`
 
@@ -1910,12 +1914,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:iridiumblock:0` | Machinery | special | partly | industrial, scifi |  |
 | `chisel:iridiumblock:1` | Egregiously Modern | wall-accent | partly | industrial, scifi | connected texture |
-| `chisel:iridiumblock:2` | Bolted Casing | wall-main | partly | industrial, scifi |  |
+| `chisel:iridiumblock:2` | Bolted Casing | wall-accent | partly | industrial, scifi |  |
 | `chisel:iridiumblock:3` | Caution Stripes | wall-accent | partly | industrial, scifi | connected texture |
 | `chisel:iridiumblock:4` | Shipping Crate | furniture-deco | partly | industrial, scifi | connected texture |
 | `chisel:iridiumblock:5` | Egregious | wall-accent | partly | industrial, scifi | connected texture |
 | `chisel:iridiumblock:6` | Scaffolding | fence-rail, special | partly | industrial, scifi | connected texture |
-| `chisel:iridiumblock:7` | Thermal | wall-main | partly | industrial, scifi |  |
+| `chisel:iridiumblock:7` | Thermal | wall-accent | partly | industrial, scifi |  |
 
 #### `OSMIUM` feature: `chisel:osmiumblock`
 
@@ -1925,12 +1929,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 |---|---|---|---|---|---|
 | `chisel:osmiumblock:0` | Machinery | special | partly | industrial, scifi |  |
 | `chisel:osmiumblock:1` | Egregiously Modern | wall-accent | partly | industrial, scifi | connected texture |
-| `chisel:osmiumblock:2` | Bolted Casing | wall-main | partly | industrial, scifi |  |
+| `chisel:osmiumblock:2` | Bolted Casing | wall-accent | partly | industrial, scifi |  |
 | `chisel:osmiumblock:3` | Caution Stripes | wall-accent | partly | industrial, scifi | connected texture |
 | `chisel:osmiumblock:4` | Shipping Crate | furniture-deco | partly | industrial, scifi | connected texture |
 | `chisel:osmiumblock:5` | Egregious | wall-accent | partly | industrial, scifi | connected texture |
 | `chisel:osmiumblock:6` | Scaffolding | fence-rail, special | partly | industrial, scifi | connected texture |
-| `chisel:osmiumblock:7` | Thermal | wall-main | partly | industrial, scifi |  |
+| `chisel:osmiumblock:7` | Thermal | wall-accent | partly | industrial, scifi |  |
 
 #### `COBALT` feature: `chisel:cobaltblock`
 
@@ -1939,12 +1943,12 @@ Beacon base; named after a GT material: fits a GTNH tier-themed district.
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
 | `chisel:cobaltblock:0` | Egregious | wall-accent | no | industrial, scifi | connected texture |
-| `chisel:cobaltblock:1` | Bolted Casing | wall-main | no | industrial, scifi |  |
+| `chisel:cobaltblock:1` | Bolted Casing | wall-accent | no | industrial, scifi |  |
 | `chisel:cobaltblock:2` | Caution Stripes | wall-accent | no | industrial, scifi | connected texture |
 | `chisel:cobaltblock:3` | Shipping Crate | furniture-deco | no | industrial, scifi | connected texture |
 | `chisel:cobaltblock:4` | Machinery | special | no | industrial, scifi |  |
 | `chisel:cobaltblock:5` | Scaffolding | fence-rail, special | no | industrial, scifi | connected texture |
-| `chisel:cobaltblock:6` | Thermal | wall-main | no | industrial, scifi |  |
+| `chisel:cobaltblock:6` | Thermal | wall-accent | no | industrial, scifi |  |
 
 #### `THAUMIUM` feature: `chisel:thaumium`
 
@@ -3571,14 +3575,15 @@ Twenty-two woods, each with the same 15 patterns on metas 1 to 15 of `chisel:<wo
 
 ## Best variety pools
 
-Proposed Chisel additions per upstream palette family ([catalog-palettes.md](../../../original-spec/05-assets/catalog-palettes.md)), in rough order of value. Each list sits beside the D19 baseline block, not in place of it; weights are for palette design to set. Blocks marked † have a gameplay effect from [Behavior](#behavior-to-know-before-placing-chisel-blocks) worth a decision first.
+Proposed Chisel additions per upstream palette family ([catalog-palettes.md](../../../original-spec/05-assets/catalog-palettes.md)), in rough order of value. Each list sits beside the D19 baseline block, not in place of it; weights are for palette design to set. Blocks marked † are speed blocks ([Behavior](#behavior-to-know-before-placing-chisel-blocks) 2): D28 rule 3 allows them in walls and trims and on highways and primary roads, never in floors, roofs, sidewalks, stairs or rubble. The metal groups and the iron and gold groups are decorative metals (D29): capped accents behind one flag per metal, listed in the [index](index.md#decorative-metals-d29) rather than here; the gem groups are loot only.
 
 | Upstream family | Baseline (D19) | Chisel blocks that add the most variety |
 |---|---|---|
 | `bricks_standard` `#` and variant `stonebrick` (main wall) | stone bricks with cracked and mossy | `stonebricksmooth:4, 5, 8` (small, wide, disordered panels), `stonebricksmooth:6, 7` (disordered, also rubble), `andesite:3`, `diorite:3`, `holystone:6, 7` (light 3), `limestone:5`, `brickCustom:15` (gray bricks), `marble:1` |
 | `bricks_standard` `X` (accent; infested stone bricks upstream) | stone bricks | `stonebricksmooth:9, 10, 11, 13, 14`, `marble:2, 4, 10, 11`, `limestone:11, 12`, `andesite:4`, `nucrete:1, 9` |
-| `$` band and `S`, `u`, `_` (smooth stone double slab: streets, floors, bands) | smooth stone | `stonebricksmooth:12` (flat stone panel), `concrete:0, 2`†, `nucrete:3, 11`, `technical4:7` (worn concrete, random variation), `limestone:7`, `marble_slab` and `concrete_slab` for real half slabs |
-| variant `stonebrick_rubble` and `}` rubble | stone bricks, slabs, stairs | `cobblestone:9`, `limestone:6`, `andesite:7, 11`, `concrete:4` to `9`†, `brutalism:5, 6, 7`, `brickCustom:5, 13`, `mossy_cobblestone:1` to `7` (overgrown) |
+| `$` band (smooth stone double slab in walls) | smooth stone | `stonebricksmooth:12` (flat stone panel), `concrete:0, 2`†, `nucrete:3, 11`, `technical4:7` (worn concrete, random variation), `limestone:7` |
+| `S`, `u`, `_` (smooth stone double slab: side streets, floors; bottom slabs) | smooth stone | `stonebricksmooth:12`, `nucrete:4, 12`, `technical4:7`, `limestone:7`, `marble_slab` for real half slabs; no `concrete` or `concrete_slab` (speed) |
+| variant `stonebrick_rubble` and `}` rubble | stone bricks, slabs, stairs | `cobblestone:9`, `limestone:6`, `andesite:7, 11`, `brutalism:5, 6, 7`, `brickCustom:5, 13`, `mossy_cobblestone:1` to `7` (overgrown) |
 | `bricks_border` and variant `bricks` (red brick and red terracotta) | bricks, red terracotta | `brickCustom:1, 2, 3, 9, 10`, `hardened_clay:3` to `8` (natural terracotta bricks), `hardened_clay_red:3` to `8`, `brickCustom:11, 12` (white and black bricks for contrast) |
 | `bricks_cyan`, `bricks_gray`, `bricks_silver` | stained terracotta (a boulder host) | the matching `hardened_clay_cyan`, `_gray`, `_lightgray` brick and panel patterns (metas 2 to 8, `2:5`, `2:6`): same colors, **not boulder hosts**, patterned instead of flat; `nucrete` dark (0 to 7) and light (8 to 15) |
 | `bricks_desert`, `_orange`, `_red`, `X` and `x` (cut sandstone) | sandstone, cut sandstone, orange and red terracotta | `sandstone:8, 12, 13, 15`, `sandstone2:0, 1`, sandstone pillars `sandstone:4` to `7`, `9` to `11` as trims, `hardened_clay_orange` and `_red` and `_yellow` patterns, `mud:6` (mud brick), `granite:1, 10`, `sandstone:0` and `sandstone_scribbles` for an ancient quarter |
@@ -3592,27 +3597,27 @@ Proposed Chisel additions per upstream palette family ([catalog-palettes.md](../
 | `T` torch | torch | `torch1` to `torch10` (same light as vanilla torches; metadata is the facing) |
 | `L` bookshelf | bookshelf | `bookshelf:1, 4, 6, 8`; `bookshelf:5` (abandoned, cobwebbed) for ruins |
 | colored concrete (`9` border, highway gas station and restaurant, oil rig) | Et Futurum concrete | `hempcrete:7, 8, 9, 14, 4, 15, 0` (gray, light gray, cyan, red, yellow, black, white), `woolen_clay` same colors, `nucrete`, `cubit` grays |
-| `R` highway surface, streets | cyan terracotta, smooth stone | `road:0` and `concrete:10` (asphalt)†, `road:1` crosswalks at junctions, `road:2, 3, 6, 7, 14` and `road2:4, 5, 6, 11, 12` lane markings (direction-named ones match the street axis), `road_line:0` to `3` as painted lines on any street block, `road2:13, 14` (weathering) and `road2:15` (overgrown) for ruined streets |
-| sidewalks and plazas | smooth stone slab | `concrete:1, 3`†, `nucrete:4, 12`, `limestone:13`, `cobblestone:6, 7, 10`, `stonebricksmooth:12`, `technical:13` (grate) |
+| `R` highway surface and primary roads | cyan terracotta, smooth stone | `road:0` and `concrete:10` (asphalt)†, `road:1` crosswalks at junctions, `road:2, 3, 6, 7, 14` and `road2:4, 5, 6, 11, 12` lane markings† (direction-named ones match the street axis), `road2:13, 14` (weathering)† and `road2:15` (overgrown)† for ruined roads; `road_line:0` to `3` as painted lines on any street block (no speed of their own) |
+| sidewalks and plazas | smooth stone slab | `nucrete:4, 12`, `limestone:13`, `cobblestone:6, 7, 10`, `stonebricksmooth:12`, `technical:13` (grate) |
 | interior floors | wood, stone | `laboratoryblock:6, 7, 8` (enamel tile, lab, checkerboard), `porcelain:3, 4, 10, 12` (tiled bathrooms and kitchens), `marble:12, 13, 14`, plank patterns 1, 5, 6, 13 of any fitting wood, `carpet` floor carpets, `hardened_clay` mosaic and tile patterns |
 | ceilings | (same as walls) | `laboratoryblock:0, 1, 9, 10`, `marble:4`, plank patterns 8 and 9 |
 | ruin and rubble | upstream damage and rubble chars | `technical4:0, 1, 5`, `factoryblock:0, 2, 14`, `sheetmetal:5` to `9`, plank patterns 14 and 15, `brutalism:7` (rebar), `bookshelf:5`, `technical4:13` (cardboard scraps), `brutalism:4` (dead faux window) |
-| overgrown | (none upstream beyond moss and vines) | `brutalism:2, 3`, `leaves:6` to `10` (never decay: hedges and planters), `moss_carpet:0, 3, 9`, `moss:0, 3`, `mossy_cobblestone`, `brickCustom:14`, `road2:15` |
+| overgrown | (none upstream beyond moss and vines) | `brutalism:2, 3`, `leaves:6` to `10` (never decay: hedges and planters), `moss_carpet:0, 3, 9`, `moss:0, 3`, `mossy_cobblestone`, `brickCustom:14` (overgrown road `road2:15`† stays on primary roads) |
 
 New styles these blocks make possible (for the building-variety work after beta):
 
-- **Industrial district** (GTNH flavor, [0004](../../../design/0004-gtnh-layer-and-tier-ceiling.md)): `factoryblock`, `sheetmetal`, `technical` and `technical4` (cinder blocks, pipes, vents, fans, grates, boxes), `nucrete` caution tape, `warningSign`, `iron2` and the GT-named metal blocks (aluminum, steel, stainless steel, titanium, tungstensteel...), `road_line:4` hazard tape.
-- **Modern office and lab**: `laboratoryblock`, `glass:10` steel-frame glass, `tyrian:5, 7, 15`, `stainlesssteelblock`, `brutalism`, `alabaster`, `cubit` grays.
+- **Industrial district** (GTNH flavor, [0004](../../../design/0004-gtnh-layer-and-tier-ceiling.md)): `factoryblock`, `sheetmetal`, `technical` and `technical4` (cinder blocks, pipes, vents, fans, grates, boxes), `nucrete` caution tape, `warningSign`, `road_line:4` hazard tape, and `iron2` and the aluminum, steel and stainless steel groups as capped metal accents (caution stripes, crates, bolted panels) behind their D29 flags.
+- **Modern office and lab**: `laboratoryblock`, `glass:10` steel-frame glass, `tyrian:5, 7, 15`, `stainlesssteelblock` as capped accents (D29), `brutalism`, `alabaster`, `cubit` grays.
 - **Ancient quarter**: `templeblock`, `fantasyblock2`, `marble_pillar`, `sandstone_scribbles`, `holystone`; `mossy_templeblock` when ruined.
 - **Asian quarter**: `paperwall` and `paperwall_block`, `glass:2, 3`, `glass_pane:12` to `15`, `porcelain:5, 6, 7, 9`, `cherry_planks`.
 - **Arctic**: `ice`, `packedice` and their pillars and stairs, keeping melting and slipperiness in mind.
 
 ## The 15 most valuable additions
 
-1. `chisel:road`, `chisel:road2`, `chisel:road_line`: real asphalt streets with crosswalks and lane markings, plus weathered and overgrown road for ruins. †Speed.
+1. `chisel:road`, `chisel:road2`, `chisel:road_line`: real asphalt highways and primary roads with crosswalks and lane markings, plus weathered and overgrown road for ruins. †Speed: highways and primary roads only (D28 rule 3).
 2. `chisel:hardened_clay_<color>` patterns: terracotta brick facades in exactly upstream's colors that are not GT boulder hosts.
 3. `chisel:stonebricksmooth:4` to `12`: stone brick variety for `bricks_standard`, and the flat panel for smooth-stone streets and bands.
-4. `chisel:concrete` 0 to 10 with slabs and stairs: concrete walls, sidewalks and asphalt with built-in weathered variants. †Speed.
+4. `chisel:concrete` 0 to 10: concrete walls and trims, and asphalt on highways and primary roads, with built-in weathered variants. †Speed: its slabs and stairs, and any use as a floor, sidewalk or rubble, stay out (D28 rule 3).
 5. `chisel:laboratoryblock`: clean white offices, labs and hospitals (walls, tiled floors, ceilings).
 6. `chisel:marble`, `marble_pillar`, with slabs and stairs: quartz-like facades with real columns and capstones.
 7. `chisel:brickCustom`: fifteen brick styles, including white, black, gray, sooty and aged.

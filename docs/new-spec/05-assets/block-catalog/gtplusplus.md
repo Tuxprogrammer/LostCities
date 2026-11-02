@@ -93,7 +93,10 @@ Not listed:
 
 ## Best variety pools
 
+None for the standard pools. Every GT++ block that fits a role is a casing, and casings are reserved for the GTNH-themed buildings after beta (D28 rule 4, [index](index.md#reserved-for-the-gtnh-themed-buildings)). There they would serve as:
+
 - **Main wall, clean panel (quartz family, industrial reskin):** Iron Plated Bricks `miscutils:miscutils.blockcasings:10` and Bulk Production Frame `miscutils:gtplusplus.blockcasings.2:12` (same white riveted panel), Blast Smelter Casing Block `miscutils:miscutils.blockcasings:15` (beige panel).
 - **Accent `X`:** Thermal Processing Casing `gtplusplus.blockcasings.2:0` (oxblood), Electrolyzer Casing `miscutils.blockcasings:5` (rose-brown), Wire Factory Casing `:6` (black).
 - **Industrial dressing:** Multitank Exterior and Wash Plant Casings (teal tanks), Vanadium Redox Power Cell (EV) for substations, Sterile Farm Casing as crates.
-- Nothing here for glass, light, streets or desert.
+
+Nothing here for glass, light, streets or desert. Compressed obsidian and compressed glowstone are storage (loot only), and the Wither Guard is unbreakable: never placed (D28 rule 7).

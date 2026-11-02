@@ -8,12 +8,12 @@ Galacticraft 3.4.37-GTNH registers its blocks under two mod IDs: `GalacticraftCo
 
 | Role | Count |
 |---|---|
-| wall-main | 7 |
-| wall-accent | 7 |
+| wall-main | 6 |
+| wall-accent | 8 |
 | trim-pillar | 1 |
 | floor | 6 |
 | ceiling | 1 |
-| roof | 2 |
+| roof | 0 |
 | street | 3 |
 | sidewalk | 3 |
 | stairs-slab | 17 |
@@ -44,13 +44,13 @@ Sheet `decoration.json`.
 |---|---|---|---|---|---|
 | `GalacticraftCore:tile.gcBlockCore:3` | Tin Decoration Block | wall-accent, floor, industrial-dressing | partly: sci-fi chevron panel, top and sides differ | industrial, space | Hardness 1, blast 2 |
 | `GalacticraftCore:tile.gcBlockCore:4` | Tin Decoration Block | wall-main, floor, ceiling, sidewalk | yes: plain light-gray metal panel with a border, reads as modern cladding or floor tile | urban, industrial, space | Hardness 1, blast 2. One of the most usable blocks in the mod |
-| `GalacticraftCore:tile.gcBlockCore:9` | Copper Block | wall-accent, roof | partly: orange striated metal, looks like copper sheet | industrial | `blockCopper`. Cheap material |
-| `GalacticraftCore:tile.gcBlockCore:10` | Tin Block | wall-accent, trim-pillar | partly: pale striated metal | industrial | `blockTin` |
-| `GalacticraftCore:tile.gcBlockCore:11` | Aluminum Block | wall-main, roof, industrial-dressing | partly: ribbed blue-white siding, reads as corrugated cladding | industrial | `blockAluminium` |
-| `GalacticraftCore:tile.gcBlockCore:12` | Solid Meteoric Iron | wall-accent | partly: dark brown metal | industrial, space | Blast 8 |
+| `GalacticraftCore:tile.gcBlockCore:9` | Copper Block | wall-accent | partly: orange striated metal, looks like copper sheet | industrial | `blockCopper`: an accent behind `decorativeMetals.copper`, never a roof ([D29](index.md#decorative-metals-d29)) |
+| `GalacticraftCore:tile.gcBlockCore:10` | Tin Block | wall-accent, trim-pillar | partly: pale striated metal | industrial | `blockTin`: an accent behind `decorativeMetals.tin` ([D29](index.md#decorative-metals-d29)) |
+| `GalacticraftCore:tile.gcBlockCore:11` | Aluminum Block | wall-accent, industrial-dressing | partly: ribbed blue-white siding, reads as corrugated cladding | industrial | `blockAluminium`: an accent behind `decorativeMetals.aluminum`, never whole siding or roofs ([D29](index.md#decorative-metals-d29)) |
+| `GalacticraftCore:tile.gcBlockCore:12` | Solid Meteoric Iron | wall-accent | partly: dark brown metal | industrial, space | Blast 8. A storage block: an accent behind `decorativeMetals.meteoricIron` ([D29](index.md#decorative-metals-d29)) |
 | `GalacticraftCore:tile.moonBlock:14` | Moon Dungeon Brick | wall-main, wall-accent, rubble-ruin | yes: dark gray brick, close to upstream's blackstone-brick building | urban, ruined, space | Hardness 4, blast 40, harvest level 3 |
 | `GalacticraftMars:tile.mars:7` | Mars Dungeon Brick | off-theme | no: bright green brick | space | Hardness 4, blast 40, harvest level 3 |
-| `GalacticraftMars:tile.mars:8` | Block of Desh | industrial-dressing, wall-accent | partly: dark machined panel | industrial, space | |
+| `GalacticraftMars:tile.mars:8` | Block of Desh | industrial-dressing, wall-accent | partly: dark machined panel | industrial, space | A storage block: an accent behind `decorativeMetals.desh` ([D29](index.md#decorative-metals-d29)) |
 | `GalacticraftCore:slabGCHalf:0` | Tin Decoration Slab | stairs-slab, floor, sidewalk | yes | urban, industrial | Meta +8 = top half |
 | `GalacticraftCore:slabGCHalf:1` | Tin Decoration Slab | stairs-slab, industrial-dressing | partly | industrial, space | Chevron sides |
 | `GalacticraftCore:slabGCHalf:2` | Moon Rock Slab | stairs-slab, street, sidewalk | yes: smooth light-gray slab, like a concrete slab | urban, ruined | Not an ore host (separate block) |
@@ -124,15 +124,15 @@ Sheet `fixtures.json`. The sheet renders models as cubes; read the shapes from t
 | Upstream role or palette family | Galacticraft candidates |
 |---|---|
 | `bricks_standard` `#` main wall | `tile.gcBlockCore:4` (modern panel facade), `tile.moonBlock:14` (dark brick) |
-| `X` accent | `tile.gcBlockCore:3`, `tile.gcBlockCore:12`, `tile.mars:8` |
+| `X` accent | `tile.gcBlockCore:3`; the storage blocks `tile.gcBlockCore:9` to `:12` and `tile.mars:8` as capped metal accents behind their D29 flags ([D29](index.md#decorative-metals-d29)) |
 | `$` band / double slab | `slabGCDouble:0`, `slabGCDouble:2`, `slabGCDouble:3` |
 | `}` rubble | `tile.moonBlock:14` with `slabGCHalf:3` and `tile.moonBricksStairs` (a dark-brick rubble set like upstream's `blackstone_rubble`) |
 | Blackstone building (`building7`) | `tile.moonBlock:14` family as a darker alternative |
 | Street and sidewalk `S` / `u` | `tile.asteroidsBlock:0` and `:2` (asphalt look), `slabGCHalf:2` (light slab), `slabGCHalf:0` |
-| Pillars `v` | `tile.gcBlockCore:10` (industrial), `tile.wallGC:2` |
+| Pillars `v` | `tile.wallGC:2` |
 | Highway `R` | `tile.asteroidsBlock:0` |
 | Light `h` | `tile.arclamp` (industrial streets and yards), `tile.glowstoneTorch` |
 | Iron bars `:` / fence `.` | `tile.wallGC:0`, `tile.wallGC:2` |
-| Oil rig | `tile.walkway` (deck), `tile.gcBlockCore:11` (cladding), `tile.arclamp` |
+| Oil rig | `tile.walkway` (deck), `tile.arclamp` |
 | Desert bricks | `tile.mars:5` (flat red-brown), `tile.mars:4` with `slabGCHalf:4` and `tile.marsCobblestoneStairs` (ruined desert) |
-| Roofs | `tile.gcBlockCore:9` (copper), `tile.gcBlockCore:11` (corrugated) |
+| Roofs | none. The copper and aluminum blocks (`tile.gcBlockCore:9`, `:11`) would make copper and corrugated roofs, but D29 keeps metal blocks to capped accents, never roofs |

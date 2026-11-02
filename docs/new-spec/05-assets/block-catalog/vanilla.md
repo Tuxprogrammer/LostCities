@@ -38,9 +38,9 @@ Blocks per role (a block can hold several roles):
 
 ### Where Et Futurum's off switches leave vanilla as the only option
 
-- **Doors**: only oak and iron doors exist apart from Et Futurum's copper doors (`enableVanillaDoors=false`).
-- **Fences and gates**: only the oak fence, oak fence gate and nether brick fence (`enableVanillaFences=false`, `enableVanillaGates=false`).
-- **Trapdoors**: the wooden trapdoor, plus Et Futurum's copper and cherry trapdoors (`enableIronTrapdoor=false`, `enableVanillaTrapdoors=false`).
+- **Doors**: vanilla has only oak and iron doors, and Et Futurum adds only its copper doors (`enableVanillaDoors=false`). Other mods fill the gap: MalisisDoors (`modifyVanillaDoors=true`) replaces `minecraft:wooden_door`, `minecraft:iron_door`, `minecraft:trapdoor` and `minecraft:fence_gate` with its own tile-entity blocks under the same names and supplies every other wood door, wood trapdoors, wood fence gates and an iron trapdoor ([malisisdoors.md](malisisdoors.md)); Natura adds metadata-only doors, trapdoors, fences and gates in its woods ([natura.md](natura.md)); Twilight Forest adds eight wood doors and trapdoors ([twilightforest.md](twilightforest.md)).
+- **Fences and gates**: vanilla has only the oak fence, oak fence gate and nether brick fence (`enableVanillaFences=false`, `enableVanillaGates=false`); MalisisDoors and Natura add the other woods' gates, and Natura its 13 fences.
+- **Trapdoors**: the wooden trapdoor (a MalisisDoors block in this pack), plus Et Futurum's copper and cherry trapdoors (`enableIronTrapdoor=false`, `enableVanillaTrapdoors=false`); MalisisDoors' iron trapdoor stands in for vanilla's.
 - **Beds**: red is vanilla's `minecraft:bed`; Et Futurum adds the other 15 colors.
 - **Polished stones**: 1.7.10 has no granite, diorite or andesite; Botania and Chisel fill them ([etfuturum.md](etfuturum.md)).
 
@@ -170,13 +170,13 @@ Blocks per role (a block can hold several roles):
 | `minecraft:quartz_stairs:0-7` | Quartz Stairs | `stairs-slab` | yes | standard, border | upstream's (`(`, `)`) |
 | `minecraft:cobblestone_wall:0` | Cobblestone Wall | `fence-rail` | yes | standard, new: old town | upstream's (`w`); not a boulder host |
 | `minecraft:cobblestone_wall:1` | Mossy Cobblestone Wall | `fence-rail`, `rubble-ruin` | yes | standard, new: old town |  |
-| `minecraft:fence:0` | Oak Fence | `fence-rail` | yes | standard, park | upstream's `oak_fence` (`.`); the only wood fence (Et Futurum's other woods are off) |
+| `minecraft:fence:0` | Oak Fence | `fence-rail` | yes | standard, park | upstream's `oak_fence` (`.`); the only vanilla wood fence (Et Futurum's other woods are off; Natura has 13) |
 | `minecraft:nether_brick_fence:0` | Nether Brick Fence | `fence-rail` | yes | standard, new: industrial | a dark iron-railing look |
-| `minecraft:fence_gate:0-7` | Oak Fence Gate | `fence-rail`, `door-trap` | yes | standard, park | meta = facing, +4 open |
+| `minecraft:fence_gate:0-7` | Oak Fence Gate | `fence-rail`, `door-trap` | yes | standard, park | meta = facing, +4 open; a MalisisDoors block with a tile entity in this pack |
 | `minecraft:iron_bars:0` | Iron Bars | `pane`, `fence-rail` | yes | standard, border, new: industrial | upstream's (`:`) and every palette's damaged form |
-| `minecraft:trapdoor:0-15` | Wooden Trapdoor | `door-trap`, `fence-rail` | yes | standard | the D19 stand-in for the iron trapdoor |
-| `minecraft:wooden_door:0-11` | Wooden Door | `door-trap` | yes | standard, border | two blocks; every wood's door in D19 |
-| `minecraft:iron_door:0-11` | Iron Door | `door-trap` | yes | standard, border, new: industrial | needs redstone to open |
+| `minecraft:trapdoor:0-15` | Wooden Trapdoor | `door-trap`, `fence-rail` | yes | standard | a MalisisDoors block with a tile entity in this pack; the fallback for the iron trapdoor when MalisisDoors' is absent |
+| `minecraft:wooden_door:0-11` | Wooden Door | `door-trap` | yes | standard, border | two blocks; a MalisisDoors block with a tile entity in this pack; upstream's oak door, and the fallback for the other woods' `malisisdoors:door_<wood>` |
+| `minecraft:iron_door:0-11` | Iron Door | `door-trap` | yes | standard, border, new: industrial | needs redstone to open; a MalisisDoors block with a tile entity in this pack |
 | `minecraft:ladder:2-5` | Ladder | `furniture-deco` | yes | standard, border | upstream's (`l`); meta = facing |
 
 ### Glass and panes

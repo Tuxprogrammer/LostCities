@@ -98,4 +98,4 @@ The multipart textures are UV atlases; the sheet shows them for reference only.
 - **Dark brick buildings (deepslate and blackstone variants):** Basalt Brick and Basalt, Basalt Cobblestone for their rubble.
 - **Walls `w`:** Marble, Basalt and Basalt Cobblestone walls next to `cobblestone_wall`.
 - **Light `h`:** white, light gray and yellow lamps, lit through tile-entity NBT; any color unlit in ruins.
-- **Industrial style:** copper, tin and silver blocks as rare accents; caged lamps only if multipart placement is ever supported.
+- **Industrial style:** caged lamps only if multipart placement is ever supported. The copper, tin and silver blocks are capped accents behind their D29 metal flags ([D29](index.md#decorative-metals-d29)).

@@ -72,4 +72,4 @@ Borosilicate glass is a clear pane with a thin colored frame per tier; the HV on
 ## Best variety pools
 
 - **Glass `a`, `+`:** Borosilicate Glass Block `bartworks:BW_TieredGlass:0` as plain framed clear glass, Titanium Reinforced `:1` for an industrial building's lilac-framed windows.
-- **Industrial dressing:** Nickel-Zinc Ferrite Block `bartworks:BW_Machinery_Casings:0` as a dark slate panel, Transformer-Winding Block `:1` for substations.
+- **Reserved for GTNH-themed buildings (D28):** Nickel-Zinc Ferrite Block `bartworks:BW_Machinery_Casings:0` as a dark slate panel and Transformer-Winding Block `:1` for substations are casings, so they wait with GT's casings ([index](index.md#reserved-for-the-gtnh-themed-buildings)).

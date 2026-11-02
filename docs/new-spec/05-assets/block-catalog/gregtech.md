@@ -15,7 +15,7 @@ Registry names: GT registers each block under its unlocalized name, so they read
 | trim-pillar | 27 |
 | floor | 9 |
 | ceiling | 6 |
-| roof | 18 |
+| roof | 16 |
 | glass | 18 |
 | pane | 0 |
 | street | 6 |
@@ -33,7 +33,7 @@ Registry names: GT registers each block under its unlocalized name, so they read
 
 Summarized, not listed per meta:
 
-- **Other storage blocks**: `gt.blockmetal1` to `gt.blockmetal10` and `gt.blockgem1` to `gt.blockgem3` hold 183 material blocks; the 43 that could pass for construction metal or treasure are listed in [Storage blocks](#storage-blocks). The other 140 are exotic or radioactive materials (Americium, Naquadria, Neutronium, Infinity and so on): `special` at most, mostly `off-theme`.
+- **Other storage blocks**: `gt.blockmetal1` to `gt.blockmetal10` and `gt.blockgem1` to `gt.blockgem3` hold 183 material blocks; the 43 that could pass for construction metal or treasure are listed in [Storage blocks](#storage-blocks-sheet-metal-blocksjson). The other 140 are exotic or radioactive materials (Americium, Naquadria, Neutronium, Infinity and so on): `special` at most, mostly `off-theme`.
 - **Frame boxes and sheetmetal of other materials**: `gt.blockframes` and `gt.sheetmetal` have one meta per GT material (material id as metadata) that generates the prefix, several hundred each, decided at runtime by material flags. The 33 that fit a city are listed. The GT jar also registers `bw.sheetmetal` and `bw.frames` for bartworks materials (meta = Werkstoff id), all exotic.
 - **Casings above EV**: 143 metas are excluded by the EV ceiling (record 0004): `gt.blockcasings` 5-9 and 12-15, `gt.blockcasings2` 5-11 and 15, `gt.blockcasings3` 12 and 15, `gt.blockcasings4` 0, 6-8, 12, 14, `gt.blockcasings5` 3-13, `gt.blockcasings6` 5-14, `gt.blockcasings8` 2-8 and 10-14, `gt.blockcasings9` 0, 1, 3-15, `gt.blockcasings10` 1-3 and 6-12, `gt.blockcasings11` 4-7, `gt.blockcasings12` 1-14 except 8, `gt.blockcasings13` 5-15, `gt.blockcasings14` 3-7, `gt.blockcasingsNH` 5, 6, 10-14, all of `gt.foundrycasings` (13) and `gt.blockcasings.bec` (7). The merged addons' casings (TecTech, GoodGenerator, KekzTech, KubaTech, gtnhlanth, GGFab) are not enumerated: their multiblocks start at IV almost without exception. Check one by one if an industrial style wants more.
 
@@ -47,14 +47,14 @@ Summarized, not listed per meta:
 - **Extended metadata.** `gt.blockframes`, `gt.sheetmetal`, `bw.frames` and `bw.sheetmetal` use the GT material id as metadata (19 to about 1000). That only works through EndlessIDs' extended block metadata, so the chunk writer must use an API that stores more than 4 bits (`setBlock` on the world or chunk does; writing nibble arrays directly does not).
 - **Mining.** GT stones are hardness 4.5 (three times stone) and resistance 60; granites need a diamond-level pick. Casings and GT glass take a **wrench** (harvest level 2); a pickaxe is slow. `gt.blockreinforced` is the painful one: Reinforced Block 40/120, Bronzeplate 60/150, Steel 150/200, Titanium 200/300. GT concrete is as soft as stone.
 - **Mob spawning.** No mob spawns naturally on casings (`canCreatureSpawn` false) or on the brick, chiseled and smooth forms of GT stones and GT concrete (only metas 0-2 and 8-10 allow spawns). Floors of these change spawning in dark interiors.
-- **Movement.** GT concrete speeds walking by 1.4× horizontally, like Chisel concrete: good for streets and sidewalks, odd for floors.
+- **Movement.** Every GT concrete meta (all 16, dark and light) speeds walking by 1.4× horizontally, like Chisel concrete: `BlockConcretes` implements `IUpdatePlayerMovement` with no metadata check, and the item tooltip says so for every meta. D28 rule 3: GT concrete is walked on only on highways and primary roads; elsewhere it may stand in walls and trims, never in floors, roofs, sidewalks, stairs or rubble.
 - **Light and gravity.** None of these blocks emits light or falls. GT has no lamp block.
 - **Hazards.** The Powderbarrel (`gt.blockreinforced:5`) explodes. The Bounce and Sticky Pads move players.
 - **Tints.** Machine casings are tinted by the client's "machine metal" color, white by default (no change). Frame boxes and sheetmetal are grayscale textures colored by the material's RGB at runtime: the sheet approximates them with the renderer's `tint` field.
 
 ## Stones (sheet `stones.json`)
 
-All four stones share one pattern of eight forms: raw, cobblestone, mossy cobblestone, bricks, cracked bricks, mossy bricks, chiseled, smooth. Black granite is near black, red granite crimson-pink, marble white with soft gray veining, basalt dark charcoal. They are good-looking and on-theme (marble and granite civic buildings, basalt plinths), but every meta is a GT boulder host. They need the owner's decision before any palette uses them.
+All four stones share one pattern of eight forms: raw, cobblestone, mossy cobblestone, bricks, cracked bricks, mossy bricks, chiseled, smooth. Black granite is near black, red granite crimson-pink, marble white with soft gray veining, basalt dark charcoal. They are good-looking and on-theme (marble and granite civic buildings, basalt plinths), but every meta is a GT boulder host. D28 rule 4 admits every meta except the raw ore hosts 0 and 8 on terracotta's terms (D18: kept, restore pass if the alpha screenshots show boulder damage).
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -93,7 +93,7 @@ All four stones share one pattern of eight forms: raw, cobblestone, mossy cobble
 
 ## Concrete (sheet `concrete.json`)
 
-Not gray: dark concrete renders mid-brown and light concrete beige. The brick, cracked and chiseled forms read as brown and sand-colored masonry rather than poured concrete, so they widen the brick and desert families more than the concrete one. Light Concrete Bricks are a close match for upstream's cut sandstone. Not ore or boulder hosts.
+Not gray: dark concrete renders mid-brown and light concrete beige. The brick, cracked and chiseled forms read as brown and sand-colored masonry rather than poured concrete, so they widen the brick and desert families more than the concrete one. Light Concrete Bricks are a close match for upstream's cut sandstone. Not ore or boulder hosts. Every meta is a speed block, so the cobble, mossy and smooth forms that would serve as rubble, floor or sidewalk stay out of those roles (D28 rule 3); the bricks and chiseled forms fit walls and trims.
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -116,7 +116,7 @@ Not gray: dark concrete renders mid-brown and light concrete beige. The brick, c
 
 ## Reinforced blocks (sheet `reinforced.json`)
 
-`gt.blockreinforced` mixes building materials, fuels and endgame plates. Two are worth having: Plascrete (`:2`, clean white panel, soft) and the Reinforced Block (`:13`, gray poured concrete, but hardness 40).
+`gt.blockreinforced` mixes building materials, fuels and endgame plates. Two are worth having: Plascrete (`:2`, clean white panel, soft), which is the cleanroom casing and so is reserved for the GTNH-themed buildings with the other casings (D28 rule 4), and the Reinforced Block (`:13`, gray poured concrete, hardness 40, under D28's ceiling of 50). Metas 0, 1, 8, 9, 11 and 12 are harder than obsidian and never placed (D28 rule 7).
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -171,7 +171,7 @@ Tinted Industrial Glass is the find: 16 dye colors of frameless EV glass, includ
 
 ## Tiered casings, hermetic casings and coils (sheet `casings-tiered.json`)
 
-The ULV-EV machine casings are what a machine hull looks like without its tile entity: the same textures, minus the output-face overlay. The LV casing is a nearly flat light-gray panel that passes for cladding.
+The ULV-EV machine casings are what a machine hull looks like without its tile entity: the same textures, minus the output-face overlay. The LV casing is a nearly flat light-gray panel that passes for cladding. Every casing on this page waits for the GTNH-themed buildings after beta ([index](index.md#reserved-for-the-gtnh-themed-buildings), D28 rule 4).
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -191,7 +191,7 @@ The ULV-EV machine casings are what a machine hull looks like without its tile e
 
 ## Structural casings up to EV (sheet `casings-structural.json`)
 
-Casings of steam-age to EV multiblocks. All are plain blocks. Tiers are the multiblock's tier or, where the recipe tier says little (most casings are assembled at LV), the tier of the material. The last five rows have unverified tiers and stay out until checked.
+Casings of steam-age to EV multiblocks. All are plain blocks. Tiers are the multiblock's tier or, where the recipe tier says little (most casings are assembled at LV), the tier of the material. The last five rows have unverified tiers and stay out until checked. Like every `gt.blockcasings*` meta, these are reserved for the GTNH-themed buildings (D28 rule 4), the brick-looking ones (coke oven bricks, firebricks) included.
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -245,7 +245,7 @@ Casings of steam-age to EV multiblocks. All are plain blocks. Tiers are the mult
 
 ## Stripes and hazard signs (sheet `hazard.json`)
 
-`gt.blockcasings3` metas 0-9. The two stripe blocks are the most useful GT dressing for a city: yellow and black caution stripes for loading docks, curbs, barriers and subway edges. The signs show the symbol on every face; one block at a door or fence reads as a sign, a wall of them as wallpaper.
+`gt.blockcasings3` metas 0-9. The two stripe blocks are the most useful GT dressing for a city: yellow and black caution stripes for loading docks, curbs, barriers and subway edges. The signs show the symbol on every face; one block at a door or fence reads as a sign, a wall of them as wallpaper. They are casings, so they wait for the GTNH-themed buildings (D28 rule 4).
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
@@ -262,47 +262,47 @@ Casings of steam-age to EV multiblocks. All are plain blocks. Tiers are the mult
 
 ## Storage blocks (sheet `metal-blocks.json`)
 
-GT's storage blocks have real per-material textures (`BLOCK_<MATERIAL>.png`), not tints: a brushed-metal plate in the material's color. Upstream uses vanilla metal blocks only as treasure (`!`). A few could serve as industrial cladding (steel, stainless steel, black steel, aluminium), but every one is nine ingots of loot, which the owner may not want in walls.
+GT's storage blocks have real per-material textures (`BLOCK_<MATERIAL>.png`), not tints: a brushed-metal plate in the material's color. Upstream uses vanilla metal blocks only as treasure (`!`). Every one is nine ingots. D29 lets the metals at or below EV that suit a city (steel, stainless steel, black steel, aluminium, copper, tin, lead and the others in the [decorative metals](index.md#decorative-metals-d29) table) back in as accents behind one flag per metal, under a per-building cap: bands, trims and the odd panel, never whole walls, floors or roofs. The other metals stay loot, tungstensteel is above EV and never placed, and the gem blocks stay loot.
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
-| `gregtech:gt.blockmetal1:1` | Block of Aluminium | wall-accent, industrial-dressing | partly: light blue | urban, industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal1:3` | Block of Annealed Copper | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal1:11` | Block of Black Bronze | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal1:12` | Block of Black Steel | wall-accent, industrial-dressing | yes: dark steel | urban, industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal1:14` | Block of Blue Steel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal1:15` | Block of Brass | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:0` | Block of Bronze | special, wall-accent | partly: copper-orange | industrial | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:3` | Block of Chrome | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:5` | Block of Cobalt | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:7` | Block of Copper | special, roof | partly: copper roofing | urban | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:8` | Block of Cupronickel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:9` | Block of Damascus Steel | wall-accent | partly | industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal2:10` | Block of Dark Iron | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal2:15` | Block of Electrum | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal3:11` | Block of Invar | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal4:2` | Block of Lead | wall-accent, roof | partly: dull purple-gray | industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal4:4` | Block of Magnalium | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal4:7` | Block of Meteoric Iron | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal5:3` | Block of Nichrome | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal5:4` | Block of Nickel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal5:11` | Block of Pig Iron | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:1` | Block of Red Alloy | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:2` | Block of Red Steel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:3` | Block of Rose Gold | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:10` | Block of Silver | special | partly: treasure | urban | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:11` | Block of Soldering Alloy | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal6:12` | Block of Stainless Steel | wall-accent, industrial-dressing | yes: pale steel | urban, industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal6:13` | Block of Steel | wall-accent, industrial-dressing, special | yes: gray steel | urban, industrial | storage block; no tile entity |
-| `gregtech:gt.blockmetal6:15` | Block of Sterling Silver | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal7:7` | Block of Tin | special | partly: light gray | industrial | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal7:8` | Block of Tin Alloy | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal7:9` | Block of Titanium | special | no: lavender | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal7:11` | Block of Tungsten | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal7:12` | Block of Tungstensteel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal8:2` | Block of Cast Iron | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal8:6` | Block of Zinc | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
-| `gregtech:gt.blockmetal8:8` | Block of Vanadium Steel | special | no | none | a storage block of 9 ingots: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:1` | Block of Aluminium | wall-accent, industrial-dressing | partly: light blue | urban, industrial | storage block: an accent behind `decorativeMetals.aluminum` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:3` | Block of Annealed Copper | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:11` | Block of Black Bronze | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:12` | Block of Black Steel | wall-accent, industrial-dressing | yes: dark steel | urban, industrial | storage block: an accent behind `decorativeMetals.blackSteel` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:14` | Block of Blue Steel | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal1:15` | Block of Brass | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:0` | Block of Bronze | special, wall-accent | partly: copper-orange | industrial | storage block: an accent behind `decorativeMetals.bronze` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:3` | Block of Chrome | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:5` | Block of Cobalt | special | no | none | storage block: an accent behind `decorativeMetals.cobalt` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:7` | Block of Copper | special | partly: copper plate | urban | storage block: an accent behind `decorativeMetals.copper` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:8` | Block of Cupronickel | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:9` | Block of Damascus Steel | wall-accent | partly | industrial | storage block: an accent behind `decorativeMetals.damascusSteel` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:10` | Block of Dark Iron | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal2:15` | Block of Electrum | special | no | none | storage block: an accent behind `decorativeMetals.electrum` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal3:11` | Block of Invar | special | no | none | storage block: an accent behind `decorativeMetals.invar` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal4:2` | Block of Lead | wall-accent | partly: dull purple-gray | industrial | storage block: an accent behind `decorativeMetals.lead` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal4:4` | Block of Magnalium | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal4:7` | Block of Meteoric Iron | special | no | none | storage block: an accent behind `decorativeMetals.meteoricIron` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal5:3` | Block of Nichrome | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal5:4` | Block of Nickel | special | no | none | storage block: an accent behind `decorativeMetals.nickel` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal5:11` | Block of Pig Iron | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:1` | Block of Red Alloy | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:2` | Block of Red Steel | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:3` | Block of Rose Gold | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:10` | Block of Silver | special | partly: treasure | urban | storage block: an accent behind `decorativeMetals.silver` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:11` | Block of Soldering Alloy | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:12` | Block of Stainless Steel | wall-accent, industrial-dressing | yes: pale steel | urban, industrial | storage block: an accent behind `decorativeMetals.stainlessSteel` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:13` | Block of Steel | wall-accent, industrial-dressing, special | yes: gray steel | urban, industrial | storage block: an accent behind `decorativeMetals.steel` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal6:15` | Block of Sterling Silver | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal7:7` | Block of Tin | special | partly: light gray | industrial | storage block: an accent behind `decorativeMetals.tin` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal7:8` | Block of Tin Alloy | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal7:9` | Block of Titanium | special | no: lavender | none | storage block: an accent behind `decorativeMetals.titanium` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal7:11` | Block of Tungsten | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal7:12` | Block of Tungstensteel | special | no | none | storage block of an above-EV metal: never placed (D29) |
+| `gregtech:gt.blockmetal8:2` | Block of Cast Iron | special | no | none | storage block: an accent behind `decorativeMetals.castIron` under the per-building cap (D29); plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal8:6` | Block of Zinc | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
+| `gregtech:gt.blockmetal8:8` | Block of Vanadium Steel | special | no | none | a storage block of 9 ingots with no D29 flag: loot, not a wall. Plain block, pickaxe, no tile entity |
 | `gregtech:gt.blockgem2:1` | Block of Lignite | off-theme | no | none | storage block; no tile entity |
 | `gregtech:gt.blockgem3:4` | Block of Charcoal | off-theme | no | none | storage block; no tile entity |
 | `gregtech:gt.blockgem2:9` | Block of Quartzite | wall-accent | partly: pale green tile | urban | storage block; no tile entity |
@@ -369,28 +369,33 @@ Frame boxes are see-through girder lattices: steel and aluminium frames make sca
 
 ## Best variety pools
 
-Suggested weights are relative within a pool. Boulder hosts are marked †; they wait for the owner's decision.
+Boulder hosts are marked †; they join on terracotta's terms (D28 rule 4, D18). Speed blocks are marked ‡: every GT concrete meta, which D28 rule 3 allows in walls and trims and on highways and primary roads, never in floors, roofs, sidewalks, stairs or rubble.
 
-- **Main wall `#`, stone-brick family (`bricks_standard`, `stonebrick` variant):** Basalt Bricks† `gt.blockstones:11` (dark), Light Concrete Bricks `gt.blockconcretes:11` (warm), Solid Steel Machine Casing `gt.blockcasings2:0` for an industrial reskin. Marble Bricks† `gt.blockstones:3` as a pale civic brick.
-- **Main wall, brick and terracotta family (`bricks`, `bricks_gray`, `bricks_silver`, `bricks_cyan`):** Red Granite Bricks† `gt.blockgranites:11` (reads as red brick), Coke Oven Bricks `gt.blockcasings12:0` (dark brown brick, not a host), Firebricks `gt.blockcasings4:15` (tan brick), Dark Concrete Bricks `gt.blockconcretes:3`. Coke oven bricks and firebricks are the host-free way to get brick variety.
-- **Quartz family (`quartzbricks_border`, `quartz` variant, `Q`):** Smooth Marble† `gt.blockstones:7`, Marble Bricks† `:3`, Chiseled Marble† `:6` as the accent; host-free: Plascrete `gt.blockreinforced:2` (white panel), Iron Plated Bricks from GT++.
-- **Accent `X` and band `$`:** Chiseled Black Granite† `gt.blockgranites:6`, Smooth Black Granite† `:7`, Chiseled Light Concrete `gt.blockconcretes:14`, Refined Graphite Block `gt.blockcasings13:4` (black band), Yellow Stripes `gt.blockcasings3:0/1` (industrial band).
-- **Rubble `}`:** Cracked Light and Dark Concrete Bricks `gt.blockconcretes:4/12`, Light Concrete Cobblestone `:9`; mossy forms `:2/5/10/13` for the overgrown variant. Steel and wood frame boxes as exposed structure in ruins.
+- **Main wall `#`, stone-brick family (`bricks_standard`, `stonebrick` variant):** Basalt Bricks† `gt.blockstones:11` (dark), Marble Bricks† `gt.blockstones:3` (pale civic brick), Light Concrete Bricks‡ `gt.blockconcretes:11` (warm).
+- **Main wall, brick and terracotta family (`bricks`, `bricks_gray`, `bricks_silver`, `bricks_cyan`):** Red Granite Bricks† `gt.blockgranites:11` (reads as red brick), Dark Concrete Bricks‡ `gt.blockconcretes:3` (brown brick).
+- **Quartz family (`quartzbricks_border`, `quartz` variant, `Q`):** Smooth Marble† `gt.blockstones:7`, Marble Bricks† `:3`, Chiseled Marble† `:6` as the accent.
+- **Accent `X` and band `$`:** Chiseled Black Granite† `gt.blockgranites:6`, Smooth Black Granite† `:7` (both need a diamond-level pick), Chiseled Basalt† `gt.blockstones:14`, Chiseled Light and Dark Concrete‡ `gt.blockconcretes:14`, `:6`.
+- **Rubble `}`:** the GT stone wall's own cracked and cobble forms† (`gt.blockstones:12`, `:4`, `:9`, `:1`, `gt.blockgranites:12`, `:9`), mossy forms† (`gt.blockstones:10`, `:13`, `:2`, `:5`) for the overgrown variant. No concrete: a speed block in rubble becomes a walking surface. Steel and wood frame boxes as exposed structure in ruins.
 - **Glass `a`, `+`, `` ` ``, `Z`, `Y`:** Tinted Industrial Glass white `gt.blocktintedglass:0`, light gray `:1`, gray `:2`, black `:3`, light blue `:11`, blue `:12` (the full upstream glass set), cyan `:10` as an extra. Borosilicate Glass `bartworks:BW_TieredGlass:0` as clear glass. Reinforced Glass `gt.blockglass1:10` for a dark industrial window. Panes: none in GT.
-- **Street and sidewalk `S`, `u`, `_`:** Smooth Light Concrete `gt.blockconcretes:15` (sidewalk), Light Concrete `:8`, Reinforced Block `gt.blockreinforced:13` (gray, very hard: highway decks only), Yellow Stripes for curbs, crossings and loading bays.
-- **Highway `R`:** Reinforced Block `gt.blockreinforced:13`; Smooth Dark Concrete `gt.blockconcretes:7` for a brown-gray deck.
-- **Pillars `v`:** Chiseled Basalt† `gt.blockstones:14`, Chiseled Light Concrete `gt.blockconcretes:14`, steel frame boxes `gt.blockframes:305` for exposed steel columns.
-- **Iron bars `:` and fences `.`:** Iron Fence `gt.blockfencemetal:0`, steel and aluminium frame boxes, Grate Machine Casing `gt.blockcasings3:10` as a vent grille.
-- **Roof:** Steel, Aluminium, Zinc and Tin Sheetmetal (`gt.sheetmetal:305/19/36/57`), Lead and Copper storage blocks as metal roofing accents.
+- **Side streets, floors and sidewalks `S`, `u`, `_`:** none. GT concrete speeds walking, and the Reinforced Block is too hard to dig out of a floor.
+- **Highway `R` and primary roads:** Smooth Light and Dark Concrete‡ `gt.blockconcretes:15`, `:7` as a concrete deck; Reinforced Block `gt.blockreinforced:13` (hardness 40) on highway decks only.
+- **Pillars `v`:** Chiseled Basalt† `gt.blockstones:14`, Chiseled Light Concrete‡ `gt.blockconcretes:14`, steel frame boxes `gt.blockframes:305` for exposed steel columns.
+- **Iron bars `:` and fences `.`:** Iron Fence `gt.blockfencemetal:0`, steel and aluminium frame boxes.
+- **Roof:** Steel, Aluminium, Zinc and Tin Sheetmetal (`gt.sheetmetal:305/19/36/57`) as corrugated roofing.
 - **Light `h`:** none in GT.
-- **Oil rig and industrial set dressing:** Solid Steel, Clean Stainless Steel and Turbine Casings, Steel Pipe and Gear Box Casings, hazard signs, Steel Firebox, Hermetic Casings, Cupronickel Coil, Primitive and Reinforced Wooden Casings (crates), Wood Frame Box; the ULV-EV machine casings in place of hulls.
-- **Desert bricks:** Light Concrete Bricks and Smooth Light Concrete `gt.blockconcretes:11/15`, Firebricks `gt.blockcasings4:15`, Red Granite Bricks† for `bricks_desert_red`.
+- **Desert bricks:** Light Concrete Bricks‡ and Smooth Light Concrete‡ `gt.blockconcretes:11`, `:15` as walls, Chiseled Light Concrete‡ `:14` as trim, Red Granite Bricks† and Smooth Red Granite† `gt.blockgranites:11`, `:15` for `bricks_desert_red`.
 
-## Owner decisions
+**Reserved for GTNH-themed buildings (D28).** Every `gt.blockcasings*` meta and Plascrete `gt.blockreinforced:2` stay out of the standard pools until the GTNH-themed buildings after beta ([index](index.md#reserved-for-the-gtnh-themed-buildings)). That covers the casings that would otherwise suit standard roles: Solid Steel Machine Casing `gt.blockcasings2:0` as an industrial wall, Coke Oven Bricks `gt.blockcasings12:0` and Firebricks `gt.blockcasings4:15` as brick, Refined Graphite Block `gt.blockcasings13:4` as a black band, Yellow Stripes `gt.blockcasings3:0`, `:1` as curbs and bands, Grate Machine Casing `gt.blockcasings3:10` as a vent grille, Plascrete as a white panel, and the oil-rig and industrial dressing (Clean Stainless Steel, turbine, pipe, gear box, firebox and hermetic casings, Cupronickel Coil, Primitive and Reinforced Wooden Casings as crates, the ULV-EV machine casings in place of hulls).
 
-1. **GT stones as building blocks.** Every meta of `gt.blockgranites` and `gt.blockstones` is a boulder host. They add the best marble, granite and basalt in the pack, and the D18 stance on terracotta (accept, then restore pass if screenshots show damage) could extend to them, or they stay out entirely. Raw metas 0 and 8 stay out either way (ore hosts).
-2. **Casings as set dressing and as cladding.** Casings are plain blocks (no tile entity), so they are cheap to place. Costs: a machine-update scan per block placed after `provideChunk`, wrench mining, no mob spawns on them, and a "GT factory" look that suits only an industrial style. Tier rule: only the ULV-EV metas listed above.
-3. **Machine hulls.** Real hulls are MetaTileEntities: each needs a `BaseMetaTileEntity` with `mID` NBT, ticks, and can be broken for a hull item worth resources. The matching casing looks the same. Recommendation: never place hulls; use casings.
-4. **Storage blocks in walls.** Steel and stainless steel blocks are good cladding but are nine ingots each.
+**Decorative metals (D29):** the steel, stainless steel, black steel, aluminium, copper, lead and other flagged storage blocks go in as accents only, behind their `decorativeMetals.<metal>` flags and under the per-building cap ([index](index.md#decorative-metals-d29)), never as cladding or roofing.
+
+**Never placed (D28 rule 7, D29):** the gem blocks and the unflagged and above-EV metal blocks outside treasure and chest loot; the reinforced blocks harder than obsidian (`gt.blockreinforced:0`, `:1`, `:8`, `:9`, `:11`, `:12`); the Powderbarrel (`:5`, explosive); machine hulls; the Bounce and Sticky Pads.
+
+## Decisions (D28)
+
+1. **GT stones as building blocks.** Every meta of `gt.blockgranites` and `gt.blockstones` is a boulder host. They join the pools on terracotta's terms (D18: kept, restore pass if the alpha screenshots show boulder damage). Raw metas 0 and 8 stay out (ore hosts).
+2. **Casings.** Casings are plain blocks (no tile entity), cheap to place, but cost a machine-update scan per block placed after `provideChunk`, need a wrench, take no mob spawns and look like a GT factory. The ULV-EV metas wait for the GTNH-themed buildings after beta.
+3. **Machine hulls.** Real hulls are MetaTileEntities: each needs a `BaseMetaTileEntity` with `mID` NBT, ticks, and can be broken for a hull item worth resources. The matching casing looks the same. Hulls are never placed.
+4. **Storage blocks.** Each metal at or below EV that suits a city has a D29 flag (on by default) and appears as accents under a per-building cap; gem blocks, unflagged metals and metals above EV stay loot.
 5. **Frames and sheetmetal** need extended-metadata support in the chunk writer.
-6. **Hard blocks.** The Reinforced Block (hardness 40) is the best gray concrete in GT but slow to break; steel and bronze reinforced blocks are worse. Vaults and bunkers only?
+6. **Hard blocks.** The Reinforced Block (hardness 40) is the best gray concrete in GT but slow to break: highway decks only. Bronze, steel and the other reinforced blocks above hardness 50 are never placed.

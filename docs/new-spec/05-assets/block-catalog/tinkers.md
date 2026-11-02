@@ -13,8 +13,8 @@ Registry names are `TConstruct:<name>` with the name passed to `GameRegistry.reg
 
 | Primary role | Entries |
 |---|---|
-| wall-main | 10 (brownstone 2, seared/scorched bricks 2, polished stone brick, sandstone brick, endstone brick, bone brick, iron brick, fancy stone brick) |
-| wall-accent | 18 |
+| wall-main | 9 (brownstone 2, seared/scorched bricks 2, polished stone brick, sandstone brick, endstone brick, bone brick, fancy stone brick) |
+| wall-accent | 19 (including the iron brick, a D29 metal accent) |
 | trim-pillar | 4 (chiseled and fancy brownstone, chiseled seared and scorched) |
 | floor | 4 (seared and scorched paver, road) |
 | street | 3 (two brownstone roads, stone road) |
@@ -35,8 +35,8 @@ Flags:
 - **Tile entities: every seared and scorched smeltery block is one.** `SmelteryBlock.createNewTileEntity` returns `MultiServantLogic` for metas 2 and 4 to 11 (the decorative bricks, stone, cobble, paver, road, fancy, chiseled), so a seared wall is a wall of tile entities. The seared **slab** (`SearedSlab`) is a plain block. Also tile entities: tanks, casting blocks, crafting and tool stations, crafting slabs, furnace slab, drying rack, tool forges.
 - **Light:** stone torch 14. Nothing else emits light.
 - **Hardness:** seared and scorched blocks 3; **seared slabs 12** (eight times stone brick); metal blocks 10; multibricks copy the source block (obsidian bricks hardness 50, diamond bricks 5, and so on); barricades 4; punji 3.
-- **Speed:** brownstone blocks and slabs speed up walking (`SpeedBlock.onWalkedOn`, and the same boost in `SpeedSlab`). That suits roads.
-- **Value:** gold, diamond, lapis, redstone and metal bricks and the metal blocks are resource stores; a building of them is loot. Keep them out of walls or treat them as treasure.
+- **Speed:** every brownstone meta speeds up walking, not only the roads. `SpeedBlock.onWalkedOn` multiplies a walking player's horizontal motion by 1.15 on metas 0, 2, 3, 5 and 6 and by 1.3 on the two roads (metas 1 and 4), unless the player sneaks or is wet (`TPlayerHandler` calls it client-side for the local player). `SpeedSlab.onEntityWalking` boosts any entity on any slab meta harder (2.2, or 2.7 on the road slabs, while horizontal motion is below 0.5). D28 rule 3: brownstone is walked on only on highways and primary roads; the blocks may stand in walls and trims, and the slabs, which are stairs-slab and sidewalk pieces, stay out.
+- **Value:** gold, diamond, lapis, redstone and metal bricks and the metal blocks are resource stores; a building of them is loot. Under D29 the iron bricks and the copper, bronze, tin, aluminum, aluminum brass, steel and cobalt blocks come back as accents behind their metal flags, under a per-building cap ([D29](index.md#decorative-metals-d29)); the gold bricks fall under the gold flag but look off-theme, and the gem and redstone bricks and the other metal blocks stay loot.
 - **Punji sticks** damage entities that walk into them.
 - **Gravity:** none.
 
@@ -46,14 +46,14 @@ Flags:
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
-| `TConstruct:SpeedBlock:0` | Rough Brownstone | wall-main, rubble-ruin | yes: rough tan stone, a sandstone partner | desert, ruined | Speeds walking |
-| `TConstruct:SpeedBlock:1` | Rough Brownstone Road | street, sidewalk | yes: gray cobbled paving | urban, desert | Speeds walking |
-| `TConstruct:SpeedBlock:2` | Brownstone | wall-main | yes: smooth tan stone, like cut sandstone | desert, urban | |
-| `TConstruct:SpeedBlock:3` | Brownstone Brick | wall-accent, wall-main | yes: tan bricks, a `bricks_desert` alternative | desert, urban | |
-| `TConstruct:SpeedBlock:4` | Brownstone Road | street, sidewalk | yes: tan paved road | desert | Speeds walking |
-| `TConstruct:SpeedBlock:5` | Fancy Brownstone | trim-pillar, wall-accent | yes: panel pattern | desert | |
-| `TConstruct:SpeedBlock:6` | Chiseled Brownstone | trim-pillar, wall-accent | yes: square-in-square relief | desert | |
-| `TConstruct:SpeedSlab:0-6` (+8 top) | Brownstone Slabs (7 kinds, metas as above) | stairs-slab, sidewalk | yes | desert | 7 entries; road slabs make curbs; speed walking |
+| `TConstruct:SpeedBlock:0` | Rough Brownstone | wall-main | yes: rough tan stone, a sandstone partner | desert, ruined | Speeds walking (1.15×), so not rubble |
+| `TConstruct:SpeedBlock:1` | Rough Brownstone Road | street | yes: gray cobbled paving | urban, desert | Speeds walking (1.3×): highways and primary roads only |
+| `TConstruct:SpeedBlock:2` | Brownstone | wall-main | yes: smooth tan stone, like cut sandstone | desert, urban | Speeds walking (1.15×) |
+| `TConstruct:SpeedBlock:3` | Brownstone Brick | wall-accent, wall-main | yes: tan bricks, a `bricks_desert` alternative | desert, urban | Speeds walking (1.15×) |
+| `TConstruct:SpeedBlock:4` | Brownstone Road | street | yes: tan paved road | desert | Speeds walking (1.3×): highways and primary roads only |
+| `TConstruct:SpeedBlock:5` | Fancy Brownstone | trim-pillar, wall-accent | yes: panel pattern | desert | Speeds walking (1.15×) |
+| `TConstruct:SpeedBlock:6` | Chiseled Brownstone | trim-pillar, wall-accent | yes: square-in-square relief | desert | Speeds walking (1.15×) |
+| `TConstruct:SpeedSlab:0-6` (+8 top) | Brownstone Slabs (7 kinds, metas as above) | stairs-slab | yes | desert | 7 entries; every slab speeds walking (2.2×, road slabs 2.7×), so no slab, curb or sidewalk use (D28 rule 3) |
 
 ## Seared and scorched blocks
 
@@ -91,7 +91,7 @@ Flags:
 | `TConstruct:decoration.multibrick:1` | Sandstone Brick | wall-main | yes: pale sandstone bricks | desert | |
 | `TConstruct:decoration.multibrick:2` | Netherrack Brick | wall-accent, rubble-ruin | partly: dull red brick | ruined | |
 | `TConstruct:decoration.multibrick:3` | Polished Stone Brick | wall-main | yes: light gray brick, a `stonebrick` alternative | urban | |
-| `TConstruct:decoration.multibrick:4` | Iron Brick | wall-main, wall-accent | partly: white metal brick | industrial, urban | Hardness 5; iron value |
+| `TConstruct:decoration.multibrick:4` | Iron Brick | wall-accent | partly: white metal brick | industrial, urban | Hardness 5; iron value |
 | `TConstruct:decoration.multibrick:5` | Gold Brick | off-theme | no | none | Gold value |
 | `TConstruct:decoration.multibrick:6` | Lapis Brick | off-theme | no | none | Lapis value |
 | `TConstruct:decoration.multibrick:7` | Diamond Brick | off-theme | no | none | Diamond value |
@@ -218,10 +218,11 @@ All tile entities. Not rendered on a sheet (model blocks).
 
 - **Main wall `#`, standard bricks:** Polished Stone Brick (`multibrick:3`) and Fancy Stone Brick (`multibrickfancy:14`) next to vanilla stone bricks.
 - **Dark brick (blackstone and deepslate buildings):** Seared Slabs as plain blocks; the full seared blocks only where tile entities are acceptable.
-- **Desert bricks (`bricks_desert`):** Brownstone, Brownstone Brick, Fancy and Chiseled Brownstone, Sandstone Brick and Fancy Sandstone Brick, Bone and Endstone Brick for pale variety.
-- **Street and sidewalk `S`/`u`:** Stone Road (`multibrickfancy:15`), Rough Brownstone Road and Brownstone Road (with road slabs as curbs); the brownstone roads speed walking, which suits roads.
+- **Desert bricks (`bricks_desert`):** Brownstone, Brownstone Brick, Fancy and Chiseled Brownstone (speed blocks, which D28 rule 3 allows in walls and trims), Sandstone Brick and Fancy Sandstone Brick, Bone and Endstone Brick for pale variety.
+- **Side streets, floors and sidewalks `S`/`u`:** Stone Road (`multibrickfancy:15`), which has no speed.
+- **Highways and primary roads:** Rough Brownstone Road and Brownstone Road (`SpeedBlock:1`, `:4`), as weighted options (D28 rule 3). No road slabs: they speed walking too.
 - **Glass `glass_*` and colored glass `Z`:** Clear Glass and its pane; stained clear glass in white, gray, light gray, light blue, blue, cyan and black.
 - **Rubble `}`:** Cracked Seared Bricks and Seared Cobblestone (TE), seared slabs, Grout; barricades over doors and windows in ruins.
 - **Light `h`/`T`:** Stone Torch.
 - **Ladder `l`:** Stone Ladder.
-- **Industrial style:** Steel and Aluminum blocks as accents, seared tanks and casting tables as dead-factory set dressing.
+- **Industrial style:** seared tanks and casting tables as dead-factory set dressing; Steel and Aluminum blocks and Iron Brick as capped metal accents behind their D29 flags ([D29](index.md#decorative-metals-d29)).

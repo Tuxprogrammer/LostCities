@@ -35,7 +35,7 @@ Registry names: IC2 registers each block under its `InternalName` enum name (`Ga
 **Flags**
 
 - **Tile entities.** `IC2:blockWall` (construction foam wall, `TileEntityWall`), `IC2:blockLuminator` and `IC2:blockLuminatorDark` (`TileEntityLuminator`) and `IC2:blockBarrel` (`TileEntityBarrel`). The foam wall's tile entity only stores optional retexture data, so a placed wall without it renders its color normally (*unverified*: check in M02 that a missing tile entity is recreated, since `BlockMultiID` creates it on demand).
-- **Hardness and blast resistance that make moving in painful.** Reinforced stone `IC2:blockAlloy` is **hardness 80, resistance 180** (obsidian is 50/2000; GT's harder machines aside, this is one of the slowest blocks to mine in the pack). The reinforced door is 50/150, reinforced glass 5/180, basalt **20/45**. A building walled in reinforced stone is effectively a bunker: use it for vaults and bunkers only, never for whole buildings players should move into ([record 0004](../../../design/0004-gtnh-layer-and-tier-ceiling.md)).
+- **Hardness and blast resistance that make moving in painful.** Reinforced stone `IC2:blockAlloy` is **hardness 80, resistance 180** (obsidian is 50/2000; GT's harder machines aside, this is one of the slowest blocks to mine in the pack). The reinforced door is 50/150, reinforced glass 5/180, basalt **20/45**. A building walled in reinforced stone is effectively a bunker, so reinforced stone is never placed (D28 rule 7: hardness above obsidian's 50). The reinforced door, at 50, is at the ceiling and stays a rare vault door.
 - **Light.** `IC2:blockLuminator` is light 15 only while it has EU; without power its tile entity turns it into `IC2:blockLuminatorDark` (no light). Unpowered in a city, it is a ceiling panel, not a light source.
 - **Unstable blocks.** Construction foam (`blockFoam`, `blockReinforcedFoam`) hardens into a foam wall or reinforced stone on a random tick, faster in light, and has no collision until then. Scaffolds check their support and drop when unsupported. Resin and the rubber sheet need a solid block below.
 - **Gravity.** None.
@@ -51,7 +51,7 @@ Sheet `construction.json`.
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
 | `IC2:blockBasalt:0` | Basalt | wall-main, wall-accent, floor, rubble-ruin | yes | urban, industrial, ruined | Very dark speckled stone, rough. **Not a GT host**, unlike GT basalt. Hardness 20, resistance 45: slow to mine, so prefer accents and plinths over whole facades |
-| `IC2:blockAlloy:0` | Reinforced Stone | wall-main, special | partly: drab olive-gray panel; **hardness 80, resistance 180** | industrial | Bunkers, vaults, a bank's strong room. Painful to dig through |
+| `IC2:blockAlloy:0` | Reinforced Stone | wall-main, special | partly: drab olive-gray panel; **hardness 80, resistance 180** | industrial | Would suit a bank's strong room, but painful to dig through: never placed (D28 rule 7) |
 | `IC2:blockAlloyGlass:0` | Reinforced Glass | glass | partly: dark frame with blue flecks | industrial | Hardness 5, resistance 180. Industrial windows and bunker slits |
 | `IC2:blockDoorAlloy` | Reinforced Door | door-trap | partly: plain gray slab door | industrial | Two-block door, vanilla door metadata. Hardness 50, resistance 150 |
 | `IC2:blockFenceIron:0` | Iron Fence | fence-rail, trim-pillar | yes | urban, industrial, ruined | Thin pole that connects like a fence; hardness 1.5. Railing, bollard, fence |
@@ -74,16 +74,16 @@ Sheet `construction.json`.
 
 ## Metal storage blocks
 
-Sheet `metal-blocks.json`. `IC2:blockMetal`, metas from `BlockMetal`. Hardness 4; no mob spawns; bronze and uranium are beacon bases. These are value blocks: upstream's `!` treasure mix uses iron, gold, diamond and emerald blocks.
+Sheet `metal-blocks.json`. `IC2:blockMetal`, metas from `BlockMetal`. Hardness 4; no mob spawns; bronze and uranium are beacon bases. These are value blocks: upstream's `!` treasure mix uses iron, gold, diamond and emerald blocks, and D29 brings copper, tin, bronze, lead and refined iron back as accents behind their metal flags, under a per-building cap and never as walls ([D29](index.md#decorative-metals-d29)). Uranium is above EV and never placed.
 
 | registry name:meta | English name | roles | fits upstream? | styles | notes |
 |---|---|---|---|---|---|
-| `IC2:blockMetal:0` | Copper Block | industrial-dressing, wall-accent | partly: bright metal | industrial | Treasure candidate |
-| `IC2:blockMetal:1` | Tin Block | industrial-dressing | partly | industrial | Treasure candidate |
+| `IC2:blockMetal:0` | Copper Block | industrial-dressing, wall-accent | partly: bright metal | industrial | Accent behind `decorativeMetals.copper` (D29), or treasure |
+| `IC2:blockMetal:1` | Tin Block | industrial-dressing | partly | industrial | Accent behind `decorativeMetals.tin` (D29), or treasure |
 | `IC2:blockMetal:2` | Bronze Block | industrial-dressing, wall-accent | partly: orange bronze | industrial | Steam-age GTNH; treasure candidate |
 | `IC2:blockMetal:3` | Uranium Block | off-theme | no | none | Radiation-hazard texture; also a strong reward. Keep out |
 | `IC2:blockMetal:4` | Lead Block | industrial-dressing, wall-accent | partly: pale gray-green plate | industrial | |
-| `IC2:blockMetal:5` | Refined Iron Block | industrial-dressing, wall-accent | partly: pale blue-gray plate | industrial | Treasure candidate |
+| `IC2:blockMetal:5` | Refined Iron Block | industrial-dressing, wall-accent | partly: pale blue-gray plate | industrial | Accent behind `decorativeMetals.iron` (D29), or treasure |
 
 ## Construction foam walls
 
@@ -112,7 +112,7 @@ Sheet `foam-walls.json`. `IC2:blockWall`, metas 0-15 in **dye-item order** (0 bl
 
 Weights are suggestions out of the role's total, beside the D19 baseline block.
 
-- **`bricks_standard` `#` / plain facades:** light gray, gray and white foam walls (`IC2:blockWall:7,8,15`) 1 each, as rendered or stucco buildings, if the tile-entity cost is accepted (owner decision below).
+- **`bricks_standard` `#` / plain facades:** light gray, gray and white foam walls (`IC2:blockWall:7,8,15`) 1 each, as rendered or stucco buildings; tile entities, so low weights (D28 rule 6).
 - **Colored-terracotta palettes (`bricks_gray`, `bricks_silver`, `bricks_cyan`):** gray, light gray and cyan foam walls (`:8,7,6`) as non-boulder-host alternatives to terracotta. Unlike `minecraft:stained_hardened_clay`, they are not GT boulder hosts.
 - **Desert bricks:** white and orange foam walls (`:15,14`) for stucco; brown (`:3`).
 - **Dark accents and plinths (`X`, `$`, `blackstone` variant):** IC2 basalt (`IC2:blockBasalt:0`) 1, sparingly because of hardness 20.
@@ -121,11 +121,13 @@ Weights are suggestions out of the role's total, beside the D19 baseline block.
 - **Iron bars `:` and fence `.`:** iron fence (`IC2:blockFenceIron:0`) 2.
 - **`}` rubble and ruins:** wooden and iron scaffolds (`IC2:blockScaffold:0`, `IC2:blockIronScaffold:0`) as abandoned construction on damaged floors, placed only where supported.
 - **Roof:** rubber sheet (`IC2:blockRubber:0`) as a flat-roof membrane, 1 in an industrial style.
-- **Furniture `F` and oil rig:** barrel (tile entity) sparingly; refined iron and bronze blocks as industrial treasure.
+- **Furniture `F` and oil rig:** barrel (tile entity) sparingly.
+- **Treasure `!`:** refined iron and bronze blocks (`IC2:blockMetal:5`, `:2`).
+- **Metal accents:** copper, tin, bronze, lead and refined iron blocks (`IC2:blockMetal:0`, `:1`, `:2`, `:4`, `:5`) as bands and odd panels in industrial buildings, behind their D29 flags ([D29](index.md#decorative-metals-d29)).
 - **Overgrown:** rubber leaves and saplings next to upstream's `p` foliage.
 
-## Owner decisions
+## Decisions (D28)
 
-1. **Foam walls are tile entities.** They give 16 flat colors that are not GT boulder hosts, a way out of the terracotta boulder issue ([ore-veins.md](../../00-pack-integration/ore-veins.md) option B), but each block carries a tile entity. Et Futurum concrete gives similar flat colors without one.
-2. **Reinforced stone, reinforced glass and basalt hardness.** Allow reinforced stone only in bunker or vault parts (or not at all), and cap basalt to accents, since [record 0004](../../../design/0004-gtnh-layer-and-tier-ceiling.md) wants buildings players can move into.
+1. **Foam walls are tile entities.** They give 16 flat colors that are not GT boulder hosts, a way out of the terracotta boulder issue ([ore-veins.md](../../00-pack-integration/ore-veins.md) option B), but each block carries a tile entity. D28 rule 6 allows tile-entity palette entries at low weights, so they take small shares beside Et Futurum concrete, which gives similar flat colors without one.
+2. **Reinforced stone, reinforced glass and basalt hardness.** Reinforced stone (hardness 80) is never placed (D28 rule 7). Reinforced glass (5) stays in industrial buildings; basalt (20) stays an accent, since [record 0004](../../../design/0004-gtnh-layer-and-tier-ceiling.md) wants buildings players can move into.
 3. **Unpowered luminators.** Use the dark luminator as a ceiling panel only; a lit one placed without EU goes dark on its first tick.
