@@ -44,7 +44,7 @@ The server-side scripts live in [server/](server/), laid out as they sit under `
 - `--fresh`: deletes the world before booting.
 - `--world <name>`: uses another world folder.
 - `--level-type <type>` and `--seed <seed>`: apply only to a new world.
-- `--cmds '<cmd>; wait:<s>; until:<regex>'`: console commands sent once the server is up. `wait:` and `until:` are steps for the script, not commands.
+- `--cmds '<cmd>; wait:<s>; until:<regex>'`: console commands sent once the server is up. `wait:` and `until:` are steps for the script, not commands. An `until:` waits for a console line written since the last command was sent, so several steps can wait for the same regex (`until:\[LCNH-SCENARIO\] Scenarios:` after each scenario).
 - `--jvm '<args>'`, `--timeout <s>`, `--run-timeout <s>`.
 - `--set-config '<file under config/>:<key>=<value>'` (repeatable): changes one config value for this run only and puts the file back when the run ends, however it ends. The overlay scenarios use it for ArchaicFix's `logCascadingWorldgen`, which the pack ships off.
 - `--view-distance <3-15>`: the server's `view-distance` for this run (the box's default is 6), put back when the run ends. The shot runner sets it to the capture's render distance.
@@ -159,7 +159,7 @@ Weather and time are the server's, so the runner locks them with console command
 Each shot has a `name` (letters, digits, `.`, `_`, `-`; the PNG's name), an optional `caption`, `yaw` (default 0; 0 faces south, 90 west, 180 north, −90 east), `pitch` (default 30; positive looks down), `wait` (seconds after settling, default 2), optional `time` and `settle_timeout`, and a position:
 
 - `x` and `z`, literal block coordinates; or
-- `find`: a console command and a regex with named groups `x`, `z` and optionally `y`. The runner sends the command and takes the first console line after it that matches; `offset` `[dx, dy, dz]` is added. Named groups `yaw` and `pitch`, when the regex has them, set the view direction of a shot that gives none, so a list can take the finder's whole viewpoint (`view=X,Y,Z,YAW,PITCH`). The finder (`/lostcities find <kind>`, M05J) is what it is for: the alpha lists [alpha-rwg2.json](shots/alpha-rwg2.json) and [alpha-rwg.json](shots/alpha-rwg.json) name a kind instead of coordinates and take the finder's viewpoint.
+- `find`: a console command and a regex with named groups `x`, `z` and optionally `y`. The runner sends the command and takes the first console line after it that matches, waiting at most the find's `timeout` (seconds, default 120; a `find … best` over 200 chunks takes a few seconds); `offset` `[dx, dy, dz]` is added. Named groups `yaw` and `pitch`, when the regex has them, set the view direction of a shot that gives none, so a list can take the finder's whole viewpoint (`view=X,Y,Z,YAW,PITCH`). The finder (`/lostcities find <kind>`, M05J) is what it is for: the alpha lists [alpha-rwg2.json](shots/alpha-rwg2.json) and [alpha-rwg.json](shots/alpha-rwg.json) name a kind instead of coordinates and take the finder's viewpoint.
 
 `y` is the feet height, as `tp` takes it: a number, or `"top"`, `"top+N"`, `"top-N"` for N blocks above or below the topmost block of the shot's column. A relative `y` first looks down from y = 220 until the column has loaded, reads its top from the client, then moves to the shot. It lets one list fit worlds whose terrain differs. Without `y`, a found `y` is used, or else `"top+3"`.
 
