@@ -11,6 +11,8 @@
 #                                                      boot the real-pack server (with the slot's jar)
 #   lc-remote.sh client    [-- <client-run.sh args...>]
 #                                                      real-pack client under Xvfb, screenshot
+#   lc-remote.sh shots     <shotlist.json> [--slot <slot>] [-- <shots-run.py args...>]
+#                                                      clean screenshots of a shot list, and a review page
 #   lc-remote.sh fetch     <remote path under LC_REMOTE_ROOT>
 #   lc-remote.sh status                                our processes and the latest run markers
 #   lc-remote.sh install-tools                         copy tools/remote/server/ (scripts, README) to the root
@@ -84,6 +86,16 @@ parse_slot_rev() {
     done
 }
 
+# The release jar a slot's last build made, as a path on the build server.
+slot_jar() {
+    local slot="$1" jar
+    check_slot "$slot"
+    jar="$("${SSH[@]}" "ls -t $(printf '%q' "$ROOT/wt/$slot/build/libs")/lostcitiesnh-*.jar" 2>/dev/null \
+        | grep -v -E -- '-(dev|sources|api)\.jar$' | head -1)" || true
+    [ -n "$jar" ] || die "no built jar in slot $slot (run build first)"
+    echo "$jar"
+}
+
 # Print the remote output and fetch the path printed after "<key>=" in it.
 fetch_from_output() {
     local out="$1" key="$2" dest="$3" path
@@ -123,13 +135,7 @@ case "$cmd" in
             esac
         done
         MOD=()
-        if [ -n "$SLOT" ]; then
-            check_slot "$SLOT"
-            jar="$("${SSH[@]}" "ls -t $(printf '%q' "$ROOT/wt/$SLOT/build/libs")/lostcitiesnh-*.jar" 2>/dev/null \
-                | grep -v -E -- '-(dev|sources|api)\.jar$' | head -1)" || true
-            [ -n "$jar" ] || die "no built jar in slot $SLOT (run build first)"
-            MOD=(--mod "$jar")
-        fi
+        if [ -n "$SLOT" ]; then jar="$(slot_jar "$SLOT")" || exit 2; MOD=(--mod "$jar"); fi
         rc=0; remote "$ROOT/realpack/run.sh" "${MOD[@]}" "${REST[@]}" | tee "$out" || rc=$?
         fetch_from_output "$out" run_dir "realpack" || true
         exit "$rc"
@@ -138,6 +144,33 @@ case "$cmd" in
         [ "${1:-}" = -- ] && shift
         rc=0; remote "$ROOT/realpack/client-run.sh" "$@" | tee "$out" || rc=$?
         fetch_from_output "$out" run_dir "client" || true
+        exit "$rc"
+        ;;
+    shots)
+        # A shot list (JSON, committed under tools/remote/shots/) goes to the server on stdin; shots-run.py boots the
+        # real-pack server and client, takes the shots clean and writes runs/shots-<id>/ with index.html.
+        LIST="${1:-}"; [ -f "$LIST" ] || die "usage: lc-remote.sh shots <shotlist.json> [--slot <slot>] [-- <shots-run.py args>]"
+        shift
+        SLOT="" REST=()
+        while [ $# -gt 0 ]; do
+            case "$1" in
+                --slot) SLOT="$2"; shift 2 ;;
+                --) shift; REST=("$@"); break ;;
+                *) die "shots: unknown argument $1 (shots-run.py arguments go after --)" ;;
+            esac
+        done
+        # Check the list here first, so a typo fails in a second instead of after a server boot.
+        python3 -I "$HERE/tools/remote/server/realpack/shots-run.py" --check --shotlist "$LIST" "${REST[@]}" \
+            || die "shot list check failed"
+        MOD=()
+        if [ -n "$SLOT" ]; then jar="$(slot_jar "$SLOT")" || exit 2; MOD=(--mod "$jar"); fi
+        label="$(basename "$LIST" .json | tr -c 'A-Za-z0-9_.\n-' '_')"
+        rc=0; remote python3 -I "$ROOT/realpack/shots-run.py" --label "$label" "${MOD[@]}" "${REST[@]}" < "$LIST" \
+            | tee "$out" || rc=$?
+        if fetch_from_output "$out" run_dir "shots"; then
+            d="$(sed -n 's/^run_dir=//p' "$out" | tail -1)"
+            echo "review page: $LOCAL/shots/$(basename "$d")/index.html"
+        fi
         exit "$rc"
         ;;
     install-tools)
@@ -161,7 +194,7 @@ true
 EOS
         ;;
     ""|-h|--help|help)
-        sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//'
+        sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'
         ;;
     *)
         die "unknown command: $cmd (try --help)"

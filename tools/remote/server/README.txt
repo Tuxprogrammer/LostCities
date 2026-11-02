@@ -100,6 +100,8 @@ run.sh [--mod <jar>] [--jvm '<args>'] [--cmds '<cmd>; ...'] [--fresh] [--world <
   --timeout <s>     boot timeout (default 900); the server is killed after it.
   --set-config '<file under config/>:<key>=<value>'  (repeatable) change one config value for this run; the file is
                     backed up to runs/<id>/cfg-backup/ and restored when the run ends (added for M04's cascade log).
+  --view-distance <3-15>  server.properties view-distance for this run; the old value is put back when it
+                    ends (added for M05S's shot runner, which matches it to the client's render distance).
   Java REALPACK_JAVA (default shared/jdk21), heap REALPACK_HEAP (default 8G, -Xms = -Xmx).
   Always -Dfml.queryResult=confirm. Kills only the PID it started (TERM, KILL after 30 s) on boot
   timeout, stop timeout (180 s) or interrupt. Exit 0 only when it booted and stopped cleanly.
@@ -107,7 +109,7 @@ run.sh [--mod <jar>] [--jvm '<args>'] [--cmds '<cmd>; ...'] [--fresh] [--world <
   run.done keys: status (ok | died-during-boot | boot-timeout | stop-timeout+killed |
   interrupted+killed | bad-mod | error), exit_code, run_id, run_dir, log, fml_log, boot_seconds,
   peak_rss_kb (VmHWM), wall_seconds, mod, jvm_extra, until (matched|timeout|died|none), world,
-  fresh, level_type, seed.
+  fresh, level_type, seed, view_distance (the value set, or unchanged).
 
   Examples
     ./run.sh --fresh                                                  # bare pack, classic RWG
@@ -134,6 +136,11 @@ Real-pack client: realpack/client/, client-prepare.py, client-run.sh
     --extra-shot takes another screenshot <seconds> after the previous one (added for M04's viewpoints).
     --mod <jar> installs a lostcitiesnh jar in client/game/mods for the run and removes it after; a server with the
     mod rejects clients without it.
+    --jvm '<args>' extra client JVM args (word-split), e.g. the clean capture's -D properties.
+    --hold <file> (under this root) after the shots, stays up until <file> exists, the client dies or --timeout;
+    status hold-timeout / died-while-holding otherwise. shots-run.py drives the client this way.
+    --restore-options backs up client/game/options.txt and optionsnf.txt into the run dir first and puts them back
+    (or deletes them, if they did not exist) when the run ends.
     Starts Xvfb on our display (default :80), runs the client with Mesa llvmpipe
     (LIBGL_ALWAYS_SOFTWARE=1, __GLX_VENDOR_LIBRARY_NAME=mesa) and OpenAL's null backend, offline
     account (default LCBot), waits for the main menu (the atlases rebuilt after "Forge Mod Loader has
@@ -144,8 +151,34 @@ Real-pack client: realpack/client/, client-prepare.py, client-run.sh
   Proof (2026-11-01): main menu in 67 s, 323/323 mods, Angelica on llvmpipe (GL 4.5), peak RSS
     10.1 GiB. Joined the real-pack server (--server 127.0.0.1:25800) in 57 s; the server's 'op' and
     'tp' applied and the world rendered. For screenshots use 'gamemode 1' and a safe y (a survival
-    tp to y=120 fell). Not done yet: hiding the HUD (F1 needs key input; no xdotool here), time/
-    weather locking via gamerules, camera pitch/yaw via tp.
+    tp to y=120 fell). Camera pitch/yaw: /lostcities view (test hooks). Clean shots: shots-run.py below.
+
+Shot runner: realpack/shots-run.py   (python3 -I; laptop side: lc-remote.sh shots, format in its README.md)
+  python3 -I shots-run.py --mod <jar> [--shotlist <file>|-] [--label <name>] [--level-type <t>] [--seed <s>]
+      [--world <name>] [--fresh|--reuse-world] [--jvm '<server args>'] [--client-jvm '<client args>']
+      [--only <a,b>] [--display 80-89] [--lock-wait <s>] [--boot-timeout <s>] [--join-timeout <s>]
+      [--deadline <s>] [--check]
+  Reads a JSON shot list (stdin by default). Waits for run.lock and client.lock to be free (45 s polls,
+  --lock-wait 1800), runs run.sh (test hooks, --view-distance = render distance, --cmds
+  'until:LCSHOTS-END-<id>') and waits for "Done (", then client-run.sh --hold --restore-options with
+  -Dlostcitiesnh.capture=true (the mod's clean capture: GUI, hand, toast and overlays hidden, logs
+  "[LCNH-CAPTURE] settled ..." when a viewpoint's chunks are in and built). No --server: the client joins
+  from the main menu itself (-Dlostcitiesnh.captureServer=127.0.0.1:25800), because FML's startup join
+  races its own handshake latch ("playClientBlock is null"); the runner restarts the client once if it has
+  not joined (dropped twice, exited, crashed, --join-timeout 420). Locks time and weather
+  (gamerule doDaylightCycle false, time set, weather clear 1000000), creative mode, no mob spawning.
+  Per shot: console "lostcities view" through run.sh's stdin fifo, wait for the settled line at the
+  target, the shot's wait, then xwd | convert every 3 s until 3 frames in a row each change under 0.3%
+  of a 160x90 grayscale thumbnail (stable_timeout 120 s; the last frame is the shot). Then touches the hold file, says LCSHOTS-END-<id> so
+  run.sh stops the server, and TERMs either script that outlives its grace (90 s client, 300 s server).
+  Writes runs/shots-<id>/: <shot>.png, results.json, index.html (review page), runner.log, server.out,
+  client-<n>.out and run.done (status ok|partial|aborted, shots_ok, run_dir). --deadline (5400 s) bounds it all.
+  Proof (2026-11-02, tools/remote/shots/synthetic-city.json, seed 4242, render distance 12, fresh worlds):
+    RWG2_CONTINENTS 7/7 ok in 325 s wall (first aerial shot 86 s, the rest about 20 s each);
+    RWG 7/7 ok in 1024 s wall including a 7 min lock wait (first aerial 226 s: Celeritas meshed
+    for about 3 min on llvmpipe). Join first try from Custom Main Menu's GuiCustom. No HUD, hand,
+    toast, chat, InGame Info panel or JourneyMap minimap in any frame. An interrupted run (TERM) and
+    a failed join both stopped the client and server; view-distance and the option files came back.
 
 Rebuild from scratch
   Server: delete server/, unzip dl/*.zip into server/ (python3 zipfile; no unzip on this box), redo

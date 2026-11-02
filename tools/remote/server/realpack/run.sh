@@ -6,6 +6,7 @@
 #               [--fresh] [--world <folder>] [--level-type <type>] [--seed <seed>]
 #               [--timeout <s>] [--cmd-wait <s>] [--run-timeout <s>]
 #               [--set-config '<file under config/>:<key>=<value>'] (repeatable; restored after the run)
+#               [--view-distance <3-15>] (server.properties view-distance for this run; restored after it)
 # In --cmds, 'wait:<s>' sleeps s seconds and 'until:<regex>' waits (polling every 5 s, at most
 # --run-timeout seconds) for a console line matching the extended regex; neither is sent to the server.
 set -u
@@ -19,7 +20,7 @@ PACK_LEVEL_TYPE=rwg      # what the GTNH 2.9.0 server zip ships in server.proper
 export JAVA_TOOL_OPTIONS="-Duser.home=$LC/shared/home"
 
 MOD="" JVM_EXTRA="" CMDS="" TIMEOUT=900 FRESH=0 CMD_WAIT=2 RUN_TIMEOUT=21600 UNTIL="" WORLD=""
-LEVEL_TYPE="$PACK_LEVEL_TYPE" SEED=""
+LEVEL_TYPE="$PACK_LEVEL_TYPE" SEED="" VIEW_DISTANCE="" ORIG_VIEW_DISTANCE=""
 SETCFG=() RESTORE=()
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -34,13 +35,17 @@ while [ $# -gt 0 ]; do
         --level-type) LEVEL_TYPE="$2"; shift 2 ;;
         --seed) SEED="$2"; shift 2 ;;
         --set-config) SETCFG+=("$2"); shift 2 ;;
-        -h|--help) sed -n '2,9p' "$0"; exit 0 ;;
+        --view-distance) VIEW_DISTANCE="$2"; shift 2 ;;
+        -h|--help) sed -n '2,11p' "$0"; exit 0 ;;
         *) echo "unknown argument: $1" >&2; exit 2 ;;
     esac
 done
 if [ -n "$WORLD" ] && ! [[ "$WORLD" =~ ^[A-Za-z0-9_-]+$ ]]; then echo "bad --world: $WORLD" >&2; exit 2; fi
 if ! [[ "$LEVEL_TYPE" =~ ^[A-Za-z0-9_]+$ ]]; then echo "bad --level-type: $LEVEL_TYPE" >&2; exit 2; fi
 if [ -n "$SEED" ] && ! [[ "$SEED" =~ ^-?[A-Za-z0-9_]+$ ]]; then echo "bad --seed: $SEED" >&2; exit 2; fi
+if [ -n "$VIEW_DISTANCE" ] && { ! [[ "$VIEW_DISTANCE" =~ ^[0-9]+$ ]] || [ "$VIEW_DISTANCE" -lt 3 ] || [ "$VIEW_DISTANCE" -gt 15 ]; }; then
+    echo "bad --view-distance: $VIEW_DISTANCE (3-15)" >&2; exit 2
+fi
 
 # One run at a time: the server dir, port and world are shared. Our own lock, in our own dir.
 exec 9>"$RP/run.lock"
@@ -82,6 +87,7 @@ finish() {
     rm -f "$FIFO"
     # Leave server.properties at the pack's values between runs.
     sed -i "s|^level-type=.*|level-type=$PACK_LEVEL_TYPE|; s|^level-seed=.*|level-seed=|" "$SRV/server.properties"
+    [ -n "$ORIG_VIEW_DISTANCE" ] && sed -i "s|^view-distance=.*|view-distance=$ORIG_VIEW_DISTANCE|" "$SRV/server.properties"
     for f in fml-server-latest.log latest.log; do
         [ -f "$SRV/logs/$f" ] && cp "$SRV/logs/$f" "$RUN_DIR/" 2>/dev/null
     done
@@ -105,6 +111,7 @@ finish() {
         echo "fresh=$FRESH"
         echo "level_type=$LEVEL_TYPE"
         echo "seed=${SEED:-random}"
+        echo "view_distance=${VIEW_DISTANCE:-unchanged}"
     } | tee "$RUN_DIR/run.done" > "$DONE"
     cat "$DONE"
     [ "$STATUS" = ok ] || exit 1
@@ -126,6 +133,13 @@ if [ -f "$SRV/$WORLD_DIR/level.dat" ] && [ "$LEVEL_TYPE" != "$PACK_LEVEL_TYPE" ]
 fi
 # level-type and level-seed are per run: set from the flags here, put back to the pack's values in finish().
 sed -i "s|^level-type=.*|level-type=$LEVEL_TYPE|; s|^level-seed=.*|level-seed=$SEED|" "$SRV/server.properties"
+# view-distance likewise, only when asked for: the old value is kept and put back in finish().
+if [ -n "$VIEW_DISTANCE" ]; then
+    ORIG_VIEW_DISTANCE="$(sed -n 's/^view-distance=//p' "$SRV/server.properties" | tail -1)"
+    ORIG_VIEW_DISTANCE="${ORIG_VIEW_DISTANCE:-6}"
+    sed -i "s|^view-distance=.*|view-distance=$VIEW_DISTANCE|" "$SRV/server.properties"
+    echo "view-distance=$VIEW_DISTANCE for this run (was $ORIG_VIEW_DISTANCE)"
+fi
 # Per-run config overrides: '<file under config/>:<key>=<value>', backed up first and restored in finish().
 for spec in "${SETCFG[@]}"; do
     f="${spec%%:*}"; kv="${spec#*:}"; key="${kv%%=*}"; val="${kv#*=}"
