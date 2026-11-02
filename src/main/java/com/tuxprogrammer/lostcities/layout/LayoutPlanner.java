@@ -87,7 +87,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final long BUILDING_X = 132897987541L;
     /** "LARGEBRG": salt of the separate large-bridge random. */
     static final long LARGE_BRIDGE_SALT = 0x4c41524745425247L;
-    /** Salt of the separate random a capped building's roof part is drawn from (decision log D-M03-5). */
+    /** Salt of the separate random a capped building's roof part is drawn from (decision log D49). */
     static final long ROOF_SALT = 0x524f4f4643415050L;
     /** Highest floor block Y a building's roof part may start below: 1.7.10's {@code 256 - 2 - 6}. */
     static final int MAX_ROOF_FLOOR_Y = 248;
@@ -795,7 +795,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /**
      * A building a zone capped keeps the drawn parts of the floors it still has and takes its roof part from a separate
-     * random (decision log D-M03-5), so the cap shifts nothing else the chunk draws.
+     * random (decision log D49), so the cap shifts nothing else the chunk draws.
      */
     private void cappedParts(ChunkPlan.Builder b, int x, int z, String[] parts, String[] parts2,
         BuildingView building) {

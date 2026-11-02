@@ -39,9 +39,9 @@ Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a c
 | RWG decoration | Stays | Stays in parks and strips (outside the footprint) | Upstream footprint rule | Upstream footprint rule |
 | `Populate` vetoes (lakes, dungeons, oil) | Not vetoed | Vetoed as city chunks | Vetoed | Vetoed |
 
-**Random consumption.** Every zone rule takes effect after upstream's draws for the chunk, so a chunk in a zone consumes its building random exactly as upstream would: `bc` is drawn and then ignored in the edge ring, corridor and dungeon candidates are drawn and then cleared, floors are drawn and then capped. 0006 §3 states this for height caps; this sheet applies it to every zone rule, so a zone never shifts the parts, palettes and doors a chunk draws. A capped building's per-level draws run for its drawn floors; it keeps the drawn parts of the floors it still has and takes its roof part from a separate random (D-M03-5).
+**Random consumption.** Every zone rule takes effect after upstream's draws for the chunk, so a chunk in a zone consumes its building random exactly as upstream would: `bc` is drawn and then ignored in the edge ring, corridor and dungeon candidates are drawn and then cleared, floors are drawn and then capped. 0006 §3 states this for height caps; this sheet applies it to every zone rule, so a zone never shifts the parts, palettes and doors a chunk draws. A capped building's per-level draws run for its drawn floors; it keeps the drawn parts of the floors it still has and takes its roof part from a separate random (D49).
 
-**Measuring the zones** (D-M03-12). A chunk's distance to a landmark is the Chebyshev distance in chunks to the chunks its footprint, grown by `landmarkMargin`, touches: 0 is the core, 1 the edge ring (or, under `AVOID`, the non-city ring), 2 and 3 the transition rings of a village (a third or later ring, if configured, caps at 4 floors like the second). Where landmarks' zones overlap, the strongest zone wins (core, avoid ring, edge ring, ring 1, ring 2). Meteorites have an edge ring as well as their crater basin. A crater basin caps floors so that the roof part's top stays at or below the cap over the chunk's column nearest the impact; a single chunk with no room for one floor there is an open lot, and a multibuilding cannot stand where it would have no room.
+**Measuring the zones** (D56). A chunk's distance to a landmark is the Chebyshev distance in chunks to the chunks its footprint, grown by `landmarkMargin`, touches: 0 is the core, 1 the edge ring (or, under `AVOID`, the non-city ring), 2 and 3 the transition rings of a village (a third or later ring, if configured, caps at 4 floors like the second). Where landmarks' zones overlap, the strongest zone wins (core, avoid ring, edge ring, ring 1, ring 2). Meteorites have an edge ring as well as their crater basin. A crater basin caps floors so that the roof part's top stays at or below the cap over the chunk's column nearest the impact; a single chunk with no room for one floor there is an open lot, and a multibuilding cannot stand where it would have no room.
 
 ## Roads around a core
 
@@ -53,7 +53,7 @@ From [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings
 4. **Village lanes.** For each village gate, at most one per side of the core (the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. From the gate chunk it continues as the surface path `03-terrain` writes.
 5. Villages inside a city's radius are surrounded by it: the city factor is not lowered near them, and each becomes the city's old town. Villages outside a city but within `villageLinkDistance` get gates and a surface lane across the land between.
 
-The exact geometry (D-M03-6):
+The exact geometry (D50):
 
 - **Detour.** Through the ring of chunks just outside the core's bounding chunk rectangle, on the side with the shorter run; ties go west for a north-south road and north for an east-west one. It needs both ends of the severed road to be city and every chunk of the run to be city; otherwise the other side is tried, otherwise there is no detour and the road is only clipped. Detour chunks are primary roads.
 - **Gate.** On each side, the gate facing that side nearest the strongest city center reaching the core (the core's center when none does); ties north, then west. Its chunk is the first non-core chunk stepping outward from the gate.
@@ -61,7 +61,7 @@ The exact geometry (D-M03-6):
 - **Plaza.** An edge-ring chunk whose effective road is secondary or tertiary, whose raw road continues into a core chunk, and which is not a detour, lane or gate chunk.
 - Detour, lane and gate chunks hold no building and no multibuilding. Each chunk's plan carries its role, the neighbors its lane or detour continues into, and the gate whose path into the core starts there.
 
-A road that would continue only into a core is a stub and is clipped (D-M03-8).
+A road that would continue only into a core is a stub and is clipped (D52).
 
 ## Profile options
 

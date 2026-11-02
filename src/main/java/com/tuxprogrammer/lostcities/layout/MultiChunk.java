@@ -26,7 +26,7 @@ import com.tuxprogrammer.lostcities.layout.view.Selection;
  * Fixes, each with a regression test:
  * <ul>
  * <li>Avoids CITY-02: the multichunk random includes the world seed and the dimension (decision log D10,
- * D-M03-2).</li>
+ * D46).</li>
  * <li>Avoids CORE-21 (CITY-09): the style pick never returns {@code null} ({@link WeightedPicker}).</li>
  * <li>Avoids CITY-25: settings with {@code maximum < minimum}, or a multibuilding larger than the area, place nothing
  * instead of throwing; the asset loader rejects them with the file and field first.</li>

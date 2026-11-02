@@ -228,7 +228,7 @@ final class CityMap {
         Random random = new Random(seed + chunkZ * STYLE_Z + chunkX * STYLE_X);
         List<Contribution> contributions = new ArrayList<>();
         if (rarity != null) {
-            // Perlin mode has no centers, so the style stays per chunk (decision log D-M03-4).
+            // Perlin mode has no centers, so the style stays per chunk (decision log D48).
             float factor = rarity.getCityFactor(chunkX, chunkZ);
             contributions.add(new Contribution(factor, styleOrAlternative(factor, chunkX, chunkZ)));
         } else {

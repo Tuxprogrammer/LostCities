@@ -11,7 +11,7 @@ import com.tuxprogrammer.lostcities.statics.ProjectFiles;
 
 /**
  * Reads the reference values recorded from upstream Lost Cities 1.20 and Minecraft 1.20.1 by
- * {@code tools/upstream-parity/} (decision log D-M03-1), in {@code src/test/resources/parity/}. Each file is a few
+ * {@code tools/upstream-parity/} (decision log D45), in {@code src/test/resources/parity/}. Each file is a few
  * {@code #} comment lines, then one record per line with space-separated fields.
  */
 public final class ParityData {

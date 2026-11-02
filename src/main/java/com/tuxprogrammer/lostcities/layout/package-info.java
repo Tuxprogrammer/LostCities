@@ -9,7 +9,7 @@
  * {@link com.tuxprogrammer.lostcities.layout.LayoutPlanner#plan(int, int)} (a chunk's immutable
  * {@link com.tuxprogrammer.lostcities.layout.ChunkPlan}) and
  * {@link com.tuxprogrammer.lostcities.layout.LayoutPlanner#layout(int, int)} (the plan with every neighbor-dependent
- * answer). The layout reads everything else through narrow interfaces it owns (decision log D-M03-7):
+ * answer). The layout reads everything else through narrow interfaces it owns (decision log D51):
  * {@code view} (assets, terrain, highways and railways), {@code landmark} (the structure oracle and the zones around
  * other mods' structures), {@code predefined} (predefined cities). {@code street} is the hierarchical street and
  * bridge field, {@code random} and {@code noise} upstream's generators.

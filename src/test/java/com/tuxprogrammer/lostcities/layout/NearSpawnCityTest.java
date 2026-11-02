@@ -13,7 +13,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 /**
  * Decision log D30 (3) asks M03 to measure how far the nearest city is from spawn over many seeds, to decide whether
  * a near-spawn city option is needed. With the default profile and land within the height window, the nearest city
- * chunk lies within a short walk of block (0, 0) for every seed tried (decision log D-M03-9), so no option is added.
+ * chunk lies within a short walk of block (0, 0) for every seed tried (decision log D53), so no option is added.
  * This test keeps that true.
  */
 public class NearSpawnCityTest {

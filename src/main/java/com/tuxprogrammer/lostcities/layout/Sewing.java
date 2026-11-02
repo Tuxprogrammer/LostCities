@@ -27,7 +27,7 @@ import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
  * can block multibuildings without a cycle. Results are kept per landmark in a bounded cache.
  *
  * <p>
- * The geometry is settled in decision log D-M03-6: a detour runs through the ring of chunks just outside the core's
+ * The geometry is settled in decision log D50: a detour runs through the ring of chunks just outside the core's
  * bounding chunk rectangle, on the side with the shorter run (ties west for north-south roads, north for east-west
  * ones); a lane is straight or L-shaped from the gate's chunk to the nearest road chunk, bending at the corner nearer
  * the city's center.

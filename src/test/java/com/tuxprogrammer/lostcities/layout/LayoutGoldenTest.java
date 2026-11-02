@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
  * Golden layouts with fixed fake structure oracles, the cases 0006's consequences name for M03: a village inside a
  * city, one at its edge, one three chunks out, a severed primary road and a meteorite basin; plus a plain city and a
  * village under upstream's {@code AVOID} treatment. The maps in each golden are the review artifact; their details are
- * pinned by hash (decision log D-M03-3).
+ * pinned by hash (decision log D47).
  */
 public class LayoutGoldenTest {
 

@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import com.tuxprogrammer.lostcities.statics.ProjectFiles;
 
 /**
- * Layout goldens (decision log D-M03-3): {@code src/test/resources/golden/layout/<case>.txt} holds the case's
+ * Layout goldens (decision log D47): {@code src/test/resources/golden/layout/<case>.txt} holds the case's
  * description, the legend, the three maps of {@link LayoutText#maps} in full, so a change can be read as a diff, and a
  * {@code details-sha256:} line pinning every chunk's full description ({@link LayoutText#details}). On a mismatch the
  * actual file and the details are written to {@code build/golden-actual/layout/}; {@code ./gradlew test

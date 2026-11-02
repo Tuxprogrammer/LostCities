@@ -112,11 +112,11 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Exit gate:**
 - [x] City detection, rarity, styles, levels, the hierarchical street and bridge planners, multibuilding placement and the per-chunk plan (`LayoutPlanner`, `ChunkPlan`, `ChunkLayout`) live in `layout`, pure Java (`LayoutPurityTest`).
-- [x] The pure planners reproduce upstream's output for the same seed, checked against values recorded from upstream and Minecraft 1.20.1 (decision log D-M03-1); the rest against the spec's numbers.
+- [x] The pure planners reproduce upstream's output for the same seed, checked against values recorded from upstream and Minecraft 1.20.1 (decision log D45); the rest against the spec's numbers.
 - [x] Every CITY bug in the ported logic has a `doesNotReproduce` test, and the ported code passes the gate.
 - [x] Landmark zones, detours, plazas, gates, lanes and crater caps, with layout goldens against fake oracles for the cases 0006 names.
 - [x] The layout is deterministic across generation order, cache size and oracle order (`DeterminismTest`).
-- [x] D30's spawn-distance measurement is done: no near-spawn option is needed (D-M03-9).
+- [x] D30's spawn-distance measurement is done: no near-spawn option is needed (D53).
 
 ## M04 · RWG overlay and terrain
 
