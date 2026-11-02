@@ -82,6 +82,13 @@ final class StructureBlocks {
         "blast_furnace", "composter", "lectern", "grindstone", "stonecutter", "loom", "cartography", "fletching",
         "smithing", "bell" };
 
+    /**
+     * Words in the resource path of any mod's building blocks that no terrain generator places: VillageNames swaps
+     * mod blocks into its buildings (Witchery's snow stairs in snowy villages, for example).
+     */
+    private static final String[] BUILDING_WORDS = { "stairs", "slab", "fence", "door", "pane", "torch", "ladder",
+        "lantern", "sign", "carpet", "wool", "planks" };
+
     /** Words in the resource path of a monument's blocks. */
     private static final String[] MONUMENT_WORDS = { "prismarine", "sea_lantern", "sponge" };
 
@@ -105,11 +112,16 @@ final class StructureBlocks {
         if ("VillageNames".equals(mod)) {
             return true;
         }
+        String path = registryName.substring(colon + 1)
+            .toLowerCase(Locale.ROOT);
+        for (String word : BUILDING_WORDS) {
+            if (path.contains(word)) {
+                return true;
+            }
+        }
         if (!"etfuturum".equals(mod)) {
             return false;
         }
-        String path = registryName.substring(colon + 1)
-            .toLowerCase(Locale.ROOT);
         for (String word : VILLAGE_WORDS) {
             if (path.contains(word)) {
                 return true;

@@ -18,6 +18,9 @@ class StructureBlocksTest {
         assertTrue(StructureBlocks.isVillageBlock("VillageNames:concrete"));
         assertTrue(StructureBlocks.isVillageBlock("etfuturum:lantern"));
         assertFalse(StructureBlocks.isVillageBlock("etfuturum:deepslate"));
+        assertTrue(StructureBlocks.isVillageBlock("witchery:snowstairs"));
+        assertFalse(StructureBlocks.isVillageBlock("gregtech:gt.blockores2"));
+        assertFalse(StructureBlocks.isVillageBlock("minecraft:snow_layer"));
         assertFalse(StructureBlocks.isVillageBlock("minecraft:log"));
         assertFalse(StructureBlocks.isVillageBlock("minecraft:cobblestone"));
         assertFalse(StructureBlocks.isVillageBlock("minecraft:sandstone"));

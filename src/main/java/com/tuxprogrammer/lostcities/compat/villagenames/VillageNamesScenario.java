@@ -78,8 +78,12 @@ public final class VillageNamesScenario implements Scenario {
     static final int REJECTED = 6;
     /** Predicted monuments generated. */
     static final int MONUMENTS = 8;
-    /** Share of a village's buildings that must show built blocks. */
-    static final double BUILT_SHARE = 0.8;
+    /**
+     * Share of a village's buildings that must show built blocks. VillageNames leaves some pieces unbuilt (over water,
+     * small decorations of natural blocks), so this checks that the village stands where predicted; the piece-for-piece
+     * comparison with its saved start is the exact check.
+     */
+    static final double BUILT_SHARE = 0.5;
     /** Monument blocks a generated monument must show at least. */
     static final int MONUMENT_MIN_BLOCKS = 200;
     /** Time one tick may spend generating, in nanoseconds; pacing only. */
