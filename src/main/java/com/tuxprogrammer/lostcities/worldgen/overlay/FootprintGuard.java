@@ -24,8 +24,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
  * <p>
  * A third kind of frame, pushed around the other mods' {@code IWorldGenerator}s ({@link TreeGuard}), drops only tree
  * parts: logs, leaves, plants, vines and cacti, so IC2 rubber trees and HarvestCraft fruit trees planted on park
- * grass no longer overhang streets and roofs, and Natura's saguaros no longer stand inside a scattered structure, while GT's ore veins and every other block pass (decision log, M05J rows; D75's
- * finding).
+ * grass no longer overhang streets and roofs, and Natura's saguaros no longer stand inside a scattered structure, while
+ * GT's ore veins and every other block pass (decision log, M05J rows; D75's finding; D-BA-7).
  *
  * <p>
  * This is the one mutable static of the overlay, and it must be: the chunk setter has no other cheap way to reach the
