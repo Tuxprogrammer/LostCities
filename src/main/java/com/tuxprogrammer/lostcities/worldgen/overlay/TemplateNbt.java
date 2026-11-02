@@ -67,7 +67,8 @@ public final class TemplateNbt {
             tag.setTag(name, overlay.getTag(name));
         }
         tile.readFromNBT(tag);
-        tile.markDirty();
+        // No markDirty: its comparator update reads the neighbors, which on a chunk's edge loads the next chunk; the
+        // caller marks the chunk modified instead.
         return true;
     }
 

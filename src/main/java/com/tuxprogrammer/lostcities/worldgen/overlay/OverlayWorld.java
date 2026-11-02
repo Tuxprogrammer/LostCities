@@ -19,6 +19,7 @@ import com.tuxprogrammer.lostcities.worldgen.city.CityPalettes;
 import com.tuxprogrammer.lostcities.worldgen.city.CityProfiles;
 import com.tuxprogrammer.lostcities.worldgen.city.CityWriteContext;
 import com.tuxprogrammer.lostcities.worldgen.city.LayoutCityPlan;
+import com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache;
 import com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 import com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan;
@@ -74,9 +75,10 @@ public final class OverlayWorld {
             settings,
             classifier,
             BlockRefs::exists);
-        this.heights = new ChunkHeights(oracle, settings.heightSampleSize(), timers::recordOracle);
+        TerrainHeightOracle columns = ChunkColumnCache.wrap(oracle);
+        this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle);
         this.biomes = new WorldBiomes(world);
-        this.cities = layoutPlan(world, snapshot, settings, oracle, heights, biomes, classifier);
+        this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers);
         this.plan = new CachedCityPlan(planSource(world.getSeed(), snapshot, settings, heights, cities));
         this.terrainPhase = new TerrainPhase(context, plan);
         this.populationPhase = new PopulationPhase(world, refs);
@@ -102,7 +104,8 @@ public final class OverlayWorld {
      * which leaves the world without cities and logs why.
      */
     private static LayoutCityPlan layoutPlan(WorldServer world, ProfileSnapshot snapshot, TerrainSettings settings,
-        TerrainHeightOracle oracle, ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier) {
+        TerrainHeightOracle oracle, ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier,
+        GenerationTimers timers) {
         if (!ProfileSnapshot.PLAN_LAYOUT.equals(snapshot.planSource())) {
             return null;
         }
@@ -120,7 +123,7 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights);
-        StructureOracle structures = StructureOracles.forWorld(world, oracle, settings.landmarkMargin());
+        StructureOracle structures = timed(StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(
@@ -144,6 +147,21 @@ public final class OverlayWorld {
             classifier,
             message -> LostCities.LOG.warn("[cities] {}", message));
         return new LayoutCityPlan(context, structures, terrain);
+    }
+
+    /** Wraps a structure oracle so each call is timed (the {@code structures} series of the timers). */
+    private static StructureOracle timed(StructureOracle oracle, GenerationTimers timers) {
+        if (oracle == StructureOracle.NONE) {
+            return oracle;
+        }
+        return (minX, minZ, maxX, maxZ) -> {
+            long start = System.nanoTime();
+            try {
+                return oracle.landmarksTouching(minX, minZ, maxX, maxZ);
+            } finally {
+                timers.recordStructures(System.nanoTime() - start);
+            }
+        };
     }
 
     /**
@@ -355,7 +373,7 @@ public final class OverlayWorld {
 
     /** Returns the most memory the world's caches can hold, estimated, for budget B5. */
     public long cacheBytes() {
-        return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES + (cities == null ? 0 : cities.estimatedCacheBytes());
+        return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES + ChunkColumnCache.MAX_BYTES + (cities == null ? 0 : cities.estimatedCacheBytes());
     }
 
     /** Frees the caches; the world is unloading. */

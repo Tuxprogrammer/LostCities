@@ -29,7 +29,9 @@ public final class GenerationTimers {
         /** The overlay's population phase. */
         POPULATION,
         /** Height-oracle calls (inside the plan, so part of whichever phase asked). */
-        ORACLE
+        ORACLE,
+        /** Structure-oracle calls (inside the plan, so part of whichever phase asked). */
+        STRUCTURES
     }
 
     /** Column of the totals in the split. */
@@ -66,6 +68,11 @@ public final class GenerationTimers {
     public void record(Series series, TerrainPhase.ChunkClass chunkClass, long nanos) {
         histograms[series.ordinal()][chunkClass.ordinal()].record(nanos);
         histograms[series.ordinal()][ALL].record(nanos);
+    }
+
+    /** Records one structure-oracle call. */
+    public void recordStructures(long nanos) {
+        histograms[Series.STRUCTURES.ordinal()][ALL].record(nanos);
     }
 
     /** Records one oracle call. */

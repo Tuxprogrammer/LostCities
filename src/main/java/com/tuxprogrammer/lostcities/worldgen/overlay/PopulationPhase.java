@@ -2,8 +2,13 @@ package com.tuxprogrammer.lostcities.worldgen.overlay;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -108,7 +113,7 @@ public final class PopulationPhase {
         if (world.isAirBlock(x, job.y(), z)) {
             return false;
         }
-        TileEntity tile = world.getTileEntity(x, job.y(), z);
+        TileEntity tile = tileAt(x, job.y(), z);
         if (!(tile instanceof IInventory)) {
             return false;
         }
@@ -117,10 +122,28 @@ public final class PopulationPhase {
             .isEmpty()) {
             return true;
         }
+        // Filled through a scratch inventory and written as NBT: a container's setInventorySlotContents calls
+        // markDirty, whose comparator update reads the neighbors and, on a chunk's edge, would load the next chunk.
+        IInventory container = (IInventory) tile;
+        InventoryBasic scratch = new InventoryBasic("", false, container.getSizeInventory());
         ChestGenHooks info = ChestGenHooks.getInfo(job.argument());
-        WeightedRandomChestContent
-            .generateChestContents(random, info.getItems(random), (IInventory) tile, info.getCount(random));
-        tile.markDirty();
+        WeightedRandomChestContent.generateChestContents(random, info.getItems(random), scratch, info.getCount(random));
+        NBTTagList items = new NBTTagList();
+        for (int slot = 0; slot < scratch.getSizeInventory(); slot++) {
+            ItemStack stack = scratch.getStackInSlot(slot);
+            if (stack != null) {
+                NBTTagCompound entry = new NBTTagCompound();
+                entry.setByte("Slot", (byte) slot);
+                stack.writeToNBT(entry);
+                items.appendTag(entry);
+            }
+        }
+        NBTTagCompound tag = new NBTTagCompound();
+        tile.writeToNBT(tag);
+        tag.setTag("Items", items);
+        tile.readFromNBT(tag);
+        world.getChunkFromChunkCoords(x >> 4, z >> 4)
+            .setChunkModified();
         return true;
     }
 
@@ -135,13 +158,14 @@ public final class PopulationPhase {
         }
         if (job.argument()
             .isEmpty()) {
-            return world.setBlockToAir(x, job.y(), z);
+            return world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
         }
-        TileEntity tile = world.getTileEntity(x, job.y(), z);
+        TileEntity tile = tileAt(x, job.y(), z);
         if (tile instanceof TileEntityMobSpawner spawner) {
             spawner.func_145881_a()
                 .setEntityName(job.argument());
-            spawner.markDirty();
+            world.getChunkFromChunkCoords(x >> 4, z >> 4)
+                .setChunkModified();
             return true;
         }
         return false;
@@ -155,12 +179,48 @@ public final class PopulationPhase {
         if (world.isAirBlock(x, job.y(), z)) {
             return false;
         }
-        TileEntity tile = world.getTileEntity(x, job.y(), z);
+        TileEntity tile = tileAt(x, job.y(), z);
         if (tile == null) {
             return false;
         }
-        TemplateNbt.apply(tile, job.template());
+        if (TemplateNbt.apply(tile, job.template())) {
+            world.getChunkFromChunkCoords(x >> 4, z >> 4)
+                .setChunkModified();
+        }
         return true;
+    }
+
+    /**
+     * Returns the tile entity at a position of the chunk being populated, creating it through the chunk alone.
+     *
+     * <p>
+     * {@code World.getTileEntity} creates a missing tile entity with {@code World.setTileEntity}, which then tells the
+     * neighbors' comparators ({@code World.func_147453_f}) and so reads the blocks beside it: for a door on a chunk's
+     * edge that loads, or generates, the next chunk, a cascade the real pack logged. The chunk's own
+     * {@code getTileEntityUnsafe} and {@code func_150813_a} (add tile entity) touch nothing outside the chunk.
+     *
+     * @return the tile entity, or {@code null} when the block has none
+     */
+    private TileEntity tileAt(int x, int y, int z) {
+        Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+        TileEntity tile = chunk.getTileEntityUnsafe(x & 15, y, z & 15);
+        if (tile != null) {
+            return tile;
+        }
+        Block block = chunk.getBlock(x & 15, y, z & 15);
+        int meta = chunk.getBlockMetadata(x & 15, y, z & 15);
+        if (!block.hasTileEntity(meta)) {
+            return null;
+        }
+        tile = block.createTileEntity(world, meta);
+        if (tile == null) {
+            return null;
+        }
+        tile.xCoord = x;
+        tile.yCoord = y;
+        tile.zCoord = z;
+        chunk.func_150813_a(tile);
+        return tile;
     }
 
     private boolean commandBlock(PopulationJob job, int x, int z) {

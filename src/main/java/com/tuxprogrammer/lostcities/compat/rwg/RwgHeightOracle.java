@@ -56,6 +56,19 @@ public final class RwgHeightOracle implements TerrainHeightOracle {
     }
 
     @Override
+    public boolean computesWholeChunks() {
+        return true;
+    }
+
+    @Override
+    public void chunkHeights(int chunkX, int chunkZ, int[] out) {
+        float[] noise = sampler.getNewNoise(manager, chunkX << 4, chunkZ << 4, biomes);
+        for (int i = 0; i < 256; i++) {
+            out[i] = (int) noise[i] + 1;
+        }
+    }
+
+    @Override
     public int height(int blockX, int blockZ) {
         float[] noise = sampler.getNewNoise(manager, (blockX >> 4) << 4, (blockZ >> 4) << 4, biomes);
         // RWG's arrays are x-major: generateTerrain writes column (x, z) from noise[x × 16 + z].
