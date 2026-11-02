@@ -35,7 +35,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * The footprint is the square of half-width at least {@value #DECAY_HALF_WIDTH} (the decay square) and the crater's
  * size, grown to every {@value #CELL}-block cell within {@value #MAX_HALF_WIDTH} blocks whose highest corner, plus
  * {@value #CITY_HEADROOM} blocks for a city's ground and street furniture above natural ground, lies above the
- * paraboloid at the cell's nearest point.
+ * paraboloid at the cell's nearest point. The cells are read ring by ring from the impact and the reading stops at a
+ * ring nothing reaches or nears ({@link Builder}).
  *
  * <p>
  * Sources:
@@ -96,27 +97,56 @@ public final class CraterBasin {
     }
 
     /**
-     * Computes a basin in steps, so the plan prefetcher can spread its height samples (about 550) over several fetches
-     * instead of one (budget B4): each step reads samples for at most the time it is given, and at least one. On
-     * RWG2 Continents a step reads many samples, on classic RWG, whose oracle computes a whole chunk per new chunk,
-     * a few. The samples are the cap's (every column of the clipped sky box and the padding around it, as
-     * {@link #capCenterY} reads them) and then the {@value #CELL}-block ground grid, so the basin is the same as one
-     * pass.
+     * Computes a basin in steps, so the plan prefetcher can spread its height samples over several fetches instead of
+     * one (budget B4): each step reads samples for at most the time it is given, and at least one. On RWG2 Continents
+     * a step reads many samples; on classic RWG, whose oracle computes a whole chunk for a chunk's first column, a few.
+     *
+     * <p>
+     * The samples are the cap's (every column of the clipped sky box and the padding around it, as
+     * {@link #capCenterY} reads them), then the {@value #CELL}-block ground grid from the inside out: the square of
+     * rings up to {@value #INNER_RINGS} cells from the impact, which holds the decay square, then one ring at a time,
+     * read only while a cell of the ring before reaches the paraboloid (its highest corner plus
+     * {@value #CITY_HEADROOM} above the cap at its nearest point) or a corner of that ring stands within
+     * {@value #CLIFF_MARGIN} blocks of reaching the next ring's cap. Beyond, ground that overtook the cap would have to
+     * climb more than {@value #CLIFF_MARGIN} blocks within one 8-block ring: a cliff, which is accepted (decision log).
+     * The rings not read save classic RWG most of the 81 chunks a full 128-block grid costs. {@code oracle.ae2} checks
+     * the result against the craters AE2 digs.
      */
     static final class Builder {
 
+        /** Rings of the ground grid always read: out to 32 blocks, past the decay square's 30. */
+        static final int INNER_RINGS = 4;
+        /**
+         * Blocks of climb the next ring is read for even when no cell of this ring reaches the paraboloid: ground on
+         * this ring that close to the next cells' cap could reach it within one 8-block ring.
+         */
+        static final int CLIFF_MARGIN = 16;
         private static final int CORNERS = 2 * MAX_HALF_WIDTH / CELL + 1;
+        private static final int MIDDLE = CORNERS / 2;
 
         private final TerrainHeightOracle heights;
+        private final int x;
+        private final int z;
         private final MeteoriteShape shape;
-        private final int[] sampleX;
-        private final int[] sampleZ;
-        private final int[] values;
-        private final int capSamples;
-        private int next;
+        private final int[] capX;
+        private final int[] capZ;
+        private final int[] capValues;
+        private final int[] grid = new int[CORNERS * CORNERS];
+        private final boolean[] read = new boolean[CORNERS * CORNERS];
+        private int capNext;
+        private int capCenter;
+        /** The ring being read: {@link #INNER_RINGS} for the inner square, then one more each. */
+        private int ring = INNER_RINGS;
+        /** The corners of the ring being read, as grid indices. */
+        private int[] ringCorners;
+        private int ringNext;
+        private int half;
+        private boolean done;
 
         Builder(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
             this.heights = heights;
+            this.x = x;
+            this.z = z;
             this.shape = shape;
             int chunkX = x >> 4;
             int chunkZ = z >> 4;
@@ -137,51 +167,94 @@ public final class CraterBasin {
                     }
                 }
             }
-            capSamples = points.size();
+            capX = new int[points.size()];
+            capZ = new int[points.size()];
+            for (int s = 0; s < points.size(); s++) {
+                capX[s] = points.get(s)[0];
+                capZ[s] = points.get(s)[1];
+            }
+            capValues = new int[points.size()];
+            half = Math.max(DECAY_HALF_WIDTH, (int) Math.ceil(shape.craterSize()));
+            ringCorners = corners(0, INNER_RINGS);
+        }
+
+        /** The grid indices of the corners whose ring (Chebyshev distance from the middle) is in {@code [from, to]}. */
+        private static int[] corners(int from, int to) {
+            int[] out = new int[CORNERS * CORNERS];
+            int n = 0;
             for (int i = 0; i < CORNERS; i++) {
                 for (int k = 0; k < CORNERS; k++) {
-                    points.add(new int[] { x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL });
+                    int level = Math.max(Math.abs(i - MIDDLE), Math.abs(k - MIDDLE));
+                    if (level >= from && level <= to) {
+                        out[n++] = i * CORNERS + k;
+                    }
                 }
             }
-            sampleX = new int[points.size()];
-            sampleZ = new int[points.size()];
-            for (int s = 0; s < points.size(); s++) {
-                sampleX[s] = points.get(s)[0];
-                sampleZ[s] = points.get(s)[1];
-            }
-            values = new int[points.size()];
+            return Arrays.copyOf(out, n);
         }
 
         /**
          * Reads samples for at most {@code budgetNanos}, and at least one.
          *
          * @param budgetNanos the time this step may take, nanoseconds
-         * @return {@code true} once every sample is read
+         * @return {@code true} once every sample the basin needs is read
          */
         boolean step(long budgetNanos) {
             long start = System.nanoTime();
             do {
-                values[next] = heights.height(sampleX[next], sampleZ[next]);
-                next++;
-            } while (next < values.length && System.nanoTime() - start < budgetNanos);
-            return next >= values.length;
+                readOne();
+            } while (!done && System.nanoTime() - start < budgetNanos);
+            return done;
         }
 
-        /** Returns the basin; every sample must be read. */
-        CraterBasin build() {
-            int lowest = Integer.MAX_VALUE;
-            for (int s = 0; s < capSamples; s++) {
-                lowest = Math.min(lowest, values[s]);
+        private void readOne() {
+            if (capNext < capValues.length) {
+                capValues[capNext] = heights.height(capX[capNext], capZ[capNext]);
+                capNext++;
+                if (capNext == capValues.length) {
+                    int lowest = Integer.MAX_VALUE;
+                    for (int value : capValues) {
+                        lowest = Math.min(lowest, value);
+                    }
+                    capCenter = (int) Math.floor(lowest - SKY_BOX_TOP - shape.size() + 1) - SLACK;
+                }
+                return;
             }
-            int capCenter = (int) Math.floor(lowest - SKY_BOX_TOP - shape.size() + 1) - SLACK;
-            int[] grid = Arrays.copyOfRange(values, capSamples, values.length);
-            int corners = CORNERS;
-            int half = Math.max(DECAY_HALF_WIDTH, (int) Math.ceil(shape.craterSize()));
-            for (int i = 0; i + 1 < corners; i++) {
-                for (int k = 0; k + 1 < corners; k++) {
+            int index = ringCorners[ringNext++];
+            int i = index / CORNERS;
+            int k = index % CORNERS;
+            grid[index] = heights.height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
+            read[index] = true;
+            if (ringNext < ringCorners.length) {
+                return;
+            }
+            boolean reached = evaluateRing(ring);
+            if (reached && ring < MIDDLE) {
+                ring++;
+                ringCorners = corners(ring, ring);
+                ringNext = 0;
+            } else {
+                done = true;
+            }
+        }
+
+        /**
+         * Grows {@link #half} over the cells whose outer ring is {@code ring} (every cell of the inner square for the
+         * first) and returns whether any of them reaches the paraboloid.
+         */
+        private boolean evaluateRing(int ring) {
+            boolean reached = false;
+            for (int i = 0; i + 1 < CORNERS; i++) {
+                for (int k = 0; k + 1 < CORNERS; k++) {
+                    int outer = Math.max(
+                        Math.max(Math.abs(i - MIDDLE), Math.abs(i + 1 - MIDDLE)),
+                        Math.max(Math.abs(k - MIDDLE), Math.abs(k + 1 - MIDDLE)));
+                    if (ring == INNER_RINGS ? outer > INNER_RINGS : outer != ring) {
+                        continue;
+                    }
                     int highest = Math.max(
-                        Math.max(grid[i * corners + k], grid[(i + 1) * corners + k]),
-                        Math.max(grid[i * corners + k + 1], grid[(i + 1) * corners + k + 1]));
+                        Math.max(grid[i * CORNERS + k], grid[(i + 1) * CORNERS + k]),
+                        Math.max(grid[i * CORNERS + k + 1], grid[(i + 1) * CORNERS + k + 1]));
                     int fromX = -MAX_HALF_WIDTH + i * CELL;
                     int fromZ = -MAX_HALF_WIDTH + k * CELL;
                     double nearestX = nearest(fromX, fromX + CELL);
@@ -192,24 +265,42 @@ public final class CraterBasin {
                             Math.max(Math.abs(fromX), Math.abs(fromX + CELL)),
                             Math.max(Math.abs(fromZ), Math.abs(fromZ + CELL)));
                         half = Math.max(half, far);
+                        if (outer == ring) {
+                            reached = true;
+                        }
                     }
                 }
             }
-            half = Math.min(half, MAX_HALF_WIDTH);
+            if (reached) {
+                return true;
+            }
+            // Ground on this ring within CLIFF_MARGIN of reaching the next ring's cells also reads the next ring.
+            double nextCap = capCenter + CURVATURE * (ring * CELL) * (double) (ring * CELL);
+            for (int index : ringCorners) {
+                if (grid[index] + CITY_HEADROOM + CLIFF_MARGIN >= nextCap) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Returns the basin; {@link #step} must have returned {@code true}. */
+        CraterBasin build() {
+            int bounded = Math.min(half, MAX_HALF_WIDTH);
             int[] inside = new int[grid.length];
             int n = 0;
-            for (int i = 0; i < corners; i++) {
-                for (int k = 0; k < corners; k++) {
+            for (int i = 0; i < CORNERS; i++) {
+                for (int k = 0; k < CORNERS; k++) {
                     int dx = -MAX_HALF_WIDTH + i * CELL;
                     int dz = -MAX_HALF_WIDTH + k * CELL;
-                    if (Math.abs(dx) <= half && Math.abs(dz) <= half) {
-                        inside[n++] = grid[i * corners + k];
+                    if (read[i * CORNERS + k] && Math.abs(dx) <= bounded && Math.abs(dz) <= bounded) {
+                        inside[n++] = grid[i * CORNERS + k];
                     }
                 }
             }
             int[] samples = Arrays.copyOf(inside, n);
             Arrays.sort(samples);
-            return new CraterBasin(capCenter, half, samples[samples.length / 2]);
+            return new CraterBasin(capCenter, bounded, samples[samples.length / 2]);
         }
     }
 

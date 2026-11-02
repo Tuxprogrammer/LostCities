@@ -95,7 +95,7 @@ class CraterBasinTest {
             steps++;
         }
         CraterBasin stepped = builder.build();
-        assertTrue(steps > 500, "a zero budget reads one sample per step: " + steps);
+        assertTrue(steps > 300, "a zero budget reads one sample per step: " + steps);
         assertEquals(CraterBasin.capCenterY(rough, X, Z, shape.size()), stepped.capCenterY());
         assertEquals(whole.capCenterY(), stepped.capCenterY());
         assertEquals(whole.halfWidth(), stepped.halfWidth());
