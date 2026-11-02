@@ -135,11 +135,11 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 **Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing, with lanes laid in the blocks VillageNames' own paths use (D31), and the VillageNames ocean-monument oracle (D32), come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
 
 **Exit gate (the alpha gate):**
-- [ ] On a fresh GTNH 2.9.0 dedicated server with RWG2 Continents, a city generates within the expected distance of spawn for a fixed seed.
-- [ ] Two fresh worlds with the same seed and profile generate identical city chunks.
-- [ ] No cascading-generation warnings; the per-chunk budget holds.
-- [ ] A player can walk the streets and enter buildings; floors, walls and stairs are sound.
-- [ ] Classic RWG produces a city too.
+- [x] On a fresh GTNH 2.9.0 dedicated server with RWG2 Continents, a city generates within the expected distance of spawn for a fixed seed. *M05J, seed 4242: the nearest city chunk 7 chunks from spawn, the nearest city center 30 blocks (classic RWG: 24 chunks, 90 blocks).*
+- [x] Two fresh worlds with the same seed and profile generate identical city chunks. *M05J: `city.real`'s 17 × 17-chunk hashes match between fresh worlds on both world types.*
+- [ ] No cascading-generation warnings; the per-chunk budget holds. *M05J: no ArchaicFix cascade warning has this mod's code as its first frame on either world type; B1 to B5 hold on RWG2 Continents; classic RWG misses B4 (D-M05J-25), so this box waits for beta.*
+- [x] A player can walk the streets and enter buildings; floors, walls and stairs are sound. *M05J: `city.walk` passes on both world types (floors 96 to 99 %, walls 96 %, stairs 93 to 95 %, doors 98 to 100 %).*
+- [x] Classic RWG produces a city too. *M05J: seed 4242 has a desert city at the spawn.*
 - [ ] Owner review (light): a screenshot set of the real-pack world (city from above, street level, building interiors, the edge where the city meets RWG terrain, on RWG2 Continents and classic RWG), with landmark shots: a village sewn into a city, a reserved lot, and a soft edge ([0006](design/0006-build-around-other-worldgen.md)). The owner's notes become fixes or roadmap items.
 
 ## M06 to M11 · After the alpha

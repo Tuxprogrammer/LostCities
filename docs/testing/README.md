@@ -154,6 +154,13 @@ tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <s
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot> -- --level-type RWG --world shots-rwg
 ```
 
+The alpha gate's set of real cities is two lists, one per world type, whose every shot but the RWG2 monument takes its position and view from `/lostcities find` (D-M05J-26): city from above, street level, a building interior, the city's edge, a village's lane or link, a reserved lot and a soft edge.
+
+```sh
+tools/remote/lc-remote.sh shots tools/remote/shots/alpha-rwg2.json --slot <slot>
+tools/remote/lc-remote.sh shots tools/remote/shots/alpha-rwg.json --slot <slot>
+```
+
 The client runs with the mod's clean capture (`-Dlostcitiesnh.testHooks=true -Dlostcitiesnh.capture=true`, `client.CleanCapture`): no GUI, hand, chat, tutorial toast or pack overlays, and a `[LCNH-CAPTURE] settled` line once the chunks around a viewpoint have arrived and the build queue is empty; the runner waits for it, then screenshots until the picture holds still. The format, the runner's steps and its bounds are in [tools/remote/README.md](../../tools/remote/README.md#shot-lists). `CaptureSettingsTest` and `SettleTrackerTest` cover the capture's settings and its settle rule; the runner itself is proved by the demo set in the M05S report.
 
 ## Dev client

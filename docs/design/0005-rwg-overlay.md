@@ -202,6 +202,21 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 
 Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99.9 over 1,269 chunks was 11.5 ms on RWG2 Continents: the first city chunks of a server's life, which B4's warm-up rule excludes. JFR, three seeds and Hodgepodge's `showChunkGenDebug` cross-check remain for the alpha gate.
 
+**Measured in M05** (D81's method, `city.budget`, decision log D-M05J-19): the same server, seed 4242, real cities, 65 × 65 chunks in spiral order starting 20 chunks beside the city nearest the spawn, the first 512 dropped, the M05J release jar. Times in milliseconds.
+
+| | RWG2 Continents | Classic RWG |
+|---|---|---|
+| RWG `provideChunk`, p50 (all chunks) | 2.10 | 2.36 |
+| RWG `populate`, p50 (all chunks) | 4.19 | 2.88 |
+| B1: terrain phase on city chunks, p95 | **1.57** (≤ 2.10) | **1.84** (≤ 2.36) |
+| B2: population phase on city chunks, p95 | **0.30** (≤ 2.10) | **0.30** (≤ 1.44) |
+| B3: overlay share of RWG's total over the region | **9.5 %** (1,694 of 17,875) | **12.4 %** (2,049 of 16,498) |
+| B4: worst phase, p99.9 | **6.8** (≤ 10) | 18.9, **over** (≤ 10) |
+| B5: plan, height and palette caches, bound | **13.1 MB** (≤ 16) | **13.1 MB** (≤ 16) |
+| Layout height sample, p50 / p99.9 | 0.23 / 0.77 | 0.79 / 1.61 (classic RWG computes all 256 columns) |
+
+Classic RWG misses B4: a few chunks where the layout first meets new ground ask for a burst of height samples, each a whole classic RWG chunk (15.7 and 18.9 ms in two runs; 3 to 4 of 3,165 chunks above 10 ms). The alpha ships with it as a known gap, to be met before beta (decision log D-M05J-25). Two measures took classic RWG's B3 from 17.5 % to 12.4 %: a whole-chunk height cache in front of the oracle (D-M05J-23) and one sky light pass per chunk instead of two (§2 step 5, D-M05J-24).
+
 ## Consequences
 
 - **M04 scope:**
