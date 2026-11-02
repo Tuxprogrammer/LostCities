@@ -211,24 +211,27 @@ final class FacadePlanner {
         if (group.size() < 2) {
             return;
         }
+        // The default first: when it fits (or its tone is unknown), no other candidate is measured.
+        int defaultIndex = StyleView.weightedIndex(group, u);
+        picks.set(
+            g,
+            group.get(defaultIndex)
+                .palette());
+        float defaultWorst = worstContrast(facades.tone(full(unit, picks, variety), unit.building), constraints);
+        if (defaultWorst <= limit) {
+            return;
+        }
         float[] worst = new float[group.size()];
-        boolean anyKnown = false;
         for (int i = 0; i < group.size(); i++) {
+            if (i == defaultIndex) {
+                worst[i] = defaultWorst;
+                continue;
+            }
             picks.set(
                 g,
                 group.get(i)
                     .palette());
-            FacadeTone tone = facades.tone(full(unit, picks, variety), unit.building);
-            worst[i] = worstContrast(tone, constraints);
-            anyKnown |= tone != null;
-        }
-        int defaultIndex = StyleView.weightedIndex(group, u);
-        if (!anyKnown || worst[defaultIndex] <= limit) {
-            picks.set(
-                g,
-                group.get(defaultIndex)
-                    .palette());
-            return;
+            worst[i] = worstContrast(facades.tone(full(unit, picks, variety), unit.building), constraints);
         }
         List<StyleView.Choice> eligible = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();

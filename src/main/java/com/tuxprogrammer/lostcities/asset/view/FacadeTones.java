@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.asset.view;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,8 @@ public final class FacadeTones implements FacadeView {
     private static final int MAX_REFERENCE_DEPTH = 8;
     /** The marker cached for a stack with no known facade color. */
     private static final FacadeTone UNKNOWN = new FacadeTone(Float.NaN, Float.NaN);
+    /** The marker cached for an entry with no known opaque color. */
+    private static final double[] NO_MEAN = new double[0];
 
     private final AssetSet assets;
     private final BlockColors colors;
@@ -54,6 +57,11 @@ public final class FacadeTones implements FacadeView {
         }
     };
     private final Map<AssetId, Map<Character, Integer>> facadeCharacters = new HashMap<>();
+    /**
+     * Each palette entry's mean color, by identity: entries are immutable and belong to the loaded assets, so this
+     * holds at most one value per entry of the asset set.
+     */
+    private final Map<PaletteEntry, double[]> means = new IdentityHashMap<>();
 
     /**
      * Creates the view of one world.
@@ -143,6 +151,15 @@ public final class FacadeTones implements FacadeView {
      * {@code {L, a, b, share}}, or {@code null} when none is.
      */
     private double[] mean(PaletteEntry entry) {
+        double[] cached = means.get(entry);
+        if (cached == null) {
+            cached = computeMean(entry);
+            means.put(entry, cached == null ? NO_MEAN : cached);
+        }
+        return cached == NO_MEAN ? null : cached;
+    }
+
+    private double[] computeMean(PaletteEntry entry) {
         if (entry.kind() == PaletteEntry.Kind.BLOCK) {
             BlockColors.Entry color = opaque(entry.block());
             return color == null ? null : new double[] { color.lightness(), color.a(), color.b(), 1.0 };
