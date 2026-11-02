@@ -96,6 +96,11 @@ public final class LayoutCityPlan implements CityPlan {
         return context;
     }
 
+    /** Returns the structure oracle the layout builds around, for scenarios. */
+    public StructureOracle structures() {
+        return structures;
+    }
+
     /** Returns the layout planner, for the finder and scenarios. */
     public LayoutPlanner planner() {
         return planner;

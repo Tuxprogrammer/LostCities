@@ -11,6 +11,8 @@ import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
+import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
@@ -37,6 +39,8 @@ final class SewingScenario implements Scenario {
     static final int START_CHUNK_Z = 4096;
     /** How far the search for a sewn village and a monument reaches, in chunks. */
     static final int SEARCH = 96;
+    /** Half-side of the square the structure oracle is asked for monuments, in chunks. */
+    static final int MONUMENT_SEARCH = 320;
     /** Half-side of each generated region, in chunks. */
     static final int RADIUS = 10;
 
@@ -83,18 +87,12 @@ final class SewingScenario implements Scenario {
         overlay.recorder()
             .record(lane.chunkX() - inner, lane.chunkX() + inner, lane.chunkZ() - inner, lane.chunkZ() + inner);
         village = new RegionGenerator(context.world(), lane.chunkX(), lane.chunkZ(), RADIUS);
-        reserved = finder.find(
-            CityFinder.Kind.RESERVED,
-            x,
-            z,
-            SEARCH,
-            found -> found.label()
-                .contains("monument@"));
+        reserved = nearestMonument(overlay, finder);
         if (reserved != null) {
             LostCities.LOG.info("[LCNH-SEWING] monument: {}", reserved.format());
             monument = new RegionGenerator(context.world(), reserved.chunkX(), reserved.chunkZ(), RADIUS);
         } else {
-            LostCities.LOG.info("[LCNH-SEWING] monument: none within {} chunks", SEARCH);
+            LostCities.LOG.info("[LCNH-SEWING] monument: none within {} chunks", MONUMENT_SEARCH);
         }
         for (CityFinder.Kind kind : new CityFinder.Kind[] { CityFinder.Kind.SOFTEDGE, CityFinder.Kind.RESERVED }) {
             CityFinder.Result found = finder.find(kind, lane.x(), lane.z(), RADIUS);
@@ -125,6 +123,43 @@ final class SewingScenario implements Scenario {
             LostCities.LOG.info("[LCNH-SEWING] around the monument: {}", kept);
             context.check(kept.coresWritten == 0, "monument cores written: " + kept.coresWritten);
         }
+    }
+
+    /**
+     * Returns the reserved lot of the ocean monument nearest the start, asking the structure oracle directly over a
+     * wide square (monuments sit on a 32-chunk grid in oceans, far from most cities), or {@code null}.
+     */
+    private static CityFinder.Result nearestMonument(OverlayWorld overlay, CityFinder finder) {
+        Landmark best = null;
+        long bestDistance = Long.MAX_VALUE;
+        for (Landmark landmark : overlay.cities()
+            .structures()
+            .landmarksTouching(
+                START_CHUNK_X - MONUMENT_SEARCH,
+                START_CHUNK_Z - MONUMENT_SEARCH,
+                START_CHUNK_X + MONUMENT_SEARCH,
+                START_CHUNK_Z + MONUMENT_SEARCH)) {
+            if (!landmark.id()
+                .startsWith("monument@")) {
+                continue;
+            }
+            BlockRect rect = landmark.footprint()
+                .get(0);
+            long dx = (rect.minX() >> 4) - START_CHUNK_X;
+            long dz = (rect.minZ() >> 4) - START_CHUNK_Z;
+            if (dx * dx + dz * dz < bestDistance) {
+                bestDistance = dx * dx + dz * dz;
+                best = landmark;
+            }
+        }
+        if (best == null) {
+            return null;
+        }
+        BlockRect rect = best.footprint()
+            .get(0);
+        int x = (rect.minX() + rect.maxX()) / 2;
+        int z = (rect.minZ() + rect.maxZ()) / 2;
+        return finder.find(CityFinder.Kind.RESERVED, x, z, RADIUS);
     }
 
     /** What one region shows of the sewing. */
