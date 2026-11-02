@@ -236,7 +236,7 @@ Settled by the owner in decision log D26 and recorded in [0006](../../design/000
 
 ## Still open (beta review)
 
-These are judged by eye or by measurement at the beta review ([decision log](../../design/decision-log.md), beta spec audit); none blocks generation.
+These are judged by eye or by measurement at the beta review ([decision log](../../design/decision-log.md) D-BA-3); none blocks generation.
 
 - How margins, plazas and lanes look. The alpha review (AR-10 to AR-13, AR-21) moved the strip out of the city into the margin; the M05R shots show the result.
 - Whether empty Witchery and Roguelike lots read as parks or as holes.

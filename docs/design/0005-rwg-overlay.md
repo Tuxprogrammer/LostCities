@@ -132,7 +132,7 @@ RWG's sea level is 63, the same as the 1.20 overworld's. So upstream's overworld
 | `buildingMaxFloors` | 8 (allowed 0 to 60) | 8 (allowed 0 to 22) | Upstream's per-chunk cap (`cityGround + 6 × floors < maxBuild − 8`, so below Y 248) drops floors one at a time, and it keeps everything below Y 255: at city level 8 (ground Y 119) a building gets at most 21 floors and its roof starts at Y 245; at level 7 and below all 22 fit. Nothing passes Y 254 ([height-mapping.md](../new-spec/03-terrain/height-mapping.md#building-envelope)) |
 | `bedrockLayer` | 1 at Y −64 | read, writes nothing; a warning when above 0 | RWG already places bedrock at Y 0 to 4, and generation never places unbreakable blocks ([0004](0004-gtnh-layer-and-tier-ceiling.md), [block-mapping.md](../new-spec/00-pack-integration/block-mapping.md#blocks-upstreams-code-names)). The key stays in the profile format so upstream profiles load |
 | `terrainFix*Offset`, L1/L2 offsets | −4/−3, −1/+1; 20/25 | same | |
-| `heightSampleSize` | 3 | 3, a pinned profile value (D73) | Revisited from the prototype's histogram |
+| `heightSampleSize` | 3 | 3, a pinned profile value (D73) | Upstream's value; no RWG histogram before beta (D-BA-4) |
 | `seaLevel` override | −1 = world default | −1 → 63 | |
 | Any option range above 255 or below 0 | up to 384 or 2048 | clamped to 0 to 255 at load, with a warning | |
 
@@ -300,7 +300,7 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
 
 1. **Install timing.** On a new world, the wrapper counts chunks generated before installation; the expected count is zero. *M04: zero on both world types (`overlay.installed`).* Repeat on an existing world with a chunk-loader ticket, to see whether the `createChunkProvider` mixin fallback is needed.
 2. **Oracle accuracy.** Compare the oracle height with the generated chunk's real height at (8, 8) over 4,096 chunks per generator, and report the error distribution. Check that the second classic-RWG instance has no visible side effects (`InitMapGenEvent` listeners, RWG's static noise flag and canyon colors).
-3. **Height histogram** for RWG2 Continents and classic RWG over the same region. It decides whether `heightSampleSize = 3` and the upstream level thresholds give sensible city levels on RWG, or whether an RWG-tuned profile is needed.
+3. **Height histogram** for RWG2 Continents and classic RWG over the same region. It decides whether `heightSampleSize = 3` and the upstream level thresholds give sensible city levels on RWG, or whether an RWG-tuned profile is needed. *Not taken before beta (decision log D-BA-4): upstream's values ship pinned per world (D73), the rise cap (D148) keeps cities off RWG's relief, and an RWG-tuned profile is on the beta balance list.*
 4. **The footprint rule (§3a)**: implement the write guard over every delegate `populate`, fall back to the footprint restore only if the guard can't tell RWG's writes apart, measure the spill with `logCascadingWorldgen`, and measure the cost against the budget. Screenshots of city edges and interiors:
    - RWG trees in parks and yards, and none on streets, roofs or inside buildings; boulders and small ruins likewise; landmarks;
    - lakes and dungeons in cellars before and after the vetoes;

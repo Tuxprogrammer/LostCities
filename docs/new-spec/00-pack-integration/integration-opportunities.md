@@ -2,7 +2,7 @@
 
 This sheet covers GTNH 2.9.0 mods that this mod does not yet integrate with, what each integration would give players, and where it fits the roadmap. The goal is the owner's "seamless and tight": abandoned cities, highways and railways in the RWG overworld that look lived-in, hold pack loot at EV or below, and can become a player's base ([0003](../../design/0003-world-presence.md), [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md)).
 
-Status: a survey. The five rows the owner decided in decision log D28 are *Accepted* ([Owner decisions](#owner-decisions)). The Slot column says what is built, what M06 still decides, and what waits until after beta; no other row is on the roadmap before beta ([decision log](../../design/decision-log.md), beta spec audit). Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
+Status: a survey. The five rows the owner decided in decision log D28 are *Accepted* ([Owner decisions](#owner-decisions)). The Slot column says what is built, what M06 still decides, and what waits until after beta; no other row is on the roadmap before beta ([decision log](../../design/decision-log.md) D-BA-2). Facts about other mods are *verified* with a permalink pinned to the pack's tag or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
 
 ## Scope
 
