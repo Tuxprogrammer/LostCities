@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.layout;
 
+import java.util.List;
+
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.predefined.PredefinedBuilding;
 import com.tuxprogrammer.lostcities.layout.predefined.PredefinedCity;
@@ -32,7 +34,7 @@ final class ActivePredefined {
     }
 
     /** Returns every predefined city of the dimension, sorted by source name. */
-    java.util.List<PredefinedCity> cities() {
+    List<PredefinedCity> cities() {
         return index.cities();
     }
 
