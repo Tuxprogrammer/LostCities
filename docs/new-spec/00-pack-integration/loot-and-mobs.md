@@ -23,7 +23,7 @@ Status words follow the [new-spec README](../README.md). *Verified* facts cite a
 
 ## In the alpha
 
-Until M08 builds the tier bands of Q5, chests fill from two categories this mod registers, `lostcitiesnh:city` (every `chestloot` value except the rail dungeon's) and `lostcitiesnh:rail_dungeon`: 2 to 4 stacks of vanilla items mapped from upstream's two tables, gold and iron ingots kept and diamonds, emeralds and diamond tools replaced by an iron sword or axe and supplies (coal, torches, bread, paper, string; rails and a minecart for the rail dungeon), far below EV. The loot condition, `chestWithoutLootChance` and `buildingWithoutLootChance` work as upstream, drawn per chest from the world seed and the chest's position; spawners get upstream's mobs as 1.7.10 entity names (`Zombie`, `Skeleton`, `Spider`, `Blaze`, `Witch`). TooMuchLoot XML can retune both categories (decision log D-M05J-10).
+Until M08 builds the tier bands of Q5, chests fill from two categories this mod registers, `lostcitiesnh:city` (every `chestloot` value except the rail dungeon's) and `lostcitiesnh:rail_dungeon`: 2 to 4 stacks of vanilla items mapped from upstream's two tables, gold and iron ingots kept and diamonds, emeralds and diamond tools replaced by an iron sword or axe and supplies (coal, torches, bread, paper, string; rails and a minecart for the rail dungeon), far below EV. The loot condition, `chestWithoutLootChance` and `buildingWithoutLootChance` work as upstream, drawn per chest from the world seed and the chest's position; spawners get upstream's mobs as 1.7.10 entity names (`Zombie`, `Skeleton`, `Spider`, `Blaze`, `Witch`). TooMuchLoot XML can retune both categories (decision log D108).
 
 ## Upstream behavior
 

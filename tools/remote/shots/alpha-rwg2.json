@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D-M05J-17); the monument is the one city.sewing finds near chunk (-4096, 4096).",
+  "comment": "M05 alpha gate: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument is the one city.sewing finds near chunk (-4096, 4096).",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",

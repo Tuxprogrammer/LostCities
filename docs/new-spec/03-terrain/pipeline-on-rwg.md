@@ -17,7 +17,7 @@ During RWG's own `populate`, two of our listeners act without being a phase: the
 
 ## The plan the overlay reads
 
-The overlay asks one pure interface what each chunk holds: `worldgen.plan.CityPlan.chunk(x, z)`, which returns an immutable `ChunkPlan` (decision log D71). It never reads the world, and the overlay wraps it in a bounded cache (`CachedCityPlan`, 4,096 chunks, budget B5). The real source is `worldgen.city.LayoutCityPlan`, over M03's `LayoutPlanner` and M02's assets, parts and palettes (D-M05J-1); the synthetic test city (D72) stays the pinned test-only source.
+The overlay asks one pure interface what each chunk holds: `worldgen.plan.CityPlan.chunk(x, z)`, which returns an immutable `ChunkPlan` (decision log D71). It never reads the world, and the overlay wraps it in a bounded cache (`CachedCityPlan`, 4,096 chunks, budget B5). The real source is `worldgen.city.LayoutCityPlan`, over M03's `LayoutPlanner` and M02's assets, parts and palettes (D99); the synthetic test city (D72) stays the pinned test-only source.
 
 | Field | Meaning | Read by |
 |---|---|---|
@@ -30,8 +30,8 @@ The overlay asks one pure interface what each chunk holds: `worldgen.plan.CityPl
 | `content` (`ChunkContent`) | Writes the building or street itself into the buffer, after leveling and room-making, skipping soft-edge columns; on a non-city chunk, the bridge span over it (never on a core) | the city chunk step; the blend step for bridges |
 | `footprintBottom(x, z)` | Lowest Y of a footprint column, or none | the write guard, the population hash |
 | `lane` (`LanePath`) | The village lane's columns and the village's material | lanes |
-| `jobs` (`PopulationJob`) | Torches, chests (with their loot category), spawners (with their mob), tile entities (with their template), command blocks; listed lazily by a dry run of the content writer (D-M05J-2) | the population phase |
-| `keepsClear(x, z)` | The columns in front of a building's street door, which the rubble layer leaves clear (D-M05J-14) | the rubble layer |
+| `jobs` (`PopulationJob`) | Torches, chests (with their loot category), spawners (with their mob), tile entities (with their template), command blocks; listed lazily by a dry run of the content writer (D100) | the population phase |
+| `keepsClear(x, z)` | The columns in front of a building's street door, which the rubble layer leaves clear (D112) | the rubble layer |
 | `label` | What stands here, for the finder and logs | `/lostcities find`, scenarios |
 | `borderOpenings(side)` | Columns where a street border is one lower, for slopes, stairs and bridges from the neighbor | borders |
 
@@ -54,7 +54,7 @@ Upstream's stages are numbered as in [generation-pipeline.md](../../original-spe
 | 9 | Reseed to a world-independent seed | Terrain phase | The seed now includes the world seed (TERR-27) |
 | 10 | `PreExplosionEvent`, explosion damage, debris | Terrain phase | Pure and confined to C; followed by the floating-fragment pass ported from 1.12 (TERR-28) |
 | 11 | Early commit for second parts | None | Writes are direct, so there is nothing to commit |
-| 12 | Commit and heightmap raise | Terrain phase, last step | Recompute the height map and sky light (`generateSkylightMap`) for C once, RWG's own pass on C deferred to here (TERR-13, D-M05J-24) |
+| 12 | Commit and heightmap raise | Terrain phase, last step | Recompute the height map and sky light (`generateSkylightMap`) for C once, RWG's own pass on C deferred to here (TERR-13, D122) |
 | 13a | `ChunkFixer`: vines | Terrain phase | Vines in C's own columns, against neighbors' walls as the plan describes them (TERR-11) |
 | 13b | `ChunkFixer`: post-todo jobs (loot, light refresh, saplings, command blocks; POI swap) | Population phase | POI swap dropped (no POI in 1.7.10); light refresh dropped, since ArchaicFix's Phosphor lights every source (P03-8); saplings placed, never grown (P03-10) |
 | 13c | `ChunkFixer`: border vine cleanup | Dropped | TERR-26 |
@@ -77,7 +77,7 @@ The population phase, in order: data-bearing tile entities (chests filled from o
 
 **Mechanism** (0005 §3a). A write guard: one mixin on the chunk's block setter (`Chunk.func_150807_a`) that drops writes inside footprint volumes, answered from pure layout data. It keeps a stack of frames: active around each delegate `populate`, inactive around our population phase, and switched off by `PopulateChunkEvent.Post` (lowest priority), so RWG's snow and ice pass (D75). It is active during every delegate `populate`, not only the chunk being populated, because decoration uses the vanilla +8 offset and lands in up to four chunks, and cascaded big trees reach chunk +2; the guard looks up the chunk each write lands in. The same guard covers mineshaft and stronghold pieces RWG writes in `populate` (P03-2). The prototype measures the spill with ArchaicFix's `logCascadingWorldgen`, off in the pack's config and switched on for the scenario. A footprint restore after decoration is the fallback, used only if the guard cannot tell the writes apart.
 
-**Volume** (*Accepted*, P03-1, D31). The outcome the owner asked for is no trees on streets and roofs (D22), so a footprint column must reach above the surface it protects: for each column the city writes in a building, street, bridge, highway or railway chunk, everything from its lowest written block up to Y 255, plus, for highways, the 15-block clearance above open and bridge parts by the same rule. Park, yard, edge-ring and soft-edge columns are outside it. RWG's snow and ice, added after `PopulateChunkEvent.Post`, pass the guard. `IWorldGenerator`s run after our population phase inside a tree frame (D-M05J-11): only tree parts written into a footprint are dropped (logs, leaves, and the wood, leaves, plants and vine materials), so the IC2 rubber trees and HarvestCraft fruit trees that M04 found overhanging streets (31 leaf blocks in its test city, D75) stop at the footprint, while GT's ore veins and every other block pass. Cut canopies where a park tree overhangs a street are judged in the S2 screenshots ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 4).
+**Volume** (*Accepted*, P03-1, D31). The outcome the owner asked for is no trees on streets and roofs (D22), so a footprint column must reach above the surface it protects: for each column the city writes in a building, street, bridge, highway or railway chunk, everything from its lowest written block up to Y 255, plus, for highways, the 15-block clearance above open and bridge parts by the same rule. Park, yard, edge-ring and soft-edge columns are outside it. RWG's snow and ice, added after `PopulateChunkEvent.Post`, pass the guard. `IWorldGenerator`s run after our population phase inside a tree frame (D109): only tree parts written into a footprint are dropped (logs, leaves, and the wood, leaves, plants and vine materials), so the IC2 rubber trees and HarvestCraft fruit trees that M04 found overhanging streets (31 leaf blocks in its test city, D75) stop at the footprint, while GT's ore veins and every other block pass. Cut canopies where a park tree overhangs a street are judged in the S2 screenshots ([0005](../../design/0005-rwg-overlay.md#still-open) "Still open" item 4).
 
 ## Soft-edge strips
 
@@ -113,9 +113,9 @@ A strip is written only in the city chunk's own columns, so it never writes into
 | Water, ice or mud | Planks, with the block above cleared (a lily pad) and log posts down through the water at even X and Z |
 | Anything else | The next block down; a column that matches nothing keeps its surface |
 
-A column that matches nothing down to sea level − 1 is paved as sand would be when its surface is natural ground the rule names nothing for (terracotta, stained clay, stone, sandstone, gravel, clay, mycelium, snow), so a lane stays continuous on classic RWG's mesas; a city's own blocks are never paved (deviation, D-M05J-12).
+A column that matches nothing down to sea level − 1 is paved as sand would be when its surface is natural ground the rule names nothing for (terracotta, stained clay, stone, sandstone, gravel, clay, mycelium, snow), so a lane stays continuous on classic RWG's mesas; a city's own blocks are never paved (deviation, D110).
 
-Every block goes through the village's biome material swaps ([StructureVillageVN.java#L945-L1003](https://github.com/GTNewHorizons/VillageNames/blob/4.5.21-GTNH/src/main/java/astrotibs/villagenames/village/StructureVillageVN.java#L945-L1003) for sand and mesa villages): a desert village's gravel and cobblestone become sandstone, a mesa village's hardened clay. Until the village oracle reports the material type, it comes from the gate chunk's biome (`MESA` mesa, `SANDY` and `HOT` sand, else plain); a lane to a village outside the city uses that village's. Where a lane runs in each chunk is D-M05J-13: 3 wide, along a link chunk's connections, in line with the gate in the gate chunk, and from the gate straight out across the core. The rule is pure over C's own blocks, as the terrain phase requires, so it reads no world.
+Every block goes through the village's biome material swaps ([StructureVillageVN.java#L945-L1003](https://github.com/GTNewHorizons/VillageNames/blob/4.5.21-GTNH/src/main/java/astrotibs/villagenames/village/StructureVillageVN.java#L945-L1003) for sand and mesa villages): a desert village's gravel and cobblestone become sandstone, a mesa village's hardened clay. Until the village oracle reports the material type, it comes from the gate chunk's biome (`MESA` mesa, `SANDY` and `HOT` sand, else plain); a lane to a village outside the city uses that village's. Where a lane runs in each chunk is D111: 3 wide, along a link chunk's connections, in line with the gate in the gate chunk, and from the gate straight out across the core. The rule is pure over C's own blocks, as the terrain phase requires, so it reads no world.
 
 ## Measurement points
 

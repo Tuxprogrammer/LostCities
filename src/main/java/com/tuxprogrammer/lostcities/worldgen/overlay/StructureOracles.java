@@ -74,7 +74,7 @@ public final class StructureOracles {
 
     /**
      * Returns the settings of every wired structure generator that decide where its structures go, one line, for the
-     * pinned snapshot: today VillageNames' (D-M05J-21).
+     * pinned snapshot: today VillageNames' (D119).
      *
      * @param world the world
      * @return the summary

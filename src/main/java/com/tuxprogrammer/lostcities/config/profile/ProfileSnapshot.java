@@ -237,7 +237,7 @@ public final class ProfileSnapshot {
 
     /**
      * Returns this snapshot with the settings of the structure generators the layout builds around (VillageNames'
-     * village and monument settings, D-M05J-21), pinned so a changed generator config can be warned about.
+     * village and monument settings, D119), pinned so a changed generator config can be warned about.
      *
      * @param summary the one-line summary; empty when none was pinned
      * @return a copy with the summary

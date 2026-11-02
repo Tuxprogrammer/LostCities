@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D-M05J-17).",
+  "comment": "M05 alpha gate: real cities on classic RWG, seed 4242 (no oceans, so no monument). Each shot's position and view come from /lostcities find (decision log D115).",
   "title": "Alpha review: real cities on classic RWG, seed 4242",
   "world": {
     "name": "alpha-rwg",
