@@ -19,6 +19,7 @@ import com.tuxprogrammer.lostcities.editor.EditSessions;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
+import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.random.DimensionKey;
 import com.tuxprogrammer.lostcities.worldgen.city.CityPalettes;
@@ -96,7 +97,7 @@ public final class OverlayWorld {
         this.columns = columns;
         this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
         this.biomes = new WorldBiomes(world);
-        this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers);
+        this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers, refs);
         this.editMode = snapshot.profileValues()
             .getBoolean(EDIT_MODE);
         if (editMode && cities != null) {
@@ -142,7 +143,7 @@ public final class OverlayWorld {
      */
     private static LayoutCityPlan layoutPlan(WorldServer world, ProfileSnapshot snapshot, TerrainSettings settings,
         TerrainHeightOracle oracle, ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier,
-        GenerationTimers timers) {
+        GenerationTimers timers, BlockRefs refs) {
         if (!ProfileSnapshot.PLAN_LAYOUT.equals(snapshot.planSource())) {
             return null;
         }
@@ -162,7 +163,7 @@ public final class OverlayWorld {
                 world.provider.dimensionId);
             return null;
         }
-        WorldTerrainView terrain = new WorldTerrainView(world, heights);
+        WorldTerrainView terrain = new WorldTerrainView(world, heights, oracle);
         StructureOracle structures = timed(StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
@@ -195,7 +196,15 @@ public final class OverlayWorld {
             biomes,
             classifier,
             message -> LostCities.LOG.warn("[cities] {}", message));
-        return new LayoutCityPlan(context, structures, terrain);
+        // 07-scattered: the module flag pinned with the world, and the profile's chance multiplier.
+        ScatteredPlanner scattered = snapshot.moduleState()
+            .isActive(Module.SCATTERED_STRUCTURES)
+                ? new ScatteredPlanner(
+                    planner,
+                    values.getFloat("scatteredChanceMultiplier"),
+                    LayoutCityPlan.SCATTERED_CACHE_SIZE)
+                : null;
+        return new LayoutCityPlan(context, structures, terrain, scattered, new OreNames(refs));
     }
 
     /**
@@ -361,13 +370,29 @@ public final class OverlayWorld {
      * @return {@code true} to veto
      */
     public boolean populationAreaTouchesCity(int chunkX, int chunkZ) {
+        return populationAreaTouches(chunkX, chunkZ, false);
+    }
+
+    /**
+     * Returns whether the population area of a chunk touches a scattered structure's footprint: then lakes, lava,
+     * dungeons and oil are vetoed too, so none cuts into a cabin or a gas station (P07-4, D31).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return {@code true} to veto
+     */
+    public boolean populationAreaTouchesScattered(int chunkX, int chunkZ) {
+        return populationAreaTouches(chunkX, chunkZ, true);
+    }
+
+    private boolean populationAreaTouches(int chunkX, int chunkZ, boolean scattered) {
         if (!settings.preventLakesRavinesInCities()) {
             return false;
         }
         for (int dz = 0; dz <= 1; dz++) {
             for (int dx = 0; dx <= 1; dx++) {
-                if (plan.chunk(chunkX + dx, chunkZ + dz)
-                    .isCity()) {
+                ChunkPlan touched = plan.chunk(chunkX + dx, chunkZ + dz);
+                if (scattered ? touched.isScattered() : touched.isCity()) {
                     return true;
                 }
             }
@@ -409,12 +434,14 @@ public final class OverlayWorld {
     }
 
     /**
-     * Returns the chunks scattered structures' footprints touch, which the Roguelike steering keeps towers off (D31).
-     * No scattered structure generates before M07, so it is {@link ScatteredFootprints#NONE}; M07 answers it from its
-     * scattered layout.
+     * Returns the chunks scattered structures' footprints touch, which the Roguelike steering keeps towers off (D31):
+     * the scattered planner's pure footprints ({@link ScatteredPlanner#inFootprint}), so the answer never depends on
+     * which chunks exist; {@link ScatteredFootprints#NONE} where scattered structures are off or the plan is the
+     * synthetic test city.
      */
     public ScatteredFootprints scatteredFootprints() {
-        return ScatteredFootprints.NONE;
+        ScatteredPlanner scattered = cities == null ? null : cities.scattered();
+        return scattered == null ? ScatteredFootprints.NONE : scattered::inFootprint;
     }
 
     /**
@@ -455,7 +482,7 @@ public final class OverlayWorld {
      * Returns the layout's terrain view over this world (D51), as the real plan source's {@code LayoutPlanner} has it.
      */
     public WorldTerrainView terrainView() {
-        return new WorldTerrainView(world, heights);
+        return new WorldTerrainView(world, heights, columns);
     }
 
     /** Returns the per-column height oracle, behind the world's column cache. */

@@ -5,9 +5,8 @@ package com.tuxprogrammer.lostcities.layout;
  * steering mixin keeps towers off them, and the population vetoes deny dungeons, lakes, lava and oil there.
  *
  * <p>
- * The seam is here so the steering is complete before scattered structures exist: until M07 builds them, a world's
- * footprints are {@link #NONE}, which is the truth then, since no scattered structure generates. M07 implements it
- * from its scattered layout (pure, like every layout answer: a function of the seed, the profile and the assets).
+ * A world answers it from its scattered planner's pure footprints ({@code ScatteredPlanner.inFootprint}: a function of
+ * the seed, the profile and the assets); {@link #NONE} where scattered structures are switched off.
  *
  * <p>
  * Side: both (plain Java).

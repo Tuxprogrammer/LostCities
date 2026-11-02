@@ -60,13 +60,19 @@ public final class Overlays {
     static final int MAX_CHANGED_NAMED = 20;
 
     private final Map<World, OverlayWorld> worlds = new IdentityHashMap<>();
+    private final PopulateVetoes vetoes = new PopulateVetoes(this);
 
     private Overlays() {}
+
+    /** Returns the population vetoes, for the scenarios' counts. */
+    public PopulateVetoes vetoes() {
+        return vetoes;
+    }
 
     /** Subscribes the installer, the population vetoes, the tree guard and the plan prefetchers' ticker. */
     public static void register() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
-        MinecraftForge.TERRAIN_GEN_BUS.register(new PopulateVetoes(INSTANCE));
+        MinecraftForge.TERRAIN_GEN_BUS.register(INSTANCE.vetoes);
         TreeGuard.register(INSTANCE);
         PrefetchTicker.register(INSTANCE);
     }
