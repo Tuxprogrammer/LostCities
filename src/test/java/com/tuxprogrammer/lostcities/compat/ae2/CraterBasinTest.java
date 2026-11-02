@@ -85,6 +85,24 @@ class CraterBasinTest {
     }
 
     @Test
+    void aBasinReadOneSampleAtATimeIsTheOnePassBasin() {
+        TerrainHeightOracle rough = (x, z) -> 62 + Math.floorMod(x * 13 + z * 7, 17);
+        MeteoriteShape shape = MeteoriteShape.of(99L);
+        CraterBasin whole = CraterBasin.of(rough, X, Z, shape);
+        CraterBasin.Builder builder = new CraterBasin.Builder(rough, X, Z, shape);
+        int steps = 1;
+        while (!builder.step(0L)) {
+            steps++;
+        }
+        CraterBasin stepped = builder.build();
+        assertTrue(steps > 500, "a zero budget reads one sample per step: " + steps);
+        assertEquals(CraterBasin.capCenterY(rough, X, Z, shape.size()), stepped.capCenterY());
+        assertEquals(whole.capCenterY(), stepped.capCenterY());
+        assertEquals(whole.halfWidth(), stepped.halfWidth());
+        assertEquals(whole.groundEstimate(), stepped.groundEstimate());
+    }
+
+    @Test
     void aStrideEightOracleCannotHideALowerColumn() {
         // RWG2's oracle answers each column with the sample at its 8-block stride corner; a slope of one block per
         // block then hides up to 7 blocks between samples. The padded box sees the lower sample beyond.

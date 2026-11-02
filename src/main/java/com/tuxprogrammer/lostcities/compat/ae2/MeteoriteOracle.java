@@ -41,6 +41,8 @@ public final class MeteoriteOracle implements StructureOracle {
 
     /** Basins part-way read, kept at most. */
     static final int BUILDING_SIZE = 16;
+    /** Time one prefetch step may spend reading a basin's samples, nanoseconds. */
+    static final long STEP_NANOS = 1_500_000L;
 
     private static final Landmark NONE = Landmark.builder("none", LandmarkKind.METEORITE)
         .footprint(new BlockRect(0, 0, 0, 0))
@@ -139,7 +141,7 @@ public final class MeteoriteOracle implements StructureOracle {
             builder = building
                 .put(key, new CraterBasin.Builder(heights, site.x(), site.z(), MeteoriteShape.of(site.seed())));
         }
-        if (builder.step()) {
+        if (builder.step(STEP_NANOS)) {
             cache.put(key, build(site, builder.build()));
             building.remove(key);
         }

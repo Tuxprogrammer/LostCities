@@ -91,65 +91,90 @@ public final class CraterBasin {
      */
     public static CraterBasin of(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
         Builder builder = new Builder(heights, x, z, shape);
-        boolean done = false;
-        while (!done) {
-            done = builder.step();
-        }
+        builder.step(Long.MAX_VALUE);
         return builder.build();
     }
 
     /**
-     * Computes a basin in steps, so the plan prefetcher can spread its height samples (about 550 on RWG2 Continents)
-     * over several fetches instead of one (budget B4): the first step finds the cap's center, each later one reads
-     * {@value #ROWS_PER_STEP} rows of the ground grid. The steps read the same samples as one pass, so the basin is
-     * the same.
+     * Computes a basin in steps, so the plan prefetcher can spread its height samples (about 550) over several fetches
+     * instead of one (budget B4): each step reads samples for at most the time it is given, and at least one. On
+     * RWG2 Continents a step reads many samples, on classic RWG, whose oracle computes a whole chunk per new chunk,
+     * a few. The samples are the cap's (every column of the clipped sky box and the padding around it, as
+     * {@link #capCenterY} reads them) and then the {@value #CELL}-block ground grid, so the basin is the same as one
+     * pass.
      */
     static final class Builder {
 
-        /** Rows of the ground grid one step reads. */
-        static final int ROWS_PER_STEP = 4;
         private static final int CORNERS = 2 * MAX_HALF_WIDTH / CELL + 1;
 
         private final TerrainHeightOracle heights;
-        private final int x;
-        private final int z;
         private final MeteoriteShape shape;
-        private final int[] grid = new int[CORNERS * CORNERS];
-        private boolean centered;
-        private int capCenter;
-        private int rows;
+        private final int[] sampleX;
+        private final int[] sampleZ;
+        private final int[] values;
+        private final int capSamples;
+        private int next;
 
         Builder(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
             this.heights = heights;
-            this.x = x;
-            this.z = z;
             this.shape = shape;
+            int chunkX = x >> 4;
+            int chunkZ = z >> 4;
+            int lowX = Math.max(x - SKY_BOX_HALF, chunkX << 4);
+            int highX = Math.min(x + SKY_BOX_HALF - 1, (chunkX << 4) + 15);
+            int lowZ = Math.max(z - SKY_BOX_HALF, chunkZ << 4);
+            int highZ = Math.min(z + SKY_BOX_HALF - 1, (chunkZ << 4) + 15);
+            java.util.List<int[]> points = new java.util.ArrayList<>();
+            for (int i = lowX; i <= highX; i++) {
+                for (int k = lowZ; k <= highZ; k++) {
+                    points.add(new int[] { i, k });
+                }
+            }
+            for (int i = lowX - STRIDE_PAD; i <= highX + STRIDE_PAD; i = next(i, highX + STRIDE_PAD)) {
+                for (int k = lowZ - STRIDE_PAD; k <= highZ + STRIDE_PAD; k = next(k, highZ + STRIDE_PAD)) {
+                    if (i < lowX || i > highX || k < lowZ || k > highZ) {
+                        points.add(new int[] { i, k });
+                    }
+                }
+            }
+            capSamples = points.size();
+            for (int i = 0; i < CORNERS; i++) {
+                for (int k = 0; k < CORNERS; k++) {
+                    points.add(new int[] { x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL });
+                }
+            }
+            sampleX = new int[points.size()];
+            sampleZ = new int[points.size()];
+            for (int s = 0; s < points.size(); s++) {
+                sampleX[s] = points.get(s)[0];
+                sampleZ[s] = points.get(s)[1];
+            }
+            values = new int[points.size()];
         }
 
         /**
-         * Reads the next part of the samples.
+         * Reads samples for at most {@code budgetNanos}, and at least one.
          *
+         * @param budgetNanos the time this step may take, nanoseconds
          * @return {@code true} once every sample is read
          */
-        boolean step() {
-            if (!centered) {
-                capCenter = capCenterY(heights, x, z, shape.size());
-                centered = true;
-                return false;
-            }
-            int end = Math.min(CORNERS, rows + ROWS_PER_STEP);
-            for (int i = rows; i < end; i++) {
-                for (int k = 0; k < CORNERS; k++) {
-                    grid[i * CORNERS + k] = heights
-                        .height(x - MAX_HALF_WIDTH + i * CELL, z - MAX_HALF_WIDTH + k * CELL);
-                }
-            }
-            rows = end;
-            return rows >= CORNERS;
+        boolean step(long budgetNanos) {
+            long start = System.nanoTime();
+            do {
+                values[next] = heights.height(sampleX[next], sampleZ[next]);
+                next++;
+            } while (next < values.length && System.nanoTime() - start < budgetNanos);
+            return next >= values.length;
         }
 
         /** Returns the basin; every sample must be read. */
         CraterBasin build() {
+            int lowest = Integer.MAX_VALUE;
+            for (int s = 0; s < capSamples; s++) {
+                lowest = Math.min(lowest, values[s]);
+            }
+            int capCenter = (int) Math.floor(lowest - SKY_BOX_TOP - shape.size() + 1) - SLACK;
+            int[] grid = Arrays.copyOfRange(values, capSamples, values.length);
             int corners = CORNERS;
             int half = Math.max(DECAY_HALF_WIDTH, (int) Math.ceil(shape.craterSize()));
             for (int i = 0; i + 1 < corners; i++) {
