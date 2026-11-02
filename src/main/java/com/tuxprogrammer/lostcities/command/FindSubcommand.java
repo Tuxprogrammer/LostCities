@@ -81,7 +81,7 @@ public final class FindSubcommand implements Subcommand {
             return;
         }
         if (kind == CityFinder.Kind.STREET || kind == CityFinder.Kind.INTERIOR) {
-            result = standingRoom(world, result);
+            result = standingRoom(world, result, kind == CityFinder.Kind.INTERIOR);
         }
         LostCities.LOG.info(TAG + result.format());
         sender.addChatMessage(
@@ -99,11 +99,16 @@ public final class FindSubcommand implements Subcommand {
                 format(result.pitch())));
     }
 
-    /** Moves a walking-level viewpoint to the nearest two-high air space with a floor, in the target's chunk. */
-    static CityFinder.Result standingRoom(World world, CityFinder.Result result) {
+    /**
+     * Moves a walking-level viewpoint to the two-high air space (with a floor under it when asked) in the target's
+     * chunk nearest to where the finder put the view.
+     */
+    static CityFinder.Result standingRoom(World world, CityFinder.Result result, boolean floor) {
         int feet = (int) Math.floor(result.viewY());
         int baseX = result.chunkX() << 4;
         int baseZ = result.chunkZ() << 4;
+        int viewX = (int) Math.floor(result.viewX()) - baseX;
+        int viewZ = (int) Math.floor(result.viewZ()) - baseZ;
         world.getChunkFromChunkCoords(result.chunkX(), result.chunkZ());
         int bestX = -1;
         int bestZ = -1;
@@ -113,10 +118,10 @@ public final class FindSubcommand implements Subcommand {
                 int x = baseX + dx;
                 int z = baseZ + dz;
                 if (!world.isAirBlock(x, feet, z) || !world.isAirBlock(x, feet + 1, z)
-                    || world.isAirBlock(x, feet - 1, z)) {
+                    || floor && world.isAirBlock(x, feet - 1, z)) {
                     continue;
                 }
-                int distance = (dx - 8) * (dx - 8) + (dz - 8) * (dz - 8);
+                int distance = (dx - viewX) * (dx - viewX) + (dz - viewZ) * (dz - viewZ);
                 if (distance < best) {
                     best = distance;
                     bestX = x;
