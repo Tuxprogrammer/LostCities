@@ -23,6 +23,7 @@ import com.tuxprogrammer.lostcities.layout.view.CityStyleView;
 import com.tuxprogrammer.lostcities.layout.view.MultiBuildingView;
 import com.tuxprogrammer.lostcities.layout.view.MultiSettings;
 import com.tuxprogrammer.lostcities.layout.view.PartContext;
+import com.tuxprogrammer.lostcities.layout.view.ScatteredView;
 import com.tuxprogrammer.lostcities.layout.view.Selection;
 import com.tuxprogrammer.lostcities.layout.view.StyleView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
@@ -228,6 +229,11 @@ public final class LayoutAssets implements AssetView {
         @Override
         public boolean buildingsBlockRailways() {
             return style.railwayAvoidance() == WorldStyle.RailwayAvoidance.BLOCK_RAILWAY;
+        }
+
+        @Override
+        public ScatteredView scattered() {
+            return ScatteredAdapter.of(style, biomes);
         }
     }
 

@@ -42,7 +42,8 @@ public final class ProfileSnapshot {
      * Version of the layout rules. A change that moves cities for an existing seed raises it, and a world pinned with
      * an older version logs that its new chunks may not match (CONTRIBUTING § World generation rules). Version 2 is
      * the alpha review round (M05R): the rise cap, the margin around landmark cores and the leveling fix TERR-39.
-     * Version 3 adds the highways and railways (M06, design record 0009).
+     * Version 3 adds M07's scattered structures, their ground fits and the stuff columns in city chunks, and M06's
+     * highways and railways (design record 0010).
      */
     public static final int LAYOUT_VERSION = 3;
 

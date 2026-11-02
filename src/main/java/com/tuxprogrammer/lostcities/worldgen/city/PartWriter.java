@@ -286,7 +286,7 @@ public final class PartWriter {
 
     /**
      * Writes a part with each of its X slices raised by its own number of blocks: a highway ramp, whose straight part
-     * climbs along its axis (M06, design record 0009). Part-local X is the axis the shifts follow, before the
+     * climbs along its axis (M06, design record 0010). Part-local X is the axis the shifts follow, before the
      * transform.
      *
      * @param placement the part and where it goes

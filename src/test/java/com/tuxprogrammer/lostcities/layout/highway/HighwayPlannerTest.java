@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.layout.random.StableHash;
 
 /**
- * The intercity highway planner (intercity-planner.md; new-spec 06, design record 0009): hashing, hubs, connections,
+ * The intercity highway planner (intercity-planner.md; new-spec 06, design record 0010): hashing, hubs, connections,
  * routes around obstacles, level sharing, ramps and the chunk query.
  */
 public class HighwayPlannerTest {

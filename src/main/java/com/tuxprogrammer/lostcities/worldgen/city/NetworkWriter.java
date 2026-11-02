@@ -44,14 +44,16 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <li>Avoids CITY-19 (HWY-07): where the world style's {@code railwayavoidance} is {@code block_railway} and this
  * chunk's building reaches down into its rail, only this chunk's rail is left out; the layout's answer for its
  * neighbors never changes.</li>
- * <li>Ramps and plazas (design record 0009, alpha review AR-10): a ramp is the straight piece written column by column
+ * <li>Ramps and plazas (design record 0010, alpha review AR-10): a ramp is the straight piece written column by column
  * along its axis a half block higher every few columns, one level across the chunk, with a bottom half slab wherever a
  * column stands a half block up, so the climb never needs a jump; a run's end is a crossing piece at the ground's
  * level, the plaza a highway ends on.</li>
  * <li>Railways under landmark cores (D30, D31): slopes along a north-south line are upstream's descent parts turned to
  * run north-south; a line or station in a core gets no clearing to the surface and no staircase.</li>
  * <li>The water test accepts still and flowing water and lava, separate blocks in 1.7.10.</li>
- * <li>Railing openings for highway-side scattered buildings belong to 07-scattered (M07).</li>
+ * <li>Railing openings: where a highway-side scattered building (a gas station, a restaurant) faces a flat piece at
+ * its deck's height, the iron bars along that edge are taken out, as upstream's {@code clearRailing}; the scattered
+ * planner (07-scattered) decides where.</li>
  * </ul>
  *
  * <p>
@@ -94,6 +96,7 @@ public final class NetworkWriter {
     private final int chunkX;
     private final int chunkZ;
     private final int naturalHeight;
+    private com.tuxprogrammer.lostcities.layout.ScatteredPlanner scattered;
 
     /**
      * Prepares the write of one chunk.
@@ -171,6 +174,17 @@ public final class NetworkWriter {
         return dungeonRail(planner, chunkX, chunkZ) != null;
     }
 
+    /**
+     * Sets the world's scattered planner, which says where a highway-side building opens a highway's railing.
+     *
+     * @param planner the scattered planner, or {@code null} for none
+     * @return this writer
+     */
+    public NetworkWriter railings(com.tuxprogrammer.lostcities.layout.ScatteredPlanner planner) {
+        this.scattered = planner;
+        return this;
+    }
+
     /** Writes the chunk's highways, then its railway, then its rail dungeon. */
     public void write() {
         if (networks == null || worldStyle == null) {
@@ -226,6 +240,35 @@ public final class NetworkWriter {
             .settings()
             .supports()) {
             supports(part, transform, deckY, piece, halfSteps);
+        }
+        if (scattered != null && halfSteps == null && !target.dryRun()) {
+            openRailings(deckY, part.height());
+        }
+    }
+
+    /**
+     * Upstream's {@code clearRailing}: toward each side where a highway-side scattered building faces this piece at its
+     * deck's height, the iron bars along that chunk edge, from the deck up through the part, are taken out.
+     */
+    private void openRailings(int deckY, int partHeight) {
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            if (!scattered.opensRailing(chunkX, chunkZ, side, deckY)) {
+                continue;
+            }
+            for (int i = 0; i < 16; i++) {
+                int x = side == com.tuxprogrammer.lostcities.layout.Direction.XMIN ? 0
+                    : side == com.tuxprogrammer.lostcities.layout.Direction.XMAX ? 15 : i;
+                int z = side == com.tuxprogrammer.lostcities.layout.Direction.ZMIN ? 0
+                    : side == com.tuxprogrammer.lostcities.layout.Direction.ZMAX ? 15 : i;
+                for (int y = deckY + 1; y < deckY + partHeight && y <= WorldLimits.MAX_Y; y++) {
+                    if ("minecraft:iron_bars".equals(
+                        target.get(x, y, z)
+                            .name())) {
+                        target.set(x, y, z, BlockRef.AIR);
+                    }
+                }
+            }
         }
     }
 

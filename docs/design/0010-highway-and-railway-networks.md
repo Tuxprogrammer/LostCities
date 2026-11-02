@@ -1,6 +1,6 @@
-# 0009 · Highway and railway networks: obstacles, deliberate ends, dips under cores
+# 0010 · Highway and railway networks: obstacles, deliberate ends, dips under cores
 
-- Status: Accepted (M06; decision log D-M06-1 to D-M06-13)
+- Status: Accepted (M06; decision log D-M06-1 to D-M06-15)
 - Gate: M06
 - Amends: [0006](0006-build-around-other-worldgen.md) §1 for highways (the margin is an obstacle as well as the core); the new-spec rows of [06-highways-railways](../new-spec/06-highways-railways/index.md) for route geometry, route levels and railways under cores
 - Date: 2026-11-02
@@ -76,7 +76,7 @@ A hub cell samples up to 64 city potentials, each of which may need a height, so
 
 - **Code.** `layout.highway` (the planner, runs, decks, pieces), `layout.rail` (the grid and the dips) and `layout.Networks` are built by `LayoutPlanner` from `LayoutInputs.networks`. `worldgen.city.NetworkWriter` writes them; `worldgen.overlay.NetworkGate` schedules hubs; `NetworkScenarios` checks them in the world.
 - **Spec.** The new-spec area's rows for highways in cores, route geometry, overlapping routes, planning cost, railways and cores, and the railing openings record this.
-- **M07.** The railing openings for highway-side scattered buildings come with 07-scattered. A highway's deck is in the footprint, so a scattered building beside it is planned against the highway's chunks, as upstream's are.
+- **M07.** Scattered footprints keep off highway chunks and the highway planner ignores them, so the order is one-way (D-M06-14). A highway-side building opens the railing of the flat piece it faces (D-M06-15).
 - **Shots.** Both alpha lists add a highway, a ramp, a station and a railway view.
 
 ## Alternatives considered

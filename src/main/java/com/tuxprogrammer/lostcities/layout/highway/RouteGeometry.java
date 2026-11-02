@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Lays a route's chosen shape around landmark obstacles (new-spec 06 "R: route geometry", D31 P06-1, alpha review
- * AR-10, design record 0009). The shape is walked chunk by chunk from the first hub to the second. Where it meets an
+ * AR-10, design record 0010). The shape is walked chunk by chunk from the first hub to the second. Where it meets an
  * obstacle (a core or its margin), the obstacle's extent is the bounding box of the obstacle chunks joined to the one
  * met (eight-neighbors, within {@link HighwayPlanner#OBSTACLE_WINDOW} chunks):
  * <ol>

@@ -42,8 +42,8 @@ public interface ApiSource {
     DamageArea damage(int chunkX, int chunkZ);
 
     /**
-     * Returns the scattered structure standing in a chunk. M07's scattered-structure layout implements this; until it
-     * lands no world has one.
+     * Returns the scattered structure standing in a chunk: the world style entry's name of the structure whose
+     * footprint holds it, from the scattered planner (07-scattered). The default, for a source without one, is none.
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z

@@ -16,7 +16,7 @@ import java.util.Set;
  * <p>
  * Pieces: where both axes carry a flat deck at one level, or one axis a flat deck that ends a run, the chunk is a
  * junction at that level: a bend, a T or a crossing from the sides the routes at that level leave by. A run's end with
- * one route leaving is a crossing: the plaza a highway ends on (deviation, design record 0009; upstream ends a route
+ * one route leaving is a crossing: the plaza a highway ends on (deviation, design record 0010; upstream ends a route
  * with a plain straight piece). Otherwise each axis gets a straight piece or a ramp, the lower one first, because each
  * piece clears the space above it.
  *
