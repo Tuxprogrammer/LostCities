@@ -29,11 +29,18 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - `/lostcities profile list`, `profile info <profile>`, `profile reload` and `/lostcities saveprofile <profile> <newName>`, operator only.
 - Spawn options: a profile can ask for a spawn in a biome, in a predefined city, never in a building, or inside a building (placing each player exactly on their first join); the spawn is found from the city layout without generating chunks, and the bonus chest still comes when asked for.
 - Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
+- City edges (milestone M12): empty lots, excavations dug 1, 2 or 4 blocks for a basement, and concrete foundations of high-rises that were never finished appear where a city thins out, on bare clay and dirt that nothing grows on.
+- Some explosion damage in cities was partly repaired: holes filled in with a similar but not identical material, and broken windows boarded up.
+- Profile options `cityTaper`, `edgeLotChance`, `damageRepairChance` and `facadeContrast`. See [docs/config.md](docs/config.md).
 
 ### Changed
 
 - Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
 - Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.
+- Building heights taper: low buildings where a city meets the land around it, a dense high-rise core at its center, rising and falling by district rather than in rings.
+- Neighboring buildings' colors feather: a pale building no longer stands beside a dark, saturated one, also where a desert city meets a standard one.
+- Roads beside a village are small streets: a road that goes around a village, or passes beside it, narrows instead of running there as a wide avenue.
+- Slopes at a city's edge step down in ragged contours instead of long straight terraces, and village lanes never climb two blocks at once.
 
 ### Fixed
 
