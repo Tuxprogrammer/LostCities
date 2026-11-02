@@ -40,8 +40,18 @@ public final class GoldenChunks {
      * @param buffer   the generated buffer
      */
     public static void assertMatches(String caseName, ChunkBuffer buffer) throws IOException {
+        assertTextMatches(caseName, ChunkBufferDigest.text(buffer));
+    }
+
+    /**
+     * Fails unless a text form matches its golden: for goldens of things other than a buffer, such as a chunk's
+     * population jobs (0005, "Determinism tests": a second hash after our population phase).
+     *
+     * @param caseName the golden's name, {@code [a-z0-9_]+}
+     * @param text     the text form
+     */
+    public static void assertTextMatches(String caseName, String text) throws IOException {
         Path golden = ProjectFiles.resolve("src/test/resources/golden/" + caseName + ".sha256");
-        String text = ChunkBufferDigest.text(buffer);
         String actual = ChunkBufferDigest.sha256(text);
         if (Boolean.getBoolean(UPDATE_PROPERTY)) {
             writeActual(caseName, text);

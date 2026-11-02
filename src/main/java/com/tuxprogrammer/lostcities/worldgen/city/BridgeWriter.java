@@ -77,6 +77,18 @@ final class BridgeWriter {
         }
         CompiledPalette palette = context.palettes()
             .forPart(palettes, part);
+        Transform transform = span(context, part, palette, orientation, level, target, sequence);
+        supports(context, plan, part, palette, palettes, orientation, transform, level, target);
+        return true;
+    }
+
+    /**
+     * Writes a bridge part's span across the chunk, from {@code level} up.
+     *
+     * @return the transform the span was written with
+     */
+    static Transform span(CityWriteContext context, Part part, CompiledPalette palette, Orientation orientation,
+        int level, CityTarget target, PaletteSequence sequence) {
         // Avoids CITY-30: positions and blocks transformed by one map.
         Transform transform = orientation == Orientation.X ? Transform.ROTATE_NONE : Transform.MIRROR_90_X;
         for (int x = 0; x < 16; x++) {
@@ -96,8 +108,7 @@ final class BridgeWriter {
                 }
             }
         }
-        supports(context, plan, part, palette, palettes, orientation, transform, level, target);
-        return true;
+        return transform;
     }
 
     private static void deck(CityWriteContext context, CompiledPalette palette, Part part, char c, int x, int y,

@@ -610,7 +610,7 @@ public final class CityScenarios {
 
         @Override
         public int ticks() {
-            return 20 * 60 * 15;
+            return 20 * 60 * 10;
         }
 
         @Override

@@ -152,6 +152,25 @@ public class LayoutPlannerTest {
     }
 
     @Test
+    public void doesNotReproduceLOOT10_multibuildingsRollTheirLootToo() {
+        LayoutProfile noLoot = LayoutProfile.builder()
+            .cityChance(0)
+            .buildingChances(0.3f, 1.0f, 0.2f)
+            .build();
+        LayoutPlanner p = bigCity(3L, noLoot, LayoutFixtures.standardAssets());
+        int multi = 0;
+        for (ChunkPlan plan : region(p)) {
+            if (plan.hasBuilding() && plan.multiPos()
+                .isMulti()) {
+                multi++;
+                // Upstream rolled noLoot only for single-chunk buildings, so a multibuilding always had loot.
+                assertTrue(plan.noLoot(), plan.toString());
+            }
+        }
+        assertTrue(multi > 0);
+    }
+
+    @Test
     public void plansAreCachedAndFinal() {
         LayoutPlanner p = bigCity(4L, noRandomCities(), LayoutFixtures.standardAssets());
         ChunkPlan first = p.plan(3, 3);
