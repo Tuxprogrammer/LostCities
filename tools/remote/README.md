@@ -57,6 +57,7 @@ World types: a dedicated server reads `level-type` from `server.properties`, and
 - `--shot <name>`, `--wait <s>`: name the screenshot and set how long to wait before taking it.
 - `--timeout <s>`, `--user <name>`, `--heap <size>`.
 - `--extra-shot <name>:<seconds>` (repeatable): another screenshot that many seconds after the one before, for viewpoints the server moves the player to.
+- `--mod <jar>`: installs a `lostcitiesnh` jar in the client for this run and removes it afterwards. A server running the mod rejects a client without it (FML's mod list check), so joining a `--slot` server needs the same jar here, by its path on the build server (`<LC_REMOTE_ROOT>/wt/<slot>/build/libs/lostcitiesnh-<version>.jar`).
 
 The client uses an offline account, so it can join only the real-pack server, which runs with `online-mode=false`.
 
