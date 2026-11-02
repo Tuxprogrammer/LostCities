@@ -58,7 +58,7 @@ Two gates matter most:
 
 ## Spikes
 
-Status: **S1 and S2 are done; S3's pack research is done** (2026-11-01). Open questions Q1 to Q10 are settled ([OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md)). What remains of S3 is the new-spec areas `01` to `09`, each a deviation table built from the decisions already taken.
+Status: **S1, S2 and S4 are done; S3's pack research is done** (2026-11-01). S4's catalog and variety pools follow decision log D25, D28 and D29. Open questions Q1 to Q10 are settled ([OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md)). What remains of S3 is the new-spec areas `01` to `09`, each a deviation table built from the decisions already taken.
 
 | Spike | Delivers | Before | Lane |
 |---|---|---|---|
