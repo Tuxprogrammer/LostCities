@@ -44,7 +44,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * (its strong points' box, grown by the margin and one block for the sampling), filed under the peak reached by
  * climbing the strength from its strongest point the way RWG2's {@code LandmarkDecorations} finds a junction's center.
  * Strength changes slowly (well under 0.05 a block), so a strong patch always lifts a corner above the refine
- * threshold.</li>
+ * threshold. A junction whose strength has several local peaks along a ridge comes back as several landmarks with
+ * overlapping footprints, whose cores join.</li>
  * </ul>
  * Certainty is {@link Certainty#EXACT}: the terrain is RWG2's, from the same functions. The ground estimate is the
  * height oracle's median over the footprint's bounds.
