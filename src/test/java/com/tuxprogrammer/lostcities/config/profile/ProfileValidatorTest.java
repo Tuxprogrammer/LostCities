@@ -47,7 +47,7 @@ public class ProfileValidatorTest {
 
     @Test
     public void buildingMinFloorsIsClampedToTheSameRangeAsTheMaximum() {
-        ProfileValidator.Result result = validate("buildingMinFloors", "40");
+        ProfileValidator.Result result = validate("buildingMinFloors", "40", "buildingMaxFloors", "40");
         assertTrue(result.ok(), result.errors()::toString);
         assertEquals(
             "22",
