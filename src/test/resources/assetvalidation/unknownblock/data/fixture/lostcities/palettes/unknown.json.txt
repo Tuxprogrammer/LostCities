@@ -1,0 +1,6 @@
+{
+  "palette": [
+    { "char": "#", "block": "minecraft:stone" },
+    { "char": "?", "block": "nosuchmod:nosuchblock" }
+  ]
+}

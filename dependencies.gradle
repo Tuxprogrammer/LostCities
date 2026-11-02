@@ -33,6 +33,29 @@
  *
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
+
+// Versions are the ones GTNH 2.9.0 ships (docs/design/0002-target-pack.md), with the :dev classifier from the GTNH
+// Maven. Hard dependencies are api, declared again in @Mod(dependencies = ...) and mcmod.info, so they are on the
+// compile classpath, in the dev runs and in the tests. Optional integrations are compileOnly and live under
+// com.tuxprogrammer.lostcities.compat.<mod> behind Loader.isModLoaded checks; M01 has none.
 dependencies {
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
+    // GTNHLib: the annotation config, its automatic config screen, and the network channel base classes (M01).
+    api("com.github.GTNewHorizons:GTNHLib:0.11.54:dev")
+
+    // Unit and static-check tests (CONTRIBUTING.md, Testing): JUnit 5, the same BOM as the owner's other GTNH mods.
+    testImplementation(platform("org.junit:junit-bom:5.14.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+// The GTNH buildscript does not switch the JUnit platform on; without this the tests silently never run.
+tasks.named("test", Test) {
+    useJUnitPlatform()
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
+    // ./gradlew test -PupdateGoldens rewrites the golden-chunk files instead of comparing against them
+    // (docs/testing/README.md). A golden changes only in a commit that says why.
+    systemProperty "lostcitiesnh.updateGoldens", providers.gradleProperty("updateGoldens").isPresent().toString()
 }

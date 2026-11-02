@@ -1,0 +1,6 @@
+{
+  "palette": [
+    { "char": "#", "block": "minecraft:stone" },
+    { "char": "=", "blocks": [ { "random": 50, "block": "minecraft:stonebrick" }, { "random": 50, "block": "minecraft:stone" } ] }
+  ]
+}
