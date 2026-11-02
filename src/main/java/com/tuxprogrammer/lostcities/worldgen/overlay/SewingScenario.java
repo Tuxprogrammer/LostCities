@@ -114,7 +114,8 @@ final class SewingScenario implements Scenario {
         overlay.recorder()
             .stop();
         Count sewing = count(context.world(), overlay, lane.chunkX(), lane.chunkZ());
-        LostCities.LOG.info("[LCNH-SEWING] {} around the village: {}", HeightOracles.worldType(context.world()), sewing);
+        LostCities.LOG
+            .info("[LCNH-SEWING] {} around the village: {}", HeightOracles.worldType(context.world()), sewing);
         context.check(sewing.cores > 0, "expected the village's core chunks");
         context.check(sewing.coresWritten == 0, "landmark cores written beyond a lane: " + sewing.coresWritten);
         context.check(sewing.edgeRingBuildings == 0, "buildings in an edge ring: " + sewing.edgeRingBuildings);
@@ -188,8 +189,8 @@ final class SewingScenario implements Scenario {
                         .get(ChunkRecorder.key(cx, cz));
                     // A core is never city and never takes content (ChunkPlan rejects it); where the recorder saw
                     // the chunk generate, it must also have come out untouched unless it carries a lane.
-                    if (!plan.isCore() || plan.lane() == null && treated != null
-                        && treated != TerrainPhase.ChunkClass.UNTOUCHED) {
+                    if (!plan.isCore()
+                        || plan.lane() == null && treated != null && treated != TerrainPhase.ChunkClass.UNTOUCHED) {
                         count.coresWritten++;
                     }
                 }

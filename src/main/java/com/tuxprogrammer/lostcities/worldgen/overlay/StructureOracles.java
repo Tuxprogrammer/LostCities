@@ -52,7 +52,8 @@ public final class StructureOracles {
      */
     public static List<Factory> factories() {
         List<Factory> factories = new ArrayList<>();
-        // One line per mod. VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the overload with the
+        // One line per mod. VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the overload with
+        // the
         // height oracle, since the one without builds a second classic RWG generator. M08 adds Roguelike Dungeons,
         // Witchery, LootGames, AE2 and RWG2 here.
         factories.add(VillageNamesOracles::forWorld);

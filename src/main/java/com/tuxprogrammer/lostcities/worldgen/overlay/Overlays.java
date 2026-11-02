@@ -241,15 +241,17 @@ public final class Overlays {
      */
     private static ProfileSnapshot resolve(String profile, WorldServer world) {
         AssetSet assets = LoadedAssets.isLoaded() ? LoadedAssets.current() : null;
-        return ProfileSnapshot.resolve(
-            profile,
-            planSource(),
-            ModuleState.configured(),
-            assets == null ? ProfileSnapshot.NO_ASSETS : assets.hash(),
-            assets == null ? java.util.Collections.<String, String>emptyMap() : assets.fileHashes(),
-            DecorativeMetalsConfig.flags(),
-            HeightOracles.worldType(world),
-            Tags.VERSION).withStructureSettings(StructureOracles.settingsSummary(world));
+        return ProfileSnapshot
+            .resolve(
+                profile,
+                planSource(),
+                ModuleState.configured(),
+                assets == null ? ProfileSnapshot.NO_ASSETS : assets.hash(),
+                assets == null ? java.util.Collections.<String, String>emptyMap() : assets.fileHashes(),
+                DecorativeMetalsConfig.flags(),
+                HeightOracles.worldType(world),
+                Tags.VERSION)
+            .withStructureSettings(StructureOracles.settingsSummary(world));
     }
 
     /** Warns once when the loaded asset set differs from the one a world was pinned with, naming the files (P05-3). */
@@ -266,7 +268,8 @@ public final class Overlays {
         }
         String structures = StructureOracles.settingsSummary(world);
         if (!snapshot.structureSettings()
-            .isEmpty() && !snapshot.structureSettings()
+            .isEmpty()
+            && !snapshot.structureSettings()
                 .equals(structures)) {
             LostCities.LOG.warn(
                 "Dimension {} was created with other structure generator settings ({}, now {}); villages and monuments"

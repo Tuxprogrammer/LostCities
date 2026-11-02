@@ -479,8 +479,11 @@ public final class CityFinder {
                 viewZ,
                 yawToward(viewX, viewZ, x, z),
                 EDGE_PITCH,
-                "soft edge toward " + side.name() + " (" + planner.zone(chunkX + side.stepX(), chunkZ + side.stepZ())
-                    .landmarkId() + ")");
+                "soft edge toward " + side.name()
+                    + " ("
+                    + planner.zone(chunkX + side.stepX(), chunkZ + side.stepZ())
+                        .landmarkId()
+                    + ")");
         }
         return null;
     }
