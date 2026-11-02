@@ -87,6 +87,38 @@ final class LandmarkZones {
         return cells.put(cellX, cellZ, Collections.unmodifiableList(deduplicated));
     }
 
+    /**
+     * Returns the landmarks a highway must keep out of within a rectangle of chunks: every landmark not ignored whose
+     * core or margin (the edge ring, or the ring of an avoided landmark) may touch it, sorted by identity (M06,
+     * design record 0007).
+     *
+     * @param minX lowest chunk X
+     * @param minZ lowest chunk Z
+     * @param maxX highest chunk X
+     * @param maxZ highest chunk Z
+     * @return the landmarks
+     */
+    List<Landmark> obstaclesIn(int minX, int minZ, int maxX, int maxZ) {
+        int grow = EDGE_RING_DISTANCE + 1;
+        List<Landmark> found = new ArrayList<>(
+            oracle.landmarksTouching(minX - grow, minZ - grow, maxX + grow, maxZ + grow));
+        found.removeIf(landmark -> profile.treatment(landmark.kind()) == LandmarkTreatment.IGNORE);
+        found.sort(Comparator.comparing(Landmark::id));
+        return found;
+    }
+
+    /**
+     * Returns whether a chunk lies in a landmark's core or the ring around it.
+     *
+     * @param landmark the landmark
+     * @param chunkX   chunk X
+     * @param chunkZ   chunk Z
+     * @return whether the chunk is that close
+     */
+    boolean inCoreOrRing(Landmark landmark, int chunkX, int chunkZ) {
+        return landmark.coreDistance(chunkX, chunkZ, profile.landmarkMargin) <= EDGE_RING_DISTANCE;
+    }
+
     /** Returns a chunk's zone. */
     ZoneInfo zone(int chunkX, int chunkZ) {
         ZoneInfo cached = zones.get(chunkX, chunkZ);

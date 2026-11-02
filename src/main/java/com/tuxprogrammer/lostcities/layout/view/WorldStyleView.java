@@ -37,6 +37,17 @@ public interface WorldStyleView {
      */
     float cityChanceMultiplier(int chunkX, int chunkZ);
 
+    /**
+     * Returns the largest city-chance multiplier of any rule, at least 1, or positive infinity when one is not finite:
+     * the bound the highway planner's hub search prunes with (upstream's {@code getMaximumCityChanceMultiplier}). The
+     * default, infinity, turns pruning off, which changes no result.
+     *
+     * @return the largest multiplier
+     */
+    default float maxCityChanceMultiplier() {
+        return Float.POSITIVE_INFINITY;
+    }
+
     /** Returns {@code multisettings}. */
     MultiSettings multiSettings();
 

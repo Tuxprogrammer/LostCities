@@ -162,6 +162,11 @@ public final class LayoutAssets implements AssetView {
         }
 
         @Override
+        public float maxCityChanceMultiplier() {
+            return style.maxCityChanceMultiplier();
+        }
+
+        @Override
         public float cityChanceMultiplier(int chunkX, int chunkZ) {
             return style.cityChanceMultiplier(biomes.biomeOfChunk(chunkX, chunkZ));
         }

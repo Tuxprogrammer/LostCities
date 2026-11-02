@@ -28,6 +28,7 @@ public final class LayoutInputs {
     final TerrainView terrain;
     final StructureOracle structures;
     final InfrastructureView infrastructure;
+    final NetworkSettings networks;
     final PredefinedIndex predefined;
     final LayoutLog log;
     final int cacheSize;
@@ -40,6 +41,7 @@ public final class LayoutInputs {
         terrain = b.terrain;
         structures = b.structures;
         infrastructure = b.infrastructure;
+        networks = b.networks;
         predefined = b.predefined;
         log = b.log;
         cacheSize = b.cacheSize;
@@ -83,6 +85,7 @@ public final class LayoutInputs {
         private DimensionKey dimension = DimensionKey.OVERWORLD;
         private StructureOracle structures = StructureOracle.NONE;
         private InfrastructureView infrastructure = InfrastructureView.NONE;
+        private NetworkSettings networks;
         private PredefinedIndex predefined = PredefinedIndex.EMPTY;
         private LayoutLog log = LayoutLog.SILENT;
         private int cacheSize = DEFAULT_CACHE_SIZE;
@@ -109,6 +112,18 @@ public final class LayoutInputs {
         /** @param v the highway and railway layout (default none) @return this builder */
         public Builder infrastructure(InfrastructureView v) {
             infrastructure = v;
+            return this;
+        }
+
+        /**
+         * Makes the layout build its own highway and railway networks ({@link Networks}) from these settings, in place
+         * of the {@link #infrastructure(InfrastructureView)} view (M06).
+         *
+         * @param v the network settings, or {@code null} for none (the default)
+         * @return this builder
+         */
+        public Builder networks(NetworkSettings v) {
+            networks = v;
             return this;
         }
 

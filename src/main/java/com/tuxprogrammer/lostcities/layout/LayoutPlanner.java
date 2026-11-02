@@ -103,6 +103,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     final WorldStyleView worldStyle;
     final TerrainView terrain;
     final InfrastructureView infrastructure;
+    final Networks networks;
     final LayoutLog log;
     final HierarchicalStreetPlanner streets;
     final HierarchicalBridgePlanner bridges;
@@ -129,7 +130,6 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.assets = inputs.assets;
         this.worldStyle = inputs.assets.worldStyle();
         this.terrain = inputs.terrain;
-        this.infrastructure = inputs.infrastructure;
         this.log = inputs.log;
         int cache = inputs.cacheSize;
         this.streets = new HierarchicalStreetPlanner(seed, dimension, profile.streets);
@@ -144,6 +144,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.cities = new CityMap(seed, profile, worldStyle, terrain, predefined, cache);
         this.levels = new CityLevels(profile, terrain, cities, cache);
         this.sewing = new Sewing(profile, cities, zones, streets, predefined, cache);
+        // M06: the networks read the city map, levels and zones built above, never a plan.
+        this.networks = inputs.networks == null ? null : new Networks(this, inputs.networks);
+        this.infrastructure = networks == null ? inputs.infrastructure : networks;
         this.multiChunks = new ChunkCache<>(Math.max(64, cache / 64));
         this.characteristicsCache = new ChunkCache<>(cache);
         this.plans = new ChunkCache<>(cache);
@@ -155,6 +158,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** Returns the profile the layout reads (M09: the world's pinned profile). */
     public LayoutProfile profile() {
         return profile;
+    }
+
+    /**
+     * Returns the world's highway and railway networks, or {@code null} when the inputs gave no network settings (the
+     * layout then reads {@link LayoutInputs}' infrastructure view).
+     *
+     * @return the networks, or {@code null}
+     */
+    public Networks networks() {
+        return networks;
     }
 
     /** Returns the street field (raw roads) of this dimension. */
