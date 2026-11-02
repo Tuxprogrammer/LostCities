@@ -153,7 +153,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Exit gate:**
 - [ ] Each M05R note is fixed, with a test where one can be written, or its cause is recorded.
-- [ ] M05's exit-gate checks still hold on both world types: hashes match between fresh worlds, budgets B1 to B5, no cascades, `city.walk`.
+- [x] M05's exit-gate checks still hold on both world types: hashes match between fresh worlds, budgets B1 to B5, no cascades, `city.walk`. *2026-11-02, the World half's jar: two fresh worlds per world type on seed 4242 print the same `city.real` hashes; B1 to B5 hold (B3 9.1 % on RWG2 Continents and 12.8 % on classic RWG, B4 at most 3.9 and 7.5 ms; [0005](design/0005-rwg-overlay.md) §8); no cascade warning names this mod first; `city.walk` and `city.sewing` pass, with no margin chunk city.*
 - [ ] Both review shot lists rerun with the final jar, and every M05R note checked against them.
 
 ## M06 to M12 · After the alpha
