@@ -29,7 +29,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * {@code T}: its height is the first non-solid Y of the base terrain, which is where the sky starts on natural ground.
  * The minimum is taken over every column of the clipped box and, because RWG2's oracle answers each column with the
  * sample at its 8-block stride corner, over samples every {@value #PAD_STEP} blocks of the box grown by
- * {@value #STRIDE_PAD} (not on classic RWG, whose oracle is exact per column); {@value #SLACK} more block of slack covers the rest of the oracle's error.
+ * {@value #STRIDE_PAD} (not on classic RWG, whose oracle is exact per column); {@value #SLACK} more block of slack
+ * covers the rest of the oracle's error.
  *
  * <p>
  * The footprint is the square of half-width at least {@value #DECAY_HALF_WIDTH} (the decay square) and the crater's
