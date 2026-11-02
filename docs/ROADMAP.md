@@ -124,7 +124,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Entry gate:** M02, M03 and M04 done.
 
-**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing, with lanes laid in the blocks VillageNames' own paths use (D31), come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
+**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing, with lanes laid in the blocks VillageNames' own paths use (D31), and the VillageNames ocean-monument oracle (D32), come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
 
 **Exit gate (the alpha gate):**
 - [ ] On a fresh GTNH 2.9.0 dedicated server with RWG2 Continents, a city generates within the expected distance of spawn for a fixed seed.

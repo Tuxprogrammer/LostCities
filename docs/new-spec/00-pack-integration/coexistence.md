@@ -16,7 +16,7 @@ Status: *Accepted* ([0006](../../design/0006-build-around-other-worldgen.md); [d
 | **RWG2 landmarks**: volcanoes, lava caves, river-junction pillars | Terrain (`provideChunk`) and landmark decoration (`populate`) | **Yes**: the chunk manager's own predicates | Large terrain features | Terrain itself | **Terrain landmark**: the city ends with a soft edge |
 | Thaumcraft mounds, rings, hilltop stones | `IWorldGenerator`, weight 0 | **No**: the roll's place in the stream depends on earlier world-reading features; site tests read blocks | 7 × 7 to 19 × 19 | Read from the world | **Coexist** (T3); city blocks fail its site tests; watched at alpha |
 | VillageNames igloos | `IWorldGenerator`, weight 0 | Yes (32-chunk grid) | 5 × 6 | World | **None**: they need vanilla Ice Plains or Cold Taiga, which neither RWG reports |
-| VillageNames ocean monuments | `IWorldGenerator`, weight 0 | Yes (32-chunk grid; the biome test reads the biome provider) | Ocean only | World | **None** (T3, watched at alpha, as Thaumcraft is). They need a biome named "deep ocean": RWG2 Continents reports vanilla Deep Ocean for its cold deep ocean, so monuments can generate there; classic RWG has no oceans. Cities seldom reach deep ocean; the oil rig stands there ([Thaumcraft, igloos and the rest](#thaumcraft-igloos-and-the-rest)) |
+| VillageNames ocean monuments | `IWorldGenerator`, weight 0 | Yes (32-chunk grid; the biome test reads the biome provider) | Ocean only | World | **Landmark core** (D32): a pure oracle on VillageNames' 32-chunk grid and biome test, built in M05 beside the village oracle; oil rigs, highways and cities keep clear of a monument's core and edge ring as they do of villages. They need a biome named "deep ocean": RWG2 Continents reports vanilla Deep Ocean for its cold deep ocean, so monuments can generate there; classic RWG has no oceans. Cities seldom reach deep ocean; the oil rig stands there ([Thaumcraft, igloos and the rest](#thaumcraft-igloos-and-the-rest)) |
 | Strongholds, mineshafts | `MapGenStructure` | Strongholds yes, mineshafts yes | Underground | n/a | **Coexist** (T3), unchanged |
 | Vanilla dungeons, lakes, NHCore oil, Railcraft quarries | Populate events | n/a | n/a | n/a | **Deny** (T2), unchanged |
 | Small decoration (hives, trees, flowers, geodes, slime islands) | Various | n/a | Small | n/a | **Coexist** (T3), unchanged |
@@ -223,5 +223,5 @@ Settled by the owner in decision log D26 and recorded in [0006](../../design/000
 - How edge strips, plazas and lanes look; whether 6 columns is wide enough; how often E3's retaining borders appear.
 - Whether empty Witchery and Roguelike lots read as parks or as holes.
 - Whether Thaumcraft mounds appear in city parks.
-- Whether VillageNames ocean monuments generate on RWG2 Continents, and how often one meets an oil rig or a city chunk; they coexist (T3) unless the screenshots show the need for a guard or a lot.
+- How often the monument oracle (D32) moves an oil rig, measured over many seeds in M05.
 - The crater basin's look.
