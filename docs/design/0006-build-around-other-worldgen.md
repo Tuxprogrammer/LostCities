@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core)
+- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin)
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01
@@ -47,7 +47,7 @@ An AE2 meteorite that lands in a city gets a **crater basin**: its core is natur
 
 Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and no edge ring: the city ends there, and the chunk-scale blend (§4, E1) shapes the land between.
 
-**Deep railways** (decision log D30) are the one exception to "no railway" in a core. A railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground may pass under the core. Nothing changes at the surface: a surface station whose spot is inside a core is still dropped, and a rail line too shallow to pass under ends before the core ([06-highways-railways](../new-spec/06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)).
+**Deep railways** (decision log D30) are the one exception to "no railway" in a core. A railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground may pass under the core. Nothing changes at the surface: a surface station whose spot is inside a core is still dropped. A rail line too shallow to pass under descends before the core until it is deep enough, runs under it and climbs back on the far side, so the network stays continuous (D31); M06 designs the descent from upstream's descending rail parts ([06-highways-railways](../new-spec/06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)).
 
 Chunk granularity keeps upstream's planner, multibuilding placement, street rendering and blend unchanged in kind. The cost is that a small structure on a chunk corner reserves up to four chunks; the soft-edge strip and the edge ring's parks make that space read as a green rather than a gap.
 
@@ -74,7 +74,7 @@ The values each oracle reads from another mod's config are added to the pinned p
 - **Roads.** The hierarchical street field stays as upstream has it; a core chunk is not city, so the road is clipped there.
   - A **primary** road severed by a core detours through edge-ring chunks on the shorter side of the ring (ties north, then west), which become roads of the same class.
   - **Secondary and tertiary** roads end in the edge-ring chunk facing the landmark, which becomes a **plaza**: upstream's `FULL` street type, which upstream defines but never reaches, gets this use.
-- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. In the gate chunk the street continues as a 3-block-wide surface path down or up the soft-edge strip to the core's edge. From there it crosses the core's ground to meet the village path's end as a **surface-only** path: the city style's path block replaces the natural top block, with nothing written above or below it, and never within `landmarkMargin` (2 blocks) of a village piece box. It is the only thing the city writes in a core, and it is written in the terrain phase, before the village's own pieces.
+- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. In the gate chunk the street continues as a 3-block-wide surface path down or up the soft-edge strip to the core's edge. From there it crosses the core's ground to meet the village path's end as a **surface-only** path, never within `landmarkMargin` (2 blocks) of a village piece box. Each column takes the block VillageNames' own paths would take there (grass path on grass, gravel on sand, planks over water, through the village's material swaps; D31, [pipeline-on-rwg.md](../new-spec/03-terrain/pipeline-on-rwg.md#village-lanes)), replacing the natural top block; nothing else is written above or below it except the supports that rule adds (cobblestone under gravel on sand, posts under planks, the block cleared above water). It is the only thing the city writes in a core, and it is written in the terrain phase, before the village's own pieces.
 - **Villages inside a city's radius** are surrounded by it: the city factor is not lowered near them, so the city continues on every side and the village becomes its old town, sewn in by the edge ring, the transition rings and a lane on each side that has a gate.
 - **Villages near a city**, outside it but within `villageLinkDistance` (4 chunks) of its edge, get gates and a surface lane across the land between, written in the terrain phase as part of the city's footprint.
 - **Height caps** (meteorite basins) reduce floors after upstream's floor draw, so random consumption is unchanged.
@@ -102,7 +102,7 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 - Every layout input is pure; the layout never reads blocks other mods placed, `data/Village.dat`, AE2's spawn data, or the live structure generators' maps. Those fill in generation order and are used only by tests that check the oracles.
 - Other structures' blocks land after our terrain phase. They land in cores, on RWG's ground, so they behave as in the wild.
 - Our population phase writes only inside our footprint; cores are outside it.
-- **Steering.** One compat mixin, on `Dungeon.validLocation` (Roguelike Dungeons), makes a candidate invalid inside a city chunk or edge ring unless it is that dungeon's predicted site. The dungeon lands in its lot, outside the city, or not at all, whatever order chunks generate in.
+- **Steering.** One compat mixin, on `Dungeon.validLocation` (Roguelike Dungeons), makes a candidate invalid inside a city chunk or edge ring unless it is that dungeon's predicted site, and invalid inside a scattered structure's footprint ([07-scattered](../new-spec/07-scattered/index.md), D31). The dungeon lands in its lot, outside the city, or not at all, whatever order chunks generate in.
 - **Misses.** A lot whose structure does not appear stays natural ground. A structure that lands in the city anyway (Thaumcraft) is accepted; a per-generator guard (T4) follows only if the alpha screenshots show it. No restore pass ever rewrites another mod's blocks.
 
 ### 6. Treatments by generator
@@ -131,7 +131,7 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
   - No writes in cores, including the footprint write guard and T2 denial, apart from village lanes' surface paths.
   - The E1 blend anchor; soft-edge strips; lane writing on blended ground and across village cores.
   - Oracle calls inside the time budget (B1 to B5).
-- **M06 (highways and railways):** cores are obstacles; the planners route around them or end before them, and deep railways pass under them (§1, D30).
+- **M06 (highways and railways):** cores are obstacles; the planners route around them or end before them, and railways pass under them, shallow lines dipping down to the depth deep ones run at (§1, D30, D31).
 - **M07 (scattered structures):** upstream's `StructureAvoidance` is replaced by this record, not ported; scattered structures stay out of cores and edge rings.
 - **M08 (GTNH layer):**
   - The per-mod oracles in `compat.villagenames`, `compat.roguelike`, `compat.witchery`, `compat.lootgames`, `compat.ae2` and `compat.rwg2`.

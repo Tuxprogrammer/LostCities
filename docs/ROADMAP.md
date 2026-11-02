@@ -58,7 +58,7 @@ Two gates matter most:
 
 ## Spikes
 
-Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec areas `00` to `09` are written, each of `01` to `09` a deviation table built from the decisions already taken. S4's catalog and variety pools follow decision log D25, D28 and D29. Open questions Q1 to Q13 are settled; the *Proposed* items the areas leave open are listed in [OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md#open), each with the milestone or owner that settles it.
+Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec areas `00` to `09` are written, each of `01` to `09` a deviation table built from the decisions already taken. S4's catalog and variety pools follow decision log D25, D28 and D29. Open questions Q1 to Q13 are settled, and so is every *Proposed* item the areas listed: the owner answered them in decision log D31, and the new spec has no open questions ([OPEN-QUESTIONS](new-spec/OPEN-QUESTIONS.md)). The milestones below build the answers.
 
 | Spike | Delivers | Before | Lane |
 |---|---|---|---|
@@ -79,7 +79,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - JUnit 5 wired into the build;
 - the static checks (`ClientIsolationTest`, `LayoutPurityTest`, `Java8ApiTest`, `PortedCodeGateTest`, `LangKeysTest`, `AssetValidationTest`);
 - the chunk-buffer interface and golden-chunk test harness;
-- module flags on GTNHLib config;
+- module flags on GTNHLib config, with the automatic config screen GTNHLib gives it (no `guiFactory`; worldgen keys marked as needing a new world, D31);
 - the network channel with validated packet base classes;
 - the in-world scenario command and harness;
 - the dev self-check;
@@ -100,7 +100,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Entry gate:** M01 done; S1's `05-assets` area written (met); S3's block-mapping table drafted (met: accepted as D19).
 
-**Scope:** every asset type loaded and validated in plain Java; 1.20 block names mapped to 1.7.10 pack blocks; palette compilation and variants; asset overrides; the bundled assets converted.
+**Scope:** every asset type loaded and validated in plain Java; 1.20 block names mapped to 1.7.10 pack blocks, with `modid:name:meta` native references and the moss block as `chisel:moss:0`; palette compilation and variants; asset overrides; the bundled assets converted, with a `sandstone_rubble` variant for desert rubble; biome matchers, including the RWG realistic-biome matcher under `compat.rwg` for canyons and oases (decision log D31).
 
 ## M03 · Layout
 
@@ -116,7 +116,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Entry gate:** M01 done; S2's design record accepted (met: [0005](design/0005-rwg-overlay.md)); S1's `03-terrain` area written (met).
 
-**Scope:** the overlay hook on RWG2 Continents and classic RWG; city terrain and its blend into RWG terrain; the 1.7.10 height mapping; population; explosions and damage; the per-chunk time budget; around landmarks ([0006](design/0006-build-around-other-worldgen.md)): no writes in cores, soft-edge strips instead of border walls, blend corners fixed at a core's natural height, and village lanes laid on the ground.
+**Scope:** the overlay hook on RWG2 Continents and classic RWG; city terrain and its blend into RWG terrain; the 1.7.10 height mapping; population, with the footprint write guard active during every RWG `populate`, no sapling growth at generation, and a scenario check that ArchaicFix's Phosphor lights every city light source (D31); explosions and damage; the per-chunk time budget; around landmarks ([0006](design/0006-build-around-other-worldgen.md)): no writes in cores, soft-edge strips instead of border walls, blend corners fixed at a core's natural height, and village lanes laid on the ground.
 
 ## M05 · First city in the world
 
@@ -124,7 +124,7 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 
 **Entry gate:** M02, M03 and M04 done.
 
-**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
+**Scope:** layout, assets and the overlay joined, so a full city with streets, buildings and parts generates in the overworld. The VillageNames structure oracle and village sewing, with lanes laid in the blocks VillageNames' own paths use (D31), come in here, ahead of the other oracles in M08, so the alpha screenshots can show a village sewn into a city (decision log D27).
 
 **Exit gate (the alpha gate):**
 - [ ] On a fresh GTNH 2.9.0 dedicated server with RWG2 Continents, a city generates within the expected distance of spawn for a fixed seed.
@@ -140,9 +140,9 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 | Milestone | Lane | Covers |
 |---|---|---|
-| M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain; highways and railways detour around landmark cores or end before them ([0006](design/0006-build-around-other-worldgen.md)) |
-| M07 · Scattered structures | Layout | Scattered structures and decorative stuff; scattered structures stay out of landmark cores and edge rings, which replace upstream's structure avoidance ([0006](design/0006-build-around-other-worldgen.md)) |
-| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin, and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
+| M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain; highways detour around landmark cores or end before them, and shallow railways dip under a core and climb back (D31) ([0006](design/0006-build-around-other-worldgen.md)) |
+| M07 · Scattered structures | Layout | Scattered structures and decorative stuff; scattered structures stay out of landmark cores and edge rings, which replace upstream's structure avoidance ([0006](design/0006-build-around-other-worldgen.md)); lakes, lava, dungeons and oil denied under their footprints; oil rigs only in RWG2's deep ocean, none on classic RWG, which has no oceans (D31) |
+| M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin (which also keeps towers out of scattered footprints, D31), and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |
 | M10 · Commands, API and editor | Core | Operator commands, the public API, the in-game part editor |
 | M11 · Full asset catalog | Assets | Every bundled building, part, palette and style converted and checked in game |

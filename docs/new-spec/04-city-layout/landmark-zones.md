@@ -2,7 +2,7 @@
 
 How each per-chunk decision of upstream's layout ([04-city-layout](../../original-spec/04-city-layout/index.md)) changes in the zones [0006](../../design/0006-build-around-other-worldgen.md#1-landmarks-and-landmark-lots) §1 puts around other mods' structures. 0006 settles the zones and their rules; this sheet lays them against upstream's decisions one by one, so the layout code has one place to read them.
 
-Status: *Accepted* from 0006, D26 and D30 (deep railways under a core), except the lines marked *Proposed*, which are collected in the area's [Proposed, not decided](index.md#proposed-not-decided).
+Status: *Accepted* from 0006, D26, D30 (deep railways under a core) and D31 (multibuildings in transition rings, P04-5; shallow railways dipping under a core, P06-4).
 
 ## Zones
 
@@ -24,7 +24,7 @@ Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a c
 |---|---|---|---|---|
 | City membership (`isCity`) | Never city | Upstream (raw city stays city) | Upstream | Upstream |
 | Building possible (`couldHaveBuilding`) | No | No | Upstream draw `bc`, compared with `buildingChance × 0.5` | Upstream |
-| Multibuilding | May not cover the chunk (`canPlaceBuilding` rejects the position) | May not cover the chunk | Allowed; *Proposed*: its floor cap is the strictest cap over its footprint | Allowed under the cap |
+| Multibuilding | May not cover the chunk (`canPlaceBuilding` rejects the position) | May not cover the chunk | Allowed, under the strictest floor cap of any chunk in its footprint, applied to the whole multibuilding so its floors stay consistent (P04-5, D31) | Allowed under the cap |
 | Floors | n/a | n/a | At most 2 in ring 1, 4 in ring 2, applied after upstream's floor draw | Reduced after upstream's draw until the roof stays below the meteorite's paraboloid; a chunk left with no floor is an open lot |
 | Cellars | n/a | None | Upstream | Upstream |
 | Planned road | None: the road is clipped | A road passing by; a severed primary road's detour; or a plaza where a secondary or tertiary road ends facing the core | Upstream | Upstream |
@@ -32,7 +32,7 @@ Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a c
 | Corridors | None | None (E7), whatever the draws say | Upstream | Upstream |
 | Rail dungeon | None | None (E7) | Upstream | Upstream |
 | Bridges | A core chunk is never a bridge gap chunk | Upstream | Upstream | Upstream |
-| Highways, railways | No highway. No railway, except a railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground, which passes under; a surface station is dropped (*Accepted*, D30; [06-highways-railways](../06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)) | A highway may pass as a road passing by; railways as upstream (E7 names only cellars, corridors, subways and rail dungeons) | Upstream | Upstream |
+| Highways, railways | No highway. A railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground passes under (D30); a shallower line dips down under the core and climbs back, so the network stays continuous, with the descent designed in M06 (P06-4, D31). Nothing is written at the surface, and a surface station is dropped (*Accepted*; [06-highways-railways](../06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)) | A highway may pass as a road passing by; railways as upstream (E7 names only cellars, corridors, subways and rail dungeons) | Upstream | Upstream |
 | Scattered structures | None (`07-scattered`) | None | Upstream | Upstream |
 | City level | n/a | From the height oracle, as everywhere | Upstream | Upstream |
 | Terrain | Untouched, except a village lane's surface path | Sides facing the core get soft-edge strips instead of border walls (`03-terrain`) | Upstream | Upstream |

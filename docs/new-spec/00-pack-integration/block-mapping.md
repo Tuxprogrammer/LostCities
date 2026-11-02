@@ -4,7 +4,7 @@ Upstream's assets name about 120 distinct blocks by their 1.20 IDs with blocksta
 
 This sheet gives one block per upstream block: the baseline, and the fallback when a mod is absent. Variety beyond it, drawn from every decorative block in the pack, is in the [block catalog](../05-assets/block-catalog/index.md) (D25, D28).
 
-Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D19, with the doors and the iron trapdoor from D28 and the oil rig's diamond look-alike from D30), except the `moss_block` row, which is *Proposed*. Settles open question Q4. The assets lane (M02) turns these tables into the block-name map that `AssetValidationTest` and the dev self-check read.
+Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D19, with the doors and the iron trapdoor from D28, the oil rig's diamond look-alike from D30, and the moss block and the gas station's iron from D31). Settles open question Q4. The assets lane (M02) turns these tables into the block-name map that `AssetValidationTest` and the dev self-check read.
 
 ## Answer to Q4
 
@@ -70,7 +70,7 @@ Registry names *verified* against the block registry of the Minecraft 1.7.10 cli
 | `crafting_table` | `minecraft:crafting_table` | |
 | `cut_sandstone` | `minecraft:sandstone` : 2 | 1.7.10's "smooth sandstone" is 1.13's cut sandstone |
 | `dandelion` | `minecraft:yellow_flower` : 0 | |
-| `diamond_block`, `emerald_block`, `gold_block`, `iron_block` (the `!` treasure mix; `iron_block` also as `i` in the `highway_gas_station` and `highway_restaurant_parking` parts) | `minecraft:diamond_block` and so on | Treasure is loot; the mix in `common.json` is on the [beta balance list](../beta-balance-list.md). The two parts' iron block is a decorative metal behind `decorativeMetals.iron` (D29) |
+| `diamond_block`, `emerald_block`, `gold_block`, `iron_block` (the `!` treasure mix; `iron_block` also as `i` in the `highway_gas_station` and `highway_restaurant_parking` parts) | `minecraft:diamond_block` and so on | Treasure is loot; the mix in `common.json` is on the [beta balance list](../beta-balance-list.md). The two parts' iron blocks (20 in `highway_gas_station`'s canopy columns and pumps, 4 in `highway_restaurant_parking`'s lamp posts) stay `minecraft:iron_block` while `decorativeMetals.iron` is on, the second exception to D29's accent cap after the cabin; with it off they take `chisel:factoryblock` : 12, then `minecraft:double_stone_slab` : 8 (D31, [decorative metals](../05-assets/block-catalog/index.md#decorative-metals-d29)) |
 | `diamond_block` in the oil rig (`M`) | `Ztones:tile.iszmBlock` : 8, then `chisel:hempcrete` : 3, then `minecraft:stained_hardened_clay` : 3 | A non-valuable look-alike: no diamond block is placed outside loot (D30, D28 rule 7). Iszm 8 is a smooth pale aqua, the catalog's closest match to the diamond block's color; Chisel's light-blue hempcrete and light-blue terracotta are bluer stand-ins when Ztones or Chisel is absent ([ztones.md](../05-assets/block-catalog/ztones.md), [chisel.md](../05-assets/block-catalog/chisel.md)) |
 | `dirt` | `minecraft:dirt` : 0 | |
 | `enchanting_table` | `minecraft:enchanting_table` | |
@@ -183,8 +183,8 @@ Upstream's Java places a few blocks directly. These map as follows. The rest of 
 | Random building doors | birch, acacia, dark oak, spruce, oak, jungle, iron doors | `malisisdoors:door_birch`, `door_acacia`, `door_dark_oak`, `door_spruce`, `door_jungle`, each with `minecraft:wooden_door` as the fallback; oak `minecraft:wooden_door`; iron `minecraft:iron_door` ([Doors and trapdoors](#doors-and-trapdoors)) | [BuildingInfo.java#L1329-L1340][up-doors] |
 | Highway and corridor details | `iron_bars`, `glowstone`, `rail`, `powered_rail`, `dirt` | the vanilla rows above | [LostCityTerrainFeature.java][up-terrain] |
 | Default leaf table, when the city style sets no `leaves` block (128 slots: 20 jungle, 20 spruce, 88 oak, all persistent) | `jungle_leaves`, `spruce_leaves`, `oak_leaves` with `persistent=true` | `minecraft:leaves` : 3, 1, 0, each +4 (the no-decay bit) | [LostCityTerrainFeature.java#L116-L146][up-leaves] |
-| Default rubble table, when the city style sets no `rubbledirt` block (128 slots: 20 mossy stone bricks, 40 mossy cobblestone, 68 moss blocks) | `mossy_stone_bricks`, `mossy_cobblestone`, `moss_block` | `minecraft:stonebrick` : 1, `minecraft:mossy_cobblestone`, and the moss block as the next row maps it; with that mapping the table is stone bricks (mossy) 20, mossy cobblestone 108 | [LostCityTerrainFeature.java#L158-L190][up-rubble] |
-| `moss_block` (68 of the rubble table's 128 slots; no asset names it) | `moss_block` | `minecraft:mossy_cobblestone`, *Proposed* ([03-terrain](../03-terrain/index.md#proposed-not-decided) P03-7, [05-assets P05-7](../05-assets/index.md#p05-7-moss-block)). The pack has no moss block: Et Futurum's is behind `enableMossAzalea=false` ([etfuturum.md](../05-assets/block-catalog/etfuturum.md)), and 1.7.10 vanilla has none | [LostCityTerrainFeature.java#L171][up-moss] |
+| Default rubble table, when the city style sets no `rubbledirt` block (128 slots: 20 mossy stone bricks, 40 mossy cobblestone, 68 moss blocks) | `mossy_stone_bricks`, `mossy_cobblestone`, `moss_block` | `minecraft:stonebrick` : 1, `minecraft:mossy_cobblestone`, and `chisel:moss` : 0 as the next row maps it; with Chisel the table is mossy stone bricks 20, mossy cobblestone 40, Chisel moss 68, and without it mossy stone bricks 20, mossy cobblestone 108 | [LostCityTerrainFeature.java#L158-L190][up-rubble] |
+| `moss_block` (68 of the rubble table's 128 slots; no asset names it) | `moss_block` | `chisel:moss` : 0, Chisel's plain moss, whose texture matches the modern moss block, with `minecraft:mossy_cobblestone` as the fallback (D31; [03-terrain](../03-terrain/index.md), [05-assets](../05-assets/index.md)). It joins the set of blocks the rubble pass recognizes as rubble. Et Futurum's moss block is behind `enableMossAzalea=false` ([etfuturum.md](../05-assets/block-catalog/etfuturum.md)), and 1.7.10 vanilla has none | [LostCityTerrainFeature.java#L171][up-moss]; [Features.java#L4658-L4679][chisel-moss] |
 | Park grass, when the city style sets no `grass` block | `grass_block` | `minecraft:grass` | [LostCityTerrainFeature.java#L1546-L1548][up-grass] |
 | Torch fix-ups (`fixTorches`) | `torch`, `wall_torch` | `minecraft:torch` : 5 standing, 1 to 4 on a wall | [LostCityTerrainFeature.java#L393-L412][up-torches] |
 | Vines on building walls (the world style's default `vine*` settings) | `vine` with one side set | `minecraft:vine` : the side bit (south 1, west 2, north 4, east 8; *unverified*, M02) | [WorldSettings.java#L40-L52][up-vines] |
@@ -228,6 +228,7 @@ To record in `05-assets` when it is written:
 - Raw stone in the `stoneandbrick` variants becomes smooth stone.
 - Infested blocks become their plain blocks: no silverfish.
 - The oil rig's diamond blocks become a non-valuable pale-aqua look-alike (D30).
+- The default rubble table's moss blocks become Chisel moss, or mossy cobblestone without Chisel (D31).
 - Polished-diorite stairs become plain-diorite stairs.
 - Doors, trapdoors and fence gates are MalisisDoors blocks with a tile entity and an opening animation. Without MalisisDoors, every wooden door is oak and the iron trapdoor is a copper or wooden trapdoor.
 - Blocks with a tile entity (furnace contents, flower pot, spawner, chests, barrels) get their NBT built at placement with per-world item IDs.
@@ -248,6 +249,8 @@ Recorded in the [decision log](../../design/decision-log.md) as D19:
 - The boulder-host question for terracotta is settled in [ore-veins.md](ore-veins.md) (D18).
 
 Recorded as D30 (item 1): the oil rig's diamond blocks map to a non-valuable look-alike, `Ztones:tile.iszmBlock` : 8, so no diamond block is placed outside loot.
+
+Recorded as D31: the moss block maps to `chisel:moss` : 0 with `minecraft:mossy_cobblestone` as the fallback, and the gas station's and restaurant parking's iron blocks keep upstream's look while the iron flag is on, with `chisel:factoryblock` : 12 and then `minecraft:double_stone_slab` : 8 when it is off.
 
 Recorded as D28 (rule 5): MalisisDoors is adopted, so upstream's door woods map to its wood-variant doors and the iron trapdoor to its iron trapdoor, each with the fallback above. D28 also sets the rules for the variety drawn on top of this mapping ([block catalog](../05-assets/block-catalog/index.md)).
 
@@ -279,6 +282,7 @@ Recorded as D28 (rule 5): MalisisDoors is adopted, so upstream's door woods map 
 [chisel-clay]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L1712-L1812
 [chisel-features]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java
 [chisel-concrete]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/block/BlockConcrete.java
+[chisel-moss]: https://github.com/GTNewHorizons/Chisel/blob/2.17.34-GTNH/src/main/java/team/chisel/Features.java#L4658-L4679
 [malisis-replace]: https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/Registers.java#L84-L89
 [malisis-doors]: https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/Registers.java#L152-L174
 [malisis-trapdoor]: https://github.com/GTNewHorizons/MalisisDoors/blob/1.19.13-GTNH/src/main/java/net/malisis/doors/Registers.java#L233-L247

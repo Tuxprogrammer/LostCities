@@ -121,7 +121,7 @@ One pool per upstream palette family or character role in [catalog-palettes.md](
 | [Streets, highways and fittings](#streets-highways-and-fittings) | [street and floor slab](#street-and-floor-slab), [primary roads](#primary-roads), [sidewalks and plazas](#sidewalks-and-plazas), [highway surface](#highway-surface), [street variant brick](#street-variant-brick), [pillars and beds](#pillars-and-beds), [bottom slabs](#bottom-slabs), [walls](#walls), [iron bars](#iron-bars), [stone-brick stairs](#stone-brick-stairs), [stone stairs](#stone-stairs), [street markings](#street-markings) |
 | [Interiors and roofs](#interiors-and-roofs) | [interior floors](#interior-floors), [ceilings](#ceilings), [roofs](#roofs), [doors](#doors), [trapdoors and hatches](#trapdoors-and-hatches), [wood trim](#wood-trim) |
 | [Lights and fittings](#lights-and-fittings) | [glowstone](#glowstone), [torches](#torches), [hanging lights](#hanging-lights), [furniture](#furniture), [bookshelves](#bookshelves), [chests and barrels](#chests-and-barrels), [ladders](#ladders), [pressure plates](#pressure-plates), [fences](#fences), [chains and cobwebs](#chains-and-cobwebs), [treasure](#treasure), [colored concrete](#colored-concrete) |
-| [Plants, ruins and set pieces](#plants-ruins-and-set-pieces) | [flowers and planters](#flowers-and-planters), [overgrowth](#overgrowth), [ruin dressing](#ruin-dressing), [oil rig](#oil-rig), [cabin](#cabin) |
+| [Plants, ruins and set pieces](#plants-ruins-and-set-pieces) | [flowers and planters](#flowers-and-planters), [overgrowth](#overgrowth), [ruin dressing](#ruin-dressing), [oil rig](#oil-rig), [cabin](#cabin), [gas station and restaurant parking](#gas-station-and-restaurant-parking) |
 | [Decorative metals (D29)](#decorative-metals-d29) | metal accents behind one flag per metal |
 
 Characters that keep upstream's block with no pool: `~` and `b` (structure void), `1` and `4` (spawners, [loot-and-mobs.md](../../00-pack-integration/loot-and-mobs.md)), `W` (water), the `rails` palette (vanilla `rail` and `golden_rail`; Railcraft tracks need their own placement call, see [Prerequisites](#prerequisites-for-the-asset-system)), and `@` in `glass_side_variant_bricks` and `_glass`, which copy `#` and `a`.
@@ -1057,7 +1057,7 @@ Saplings grow into trees on random ticks; planters that must keep their shape us
 
 #### Overgrowth
 
-Upstream's overgrown look comes from vines, leaves and mossy blocks. The ruin pass and overgrown variants draw from:
+Upstream's overgrown look comes from vines, leaves and mossy blocks. Upstream's moss block, 68 of the 128 slots of the rubble-dirt default its code uses when a city style sets no `rubbledirt` block, maps to `chisel:moss:0` (Chisel's lush moss, which matches the modern moss block's look), falling back to `minecraft:mossy_cobblestone`, and is one of the blocks the damage pass recognizes as rubble (D31; [block-mapping.md](../../00-pack-integration/block-mapping.md#blocks-upstreams-code-names)). The ruin pass and overgrown variants draw from:
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
@@ -1066,7 +1066,7 @@ Upstream's overgrown look comes from vines, leaves and mossy blocks. The ruin pa
 | `Botania:solidVine` | 10 | `minecraft:vine` | SP | Vines that never spread |
 | `chisel:brutalism:2`, `:3`, `chisel:leaves:6` to `:10` | 10 | baseline | SP | Leafy cement, hedges that never decay (Chisel's overgrown road `road2:15` is a speed block and stays on primary roads) |
 | `harvestcraft` wild gardens with `minecraft:tallgrass` | 8 | `minecraft:tallgrass:1` | | Overgrown lots |
-| `chisel:moss_carpet:0`, `:3`, `:9`, `chisel:mossy_cobblestone:1` to `:7` | 7 | baseline | SP (cobblestone) | Moss carpets |
+| `chisel:moss:0`, `:3`, `:9`, `chisel:moss_carpet:0`, `:3`, `:9`, `chisel:mossy_cobblestone:1` to `:7` | 7 | baseline | SP (moss blocks, cobblestone) | Moss blocks and carpets |
 | `witchery:spanishmoss:0` | 5 | `minecraft:vine` | | Hanging moss |
 | `TwilightForest` roots, moss patch, darkwood hedge (`tile.TFHedge:1`; meta 0 hurts) | 5 | `minecraft:vine` | | Ruin and park follies |
 
@@ -1113,6 +1113,19 @@ Part `cabin` local palette: exposed copper and its cut stairs, quartz, barrel, i
 | `c`, `1` to `4` (exposed copper, exposed cut copper stairs; DM, see [decorative metals](#decorative-metals-d29)) | `etfuturum:copper_block:1`, `etfuturum:exposed_cut_copper_stairs`; with the copper flag off, `minecraft:planks:1` and `minecraft:spruce_stairs` | the other unwaxed stages (the cabin keeps weathering, as upstream) |
 | `D`, `d` (iron door) | `minecraft:iron_door` | `etfuturum:exposed_copper_door` (DM) |
 
+The cabin is one of the two exceptions to D29's accent cap; the other is the [gas station and restaurant parking](#gas-station-and-restaurant-parking).
+
+#### Gas station and restaurant parking
+
+Parts `highway_gas_station` and `highway_restaurant_parking`, the scattered structures beside highways ([07-scattered](../../07-scattered/index.md)). Their `i` is `minecraft:iron_block`: 20 blocks in the gas station's canopy columns and pumps ([highway_gas_station.json](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/resources/data/lostcities/lostcities/parts/highway_gas_station.json)) and 4 in the parking's lamp posts ([highway_restaurant_parking.json](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/resources/data/lostcities/lostcities/parts/highway_restaurant_parking.json)). The iron is the structure, not an accent, so like the [cabin](#cabin)'s copper it keeps upstream's block while its flag is on, the second exception to D29's accent cap (D31).
+
+| Character | Baseline (D19) | Variety |
+|---|---|---|
+| `i` (iron block; DM, see [decorative metals](#decorative-metals-d29)) | `minecraft:iron_block` while `decorativeMetals.iron` is on; with the flag off, `chisel:factoryblock:12` (Shiny Metal Construction Block, [chisel.md](chisel.md)), then `minecraft:double_stone_slab:8` | none: upstream's block, so the canopy and pumps read as one material |
+| `p`, `r`, `k`, `m` (gray, red, black, yellow concrete) | as [colored concrete](#colored-concrete) | as [colored concrete](#colored-concrete) |
+| `e` (sea lantern) | `Botania:seaLamp:0` | [hanging lights](#hanging-lights) |
+| `a`, `j` (iron door, gas station), `b` (iron bars, parking) | `minecraft:iron_door`, `minecraft:iron_bars` | [iron bars](#iron-bars) for `b` |
+
 ### Decorative metals (D29)
 
 Metal storage blocks and their decorative variants come back as accents. Each metal at or below EV that the catalogs place has its own worldgen flag, on by default and pinned into the world profile at creation; one flag covers that metal's blocks in every mod. A flagged metal appears only as accents under a per-building cap: stripe bands, trims, crates and ingot stacks as props, the odd vent or panel, never whole walls, floors or roofs. The roles are `wall-accent`, `trim-pillar`, `furniture-deco` and `special`; the per-mod catalogs drop `wall-main`, `floor` and `roof` from these blocks. With a flag off, each candidate takes its fallback, so a metal accent becomes the building's own accent block. The defaults and the cap are on the [beta balance list](../../beta-balance-list.md). Treasure (`!`) and chest loot are loot, not decoration, and ignore the flags.
@@ -1121,7 +1134,7 @@ Metal storage blocks and their decorative variants come back as accents. Each me
 
 | Metal | Flag | Blocks it covers | Accent roles | Tier (GT source at 5.09.54.265) |
 |---|---|---|---|---|
-| Iron | `decorativeMetals.iron` | `minecraft:iron_block`; Chisel `iron_block:0` to `:15`, `iron2:0` to `:5`; Tinkers `decoration.multibrick:4`, `multibrickfancy:4`; IC2 `blockMetal:5` (refined iron); Thaumic Bases `oldIron:0` | `wall-accent` (vents, gears, caution stripes), `furniture-deco` (crates), `special` (ingot and coin stacks as props) | steam: no blast furnace ([MaterialsInit.java#L865-L897][gt-iron]) |
+| Iron | `decorativeMetals.iron` | `minecraft:iron_block` (also the gas station's and restaurant parking's `i`, an exception to the cap: [gas station](#gas-station-and-restaurant-parking)); Chisel `iron_block:0` to `:15`, `iron2:0` to `:5`; Tinkers `decoration.multibrick:4`, `multibrickfancy:4`; IC2 `blockMetal:5` (refined iron); Thaumic Bases `oldIron:0` | `wall-accent` (vents, gears, caution stripes), `furniture-deco` (crates), `special` (ingot and coin stacks as props) | steam: no blast furnace ([MaterialsInit.java#L865-L897][gt-iron]) |
 | Gold | `decorativeMetals.gold` | `minecraft:gold_block`; Chisel `gold_block`, `gold2`; Tinkers `decoration.multibrick:5`, `multibrickfancy:5` (gold bricks); Thaumic Bases `oldGold:0` | `special` (ingot and coin stacks), `wall-accent` | steam ([#L725-L759][gt-gold]) |
 | Cast iron | `decorativeMetals.castIron` | Chisel `castironblock:0` to `:7` (its group keys `blockCastIron`, [Features.java#L4833][ch-castiron], which GT's block registers); GT `gt.blockmetal8:2` ([LoaderGTBlockFluid.java#L836-L844][gt-metal8]) | `wall-accent`, `furniture-deco`, `special` | ULV: the ULV casing metal; no blast furnace ([MaterialsInit.java#L9648-L9668][gt-castiron]) |
 | Copper | `decorativeMetals.copper` | Et Futurum copper blocks, cut and chiseled copper, grates, bulbs, doors, trapdoors, cut copper stairs and slabs; Chisel `copperblock`; GT `gt.blockmetal2:7`; Railcraft `cube:9`; IC2 `blockMetal:0`; Galacticraft `tile.gcBlockCore:9`; Tinkers `MetalBlock:3`; ProjectRed `projectred.exploration.stone:8` | `wall-accent`, `trim-pillar`, `furniture-deco`, `special`; Et Futurum's doors, trapdoors, bulbs and grates as fittings | steam ([#L500-L531][gt-copper]) |
@@ -1150,7 +1163,7 @@ The other metals at or below EV that the catalogs list (annealed copper, black b
 
 **Above EV, never placed:** tungstensteel (the IV casing metal, blast 4000K: [#L11678-L11700][gt-tungstensteel]), iridium and osmium (blast 4500K: [#L838-L863][gt-iridium], [#L1316-L1342][gt-osmium]), platinum and uranium (D29), and Chisel's rhodium-plated palladium (`rppblock`; bartworks' material is a 4500K blast-furnace metal, [WerkstoffLoader.java#L1311-L1333][bw-rpp], and the group keys `rppBlock`, which nothing registers). That covers Chisel's `tungstensteelblock`, `iridiumblock`, `osmiumblock`, `platinumblock`, `uraniumblock` and `rppblock`, GT's tungstensteel and uranium blocks, and IC2's uranium block.
 
-**Upstream's cabin** is the one building upstream makes of copper (exposed copper walls and cut copper stairs, [cabin](#cabin)). It keeps upstream's palette while `decorativeMetals.copper` is on, the one exception to D29's accent cap, confirmed by the owner; with the flag off, it falls back to spruce planks and stairs.
+**Two exceptions to the cap** keep upstream's look where the metal is the structure, not an accent, both confirmed by the owner. **Upstream's cabin** is the one building upstream makes of copper (exposed copper walls and cut copper stairs, [cabin](#cabin)); it keeps upstream's palette while `decorativeMetals.copper` is on, and with the flag off falls back to spruce planks and stairs (D29). **The highway gas station and restaurant parking** keep their 24 iron blocks (canopy columns, pumps and lamp posts, [gas station and restaurant parking](#gas-station-and-restaurant-parking)) while `decorativeMetals.iron` is on, and with the flag off take `chisel:factoryblock:12`, then `minecraft:double_stone_slab:8` (D31).
 
 [gt-casings]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/loaders/postload/recipes/AssemblerRecipes.java#L2570-L2618
 [gt-coils]: https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/api/enums/HeatingCoilLevel.java#L10-L15
@@ -1279,4 +1292,4 @@ What M02 must support before these pools can become palettes ([ROADMAP](../../..
 8. **Primary roads as a layout fact.** Speed blocks are walked on only on highways and primary roads, while upstream uses `S` for every street and for building floors. The city style needs a separate street block or character for primary roads, which M04 and M06 provide.
 9. **Per-building palette choice with weights**, per style, with the spawn-proof floor share as a tunable (D28 rule 1).
 10. **A "shape of material" palette entry** (ArchitectureCraft, Carpenter's Blocks) for true roof slopes and cornices, after beta.
-11. **Decorative metal flags (D29).** One `decorativeMetals.<metal>` worldgen flag per metal in the [decorative metals](#decorative-metals-d29) table, pinned into the world profile at creation, and a per-building cap on metal accents. A palette entry marked DM resolves to its fallback when its flag is off.
+11. **Decorative metal flags (D29).** One `decorativeMetals.<metal>` worldgen flag per metal in the [decorative metals](#decorative-metals-d29) table, pinned into the world profile at creation, and a per-building cap on metal accents that exempts the cabin and the gas station and restaurant parking. A palette entry marked DM resolves to its fallback when its flag is off.

@@ -2,7 +2,7 @@
 
 How a world gets its profile and keeps it. Upstream stores only a profile name per world ([profile-selection.md](../../original-spec/02-profiles-dimensions/profile-selection.md#profiles-are-referenced-by-name)) and hands the choice over from the world-creation screen through a sentinel in a per-world config file ([01-core config.md](../../original-spec/01-core/config.md#profile-resolution-getprofilefordimensiondimension-server)). Here there is no world-creation screen and no per-world config: the profile is server configuration, resolved once and **pinned** into the world's saved data when the world is created, so later edits to config, profile files or built-ins never change a world that already exists.
 
-Status: *Accepted* where [0005](../../design/0005-rwg-overlay.md) §7, [0006](../../design/0006-build-around-other-worldgen.md) §2, D22 and D29 settle it; the stored layout and the mismatch handling are *Proposed* ([P-PROF-7](index.md#proposed-not-decided)).
+Status: *Accepted* where [0005](../../design/0005-rwg-overlay.md) §7, [0006](../../design/0006-build-around-other-worldgen.md) §2, D22 and D29 settle it; the stored layout and the mismatch handling are *Accepted* as recommended (P-PROF-7, decision log D31).
 
 ## Lifecycle
 
@@ -27,13 +27,13 @@ Status: *Accepted* where [0005](../../design/0005-rwg-overlay.md) §7, [0006](..
 | World type name | The oracle the world was pinned for | [0005](../../design/0005-rwg-overlay.md) §7 |
 | Other mods' config values each structure oracle reads (VillageNames, Roguelike Dungeons, Witchery, LootGames, AE2, RWG2) | Structure sites move when they change; the server logs it | [0006](../../design/0006-build-around-other-worldgen.md) §2 |
 | The decorative metal flags | They change palettes, so they belong to the world | D29 |
-| The other mod-config keys that change generated blocks: the worldgen module flags, `heightSampleSize`, `forceSaplingGrowth` | Same rule as D29; upstream's per-installation `heightSampleSize` is CORE-10 | [CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules) ("existing worlds stay valid"); bug register |
+| The other mod-config keys that change generated blocks: the worldgen module flags, `heightSampleSize` (upstream's `forceSaplingGrowth` is dropped: saplings are never grown at generation, P03-10, D31) | Same rule as D29; upstream's per-installation `heightSampleSize` is CORE-10 | [CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules) ("existing worlds stay valid"); bug register |
 
 Assets themselves are not copied into the snapshot: only their hash. A world created with one asset set and loaded with another generates new chunks with the new set; the hash makes that visible.
 
 ## Stored layout
 
-*Proposed* ([P-PROF-7](index.md#proposed-not-decided)). One `WorldSavedData` named `lostcitiesnh` in the overworld's `MapStorage`, so the file is `data/lostcitiesnh.dat`, as [0005](../../design/0005-rwg-overlay.md) §7 names it:
+*Accepted* (P-PROF-7, D31). The profile is stored as its upstream-format JSON, so one loader reads files and snapshots, with one entry per dimension for the PersonalSpace work. One `WorldSavedData` named `lostcitiesnh` in the overworld's `MapStorage`, so the file is `data/lostcitiesnh.dat`, as [0005](../../design/0005-rwg-overlay.md) §7 names it:
 
 | NBT key | Type | Content |
 |---|---|---|
@@ -49,7 +49,7 @@ Assets themselves are not copied into the snapshot: only their hash. A world cre
 
 ## On a later load
 
-*Proposed* ([P-PROF-7](index.md#proposed-not-decided)), apart from the oracle-input row, which [0006](../../design/0006-build-around-other-worldgen.md) §2 settles.
+*Accepted* (P-PROF-7, D31); the oracle-input row is [0006](../../design/0006-build-around-other-worldgen.md) §2's. No mismatch refuses to load a world: each is logged and generation carries on.
 
 | Mismatch | Handling |
 |---|---|
