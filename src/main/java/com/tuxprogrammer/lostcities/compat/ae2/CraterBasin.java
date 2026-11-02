@@ -92,7 +92,22 @@ public final class CraterBasin {
      * @return the basin
      */
     public static CraterBasin of(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
-        Builder builder = new Builder(heights, x, z, shape);
+        return of(heights, x, z, shape, true);
+    }
+
+    /**
+     * Computes a meteorite's basin, with or without its ground grid.
+     *
+     * @param heights the height oracle
+     * @param x       the impact's block X
+     * @param z       the impact's block Z
+     * @param shape   the meteorite's shape
+     * @param grid    whether to read the ground grid; without it the footprint is the decay square and the crater,
+     *                and the ground estimate the median of the sky box, enough where no city stands near
+     * @return the basin
+     */
+    public static CraterBasin of(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape, boolean grid) {
+        Builder builder = new Builder(heights, x, z, shape, grid);
         builder.step(Long.MAX_VALUE);
         return builder.build();
     }
@@ -143,8 +158,14 @@ public final class CraterBasin {
         private int ringNext;
         private int half;
         private boolean done;
+        private final boolean withGrid;
 
         Builder(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape) {
+            this(heights, x, z, shape, true);
+        }
+
+        Builder(TerrainHeightOracle heights, int x, int z, MeteoriteShape shape, boolean withGrid) {
+            this.withGrid = withGrid;
             this.heights = heights;
             this.x = x;
             this.z = z;
@@ -220,6 +241,7 @@ public final class CraterBasin {
                         lowest = Math.min(lowest, value);
                     }
                     capCenter = (int) Math.floor(lowest - SKY_BOX_TOP - shape.size() + 1) - SLACK;
+                    done = !withGrid;
                 }
                 return;
             }
@@ -290,6 +312,11 @@ public final class CraterBasin {
         /** Returns the basin; {@link #step} must have returned {@code true}. */
         CraterBasin build() {
             int bounded = Math.min(half, MAX_HALF_WIDTH);
+            if (!withGrid) {
+                int[] box = capValues.clone();
+                Arrays.sort(box);
+                return new CraterBasin(capCenter, bounded, box[box.length / 2]);
+            }
             int[] inside = new int[grid.length];
             int n = 0;
             for (int i = 0; i < CORNERS; i++) {

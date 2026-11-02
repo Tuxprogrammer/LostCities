@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
+import com.tuxprogrammer.lostcities.layout.landmark.CityNearness;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
@@ -63,7 +64,7 @@ public final class OracleCostScenario implements Scenario {
         for (int i = 0; i < factories.size(); i++) {
             TerrainHeightOracle heights = HeightOracles.create(context.world());
             StructureOracle oracle = factories.get(i)
-                .forWorld(context.world(), heights, 2);
+                .forWorld(context.world(), heights, 2, CityNearness.ANYWHERE);
             if (oracle == null || oracle == StructureOracle.NONE) {
                 LostCities.LOG.info("[LCNH-ORACLE-COST] {} none", names.get(i));
                 continue;

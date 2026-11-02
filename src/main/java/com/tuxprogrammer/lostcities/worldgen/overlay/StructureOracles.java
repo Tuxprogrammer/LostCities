@@ -13,6 +13,7 @@ import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
 import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.compat.witchery.WitcheryOracles;
+import com.tuxprogrammer.lostcities.layout.landmark.CityNearness;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
@@ -44,9 +45,10 @@ public final class StructureOracles {
          * @param world          the world being wrapped
          * @param heights        the world's height oracle, for ground estimates
          * @param landmarkMargin the pinned profile's {@code landmarkMargin}, blocks
+         * @param cities         whether a raw city chunk lies near, for oracles that skip work far from cities
          * @return the oracle; {@link StructureOracle#NONE} when the mod is absent or off
          */
-        StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin);
+        StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin, CityNearness cities);
     }
 
     private StructureOracles() {}
@@ -61,12 +63,12 @@ public final class StructureOracles {
         // One line per mod (0006 §2). VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the
         // overload with the height oracle, since the one without builds a second classic RWG generator. Roguelike
         // Dungeons, Witchery, LootGames, AE2 and RWG2's terrain landmarks (M08).
-        factories.add(VillageNamesOracles::forWorld);
-        factories.add(RoguelikeOracles::forWorld);
-        factories.add(WitcheryOracles::forWorld);
-        factories.add(LootGamesOracles::forWorld);
+        factories.add((world, heights, margin, cities) -> VillageNamesOracles.forWorld(world, heights, margin));
+        factories.add((world, heights, margin, cities) -> RoguelikeOracles.forWorld(world, heights, margin));
+        factories.add((world, heights, margin, cities) -> WitcheryOracles.forWorld(world, heights, margin));
+        factories.add((world, heights, margin, cities) -> LootGamesOracles.forWorld(world, heights, margin));
         factories.add(Ae2Oracles::forWorld);
-        factories.add(Rwg2Landmarks::forWorld);
+        factories.add((world, heights, margin, cities) -> Rwg2Landmarks.forWorld(world, heights, margin));
         return factories;
     }
 
@@ -85,10 +87,12 @@ public final class StructureOracles {
      * @param world          the world
      * @param heights        the world's height oracle
      * @param landmarkMargin the pinned profile's {@code landmarkMargin}, blocks
+     * @param cities         whether a raw city chunk lies near (the world's planner, set once it exists)
      * @return the oracle; {@link StructureOracle#NONE} when no factory knows anything
      */
-    public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin) {
-        return compose(build(world, heights, landmarkMargin, factories()));
+    public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin,
+        CityNearness cities) {
+        return compose(build(world, heights, landmarkMargin, cities, factories()));
     }
 
     /**
@@ -118,16 +122,17 @@ public final class StructureOracles {
      * @param world          the world
      * @param heights        the world's height oracle
      * @param landmarkMargin the pinned profile's {@code landmarkMargin}, blocks
+     * @param cities         whether a raw city chunk lies near
      * @param factories      the factories
      * @return the oracles that are not {@link StructureOracle#NONE}
      */
     static List<StructureOracle> build(World world, TerrainHeightOracle heights, int landmarkMargin,
-        List<Factory> factories) {
+        CityNearness cities, List<Factory> factories) {
         List<StructureOracle> oracles = new ArrayList<>();
         for (Factory factory : factories) {
             StructureOracle oracle;
             try {
-                oracle = factory.forWorld(world, heights, landmarkMargin);
+                oracle = factory.forWorld(world, heights, landmarkMargin, cities);
             } catch (RuntimeException e) {
                 LostCities.LOG.error("A structure oracle failed to start; its structures are not known", e);
                 continue;

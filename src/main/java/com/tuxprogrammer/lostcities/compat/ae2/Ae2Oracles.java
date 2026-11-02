@@ -3,6 +3,7 @@ package com.tuxprogrammer.lostcities.compat.ae2;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.layout.landmark.CityNearness;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
@@ -40,10 +41,25 @@ public final class Ae2Oracles {
      * @return the oracle; {@link StructureOracle#NONE} when no meteorite falls here
      */
     public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin) {
+        return forWorld(world, heights, landmarkMargin, CityNearness.ANYWHERE);
+    }
+
+    /**
+     * Returns the oracle of a world, which reads a meteorite's whole ground grid only where a raw city chunk lies
+     * near it (D-M08-24).
+     *
+     * @param world          the world
+     * @param heights        the world's height oracle
+     * @param landmarkMargin the profile's {@code landmarkMargin}, blocks (unused: the basin is the core)
+     * @param cities         whether a raw city chunk lies near
+     * @return the oracle; {@link StructureOracle#NONE} when AE2 places no meteorites here
+     */
+    public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin,
+        CityNearness cities) {
         if (!isLoaded()) {
             return StructureOracle.NONE;
         }
-        return Present.create(world, heights);
+        return Present.create(world, heights, cities);
     }
 
     /**
@@ -77,14 +93,14 @@ public final class Ae2Oracles {
             return Ae2Config.read(world);
         }
 
-        static StructureOracle create(World world, TerrainHeightOracle heights) {
+        static StructureOracle create(World world, TerrainHeightOracle heights, CityNearness cities) {
             MeteoriteSettings settings = Ae2Config.read(world);
             if (!settings.enabled()) {
                 LostCities.LOG.info("[LCNH-AE2] dimension {}: no oracle ({})", world.provider.dimensionId, settings);
                 return StructureOracle.NONE;
             }
             LostCities.LOG.info("[LCNH-AE2] dimension {}: oracle on ({})", world.provider.dimensionId, settings);
-            return new MeteoriteOracle(world.getSeed(), settings, heights, MeteoriteOracle.CACHE_SIZE);
+            return new MeteoriteOracle(world.getSeed(), settings, heights, MeteoriteOracle.CACHE_SIZE, cities);
         }
     }
 }

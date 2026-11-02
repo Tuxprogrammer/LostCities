@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
 import com.tuxprogrammer.lostcities.layout.landmark.Certainty;
+import com.tuxprogrammer.lostcities.layout.landmark.CityNearness;
 import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
@@ -53,6 +54,7 @@ public final class MeteoriteOracle implements StructureOracle {
     private final HeightProbe probe;
     private final SiteCache<CraterBasin.Builder> building = new SiteCache<>(BUILDING_SIZE);
     private final SiteCache<Landmark> cache;
+    private final CityNearness cities;
 
     /**
      * Creates the oracle of a world.
@@ -63,6 +65,23 @@ public final class MeteoriteOracle implements StructureOracle {
      * @param cacheSize the most cells cached
      */
     public MeteoriteOracle(long worldSeed, MeteoriteSettings settings, TerrainHeightOracle heights, int cacheSize) {
+        this(worldSeed, settings, heights, cacheSize, CityNearness.ANYWHERE);
+    }
+
+    /**
+     * Creates the oracle of a world that reads a meteorite's ground grid only where a raw city chunk lies within
+     * {@link CraterBasin#MAX_HALF_WIDTH} blocks plus {@link CityNearness#EFFECT_CHUNKS} chunks of the impact; elsewhere
+     * the basin is the decay square and the crater, whose core and rings no city reaches (D-M08-24).
+     *
+     * @param worldSeed the world seed
+     * @param settings  the dimension's settings, enabled
+     * @param heights   the height oracle; {@code null} estimates every height at Y {@value #FALLBACK_Y}
+     * @param cacheSize the most cells cached
+     * @param cities    whether a raw city chunk lies near
+     */
+    public MeteoriteOracle(long worldSeed, MeteoriteSettings settings, TerrainHeightOracle heights, int cacheSize,
+        CityNearness cities) {
+        this.cities = cities;
         this.grid = new MeteoriteGrid(worldSeed, settings);
         this.heights = heights == null ? (x, z) -> FALLBACK_Y : heights;
         HeightProbe guard = heights == null ? null : heights.probe();
@@ -126,7 +145,9 @@ public final class MeteoriteOracle implements StructureOracle {
             // About 550 height samples: read a part per prefetch step, with the probe off (B4).
             throw probe.miss(() -> step(key, site));
         }
-        Landmark landmark = build(site, CraterBasin.of(heights, site.x(), site.z(), MeteoriteShape.of(site.seed())));
+        Landmark landmark = build(
+            site,
+            CraterBasin.of(heights, site.x(), site.z(), MeteoriteShape.of(site.seed()), nearCity(site)));
         cache.put(key, landmark);
         return landmark;
     }
@@ -139,12 +160,30 @@ public final class MeteoriteOracle implements StructureOracle {
         CraterBasin.Builder builder = building.get(key);
         if (builder == null) {
             builder = building
-                .put(key, new CraterBasin.Builder(heights, site.x(), site.z(), MeteoriteShape.of(site.seed())));
+                .put(
+                    key,
+                    new CraterBasin.Builder(
+                        heights,
+                        site.x(),
+                        site.z(),
+                        MeteoriteShape.of(site.seed()),
+                        nearCity(site)));
         }
         if (builder.step(STEP_NANOS)) {
             cache.put(key, build(site, builder.build()));
             building.remove(key);
         }
+    }
+
+    /**
+     * Whether a raw city chunk lies close enough to a site for its ground grid to matter: within the largest footprint
+     * plus the chunks a core's effects reach.
+     */
+    private boolean nearCity(MeteoriteGrid.Site site) {
+        int reach = (CraterBasin.MAX_HALF_WIDTH >> 4) + 1 + CityNearness.EFFECT_CHUNKS;
+        int chunkX = site.x() >> 4;
+        int chunkZ = site.z() >> 4;
+        return cities.anyRawCity(chunkX - reach, chunkZ - reach, chunkX + reach, chunkZ + reach);
     }
 
     private Landmark build(MeteoriteGrid.Site site, CraterBasin basin) {
