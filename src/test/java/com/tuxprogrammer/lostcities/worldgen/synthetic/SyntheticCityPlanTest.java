@@ -29,12 +29,16 @@ public class SyntheticCityPlanTest {
     @Test
     public void citiesRepeatEverySixtyFourChunks() {
         SyntheticCityPlan plan = plan(3L);
-        assertTrue(plan.chunk(0, 1)
-            .isCity());
-        assertTrue(plan.chunk(64, 1)
-            .isCity());
-        assertFalse(plan.chunk(32, 1)
-            .isCity(), "between cities");
+        assertTrue(
+            plan.chunk(0, 1)
+                .isCity());
+        assertTrue(
+            plan.chunk(64, 1)
+                .isCity());
+        assertFalse(
+            plan.chunk(32, 1)
+                .isCity(),
+            "between cities");
         assertEquals(0, SyntheticCityPlan.centerOf(31));
         assertEquals(64, SyntheticCityPlan.centerOf(32));
         assertEquals(2048, SyntheticCityPlan.centerOf(2050));
@@ -71,16 +75,26 @@ public class SyntheticCityPlanTest {
         ChunkPlan ring = plan.chunk(6, -4);
         assertTrue(ring.isCity());
         assertFalse(ring.hasBuilding(), "no building in the edge ring");
-        assertNotNull(plan.chunk(4, -4)
-            .lane(), "the lane crosses the core");
-        assertNotNull(plan.chunk(3, -4)
-            .lane(), "and the strip of the street facing it");
-        assertNull(plan.chunk(5, -4)
-            .lane(), "only to the core's center");
-        assertEquals(ChunkKind.LANDMARK_CORE, plan.chunk(-7, 0)
-            .kind());
-        assertEquals(ChunkKind.LANDMARK_CORE, plan.chunk(-6, -1)
-            .kind());
+        assertNotNull(
+            plan.chunk(4, -4)
+                .lane(),
+            "the lane crosses the core");
+        assertNotNull(
+            plan.chunk(3, -4)
+                .lane(),
+            "and the strip of the street facing it");
+        assertNull(
+            plan.chunk(5, -4)
+                .lane(),
+            "only to the core's center");
+        assertEquals(
+            ChunkKind.LANDMARK_CORE,
+            plan.chunk(-7, 0)
+                .kind());
+        assertEquals(
+            ChunkKind.LANDMARK_CORE,
+            plan.chunk(-6, -1)
+                .kind());
     }
 
     @Test
@@ -89,8 +103,9 @@ public class SyntheticCityPlanTest {
         SyntheticCityPlan second = plan(9L);
         for (int cx = -8; cx <= 8; cx++) {
             for (int cz = 8; cz >= -8; cz--) {
-                assertEquals(first.chunk(cx, cz)
-                    .toString(),
+                assertEquals(
+                    first.chunk(cx, cz)
+                        .toString(),
                     second.chunk(cx, cz)
                         .toString());
             }

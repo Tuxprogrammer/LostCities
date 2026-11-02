@@ -52,9 +52,7 @@ public class TerrainPhaseTest {
             context.settings()
                 .heightSampleSize(),
             ChunkHeights.Listener.NONE);
-        return new TerrainPhase(
-            context,
-            new CachedCityPlan(new SyntheticCityPlan(SEED, context.settings(), heights)));
+        return new TerrainPhase(context, new CachedCityPlan(new SyntheticCityPlan(SEED, context.settings(), heights)));
     }
 
     static ArrayChunkBuffer run(TerrainPhase phase, int chunkX, int chunkZ) {
@@ -121,15 +119,15 @@ public class TerrainPhaseTest {
             ChunkBufferDigest.sha256(TestTerrain.chunk(5, -5)),
             ChunkBufferDigest.sha256(run(phase, 5, -5)),
             "the city writes nothing in a landmark core without a lane");
-        assertEquals(TerrainPhase.ChunkClass.UNTOUCHED, phase.run(TestTerrain.chunk(5, -5), 5, -5)
-            .chunkClass());
+        assertEquals(
+            TerrainPhase.ChunkClass.UNTOUCHED,
+            phase.run(TestTerrain.chunk(5, -5), 5, -5)
+                .chunkClass());
     }
 
     @Test
     public void farFromCitiesNothingChanges() {
         TerrainPhase phase = phase();
-        assertEquals(
-            ChunkBufferDigest.sha256(TestTerrain.chunk(30, 30)),
-            ChunkBufferDigest.sha256(run(phase, 30, 30)));
+        assertEquals(ChunkBufferDigest.sha256(TestTerrain.chunk(30, 30)), ChunkBufferDigest.sha256(run(phase, 30, 30)));
     }
 }

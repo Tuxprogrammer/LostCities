@@ -24,7 +24,11 @@ public class VinesTest {
     private static TerrainContext context(float chance) {
         Map<String, String> values = new HashMap<>();
         values.put("vineChance", Float.toString(chance));
-        return new TerrainContext(1L, 0, TerrainSettings.fromValues(values), new NameBlockClassifier(),
+        return new TerrainContext(
+            1L,
+            0,
+            TerrainSettings.fromValues(values),
+            new NameBlockClassifier(),
             BlockAvailability.VANILLA);
     }
 

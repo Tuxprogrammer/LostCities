@@ -53,8 +53,9 @@ public class DamageAreaTest {
         TerrainSettings always = settings("explosionChance", "1", "miniExplosionChance", "1");
         DamageArea first = DamageArea.of(42L, 10, -3, always, ALL_CITY);
         DamageArea second = DamageArea.of(42L, 10, -3, always, ALL_CITY);
-        assertEquals(first.explosions()
-            .toString(),
+        assertEquals(
+            first.explosions()
+                .toString(),
             second.explosions()
                 .toString());
         assertTrue(first.hasExplosions());
@@ -67,8 +68,9 @@ public class DamageAreaTest {
     public void explosionsStartOnlyInCitiesByDefault() {
         CityPlan noCity = (cx, cz) -> ChunkPlan.none(cx, cz, 0, 71, 70, false);
         TerrainSettings always = settings("explosionChance", "1", "miniExplosionChance", "1");
-        assertFalse(DamageArea.of(42L, 0, 0, always, noCity)
-            .hasExplosions());
+        assertFalse(
+            DamageArea.of(42L, 0, 0, always, noCity)
+                .hasExplosions());
     }
 
     @Test
@@ -100,7 +102,9 @@ public class DamageAreaTest {
         assertTrue(area.hasExplosions(15), "the top section, Y 240 to 255");
         assertEquals(255, area.highestExplosionY());
         Explosion bottom = new Explosion(8, 3, 8, 6);
-        assertEquals(0, DamageArea.withExplosions(0, 0, Collections.singletonList(bottom))
-            .lowestExplosionY());
+        assertEquals(
+            0,
+            DamageArea.withExplosions(0, 0, Collections.singletonList(bottom))
+                .lowestExplosionY());
     }
 }

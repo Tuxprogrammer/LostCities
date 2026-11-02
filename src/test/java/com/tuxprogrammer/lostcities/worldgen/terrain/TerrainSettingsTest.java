@@ -29,8 +29,9 @@ public class TerrainSettingsTest {
         assertEquals(6, settings.softEdgeWidth());
         assertEquals(2, settings.landmarkMargin());
         assertTrue(settings.preventLakesRavinesInCities());
-        assertTrue(settings.warnings()
-            .isEmpty());
+        assertTrue(
+            settings.warnings()
+                .isEmpty());
     }
 
     @Test
@@ -46,8 +47,10 @@ public class TerrainSettingsTest {
     @Test
     public void valuesRoundTripThroughASnapshot() {
         TerrainSettings settings = TerrainSettings.defaults();
-        assertEquals(settings.toValues(), TerrainSettings.fromValues(settings.toValues())
-            .toValues());
+        assertEquals(
+            settings.toValues(),
+            TerrainSettings.fromValues(settings.toValues())
+                .toValues());
     }
 
     @Test
@@ -59,8 +62,10 @@ public class TerrainSettingsTest {
         TerrainSettings settings = TerrainSettings.fromValues(values);
         assertEquals(255, settings.groundLevel());
         assertEquals(0.002f, settings.explosionChance());
-        assertEquals(3, settings.warnings()
-            .size());
+        assertEquals(
+            3,
+            settings.warnings()
+                .size());
     }
 
     @Test
@@ -69,7 +74,8 @@ public class TerrainSettingsTest {
         values.put("bedrockLayer", "2");
         TerrainSettings settings = TerrainSettings.fromValues(values);
         assertEquals(2, settings.bedrockLayer());
-        assertFalse(settings.warnings()
-            .isEmpty());
+        assertFalse(
+            settings.warnings()
+                .isEmpty());
     }
 }

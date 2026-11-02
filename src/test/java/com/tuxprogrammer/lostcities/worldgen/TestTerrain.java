@@ -43,7 +43,12 @@ public final class TestTerrain {
 
     /** Returns a terrain context with default settings and vanilla blocks. */
     public static TerrainContext context(long seed) {
-        return new TerrainContext(seed, 0, TerrainSettings.defaults(), new NameBlockClassifier(), BlockAvailability.VANILLA);
+        return new TerrainContext(
+            seed,
+            0,
+            TerrainSettings.defaults(),
+            new NameBlockClassifier(),
+            BlockAvailability.VANILLA);
     }
 
     /**

@@ -27,8 +27,12 @@ public class SpeedBlocksTest {
 
     @Test
     public void slabsKeepTheirHalf() {
-        assertEquals(BlockRef.of("minecraft:stone_slab", 8), SpeedBlocks.normalFor(BlockRef.of("chisel:concrete_slab", 9)));
-        assertEquals(BlockRef.of("minecraft:stone_slab", 1), SpeedBlocks.normalFor(BlockRef.of("TConstruct:SpeedSlab", 3)));
+        assertEquals(
+            BlockRef.of("minecraft:stone_slab", 8),
+            SpeedBlocks.normalFor(BlockRef.of("chisel:concrete_slab", 9)));
+        assertEquals(
+            BlockRef.of("minecraft:stone_slab", 1),
+            SpeedBlocks.normalFor(BlockRef.of("TConstruct:SpeedSlab", 3)));
     }
 
     @Test

@@ -46,8 +46,7 @@ public class ExplosionDamageTest {
     @Test
     public void anExplosionBreaksBlocksNearItsCenter() {
         ArrayChunkBuffer buffer = solid(90);
-        DamageArea area = DamageArea
-            .withExplosions(0, 0, Collections.singletonList(new Explosion(8, 85, 8, 10)));
+        DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, 85, 8, 10)));
         ExplosionDamage damage = new ExplosionDamage(CONTEXT);
         int changed = damage.breakBlocks(buffer, area, plan(), damage.damageRandom(0, 0));
         assertTrue(changed > 100, "a crater, changed " + changed);
@@ -88,8 +87,7 @@ public class ExplosionDamageTest {
         for (int y = 40; y <= 44; y++) {
             buffer.set(2, y, 2, BlockRef.AIR);
         }
-        DamageArea area = DamageArea
-            .withExplosions(0, 0, Collections.singletonList(new Explosion(8, 50, 8, 30)));
+        DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, 50, 8, 30)));
         ExplosionDamage damage = new ExplosionDamage(CONTEXT);
         damage.breakBlocks(buffer, area, plan(), damage.damageRandom(0, 0));
         for (int y = 40; y <= 44; y++) {

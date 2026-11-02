@@ -55,7 +55,8 @@ public class FloatingFragmentsTest {
             }
         }
         DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, 85, 8, 14)));
-        int changed = new FloatingFragments(TestTerrain.context(3L)).apply(buffer, area, plan(), lowSides(), new Random(1));
+        int changed = new FloatingFragments(TestTerrain.context(3L))
+            .apply(buffer, area, plan(), lowSides(), new Random(1));
         assertTrue(changed >= 16, "the slab was handled, changed " + changed);
         for (int x = 6; x <= 9; x++) {
             for (int z = 6; z <= 9; z++) {
@@ -69,7 +70,8 @@ public class FloatingFragmentsTest {
         ArrayChunkBuffer buffer = groundTo(90);
         String before = ChunkBufferDigest.sha256(buffer);
         DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, 85, 8, 10)));
-        int changed = new FloatingFragments(TestTerrain.context(3L)).apply(buffer, area, plan(), lowSides(), new Random(1));
+        int changed = new FloatingFragments(TestTerrain.context(3L))
+            .apply(buffer, area, plan(), lowSides(), new Random(1));
         assertEquals(0, changed, "a blob reaching below the band is supported");
         assertEquals(before, ChunkBufferDigest.sha256(buffer));
     }

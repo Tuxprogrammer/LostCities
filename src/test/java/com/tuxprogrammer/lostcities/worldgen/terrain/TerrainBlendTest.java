@@ -107,8 +107,11 @@ public class TerrainBlendTest {
         TerrainContext context = TestTerrain.context(7L);
         ArrayChunkBuffer first = TestTerrain.chunk(-1, 0);
         new TerrainBlend(context).apply(first, -1, 0, plan);
-        assertEquals(before, plan.chunk(-1, 0)
-            .naturalHeight(), "the plan's height is unchanged");
+        assertEquals(
+            before,
+            plan.chunk(-1, 0)
+                .naturalHeight(),
+            "the plan's height is unchanged");
         ArrayChunkBuffer second = TestTerrain.chunk(-1, 0);
         new TerrainBlend(context).apply(second, -1, 0, plan);
         assertEquals(ChunkBufferDigest.sha256(first), ChunkBufferDigest.sha256(second), "a second blend agrees");

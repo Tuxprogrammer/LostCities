@@ -61,12 +61,18 @@ public class GenerationTimersTest {
             timers.record(GenerationTimers.Series.POPULATION, TerrainPhase.ChunkClass.CITY, 100_000L);
         }
         List<GenerationTimers.Verdict> verdicts = timers.budgets(0);
-        assertFalse(verdicts.get(0)
-            .met(), "B1");
-        assertFalse(verdicts.get(3)
-            .met(), "B4");
-        assertFalse(timers.budgets(64L * 1024 * 1024)
-            .get(4)
-            .met(), "B5");
+        assertFalse(
+            verdicts.get(0)
+                .met(),
+            "B1");
+        assertFalse(
+            verdicts.get(3)
+                .met(),
+            "B4");
+        assertFalse(
+            timers.budgets(64L * 1024 * 1024)
+                .get(4)
+                .met(),
+            "B5");
     }
 }

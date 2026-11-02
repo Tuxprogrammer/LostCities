@@ -19,13 +19,18 @@ public class ProfileSnapshotTest {
     public void theDefaultProfileResolvesEveryTerrainValue() {
         ProfileSnapshot snapshot = ProfileSnapshot
             .resolve("default", ProfileSnapshot.PLAN_LAYOUT, ModuleState.allActive(), "none", "RWG", "test");
-        assertEquals("71", snapshot.values()
-            .get("groundLevel"));
-        assertEquals(71, snapshot.terrainSettings()
-            .groundLevel());
+        assertEquals(
+            "71",
+            snapshot.values()
+                .get("groundLevel"));
+        assertEquals(
+            71,
+            snapshot.terrainSettings()
+                .groundLevel());
         assertEquals(ProfileSnapshot.LAYOUT_VERSION, snapshot.layoutVersion());
-        assertTrue(snapshot.modules()
-            .get("cities"));
+        assertTrue(
+            snapshot.modules()
+                .get("cities"));
     }
 
     @Test
@@ -33,10 +38,12 @@ public class ProfileSnapshotTest {
         ModuleState noCities = ModuleState.of(EnumSet.of(Module.HIGHWAYS));
         ProfileSnapshot snapshot = ProfileSnapshot
             .resolve("default", ProfileSnapshot.PLAN_LAYOUT, noCities, "none", "RWG2_CONTINENTS", "test");
-        assertFalse(snapshot.moduleState()
-            .isActive(Module.CITIES));
-        assertTrue(snapshot.moduleState()
-            .isActive(Module.HIGHWAYS));
+        assertFalse(
+            snapshot.moduleState()
+                .isActive(Module.CITIES));
+        assertTrue(
+            snapshot.moduleState()
+                .isActive(Module.HIGHWAYS));
     }
 
     @Test
