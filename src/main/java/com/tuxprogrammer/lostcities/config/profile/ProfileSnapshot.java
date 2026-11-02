@@ -42,8 +42,9 @@ public final class ProfileSnapshot {
      * Version of the layout rules. A change that moves cities for an existing seed raises it, and a world pinned with
      * an older version logs that its new chunks may not match (CONTRIBUTING § World generation rules). Version 2 is
      * the alpha review round (M05R): the rise cap, the margin around landmark cores and the leveling fix TERR-39.
+     * Version 3 adds M07's scattered structures, their ground fits and the stuff columns in city chunks.
      */
-    public static final int LAYOUT_VERSION = 2;
+    public static final int LAYOUT_VERSION = 3;
 
     /** Plan source of real cities: the layout (M03) and the assets (M02), joined by {@code worldgen.city} (M05). */
     public static final String PLAN_LAYOUT = "layout";

@@ -204,7 +204,7 @@ public final class ProfileOptions {
         live(c, "spawnRadiusIncrease", Type.INT, "100", d(1), d(100000), "01-core");
         live(c, "spawnCheckAttempts", Type.INT, "20000", d(1), d(1000000), "01-core");
         // Terrain look and damage layers.
-        option(c, "scatteredChanceMultiplier", Type.FLOAT, "1.0", d(0), d(100), Status.PENDING, "M07");
+        live(c, "scatteredChanceMultiplier", Type.FLOAT, "1.0", d(0), d(100), "07-scattered");
         terrain(c, "terrainFixLowerMinOffset", Type.INT, d(-40), d(40));
         terrain(c, "terrainFixLowerMaxOffset", Type.INT, d(-40), d(40));
         terrain(c, "terrainFixUpperMinOffset", Type.INT, d(-40), d(40));
