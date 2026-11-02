@@ -23,8 +23,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
  *
  * <p>
  * A third kind of frame, pushed around the other mods' {@code IWorldGenerator}s ({@link TreeGuard}), drops only tree
- * parts: logs, leaves, plants and vines, so IC2 rubber trees and HarvestCraft fruit trees planted on park grass no
- * longer overhang streets and roofs, while GT's ore veins and every other block pass (decision log, M05J rows; D75's
+ * parts: logs, leaves, plants, vines and cacti, so IC2 rubber trees and HarvestCraft fruit trees planted on park
+ * grass no longer overhang streets and roofs, and Natura's saguaros no longer stand inside a scattered structure, while GT's ore veins and every other block pass (decision log, M05J rows; D75's
  * finding).
  *
  * <p>
@@ -190,7 +190,8 @@ public final class FootprintGuard {
 
     /**
      * Returns whether a block is part of a tree as other mods plant them: logs and leaves by class, and anything of the
-     * wood, leaves, plants or vine material (IC2's rubber wood, HarvestCraft's fruit).
+     * wood, leaves, plants, vine or cactus material (IC2's rubber wood, HarvestCraft's fruit, Natura's saguaros, which
+     * its tree generator plants in deserts).
      *
      * @param block the block
      * @return whether a tree frame drops it
@@ -202,7 +203,8 @@ public final class FootprintGuard {
         Material material = block.getMaterial();
         return material == Material.wood || material == Material.leaves
             || material == Material.plants
-            || material == Material.vine;
+            || material == Material.vine
+            || material == Material.cactus;
     }
 
     /** Returns the number of writes dropped since the server started. */
