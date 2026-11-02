@@ -11,6 +11,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.Gate;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
 /**
@@ -51,6 +52,8 @@ public final class VillageOracle implements StructureOracle {
     public static final int REACH_CHUNKS = 11;
     /** Starts kept in the cache: a layout query covers at most about nine grid cells. */
     public static final int CACHE_SIZE = 256;
+    /** Village plans kept for retries of a prediction whose ground estimate a probe abandoned. */
+    static final int PLAN_CACHE_SIZE = 16;
 
     /** Why a start chunk is or is not a village; for the scenario's report. */
     public enum Status {
@@ -123,6 +126,14 @@ public final class VillageOracle implements StructureOracle {
     private final TerrainHeightOracle heights;
     private final int gateClearance;
     private final BoundedCache<Prediction> cache;
+    /**
+     * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}): a plan prefetcher's probe (0005 §8)
+     * abandons a prediction at its first ground sample that is not cached and asks again once it is, and VillageNames'
+     * start constructor must not run again on every retry.
+     */
+    private final BoundedCache<VillagePlan> planCache = new BoundedCache<>(PLAN_CACHE_SIZE);
+    /** The probe that guards the height oracle's cache; while it is active, a plan not built yet is fetched apart. */
+    private final HeightProbe probe;
 
     /**
      * Creates the oracle of a world.
@@ -144,6 +155,8 @@ public final class VillageOracle implements StructureOracle {
         this.heights = heights;
         this.gateClearance = gateClearance;
         this.cache = new BoundedCache<>(cacheSize);
+        HeightProbe guard = heights == null ? null : heights.probe();
+        this.probe = guard == null ? new HeightProbe() : guard;
     }
 
     /** Returns the grid this oracle reads. */
@@ -194,6 +207,11 @@ public final class VillageOracle implements StructureOracle {
         return cache.put(key, compute(chunkX, chunkZ));
     }
 
+    /** Builds a village's plan with VillageNames' start constructor and keeps it for retries. */
+    private synchronized VillagePlan fetchPlan(int chunkX, int chunkZ) {
+        return planCache.put(BoundedCache.key(chunkX, chunkZ), plans.plan(chunkX, chunkZ));
+    }
+
     private Prediction compute(int chunkX, int chunkZ) {
         if (!settings.villagesOn()) {
             return new Prediction(chunkX, chunkZ, Status.NOT_CANDIDATE, null, null, null);
@@ -208,7 +226,16 @@ public final class VillageOracle implements StructureOracle {
         if (!settings.isSpawnBiome(biomeName)) {
             return new Prediction(chunkX, chunkZ, Status.BIOME_REJECTED, biomeName, null, null);
         }
-        VillagePlan plan = plans.plan(chunkX, chunkZ);
+        long key = BoundedCache.key(chunkX, chunkZ);
+        VillagePlan plan;
+        if (planCache.contains(key)) {
+            plan = planCache.get(key);
+        } else if (probe.active()) {
+            // The plan prefetcher builds one village per fetch, outside the attempt (0005 §8, B4).
+            throw probe.missHeavy(() -> fetchPlan(chunkX, chunkZ));
+        } else {
+            plan = fetchPlan(chunkX, chunkZ);
+        }
         if (plan == null || !plan.isSizeable()
             || plan.pieces()
                 .isEmpty()) {

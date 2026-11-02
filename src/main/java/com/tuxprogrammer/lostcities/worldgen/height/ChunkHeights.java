@@ -18,8 +18,12 @@ import java.util.Objects;
  * and Z = 0 axes, where upstream's truncating division made narrower groups (P03-3, D31);</li>
  * <li>TERR-10: a height is never written back; the blend reads these values but never changes them;</li>
  * <li>TERR-34: there is one sampling path, so no option changes the world;</li>
- * <li>the cache is bounded and has no wall-clock expiry: a direct-mapped table of {@link #CAPACITY} groups owned by
- * the world, freed on unload (0005 §8, B5). Eviction never changes a result.</li>
+ * <li>the cache is bounded and has no wall-clock expiry: a {@link #WAYS}-way set-associative table of
+ * {@link #CAPACITY} groups owned by the world, freed on unload (0005 §8, B5). Eviction never changes a result. The
+ * plan prefetcher's samples must outlive the few hundred samples taken before the generation front reaches them, and
+ * a burst it fetches piece by piece must stay cached until its last piece arrives, which a direct-mapped table does
+ * not promise;</li>
+ * <li>while the world's {@link HeightProbe} is active, a sample the oracle would have to compute throws instead.</li>
  * </ul>
  *
  * <p>
@@ -27,11 +31,17 @@ import java.util.Objects;
  */
 public final class ChunkHeights {
 
-    /** Number of cached groups. */
-    public static final int CAPACITY = 4096;
+    /** Groups cached in all: 16,384, about 200 KB. */
+    public static final int CAPACITY = 16384;
 
-    /** Bytes the cache holds at most: a key and a height per slot. */
-    public static final long MAX_BYTES = CAPACITY * (long) (Long.BYTES + Integer.BYTES);
+    /** Entries per set. */
+    public static final int WAYS = 4;
+
+    /** Bytes the cache holds at most: a key, a height and a flag per entry, and a cursor per set. */
+    public static final long MAX_BYTES = CAPACITY * (long) (Long.BYTES + Integer.BYTES + 1) + CAPACITY / WAYS;
+
+    private static final int SETS = CAPACITY / WAYS;
+    private static final int SET_SHIFT = Integer.SIZE - Integer.numberOfTrailingZeros(SETS);
 
     /** Receives the duration of each oracle call, for the timers (0005 §8). */
     @FunctionalInterface
@@ -51,25 +61,41 @@ public final class ChunkHeights {
     private final TerrainHeightOracle oracle;
     private final int sampleSize;
     private final Listener listener;
+    private final HeightProbe probe;
     private final long[] keys = new long[CAPACITY];
     private final int[] heights = new int[CAPACITY];
     private final boolean[] filled = new boolean[CAPACITY];
+    private final byte[] victims = new byte[SETS];
     private long samples;
 
     /**
-     * Creates the sampler.
+     * Creates the sampler, with a probe that is never active.
      *
      * @param oracle     the height oracle
      * @param sampleSize chunks per side of a group ({@code heightSampleSize}), at least 1
      * @param listener   receives oracle timings
      */
     public ChunkHeights(TerrainHeightOracle oracle, int sampleSize, Listener listener) {
+        this(oracle, sampleSize, listener, new HeightProbe());
+    }
+
+    /**
+     * Creates the sampler with the world's probe.
+     *
+     * @param oracle     the height oracle
+     * @param sampleSize chunks per side of a group ({@code heightSampleSize}), at least 1
+     * @param listener   receives oracle timings
+     * @param probe      the world's probe: while it is active, a sample the oracle would have to compute throws
+     *                   {@link HeightProbe.NotCached}
+     */
+    public ChunkHeights(TerrainHeightOracle oracle, int sampleSize, Listener listener, HeightProbe probe) {
         if (sampleSize < 1) {
             throw new IllegalArgumentException("heightSampleSize must be at least 1, got " + sampleSize);
         }
         this.oracle = Objects.requireNonNull(oracle);
         this.sampleSize = sampleSize;
         this.listener = Objects.requireNonNull(listener);
+        this.probe = Objects.requireNonNull(probe);
     }
 
     /**
@@ -82,21 +108,39 @@ public final class ChunkHeights {
     public int height(int chunkX, int chunkZ) {
         int groupX = Math.floorDiv(chunkX, sampleSize);
         int groupZ = Math.floorDiv(chunkZ, sampleSize);
-        long key = ((long) groupX << 32) | (groupZ & 0xFFFFFFFFL);
-        int slot = ((groupX * 0x9E3779B1) ^ (groupZ * 0x85EBCA77)) >>> 20;
-        if (filled[slot] && keys[slot] == key) {
-            return heights[slot];
+        long key = key(groupX, groupZ);
+        int entry = find(key, groupX, groupZ);
+        if (entry >= 0) {
+            return heights[entry];
         }
-        int centerX = sampleCenter(chunkX);
-        int centerZ = sampleCenter(chunkZ);
+        int blockX = (sampleCenter(chunkX) << 4) + 8;
+        int blockZ = (sampleCenter(chunkZ) << 4) + 8;
+        if (probe.active() && !oracle.isCached(blockX, blockZ)) {
+            throw probe.miss(() -> height(chunkX, chunkZ));
+        }
         long start = System.nanoTime();
-        int height = oracle.height((centerX << 4) + 8, (centerZ << 4) + 8);
+        int height = oracle.height(blockX, blockZ);
         listener.sampled(System.nanoTime() - start);
         samples++;
+        int set = set(groupX, groupZ);
+        int slot = set * WAYS + victim(set);
         keys[slot] = key;
         heights[slot] = height;
         filled[slot] = true;
         return height;
+    }
+
+    /**
+     * Returns whether a chunk's height is cached, so asking for it costs nothing.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return {@code true} when its group's sample is held
+     */
+    public boolean isCached(int chunkX, int chunkZ) {
+        int groupX = Math.floorDiv(chunkX, sampleSize);
+        int groupZ = Math.floorDiv(chunkZ, sampleSize);
+        return find(key(groupX, groupZ), groupX, groupZ) >= 0;
     }
 
     /**
@@ -117,5 +161,36 @@ public final class ChunkHeights {
     /** Empties the cache; the world calls it on unload. */
     public void clear() {
         Arrays.fill(filled, false);
+    }
+
+    private int find(long key, int groupX, int groupZ) {
+        int base = set(groupX, groupZ) * WAYS;
+        for (int way = 0; way < WAYS; way++) {
+            if (filled[base + way] && keys[base + way] == key) {
+                return base + way;
+            }
+        }
+        return -1;
+    }
+
+    /** Picks the way a new entry of a set takes: an empty one, else the oldest (round robin). */
+    private int victim(int set) {
+        int base = set * WAYS;
+        for (int way = 0; way < WAYS; way++) {
+            if (!filled[base + way]) {
+                return way;
+            }
+        }
+        int way = victims[set];
+        victims[set] = (byte) ((way + 1) % WAYS);
+        return way;
+    }
+
+    private static long key(int groupX, int groupZ) {
+        return ((long) groupX << 32) | (groupZ & 0xFFFFFFFFL);
+    }
+
+    private static int set(int groupX, int groupZ) {
+        return ((groupX * 0x9E3779B1) ^ (groupZ * 0x85EBCA77)) >>> SET_SHIFT;
     }
 }

@@ -40,6 +40,28 @@ public interface TerrainHeightOracle {
     }
 
     /**
+     * Returns whether a column's height is already held, so asking for it costs no oracle work. The plan prefetcher's
+     * probe ({@link HeightProbe}) asks this before it counts a sample as missing.
+     *
+     * @param blockX block X
+     * @param blockZ block Z
+     * @return {@code false} by default: every call computes
+     */
+    default boolean isCached(int blockX, int blockZ) {
+        return false;
+    }
+
+    /**
+     * Returns the world's probe that guards this oracle's cache, so a structure oracle reading heights through it can
+     * defer its own costly work the same way ({@link HeightProbe}).
+     *
+     * @return the probe, or {@code null} when nothing guards this oracle
+     */
+    default HeightProbe probe() {
+        return null;
+    }
+
+    /**
      * Fills the heights of every column of a chunk, index {@code x × 16 + z}.
      *
      * @param chunkX chunk X

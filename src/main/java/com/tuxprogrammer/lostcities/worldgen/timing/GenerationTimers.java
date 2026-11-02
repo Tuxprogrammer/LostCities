@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.timing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,8 +10,9 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 /**
  * The overlay's generation timers and the budget check of docs/design/0005-rwg-overlay.md §8: fixed-bucket
  * histograms of the delegate's {@code provideChunk}, the terrain phase, the delegate's {@code populate}, the population
- * phase and oracle calls, each split by how the chunk was treated (city, blend, untouched) with a total, plus the count
- * of chunks whose phase failed (P03-12, D31).
+ * phase and oracle calls, each split by how the chunk was treated (city, blend, untouched) with a total, the plan
+ * prefetcher's ticks, the count of chunks whose phase failed (P03-12, D31), and the slowest phase invocations with
+ * the oracle work each asked for, so a report names the chunks behind a high p99.9.
  *
  * <p>
  * Measurement only: nothing generated depends on these numbers. One instance per wrapped world. Server thread only.
@@ -31,7 +33,9 @@ public final class GenerationTimers {
         /** Height-oracle calls (inside the plan, so part of whichever phase asked). */
         ORACLE,
         /** Structure-oracle calls (inside the plan, so part of whichever phase asked). */
-        STRUCTURES
+        STRUCTURES,
+        /** The plan prefetcher's work in one server tick, outside every chunk's phases. */
+        PREFETCH
     }
 
     /** Column of the totals in the split. */
@@ -46,8 +50,15 @@ public final class GenerationTimers {
     /** B5: caches bounded to this many bytes per world. */
     public static final long B5_LIMIT_BYTES = 16L * 1024 * 1024;
 
+    /** How many of the slowest phase invocations the report names. */
+    public static final int SLOWEST_KEPT = 8;
+
     private final Histogram[][] histograms = new Histogram[Series.values().length][ALL + 1];
+    private final SlowPhase[] slowest = new SlowPhase[SLOWEST_KEPT];
     private long failedChunks;
+    private long oracleSamples;
+    private long oracleNanos;
+    private long structureNanos;
 
     /** Creates empty timers. */
     public GenerationTimers() {
@@ -73,11 +84,67 @@ public final class GenerationTimers {
     /** Records one structure-oracle call. */
     public void recordStructures(long nanos) {
         histograms[Series.STRUCTURES.ordinal()][ALL].record(nanos);
+        structureNanos += nanos;
     }
 
     /** Records one oracle call. */
     public void recordOracle(long nanos) {
         histograms[Series.ORACLE.ordinal()][ALL].record(nanos);
+        oracleSamples++;
+        oracleNanos += nanos;
+    }
+
+    /**
+     * Returns a mark of the oracle work so far, for {@link #recordPhase}: what a phase invocation asked of the height
+     * and structure oracles is the difference between the marks at its start and its end.
+     *
+     * @return the mark
+     */
+    public PhaseMark mark() {
+        return new PhaseMark(oracleSamples, oracleNanos, structureNanos);
+    }
+
+    /**
+     * Records one invocation of overlay work (a terrain or population phase, or a tick of the plan prefetcher), and
+     * keeps it with what it asked of the oracles when it is among the {@link #SLOWEST_KEPT} slowest since the last
+     * reset, so a budget report says why it was slow (0005 §8, B4).
+     *
+     * @param series     {@link Series#TERRAIN}, {@link Series#POPULATION} or {@link Series#PREFETCH}
+     * @param chunkClass how the chunk was treated; {@code null} for the prefetcher, which is counted only in the total
+     * @param chunkX     chunk X (the prefetcher: the last chunk it planned)
+     * @param chunkZ     chunk Z
+     * @param nanos      the duration in nanoseconds
+     * @param start      the mark taken when the work began
+     */
+    public void recordPhase(Series series, TerrainPhase.ChunkClass chunkClass, int chunkX, int chunkZ, long nanos,
+        PhaseMark start) {
+        if (chunkClass == null) {
+            histograms[series.ordinal()][ALL].record(nanos);
+        } else {
+            record(series, chunkClass, nanos);
+        }
+        int weakest = 0;
+        for (int i = 0; i < slowest.length; i++) {
+            if (slowest[i] == null) {
+                weakest = i;
+                break;
+            }
+            if (slowest[i].nanos < slowest[weakest].nanos) {
+                weakest = i;
+            }
+        }
+        if (slowest[weakest] != null && slowest[weakest].nanos >= nanos) {
+            return;
+        }
+        slowest[weakest] = new SlowPhase(
+            series,
+            chunkClass,
+            chunkX,
+            chunkZ,
+            nanos,
+            oracleSamples - start.samples,
+            oracleNanos - start.oracleNanos,
+            structureNanos - start.structureNanos);
     }
 
     /** Counts a chunk whose phase failed and was logged. */
@@ -108,6 +175,7 @@ public final class GenerationTimers {
                 histogram.reset();
             }
         }
+        Arrays.fill(slowest, null);
         failedChunks = 0;
     }
 
@@ -144,6 +212,16 @@ public final class GenerationTimers {
                         ms(h.sum())));
             }
         }
+        List<SlowPhase> slow = new ArrayList<>();
+        for (SlowPhase phase : slowest) {
+            if (phase != null) {
+                slow.add(phase);
+            }
+        }
+        slow.sort((a, b) -> Long.compare(b.nanos, a.nanos));
+        for (SlowPhase phase : slow) {
+            lines.add(phase.toString());
+        }
         lines.add("failed chunks: " + failedChunks);
         return lines;
     }
@@ -162,6 +240,7 @@ public final class GenerationTimers {
         Histogram populationCity = histogram(Series.POPULATION, TerrainPhase.ChunkClass.CITY);
         Histogram terrain = histogram(Series.TERRAIN, null);
         Histogram population = histogram(Series.POPULATION, null);
+        Histogram prefetch = histogram(Series.PREFETCH, null);
         long b1Limit = provide.quantile(0.50);
         out.add(
             new Verdict(
@@ -183,7 +262,7 @@ public final class GenerationTimers {
                     ms(populationCity.quantile(0.95)),
                     ms(b2Limit))));
         long rwgTotal = provide.sum() + populate.sum();
-        long overlayTotal = terrain.sum() + population.sum();
+        long overlayTotal = terrain.sum() + population.sum() + prefetch.sum();
         double share = rwgTotal == 0 ? 0 : (double) overlayTotal / rwgTotal;
         out.add(
             new Verdict(
@@ -195,12 +274,20 @@ public final class GenerationTimers {
                     ms(overlayTotal),
                     100 * share,
                     ms(rwgTotal))));
-        long worst = Math.max(terrain.quantile(0.999), population.quantile(0.999));
+        long worst = Math.max(
+            Math.max(terrain.quantile(0.999), population.quantile(0.999)),
+            prefetch.count() == 0 ? 0 : prefetch.quantile(0.999));
         out.add(
             new Verdict(
                 "B4",
                 worst <= B4_LIMIT_NANOS,
-                String.format(Locale.ROOT, "worst phase p99.9 %.3f ms <= 10 ms", ms(worst))));
+                String.format(
+                    Locale.ROOT,
+                    "worst phase p99.9 %.3f ms <= 10 ms (terrain %.3f, population %.3f, prefetch tick %.3f)",
+                    ms(worst),
+                    ms(terrain.quantile(0.999)),
+                    ms(population.quantile(0.999)),
+                    ms(prefetch.count() == 0 ? 0 : prefetch.quantile(0.999)))));
         out.add(
             new Verdict(
                 "B5",
@@ -211,6 +298,63 @@ public final class GenerationTimers {
 
     private static double ms(long nanos) {
         return nanos / 1_000_000.0;
+    }
+
+    /** The oracle counters at the start of a phase invocation ({@link #mark()}). */
+    public static final class PhaseMark {
+
+        private final long samples;
+        private final long oracleNanos;
+        private final long structureNanos;
+
+        PhaseMark(long samples, long oracleNanos, long structureNanos) {
+            this.samples = samples;
+            this.oracleNanos = oracleNanos;
+            this.structureNanos = structureNanos;
+        }
+    }
+
+    /** One of the slowest phase invocations, with what it asked of the oracles. */
+    static final class SlowPhase {
+
+        final Series series;
+        final TerrainPhase.ChunkClass chunkClass;
+        final int chunkX;
+        final int chunkZ;
+        final long nanos;
+        final long samples;
+        final long oracleNanos;
+        final long structureNanos;
+
+        SlowPhase(Series series, TerrainPhase.ChunkClass chunkClass, int chunkX, int chunkZ, long nanos, long samples,
+            long oracleNanos, long structureNanos) {
+            this.series = series;
+            this.chunkClass = chunkClass;
+            this.chunkX = chunkX;
+            this.chunkZ = chunkZ;
+            this.nanos = nanos;
+            this.samples = samples;
+            this.oracleNanos = oracleNanos;
+            this.structureNanos = structureNanos;
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                Locale.ROOT,
+                "slow %s %s chunk=%d,%d %.3f ms: %d height samples %.3f ms, structures %.3f ms",
+                series.name()
+                    .toLowerCase(Locale.ROOT),
+                chunkClass == null ? "all"
+                    : chunkClass.name()
+                        .toLowerCase(Locale.ROOT),
+                chunkX,
+                chunkZ,
+                ms(nanos),
+                samples,
+                ms(oracleNanos),
+                ms(structureNanos));
+        }
     }
 
     /** One budget's result. */

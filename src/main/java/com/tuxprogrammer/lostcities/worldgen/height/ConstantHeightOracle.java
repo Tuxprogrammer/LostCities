@@ -24,4 +24,9 @@ public final class ConstantHeightOracle implements TerrainHeightOracle {
     public int height(int blockX, int blockZ) {
         return height;
     }
+
+    @Override
+    public boolean isCached(int blockX, int blockZ) {
+        return true;
+    }
 }
