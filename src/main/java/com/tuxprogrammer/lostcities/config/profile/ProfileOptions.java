@@ -460,6 +460,7 @@ public final class ProfileOptions {
                 null));
         newTerrain("landmarkMargin", Type.INT, d(0), d(16));
         newTerrain("softEdgeWidth", Type.INT, d(2), d(12));
+        newTerrain("cityMaxRise", Type.INT, d(0), d(TerrainSettings.CITY_LEVEL_THRESHOLDS));
         add(
             new ProfileOption(
                 "villageTransitionRings",

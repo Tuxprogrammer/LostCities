@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin)
+- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin); §1, §3 and §4 amended by the alpha review round M05R (decision log D149 to D153): the edge ring is the city's margin, never city, and the soft edge, the lanes and the detours move with it
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01
@@ -40,16 +40,16 @@ Around each landmark the layout derives three zones, whole chunks as upstream's 
 | Zone | Chunks | What the city does there |
 |---|---|---|
 | **Core** | Every chunk the footprint, grown by `landmarkMargin` (2 blocks), touches | Nothing but a village lane's surface path (§3). Not a city chunk; no building, street, foundation, cellar, corridor, highway, railway (except a deep railway, below), blend, decoration clearing or T2 denial. RWG's terrain and decoration stay |
-| **Edge ring** | City chunks among the core's eight-neighbors | City chunks without buildings, cellars, corridors, subways or rail dungeons. Each is a park, a plaza (where a road ends facing the landmark), or a road passing by. Sides facing the core get soft-edge strips (§4) |
-| **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town |
+| **Edge ring (the margin)** | The core's eight-neighbors | Never city: the city builds inside it (alpha review AR-10). Natural ground with RWG's decoration, which the blend slopes from the city's edge to the core's ground and a soft-edge strip meets to the core's own edge columns (§4). Nothing city-made but a village lane, graded down the slope with stairs and half slabs (§3) |
+| **Transition rings** | Villages only: the next `villageTransitionRings` (2) rings of city chunks, outside the margin | Building chance × 0.5; at most 2 floors in the first, 4 in the second. Open lots become parks as upstream's hierarchical open lots do. The village reads as the city's old town. A street that runs toward the margin ends in a plaza in the first ring, and a primary road's detour runs through it (§3) |
 
 An AE2 meteorite that lands in a city gets a **crater basin**: its core is natural ground for the impact, and its heightCap applies to every city chunk it reaches, capping a building's floors so its roof stays below the paraboloid. The city steps down toward the impact instead of being sliced by the crater (§3, [coexistence.md § AE2](../new-spec/00-pack-integration/coexistence.md#ae2-meteorites)).
 
-Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and no edge ring: the city ends there, and the chunk-scale blend (§4, E1) shapes the land between.
+Terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) have a core and a margin like every other kind: the city ends a chunk short of them, and the blend (§4, E1) shapes the land between.
 
 **Deep railways** (decision log D30) are the one exception to "no railway" in a core. A railway part whose top is at least 8 blocks below the core chunk's lowest oracle ground may pass under the core. Nothing changes at the surface: a surface station whose spot is inside a core is still dropped. A rail line too shallow to pass under descends before the core until it is deep enough, runs under it and climbs back on the far side, so the network stays continuous (D31); M06 designs the descent from upstream's descending rail parts ([06-highways-railways](../new-spec/06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd)).
 
-Chunk granularity keeps upstream's planner, multibuilding placement, street rendering and blend unchanged in kind. The cost is that a small structure on a chunk corner reserves up to four chunks; the soft-edge strip and the edge ring's parks make that space read as a green rather than a gap.
+Chunk granularity keeps upstream's planner, multibuilding placement, street rendering and blend unchanged in kind. The cost is that a small structure on a chunk corner reserves up to four chunks and its margin a ring around them; the margin's natural ground, with RWG's trees on it, makes that space read as a green rather than a gap. The first alpha set put the city's parks and roads in the ring and stitched them to the core with a strip inside the city chunk; the owner's review found the strip eating half a park and half a highway, and a primary road running along a village's pond (AR-10 to AR-13). A whole chunk of margin, with the city's content only inside it, is what the owner asked for: "the city build in a margin, and then the slope stitches that margin into the village".
 
 ### 2. How the layout learns about landmarks: structure oracles
 
@@ -72,11 +72,11 @@ The values each oracle reads from another mod's config are added to the pinned p
 ### 3. Streets, buildings and the planner
 
 - **Multibuildings** may not cover a core or edge-ring chunk (`canPlaceBuilding` rejects the position, as it rejects predefined content). Because the oracle is pure, this decision is made once and holds (no SCAT-02).
-- **Roads.** The hierarchical street field stays as upstream has it; a core chunk is not city, so the road is clipped there.
-  - A **primary** road severed by a core detours through edge-ring chunks on the shorter side of the ring (ties north, then west), which become roads of the same class.
-  - **Secondary and tertiary** roads end in the edge-ring chunk facing the landmark, which becomes a **plaza**: upstream's `FULL` street type, which upstream defines but never reaches, gets this use.
-- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the nearest effective road connects to the gate's edge-ring chunk by a straight or L-shaped run through edge-ring and transition chunks, forced to the tertiary class. In the gate chunk the street continues as a 3-block-wide surface path down or up the soft-edge strip to the core's edge. From there it crosses the core's ground to meet the village path's end as a **surface-only** path, never within `landmarkMargin` (2 blocks) of a village piece box. Each column takes the block VillageNames' own paths would take there (grass path on grass, gravel on sand, planks over water, through the village's material swaps; D31, [pipeline-on-rwg.md](../new-spec/03-terrain/pipeline-on-rwg.md#village-lanes)), replacing the natural top block; nothing else is written above or below it except the supports that rule adds (cobblestone under gravel on sand, posts under planks, the block cleared above water). It is the only thing the city writes in a core, and it is written in the terrain phase, before the village's own pieces.
-- **Villages inside a city's radius** are surrounded by it: the city factor is not lowered near them, so the city continues on every side and the village becomes its old town, sewn in by the edge ring, the transition rings and a lane on each side that has a gate.
+- **Roads.** The hierarchical street field stays as upstream has it; neither a core chunk nor its margin is city, so the road is clipped there.
+  - A **primary** road severed by a core or its margin detours through the ring of city chunks just outside the margin, on the shorter side (ties north, then west); those chunks become roads of the same class. No major road runs through the margin, so none runs closer to a village than a chunk of green (AR-10).
+  - **Secondary and tertiary** roads, and a primary road with no detour, end in the city chunk facing the margin, which becomes a **plaza**: upstream's `FULL` street type, which upstream defines but never reaches, gets this use.
+- **Village lanes.** For each village gate (at most one per side of the core, the one nearest the city's center), the gate chunk is the margin chunk in front of the gate. In a city, the lane crosses that chunk straight and goes on from the city chunk beyond it, by a straight or L-shaped run through transition chunks to the nearest effective road; those chunks are forced to the tertiary class, and a secondary or tertiary road is preferred to a primary one up to 2 chunks farther, so a village is sewn in with small roads (AR-7). In the gate chunk the lane is a 3-block-wide surface path, graded in a straight ramp from the city street's ground to the core's edge, the column on each side meeting it halfway, and given a stair or half slab wherever it rises a block (AR-7, AR-11); the street's border opens where it arrives. From the core's edge it crosses the core's ground to meet the village path's end as a **surface-only** path, never within `landmarkMargin` (2 blocks) of a village piece box. Each column takes the block VillageNames' own paths would take there (grass path on grass, gravel on sand, planks over water, through the village's material swaps; D31, [pipeline-on-rwg.md](../new-spec/03-terrain/pipeline-on-rwg.md#village-lanes)), replacing the natural top block; nothing else is written above or below it except the supports that rule adds (cobblestone under gravel on sand, posts under planks, the block cleared above water). It and its steps are the only thing the city writes in a core, and they are written in the terrain phase, before the village's own pieces.
+- **Villages inside a city's radius** are surrounded by it: the city factor is not lowered near them, so the city continues on every side and the village becomes its old town, sewn in by the margin, the transition rings and a lane on each side that has a gate.
 - **Villages near a city**, outside it but within `villageLinkDistance` (4 chunks) of its edge, get gates and a surface lane across the land between, written in the terrain phase as part of the city's footprint.
 - **Height caps** (meteorite basins) reduce floors after upstream's floor draw, so random consumption is unchanged.
 - **City level** near a landmark comes from the same height oracle as the landmark's ground estimate.
@@ -86,7 +86,7 @@ The values each oracle reads from another mod's config are added to the pinned p
 |---|---|
 | `avoidVillages` (true) | `villageTreatment`: `BUILD_AROUND` (default), `AVOID` (core and a non-city ring, no sewing: upstream's behavior), `IGNORE` |
 | `avoidStructures` (vanilla ids) | `landmarkTreatment` per kind: `BUILD_AROUND` (default), `AVOID`, `IGNORE` |
-| `avoidVillagesAdjacent`, `avoidStructuresAdjacent` | Replaced by the edge ring, which always exists for `BUILD_AROUND` |
+| `avoidVillagesAdjacent`, `avoidStructuresAdjacent` | Replaced by the margin (edge ring), which always exists for `BUILD_AROUND` |
 | `avoidFlattening` (true) | Always true for cores |
 | (none) | `landmarkMargin` (2 blocks), `softEdgeWidth` (6), `villageTransitionRings` (2), `villageLinkDistance` (4 chunks) |
 
@@ -94,9 +94,9 @@ The values each oracle reads from another mod's config are added to the pinned p
 
 The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integration/coexistence.md#soft-edges) are adopted. In short:
 
-- **E1, cores are fixed ground in the blend.** Upstream's L0 step treats a corner shared by a core chunk and a non-city chunk as fixed at the core's oracle height (−1 to +1), as it fixes city corners at the city ground. L1, L2 and the transition noise are upstream's. Core chunks are never reshaped.
-- **E2 to E4, soft-edge strips instead of walls.** A city chunk's side facing a core has no border wall. A strip `softEdgeWidth` columns wide, varied ±2 by the transition noise, moves the ground from the city ground to the column's own natural height at the core's edge, keeping the column's own top block. Where water stands on that edge column (a village's pond or river), its natural height is the water's surface, so the strip meets the water at its waterline as a shore instead of ramping down to the bed (decision log D129). The terrain phase already reads its own chunk's RWG columns ([0005](0005-rwg-overlay.md) §4), and those are pure. Where the step is more than twice the strip, a retaining border at the inner edge takes the rest, no taller than needed.
-- **E5 to E8:** edge-ring parks keep RWG's decoration; density falls off; nothing city-made underground in the edge ring; lanes are 3 wide and follow the strip.
+- **E1, cores are fixed ground in the blend.** Upstream's L0 step treats a corner shared by a core chunk and a non-city chunk as fixed at the core's oracle height (−1 to +1), as it fixes city corners at the city ground. L1, L2 and the transition noise are upstream's. Core chunks are never reshaped. The margin chunk between a city and a core is therefore sloped by the blend from the city's ground on its inner side to the core's oracle height on its outer side, over its whole 16 columns.
+- **E2 to E4, a soft-edge strip in the margin.** The city's street chunks next to the margin keep upstream's border toward lower non-city land, opened where a lane arrives. In the margin chunk, the oracle height the blend aimed at is the core chunk's, not its edge columns', so after the blend a strip `softEdgeWidth` columns wide, varied ±2 by the transition noise, ramps the blended ground to each core-side edge column's own natural height read before the blend, keeping the column's own top block. Where water stands on that edge column (a village's pond or river), its natural height is the water's surface, so the strip meets the water at its waterline as a shore (decision log D129). Nothing the city builds is in the strip, so it never cuts a road, a highway or a park (AR-10, AR-12, AR-13). The retaining border of E3 remains only for a plan that puts a city chunk right beside a core, which the layout no longer does (the synthetic test city still does).
+- **E5 to E8:** the margin keeps RWG's decoration; density falls off; nothing city-made underground in the margin, which is not city; lanes are 3 wide, graded down the margin's slope with stairs and half slabs.
 
 ### 5. Order and determinism
 
@@ -156,7 +156,8 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
 | Sub-chunk lots everywhere | Upstream's layout, planner and blend are chunk-granular; rewriting them at block granularity is a large deviation. Soft-edge strips and lanes give the sub-chunk detail where it shows |
 | Generate other mods' structures ourselves, as our own multibuildings | Copies GPL and closed content and duplicates their generators |
 | Our own copy of VillageNames' village layout | GPL code we would copy and keep in step; calling VillageNames' constructor is exact and allowed |
-| A full non-city green belt around every landmark | Fine for villages and terrain landmarks, but a 4 × 4-chunk hole for a 7 × 7 shack. Edge-ring parks keep the city continuous |
+| Edge-ring parks, plazas and passing roads, with the strip inside the city chunk (the first alpha design) | The owner's review: the strip ate half a park, its stone features and half a highway, and put a primary road beside a village's pond (AR-10 to AR-13). A one-chunk margin of natural ground costs a ring of chunks around a small structure, which reads as a green |
+| A wider non-city green belt around every landmark | More land lost to the city than the margin needs; the transition rings already thin the city out around villages |
 | AE2: let the crater carve | Slices tall buildings within about 50 blocks: a sharp cutoff |
 | AE2: a guard mixin that keeps meteorites out of cities | No cut and no extra layout rules, but no meteorites wherever cities are, against D24 |
 | Village lanes that stop at the core's edge | Leaves up to about 15 blocks of natural ground between the city's path and the village's, so the two never meet |
@@ -168,6 +169,6 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
 For the prototype and the alpha screenshots:
 
 - The Roguelike prediction's hit rate.
-- The look of edge strips, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers; how often retaining borders appear.
+- The look of margins, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers (the alpha review round's shots, M05R, show the margins and lanes).
 - Thaumcraft mounds in city parks.
 - The oracles' cost against the budget.

@@ -318,6 +318,33 @@ public final class DamageArea {
     }
 
     /**
+     * Returns whether explosion damage can have reached a block of this chunk or a block beside it: the block is within
+     * one block of the column of some explosion's sphere (horizontal distance below {@code r + 1}), at most one block
+     * under the sphere's bottom. The column, not the sphere, because the damage pass carries collected damage upward
+     * through a column (docs/original-spec/03-terrain/damage-ruins-rubble.md, "Upward carry"). The floating-fragment
+     * pass leaves alone any blob with no block here (AR-1).
+     *
+     * @param localX chunk-local X, 0 to 15
+     * @param y      block Y
+     * @param localZ chunk-local Z, 0 to 15
+     * @return {@code true} when damage can have touched the block or a neighbor of it
+     */
+    public boolean mayHaveDamaged(int localX, int y, int localZ) {
+        int x = (chunkX << 4) + localX;
+        int z = (chunkZ << 4) + localZ;
+        for (int i = 0, n = explosions.size(); i < n; i++) {
+            Explosion explosion = explosions.get(i);
+            long reach = explosion.radius() + 1L;
+            long dx = x - explosion.x();
+            long dz = z - explosion.z();
+            if (dx * dx + dz * dz < reach * reach && y >= explosion.y() - reach) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns the damage at a block: {@code 3 × (r − d) / r} summed over the explosions it is inside of.
      *
      * @param x block X (world)

@@ -34,6 +34,72 @@ public class TerrainSettingsTest {
                 .isEmpty());
     }
 
+    /**
+     * AR-8: damage is an accent. The expected crater area per city chunk (chance times the mean squared radius) is at
+     * most a fifth of upstream's for both kinds of explosion, and ruins are under half as common.
+     */
+    @Test
+    public void damageDefaultsAreFarBelowUpstreams() {
+        TerrainSettings settings = TerrainSettings.defaults();
+        double upstreamBig = 0.002 * meanSquare(15, 35);
+        double upstreamMini = 0.03 * meanSquare(5, 12);
+        double big = settings.explosionChance()
+            * meanSquare(settings.explosionMinRadius(), settings.explosionMaxRadius());
+        double mini = settings.miniExplosionChance()
+            * meanSquare(settings.miniExplosionMinRadius(), settings.miniExplosionMaxRadius());
+        assertTrue(big <= upstreamBig / 5, "big crater area " + big + " vs upstream " + upstreamBig);
+        assertTrue(mini <= upstreamMini / 5, "mini crater area " + mini + " vs upstream " + upstreamMini);
+        assertTrue(settings.ruinChance() <= 0.05f / 2, "ruin chance " + settings.ruinChance());
+        assertTrue(settings.explosionChance() > 0 && settings.miniExplosionChance() > 0, "damage stays on");
+        assertTrue(settings.ruinChance() > 0, "ruins stay on");
+    }
+
+    /** Small chances are written as plain decimals, as docs/config.md shows them. */
+    @Test
+    public void floatsAreWrittenInPlainDecimal() {
+        assertEquals("0.0004", TerrainSettings.text(0.0004f));
+        assertEquals("0.002", TerrainSettings.text(0.002f));
+        assertEquals("3.0", TerrainSettings.text(3.0f));
+        assertEquals(
+            "0.0004",
+            TerrainSettings.defaults()
+                .toValues()
+                .get("explosionChance"));
+    }
+
+    /** AR-8: the damage numbers stay profile options, so a profile can ask for upstream's look. */
+    @Test
+    public void upstreamsDamageNumbersStayConfigurable() {
+        Map<String, String> values = new HashMap<>();
+        values.put("explosionChance", "0.002");
+        values.put("explosionMinRadius", "15");
+        values.put("explosionMaxRadius", "35");
+        values.put("miniExplosionChance", "0.03");
+        values.put("miniExplosionMinRadius", "5");
+        values.put("miniExplosionMaxRadius", "12");
+        values.put("ruinChance", "0.05");
+        TerrainSettings settings = TerrainSettings.fromValues(values);
+        assertEquals(0.002f, settings.explosionChance());
+        assertEquals(15, settings.explosionMinRadius());
+        assertEquals(35, settings.explosionMaxRadius());
+        assertEquals(0.03f, settings.miniExplosionChance());
+        assertEquals(5, settings.miniExplosionMinRadius());
+        assertEquals(12, settings.miniExplosionMaxRadius());
+        assertEquals(0.05f, settings.ruinChance());
+        assertTrue(
+            settings.warnings()
+                .isEmpty());
+    }
+
+    /** Returns the mean of r² for a radius drawn as {@code min + nextInt(max − min)}. */
+    private static double meanSquare(int min, int max) {
+        double sum = 0;
+        for (int r = min; r < max; r++) {
+            sum += (double) r * r;
+        }
+        return sum / (max - min);
+    }
+
     @Test
     public void cityLevelsFollowUpstreamsThresholds() {
         TerrainSettings settings = TerrainSettings.defaults();
@@ -61,7 +127,7 @@ public class TerrainSettingsTest {
         values.put("explosionChance", "banana");
         TerrainSettings settings = TerrainSettings.fromValues(values);
         assertEquals(255, settings.groundLevel());
-        assertEquals(0.002f, settings.explosionChance());
+        assertEquals(TerrainSettings.DEFAULT_EXPLOSION_CHANCE, settings.explosionChance());
         assertEquals(
             3,
             settings.warnings()

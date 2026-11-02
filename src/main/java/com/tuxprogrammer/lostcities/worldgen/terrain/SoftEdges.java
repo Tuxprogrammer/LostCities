@@ -6,7 +6,15 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 
 /**
- * Soft-edge strips: on each side of a city chunk that faces a landmark core, a strip of about
+ * Soft-edge strips. The layout puts the city's margin (a ring of non-city chunks) between a city and every landmark
+ * core, so the strip that stitches the city to the core lies in the margin chunk ({@link #recordCoreEdges},
+ * {@link #stitchToCores}): after the blend has sloped the margin from the city's edge toward the core's oracle height,
+ * a strip of about {@code softEdgeWidth} columns on each side facing a core ramps the blended ground to the core's own
+ * edge columns, so the margin meets the village's ground without a step (alpha review AR-10, AR-13).
+ *
+ * <p>
+ * A city chunk that faces a core directly, which only a plan without margins makes (the synthetic test city), gets
+ * the strip inside the city chunk instead: on each side of a city chunk that faces a landmark core, a strip of about
  * {@code softEdgeWidth} columns replaces upstream's border wall and ramps the ground linearly from the city ground to
  * the column's own RWG height at the core's edge (rules E2 to E4 of docs/new-spec/00-pack-integration/coexistence.md,
  * adopted by docs/design/0006-build-around-other-worldgen.md §4; the ramp shape is P03-13, D31).
@@ -162,6 +170,104 @@ public final class SoftEdges {
             y++;
         }
         return y - 1;
+    }
+
+    /**
+     * Reads the natural height of every edge column of a non-city chunk that faces a core, before the blend moves it:
+     * the column's surface through foliage, or the top of the water standing on it.
+     *
+     * @param buffer  the chunk as RWG made it
+     * @param classes the block classes
+     * @param sides   the plans toward −X, +X, −Z and +Z
+     * @param edges   out: per side ({@link ChunkPlan.Side} order) and position along it, the edge column's height;
+     *                {@link #NOT_IN_STRIP} for a side that faces no core
+     * @return whether any side faces a core
+     */
+    public static boolean recordCoreEdges(ChunkBuffer buffer, BlockClassifier classes, ChunkPlan[] sides,
+        int[][] edges) {
+        boolean any = false;
+        for (ChunkPlan.Side side : ChunkPlan.Side.values()) {
+            int[] row = edges[side.ordinal()];
+            if (!sides[side.ordinal()].isCore()) {
+                Arrays.fill(row, NOT_IN_STRIP);
+                continue;
+            }
+            any = true;
+            for (int along = 0; along < 16; along++) {
+                int x = edgeX(side, along, 0);
+                int z = edgeZ(side, along, 0);
+                int surface = ColumnOps.surface(buffer, classes, x, z, true);
+                row[along] = surface < WorldLimits.MIN_Y ? NOT_IN_STRIP : waterline(buffer, classes, x, z, surface);
+            }
+        }
+        return any;
+    }
+
+    /**
+     * Ramps the blended ground of a non-city chunk back to the natural edge columns recorded before the blend, over a
+     * strip of {@code softEdgeWidth} ± 2 columns on each side facing a core (E2 to E4 in the margin): the strip's
+     * inner end keeps the blended height, its edge column its own natural height, linearly between. A column in two
+     * strips follows the side it is nearer to. Columns keep their own top blocks.
+     *
+     * @param buffer  the chunk after the blend
+     * @param context the world's terrain context
+     * @param chunkX  chunk X
+     * @param chunkZ  chunk Z
+     * @param edges   the heights {@link #recordCoreEdges} read
+     * @return the number of columns moved
+     */
+    public static int stitchToCores(ChunkBuffer buffer, TerrainContext context, int chunkX, int chunkZ, int[][] edges) {
+        BlockClassifier classes = context.classifier();
+        int baseWidth = context.settings()
+            .softEdgeWidth();
+        int waterLevel = context.settings()
+            .waterLevel();
+        int[] targets = new int[256];
+        int[] depth = new int[256];
+        Arrays.fill(depth, NOT_IN_STRIP);
+        for (ChunkPlan.Side side : ChunkPlan.Side.values()) {
+            int[] row = edges[side.ordinal()];
+            for (int along = 0; along < 16; along++) {
+                int outer = row[along];
+                if (outer == NOT_IN_STRIP) {
+                    continue;
+                }
+                int edgeX = edgeX(side, along, 0);
+                int edgeZ = edgeZ(side, along, 0);
+                float noise = context.transitionNoise((chunkX << 4) + edgeX, (chunkZ << 4) + edgeZ);
+                int variation = Math.max(-WIDTH_VARIATION, Math.min(WIDTH_VARIATION, Math.round(noise / 2f)));
+                int width = Math.max(1, Math.min(15, baseWidth + variation));
+                int innerX = edgeX(side, along, width);
+                int innerZ = edgeZ(side, along, width);
+                int inner = ColumnOps.surface(buffer, classes, innerX, innerZ, true);
+                if (inner < WorldLimits.MIN_Y) {
+                    continue;
+                }
+                for (int d = 0; d < width; d++) {
+                    int index = (edgeZ(side, along, d) << 4) | edgeX(side, along, d);
+                    if (depth[index] != NOT_IN_STRIP && depth[index] <= d) {
+                        continue;
+                    }
+                    targets[index] = WorldLimits.clampY(outer + Math.round((inner - outer) * d / (float) width));
+                    depth[index] = d;
+                }
+            }
+        }
+        int moved = 0;
+        for (int index = 0; index < 256; index++) {
+            if (depth[index] == NOT_IN_STRIP) {
+                continue;
+            }
+            int x = index & 15;
+            int z = index >> 4;
+            int touched = ColumnOps
+                .moveDown(buffer, classes, x, z, targets[index] + 1, WorldLimits.BUILD_HEIGHT, waterLevel);
+            if (touched == ColumnOps.NOT_TOUCHED) {
+                touched = ColumnOps.moveUp(buffer, classes, x, z, targets[index]);
+            }
+            moved += touched == ColumnOps.NOT_TOUCHED ? 0 : 1;
+        }
+        return moved;
     }
 
     private static int edgeX(ChunkPlan.Side side, int along, int depth) {

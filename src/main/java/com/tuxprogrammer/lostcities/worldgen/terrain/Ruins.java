@@ -3,8 +3,12 @@ package com.tuxprogrammer.lostcities.worldgen.terrain;
 // https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
 // Avoids: TERR-29, TERR-30, TERR-37, TERR-27
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
@@ -60,6 +64,9 @@ public final class Ruins {
     /** Distance between two chunk centers, in blocks: the rubble height's interpolation span. */
     static final float CENTER_SPAN = 16f;
 
+    /** The one-block plants {@link #isSmallPlant} names: tall grass and ferns, and both small-flower blocks. */
+    private static final Set<String> SMALL_PLANTS = Collections.unmodifiableSet(
+        new HashSet<>(Arrays.asList("minecraft:tallgrass", "minecraft:yellow_flower", "minecraft:red_flower")));
     private static final long RUIN_SALT = 0x52_55_49_4E_4E_4F_49_53L;
     private static final long RUBBLE_SALT = 0x52_55_42_42_4C_45_4E_53L;
     private static final long LEAVES_SALT = 0x4C_45_41_56_45_53_4E_53L;
@@ -218,7 +225,8 @@ public final class Ruins {
                 }
                 if (!classes.isEmpty(buffer.get(x, y - 1, z))) {
                     for (int i = 0; i < vr && y <= WorldLimits.MAX_Y; i++) {
-                        if (classes.isEmpty(buffer.get(x, y, z))) {
+                        BlockRef cell = buffer.get(x, y, z);
+                        if (classes.isEmpty(cell) || i == 0 && isSmallPlant(cell)) {
                             buffer.set(x, y, z, dirt.get(random.nextInt(dirt.size())));
                             placed++;
                         }
@@ -241,6 +249,18 @@ public final class Ruins {
             }
         }
         return placed;
+    }
+
+    /**
+     * Returns whether a block is a one-block plant a rubble pile covers rather than stacks on: tall grass, ferns and
+     * small flowers, which a park's greenery puts on most of its grass (AR-18). Stacked, the pile would float on the
+     * plant.
+     *
+     * @param block the block on the ground
+     * @return {@code true} for a small plant
+     */
+    static boolean isSmallPlant(BlockRef block) {
+        return SMALL_PLANTS.contains(block.name());
     }
 
     /**

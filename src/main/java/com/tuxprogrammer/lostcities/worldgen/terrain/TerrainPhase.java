@@ -28,8 +28,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ContentContext;
  * <li>A city chunk: high water, leveling to the city ground (soft-edge strips toward cores), room for the building,
  * the plan's content, the street base and borders, the ruin of a ruined building, the street rubble layer, the
  * retaining walls of steep strips, a lane.</li>
- * <li>Any other chunk: the blend toward nearby cities and cores, the plan's content (a bridge span), and a lane to a
- * village outside a city.</li>
+ * <li>Any other chunk: the blend toward nearby cities and cores, then, beside a core (the city's margin), the strip
+ * that meets the core's own edge columns; the plan's content (a bridge span), and a village lane with its steps.</li>
  * <li>Explosion damage, the floating-fragment pass, debris from damaged neighbors, then vines (stages 10 and
  * 13a).</li>
  * </ol>
@@ -125,6 +125,7 @@ public final class TerrainPhase {
     private final int[] depth = new int[256];
     private final int[] inner = new int[256];
     private final boolean[] skip = new boolean[256];
+    private final int[][] coreEdges = new int[4][16];
 
     /**
      * Creates the terrain phase of one world.
@@ -185,7 +186,13 @@ public final class TerrainPhase {
             cityChunk(buffer, chunkX, chunkZ, plan, sides);
             changed = true;
         } else {
+            boolean facesCore = SoftEdges.recordCoreEdges(buffer, context.classifier(), sides, coreEdges);
             changed = blend.apply(buffer, chunkX, chunkZ, cityPlan);
+            if (changed && facesCore) {
+                // The margin: the blend sloped it from the city toward the core's oracle height; the strip meets the
+                // core's real edge columns (AR-10, AR-13).
+                SoftEdges.stitchToCores(buffer, context, chunkX, chunkZ, coreEdges);
+            }
             if (plan.content() != ChunkContent.NONE) {
                 plan.content()
                     .write(
@@ -202,6 +209,9 @@ public final class TerrainPhase {
             }
         }
         if (plan.lane() != null) {
+            if (!plan.isCity()) {
+                changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
+            }
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
             changed |= paved > 0;
         }

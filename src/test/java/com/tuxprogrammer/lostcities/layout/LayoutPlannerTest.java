@@ -340,13 +340,18 @@ public class LayoutPlannerTest {
         ChunkPlan plaza = p.plan(roadX, roadZ);
         assertEquals(
             Zone.EDGE_RING,
-            plaza.zone()
-                .zone());
+            p.zone((roadX + coreX) / 2, (roadZ + coreZ) / 2)
+                .zone(),
+            "the margin lies between the plaza and the core");
+        assertTrue(plaza.isCity());
         assertEquals(StreetType.FULL, plaza.streetType());
         assertTrue(plaza.isPlannedRoad());
     }
 
-    /** A road chunk with two raw connections whose neighbor in one of them could be a core: no primary near it. */
+    /**
+     * A road chunk with two raw connections whose chunk two out along one of them could be a core, with the margin
+     * between: no primary near it.
+     */
     private static int[] findPlazaSite(LayoutPlanner p) {
         for (int x = -8; x <= 8; x++) {
             for (int z = -8; z <= 8; z++) {
@@ -364,16 +369,20 @@ public class LayoutPlannerTest {
                     continue;
                 }
                 for (RoadDirection d : RoadDirection.values()) {
-                    int cx = x + d.stepX();
-                    int cz = z + d.stepZ();
-                    if (raw.connects(d) && !p.streets()
-                        .isVerticalPrimary(cx)
-                        && !p.streets()
-                            .isHorizontalPrimary(cz)
-                        && !p.streets()
-                            .isVerticalPrimary(x)
-                        && !p.streets()
-                            .isHorizontalPrimary(z)) {
+                    // The core two chunks out, the margin between; no primary crosses the margin's bounds or the road.
+                    int cx = x + 2 * d.stepX();
+                    int cz = z + 2 * d.stepZ();
+                    boolean primaryNear = p.streets()
+                        .isVerticalPrimary(x)
+                        || p.streets()
+                            .isHorizontalPrimary(z);
+                    for (int i = -1; i <= 1; i++) {
+                        primaryNear |= p.streets()
+                            .isVerticalPrimary(cx + i)
+                            || p.streets()
+                                .isHorizontalPrimary(cz + i);
+                    }
+                    if (raw.connects(d) && !primaryNear) {
                         return new int[] { x, z, cx, cz };
                     }
                 }
@@ -659,7 +668,8 @@ public class LayoutPlannerTest {
                 assertFalse(plan.isCity());
             }
             if (zone == Zone.EDGE_RING) {
-                assertFalse(plan.hasBuilding());
+                // The margin (AR-10): the city builds inside it, so it is never city at all.
+                assertFalse(plan.isCity(), plan.toString());
             }
         }
         assertTrue(multi > 0);

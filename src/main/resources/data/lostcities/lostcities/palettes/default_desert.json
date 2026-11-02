@@ -17,7 +17,7 @@
     },
     {
       "char": "S",
-      "block": "minecraft:red_sandstone_slab[type=double]",
+      "block": "minecraft:smooth_sandstone",
       "damaged": "minecraft:iron_bars"
     },
     {
@@ -26,7 +26,7 @@
     },
     {
       "char": "B",
-      "block": "minecraft:red_nether_bricks",
+      "block": "minecraft:sandstone",
       "damaged": "minecraft:iron_bars"
     },
     {

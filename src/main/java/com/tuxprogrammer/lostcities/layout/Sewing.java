@@ -13,6 +13,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.street.HierarchicalStreetPlanner;
+import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
 import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 
 /**
@@ -27,10 +28,13 @@ import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
  * can block multibuildings without a cycle. Results are kept per landmark in a bounded cache.
  *
  * <p>
- * The geometry is settled in decision log D50: a detour runs through the ring of chunks just outside the core's
- * bounding chunk rectangle, on the side with the shorter run (ties west for north-south roads, north for east-west
- * ones); a lane is straight or L-shaped from the gate's chunk to the nearest road chunk, bending at the corner nearer
- * the city's center.
+ * The geometry is settled in decision log D50, with the margin of the alpha review (AR-10): the core's eight-neighbors
+ * are the city's margin, never city, so a detour runs through the ring of chunks just outside the margin's bounding
+ * chunk rectangle, on the side with the shorter run (ties west for north-south roads, north for east-west ones). A
+ * lane starts in the gate's margin chunk, whose path runs down the margin's slope, and goes on from the city chunk
+ * beyond it, straight or L-shaped, to the nearest road chunk, bending at the corner nearer the city's center; a
+ * secondary or tertiary road is preferred to a primary one up to {@link #PRIMARY_PENALTY} chunks farther, so a village
+ * is sewn in with small roads (AR-7).
  *
  * <p>
  * Spec: docs/design/0006-build-around-other-worldgen.md §3, docs/new-spec/00-pack-integration/coexistence.md § Sewing
@@ -40,6 +44,8 @@ final class Sewing {
 
     /** How far a gate's chunk may be stepped outward from the gate before it leaves the core. */
     private static final int MAX_GATE_STEPS = 8;
+    /** Extra chunks a lane will run to reach a secondary or tertiary road rather than a primary one (AR-7). */
+    static final int PRIMARY_PENALTY = 2;
 
     private final LayoutProfile profile;
     private final CityMap cities;
@@ -87,10 +93,7 @@ final class Sewing {
         }
         Map<Long, LaneCell> cells = new HashMap<>();
         if (profile.treatment(landmark.kind()) == LandmarkTreatment.BUILD_AROUND) {
-            if (landmark.kind()
-                .hasEdgeRing()) {
-                detours(landmark, cells);
-            }
+            detours(landmark, cells);
             if (landmark.kind()
                 .isSewn()) {
                 lanes(landmark, cells);
@@ -117,26 +120,30 @@ final class Sewing {
 
     // ------------------------------------------------------------------ predicates
 
-    /** Whether a chunk is barred to the city by any landmark (a core or an avoid ring). */
+    /** Whether a lane may not cross a chunk: a core or an avoid ring of any landmark. */
     private boolean barred(int chunkX, int chunkZ) {
         return zones.zone(chunkX, chunkZ)
             .zone()
-            .forcesNonCity();
+            .barsLanes();
     }
 
-    /** Whether a chunk will be city: raw city and not barred. */
+    /** Whether a chunk will be city: raw city and not a core, margin or avoid ring. */
     private boolean city(int chunkX, int chunkZ) {
-        return cities.isCityRaw(chunkX, chunkZ) && !barred(chunkX, chunkZ);
+        return cities.isCityRaw(chunkX, chunkZ) && !zones.zone(chunkX, chunkZ)
+            .zone()
+            .forcesNonCity();
     }
 
     // ------------------------------------------------------------------ detours
 
     private void detours(Landmark landmark, Map<Long, LaneCell> cells) {
+        // Around the margin: the core's bounds grown by the margin's chunk, so the detour stays out of the margin.
         int[] b = landmark.coreChunkBounds(profile.landmarkMargin);
-        int x0 = b[0];
-        int z0 = b[1];
-        int x1 = b[2];
-        int z1 = b[3];
+        int ring = LandmarkZones.EDGE_RING_DISTANCE;
+        int x0 = b[0] - ring;
+        int z0 = b[1] - ring;
+        int x1 = b[2] + ring;
+        int z1 = b[3] + ring;
         for (int c = x0; c <= x1; c++) {
             if (streets.isVerticalPrimary(c) && city(c, z0 - 1) && city(c, z1 + 1)) {
                 boolean westFirst = c - (x0 - 1) <= (x1 + 1) - c;
@@ -256,17 +263,31 @@ final class Sewing {
         if (barred(gx, gz)) {
             return;
         }
-        boolean inCity = city(gx, gz);
+        // The gate chunk is the margin chunk in front of the gate; its path runs down the margin's slope (AR-7). In a
+        // city the lane goes on from the city chunk beyond it, so it crosses the margin straight.
+        int sx = gx + out.stepX();
+        int sz = gz + out.stepZ();
+        boolean inCity = city(sx, sz);
         int maxCoreDistance = LandmarkZones.EDGE_RING_DISTANCE + profile.villageTransitionRings;
-        int reach = inCity ? maxCoreDistance + 1 : profile.villageLinkDistance + 1;
         if (!inCity && profile.villageLinkDistance <= 0) {
             return;
         }
-        List<int[]> path = inCity && streets.getRoadType(gx, gz)
-            .isRoad() ? Collections.singletonList(new int[] { gx, gz })
-                : route(landmark, gx, gz, reach, inCity, maxCoreDistance, refX, refZ);
-        if (path == null) {
-            return;
+        List<int[]> path;
+        if (inCity) {
+            List<int[]> rest = streets.getRoadType(sx, sz)
+                .isRoad() ? new ArrayList<>(Collections.singletonList(new int[] { sx, sz }))
+                    : route(landmark, sx, sz, maxCoreDistance + 1, true, maxCoreDistance, refX, refZ);
+            if (rest == null) {
+                return;
+            }
+            path = new ArrayList<>();
+            path.add(new int[] { gx, gz });
+            path.addAll(rest);
+        } else {
+            path = route(landmark, gx, gz, profile.villageLinkDistance + 1, false, maxCoreDistance, refX, refZ);
+            if (path == null) {
+                return;
+            }
         }
         // The road chunk the lane reaches keeps its own road; the lane's last chunk connects to it.
         int[] target = path.size() > 1 ? path.remove(path.size() - 1) : null;
@@ -312,7 +333,7 @@ final class Sewing {
             }
         }
         targets.sort((a, b) -> {
-            int c = Integer.compare(manhattan(a, gx, gz), manhattan(b, gx, gz));
+            int c = Integer.compare(cost(a, gx, gz), cost(b, gx, gz));
             if (c != 0) {
                 return c;
             }
@@ -341,6 +362,12 @@ final class Sewing {
 
     private static int manhattan(int[] c, int gx, int gz) {
         return Math.abs(c[0] - gx) + Math.abs(c[1] - gz);
+    }
+
+    /** A target road's cost: its distance, and {@link #PRIMARY_PENALTY} more for a primary road (AR-7). */
+    private int cost(int[] c, int gx, int gz) {
+        return manhattan(c, gx, gz)
+            + (streets.getRoadType(c[0], c[1]) == PlannedRoadType.PRIMARY ? PRIMARY_PENALTY : 0);
     }
 
     private static boolean straight(int[] c, int gx, int gz) {
@@ -374,7 +401,7 @@ final class Sewing {
 
     /**
      * Whether every chunk of a run may carry the lane: never a core or avoid ring, never predefined content; in a
-     * city, only edge-ring and transition chunks of this landmark that are city.
+     * city, only transition chunks of this landmark that are city (the margin is behind the run's start).
      */
     private boolean laneAllowed(Landmark landmark, List<int[]> path, boolean inCity, int maxCoreDistance) {
         for (int[] c : path.subList(0, path.size() - 1)) {
@@ -383,7 +410,7 @@ final class Sewing {
             }
             if (inCity) {
                 int distance = landmark.coreDistance(c[0], c[1], profile.landmarkMargin);
-                if (!city(c[0], c[1]) || distance < 1 || distance > maxCoreDistance) {
+                if (!city(c[0], c[1]) || distance <= LandmarkZones.EDGE_RING_DISTANCE || distance > maxCoreDistance) {
                     return false;
                 }
             }

@@ -1385,7 +1385,7 @@
       "candidates": [
         {
           "label": "Baseline: minecraft:sandstone:2",
-          "weight": 34,
+          "weight": 42,
           "blocks": [
             "minecraft:sandstone:2"
           ],
@@ -1441,18 +1441,6 @@
           "flags": []
         },
         {
-          "label": "etfuturum:red_sandstone:1, :2",
-          "weight": 8,
-          "blocks": [
-            "etfuturum:red_sandstone:1",
-            "etfuturum:red_sandstone:2"
-          ],
-          "fallback": [
-            "minecraft:sandstone:2"
-          ],
-          "flags": []
-        },
-        {
           "label": "Botania:biomeStoneA:5",
           "weight": 6,
           "blocks": [
@@ -1499,15 +1487,15 @@
       ]
     },
     {
-      "name": "orange-desert-walls",
-      "title": "Orange desert walls",
+      "name": "bleached-desert-walls",
+      "title": "Bleached desert walls",
       "group": "Brick and stone walls",
       "candidates": [
         {
-          "label": "Baseline: minecraft:stained_hardened_clay:1",
+          "label": "Baseline: minecraft:stained_hardened_clay:0",
           "weight": 45,
           "blocks": [
-            "minecraft:stained_hardened_clay:1"
+            "minecraft:stained_hardened_clay:0"
           ],
           "baseline": true,
           "flags": [
@@ -1515,16 +1503,39 @@
           ]
         },
         {
-          "label": "chisel:hardened_clay_orange:2 to :8",
+          "label": "chisel:hardened_clay_white:2 to :8",
+          "weight": 15,
+          "blocks": [
+            "chisel:hardened_clay_white:2",
+            "chisel:hardened_clay_white:3",
+            "chisel:hardened_clay_white:4",
+            "chisel:hardened_clay_white:5",
+            "chisel:hardened_clay_white:6",
+            "chisel:hardened_clay_white:7",
+            "chisel:hardened_clay_white:8"
+          ],
+          "fallbackToBaseline": true,
+          "flags": [
+            "SP"
+          ]
+        },
+        {
+          "label": "Ztones:tile.roenBlock:0, :7, Ztones:tile.solsBlock:3",
           "weight": 12,
           "blocks": [
-            "chisel:hardened_clay_orange:2",
-            "chisel:hardened_clay_orange:3",
-            "chisel:hardened_clay_orange:4",
-            "chisel:hardened_clay_orange:5",
-            "chisel:hardened_clay_orange:6",
-            "chisel:hardened_clay_orange:7",
-            "chisel:hardened_clay_orange:8"
+            "Ztones:tile.roenBlock:0",
+            "Ztones:tile.roenBlock:7",
+            "Ztones:tile.solsBlock:3"
+          ],
+          "fallbackToBaseline": true,
+          "flags": []
+        },
+        {
+          "label": "TConstruct:decoration.multibrick:9 (bone brick), Railcraft:brick.bleachedbone:0",
+          "weight": 10,
+          "blocks": [
+            "TConstruct:decoration.multibrick:9",
+            "Railcraft:brick.bleachedbone:0"
           ],
           "fallbackToBaseline": true,
           "flags": [
@@ -1532,80 +1543,46 @@
           ]
         },
         {
-          "label": "etfuturum:concrete:1",
-          "weight": 10,
-          "blocks": [
-            "etfuturum:concrete:1"
-          ],
-          "fallbackToBaseline": true,
-          "flags": []
-        },
-        {
-          "label": "chisel:hempcrete:1",
+          "label": "etfuturum:end_bricks:0",
           "weight": 8,
           "blocks": [
-            "chisel:hempcrete:1"
+            "etfuturum:end_bricks:0"
+          ],
+          "fallbackToBaseline": true,
+          "flags": []
+        },
+        {
+          "label": "Ztones:tile.krypBlock:5",
+          "weight": 5,
+          "blocks": [
+            "Ztones:tile.krypBlock:5"
+          ],
+          "fallbackToBaseline": true,
+          "flags": []
+        },
+        {
+          "label": "Botania:biomeStoneA:5",
+          "weight": 5,
+          "blocks": [
+            "Botania:biomeStoneA:5"
           ],
           "fallbackToBaseline": true,
           "flags": [
             "SP"
           ]
-        },
-        {
-          "label": "Ztones:tile.solsBlock:1, :2, Ztones:tile.iszmBlock:13, Ztones:tile.zestBlock:12",
-          "weight": 10,
-          "blocks": [
-            "Ztones:tile.solsBlock:1",
-            "Ztones:tile.solsBlock:2",
-            "Ztones:tile.iszmBlock:13",
-            "Ztones:tile.zestBlock:12"
-          ],
-          "fallbackToBaseline": true,
-          "flags": []
-        },
-        {
-          "label": "GalaxySpace:barnardaFgrunt",
-          "weight": 5,
-          "blocks": [
-            "GalaxySpace:barnardaFgrunt:0"
-          ],
-          "fallbackToBaseline": true,
-          "flags": [
-            "H"
-          ]
-        },
-        {
-          "label": "etfuturum:red_sandstone:0",
-          "weight": 5,
-          "blocks": [
-            "etfuturum:red_sandstone:0"
-          ],
-          "fallback": [
-            "minecraft:sandstone:0"
-          ],
-          "flags": []
-        },
-        {
-          "label": "Ztones:tile.crayBlock:13",
-          "weight": 5,
-          "blocks": [
-            "Ztones:tile.crayBlock:13"
-          ],
-          "fallbackToBaseline": true,
-          "flags": []
         }
       ]
     },
     {
-      "name": "red-desert-walls",
-      "title": "Red desert walls",
+      "name": "taupe-desert-walls",
+      "title": "Taupe desert walls",
       "group": "Brick and stone walls",
       "candidates": [
         {
-          "label": "Baseline: minecraft:stained_hardened_clay:14",
+          "label": "Baseline: minecraft:stained_hardened_clay:8",
           "weight": 45,
           "blocks": [
-            "minecraft:stained_hardened_clay:14"
+            "minecraft:stained_hardened_clay:8"
           ],
           "baseline": true,
           "flags": [
@@ -1613,16 +1590,16 @@
           ]
         },
         {
-          "label": "chisel:hardened_clay_red:2 to :8",
-          "weight": 12,
+          "label": "chisel:hardened_clay_lightgray:2 to :8",
+          "weight": 15,
           "blocks": [
-            "chisel:hardened_clay_red:2",
-            "chisel:hardened_clay_red:3",
-            "chisel:hardened_clay_red:4",
-            "chisel:hardened_clay_red:5",
-            "chisel:hardened_clay_red:6",
-            "chisel:hardened_clay_red:7",
-            "chisel:hardened_clay_red:8"
+            "chisel:hardened_clay_lightgray:2",
+            "chisel:hardened_clay_lightgray:3",
+            "chisel:hardened_clay_lightgray:4",
+            "chisel:hardened_clay_lightgray:5",
+            "chisel:hardened_clay_lightgray:6",
+            "chisel:hardened_clay_lightgray:7",
+            "chisel:hardened_clay_lightgray:8"
           ],
           "fallbackToBaseline": true,
           "flags": [
@@ -1630,19 +1607,19 @@
           ]
         },
         {
-          "label": "etfuturum:concrete:14",
+          "label": "Ztones:tile.krypBlock:3",
           "weight": 10,
           "blocks": [
-            "etfuturum:concrete:14"
+            "Ztones:tile.krypBlock:3"
           ],
           "fallbackToBaseline": true,
           "flags": []
         },
         {
-          "label": "chisel:hempcrete:14",
+          "label": "chisel:hempcrete:8",
           "weight": 8,
           "blocks": [
-            "chisel:hempcrete:14"
+            "chisel:hempcrete:8"
           ],
           "fallbackToBaseline": true,
           "flags": [
@@ -1650,50 +1627,32 @@
           ]
         },
         {
-          "label": "Ztones:tile.solsBlock:12 to :15, Ztones:tile.fortBlock:13, Ztones:tile.mystBlock:5",
-          "weight": 10,
+          "label": "Ztones:tile.mystBlock:15, Ztones:tile.crayBlock:0",
+          "weight": 8,
           "blocks": [
-            "Ztones:tile.solsBlock:12",
-            "Ztones:tile.solsBlock:13",
-            "Ztones:tile.solsBlock:14",
-            "Ztones:tile.solsBlock:15",
-            "Ztones:tile.fortBlock:13",
-            "Ztones:tile.mystBlock:5"
+            "Ztones:tile.mystBlock:15",
+            "Ztones:tile.crayBlock:0"
           ],
           "fallbackToBaseline": true,
           "flags": []
         },
         {
-          "label": "gregtech:gt.blockgranites:11, :15",
-          "weight": 5,
+          "label": "TConstruct:SpeedBlock:2, :3 (brownstone, brownstone brick)",
+          "weight": 8,
           "blocks": [
-            "gregtech:gt.blockgranites:11",
-            "gregtech:gt.blockgranites:15"
+            "TConstruct:SpeedBlock:2",
+            "TConstruct:SpeedBlock:3"
           ],
           "fallbackToBaseline": true,
           "flags": [
-            "BH",
-            "H"
+            "SPD"
           ]
         },
         {
-          "label": "Railcraft:brick.bloodstained:0, :2",
-          "weight": 5,
+          "label": "Thaumcraft:blockCosmeticSolid:11 (ancient stone)",
+          "weight": 6,
           "blocks": [
-            "Railcraft:brick.bloodstained:0",
-            "Railcraft:brick.bloodstained:2"
-          ],
-          "fallbackToBaseline": true,
-          "flags": [
-            "SP",
-            "H"
-          ]
-        },
-        {
-          "label": "Ztones:tile.lairBlock:4",
-          "weight": 5,
-          "blocks": [
-            "Ztones:tile.lairBlock:4"
+            "Thaumcraft:blockCosmeticSolid:11"
           ],
           "fallbackToBaseline": true,
           "flags": []
@@ -1706,75 +1665,58 @@
       "group": "Brick and stone walls",
       "candidates": [
         {
-          "label": "Baseline: etfuturum:double_red_sandstone_slab:0",
-          "weight": 45,
+          "label": "Baseline: minecraft:double_stone_slab:9 (smooth sandstone)",
+          "weight": 50,
           "blocks": [
-            "etfuturum:double_red_sandstone_slab:0"
+            "minecraft:double_stone_slab:9"
           ],
           "baseline": true,
-          "fallback": [
-            "minecraft:double_stone_slab:1"
-          ],
           "flags": []
         },
         {
-          "label": "etfuturum:smooth_red_sandstone:0",
+          "label": "minecraft:sandstone:2 (cut)",
           "weight": 15,
           "blocks": [
-            "etfuturum:smooth_red_sandstone:0"
-          ],
-          "fallback": [],
-          "flags": []
-        },
-        {
-          "label": "etfuturum:red_sandstone:2 (cut)",
-          "weight": 10,
-          "blocks": [
-            "etfuturum:red_sandstone:2"
-          ],
-          "fallback": [
             "minecraft:sandstone:2"
           ],
           "flags": []
         },
         {
-          "label": "minecraft:double_stone_slab:9 (smooth sandstone top)",
+          "label": "minecraft:sandstone:1 (chiseled)",
           "weight": 10,
           "blocks": [
-            "minecraft:double_stone_slab:9"
+            "minecraft:sandstone:1"
           ],
           "flags": []
         },
         {
           "label": "Railcraft:brick.sandy:2",
-          "weight": 8,
+          "weight": 10,
           "blocks": [
             "Railcraft:brick.sandy:2"
           ],
-          "fallback": [
-            "minecraft:sandstone:2"
-          ],
+          "fallbackToBaseline": true,
           "flags": [
             "SP",
             "H"
           ]
         },
         {
-          "label": "Ztones:tile.solsBlock:12",
-          "weight": 7,
-          "blocks": [
-            "Ztones:tile.solsBlock:12"
-          ],
-          "fallback": [],
-          "flags": []
-        },
-        {
           "label": "Ztones:tile.krypBlock:3",
-          "weight": 5,
+          "weight": 8,
           "blocks": [
             "Ztones:tile.krypBlock:3"
           ],
-          "fallback": [],
+          "fallbackToBaseline": true,
+          "flags": []
+        },
+        {
+          "label": "Ztones:tile.solsBlock:4",
+          "weight": 7,
+          "blocks": [
+            "Ztones:tile.solsBlock:4"
+          ],
+          "fallbackToBaseline": true,
           "flags": []
         }
       ]
@@ -3181,16 +3123,13 @@
       "group": "Streets, highways and fittings",
       "candidates": [
         {
-          "label": "Baseline: minecraft:brick_block; desert etfuturum:red_netherbrick:0",
+          "label": "Baseline: minecraft:brick_block; desert minecraft:sandstone:0",
           "weight": 50,
           "blocks": [
             "minecraft:brick_block:0",
-            "etfuturum:red_netherbrick:0"
+            "minecraft:sandstone:0"
           ],
           "baseline": true,
-          "fallback": [
-            "minecraft:nether_brick:0"
-          ],
           "flags": []
         },
         {
@@ -3216,12 +3155,12 @@
           "flags": []
         },
         {
-          "label": "Desert: chisel:nether_brick:14, :15, Railcraft:brick.nether:2",
+          "label": "Desert: chisel:sandstone:8, :12, Railcraft:brick.sandy:0",
           "weight": 10,
           "blocks": [
-            "chisel:nether_brick:14",
-            "chisel:nether_brick:15",
-            "Railcraft:brick.nether:2"
+            "chisel:sandstone:8",
+            "chisel:sandstone:12",
+            "Railcraft:brick.sandy:0"
           ],
           "fallbackToBaseline": true,
           "flags": [

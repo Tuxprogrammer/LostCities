@@ -13,7 +13,7 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
  * Finds things to look at and check in a world's cities, from the plan alone (no block is read and no chunk is
  * loaded), for the test-hook command {@code /lostcities find} and the screenshot tooling: the nearest city center, a
  * primary street, an enterable building, the edge where a city meets RWG terrain, a reserved lot (a landmark core or
- * its edge ring) and a village sewn into a city (a gate, lane or link chunk). Each result has a target block and a
+ * its margin) and a village sewn into a city (a gate, lane or link chunk). Each result has a target block and a
  * suggested viewpoint with a view direction.
  *
  * <p>
@@ -37,9 +37,14 @@ public final class CityFinder {
         INTERIOR,
         /** A city chunk on land beside a non-city chunk: the blend into RWG terrain. */
         EDGE,
-        /** A city chunk with a side facing a landmark core: a soft-edge strip (0006 §4). */
+        /**
+         * A city chunk beside land at least {@link CityFinder#RISE_MIN} blocks above its ground that is not city: where
+         * the rise cap stops a city before high terrain (alpha review AR-4).
+         */
+        RISE,
+        /** A chunk of a landmark's margin between a city chunk and the core: the slope and its strip (0006 §4). */
         SOFTEDGE,
-        /** A landmark core or a city chunk of its edge ring. */
+        /** A landmark core or a chunk of its margin. */
         RESERVED,
         /** A chunk of a village's sewing: a gate, lane or link chunk. */
         VILLAGE;
@@ -210,6 +215,16 @@ public final class CityFinder {
     static final float OVERVIEW_PITCH = 40f;
     /** How far outside the city the edge view stands, in blocks. */
     static final int EDGE_BACK = 28;
+    /** Least height of the land beside a city chunk above its ground for a rise view, in blocks. */
+    static final int RISE_MIN = 12;
+    /** How far back into the city from the chunk's side the rise view stands, in blocks. */
+    static final int RISE_BACK = 30;
+    /** How far above the city's ground the rise view stands, above its rooftops, in blocks. */
+    static final int RISE_HEIGHT = 44;
+    /** Pitch of the rise view, degrees: down onto the street, with the slope it stops before above it. */
+    static final float RISE_PITCH = 30f;
+    /** How far into the city from a margin chunk's middle the soft-edge view stands, in blocks. */
+    static final int MARGIN_BACK = 22;
     /** How far above the natural ground the edge view stands. */
     static final int EDGE_HEIGHT = 18;
     /** Pitch of the edge view, degrees. */
@@ -352,6 +367,8 @@ public final class CityFinder {
                 return interior(chunkX, chunkZ);
             case EDGE:
                 return edge(chunkX, chunkZ);
+            case RISE:
+                return rise(chunkX, chunkZ);
             case SOFTEDGE:
                 return softEdge(chunkX, chunkZ);
             case RESERVED:
@@ -516,22 +533,63 @@ public final class CityFinder {
         return null;
     }
 
-    private Result softEdge(int chunkX, int chunkZ) {
+    private Result rise(int chunkX, int chunkZ) {
         ChunkPlan layout = planner.plan(chunkX, chunkZ);
-        if (!layout.isCity()) {
+        if (!layout.isCity() || layout.hasBuilding()) {
+            return null;
+        }
+        int ground = layout.cityGroundLevel();
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            int nx = chunkX + side.stepX();
+            int nz = chunkZ + side.stepZ();
+            com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan outside = plan.chunk(nx, nz);
+            if (outside.kind() != com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind.NONE
+                || outside.naturalHeight() - ground < RISE_MIN) {
+                continue;
+            }
+            // From above the city, looking across the street toward the slope the city stopped before.
+            int x = (chunkX << 4) + 8 + side.stepX() * 8;
+            int z = (chunkZ << 4) + 8 + side.stepZ() * 8;
+            double viewX = x - side.stepX() * RISE_BACK + 0.5;
+            double viewZ = z - side.stepZ() * RISE_BACK + 0.5;
+            return new Result(
+                Kind.RISE,
+                chunkX,
+                chunkZ,
+                x,
+                ground,
+                z,
+                viewX,
+                ground + RISE_HEIGHT,
+                viewZ,
+                yawToward(viewX, viewZ, x, z),
+                RISE_PITCH,
+                "city stops before ground " + (outside.naturalHeight() - ground)
+                    + " blocks higher toward "
+                    + side.name());
+        }
+        return null;
+    }
+
+    private Result softEdge(int chunkX, int chunkZ) {
+        // A chunk of a landmark's margin with a city chunk on one side and the core on the other.
+        if (planner.zone(chunkX, chunkZ)
+            .zone() != Zone.EDGE_RING) {
             return null;
         }
         for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
             .values()) {
-            if (!planner.facesCore(chunkX, chunkZ, side)) {
+            ChunkPlan inside = planner.plan(chunkX - side.stepX(), chunkZ - side.stepZ());
+            if (!planner.facesCore(chunkX, chunkZ, side) || !inside.isCity()) {
                 continue;
             }
-            int ground = layout.cityGroundLevel();
-            int x = (chunkX << 4) + 8 + side.stepX() * 8;
-            int z = (chunkZ << 4) + 8 + side.stepZ() * 8;
-            // Look along the strip from inside the city, a little above it.
-            double viewX = x - side.stepX() * EDGE_BACK + 0.5;
-            double viewZ = z - side.stepZ() * EDGE_BACK + 0.5;
+            int ground = inside.cityGroundLevel();
+            int x = (chunkX << 4) + 8;
+            int z = (chunkZ << 4) + 8;
+            // Look across the margin's slope from the city's edge, a little above it.
+            double viewX = x - side.stepX() * MARGIN_BACK + 0.5;
+            double viewZ = z - side.stepZ() * MARGIN_BACK + 0.5;
             return new Result(
                 Kind.SOFTEDGE,
                 chunkX,
@@ -544,7 +602,7 @@ public final class CityFinder {
                 viewZ,
                 yawToward(viewX, viewZ, x, z),
                 EDGE_PITCH,
-                "soft edge toward " + side.name()
+                "margin toward " + side.name()
                     + " ("
                     + planner.zone(chunkX + side.stepX(), chunkZ + side.stepZ())
                         .landmarkId()
@@ -556,15 +614,14 @@ public final class CityFinder {
     private Result reserved(int chunkX, int chunkZ) {
         Zone zone = planner.zone(chunkX, chunkZ)
             .zone();
-        if (zone != Zone.CORE && !(zone == Zone.EDGE_RING && planner.plan(chunkX, chunkZ)
-            .isCity())) {
+        if (zone != Zone.CORE && zone != Zone.EDGE_RING) {
             return null;
         }
         return landmarkView(
             Kind.RESERVED,
             chunkX,
             chunkZ,
-            (zone == Zone.CORE ? "landmark core " : "edge ring of ") + planner.zone(chunkX, chunkZ)
+            (zone == Zone.CORE ? "landmark core " : "margin of ") + planner.zone(chunkX, chunkZ)
                 .landmarkId());
     }
 

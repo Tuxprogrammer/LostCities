@@ -34,8 +34,24 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows th
 | `FLOORHEIGHT` | 6 | constant | 6 | Blocks per level and per floor |
 | `cityMinHeight` | 50 | −1024 to 2048 | 50, range 0 to 255 | Keeps cities off deep RWG ocean (floor 34 ± 5.5) |
 | `cityMaxHeight` | 150 | −1024 to 2048 | 150, range 0 to 255 | Keeps cities off RWG2 mountain chains (base 120) and high mountains, as upstream keeps them off peaks |
+| `cityMaxRise` | none | none | 2 city levels, range 0 to 8 (8: no cap) | New ([Rise cap](#rise-cap)): how far a city chunk's level may rise above its city's base level |
 | `heightSampleSize` (mod config) | 3 | 1 to 100 | 3, range 1 to 100 | Chunks per side; not a height |
 | `oceanCorrectionBorder` | 4 | −255 to 255 | same | An offset: ocean corner = `groundLevel − 4` = Y 67 |
+
+## Rise cap
+
+Upstream lets a city climb any slope up to `cityMaxHeight`: each chunk takes the level of its own terrain, so a city whose center lies in a valley follows RWG up a mountainside, levels 4 to 7 above its streets, with parks 40 to 60 blocks up and buildings ending against the slope (alpha review AR-4, AR-14). The owner asked for the "happy medium" between cutting the mountain flat and raising the city to the sky. Deviation (pinned profile value `cityMaxRise`, default 2; decision log D148):
+
+| Rule | Value |
+|---|---|
+| Base level | The city level of the median of five oracle heights, at the strongest city center reaching the chunk and 3 chunks from it on each axis, so one hill or hollow at the center does not move the whole city. Cached per center |
+| Cap | A city chunk's level is at most base + `cityMaxRise`: two levels, 12 blocks of city ground |
+| Tolerance | Terrain one level over the cap stays city and is cut down to the cap (the foot of a slope is leveled a little) |
+| Stop | Terrain two or more levels over the cap is not city. The city stops before it, and the blend shapes the slope between; such a chunk keeps its own level |
+| Lower ground | Uncapped: a city on a hill steps down its sides as upstream's does |
+| No cap | Perlin mode (no centers), and `cityMaxRise` 8 or more |
+
+The cap is decided from the oracle in the layout, before any chunk's characteristics, so every chunk agrees on it whatever order chunks generate in. With it, the tallest step between two neighboring city chunks is the one upstream already had between levels, a wall with stairs, and no stone-brick column or foundation wall rises more than about two levels above the street beside it (AR-14).
 
 ## Building envelope
 
@@ -61,7 +77,8 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows th
 | "Fixed corner" test | `< 256` | explicit flag | 0005 §5 |
 | Landmark core corner | none | the core's oracle height, offsets −1 to +1 | E1 |
 | Kept surface layers | 6 | 6 | |
-| Soft-edge strip | none | `softEdgeWidth` 6 columns ± 2 | [pipeline-on-rwg.md](pipeline-on-rwg.md#soft-edge-strips) |
+| Soft-edge strip | none | `softEdgeWidth` 6 columns ± 2, in the margin chunk beside a core after the blend | [pipeline-on-rwg.md](pipeline-on-rwg.md#soft-edge-strips) |
+| Terrain exactly at a lowering target | left standing one block above it (TERR-39) | lowered like any higher terrain | A street no longer runs under a line of grass or sand following the contour (AR-2) |
 
 ## Damage
 
@@ -69,7 +86,7 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows th
 |---|---|---|---|---|
 | `explosionMinHeight`, `explosionMaxHeight` | 75, 90 | 1 to 256 | same defaults, range 1 to 255 | Center Y = `6 × cityLevel + min + nextInt(max − min)`, absolute, as upstream |
 | `miniExplosionMinHeight`, `miniExplosionMaxHeight` | 60, 100 | 1 to 256 | same defaults, range 1 to 255 | |
-| Explosion radii | 15 to 35, 5 to 12 | 1 to 3000 | same | Blocks, not heights |
+| Explosion radii | 15 to 35, 5 to 12 | 1 to 3000 | 12 to 24, 4 to 9 by default, same range | Blocks, not heights. Smaller by default so damage is an accent ([index.md](index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd), AR-8) |
 | Damage pass | Y 0 to 255 | Y 0 to 255 | | Upstream's hard-coded range is the 1.7.10 range (TERR-19) |
 | Debris start | neighbor's top + 10, or `minBuild − 1` above the cap | neighbor's top + 10, capped at Y 255 | TERR-04 |
 | Ruin column | `base + noise` to building top + 10 | the same, capped at Y 255 | TERR-29 |

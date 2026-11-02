@@ -25,7 +25,8 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `spawnBiome`, `spawnCity`, `spawnSphere`, `spawnNotInBuilding`, `forceSpawnInBuilding`, `forceSpawnBuildings`, `forceSpawnParts`, `spawnCheckRadius`, `spawnRadiusIncrease`, `spawnCheckAttempts` | same | Off by default, searched in the layout. `spawnBiome` names a 1.7.10 biome. `spawnSphere` is deferred with spheres. `forceSpawnInBuilding` places a player exactly only on first join. | 01 | D21, [01 · Spawn selection](../01-core/index.md#spawn-selection) | CORE-13, CORE-14, CORE-15, CORE-16 |
 | `scatteredChanceMultiplier` | same | | 07 | | |
 | `terrainFixLowerMinOffset`, `terrainFixLowerMaxOffset`, `terrainFixUpperMinOffset`, `terrainFixUpperMaxOffset` | same | Upstream's −4/−3 and −1/+1. | 03 | [0005](../../design/0005-rwg-overlay.md) §5, §6 | |
-| `vineChance`, `randomLeafBlockChance`, `randomLeafBlockThickness`, `avoidFoliage`, `rubbleLayer`, `rubbleDirtScale`, `rubbleLeaveScale`, `ruinChance`, `ruinMinlevelPercent`, `ruinMaxlevelPercent`, `avoidWater` | same | | 03, 04 | | |
+| `vineChance`, `randomLeafBlockChance`, `randomLeafBlockThickness`, `avoidFoliage`, `rubbleLayer`, `rubbleDirtScale`, `rubbleLeaveScale`, `ruinMinlevelPercent`, `ruinMaxlevelPercent`, `avoidWater` | same | | 03, 04 | | |
+| `ruinChance` | changed | Default 0.015 instead of 0.05, so a ruined top is an occasional accent ([03-terrain](../03-terrain/index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd)). A profile can still ask for upstream's 0.05. | 03, 04 | AR-8 ([alpha review](../../reviews/2026-11-02-alpha.md)) | |
 | `landscapeType` | changed | Only `default` is valid. Any other value rejects the profile at load with a message, so the allowed list and the check agree. | 02 | [0005](../../design/0005-rwg-overlay.md) §7, D12 | PROF-15 |
 | `bedrockLayer` | changed | Read and writes nothing, with a warning when above 0: RWG already places bedrock at Y 0 to 4, and generation never places unbreakable blocks. The key stays so upstream profiles load. | 03 | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | `groundLevel` | same | 71, range clamped to 2 to 255. | 03, 04 | [0005](../../design/0005-rwg-overlay.md) §6 | |
@@ -47,8 +48,9 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 
 | Options | Here | What changes | Owner | Decision | Avoids |
 |---|---|---|---|---|---|
-| `debrisToNearbyChunkFactor`, `explosionChance`, `explosionsInCitiesOnly`, `miniExplosionChance` | same | | 03 | | |
-| `explosionMinRadius`, `explosionMaxRadius`, `explosionMinHeight`, `explosionMaxHeight`, `miniExplosionMinRadius`, `miniExplosionMaxRadius`, `miniExplosionMinHeight`, `miniExplosionMaxHeight` | changed | Heights clamped to 0 to 255. Each minimum must be below its maximum, checked at load. | 03 | [0005](../../design/0005-rwg-overlay.md) §6; bug register | PROF-06 |
+| `debrisToNearbyChunkFactor`, `explosionsInCitiesOnly` | same | | 03 | | |
+| `explosionChance`, `miniExplosionChance` | changed | Defaults 0.0004 and 0.005 instead of 0.002 and 0.03: craters are an occasional accent, not the look of a city ([03-terrain](../03-terrain/index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd)). A profile can still ask for upstream's numbers. | 03 | AR-8 ([alpha review](../../reviews/2026-11-02-alpha.md)) | |
+| `explosionMinRadius`, `explosionMaxRadius`, `explosionMinHeight`, `explosionMaxHeight`, `miniExplosionMinRadius`, `miniExplosionMaxRadius`, `miniExplosionMinHeight`, `miniExplosionMaxHeight` | changed | Heights clamped to 0 to 255. Each minimum must be below its maximum, checked at load. Default radii 12 to 24 and 4 to 9 instead of 15 to 35 and 5 to 12 (AR-8). | 03 | [0005](../../design/0005-rwg-overlay.md) §6; bug register; AR-8 | PROF-06 |
 
 ## Category `cities` (25 options)
 
@@ -91,7 +93,8 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `villageTreatment` | `lostcity` | `BUILD_AROUND` | `BUILD_AROUND`, `AVOID` (upstream's avoidance), `IGNORE`; replaces `avoidVillages` | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
 | `landmarkTreatment` | `lostcity` | `BUILD_AROUND` | The same three values for each landmark kind other than villages: a comma-separated list of a bare treatment, which sets every kind, and `<kind>=<treatment>` entries (`ocean_monument=AVOID`); replaces `avoidStructures` | 04, 07 | [0006](../../design/0006-build-around-other-worldgen.md) §3, D138 |
 | `landmarkMargin` | `lostcity` | 2 blocks | Growth of a landmark footprint before it is turned into core chunks | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
-| `softEdgeWidth` | `lostcity` | 6 columns | Width of the strip that steps city ground down to natural ground facing a core | 03 | [0006](../../design/0006-build-around-other-worldgen.md) §4 |
+| `softEdgeWidth` | `lostcity` | 6 columns | Width of the strip in a core's margin that meets the blended ground to the core's own edge columns | 03 | [0006](../../design/0006-build-around-other-worldgen.md) §4 |
+| `cityMaxRise` | `lostcity` | 2 city levels | How far a city chunk's level may rise above its city's base level; one level more is cut down to it, higher ground is not city; 8 is no cap (alpha review AR-4) | 03, 04 | [height-mapping.md](../03-terrain/height-mapping.md#rise-cap), D148 |
 | `villageTransitionRings` | `lostcity` | 2 | Rings of lower building density around a village | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
 | `villageLinkDistance` | `lostcity` | 4 chunks | How far outside a city a village still gets a lane | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
 | Vanilla loot categories opt-in (name `08-loot-mobs-blocks`'; M08 adds it) | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |

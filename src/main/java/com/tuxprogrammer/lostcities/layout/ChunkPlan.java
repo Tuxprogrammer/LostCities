@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
-import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
 
@@ -139,11 +138,6 @@ public final class ChunkPlan {
     /** Returns whether the chunk is a city chunk without a building: a street, plaza, park or open lot. */
     public boolean isStreetOrParkSection() {
         return isCity && !hasBuilding;
-    }
-
-    /** Returns whether this is a city chunk in a landmark's edge ring (no building, cellar, corridor or dungeon). */
-    public boolean isEdgeRing() {
-        return isCity && characteristics.zone.zone() == Zone.EDGE_RING;
     }
 
     /** Returns the multibuilding position, {@link MultiPos#SINGLE} for a single chunk. */

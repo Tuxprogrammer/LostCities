@@ -65,6 +65,37 @@ public class FloatingFragmentsTest {
         }
     }
 
+    /**
+     * AR-1 (alpha review): a street stair's slab steps are each their own floating blob by design. An explosion 19
+     * blocks away whose sphere reaches the section holding one step must not remove it: no damage came near it.
+     */
+    @Test
+    public void aStairStepNoExplosionCameNearIsKept() {
+        ArrayChunkBuffer buffer = groundTo(77);
+        BlockRef slab = BlockRef.of("minecraft:stone_slab", 0);
+        // stairs1 against the east side: two by two slabs a step, one block higher every two blocks.
+        for (int step = 0; step < 5; step++) {
+            for (int x = 14; x <= 15; x++) {
+                for (int z = 2 * step; z <= 2 * step + 1; z++) {
+                    buffer.set(x, 78 + step, z, slab);
+                }
+            }
+        }
+        // The alpha set's mini explosion: radius 11, west of the chunk, reaching Y 80 to 111 of this chunk's box.
+        DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(-5, 95, 9, 11)));
+        assertEquals(80, area.lowestExplosionY(), "the step at Y 81 is inside the damaged band");
+        int changed = new FloatingFragments(TestTerrain.context(3L))
+            .apply(buffer, area, plan(), lowSides(), new Random(1));
+        assertEquals(0, changed, "nothing the explosion never reached is removed");
+        for (int step = 0; step < 5; step++) {
+            for (int x = 14; x <= 15; x++) {
+                for (int z = 2 * step; z <= 2 * step + 1; z++) {
+                    assertEquals(slab, buffer.get(x, 78 + step, z), "step " + step + " at " + x + "," + z);
+                }
+            }
+        }
+    }
+
     @Test
     public void groundConnectedBelowTheBandIsKept() {
         ArrayChunkBuffer buffer = groundTo(90);

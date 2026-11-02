@@ -4,6 +4,7 @@ package com.tuxprogrammer.lostcities.layout;
 // Avoids: PROF-11, PROF-10, CITY-05, CITY-06, CITY-07, CITY-39, CITY-40
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -55,6 +56,17 @@ final class CityMap {
     private static final float FACTOR_EPSILON = 0.0001f;
     /** Chunk width, in blocks. */
     private static final int CHUNK = 16;
+    /** {@link #riseBase} when no rise cap applies: Perlin mode, no city reaches the chunk, or no cap is set. */
+    static final int NO_BASE = Integer.MIN_VALUE;
+    /**
+     * City levels above the rise cap a chunk's terrain may reach and still be city, cut down to the cap: the foot of a
+     * slope is leveled a little, steeper ground is left to RWG (AR-4).
+     */
+    static final int RISE_TOLERANCE = 1;
+    /** Distance, in chunks, from a city center of the four extra samples its base level takes the median with. */
+    static final int BASE_SPREAD = 3;
+    /** Entries of the base-level cache: one per city center, so far fewer than chunks. */
+    private static final int BASE_CACHE = 256;
 
     private final long seed;
     private final LayoutProfile profile;
@@ -65,6 +77,7 @@ final class CityMap {
     private final int searchRadius;
     private final ChunkCache<Float> factors;
     private final ChunkCache<String> styles;
+    private final ChunkCache<Integer> bases;
 
     CityMap(long seed, LayoutProfile profile, WorldStyleView worldStyle, TerrainView terrain,
         ActivePredefined predefined, int cacheSize) {
@@ -79,6 +92,7 @@ final class CityMap {
         this.searchRadius = (profile.cityMaxRadius + 15) / CHUNK;
         this.factors = new ChunkCache<>(cacheSize);
         this.styles = new ChunkCache<>(cacheSize);
+        this.bases = new ChunkCache<>(Math.min(cacheSize, BASE_CACHE));
     }
 
     /** Returns whether the profile uses Perlin rarity instead of city centers. */
@@ -166,12 +180,60 @@ final class CityMap {
             if (height < profile.cityMinHeight || height > profile.cityMaxHeight) {
                 return 0;
             }
+            if (risesTooHigh(chunkX, chunkZ, height)) {
+                return 0;
+            }
             factor *= worldStyle.cityChanceMultiplier(chunkX, chunkZ);
         }
         if (profile.citySpawnDistance2 > 0) {
             factor *= (float) spawnMultiplier(chunkX, chunkZ);
         }
         return Math.min(Math.max(factor, 0), 1);
+    }
+
+    /**
+     * Deviation (alpha review AR-4): whether a chunk's terrain rises more than {@code cityMaxRise} +
+     * {@link #RISE_TOLERANCE} city levels above its city's base level. Upstream lets a city climb any slope up to
+     * {@code cityMaxHeight}, so parks and buildings sat 40 to 60 blocks above the rest of their city; here the city
+     * stops before such ground and the blend shapes the slope between.
+     */
+    private boolean risesTooHigh(int chunkX, int chunkZ, int height) {
+        if (!profile.capsRise()) {
+            return false;
+        }
+        int base = riseBase(chunkX, chunkZ);
+        return base != NO_BASE && profile.levelForHeight(height) > base + profile.cityMaxRise + RISE_TOLERANCE;
+    }
+
+    /**
+     * Returns the base level of the city that reaches a chunk most strongly: the city level of the median of five
+     * height samples, at its center and {@link #BASE_SPREAD} chunks from it on each axis, so one hill or hollow at
+     * the center does not lift or sink the whole city. {@link #NO_BASE} when no cap applies: Perlin mode (no
+     * centers), no city reaching the chunk, or {@code cityMaxRise} at the number of levels or more.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the base city level, or {@link #NO_BASE}
+     */
+    int riseBase(int chunkX, int chunkZ) {
+        if (!profile.capsRise()) {
+            return NO_BASE;
+        }
+        int[] center = strongestCenter(chunkX, chunkZ);
+        if (center == null) {
+            return NO_BASE;
+        }
+        Integer cached = bases.get(center[0], center[1]);
+        if (cached != null) {
+            return cached;
+        }
+        int cx = center[0];
+        int cz = center[1];
+        int[] samples = { terrain.height(cx, cz), terrain.height(cx - BASE_SPREAD, cz),
+            terrain.height(cx + BASE_SPREAD, cz), terrain.height(cx, cz - BASE_SPREAD),
+            terrain.height(cx, cz + BASE_SPREAD) };
+        Arrays.sort(samples);
+        return bases.put(cx, cz, profile.levelForHeight(samples[samples.length / 2]));
     }
 
     /**

@@ -30,7 +30,7 @@ public class SewingTest {
             LayoutProfile.defaults().streets);
         int px = streets.primaryOffsetX();
         int z = 3;
-        while (streets.isHorizontalPrimary(z)) {
+        while (anyHorizontalPrimary(streets, z - 2, z + 2)) {
             z++;
         }
         LayoutPlanner p = LayoutFixtures.cityWith(
@@ -41,7 +41,17 @@ public class SewingTest {
         assertFalse(
             p.plan(px, z)
                 .isCity());
-        int[][] path = { { px, z - 1 }, { px - 1, z - 1 }, { px - 1, z }, { px - 1, z + 1 }, { px, z + 1 } };
+        // The core's margin (px - 1 .. px + 1, z - 1 .. z + 1) is never city; the detour runs around it.
+        for (int dz = -1; dz <= 1; dz++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                assertFalse(
+                    p.plan(px + dx, z + dz)
+                        .isCity(),
+                    "margin " + (px + dx) + "," + (z + dz));
+            }
+        }
+        int[][] path = { { px, z - 2 }, { px - 1, z - 2 }, { px - 2, z - 2 }, { px - 2, z - 1 }, { px - 2, z },
+            { px - 2, z + 1 }, { px - 2, z + 2 }, { px - 1, z + 2 }, { px, z + 2 } };
         for (int[] c : path) {
             ChunkPlan plan = p.plan(c[0], c[1]);
             assertEquals(
@@ -52,15 +62,24 @@ public class SewingTest {
             assertEquals(PlannedRoadType.PRIMARY, plan.plannedRoad(), c[0] + "," + c[1]);
             assertFalse(plan.hasBuilding());
         }
-        LaneCell corner = p.plan(px - 1, z - 1)
+        LaneCell corner = p.plan(px - 2, z - 2)
             .lane();
         assertTrue(corner.connects(RoadDirection.EAST) && corner.connects(RoadDirection.SOUTH));
         assertEquals(
             LaneRole.NONE,
-            p.plan(px + 1, z)
+            p.plan(px + 2, z)
                 .lane()
                 .role(),
             "one side only");
+    }
+
+    private static boolean anyHorizontalPrimary(HierarchicalStreetPlanner streets, int fromZ, int toZ) {
+        for (int z = fromZ; z <= toZ; z++) {
+            if (streets.isHorizontalPrimary(z)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Test
@@ -83,9 +102,10 @@ public class SewingTest {
                 .connects(RoadDirection.WEST),
             "the gate chunk leads into the core");
         assertTrue(
-            gate.plannedRoad()
-                .isRoad());
-        assertFalse(gate.hasBuilding());
+            gate.lane()
+                .connects(RoadDirection.EAST),
+            "and straight across the margin into the city (AR-7)");
+        assertFalse(gate.isCity(), "the gate chunk is the city's margin (AR-10)");
         // Follow the lane away from the core until it meets a road chunk that is not part of it.
         int x = 6;
         int z = 5;

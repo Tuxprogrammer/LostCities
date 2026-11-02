@@ -137,4 +137,46 @@ public class SoftEdgesTest {
         assertEquals(BlockRef.of("minecraft:cobblestone", 0), leveled.get(x, 101, 8), "the wall reaches the ground");
         assertEquals(BlockRef.AIR, leveled.get(x, 102, 8), "and no higher");
     }
+
+    @Test
+    public void aMarginMeetsTheCoresOwnEdgeAfterTheBlend() {
+        // A margin chunk (not city) west of a core: the core's edge columns stand at 66 before the blend, and the blend
+        // has left the whole chunk at 74 (toward the city's ground, from the core's oracle height).
+        ChunkPlan margin = ChunkPlan.builder(0, 0, ChunkKind.NONE)
+            .groundY(71)
+            .naturalHeight(66)
+            .build();
+        ChunkPlan[] sides = coreToTheEast(margin);
+        ArrayChunkBuffer buffer = flat(66);
+        int[][] edges = new int[4][16];
+        assertTrue(SoftEdges.recordCoreEdges(buffer, CONTEXT.classifier(), sides, edges));
+        assertEquals(66, edges[ChunkPlan.Side.EAST.ordinal()][5]);
+        assertEquals(SoftEdges.NOT_IN_STRIP, edges[ChunkPlan.Side.WEST.ordinal()][5], "no core to the west");
+        ArrayChunkBuffer blended = flat(74);
+        SoftEdges.stitchToCores(blended, CONTEXT, 0, 0, edges);
+        for (int z = 0; z < 16; z++) {
+            assertEquals(
+                66,
+                ColumnOps.surface(blended, CONTEXT.classifier(), 15, z, true),
+                "the edge column is back at the core's height at z " + z);
+            assertEquals(74, ColumnOps.surface(blended, CONTEXT.classifier(), 0, z, true), "the far side is untouched");
+            int previous = 66;
+            for (int x = 14; x >= 0; x--) {
+                int top = ColumnOps.surface(blended, CONTEXT.classifier(), x, z, true);
+                assertTrue(top >= previous && top - previous <= 2, "a gentle ramp at " + x + "," + z);
+                previous = top;
+            }
+        }
+        assertEquals(TestTerrain.GRASS, blended.get(15, 66, 3), "the ramp keeps the grass");
+    }
+
+    @Test
+    public void noSideFacingACoreRecordsNothing() {
+        ChunkPlan plan = ChunkPlan.builder(0, 0, ChunkKind.NONE)
+            .groundY(71)
+            .build();
+        ChunkPlan[] sides = new ChunkPlan[4];
+        Arrays.fill(sides, plan);
+        assertTrue(!SoftEdges.recordCoreEdges(flat(70), CONTEXT.classifier(), sides, new int[4][16]));
+    }
 }

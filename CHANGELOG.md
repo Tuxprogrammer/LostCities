@@ -31,3 +31,13 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - The GTNH layer (milestone M08): city chests hold GTNH loot in tier bands, from supplies, food, bronze and iron up to LV, MV, HV and, rarely on high floors and in deep cellars, EV components, circuits, materials and the pack's loot bags; nothing above EV. Rail dungeons hold Railcraft rails, ties, carts and tools. Server owners can retune each category with a TooMuchLoot file of the same name (`lostcitiesnh:city_supplies`, `city_lv`, `city_mv`, `city_hv`, `city_ev`, `rail_dungeon`). Two new profile options, both off: `vanillaLootCategories` (chests may also draw the pack's vanilla loot) and `enderZooHardMobs` (EnderZoo's mobs in the harder spawners). A spawner whose mob is missing from the pack falls back to a skeleton or is left out, never a pig spawner.
 - Cities now also build around Roguelike Dungeons towers, LootGames puzzle dungeons, AE2 meteorites (stepping down so a crater cuts nothing), Witchery's structures and, on RWG2, its volcanoes, lava caves and river junctions; Roguelike towers no longer land inside cities.
 - Railcraft's quarried-stone patches are kept out of cities, like lakes and oil.
+- Parks are filled in with tall grass, flowers, ferns and small shrubs suited to their biome, instead of bare grass with a few flowers.
+
+### Changed
+
+- Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
+- Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.
+
+### Fixed
+
+- A street stair no longer loses one of its steps when an explosion lands nearby: the cleanup after explosions only removes loose blocks that the explosion could have reached.

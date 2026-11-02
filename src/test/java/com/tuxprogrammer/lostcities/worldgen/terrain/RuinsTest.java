@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -141,5 +142,17 @@ public class RuinsTest {
         ChunkPlan[] around = new ChunkPlan[9];
         Arrays.fill(around, street);
         assertEquals(0, ruins.rubble(buffer, 0, 0, street, around, ruins.random(0, 0), null));
+    }
+
+    /** AR-18: a rubble pile covers a park's one-block plants instead of floating on top of them. */
+    @Test
+    public void rubbleCoversSmallPlantsButNotShrubsOrSaplings() {
+        assertTrue(Ruins.isSmallPlant(BlockRef.of("minecraft:tallgrass", 1)));
+        assertTrue(Ruins.isSmallPlant(BlockRef.of("minecraft:tallgrass", 2)));
+        assertTrue(Ruins.isSmallPlant(BlockRef.of("minecraft:yellow_flower", 0)));
+        assertTrue(Ruins.isSmallPlant(BlockRef.of("minecraft:red_flower", 8)));
+        assertFalse(Ruins.isSmallPlant(BlockRef.of("minecraft:leaves", 4)));
+        assertFalse(Ruins.isSmallPlant(BlockRef.of("minecraft:sapling", 8)));
+        assertFalse(Ruins.isSmallPlant(BlockRef.of("minecraft:double_plant", 2)));
     }
 }
