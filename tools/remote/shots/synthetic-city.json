@@ -1,0 +1,25 @@
+{
+  "comment": "M05S demo: the synthetic test city at chunk (2048, 2048), seed 4242 (decision log D72). Run once per world type; pass --level-type RWG --world shots-rwg for classic RWG. y as top+N stands N blocks above the column's top block, so the same list fits both world types.",
+  "title": "Synthetic test city, seed 4242",
+  "world": {"name": "shots-rwg2c", "level_type": "RWG2_CONTINENTS", "seed": "4242", "fresh": true},
+  "server_jvm": "-Dlostcitiesnh.planSource=synthetic",
+  "time": 6000,
+  "render_distance": 12,
+  "fov": 70,
+  "shots": [
+    {"name": "above", "x": 32884, "z": 32884, "y": "top+50", "yaw": 135, "pitch": 33, "wait": 3,
+     "caption": "City from above: the 13 x 13-chunk synthetic city from its south-east corner, looking north-west."},
+    {"name": "street", "x": 32776, "z": 32866, "y": "top+1", "yaw": 180, "pitch": 3, "wait": 3,
+     "caption": "Street level: the north-south street through the city center, looking north."},
+    {"name": "interior", "x": 32787.5, "z": 32787.5, "y": "top-5", "yaw": -45, "pitch": 5, "wait": 3,
+     "caption": "Building interior: the top floor of the lot at chunk (2049, 2049), glowstone ceiling lights."},
+    {"name": "edge", "x": 32935, "z": 32776, "y": "top+22", "yaw": 90, "pitch": 18, "wait": 3,
+     "caption": "City edge: the east edge where the city meets RWG terrain, looking west."},
+    {"name": "village", "x": 32900, "z": 32640, "y": "top+45", "yaw": 39, "pitch": 40, "wait": 3,
+     "caption": "Landmark: the 2 x 2-chunk village core sewn into the city at (4..5, -5..-4), seen from the north-east: its edge ring of parks and its lane."},
+    {"name": "lane", "x": 32818, "z": 32704, "y": "top+4", "yaw": -90, "pitch": 12, "wait": 3,
+     "caption": "Landmark lane, just above street level: from the street at x = 3 across the soft-edge strip into the village core."},
+    {"name": "soft-edge", "x": 32620, "z": 32820, "y": "top+40", "yaw": -135, "pitch": 35, "wait": 3,
+     "caption": "Soft edge and reserved lot: the 2 x 2 core straddling the city's west edge, left as RWG made it, seen from the south-west."}
+  ]
+}
