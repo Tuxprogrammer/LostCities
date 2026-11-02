@@ -9,7 +9,8 @@ import com.tuxprogrammer.lostcities.asset.block.TileTemplate;
  *
  * <p>
  * Exactly one of the four kinds holds: a single block, a random list (an inline {@code blocks} list or a variant), or
- * a reference to another character ({@code frompalette}). Immutable. Side: both.
+ * a reference to another character ({@code frompalette}). Immutable, but for the slot array {@link #slots()} builds
+ * once. Side: both.
  */
 public final class PaletteEntry {
 
@@ -33,6 +34,8 @@ public final class PaletteEntry {
     private final Condition mob;
     private final boolean torch;
     private final TileTemplate tag;
+    /** The slots a compiled palette reads, built on first use; never written after (see {@link #slots()}). */
+    private BlockChoice[] slots;
 
     PaletteEntry(char character, Kind kind, BlockChoice block, RandomList random, char reference, BlockChoice damaged,
         Condition loot, Condition mob, boolean torch, TileTemplate tag) {
@@ -96,6 +99,30 @@ public final class PaletteEntry {
     /** Returns the tile-entity template, or null. */
     public TileTemplate tag() {
         return tag;
+    }
+
+    /**
+     * Returns the blocks a compiled palette reads for this entry: one for a {@link Kind#BLOCK} entry, the 128 slots of
+     * a
+     * {@link Kind#RANDOM} one; null for a reference. Built on first use and shared by every compiled palette, which
+     * only
+     * read it (callers must not write to it). Generation runs on the server thread, so the lazy build needs no lock.
+     *
+     * @return the slots, or null for a reference
+     */
+    public BlockChoice[] slots() {
+        if (slots == null && kind != Kind.REFERENCE) {
+            if (kind == Kind.BLOCK) {
+                slots = new BlockChoice[] { block };
+            } else {
+                BlockChoice[] built = new BlockChoice[RandomList.SLOTS];
+                for (int i = 0; i < built.length; i++) {
+                    built[i] = random.slot(i);
+                }
+                slots = built;
+            }
+        }
+        return slots;
     }
 
     /** Returns whether the entry carries any information (loot, mob, torch or a template). */

@@ -4583,18 +4583,6 @@
           "flags": [
             "L15"
           ]
-        },
-        {
-          "label": "Automagy:blockTranslucent:0, :1 (glowing amber, amber bricks)",
-          "weight": 2,
-          "blocks": [
-            "Automagy:blockTranslucent:0",
-            "Automagy:blockTranslucent:1"
-          ],
-          "fallbackToBaseline": true,
-          "flags": [
-            "L15"
-          ]
         }
       ]
     },

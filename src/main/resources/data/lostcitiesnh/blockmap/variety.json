@@ -3669,16 +3669,6 @@
       ]
     },
     {
-      "name": "light_automagy_blocktranslucent_0",
-      "pool": "glowstone",
-      "palette": [
-        {
-          "char": "\ue003",
-          "block": "Automagy:blockTranslucent:0"
-        }
-      ]
-    },
-    {
       "name": "furniture_workshop",
       "pool": "furniture",
       "palette": [
@@ -7657,10 +7647,6 @@
             {
               "option": "light_galaxyspace_proteusglowstone_0",
               "weight": 2
-            },
-            {
-              "option": "light_automagy_blocktranslucent_0",
-              "weight": 2
             }
           ]
         },
@@ -8810,10 +8796,6 @@
             },
             {
               "option": "light_galaxyspace_proteusglowstone_0",
-              "weight": 2
-            },
-            {
-              "option": "light_automagy_blocktranslucent_0",
               "weight": 2
             }
           ]

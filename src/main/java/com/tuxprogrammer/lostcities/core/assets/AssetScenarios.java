@@ -28,7 +28,8 @@ import com.tuxprogrammer.lostcities.worldgen.city.AssetCatalogCheck;
  * unresolved name, and every palette-variety option's blocks are registered;</li>
  * <li>{@code assets.catalog}: every bundled part written under every style's palettes, with the palette variety drawn
  * for {@link #CATALOG_SEEDS} seeds per style, places only registered blocks and leaves no character undefined
- * ({@link AssetCatalogCheck}; M11's exit gate).</li>
+ * ({@link AssetCatalogCheck}; M11's exit gate), and that no placed block reads the world for its light opacity
+ * ({@link GenerationSafety}).</li>
  * </ul>
  * Side: server.
  */
@@ -211,6 +212,20 @@ public final class AssetScenarios {
                         new ArrayList<>(
                             report.unregistered()
                                 .keySet())));
+            Set<String> placed = new java.util.TreeSet<>(report.distinctBlocks());
+            placed.addAll(
+                set.variety()
+                    .blocks());
+            List<String> unsafe = GenerationSafety.worldAwareOpacity(placed);
+            LostCities.LOG.info(
+                LoadedAssets.TAG + "catalog: "
+                    + placed.size()
+                    + " blocks checked for world-aware light opacity, flagged "
+                    + unsafe);
+            context.check(
+                unsafe.isEmpty(),
+                "expected no block that reads the world for its light opacity (it regenerates its own chunk), found "
+                    + unsafe);
             context.check(
                 report.undefined()
                     .isEmpty(),

@@ -888,7 +888,6 @@ Upstream's oak planks (`top1x1_5` local `o`), fence posts and the wood in its fu
 | `IC2NuclearControl:blockNuclearControlLight:1` | 4 | baseline | L15 | White panel lamp; goes dark if tinkered |
 | `EnderIO:blockFusedQuartz:3` (enlightened clear glass) | 3 | baseline | L15, TE | Lit windows |
 | `GalaxySpace:proteusglowstone`, `GalaxySpace:enceladusglowstone` | 3 | baseline | L15 | Neutral lamp blocks |
-| `Automagy:blockTranslucent:0`, `:1` (glowing amber, amber bricks) | 2 | baseline | L15 | Warm lamp block, no tile entity |
 
 `ProjRed|Illumination` lamps (tile entity, lit through `inv`), Computronics' colorful lamp (`clc` NBT) and BiblioCraft lamps are low-weight options once tile-entity palette data exists.
 
@@ -1237,6 +1236,7 @@ D28 rule 7, with the pack's other hazards. The never-place list applies to every
 | GT ore hosts | Raw `minecraft:stone`, `netherrack`, `end_stone`, `gregtech:gt.blockgranites:0`, `:8`, `gregtech:gt.blockstones:0`, `:8`, `etfuturum:deepslate` (any meta), `etfuturum:tuff:0`, and the planet stones GT treats as hosts in every dimension: Galacticraft `tile.moonBlock:4`, `tile.mars:6`, `tile.mars:9`, `tile.asteroidsBlock:1`, and the 33 GalaxySpace stones in [galaxyspace.md](galaxyspace.md) ([ore-veins.md](../../00-pack-integration/ore-veins.md#which-blocks-gt-replaces)) |
 | Infested | Every `minecraft:monster_egg` (D19); Twilight Forest infested towerwood (`tile.TFTowerStone:4`) |
 | Casings and machines | GT casings until the GTNH-themed buildings ([above](#reserved-for-the-gtnh-themed-buildings)); machine hulls never; any machine, turret, portal or ticking generator |
+| Regenerates its own chunk | Blocks whose world-aware light opacity reads the world at their own position: building a fresh chunk's sky light asks for it before the chunk is registered, so the read generates the chunk again until the stack overflows (M11, [0011](../../../design/0011-palette-variety.md)). Thaumcraft's `blockCosmeticOpaque` (amber, amber bricks, warded glass) and every block extending it, such as Automagy's glowing amber `blockTranslucent`; the `assets.catalog` scenario flags any other placed block whose class overrides that method |
 | Gameplay hazards | Speed blocks as floors, roofs, sidewalks, side streets, stairs or rubble (D28 rule 3: they are walked on only on highways and primary roads, and may stand in walls and trims); Thaumcraft and Thaumic Tinkerer travel paving, slabs and stairs; OpenBlocks elevators in same-colored columns and scaffolding; OpenModularTurrets fences tier 3 to 5; Extra Utilities ethereal glass, spikes, chandelier and magnum torch (spawn suppression), colored redstone blocks; Natura soul glass, heat glass, heat sand and thornvines; Twilight Forest thorns and hedge meta 0 at reachable height; Witchery brambles; Blood Magic spectral block; Biomes O' Plenty quicksand, poison ivy and thorns; GalaxySpace webs; Galacticraft cavernous vines; crusted taint and tainted soil; OpenSecurity security doors on paths; Ztones `booster`; GT bounce and sticky pads |
 
 ## City styles that would gain a distinct pool

@@ -579,6 +579,31 @@ public final class PaletteVariety {
         return out;
     }
 
+    /** Returns every block the available options place, {@code modid:name:meta}, sorted. */
+    public Set<String> blocks() {
+        Set<String> out = new java.util.TreeSet<>();
+        for (Option option : options.values()) {
+            if (!option.available()) {
+                continue;
+            }
+            for (com.tuxprogrammer.lostcities.asset.model.PaletteEntry entry : option.palette.entries()
+                .values()) {
+                com.tuxprogrammer.lostcities.asset.block.BlockChoice[] slots = entry.slots();
+                if (slots == null) {
+                    continue;
+                }
+                for (com.tuxprogrammer.lostcities.asset.block.BlockChoice choice : slots) {
+                    if (!choice.isHardAir()) {
+                        out.add(
+                            choice.block()
+                                .toString());
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
     /** Returns how many options are available. */
     public int availableCount() {
         int count = 0;

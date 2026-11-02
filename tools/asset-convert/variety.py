@@ -481,7 +481,6 @@ LIGHTS = singles("light", "glowstone", LIGHT, [
     ("ExtraUtilities:color_lightgem:0", 3),
     ("IC2NuclearControl:blockNuclearControlLight:1", 3),
     ("GalaxySpace:proteusglowstone:0", 2),
-    ("Automagy:blockTranslucent:0", 2),
 ])
 
 COBWEB = "minecraft:cobweb"
