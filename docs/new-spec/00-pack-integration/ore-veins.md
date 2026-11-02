@@ -6,14 +6,14 @@ Status: *Accepted* (spike S3; [decision log](../../design/decision-log.md) D18).
 
 ## Answer to Q3
 
-**Veins pass through; buildings are ore-inert.** The mechanics are verified from source and pack config. The alpha screenshots show how often boulders mark terracotta buildings, and that decides whether option B is built.
+**Veins pass through; buildings are ore-inert.** The mechanics are verified from source and pack config. The alpha review (2026-11-02, [reviews/2026-11-02-alpha.md](../../reviews/2026-11-02-alpha.md)) noted no boulder damage on either world type, so option B is not built; `gtnh.layer` checks on the real pack that ore stands under cities and none inside buildings (M08).
 
 1. **Nothing suppresses, moves or excludes GT generation.** Every vein, small ore and boulder that GT would place in natural stone under or around a city is placed. The city's foundation fill (upstream's profile `baseBlock`, `minecraft:stone`) is natural stone, so veins continue under and into city mounds, and basements and subways that cut through a vein expose its ore.
 2. **The block mapping keeps buildings, streets, highways and railways off the ore-host list** (the [host table](#which-blocks-gt-replaces) below). That alone makes them immune to veins, placer ores and small ores, which is the bulk of GT's output. The one upstream asset that would break the rule is the `stoneandbrick` variant (building8), which is about 94 % `minecraft:stone`; it maps to a non-host stone such as a smooth-stone or stone-brick block ([block-mapping.md](block-mapping.md)).
-3. **Boulder hosts are accepted for alpha.** Upstream's colored terracotta (22 references in 10 palette and variant files) maps faithfully to `minecraft:stained_hardened_clay`, which GT's boulders can overwrite. The GT stones' cobble, brick, cracked, mossy, chiseled and smooth forms join the palettes' variety pools on the same terms (D28; [block catalog](../05-assets/block-catalog/index.md)). The alpha screenshot review decides whether boulder damage shows; if it does, M08 adds the restore pass (option B below) for boulder hosts only.
+3. **Boulder hosts are accepted.** Upstream's colored terracotta (22 references in 10 palette and variant files) maps faithfully to `minecraft:stained_hardened_clay`, which GT's boulders can overwrite. The GT stones' cobble, brick, cracked, mossy, chiseled and smooth forms join the palettes' variety pools on the same terms (D28; [block catalog](../05-assets/block-catalog/index.md)). The alpha review showed no boulder damage, so no restore pass runs; option B below stays the fix if a later review shows it.
 4. **Ore lost under a city is only what the city displaced before GT ran**: air in basements, tunnels and building volumes, and non-host blocks. That matches the owner's default ("losing some ore under a building is acceptable") without any restoration code.
 
-Option B, a restore pass limited to boulder-host blocks, is the fix if the alpha screenshots show boulder damage. It needs a mixin into GT internals, because no GT event covers boulders or signals the end of a chunk's ore generation, so it is held back until the screenshots show it is needed. Terracotta keeps its faithful mapping either way, and GT stones stay in the pools: the owner chose the restore pass over non-host look-alikes.
+Option B, a restore pass limited to boulder-host blocks, is the fix if a review shows boulder damage; the alpha review did not. It needs a mixin into GT internals, because no GT event covers boulders or signals the end of a chunk's ore generation, so it is held back until it is needed. Terracotta keeps its faithful mapping either way, and GT stones stay in the pools: the owner chose the restore pass over non-host look-alikes.
 
 ## How GT generates the overworld
 
@@ -99,7 +99,7 @@ GT boulders (`WorldgenStone`) use a different, broader test: a block is replaced
 | `minecraft:end_stone`, `minecraft:netherrack` | all | *Verified* |
 | `gregtech:gt.blockgranites`, `gregtech:gt.blockstones` | **all 16 metas**, including cobble, bricks, mossy, cracked, chiseled and smooth | *Verified* |
 
-So every GT stone meta is a boulder host, and the raw metas 0 and 8 are ore hosts as well. In palettes, GT stones follow D28: the raw metas never, every other meta on terracotta's terms (kept, and covered by the restore pass if the alpha screenshots show boulder damage).
+So every GT stone meta is a boulder host, and the raw metas 0 and 8 are ore hosts as well. In palettes, GT stones follow D28: the raw metas never, every other meta on terracotta's terms (kept; the restore pass would cover them if a review showed boulder damage).
 
 Sources: [WorldgenStone.java#L216-L233](https://github.com/GTNewHorizons/GT5-Unofficial/blob/5.09.54.265/src/main/java/gregtech/common/WorldgenStone.java#L216-L233); Forge 1.7.10 [Block.java.patch](https://github.com/MinecraftForge/MinecraftForge/blob/9274e4fe435cb415099a8216c1b42235f185443e/patches/minecraft/net/minecraft/block/Block.java.patch) (`isReplaceableOreGen` returns `this == target`); search of the GT tag finds no override.
 
@@ -151,8 +151,8 @@ A restore pass can therefore overwrite an ore or boulder block with an ordinary 
 
 Recorded in the [decision log](../../design/decision-log.md) as D18:
 
-- Option A at alpha: veins pass through cities, buildings are ore-inert, nothing is excluded and nothing is restored. Occasional granite, marble or basalt boulders cutting into terracotta buildings are accepted until the alpha review.
-- If the alpha screenshots show boulder damage, option B: a restore pass limited to boulder-host blocks, through a tail mixin on GT's chunk task, re-checked at every GT bump. Terracotta is not remapped to non-host look-alikes.
+- Option A: veins pass through cities, buildings are ore-inert, nothing is excluded and nothing is restored. Occasional granite, marble or basalt boulders cutting into terracotta buildings are accepted; the alpha review showed none (M08 decision row).
+- If a review shows boulder damage, option B: a restore pass limited to boulder-host blocks, through a tail mixin on GT's chunk task, re-checked at every GT bump. Terracotta is not remapped to non-host look-alikes.
 
 Recorded as D28 (rule 4): GT stones (granite, marble, basalt and their brick and smooth forms) join the palettes' variety pools on terracotta's terms; option B, if built, covers them too. D28 (rule 7) also keeps the planet stones GT treats as ore hosts out of every palette.
 

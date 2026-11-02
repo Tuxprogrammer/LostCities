@@ -341,7 +341,7 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 
 | Key | Default | Range | Status | What it does |
 |---|---|---|---|---|
-| `preventLakesInCities` | `true` |  | live | Vetoes RWG's lakes, lava lakes and dungeons and NHCore's oil where a population area touches a city chunk or a scattered structure; not ravines. 1.12's `preventLakesRavinesInCities` still loads |
+| `preventLakesInCities` | `true` |  | live | Vetoes RWG's lakes, lava lakes and dungeons, NHCore's oil and its Railcraft quarried-stone populator where a population area touches a city chunk or a scattered structure; not ravines. 1.12's `preventLakesRavinesInCities` still loads |
 | `highwaysEnabled` | `true` |  | pinned; read from M06 | Generate highways in this world |
 | `villageTreatment` | `BUILD_AROUND` | BUILD_AROUND, AVOID, IGNORE | live | How cities meet villages: `BUILD_AROUND` (sew them in), `AVOID` (upstream's avoidance), `IGNORE` |
 | `landmarkTreatment` | `BUILD_AROUND` |  | live | The same for other landmarks: one treatment for all, and `<kind>=<treatment>` per kind, comma-separated (`ocean_monument`, `roguelike`, `witchery`, `lootgames`, `meteorite`, `terrain`) |

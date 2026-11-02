@@ -173,6 +173,27 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] A server and a client with different configs still join. *Real pack: the server with `highways` and `iron` off and `nodamage` mapped to dimension 0, the client with its default config; the client joined and played until the server stopped.*
 - [x] Two fresh worlds of the same seed and a non-default profile hash identically (`city.real`). *`tallbuildings` with `forceSpawnInBuilding`, RWG2 Continents, seed 4242: terrain `c2fbbf50…`, population `7ab26747…` in both.*
 
+## M08 · GTNH layer
+
+**Lane:** Integration. **Parallel with:** M05R, M09.
+
+**Entry gate:** the alpha gate; [00-pack-integration](new-spec/00-pack-integration/index.md) and [08-loot-mobs-blocks](new-spec/08-loot-mobs-blocks/index.md) written, records [0004](design/0004-gtnh-layer-and-tier-ceiling.md) and [0006](design/0006-build-around-other-worldgen.md) accepted (met). Upstream's loot and spawner behavior: [original-spec/08-loot-mobs-blocks](original-spec/08-loot-mobs-blocks/index.md).
+
+**Scope:**
+- **Loot at EV or below** ([loot-and-mobs.md](new-spec/00-pack-integration/loot-and-mobs.md) Q5, D20): this mod's `ChestGenHooks` categories, one per tier band (`city_supplies`, `city_lv`, `city_mv`, `city_hv`, `city_ev`) plus `rail_dungeon`, filled from pack items at `postInit` (GT components and circuits by tier, GT materials, EnhancedLootBags of the matching tier, pack food and supplies, Railcraft for rail dungeons); upstream's `chestloot` choosing among them by floor; the tier map and the dev self-check that fails on anything above EV or unmapped; the vanilla categories behind a profile opt-in, off by default.
+- **Pack mobs and spawners** (Q6, D20): vanilla spawners with upstream's mobs as 1.7.10 names; every name checked against the entity registry, with a fallback; EnderZoo's overworld mobs as an optional `hardmobs` set, off by default.
+- **GT ore-vein coexistence** ([ore-veins.md](new-spec/00-pack-integration/ore-veins.md), D18): veins pass through cities and no building block is an ore host; the boulder restore pass (option B) only if the alpha screenshots show boulder damage.
+- **Other pack worldgen** ([other-worldgen.md](new-spec/00-pack-integration/other-worldgen.md), D21): the T2 denial completed with Railcraft's quarry populator; the structure oracles under `compat` for Roguelike Dungeons, Witchery, LootGames, AE2 and RWG2's terrain landmarks, wired beside VillageNames' and pinned in the snapshot; the Roguelike Dungeons steering mixin, which also keeps towers out of scattered footprints (D31); the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md) §1, §3).
+
+**Exit gate:**
+- [ ] Loot: the bundled defaults keep the EV ceiling, the band rules and the loot-bag families (`LootDefaultsTest`, `LootRulesTest`); the dev self-check walks every registered category in the real pack and finds nothing unmapped or above EV; on both world types `gtnh.layer` finds filled city chests holding only tier-mapped items at EV or below.
+- [ ] Spawners: on both world types every city spawner names the mob its plan drew, from upstream's set (`Zombie`, `Skeleton`, `Spider`, `Blaze`, `Witch`), never a pig, and each name creates its entity; the EnderZoo set replaces `hardmobs` only when its option is on (`JobTargetTest`).
+- [ ] Ore veins: on both world types GT ore blocks stand in the natural stone under city chunks and none above the city ground in a building chunk (`gtnh.layer`); the alpha review showed no boulder damage, so option B is not built (recorded).
+- [ ] Each structure oracle is pure, cached and unit-tested with fakes, and its real-pack scenario matches the structures the other mod placed, with none of them inside a city chunk or edge ring: `oracle.roguelike`, `oracle.witchery`, `oracle.lootgames`, `oracle.ae2`, `oracle.rwg2` (RWG2 Continents only).
+- [ ] The Roguelike steering mixin applies in the real pack and refuses every candidate whose lot touches a city chunk or edge ring; scattered footprints are honored through the layout's seam, which M07 fills.
+- [ ] A meteorite near a city leaves no city block under its crater's paraboloid (`oracle.ae2`).
+- [ ] M05's checks still hold on both world types with the M08 jar: `city.real` hashes match between two fresh worlds, budgets B1 to B5 hold (`city.budget`), no cascade warning has this mod's code as its first frame, and `city.walk` passes.
+
 ## M06 to M12 · After the alpha
 
 Scopes are written from S1 to S3 when they land. In outline:
