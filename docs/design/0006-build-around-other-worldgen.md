@@ -59,7 +59,8 @@ Chunk granularity keeps upstream's planner, multibuilding placement, street rend
 
 | Oracle | Package | How |
 |---|---|---|
-| Villages | `compat.villagenames` | Computes VillageNames' grid seed with vanilla's `setRandomSeed` formula and tests the biome name through the biome provider. For an accepted start, seeds a `Random` exactly as `MapGenBase` does and builds the start through VillageNames' own `getStructureStart` on a private `MapGenVillageVN` instance (an accessor mixin reaches the protected method and sets its world). Footprint: every piece's box; gates: the ends of path pieces that face outward. Ground: the oracle's median height over each box |
+| Villages | `compat.villagenames` | Computes VillageNames' grid seed with vanilla's `setRandomSeed` formula on a `Random` of its own and tests the biome name through the biome provider. For an accepted start, seeds the `Random` of a private `MapGenVillageVN` subclass exactly as `MapGenBase` does (so it is Hodgepodge's `StdLCG` in the pack, as the live generator's is) and calls VillageNames' own protected `getStructureStart` from the subclass; no mixin (D84, D85). FML's village-creation handlers are ordered by class name at `postInit`, without which the same seed builds other villages on each server run (D86). Footprint: every piece's box; gates: path ends nothing continues whose way out is clear of every piece by `landmarkMargin` (D87). Ground: the height oracle's median at the center and corners of each building (D88) |
+| Ocean monuments (D32) | `compat.villagenames` | VillageNames' 32-chunk grid (separation 5, salt 10387313) and its biome-name test through the biome provider: deep ocean over 9 × 9 blocks, ocean or river over 15 × 15. An `EXACT` core: the 58 × 58 building. Ground: the sea floor's median |
 | Roguelike Dungeons | `compat.roguelike` | Reproduces the grid and the FML generator seed, generates the 50 candidates, and tests each against the biome provider and the height oracle with `validLocation`'s rules. The first that passes is a `CANDIDATE` landmark: 21 × 21 blocks around it |
 | Witchery | `compat.witchery` | The 20-chunk grid and the biome-type test, from the contract read from the decompiled jar (no code copied). A `UNION` landmark: 23 × 23 blocks over the candidate chunk and its west, north and north-west neighbors |
 | LootGames | `compat.lootgames` | The rhomb-grid test. An `EXACT` landmark: the 21 × 21 room and the +Z entrance tunnel |
@@ -166,8 +167,6 @@ In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldg
 
 For the prototype and the alpha screenshots:
 
-- The village oracle against `data/Village.dat` over many starts, and the side effects of a private `Start` construction.
-- How often VillageNames villages start in RWG2's biomes.
 - The Roguelike prediction's hit rate.
 - The look of edge strips, plazas, lanes, empty lots and crater basins; `softEdgeWidth` and the transition-ring numbers; how often retaining borders appear.
 - Thaumcraft mounds in city parks.
