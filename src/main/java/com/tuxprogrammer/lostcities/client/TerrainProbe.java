@@ -15,7 +15,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  *
  * <p>
  * The GTNH pack renders terrain with Angelica's Celeritas renderer, which replaces vanilla's chunk updates. Angelica
- * 2.2.43 exposes it as {@code com.gtnewhorizons.angelica.rendering.celeritas.CeleritasWorldRenderer.getInstanceOrNull()},
+ * 2.2.43 exposes it as
+ * {@code com.gtnewhorizons.angelica.rendering.celeritas.CeleritasWorldRenderer.getInstanceOrNull()},
  * whose superclass {@code org.embeddedt.embeddium.impl.render.terrain.SimpleWorldRenderer} has a public
  * {@code isTerrainRenderComplete()}: the build queue is empty (checked with javap on the pack's
  * {@code angelica-2.2.43.jar}; the class is in Angelica's source at tag 2.2.43,
@@ -44,7 +45,9 @@ final class TerrainProbe {
     static TerrainProbe create() {
         try {
             Class<?> renderer = Class.forName(CELERITAS);
-            return new TerrainProbe(renderer.getMethod("getInstanceOrNull"), renderer.getMethod("isTerrainRenderComplete"));
+            return new TerrainProbe(
+                renderer.getMethod("getInstanceOrNull"),
+                renderer.getMethod("isTerrainRenderComplete"));
         } catch (ClassNotFoundException | NoSuchMethodException | LinkageError e) {
             return new TerrainProbe(null, null);
         }
@@ -75,7 +78,8 @@ final class TerrainProbe {
         } catch (ReflectiveOperationException | RuntimeException e) {
             if (!warned) {
                 warned = true;
-                LostCities.LOG.warn("{} cannot read the terrain build queue; shots rely on their waits", CleanCapture.TAG, e);
+                LostCities.LOG
+                    .warn("{} cannot read the terrain build queue; shots rely on their waits", CleanCapture.TAG, e);
             }
             return true;
         }

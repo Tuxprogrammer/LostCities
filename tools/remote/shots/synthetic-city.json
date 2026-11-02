@@ -1,0 +1,25 @@
+{
+  "comment": "M05S demo: the synthetic test city at chunk (2048, 2048), seed 4242 (decision log D72). Run once per world type; pass --level-type RWG --world shots-rwg for classic RWG. y as top+N stands N blocks above the column's top block, so the same list fits both world types.",
+  "title": "Synthetic test city, seed 4242",
+  "world": {"name": "shots-rwg2c", "level_type": "RWG2_CONTINENTS", "seed": "4242", "fresh": true},
+  "server_jvm": "-Dlostcitiesnh.planSource=synthetic",
+  "time": 6000,
+  "render_distance": 10,
+  "fov": 70,
+  "shots": [
+    {"name": "above", "x": 32905, "z": 32905, "y": "top+55", "yaw": 135, "pitch": 35, "wait": 3,
+     "caption": "City from above: the 13 x 13-chunk synthetic city from its south-east corner, looking north-west."},
+    {"name": "street", "x": 32776, "z": 32866, "y": "top+1", "yaw": 180, "pitch": 3, "wait": 3,
+     "caption": "Street level: the north-south street through the city center, looking north."},
+    {"name": "interior", "x": 32787.5, "z": 32787.5, "y": "top-5", "yaw": -45, "pitch": 5, "wait": 3,
+     "caption": "Building interior: the top floor of the lot at chunk (2049, 2049), glowstone ceiling lights."},
+    {"name": "edge", "x": 32935, "z": 32776, "y": "top+22", "yaw": 90, "pitch": 18, "wait": 3,
+     "caption": "City edge: the east edge where the city meets RWG terrain, looking west."},
+    {"name": "village", "x": 32820, "z": 32762, "y": "top+30", "yaw": -153, "pitch": 35, "wait": 3,
+     "caption": "Landmark: the 2 x 2-chunk village core sewn into the city at (4..5, -5..-4), its edge ring and lane."},
+    {"name": "lane", "x": 32818, "z": 32704, "y": "top+1", "yaw": -90, "pitch": 3, "wait": 3,
+     "caption": "Landmark lane at street level: from the street at x = 3 across the soft-edge strip into the village core."},
+    {"name": "soft-edge", "x": 32722, "z": 32804, "y": "top+25", "yaw": 124, "pitch": 30, "wait": 3,
+     "caption": "Soft edge and reserved lot: the 2 x 2 core straddling the city's west edge, left as RWG made it."}
+  ]
+}

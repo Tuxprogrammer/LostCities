@@ -14,16 +14,16 @@ public final class CaptureSettings {
     /** JVM property that turns the clean capture on (with the test hooks): {@code -Dlostcitiesnh.capture=true}. */
     public static final String PROPERTY = "lostcitiesnh.capture";
     /** Field of view in degrees, as the options slider sets it: 30 to 110, default {@value #DEFAULT_FOV}. */
-    public static final String FOV_PROPERTY = "lostcitiesnh.capture.fov";
+    public static final String FOV_PROPERTY = "lostcitiesnh.captureFov";
     /** Render distance in chunks: 2 to 16, default {@value #DEFAULT_RENDER_DISTANCE}. */
-    public static final String RENDER_DISTANCE_PROPERTY = "lostcitiesnh.capture.renderDistance";
+    public static final String RENDER_DISTANCE_PROPERTY = "lostcitiesnh.captureRenderDistance";
     /**
      * Radius in chunks around the player that must have arrived before a viewpoint counts as settled; default one less
      * than the render distance. It must not exceed the server's {@code view-distance}, or the wait never ends.
      */
-    public static final String CHUNK_RADIUS_PROPERTY = "lostcitiesnh.capture.chunkRadius";
+    public static final String CHUNK_RADIUS_PROPERTY = "lostcitiesnh.captureChunkRadius";
     /** Whether clouds are drawn: default {@code false}, since they hide a city from above. */
-    public static final String CLOUDS_PROPERTY = "lostcitiesnh.capture.clouds";
+    public static final String CLOUDS_PROPERTY = "lostcitiesnh.captureClouds";
 
     static final int DEFAULT_FOV = 70;
     static final int DEFAULT_RENDER_DISTANCE = 10;

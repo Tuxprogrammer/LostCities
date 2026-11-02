@@ -43,13 +43,13 @@ final class SettleTracker {
     /**
      * Takes one client tick's observation.
      *
-     * @param x              camera X
-     * @param y              camera Y
-     * @param z              camera Z
-     * @param yaw            camera yaw in degrees
-     * @param pitch          camera pitch in degrees
-     * @param missingChunks  chunks in the capture radius that have not arrived yet
-     * @param terrainBuilt   whether the terrain renderer's build queue is empty
+     * @param x             camera X
+     * @param y             camera Y
+     * @param z             camera Z
+     * @param yaw           camera yaw in degrees
+     * @param pitch         camera pitch in degrees
+     * @param missingChunks chunks in the capture radius that have not arrived yet
+     * @param terrainBuilt  whether the terrain renderer's build queue is empty
      * @return what changed
      */
     Event tick(double x, double y, double z, float yaw, float pitch, int missingChunks, boolean terrainBuilt) {

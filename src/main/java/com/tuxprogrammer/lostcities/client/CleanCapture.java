@@ -68,8 +68,12 @@ public final class CleanCapture {
         FMLCommonHandler.instance()
             .bus()
             .register(capture);
-        LostCities.LOG
-            .info("{} clean capture on (-D{}=true): {} terrain={}", TAG, CaptureSettings.PROPERTY, capture.settings, capture.probe.kind());
+        LostCities.LOG.info(
+            "{} clean capture on (-D{}=true): {} terrain={}",
+            TAG,
+            CaptureSettings.PROPERTY,
+            capture.settings,
+            capture.probe.kind());
     }
 
     /** Sets the view options before any world loads, so the renderer starts at the capture's render distance. */
@@ -124,13 +128,14 @@ public final class CleanCapture {
         if (change == SettleTracker.Event.SETTLED) {
             int columnX = MathHelper.floor_double(player.posX);
             int columnZ = MathHelper.floor_double(player.posZ);
+            // y is the feet, as /tp and /lostcities view take it: a 1.7.10 client player's posY includes eye height.
             LostCities.LOG.info(
                 String.format(
                     Locale.ROOT,
                     "%s settled x=%.2f y=%.2f z=%.2f yaw=%.1f pitch=%.1f top=%d ticks=%d",
                     TAG,
                     player.posX,
-                    player.posY,
+                    player.boundingBox.minY,
                     player.posZ,
                     player.rotationYaw,
                     player.rotationPitch,
@@ -138,15 +143,20 @@ public final class CleanCapture {
                     tracker.ticksSinceMove()));
         } else if (change == SettleTracker.Event.MOVED) {
             LostCities.LOG.info("{} moving", TAG);
-        } else if (!tracker.settled() && tracker.ticksSinceMove() > 0
-            && tracker.ticksSinceMove() % PROGRESS_TICKS == 0) {
-                LostCities.LOG.info(
-                    "{} waiting {} s: {} chunks missing, terrain {}",
-                    TAG,
-                    tracker.ticksSinceMove() / 20,
-                    missing,
-                    built ? "built" : "building");
-            }
+        } else if (loadingForAWhile()) {
+            LostCities.LOG.info(
+                "{} waiting {} s: {} chunks missing, terrain {}",
+                TAG,
+                tracker.ticksSinceMove() / 20,
+                missing,
+                built ? "built" : "building");
+        }
+    }
+
+    /** Returns whether a progress line is due: the viewpoint is unsettled, every {@link #PROGRESS_TICKS} ticks. */
+    private boolean loadingForAWhile() {
+        int ticks = tracker.ticksSinceMove();
+        return !tracker.settled() && ticks > 0 && ticks % PROGRESS_TICKS == 0;
     }
 
     /** Hides the GUI, the hand and the toast, keeps first person, and closes any screen but terrain download. */
