@@ -121,7 +121,7 @@ The client side is a dev-only mode in the mod ([`client/CleanCapture`](../../src
 - closes any screen that opens in the world;
 - with `-Dlostcitiesnh.captureServer=<host>:<port>`, joins that server from the main menu by itself;
 - sets the field of view, the render distance and clouds (off by default; they hide a city from above) in memory, before any world loads;
-- logs `[LCNH-CAPTURE] settled x=… y=… z=… yaw=… pitch=… top=… ticks=…` once the camera has been still for a second, every chunk within the capture radius has arrived, and the terrain renderer's build queue has stayed empty for a second. With Angelica, as in the pack, that queue is Celeritas's (`isTerrainRenderComplete()`); without it, vanilla's.
+- logs `[LCNH-CAPTURE] settled x=… y=… z=… yaw=… pitch=… top=… ticks=…` once the camera has been still for a second, every chunk within the capture radius has arrived, and the terrain renderer has had nothing left to build for a second. With Angelica, as in the pack, that is Celeritas's build queue (`isTerrainRenderComplete()`) empty and at most 4 sections pending in its upload and rebuild lists (the `Chunk Queues` line of its debug strings; one section can keep rebuilding in a finished view); without Angelica, vanilla's `worldRenderersToUpdate` empty.
 
 Weather and time are the server's, so the runner locks them with console commands.
 

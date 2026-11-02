@@ -31,7 +31,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  * <li>{@code getDebugStrings()}, whose {@code Chunk Queues: U=.. (P0=.. | P1=.. | P2=..)} line counts the build results
  * waiting for upload and the sections waiting in each rebuild list ({@link #pendingFromDebug}).</li>
  * </ul>
- * The probe reports "built" only when the queue is empty and that line counts nothing pending. Both are reached by
+ * The probe reports "built" when that line counts at most {@link #PENDING_TOLERANCE} sections pending, or, if the line
+ * cannot be read, when the queue is empty. Both are reached by
  * reflection, so the mod has no Angelica dependency. Without Angelica, or with its renderer off, vanilla's
  * {@code RenderGlobal.worldRenderersToUpdate} list is the queue. If neither can be read, the probe says "built" and the
  * shot runner's frame check is what remains.
@@ -42,6 +43,13 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 final class TerrainProbe {
 
     private static final String CELERITAS = "com.gtnewhorizons.angelica.rendering.celeritas.CeleritasWorldRenderer";
+    /**
+     * Sections that may stay pending in a finished view. On the real pack some section is rebuilt over and over (the
+     * count flickered between 0 and 1 for minutes with the camera still, so a zero count never held for a second);
+     * terrain still loading leaves dozens to hundreds pending.
+     */
+    static final int PENDING_TOLERANCE = 4;
+
     private static final Pattern QUEUES = Pattern
         .compile("Chunk Queues: U=(\\d+) \\(P0=(\\d+) \\| P1=(\\d+) \\| P2=(\\d+)\\)");
 
@@ -98,11 +106,13 @@ final class TerrainProbe {
             if (instance != null) {
                 Object renderer = instance.invoke(null);
                 if (renderer != null) {
-                    boolean queueEmpty = (Boolean) complete.invoke(renderer);
                     if (debug != null) {
                         lastPending = pendingFromDebug((Collection<?>) debug.invoke(renderer));
                     }
-                    return queueEmpty && lastPending <= 0;
+                    if (lastPending >= 0) {
+                        return lastPending <= PENDING_TOLERANCE;
+                    }
+                    return (Boolean) complete.invoke(renderer);
                 }
             }
             List<?> queue = ReflectionHelper
