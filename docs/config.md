@@ -44,7 +44,7 @@ profiles {
 }
 ```
 
-Every profile value, the module flags, the world type, the loaded asset set (its hash and every file's) and the `decorativeMetals` flags are pinned into the world when it is created; a later start with a different asset set logs one warning naming the changed files, and the world carries on with the loaded assets (P05-3); `/lostcities profile` shows what a dimension was pinned with, and `/lostcities timers` prints the overlay's generation timers and budgets ([0005](design/0005-rwg-overlay.md) §8).
+Every profile value, the module flags, the world type, the loaded asset set (its hash and every file's), the `decorativeMetals` flags and VillageNames' structure settings are pinned into the world when it is created; a later start with a different asset set logs one warning naming the changed files, and the world carries on with the loaded assets (P05-3); `/lostcities profile` shows what a dimension was pinned with, and `/lostcities timers` prints the overlay's generation timers and budgets ([0005](design/0005-rwg-overlay.md) §8).
 
 `ConfigDocsTest` keeps this table in step with the code: every option has a row here with its default.
 

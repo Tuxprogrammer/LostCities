@@ -33,6 +33,7 @@ public final class ProfileSavedData extends WorldSavedData {
     static final String KEY_ASSETS = "assetSetHash";
     static final String KEY_ASSET_FILES = "assetFiles";
     static final String KEY_METALS = "decorativeMetals";
+    static final String KEY_STRUCTURES = "structureSettings";
     static final String KEY_LAYOUT = "layoutVersion";
     static final String KEY_WORLD_TYPE = "worldType";
     static final String KEY_CREATED_BY = "createdBy";
@@ -132,6 +133,7 @@ public final class ProfileSavedData extends WorldSavedData {
         for (Object key : metalTag.func_150296_c()) {
             metals.put((String) key, metalTag.getBoolean((String) key));
         }
+        String structures = tag.hasKey(KEY_STRUCTURES) ? tag.getString(KEY_STRUCTURES) : "";
         String plan = tag.hasKey(KEY_PLAN) ? tag.getString(KEY_PLAN) : ProfileSnapshot.PLAN_LAYOUT;
         int layout = tag.hasKey(KEY_LAYOUT) ? tag.getInteger(KEY_LAYOUT) : ProfileSnapshot.LAYOUT_VERSION;
         return new ProfileSnapshot(
@@ -144,7 +146,7 @@ public final class ProfileSavedData extends WorldSavedData {
             metals,
             layout,
             tag.getString(KEY_WORLD_TYPE),
-            tag.getString(KEY_CREATED_BY));
+            tag.getString(KEY_CREATED_BY)).withStructureSettings(structures);
     }
 
     static NBTTagCompound write(ProfileSnapshot snapshot) {
@@ -176,6 +178,7 @@ public final class ProfileSavedData extends WorldSavedData {
             metals.setBoolean(entry.getKey(), entry.getValue());
         }
         tag.setTag(KEY_METALS, metals);
+        tag.setString(KEY_STRUCTURES, snapshot.structureSettings());
         tag.setInteger(KEY_LAYOUT, snapshot.layoutVersion());
         tag.setString(KEY_WORLD_TYPE, snapshot.worldType());
         tag.setString(KEY_CREATED_BY, snapshot.createdBy());

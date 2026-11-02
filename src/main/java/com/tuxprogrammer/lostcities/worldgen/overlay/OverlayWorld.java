@@ -76,7 +76,7 @@ public final class OverlayWorld {
             BlockRefs::exists);
         this.heights = new ChunkHeights(oracle, settings.heightSampleSize(), timers::recordOracle);
         this.biomes = new WorldBiomes(world);
-        this.cities = layoutPlan(world, snapshot, settings, heights, biomes, classifier);
+        this.cities = layoutPlan(world, snapshot, settings, oracle, heights, biomes, classifier);
         this.plan = new CachedCityPlan(planSource(world.getSeed(), snapshot, settings, heights, cities));
         this.terrainPhase = new TerrainPhase(context, plan);
         this.populationPhase = new PopulationPhase(world, refs);
@@ -102,7 +102,7 @@ public final class OverlayWorld {
      * which leaves the world without cities and logs why.
      */
     private static LayoutCityPlan layoutPlan(WorldServer world, ProfileSnapshot snapshot, TerrainSettings settings,
-        ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier) {
+        TerrainHeightOracle oracle, ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier) {
         if (!ProfileSnapshot.PLAN_LAYOUT.equals(snapshot.planSource())) {
             return null;
         }
@@ -120,7 +120,7 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights);
-        StructureOracle structures = StructureOracles.forWorld(world);
+        StructureOracle structures = StructureOracles.forWorld(world, oracle, settings.landmarkMargin());
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(

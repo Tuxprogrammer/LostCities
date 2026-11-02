@@ -36,6 +36,8 @@ public final class CityFinder {
         INTERIOR,
         /** A city chunk on land beside a non-city chunk: the blend into RWG terrain. */
         EDGE,
+        /** A city chunk with a side facing a landmark core: a soft-edge strip (0006 §4). */
+        SOFTEDGE,
         /** A landmark core or a city chunk of its edge ring. */
         RESERVED,
         /** A chunk of a village's sewing: a gate, lane or link chunk. */
@@ -308,6 +310,8 @@ public final class CityFinder {
                 return interior(chunkX, chunkZ);
             case EDGE:
                 return edge(chunkX, chunkZ);
+            case SOFTEDGE:
+                return softEdge(chunkX, chunkZ);
             case RESERVED:
                 return reserved(chunkX, chunkZ);
             default:
@@ -443,6 +447,40 @@ public final class CityFinder {
                 yawToward(viewX, viewZ, x, z),
                 EDGE_PITCH,
                 "city edge toward " + side.name());
+        }
+        return null;
+    }
+
+    private Result softEdge(int chunkX, int chunkZ) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        if (!layout.isCity()) {
+            return null;
+        }
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            if (!planner.facesCore(chunkX, chunkZ, side)) {
+                continue;
+            }
+            int ground = layout.cityGroundLevel();
+            int x = (chunkX << 4) + 8 + side.stepX() * 8;
+            int z = (chunkZ << 4) + 8 + side.stepZ() * 8;
+            // Look along the strip from inside the city, a little above it.
+            double viewX = x - side.stepX() * EDGE_BACK + 0.5;
+            double viewZ = z - side.stepZ() * EDGE_BACK + 0.5;
+            return new Result(
+                Kind.SOFTEDGE,
+                chunkX,
+                chunkZ,
+                x,
+                ground,
+                z,
+                viewX,
+                ground + EDGE_HEIGHT,
+                viewZ,
+                yawToward(viewX, viewZ, x, z),
+                EDGE_PITCH,
+                "soft edge toward " + side.name() + " (" + planner.zone(chunkX + side.stepX(), chunkZ + side.stepZ())
+                    .landmarkId() + ")");
         }
         return null;
     }

@@ -249,7 +249,7 @@ public final class Overlays {
             assets == null ? java.util.Collections.<String, String>emptyMap() : assets.fileHashes(),
             DecorativeMetalsConfig.flags(),
             HeightOracles.worldType(world),
-            Tags.VERSION);
+            Tags.VERSION).withStructureSettings(StructureOracles.settingsSummary(world));
     }
 
     /** Warns once when the loaded asset set differs from the one a world was pinned with, naming the files (P05-3). */
@@ -263,6 +263,17 @@ public final class Overlays {
                 "Dimension {} was pinned before its asset set was; asset changes cannot be detected for it",
                 world.provider.dimensionId);
             return;
+        }
+        String structures = StructureOracles.settingsSummary(world);
+        if (!snapshot.structureSettings()
+            .isEmpty() && !snapshot.structureSettings()
+                .equals(structures)) {
+            LostCities.LOG.warn(
+                "Dimension {} was created with other structure generator settings ({}, now {}); villages and monuments"
+                    + " in new chunks may not be where the city left room for them",
+                world.provider.dimensionId,
+                snapshot.structureSettings(),
+                structures);
         }
         java.util.List<String> changed = snapshot.changedAssets(assets.hash(), assets::changedFiles);
         if (changed.isEmpty()) {

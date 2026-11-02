@@ -94,4 +94,22 @@ public class ProfileSnapshotTest {
             java.util.Collections.emptyList(),
             old.changedAssets("any", pinned -> java.util.Arrays.asList("x")));
     }
+
+    @Test
+    public void pinsTheStructureGeneratorSettings() {
+        ProfileSnapshot snapshot = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            java.util.Collections.<String, String>emptyMap(),
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "h",
+            1,
+            "RWG",
+            "test");
+        assertEquals("", snapshot.structureSettings(), "a world pinned before has none");
+        ProfileSnapshot pinned = snapshot.withStructureSettings("villagenames=absent");
+        assertEquals("villagenames=absent", pinned.structureSettings());
+        assertFalse(pinned.equals(snapshot));
+        assertEquals(snapshot.profile(), pinned.profile());
+    }
 }

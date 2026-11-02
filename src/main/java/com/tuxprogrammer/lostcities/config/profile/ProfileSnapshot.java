@@ -56,6 +56,7 @@ public final class ProfileSnapshot {
     private final String assetSetHash;
     private final Map<String, String> assetFiles;
     private final Map<String, Boolean> metals;
+    private String structureSettings = "";
     private final int layoutVersion;
     private final String worldType;
     private final String createdBy;
@@ -226,6 +227,37 @@ public final class ProfileSnapshot {
         return assetFiles;
     }
 
+    /**
+     * Returns the pinned settings of the structure generators the layout builds around, one line; empty when none were
+     * pinned.
+     */
+    public String structureSettings() {
+        return structureSettings;
+    }
+
+    /**
+     * Returns this snapshot with the settings of the structure generators the layout builds around (VillageNames'
+     * village and monument settings, D-M05J-21), pinned so a changed generator config can be warned about.
+     *
+     * @param summary the one-line summary; empty when none was pinned
+     * @return a copy with the summary
+     */
+    public ProfileSnapshot withStructureSettings(String summary) {
+        ProfileSnapshot copy = new ProfileSnapshot(
+            profile,
+            planSource,
+            values,
+            modules,
+            assetSetHash,
+            assetFiles,
+            metals,
+            layoutVersion,
+            worldType,
+            createdBy);
+        copy.structureSettings = Objects.requireNonNull(summary);
+        return copy;
+    }
+
     /** Returns every pinned decorative-metal flag by its key, sorted; empty when none were pinned. */
     public Map<String, Boolean> metals() {
         return metals;
@@ -303,6 +335,7 @@ public final class ProfileSnapshot {
             && assetSetHash.equals(that.assetSetHash)
             && assetFiles.equals(that.assetFiles)
             && metals.equals(that.metals)
+            && structureSettings.equals(that.structureSettings)
             && layoutVersion == that.layoutVersion
             && worldType.equals(that.worldType)
             && createdBy.equals(that.createdBy);
