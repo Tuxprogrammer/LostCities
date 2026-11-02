@@ -406,7 +406,8 @@ public final class CityScenarios {
             context.check(walk.buildings() > 0, "expected buildings to walk, found none");
             context.check(walk.floors.share() >= FLOORS_PASS, "floors with a floor: " + walk.floors);
             context.check(walk.walls.share() >= WALLS_PASS, "floors with closed walls: " + walk.walls);
-            context.check(walk.stairs.share() >= STAIRS_PASS, "floor pairs joined by stairs or ladders: " + walk.stairs);
+            context
+                .check(walk.stairs.share() >= STAIRS_PASS, "floor pairs joined by stairs or ladders: " + walk.stairs);
             context.check(walk.doors.share() >= DOORS_PASS, "doors opening onto open space: " + walk.doors);
         }
     }
@@ -512,7 +513,9 @@ public final class CityScenarios {
             return solid / (14.0 * 14.0);
         }
 
-        /** The share of a floor's outer wall blocks that are closed, doorways and sides inside a multibuilding aside. */
+        /**
+         * The share of a floor's outer wall blocks that are closed, doorways and sides inside a multibuilding aside.
+         */
         private double wallShare(ChunkPlan plan, int chunkX, int chunkZ, int floor, int y) {
             int closed = 0;
             int counted = 0;

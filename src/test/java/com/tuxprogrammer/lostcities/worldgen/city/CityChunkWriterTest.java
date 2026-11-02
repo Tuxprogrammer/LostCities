@@ -74,8 +74,10 @@ public class CityChunkWriterTest {
                     if (doorway == Doorway.PASSAGE) {
                         assertTrue(lower.isAir(), "a passage is open: " + lower);
                     } else {
-                        assertTrue(lower.name()
-                            .contains("door"), "a door stands on side " + side + ": " + lower);
+                        assertTrue(
+                            lower.name()
+                                .contains("door"),
+                            "a door stands on side " + side + ": " + lower);
                     }
                     checked++;
                 }
@@ -87,14 +89,37 @@ public class CityChunkWriterTest {
     @Test
     public void doorHalvesCarry1710Metadata() {
         BlockRef door = BlockRef.of("minecraft:wooden_door", 0);
-        assertEquals(0, CityChunkWriter.doorHalf(door, Direction.XMIN, true, false).meta(), "west wall faces east");
-        assertEquals(2, CityChunkWriter.doorHalf(door, Direction.XMAX, true, false).meta(), "east wall faces west");
-        assertEquals(3, CityChunkWriter.doorHalf(door, Direction.ZMIN, true, false).meta());
-        assertEquals(1, CityChunkWriter.doorHalf(door, Direction.ZMAX, true, false).meta());
+        assertEquals(
+            0,
+            CityChunkWriter.doorHalf(door, Direction.XMIN, true, false)
+                .meta(),
+            "west wall faces east");
+        assertEquals(
+            2,
+            CityChunkWriter.doorHalf(door, Direction.XMAX, true, false)
+                .meta(),
+            "east wall faces west");
+        assertEquals(
+            3,
+            CityChunkWriter.doorHalf(door, Direction.ZMIN, true, false)
+                .meta());
+        assertEquals(
+            1,
+            CityChunkWriter.doorHalf(door, Direction.ZMAX, true, false)
+                .meta());
         // The two leaves of a double door hinge on opposite sides.
-        assertEquals(8, CityChunkWriter.doorHalf(door, Direction.XMIN, true, true).meta());
-        assertEquals(9, CityChunkWriter.doorHalf(door, Direction.XMIN, false, true).meta());
-        assertEquals(9, CityChunkWriter.doorHalf(door, Direction.XMAX, true, true).meta());
+        assertEquals(
+            8,
+            CityChunkWriter.doorHalf(door, Direction.XMIN, true, true)
+                .meta());
+        assertEquals(
+            9,
+            CityChunkWriter.doorHalf(door, Direction.XMIN, false, true)
+                .meta());
+        assertEquals(
+            9,
+            CityChunkWriter.doorHalf(door, Direction.XMAX, true, true)
+                .meta());
     }
 
     @Test
@@ -114,8 +139,9 @@ public class CityChunkWriterTest {
         int grass = 0;
         for (int x = 1; x < 15; x++) {
             for (int z = 1; z < 15; z++) {
-                if ("minecraft:grass".equals(buffer.get(x, ground, z)
-                    .name())) {
+                if ("minecraft:grass".equals(
+                    buffer.get(x, ground, z)
+                        .name())) {
                     grass++;
                 }
             }
@@ -186,11 +212,13 @@ public class CityChunkWriterTest {
 
     @Test
     public void theDryRunListsTheSameJobsEveryTime() {
-        int[] at = CityFixtures.first(SEARCH, (x, z) -> PLANNER.plan(x, z)
-            .hasBuilding()
-            && !PLAN.chunk(x, z)
-                .jobs()
-                .isEmpty());
+        int[] at = CityFixtures.first(
+            SEARCH,
+            (x, z) -> PLANNER.plan(x, z)
+                .hasBuilding()
+                && !PLAN.chunk(x, z)
+                    .jobs()
+                    .isEmpty());
         assertNotNull(at, "a building with population jobs");
         LayoutCityPlan other = CityFixtures.plan();
         assertEquals(

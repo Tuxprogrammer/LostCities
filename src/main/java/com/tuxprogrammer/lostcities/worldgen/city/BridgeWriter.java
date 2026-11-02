@@ -9,8 +9,8 @@ import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.block.BlockChoice;
 import com.tuxprogrammer.lostcities.asset.model.CityStyle;
-import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.asset.model.PaletteEntry;
+import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.asset.palette.CompiledPalette;
 import com.tuxprogrammer.lostcities.asset.transform.MetaRotation;
@@ -111,8 +111,8 @@ final class BridgeWriter {
         return transform;
     }
 
-    private static void deck(CityWriteContext context, CompiledPalette palette, Part part, char c, int x, int y,
-        int z, Transform transform, CityTarget target, PaletteSequence sequence) {
+    private static void deck(CityWriteContext context, CompiledPalette palette, Part part, char c, int x, int y, int z,
+        Transform transform, CityTarget target, PaletteSequence sequence) {
         if (!palette.isDefined(c)) {
             context.log()
                 .warn("bridge part " + part.id() + " uses character '" + c + "', which its palette does not define");

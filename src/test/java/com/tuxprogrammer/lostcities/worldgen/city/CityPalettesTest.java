@@ -43,7 +43,10 @@ public class CityPalettesTest {
         assertEquals(1, palettes.compiledPartPalettes());
         assertEquals(BlockRef.of("minecraft:glass", 0), first.get('x', 0));
         assertEquals(BlockRef.of("minecraft:stonebrick", 0), first.get('#', 0), "the chunk palette stays under it");
-        assertSame(chunk.palette(), palettes.forPart(chunk, SET.part(AssetId.parse("plain"))), "no own palette, no compile");
+        assertSame(
+            chunk.palette(),
+            palettes.forPart(chunk, SET.part(AssetId.parse("plain"))),
+            "no own palette, no compile");
     }
 
     @Test
@@ -58,19 +61,27 @@ public class CityPalettesTest {
     @Test
     public void styleBlocksComeFromTheCityStylesCharactersAndTheDamagedEntries() {
         CityPalettes palettes = new CityPalettes(CityFixtures.ASSETS, MetalFlags.ALL_ON);
-        CityPalettes.ChunkPalette chunk = palettes.chunk(
-            Arrays.asList("lostcities:common", "lostcities:default"),
-            "lostcities:building1");
+        CityPalettes.ChunkPalette chunk = palettes
+            .chunk(Arrays.asList("lostcities:common", "lostcities:default"), "lostcities:building1");
         StyleBlocks style = palettes.styleBlocks(
             chunk,
             CityFixtures.ASSETS.cityStyle(AssetId.parse("citystyle_standard")),
             CityFixtures.ASSETS.building(AssetId.parse("building1")));
         assertNotNull(style.border());
         assertNotNull(style.filler());
-        assertEquals(128, style.leaves().size());
-        assertEquals(128, style.rubbleDirt().size());
-        assertSame(style, palettes.styleBlocks(chunk,
-            CityFixtures.ASSETS.cityStyle(AssetId.parse("citystyle_standard")),
-            CityFixtures.ASSETS.building(AssetId.parse("building1"))));
+        assertEquals(
+            128,
+            style.leaves()
+                .size());
+        assertEquals(
+            128,
+            style.rubbleDirt()
+                .size());
+        assertSame(
+            style,
+            palettes.styleBlocks(
+                chunk,
+                CityFixtures.ASSETS.cityStyle(AssetId.parse("citystyle_standard")),
+                CityFixtures.ASSETS.building(AssetId.parse("building1"))));
     }
 }

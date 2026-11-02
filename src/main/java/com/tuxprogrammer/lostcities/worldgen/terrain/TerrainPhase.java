@@ -188,7 +188,16 @@ public final class TerrainPhase {
             changed = blend.apply(buffer, chunkX, chunkZ, cityPlan);
             if (plan.content() != ChunkContent.NONE) {
                 plan.content()
-                    .write(buffer, new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), null));
+                    .write(
+                        buffer,
+                        new ContentContext(
+                            chunkX,
+                            chunkZ,
+                            plan,
+                            cityPlan,
+                            context,
+                            contentRandom(chunkX, chunkZ),
+                            null));
                 changed = true;
             }
         }
@@ -231,7 +240,9 @@ public final class TerrainPhase {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
         plan.content()
-            .write(buffer, new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), skipMask));
+            .write(
+                buffer,
+                new ContentContext(chunkX, chunkZ, plan, cityPlan, context, contentRandom(chunkX, chunkZ), skipMask));
         if (!plan.hasBuilding()) {
             CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
         }

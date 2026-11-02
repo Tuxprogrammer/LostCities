@@ -56,32 +56,65 @@ public class JobTargetTest {
     public void listsEachSpecialBlockAsAJob() {
         List<PopulationJob> jobs = jobs(65, 0, 0, false, 0f);
         assertEquals(4, jobs.size(), jobs.toString());
-        assertEquals(PopulationJob.Kind.CHEST, jobs.get(0).kind());
-        assertEquals(PopulationJob.Kind.SPAWNER, jobs.get(1).kind());
-        assertEquals("CaveSpider", jobs.get(1).argument());
-        assertEquals(PopulationJob.Kind.TORCH, jobs.get(2).kind());
-        assertEquals(PopulationJob.Kind.TILE_ENTITY, jobs.get(3).kind());
-        assertTrue(jobs.get(3).template().contains("minecraft:coal"), jobs.get(3).template());
+        assertEquals(
+            PopulationJob.Kind.CHEST,
+            jobs.get(0)
+                .kind());
+        assertEquals(
+            PopulationJob.Kind.SPAWNER,
+            jobs.get(1)
+                .kind());
+        assertEquals(
+            "CaveSpider",
+            jobs.get(1)
+                .argument());
+        assertEquals(
+            PopulationJob.Kind.TORCH,
+            jobs.get(2)
+                .kind());
+        assertEquals(
+            PopulationJob.Kind.TILE_ENTITY,
+            jobs.get(3)
+                .kind());
+        assertTrue(
+            jobs.get(3)
+                .template()
+                .contains("minecraft:coal"),
+            jobs.get(3)
+                .template());
     }
 
     @Test
     public void doesNotReproduceASSET05_aCellarChestIsOnFloorMinusOne() {
         // Y 70 is one block below the city ground 71: the first cellar, floor −1, which the loot range -100..-1
         // includes; upstream's truncating division called it floor 0 and the chest stayed empty.
-        assertEquals(LootRules.CITY, jobs(70, 0, 0, false, 0f).get(0).argument());
-        assertEquals("", jobs(71, 0, 0, false, 0f).get(0).argument(), "the ground floor is outside the range");
+        assertEquals(
+            LootRules.CITY,
+            jobs(70, 0, 0, false, 0f).get(0)
+                .argument());
+        assertEquals(
+            "",
+            jobs(71, 0, 0, false, 0f).get(0)
+                .argument(),
+            "the ground floor is outside the range");
     }
 
     @Test
     public void doesNotReproduceLOOT05_eachChestDrawsFromItsOwnPosition() {
         // The same chest gets the same draw whatever else the chunk lists before it.
-        String alone = jobs(65, 3, 4, false, 0.5f).get(0).argument();
+        String alone = jobs(65, 3, 4, false, 0.5f).get(0)
+            .argument();
         for (int i = 0; i < 5; i++) {
-            assertEquals(alone, jobs(65, 3, 4, false, 0.5f).get(0).argument());
+            assertEquals(
+                alone,
+                jobs(65, 3, 4, false, 0.5f).get(0)
+                    .argument());
         }
         int empty = 0;
         for (int x = 0; x < 64; x++) {
-            if (jobs(65, x, 0, false, 0.5f).get(0).argument().isEmpty()) {
+            if (jobs(65, x, 0, false, 0.5f).get(0)
+                .argument()
+                .isEmpty()) {
                 empty++;
             }
         }
@@ -91,8 +124,14 @@ public class JobTargetTest {
     @Test
     public void aBuildingWithoutLootKeepsEmptyChestsAndNoSpawners() {
         List<PopulationJob> jobs = jobs(65, 0, 0, true, 0f);
-        assertEquals("", jobs.get(0).argument());
-        assertTrue(jobs.stream().noneMatch(job -> job.kind() == PopulationJob.Kind.SPAWNER), jobs.toString());
+        assertEquals(
+            "",
+            jobs.get(0)
+                .argument());
+        assertTrue(
+            jobs.stream()
+                .noneMatch(job -> job.kind() == PopulationJob.Kind.SPAWNER),
+            jobs.toString());
     }
 
     @Test

@@ -32,8 +32,10 @@ public class CityGoldenTest {
     }
 
     private static int[] street() {
-        return CityFixtures.first(SEARCH, (x, z) -> PLANNER.plan(x, z)
-            .isPrimaryRoad());
+        return CityFixtures.first(
+            SEARCH,
+            (x, z) -> PLANNER.plan(x, z)
+                .isPrimaryRoad());
     }
 
     private static int[] park() {
@@ -44,8 +46,10 @@ public class CityGoldenTest {
     }
 
     private static int[] ruin() {
-        return CityFixtures.first(SEARCH * 2, (x, z) -> PLANNER.plan(x, z)
-            .ruinHeight() >= 0);
+        return CityFixtures.first(
+            SEARCH * 2,
+            (x, z) -> PLANNER.plan(x, z)
+                .ruinHeight() >= 0);
     }
 
     @Test

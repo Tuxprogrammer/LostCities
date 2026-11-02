@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
 import com.tuxprogrammer.lostcities.layout.landmark.Gate;
-import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
-import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
+import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
+import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 
 /** Where a village lane runs in a chunk (0006 §3). */
@@ -64,7 +64,8 @@ public class LaneShapesTest {
         boolean[] inside = LaneShapes.forCore(0, 1, Collections.singletonList(village), 0, (g, x, z) -> true);
         assertTrue(inside[(0 << 4) | 8], "the gate's own block");
         assertFalse(inside[(1 << 4) | 8], "nothing deeper into the village");
-        assertNull(LaneShapes.forCore(0, 1, Collections.singletonList(village), 0, (g, x, z) -> false),
+        assertNull(
+            LaneShapes.forCore(0, 1, Collections.singletonList(village), 0, (g, x, z) -> false),
             "a gate the layout did not sew gets no path");
     }
 }

@@ -70,7 +70,10 @@ public class SmallPartsTest {
         }
         assertEquals(4, cache.size());
         assertEquals("v1", cache.get(1, k -> "v" + k), "an evicted value comes back the same");
-        assertEquals(1, cache.get(19, k -> "x").length() > 0 ? 1 : 0);
+        assertEquals(
+            1,
+            cache.get(19, k -> "x")
+                .length() > 0 ? 1 : 0);
         assertEquals("v19", cache.get(19, k -> "x"), "a kept value is not recomputed");
     }
 

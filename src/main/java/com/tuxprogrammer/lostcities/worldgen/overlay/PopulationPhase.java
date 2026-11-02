@@ -125,7 +125,8 @@ public final class PopulationPhase {
     }
 
     /**
-     * Sets the mob of the spawner the terrain phase wrote; a spawner whose condition picked no mob becomes air (ASSET-29
+     * Sets the mob of the spawner the terrain phase wrote; a spawner whose condition picked no mob becomes air
+     * (ASSET-29
      * is fixed by the condition returning nothing, and nothing must not mean a pig spawner).
      */
     private boolean spawner(PopulationJob job, int x, int z) {

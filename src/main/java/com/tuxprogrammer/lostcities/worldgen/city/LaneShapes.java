@@ -3,9 +3,9 @@ package com.tuxprogrammer.lostcities.worldgen.city;
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.landmark.Gate;
+import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
-import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
 
@@ -51,8 +51,9 @@ public final class LaneShapes {
         }
         boolean[] columns = new boolean[256];
         Gate gate = cell.gate();
-        RoadDirection toCore = gate == null ? null : gate.facing()
-            .opposite();
+        RoadDirection toCore = gate == null ? null
+            : gate.facing()
+                .opposite();
         for (RoadDirection direction : RoadDirection.values()) {
             if (!cell.connects(direction)) {
                 continue;

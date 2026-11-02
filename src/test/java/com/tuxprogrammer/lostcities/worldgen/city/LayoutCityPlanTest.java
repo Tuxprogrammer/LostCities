@@ -83,7 +83,9 @@ public class LayoutCityPlanTest {
             if (plan.hasBuilding()) {
                 assertEquals(plan.buildingBottom() - 1, plan.footprintBottom(3, 3));
             } else if (plan.isCity() && layout.streetType() == StreetType.PARK && plan.lane() == null) {
-                assertEquals(com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT, plan.footprintBottom(3, 3));
+                assertEquals(
+                    com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT,
+                    plan.footprintBottom(3, 3));
             } else if (plan.isCity() && layout.isPlannedRoad()) {
                 assertEquals(plan.groundY() - LayoutCityPlan.STREET_FOOTPRINT_DEPTH, plan.footprintBottom(3, 3));
             }
@@ -118,10 +120,11 @@ public class LayoutCityPlanTest {
 
     @Test
     public void aSlopesStairOpensItsColumnsOfTheBorder() {
-        Part slope = TestAssets.loadFiles(
-            "lostcities/parts/s.json",
-            "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"a\"]], \"meta\": [{\"key\": \"z1\", \"integer\": 6},"
-                + " {\"key\": \"z2\", \"integer\": 9}]}")
+        Part slope = TestAssets
+            .loadFiles(
+                "lostcities/parts/s.json",
+                "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"a\"]], \"meta\": [{\"key\": \"z1\", \"integer\": 6},"
+                    + " {\"key\": \"z2\", \"integer\": 9}]}")
             .part(AssetId.parse("s"));
         // The neighbor to the west climbs toward us: its part's far side (x 15, z 6..9) turned to face east lands on
         // our west column at z 6..9.
@@ -133,7 +136,8 @@ public class LayoutCityPlanTest {
     @Test
     public void aLanesMaterialFollowsTheVillagesBiome() {
         BiomeDescriptor mesa = BiomeDescriptor.of(new HashSet<>(Arrays.asList("MESA", "SANDY", "HOT")), "Mesa", null);
-        BiomeDescriptor desert = BiomeDescriptor.of(new HashSet<>(Arrays.asList("SANDY", "HOT", "DRY")), "Desert", null);
+        BiomeDescriptor desert = BiomeDescriptor
+            .of(new HashSet<>(Arrays.asList("SANDY", "HOT", "DRY")), "Desert", null);
         assertEquals(LanePath.Material.MESA, materialIn(mesa));
         assertEquals(LanePath.Material.SAND, materialIn(desert));
         assertEquals(LanePath.Material.PLAIN, PLAN.material(0, 0));

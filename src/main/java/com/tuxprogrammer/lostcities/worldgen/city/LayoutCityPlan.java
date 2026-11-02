@@ -15,9 +15,9 @@ import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.StreetType;
+import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneCell;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
-import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.street.Orientation;
@@ -136,20 +136,22 @@ public final class LayoutCityPlan implements CityPlan {
             chunkZ - CORE_LANE_REACH,
             chunkX + CORE_LANE_REACH,
             chunkZ + CORE_LANE_REACH);
-        boolean[] lane = LaneShapes.forCore(chunkX, chunkZ, sorted(landmarks), settings.landmarkMargin(), (gate, gx, gz) -> {
-            LaneCell cell = planner.plan(gx, gz)
-                .lane();
-            return cell.gate() != null && cell.gate()
-                .equals(gate);
-        });
+        boolean[] lane = LaneShapes
+            .forCore(chunkX, chunkZ, sorted(landmarks), settings.landmarkMargin(), (gate, gx, gz) -> {
+                LaneCell cell = planner.plan(gx, gz)
+                    .lane();
+                return cell.gate() != null && cell.gate()
+                    .equals(gate);
+            });
         return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.builder(chunkX, chunkZ, ChunkKind.LANDMARK_CORE)
             .cityLevel(plan.cityLevel())
             .groundY(natural)
             .naturalHeight(natural)
             .ocean(ocean)
             .lane(LaneShapes.path(lane, material(chunkX, chunkZ)))
-            .label("landmark core " + plan.zone()
-                .landmarkId())
+            .label(
+                "landmark core " + plan.zone()
+                    .landmarkId())
             .build();
     }
 
@@ -252,23 +254,25 @@ public final class LayoutCityPlan implements CityPlan {
     }
 
     private ChunkContent cityContent(int chunkX, int chunkZ) {
-        return (buffer, contentContext) -> new CityChunkWriter(
-            context,
-            chunkX,
-            chunkZ,
-            new BufferTarget(buffer, contentContext),
-            contentContext.random(),
-            new PaletteSequence(context.worldSeed(), chunkX, chunkZ)).writeCity();
+        return (buffer,
+            contentContext) -> new CityChunkWriter(
+                context,
+                chunkX,
+                chunkZ,
+                new BufferTarget(buffer, contentContext),
+                contentContext.random(),
+                new PaletteSequence(context.worldSeed(), chunkX, chunkZ)).writeCity();
     }
 
     private ChunkContent bridgeContent(int chunkX, int chunkZ) {
-        return (buffer, contentContext) -> new CityChunkWriter(
-            context,
-            chunkX,
-            chunkZ,
-            new BufferTarget(buffer, contentContext),
-            contentContext.random(),
-            new PaletteSequence(context.worldSeed(), chunkX, chunkZ)).writeBridge();
+        return (buffer,
+            contentContext) -> new CityChunkWriter(
+                context,
+                chunkX,
+                chunkZ,
+                new BufferTarget(buffer, contentContext),
+                contentContext.random(),
+                new PaletteSequence(context.worldSeed(), chunkX, chunkZ)).writeBridge();
     }
 
     /**
@@ -324,8 +328,11 @@ public final class LayoutCityPlan implements CityPlan {
             mask |= openingOf(slopePart(nx, nz), direction);
         }
         if (planner.stairDirection(nx, nz) == direction.opposite()) {
-            mask |= openingOf(part(planner.plan(nx, nz)
-                .stairPart()), direction);
+            mask |= openingOf(
+                part(
+                    planner.plan(nx, nz)
+                        .stairPart()),
+                direction);
         }
         return mask;
     }
@@ -433,8 +440,10 @@ public final class LayoutCityPlan implements CityPlan {
             return landmarks;
         }
         Landmark[] array = landmarks.toArray(new Landmark[0]);
-        Arrays.sort(array, (a, b) -> a.id()
-            .compareTo(b.id()));
+        Arrays.sort(
+            array,
+            (a, b) -> a.id()
+                .compareTo(b.id()));
         return Collections.unmodifiableList(Arrays.asList(array));
     }
 

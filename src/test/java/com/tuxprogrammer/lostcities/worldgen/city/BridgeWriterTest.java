@@ -76,8 +76,10 @@ public class BridgeWriterTest {
     public void doesNotReproduceHWY12_anUndefinedDeckCharacterIsSkippedNotThrown() {
         ArrayChunkBuffer x = span(Orientation.X);
         assertEquals(BlockRef.AIR, x.get(2, 71, 0));
-        assertTrue(LOG.stream()
-            .anyMatch(line -> line.contains("'Q'")), LOG.toString());
+        assertTrue(
+            LOG.stream()
+                .anyMatch(line -> line.contains("'Q'")),
+            LOG.toString());
     }
 
     @Test

@@ -77,7 +77,11 @@ public class PartWriterTest {
     public void eachKindOfCharacterBecomesWhatUpstreamWrites() {
         ArrayChunkBuffer buffer = filled();
         BufferTarget target = new BufferTarget(buffer, null);
-        PartWriter writer = new PartWriter(target, new PaletteSequence(1, 0, 0), rules(false, false, false), LayoutLog.SILENT);
+        PartWriter writer = new PartWriter(
+            target,
+            new PaletteSequence(1, 0, 0),
+            rules(false, false, false),
+            LayoutLog.SILENT);
         int top = writer.place(at(part("column"), Transform.ROTATE_NONE, 0, 60, 0, HardAir.VOID));
         assertEquals(67, top, "the Y above the last slice");
         assertEquals(STONE, buffer.get(0, 60, 0));
@@ -85,26 +89,44 @@ public class PartWriterTest {
         assertEquals(DIRT, buffer.get(0, 62, 0), "air in a part leaves the world's block");
         assertEquals(WATER, buffer.get(0, 63, 0), "liquid stays liquid without avoidWater");
         assertEquals(BlockRef.AIR, buffer.get(0, 64, 0), "a torch is air without generateLighting");
-        assertEquals("minecraft:mob_spawner", buffer.get(0, 65, 0).name(), "a spawner with loot allowed");
-        assertEquals("minecraft:red_flower", buffer.get(0, 66, 0).name(), "a flower where foliage is allowed");
+        assertEquals(
+            "minecraft:mob_spawner",
+            buffer.get(0, 65, 0)
+                .name(),
+            "a spawner with loot allowed");
+        assertEquals(
+            "minecraft:red_flower",
+            buffer.get(0, 66, 0)
+                .name(),
+            "a flower where foliage is allowed");
     }
 
     @Test
     public void hardAirFollowsTheSettingAndNoLootRemovesSpawners() {
         ArrayChunkBuffer buffer = filled();
-        PartWriter writer = new PartWriter(new BufferTarget(buffer, null), new PaletteSequence(1, 0, 0), rules(true, true, true),
+        PartWriter writer = new PartWriter(
+            new BufferTarget(buffer, null),
+            new PaletteSequence(1, 0, 0),
+            rules(true, true, true),
             LayoutLog.SILENT);
         writer.place(at(part("column"), Transform.ROTATE_NONE, 0, 60, 0, HardAir.WATERLEVEL));
         assertEquals(WATER, buffer.get(0, 61, 0), "hard air below the water level becomes liquid");
         assertEquals(BlockRef.AIR, buffer.get(0, 63, 0), "avoidWater turns liquid into air");
-        assertEquals("minecraft:torch", buffer.get(0, 64, 0).name(), "a torch with generateLighting");
+        assertEquals(
+            "minecraft:torch",
+            buffer.get(0, 64, 0)
+                .name(),
+            "a torch with generateLighting");
         assertEquals(BlockRef.AIR, buffer.get(0, 65, 0), "no spawner in a building without loot");
     }
 
     @Test
     public void doesNotReproduceASSET18_directionalBlocksTurnWithThePart() {
         ArrayChunkBuffer buffer = new ArrayChunkBuffer();
-        PartWriter writer = new PartWriter(new BufferTarget(buffer, null), new PaletteSequence(1, 0, 0), rules(false, false, false),
+        PartWriter writer = new PartWriter(
+            new BufferTarget(buffer, null),
+            new PaletteSequence(1, 0, 0),
+            rules(false, false, false),
             LayoutLog.SILENT);
         writer.place(at(part("stairs"), Transform.ROTATE_180, 0, 70, 0, HardAir.VOID));
         // The part's (0, 0) lands on (15, 15); stairs facing east (meta 0) turned 180° face west (meta 1).
@@ -117,7 +139,10 @@ public class PartWriterTest {
         ArrayChunkBuffer buffer = new ArrayChunkBuffer();
         List<String> log = new ArrayList<>();
         java.util.Set<String> once = new java.util.HashSet<>();
-        PartWriter writer = new PartWriter(new BufferTarget(buffer, null), new PaletteSequence(1, 0, 0), rules(false, false, false),
+        PartWriter writer = new PartWriter(
+            new BufferTarget(buffer, null),
+            new PaletteSequence(1, 0, 0),
+            rules(false, false, false),
             message -> {
                 if (once.add(message)) {
                     log.add(message);
@@ -128,13 +153,19 @@ public class PartWriterTest {
         assertEquals(STONE, buffer.get(0, 70, 0), "the defined character is written");
         assertEquals(BlockRef.AIR, buffer.get(1, 70, 0), "the undefined one is skipped, not thrown");
         assertEquals(1, log.size(), log.toString());
-        assertTrue(log.get(0).contains("'Q'"), log.toString());
+        assertTrue(
+            log.get(0)
+                .contains("'Q'"),
+            log.toString());
     }
 
     @Test
     public void doesNotReproduceTERR14_aPositionOutsideTheChunkIsDroppedNotAliased() {
         ArrayChunkBuffer buffer = new ArrayChunkBuffer();
-        PartWriter writer = new PartWriter(new BufferTarget(buffer, null), new PaletteSequence(1, 0, 0), rules(false, false, false),
+        PartWriter writer = new PartWriter(
+            new BufferTarget(buffer, null),
+            new PaletteSequence(1, 0, 0),
+            rules(false, false, false),
             LayoutLog.SILENT);
         // Offset so the part's (0, 0) would land at x 16: upstream's driver aliased it onto x 0.
         writer.place(at(part("stairs"), Transform.ROTATE_NONE, 16, 70, 0, HardAir.VOID));

@@ -132,8 +132,7 @@ public final class CityPalettes {
             return chunk.palette();
         }
         return parts.get(
-            chunk.key() + "|"
-                + part.id(),
+            chunk.key() + "|" + part.id(),
             k -> chunk.palette()
                 .withLayer(part.palette()));
     }

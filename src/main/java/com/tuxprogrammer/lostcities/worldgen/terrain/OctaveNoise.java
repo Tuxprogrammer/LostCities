@@ -4,7 +4,8 @@ import java.util.Random;
 
 /**
  * Upstream's {@code NoiseGeneratorPerlin} with its {@code getRegion}: octaves of 2D simplex noise summed over a 16 × 16
- * region, octave {@code k} sampled at {@code scale × factor^k / 2^k} with amplitude {@code 0.55 × 2^k}. Upstream's ruin,
+ * region, octave {@code k} sampled at {@code scale × factor^k / 2^k} with amplitude {@code 0.55 × 2^k}. Upstream's
+ * ruin,
  * rubble and leaves noises are four octaves each (docs/original-spec/03-terrain/damage-ruins-rubble.md, Numbers).
  *
  * <p>

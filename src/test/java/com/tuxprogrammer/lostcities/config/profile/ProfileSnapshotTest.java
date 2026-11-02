@@ -61,7 +61,8 @@ public class ProfileSnapshotTest {
         ProfileSnapshot snapshot = ProfileSnapshot.resolve(
             "default",
             ProfileSnapshot.PLAN_LAYOUT,
-            com.tuxprogrammer.lostcities.core.ModuleState.of(java.util.EnumSet.allOf(com.tuxprogrammer.lostcities.core.Module.class)),
+            com.tuxprogrammer.lostcities.core.ModuleState
+                .of(java.util.EnumSet.allOf(com.tuxprogrammer.lostcities.core.Module.class)),
             "hash1",
             files,
             com.tuxprogrammer.lostcities.asset.block.MetalFlags.ALL_OFF,
@@ -69,8 +70,12 @@ public class ProfileSnapshotTest {
             "test");
         assertEquals(com.tuxprogrammer.lostcities.asset.block.MetalFlags.ALL_OFF, snapshot.metalFlags());
         assertEquals(files, snapshot.assetFiles());
-        assertEquals(java.util.Collections.emptyList(), snapshot.changedAssets("hash1", pinned -> java.util.Arrays.asList("x")));
-        assertEquals(java.util.Arrays.asList("x"), snapshot.changedAssets("hash2", pinned -> java.util.Arrays.asList("x")));
+        assertEquals(
+            java.util.Collections.emptyList(),
+            snapshot.changedAssets("hash1", pinned -> java.util.Arrays.asList("x")));
+        assertEquals(
+            java.util.Arrays.asList("x"),
+            snapshot.changedAssets("hash2", pinned -> java.util.Arrays.asList("x")));
     }
 
     @Test
@@ -85,6 +90,8 @@ public class ProfileSnapshotTest {
             "RWG",
             "test");
         assertEquals(com.tuxprogrammer.lostcities.asset.block.MetalFlags.ALL_ON, old.metalFlags());
-        assertEquals(java.util.Collections.emptyList(), old.changedAssets("any", pinned -> java.util.Arrays.asList("x")));
+        assertEquals(
+            java.util.Collections.emptyList(),
+            old.changedAssets("any", pinned -> java.util.Arrays.asList("x")));
     }
 }

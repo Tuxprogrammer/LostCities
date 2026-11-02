@@ -79,7 +79,12 @@ public final class CityFixtures {
         BiomeSource biomes = plains();
         TerrainView terrain = terrain();
         LayoutPlanner planner = new LayoutPlanner(
-            LayoutInputs.builder(seed, CityProfiles.layoutProfile(settings), new LayoutAssets(ASSETS, worldStyle, biomes), terrain)
+            LayoutInputs
+                .builder(
+                    seed,
+                    CityProfiles.layoutProfile(settings),
+                    new LayoutAssets(ASSETS, worldStyle, biomes),
+                    terrain)
                 .structures(oracle)
                 .log(log)
                 .build());
@@ -111,8 +116,11 @@ public final class CityFixtures {
      */
     public static ArrayChunkBuffer generate(LayoutCityPlan plan, int chunkX, int chunkZ) {
         ArrayChunkBuffer buffer = TestTerrain.chunk(chunkX, chunkZ);
-        new TerrainPhase(TestTerrain.context(plan.context()
-            .worldSeed()), new CachedCityPlan(plan)).run(buffer, chunkX, chunkZ);
+        new TerrainPhase(
+            TestTerrain.context(
+                plan.context()
+                    .worldSeed()),
+            new CachedCityPlan(plan)).run(buffer, chunkX, chunkZ);
         return buffer;
     }
 

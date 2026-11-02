@@ -18,7 +18,8 @@ import com.tuxprogrammer.lostcities.scenario.TestSubcommand;
 /**
  * {@code /lostcities}, with the aliases {@code /lost} and {@code /lostcitiesnh}: one 1.7.10 command that dispatches on
  * its first argument (docs/new-spec/01-core/commands.md, "Shape"). M04 adds {@code profile} and {@code timers} to M01's
- * {@code test} (alias {@code scenario}), and the test-hook-only {@code view}; M05 adds the test-hook-only {@code find}; M09
+ * {@code test} (alias {@code scenario}), and the test-hook-only {@code view}; M05 adds the test-hook-only {@code find};
+ * M09
  * and M10 add the rest.
  *
  * <p>

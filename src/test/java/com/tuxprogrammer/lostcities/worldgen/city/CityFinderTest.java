@@ -12,9 +12,9 @@ import com.tuxprogrammer.lostcities.layout.LayoutFixtures;
 import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
 import com.tuxprogrammer.lostcities.layout.landmark.Gate;
-import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
+import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
@@ -66,12 +66,15 @@ public class CityFinderTest {
             CityFinder.Result found = finder.find(kind, 0, 0, 40);
             assertNotNull(found, kind.key());
             assertEquals(kind, found.kind());
-            assertTrue(found.format()
-                .startsWith("kind=" + kind.key() + " block="), found.format());
+            assertTrue(
+                found.format()
+                    .startsWith("kind=" + kind.key() + " block="),
+                found.format());
         }
         CityFinder.Result center = finder.find(CityFinder.Kind.CENTER, 0, 0, 40);
-        assertTrue(PLAN.planner()
-            .isCityCenter(center.chunkX(), center.chunkZ()));
+        assertTrue(
+            PLAN.planner()
+                .isCityCenter(center.chunkX(), center.chunkZ()));
         CityFinder.Result building = finder.find(CityFinder.Kind.INTERIOR, 0, 0, 40);
         ChunkPlan plan = PLAN.planner()
             .plan(building.chunkX(), building.chunkZ());

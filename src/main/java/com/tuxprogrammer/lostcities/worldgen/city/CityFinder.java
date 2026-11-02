@@ -279,8 +279,8 @@ public final class CityFinder {
                     long ddx = found.x - blockX;
                     long ddz = found.z - blockZ;
                     long distance = ddx * ddx + ddz * ddz;
-                    if (distance < bestDistance || distance == bestDistance && (found.z < best.z
-                        || found.z == best.z && found.x < best.x)) {
+                    if (distance < bestDistance
+                        || distance == bestDistance && (found.z < best.z || found.z == best.z && found.x < best.x)) {
                         best = found;
                         bestDistance = distance;
                     }
@@ -342,7 +342,8 @@ public final class CityFinder {
 
     private Result street(int chunkX, int chunkZ) {
         ChunkPlan layout = planner.plan(chunkX, chunkZ);
-        if (!layout.isCity() || layout.hasBuilding() || !layout.isPrimaryRoad()
+        if (!layout.isCity() || layout.hasBuilding()
+            || !layout.isPrimaryRoad()
             || planner.streetSlope(chunkX, chunkZ) != null) {
             return null;
         }

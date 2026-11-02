@@ -10,7 +10,8 @@ import com.tuxprogrammer.lostcities.worldgen.city.LootRules;
 
 /**
  * The alpha's chest loot (decision log, M05J rows): two {@code ChestGenHooks} categories of this mod, filled with a
- * minimal set mapped from upstream's two tables to vanilla items far below EV (docs/design/0004, the tier ceiling): upstream's
+ * minimal set mapped from upstream's two tables to vanilla items far below EV (docs/design/0004, the tier ceiling):
+ * upstream's
  * gold and iron ingots stay, its diamonds, emeralds and diamond tools give way to iron ones and to supplies (coal,
  * torches, bread), and the rail dungeon's table adds rails and a minecart. M08 replaces both with the tier bands of
  * docs/new-spec/00-pack-integration/loot-and-mobs.md (Q5); server owners can retune both with TooMuchLoot XML.

@@ -13,7 +13,8 @@ import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 /**
  * The pinned profile snapshots of a save, in the overworld's {@code data/lostcitiesnh.dat}, one per dimension
  * (docs/design/0005-rwg-overlay.md §7). Keys are constants; a reader tolerates missing keys with the defaults of
- * formats 1 and 2, and a dimension without a snapshot has no cities (CONTRIBUTING § Code standards, "NBT and saved data").
+ * formats 1 and 2, and a dimension without a snapshot has no cities (CONTRIBUTING § Code standards, "NBT and saved
+ * data").
  *
  * <p>
  * Server thread only. Side: server.

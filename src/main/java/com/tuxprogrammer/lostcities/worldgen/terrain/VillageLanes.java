@@ -123,8 +123,9 @@ public final class VillageLanes {
                 return true;
             }
         }
-        if (surface > WorldLimits.MIN_Y && isNaturalGround(buffer.get(x, surface, z)
-            .name())) {
+        if (surface > WorldLimits.MIN_Y && isNaturalGround(
+            buffer.get(x, surface, z)
+                .name())) {
             clearPlantAbove(buffer, classes, x, surface, z);
             buffer.set(x, surface, z, swap(GRAVEL, material));
             buffer.set(x, surface - 1, z, swap(COBBLESTONE, material));

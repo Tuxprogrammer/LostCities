@@ -111,7 +111,8 @@ public final class PopulationJob {
 
     @Override
     public String toString() {
-        return kind + "@" + x
+        return kind + "@"
+            + x
             + ","
             + y
             + ","

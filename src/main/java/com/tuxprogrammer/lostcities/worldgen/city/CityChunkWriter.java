@@ -802,8 +802,7 @@ public final class CityChunkWriter {
 
     // ------------------------------------------------------------------ helpers
 
-    private PartWriter.Placement placement(Part part, Transform transform, int oy, HardAir hardAir,
-        AssetId building) {
+    private PartWriter.Placement placement(Part part, Transform transform, int oy, HardAir hardAir, AssetId building) {
         return new PartWriter.Placement(
             part,
             context.palettes()
