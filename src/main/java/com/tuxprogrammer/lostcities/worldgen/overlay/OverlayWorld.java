@@ -203,7 +203,12 @@ public final class OverlayWorld {
      */
     void recordTerrain(Chunk chunk, TerrainPhase.ChunkClass chunkClass) {
         if (recorder.covers(chunk.xPosition, chunk.zPosition)) {
-            recorder.afterTerrain(chunk.xPosition, chunk.zPosition, buffer.attach(chunk), chunkClass);
+            recorder.afterTerrain(
+                chunk.xPosition,
+                chunk.zPosition,
+                buffer.attach(chunk),
+                chunkClass,
+                plan.chunk(chunk.xPosition, chunk.zPosition));
         }
     }
 
@@ -301,6 +306,19 @@ public final class OverlayWorld {
      */
     public LayoutCityPlan cities() {
         return cities;
+    }
+
+    /**
+     * Returns whether explosion damage reaches a chunk, for the walkability scenario's exemption of upstream's own
+     * damage.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return whether the chunk's damage area holds an explosion
+     */
+    public boolean damaged(int chunkX, int chunkZ) {
+        return terrainPhase.damageArea(chunkX, chunkZ)
+            .hasExplosions();
     }
 
     /** Returns the timers. */
