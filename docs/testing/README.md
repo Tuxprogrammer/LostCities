@@ -21,6 +21,20 @@ The static checks live in `src/test/java/com/tuxprogrammer/lostcities/statics/`.
 
 The M01 goldens pin `GoldenFixtureTerrain`, a stand-in generator, at three seeds and chunk positions. Their hashes were computed outside Java by an independent re-implementation of the generator (including `java.util.Random`) and of the text form, so they check the format as well as its stability. M03 to M05 add goldens for real city chunks: taken after the terrain phase, and separately after our population phase ([0005](../design/0005-rwg-overlay.md), "Determinism tests").
 
+## Layout goldens
+
+The city layout (`layout`, M03) has its own goldens, one text file per case in `src/test/resources/golden/layout/` (decision log D-M03-3), written by `LayoutGoldenTest` through `LayoutGoldens`:
+
+- each file holds the case's description, a legend and three maps of the case's region, north at the top: what each chunk is (building, multibuilding, road class, park, plaza, core, lane, detour), its landmark zone, and its building's floors;
+- a `details-sha256:` line pins every chunk's full decision line (`LayoutText.describe`: building, parts, street type, draws, zone, lane, neighbor answers);
+- on a mismatch the test writes the actual file and the details to `build/golden-actual/layout/`; `-PupdateGoldens` rewrites the files, as for chunk goldens. Review the map diff before committing a rewritten golden, and say why in the commit.
+
+The cases are 0006's: a village inside a city, one at its edge, one three chunks out, a severed primary road, a meteorite basin; plus a plain city and a village under `AVOID`. They run against fake structure oracles, fake assets and fake terrain (`LayoutFixtures`), so they need no Minecraft.
+
+## Layout parity
+
+`src/test/resources/parity/` holds values recorded from upstream Lost Cities 1.20 and from Minecraft 1.20.1 by [tools/upstream-parity/](../../tools/upstream-parity/README.md) (decision log D-M03-1). The street planner, bridge hashes, `QualityRandom`, simplex noise, the city rarity map and the dimension hash are compared with them bit for bit. Upstream's planner above the street field (`City`, `BuildingInfo`, `MultiChunk`) cannot run outside a 1.20 server, so it is checked against the spec's numbers, the `doesNotReproduce` regressions and the layout goldens. Recording again needs JDK 17 or newer and internet access on the build server; see the tool's README.
+
 ## Dev server and the dev self-check
 
 `./gradlew runServer` boots the dev server with GTNHLib, the mod's one hard dependency. In the development environment the dev self-check runs in `postInit` and logs `Dev self-check passed`; a failure stops the server with every problem listed. `-Dlostcitiesnh.selfCheck=true` or `false` forces it on or off ([config.md](../config.md#development-and-testing-switches)).
