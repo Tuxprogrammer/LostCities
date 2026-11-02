@@ -112,4 +112,18 @@ public class DamageAreaTest {
             DamageArea.withExplosions(0, 0, Collections.singletonList(bottom))
                 .lowestExplosionY());
     }
+
+    /** AR-1: the reach the floating-fragment pass trusts is the sphere's column, widened by one block. */
+    @Test
+    public void damageReachIsTheSpheresColumnPlusOneBlock() {
+        // Chunk (1, 0); an explosion at block (20, 90, 8), radius 6.
+        DamageArea area = DamageArea.withExplosions(1, 0, Collections.singletonList(new Explosion(20, 90, 8, 6)));
+        assertTrue(area.mayHaveDamaged(4, 90, 8), "the center");
+        assertTrue(area.mayHaveDamaged(4, 140, 8), "far above, where the upward carry can reach");
+        assertTrue(area.mayHaveDamaged(10, 90, 8), "one block past the radius");
+        assertTrue(area.mayHaveDamaged(4, 83, 8), "one block under the sphere's bottom");
+        assertFalse(area.mayHaveDamaged(4, 82, 8), "below that");
+        assertFalse(area.mayHaveDamaged(11, 90, 8), "two blocks past the radius");
+        assertFalse(area.mayHaveDamaged(15, 95, 15), "the far corner");
+    }
 }
