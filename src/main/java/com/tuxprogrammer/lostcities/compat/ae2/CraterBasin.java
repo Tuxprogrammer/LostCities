@@ -37,7 +37,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * The footprint is the square of half-width {@value #DECAY_HALF_WIDTH} (the decay square), or the crater's size where
  * that is larger: the ground AE2 itself rebuilds. Farther out the city stays under the paraboloid through the layout,
  * which caps a building's floors and leaves out of the city every chunk whose ground, plus {@link
- * HeightCap#CITY_HEADROOM} blocks, the cap over it would cut (decision log, D-M08-23); so the oracle reads no ground
+ * HeightCap#CITY_HEADROOM} blocks, the cap over it would cut (decision log, D216); so the oracle reads no ground
  * beyond the meteor's own chunk. The ground estimate is the median of the sky box's columns.
  *
  * <p>

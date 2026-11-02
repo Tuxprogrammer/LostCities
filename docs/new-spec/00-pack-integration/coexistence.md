@@ -157,7 +157,7 @@ The source is a third-party decompile of the closed mod, its version unverified;
 **Treatment: a crater basin.** Letting the crater carve, so that it reads as part of a ruined city, does not work: the paraboloid slices the tops off every tall building within about 50 blocks, which is the sharp cutoff D24 rules out.
 - Height caps: in the city around it, a building's roof stays below `h + 0.02 d²` with the lowest center a crater can have, `h = Tmin − 10 − r + 1`, less one block of slack (`compat.ae2.CraterBasin`). Buildings step down toward the impact.
 - Core: an `EXACT` footprint centered on the impact, the ground AE2 itself rebuilds: the decay square (half-width 30, so no building sags), which always holds the crater (at most 21 blocks). Natural ground, so the meteor behaves as in the wild, and the crater's slope reads as part of the landscape.
-- Streets and parks: a chunk within the crater's 200 blocks whose lowest cap is below its city ground plus 6 blocks (one city level, for a street and its furniture) leaves the city, so the crater digs natural ground there, never a street. The layout decides this from the chunk's own city level, which it knows exactly; the oracle reads no ground beyond the meteor's chunk (D-M08-14, D-M08-23).
+- Streets and parks: a chunk within the crater's 200 blocks whose lowest cap is below its city ground plus 6 blocks (one city level, for a street and its furniture) leaves the city, so the crater digs natural ground there, never a street. The layout decides this from the chunk's own city level, which it knows exactly; the oracle reads no ground beyond the meteor's chunk (D207, D216).
 
 ## RWG2 landmarks
 

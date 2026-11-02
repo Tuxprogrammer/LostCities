@@ -481,7 +481,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** Whether a one-floor building (ground floor and roof part) stays under a crater cap at this level. */
     /**
      * Whether a meteorite's crater paraboloid would cut this chunk's city ground plus {@link HeightCap#CITY_HEADROOM}:
-     * such a chunk leaves the city (0006 §1, the crater basin; D-M08-23), so the crater digs natural ground there, not
+     * such a chunk leaves the city (0006 §1, the crater basin; D216), so the crater digs natural ground there, not
      * a street or a park. The ground is the chunk's own city level, which depends on heights only, never on zones.
      */
     private boolean underCrater(int x, int z, ZoneInfo zone) {

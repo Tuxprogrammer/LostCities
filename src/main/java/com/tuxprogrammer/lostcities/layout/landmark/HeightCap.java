@@ -21,7 +21,7 @@ public final class HeightCap {
     /**
      * Blocks above a chunk's city ground the cap must clear for the chunk to stay city: one city level, for its
      * street, park furniture and lamps. A chunk whose cap is lower leaves the city, so the crater cuts natural ground
-     * there, not a street (D-M08-23).
+     * there, not a street (D216).
      */
     public static final int CITY_HEADROOM = 6;
 
