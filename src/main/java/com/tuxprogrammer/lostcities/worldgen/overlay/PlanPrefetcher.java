@@ -61,6 +61,8 @@ public final class PlanPrefetcher {
 
     /** The longest slow fetch per source class, since the last reset; a handful of keys at most. */
     private final java.util.Map<String, Long> slowFetches = new java.util.TreeMap<>();
+    /** Every fetch's time summed per source class, since the last reset: what each source costs budget B3. */
+    private final java.util.Map<String, Long> fetchTotals = new java.util.TreeMap<>();
 
     private static final int PERIMETER = 8 * LEAD;
 
@@ -239,6 +241,7 @@ public final class PlanPrefetcher {
             if (fetchNanos > SLOW_FETCH_NANOS) {
                 slowFetches.merge(probe.lastFetchSource(), fetchNanos, Math::max);
             }
+            fetchTotals.merge(probe.lastFetchSource(), fetchNanos, Long::sum);
             tickFetches++;
             tickFetchNanos += fetchNanos;
             fetches++;
@@ -262,6 +265,7 @@ public final class PlanPrefetcher {
     /** Forgets the counts {@link #summary()} reports, with the timers' reset at the end of a budget warm-up. */
     void resetStats() {
         slowFetches.clear();
+        fetchTotals.clear();
         planned = 0;
         fetchedTotal = 0;
         failedAttemptNanos = 0;
@@ -269,10 +273,10 @@ public final class PlanPrefetcher {
         worstTick = "none";
     }
 
-    /** The slow fetches' sources and their longest fetch, ms, sorted by source. */
-    private String slowFetchesText() {
+    /** A map of source to nanoseconds as milliseconds, sorted by source. */
+    private static String millisText(java.util.Map<String, Long> bySource) {
         StringBuilder out = new StringBuilder("{");
-        for (java.util.Map.Entry<String, Long> entry : slowFetches.entrySet()) {
+        for (java.util.Map.Entry<String, Long> entry : bySource.entrySet()) {
             if (out.length() > 1) {
                 out.append(", ");
             }
@@ -296,7 +300,9 @@ public final class PlanPrefetcher {
             "prefetcher: %d plans, %d fetches, abandoned attempts %.1f ms; slowest tick %s; fetches over "
                 + SLOW_FETCH_NANOS / 1_000_000
                 + " ms, longest by source "
-                + slowFetchesText(),
+                + millisText(slowFetches)
+                + ", all fetches' time by source "
+                + millisText(fetchTotals),
             planned,
             fetchedTotal,
             failedAttemptNanos / 1_000_000.0,
