@@ -11,7 +11,7 @@ import com.tuxprogrammer.lostcities.layout.street.RoadDirection;
 
 /**
  * Finds a village's gates in its plan: the path ends that face the outside, where a city lane can meet the village's
- * own path (0006 §1 and §3; coexistence.md § Sewing a village into a city, item 4; decision log D-M05O-4).
+ * own path (0006 §1 and §3; coexistence.md § Sewing a village into a city, item 4; decision log D87).
  *
  * <p>
  * A path piece is 3 blocks wide and runs along its longer side. Each of its two ends is a gate when:

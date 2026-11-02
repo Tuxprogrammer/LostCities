@@ -11,7 +11,7 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 
 /**
  * Pins the order in which Forge asks village-creation handlers for their piece weights to the handlers' component
- * class names, so the same seed builds the same villages on every server run (decision log D-M05O-3).
+ * class names, so the same seed builds the same villages on every server run (decision log D86).
  *
  * <p>
  * Why: FML keeps the handlers in a {@code HashMap} keyed by {@code Class}, whose iteration order follows identity

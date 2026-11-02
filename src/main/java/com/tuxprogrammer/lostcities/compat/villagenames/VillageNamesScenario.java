@@ -144,7 +144,7 @@ public final class VillageNamesScenario implements Scenario {
         context.check(VillageNamesOracles.isLoaded(), "expected VillageNames loaded, found it absent");
         context.check(
             VillageHandlerOrder.isPinned(),
-            "expected FML's village-creation handler order pinned at postInit (D-M05O-3), found it unpinned");
+            "expected FML's village-creation handler order pinned at postInit (D86), found it unpinned");
         int[] center = center();
         centerX = center[0];
         centerZ = center[1];

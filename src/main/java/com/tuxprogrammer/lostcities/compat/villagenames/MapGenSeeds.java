@@ -14,7 +14,7 @@ import java.util.Random;
  * Hodgepodge's {@code fastRandom} (on in the pack's {@code hodgepodge.cfg}) makes every {@code MapGenBase} build a
  * {@code StdLCG}, whose {@code setSeed} skips {@code Random}'s seed scramble, so the same seeds give other numbers.
  * The oracle therefore passes the {@code rand} of a {@code MapGenBase} of its own, which Hodgepodge treats the same way
- * (decision log D-M05O-2).
+ * (decision log D85).
  *
  * <p>
  * Source: vanilla 1.7.10 {@code MapGenBase.generate} and {@code MapGenStructure.func_151538_a} (no pinned public

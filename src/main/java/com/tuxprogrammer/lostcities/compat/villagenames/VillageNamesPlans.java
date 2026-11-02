@@ -18,7 +18,7 @@ import astrotibs.villagenames.village.MapGenVillageVN;
  * Builds a village's plan with VillageNames' own code, exactly as its generator does when a chunk near the start is
  * provided, but on a generator of our own: VillageNames' {@code getStructureStart} on a private
  * {@code MapGenVillageVN} subclass whose {@code Random} is seeded as {@link MapGenSeeds} says (decision log
- * D-M05O-1). Nothing here loads or generates a chunk, reads saved data or touches {@code world.rand}:
+ * D84). Nothing here loads or generates a chunk, reads saved data or touches {@code world.rand}:
  * {@code getStructureStart} reads the generator's {@code Random}, VillageNames' config and the world's biome provider
  * ({@code world.getWorldChunkManager()}), and its start's constructor builds every piece from those alone.
  *
@@ -81,7 +81,7 @@ final class VillageNamesPlans implements VillagePlans {
      * VillageNames' village generator with its protected start factory opened to the oracle. Never registered with
      * anything and never asked to generate, so it holds no saved data. Hodgepodge's {@code fastRandom} gives it the
      * same {@code Random} class it gives the live generator, because both are built by {@code MapGenBase}'s
-     * constructor (decision log D-M05O-2).
+     * constructor (decision log D85).
      */
     static final class OracleVillageGenerator extends MapGenVillageVN {
 

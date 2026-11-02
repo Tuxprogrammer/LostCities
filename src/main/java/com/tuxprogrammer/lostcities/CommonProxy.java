@@ -73,7 +73,7 @@ public class CommonProxy {
 
     /**
      * Loads the assets against the complete block registry, pins the order of FML's village-creation handlers so
-     * VillageNames villages are reproducible (decision log D-M05O-3), then runs the dev self-check, which throws and
+     * VillageNames villages are reproducible (decision log D86), then runs the dev self-check, which throws and
      * so stops the dev server when it fails.
      *
      * @param event FML's post-initialization event
