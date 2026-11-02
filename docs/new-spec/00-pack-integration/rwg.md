@@ -26,7 +26,7 @@ From the pack's 2.9.0 `config/` folder. The pack ships no `rwg2.cfg`, so RWG2 ru
 
 | File | Setting | Value | Effect on the overlay |
 |---|---|---|---|
-| `defaultworldgenerator.cfg` | `World Generator` | `RWG2_CONTINENTS` | Default world type on the **client's** create-world screen. DefaultWorldGenerator is a client-side mod (manifest: `side: CLIENT`), so a dedicated server takes `level-type` from `server.properties`. The GTNH server pack's default `level-type` is *unverified* |
+| `defaultworldgenerator.cfg` | `World Generator` | `RWG2_CONTINENTS` | Default world type on the **client's** create-world screen. DefaultWorldGenerator is a client-side mod (manifest: `side: CLIENT`), so a dedicated server takes `level-type` from `server.properties`. *Verified:* the GTNH 2.9.0 server pack ships `level-type=rwg`, and vanilla `WorldType.parseWorldType` matches names case-insensitively, so a dedicated server's new world is **classic RWG** (`RWG`, [RWG.java#L32](https://github.com/GTNewHorizons/Realistic-World-Gen/blob/alpha-1.5.3/src/main/java/rwg/RWG.java#L32)), not RWG2 Continents; a fresh boot writes `generatorName=RWG` to `level.dat`. `level-type=RWG2_CONTINENTS` gives RWG2 Continents ([RWG.java#L39-L40](https://github.com/GTNewHorizons/Realistic-World-Gen-2/blob/2.0.6/src/main/java/rwg2/RWG.java#L39-L40)). So single-player worlds default to RWG2 Continents and server worlds to classic RWG, and tests cover both |
 | `defaultworldgenerator.cfg` | `World Generator Whitelist` | `flat`, `RWG`, `RWG2_CONTINENTS` | Plain `RWG2` (non-continental) is registered but hidden from the screen |
 | `rwg2.cfg` (not shipped: mod default) | `Generate Caves / Mineshafts / Villages / Underground Lakes / Underground Lava Lakes` | all `true` ([#L99-L103](https://github.com/GTNewHorizons/Realistic-World-Gen-2/blob/2.0.6/src/main/java/rwg2/config/ConfigRWG.java#L99-L103)) | Caves are carved, and villages, lakes and dungeons are placed, in city chunks unless the overlay intervenes |
 | `rwg2.cfg` (not shipped: mod default) | `Minimum` and `Maximum Continent Width` | `2700` ([#L112-L125](https://github.com/GTNewHorizons/Realistic-World-Gen-2/blob/2.0.6/src/main/java/rwg2/config/ConfigRWG.java#L112-L125)) | Continents about 2700 blocks wide; average ocean width 100 |
@@ -263,7 +263,6 @@ A wrapper can time `delegate.provideChunk`, the terrain phase, `delegate.populat
 
 ## Unverified, to check before code
 
-- The GTNH server pack's default `level-type` in `server.properties`.
 - Weights of the other overworld `IWorldGenerator`s (Thaumcraft, Natura, Forestry, IC2, Witchery, Roguelike Dungeons, Botania, BOP) and any other `PopulateChunkEvent` listeners in the pack (S3, Q8).
 - Whether EndlessIDs 1.7.4 needs anything beyond `ExtendedBlockStorage`'s block and metadata setters for writes into a generated chunk (read its source or decompile its mixin list).
 - Whether a GTNH Maven `dev` artifact exists for RWG2 2.0.6 and RWG alpha-1.5.3 (for `compileOnly`).
