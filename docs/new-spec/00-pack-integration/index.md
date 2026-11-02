@@ -2,7 +2,7 @@
 
 How Lost Cities: New Horizons fits into GTNH 2.9.0 across every feature area: the RWG terrain it overlays, the GT ores it must not fight, the blocks it builds with, the loot and mobs it places, the other structures it shares the overworld with, and world spawn. The other new-spec areas build on these sheets.
 
-Status: *Accepted* (spikes S2 and S3; [decision log](../../design/decision-log.md) D18 to D21, D24 and D26, and records [0005](../../design/0005-rwg-overlay.md) and [0006](../../design/0006-build-around-other-worldgen.md)), except [integration-opportunities.md](integration-opportunities.md), which is *Proposed*. Each sheet states its answer to one or more of the questions [OPEN-QUESTIONS.md](../OPEN-QUESTIONS.md) tracked, and the decision that settled it. Facts about other mods are *verified* with a pinned source permalink or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
+Status: *Accepted* (spikes S2 and S3; [decision log](../../design/decision-log.md) D18 to D21, D24, D26 and D31, and records [0005](../../design/0005-rwg-overlay.md) and [0006](../../design/0006-build-around-other-worldgen.md)), except [integration-opportunities.md](integration-opportunities.md), which is *Proposed*. Each sheet states its answer to one or more of the questions [OPEN-QUESTIONS.md](../OPEN-QUESTIONS.md) tracked, and the decision that settled it. Facts about other mods are *verified* with a pinned source permalink or a pack config path relative to `.minecraft/`, or marked *unverified* ([new-spec README](../README.md)).
 
 ## Sheets
 
@@ -44,7 +44,8 @@ Versions, mod IDs and source tags come from the reference pack's `MOD-INDEX.md` 
 | LootGames (`lootgames`), Applied Energistics 2 (`appliedenergistics2`) | 2.2.14, rv3-beta-1095-GTNH | generation | Seed-determined puzzle dungeons and meteorites the city builds around: a lot for each dungeon, and a crater basin the city steps down toward for each meteorite ([0006](../../design/0006-build-around-other-worldgen.md), D26) | [other-worldgen.md](other-worldgen.md), [coexistence.md](coexistence.md) |
 | Thaumcraft (`Thaumcraft`), Forestry (`Forestry`), Tinkers' Construct (`TConstruct`) and the small decorators | 4.2.3.5, 4.11.40, 1.14.123-GTNH | generation | Nodes, small structures, hives, slime islands and plants coexist with cities | [other-worldgen.md](other-worldgen.md) |
 | Hodgepodge (`hodgepodge`) | 2.7.221 | behavior | Its cascading-worldgen warning is what the headless worldgen scenario fails on | [CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules) |
-| GTNHLib (`gtnhlib`) | 0.11.54 | behavior | Annotation config for mod options | `01-core` |
+| ArchaicFix (`archaicfix`) | 0.8.2 | behavior | Its Phosphor lighting backport (`enablePhosphor=true` in the pack's `config/archaicfix.cfg`) lights every light source the terrain phase writes once a chunk's neighbors exist, so the overlay queues no relight: a recorded dependency, checked by a scenario (P03-8, D31). Its `logCascadingWorldgen` option, switched on for the scenario, measures any spill past the populated chunk | [`03-terrain`](../03-terrain/index.md) |
+| GTNHLib (`gtnhlib`) | 0.11.54 | behavior | Annotation config for mod options, and the automatic config screen its mod-list mixin gives every registered config (P-UI-1, D31) | `01-core`, `09-client-ui` |
 | PersonalSpace (`personalspace`) | 1.0.41 | none yet | Cities in personal dimensions after beta ([0003](../../design/0003-world-presence.md)) | |
 
 ## Reference pack

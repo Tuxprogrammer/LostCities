@@ -2929,7 +2929,7 @@ Solid moss block (wood material, grass sound).
 
 | Block:meta | English name | Roles | Fits upstream? | Styles | Notes |
 |---|---|---|---|---|---|
-| `chisel:moss:0` | Lush | foliage | yes | overgrown | solid moss block (wood material, grass sound) |
+| `chisel:moss:0` | Lush | foliage, rubble-ruin | yes | overgrown | solid moss block (wood material, grass sound); matches the modern moss block's look, so it is the D19 mapping of upstream's `moss_block` in the rubble-dirt default (D31) |
 | `chisel:moss:1` | Pale | foliage | yes | overgrown | solid moss block (wood material, grass sound) |
 | `chisel:moss:2` | Dark | foliage | partly | overgrown |  |
 | `chisel:moss:3` | Dry | foliage | yes | overgrown | solid moss block (wood material, grass sound) |

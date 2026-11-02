@@ -2,14 +2,14 @@
 
 What happens to each of upstream's 163 profile options ([original catalog](../../original-spec/02-profiles-dimensions/profile-options.md)), and which options are new. The [02 index](index.md#profile-options) summarizes it. Each option's meaning, default and consumer are upstream's unless a row says otherwise; the area named under **Owner** builds the consumer and may refine the row in its own new-spec area.
 
-Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are listed in [Proposed, not decided](index.md#proposed-not-decided).
+Status: rows that cite a decision are *Accepted*. The former proposals on this page (P-PROF-1, P-PROF-5, P-PROF-6) were accepted as recommended by decision log D31; nothing here is open.
 
 ## Rules for every option
 
 - **Format.** Profiles stay in upstream's JSON format: the same five categories, the same keys ([0005](../../design/0005-rwg-overlay.md) §7). A file written for upstream 1.20 loads.
 - **Dropped keys** are read and ignored, with one debug log line per file, so upstream-format files still load. They are not written back by `saveprofile`.
 - **Deferred keys** (the sphere and non-default landscape options) are kept in the format, validated and stored, but have no effect until the landscape types return after beta (D12).
-- **Ranges are enforced when a profile loads**, not only in a GUI (PROF-04). How a violation is handled is *Proposed* ([P-PROF-1](index.md#proposed-not-decided)).
+- **Ranges are enforced when a profile loads**, not only in a GUI (PROF-04). A single numeric value out of range is clamped with a warning; anything a clamp cannot fix (a wrong type, an unknown enum value, an inverted min/max pair, a failed cross-option check) rejects the profile with a message, and mod loading never fails (P-PROF-1, D31).
 - **Heights.** RWG's sea level is 63, as the 1.20 overworld's, so upstream's Y numbers carry over; any range above 255 or below 0 is clamped to 0 to 255 at load with a warning ([0005](../../design/0005-rwg-overlay.md) §6).
 - **Block names** (`liquidBlock`, `baseBlock`) are upstream's 1.20 names, translated at load by the block-mapping table (D14, D19).
 - **Every value is pinned** into the world's snapshot when the world is created ([pinned-profile.md](pinned-profile.md)).
@@ -35,11 +35,11 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 | `buildingMaxFloors` | changed | Default 8, allowed range 0 to 22 instead of 0 to 60. Upstream's per-chunk cap (below Y 248) keeps everything below Y 255: at city level 8 a building gets at most 21 floors ([height-mapping.md](../03-terrain/height-mapping.md#building-envelope)). | 04 | [0005](../../design/0005-rwg-overlay.md) §6 | |
 | `parkChance`, `openLotParkChance`, `corridorChance`, `bridgeChance`, `plannedPrimaryBridgeChance`, `plannedPrimaryBridgeMaxLength`, `fountainChance`, `bridgeSupports`, `parkElevation`, `parkBorder`, `parkStreetThreshold`, `primaryRoadSpacingX`, `primaryRoadSpacingZ`, `primaryRoadOptionalChance`, `primaryRoadForceEvery`, `secondaryRoadMinCountX`, `secondaryRoadMaxCountX`, `secondaryRoadMinCountZ`, `secondaryRoadMaxCountZ`, `minimumRoadSeparation`, `minimumRoadEdgeDistance`, `tertiaryRoadChance`, `tertiaryRoadMinLength`, `tertiaryRoadMaxLength`, `multiBuildingStreetConflict` | same | Upstream's explicit checks stay, with upstream's messages as lang keys. | 04 | | |
 | `streetGenerationMode` | dropped | Only `HIERARCHICAL_GRID_V1` is ported, and it is not persisted. | 04 | D11 | |
-| `railwayDungeonChance`, `railwaysCanEnd`, `railwaysEnabled`, `railwayStationsEnabled`, `railwaySurfaceStationsEnabled`, `railwayLevelOffset`, `railwaySpacingNorthSouth`, `railwaySpacingEastWest` | same | Rail heights within 0 to 255 are `06-highways-railways`' to map. | 06 | | |
-| `highwayLevelFromCities`, `highwaySupports`, `highwayPlanningCellSize`, `highwayHubSampleSpacing`, `highwayHubMinimumPotential`, `highwayHubSearchRadiusCells`, `highwayMinimumHubDistance`, `highwayMaximumHubDistance`, `highwayMaximumConnectionsPerHub`, `highwayMinimumRouteLength`, `highwayRouteCityPenalty`, `highwayNetworkLevel` | same | The intercity planner's options. It runs synchronously with no saved hub data. | 06 | D11 | |
+| `railwayDungeonChance`, `railwaysCanEnd`, `railwaysEnabled`, `railwayStationsEnabled`, `railwaySurfaceStationsEnabled`, `railwayLevelOffset`, `railwaySpacingNorthSouth`, `railwaySpacingEastWest` | same | Rail heights within 0 to 255 are `06-highways-railways`' to map: the rail Y is ground + 6 × (−3 + `railwayLevelOffset`), and an offset that would put it below Y 5 (RWG's bedrock is Y 0 to 4) is clamped up with a warning (P06-7, D31). | 06 | D31 | |
+| `highwayLevelFromCities`, `highwaySupports`, `highwayPlanningCellSize`, `highwayHubSampleSpacing`, `highwayHubMinimumPotential`, `highwayHubSearchRadiusCells`, `highwayMinimumHubDistance`, `highwayMaximumHubDistance`, `highwayMaximumConnectionsPerHub`, `highwayMinimumRouteLength`, `highwayRouteCityPenalty`, `highwayNetworkLevel` | same | The intercity planner's options. It runs synchronously with no saved hub data. `highwayNetworkLevel` is clamped, with a warning, to the highest level whose tallest highway part still ends at or below Y 255 (28 at ground 71); a `groundLevel` above 244 rejects the profile (P06-6, D31, [06-highways-railways](../06-highways-railways/index.md)). | 06 | D11, D31 | |
 | `highwayGenerationMode` | dropped | Only `INTERCITY_NETWORK_V1` is ported, and it is not persisted. | 06 | D11 | |
 | `highwayRequiresTwoCities`, `highwayMainPerlinScale`, `highwaySecondaryPerlinScale`, `highwayPerlinFactor` | dropped | Read only by legacy noise highways ([Highway.java#L136](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Highway.java#L136), [#L168-L174](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Highway.java#L168-L174)). | 06 | D11 | |
-| `highwayDistanceMask` | *Proposed*: dropped | Read only by legacy highways too ([Highway.java#L101-L105](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Highway.java#L101-L105)); its "0 disables highways" use goes to the highways module flag ([P-PROF-5](index.md#proposed-not-decided)). | 06 | D11; *Proposed* | (`06`'s HWY-06) |
+| `highwayDistanceMask` | dropped | Read only by legacy highways too ([Highway.java#L101-L105](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Highway.java#L101-L105)); its "0 disables highways" use goes to the new profile option `highwaysEnabled` (P-PROF-5, P06-5). | 06 | D11, D31 | (`06`'s HWY-06) |
 | `editMode` | same | Pinned at creation, so a world is an edit world from its start. | 01 | D13 | |
 | `generateNether` | dropped | Dead upstream; overworld only. | 02 | D12, [0003](../../design/0003-world-presence.md) | PROF-08 |
 
@@ -86,7 +86,8 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 
 | Option | Category | Default | Meaning | Owner | Decision |
 |---|---|---|---|---|---|
-| Lake and dungeon veto in city chunks (upstream 1.12's `preventLakesRavinesInCities`; name *Proposed*, [P-PROF-6](index.md#proposed-not-decided)) | `lostcity` | on | Vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` populate steps and NHCore's oil deposits wherever a population area touches a city chunk; landmark cores get no veto | 03 | [0005](../../design/0005-rwg-overlay.md) §3 |
+| `preventLakesInCities` (upstream 1.12's `preventLakesRavinesInCities`, renamed because the cave carver is not wrapped, so ravines are not covered: P-PROF-6, P03-2) | `lostcity` | on | Vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` populate steps and NHCore's oil deposits wherever a population area touches a city chunk or a scattered structure's footprint (P07-4); landmark cores get no veto | 03 | [0005](../../design/0005-rwg-overlay.md) §3, D31 |
+| `highwaysEnabled` | `lostcity` | true | A per-world switch for highways; false generates none (P06-5, HWY-06) | 06 | D31 |
 | `villageTreatment` | `lostcity` | `BUILD_AROUND` | `BUILD_AROUND`, `AVOID` (upstream's avoidance), `IGNORE`; replaces `avoidVillages` | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
 | `landmarkTreatment` | `lostcity` | `BUILD_AROUND` per kind | The same three values for each landmark kind; replaces `avoidStructures` | 04, 07 | [0006](../../design/0006-build-around-other-worldgen.md) §3 |
 | `landmarkMargin` | `lostcity` | 2 blocks | Growth of a landmark footprint before it is turned into core chunks | 04 | [0006](../../design/0006-build-around-other-worldgen.md) §1 |
@@ -96,8 +97,8 @@ Status: rows that cite a decision are *Accepted*; rows marked *Proposed* are lis
 | Vanilla loot categories opt-in (name `08-loot-mobs-blocks`') | `lostcity` | off | Lets city chests also draw from vanilla `ChestGenHooks` categories | 08 | D20 |
 | A city near spawn (name and distance set at M03; added only if M03's measurement shows the nearest city center is too far from spawn) | `lostcity` | on | Guarantees a city center within a set distance of (0, 0), seeded from the world seed | 04 | D30 |
 
-Placing the new options in the `lostcity` category is *Proposed* ([P-PROF-6](index.md#proposed-not-decided)). The mod-config keys that are pinned with the profile (module flags, the decorative metal flags, `heightSampleSize`, `forceSaplingGrowth`) are in [01-core § Mod config](../01-core/index.md#mod-config) and [pinned-profile.md](pinned-profile.md).
+Every new option is in the `lostcity` category (P-PROF-6, D31). The mod-config keys that are pinned with the profile (module flags, the decorative metal flags, `heightSampleSize`) are in [01-core § Mod config](../01-core/index.md#mod-config) and [pinned-profile.md](pinned-profile.md).
 
 ## Count
 
-107 + 12 + 25 + 14 + 5 = 163 upstream options: 134 kept (same or changed), 17 dropped (one of them, `highwayDistanceMask`, *Proposed*), 12 deferred; 8 new options, and a ninth, the near-spawn city, if M03 needs it (D30).
+107 + 12 + 25 + 14 + 5 = 163 upstream options: 134 kept (same or changed), 17 dropped, 12 deferred; 9 new options, and a ninth, the near-spawn city, if M03 needs it (D30).

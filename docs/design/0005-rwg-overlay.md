@@ -1,6 +1,6 @@
 # 0005 · The RWG overlay: hook, terrain blend, heights, profiles and budget
 
-- Status: Accepted
+- Status: Accepted; §3 and §3a amended by D31 (saplings, light, the carver, the write guard)
 - Gate: S2 → M04 (M04's entry gate needs this record accepted)
 - Amends: none (settles the "Still open" items of [0003](0003-world-presence.md))
 - Date: 2026-11-01
@@ -61,16 +61,18 @@ Rules:
 Runs after RWG's `populate` returns, for the chunk being populated:
 
 - chest blocks with loot and spawners, with their tile entities;
-- torch and other attachment fix-ups, and sapling growth where upstream does it;
+- torch and other attachment fix-ups, and sapling stages (saplings are never grown at generation; they stay saplings and grow by random ticks, D31);
 - any other step upstream does with world access.
+
+It writes no light updates. In the pack, ArchaicFix's Phosphor backport (`enablePhosphor=true`) lights every light source in a chunk when vanilla's light population pass runs ([LightingHooks.java#L329-L369](https://github.com/embeddedt/ArchaicFix/blob/0.8.2/src/main/java/org/embeddedt/archaicfix/lighting/world/lighting/LightingHooks.java#L329-L369)), so lamps the terrain phase wrote are lit without a relight; the terrain phase keeps `generateSkylightMap`. This is a recorded dependency, checked by M04's scenario (D31).
 
 Rules:
 
 - Writes only into the populated chunk itself, which is always loaded. Never into its neighbors, so it never cascades, with vanilla's neighbor rule or with Hodgepodge's 3×3 rule.
 - Uses its own `Random`, seeded from the world seed and the chunk coordinates. **Never draw from RWG's or an event's `Random`**: that would change RWG's decoration.
 - RWG's decoration does not survive inside the city's footprint (§3a).
-- When a population area touches a city chunk, the overlay vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` steps through `PopulateChunkEvent.Populate` (RWG honors these), and NHCore's oil deposits through `CUSTOM`. Otherwise lakes and dungeons cut into cellars and break [0004](0004-gtnh-layer-and-tier-ceiling.md)'s "sound enough to move into". Upstream 1.12 had this as a profile option (`preventLakesRavinesInCities`); 1.20 has none, because its own feature step makes the question moot. It returns as a profile option, on by default, recorded as a deviation. Landmark cores are not city chunks and get no veto. The treatment of every other pack feature is in [other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md).
-- Villages and the other surface structures the layout can predict are not kept out of cities: the city builds around them ([0006](0006-build-around-other-worldgen.md)). Whether the cave carver is wrapped through `InitMapGenEvent` in city chunks is left to the prototype.
+- When a population area touches a city chunk, the overlay vetoes RWG's `LAKE`, `LAVA` and `DUNGEON` steps through `PopulateChunkEvent.Populate` (RWG honors these), and NHCore's oil deposits through `CUSTOM`. Otherwise lakes and dungeons cut into cellars and break [0004](0004-gtnh-layer-and-tier-ceiling.md)'s "sound enough to move into". Upstream 1.12 had this as a profile option (`preventLakesRavinesInCities`); 1.20 has none, because its own feature step makes the question moot. It returns as a profile option, on by default, recorded as a deviation. The same vetoes apply when a population area touches a scattered structure's footprint ([07-scattered](../new-spec/07-scattered/index.md), D31). Landmark cores are not city chunks and get no veto. The treatment of every other pack feature is in [other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md).
+- Villages and the other surface structures the layout can predict are not kept out of cities: the city builds around them ([0006](0006-build-around-other-worldgen.md)). The cave carver is not wrapped: RWG carves caves in `provideChunk`, before the terrain phase, as vanilla carves them before upstream's feature. Mineshafts and strongholds, which RWG writes in its `populate`, are the residual risk to cellars; the write guard (§3a) drops their writes inside the footprint (D31).
 
 ### 3a. RWG sets the landscape; the city is set into it
 
@@ -81,9 +83,9 @@ The owner's rule: RWG builds the landscape first, with its terrain and its decor
 - **Landmark cores** ([0006](0006-build-around-other-worldgen.md) §1) are outside the footprint. Neither the write guard nor the footprint restore acts in them, so RWG's decoration there stays, and other mods' structures (village pieces, which RWG's own `populate` writes, included) land on RWG's untouched ground. Edge-ring parks and soft-edge strips are outside the footprint too.
 - City levels still follow upstream's stepped heights (§6), and edges blend into RWG's ground (§5).
 
-**Mechanism.** The rule fixes the outcome; the prototype picks how to reach it. There are two candidates:
-- **A write guard** (preferred): one mixin on the chunk's block setter that drops writes from RWG's decoration inside footprint volumes. The layout answers "is this block in a footprint" from pure data. It is precise, cheap, and the mixin comment says why no event works: RWG ignores `DecorateBiomeEvent` results.
-- **A footprint restore**: a pass after decoration that rewrites the city's blocks inside the footprint from the layout. No mixin, but it costs more, because decoration spreads over four chunks. It is the same machinery as the GT boulder restore of [new-spec 00-pack-integration/ore-veins.md](../new-spec/00-pack-integration/ore-veins.md), should that become necessary.
+**Mechanism.** A **write guard**: one mixin on the chunk's block setter that drops writes inside footprint volumes. It is active during every delegate `populate`, wherever the write lands, because decoration spreads over four chunks and cascaded big trees reach chunk +2; the prototype measures that spill with ArchaicFix's `logCascadingWorldgen`. The layout answers "is this block in a footprint" from pure data. It is precise, cheap, and the mixin comment says why no event works: RWG ignores `DecorateBiomeEvent` results. The footprint is every city-written column from its lowest block up to Y 255; parks, yards, edge rings and soft-edge strips are outside it (D31).
+
+The **fallback**, only if the prototype shows the guard cannot tell RWG's writes apart, is a footprint restore: a pass after decoration that rewrites the city's blocks inside the footprint from the layout. No mixin, but it costs more. It is the same machinery as the GT boulder restore of [new-spec 00-pack-integration/ore-veins.md](../new-spec/00-pack-integration/ore-veins.md), should that become necessary.
 
 Revisit after the alpha and beta reviews: if cities feel too synthetic, the owner may let the city follow the terrain more closely.
 
@@ -216,7 +218,7 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 | Alternative | Why not |
 |---|---|
 | Write the city in `ChunkProviderEvent.ReplaceBiomeBlocks` | Fires before RWG paints the surface, carves caves and adds landmarks, so the city would be repainted and carved. `DENY` also removes bedrock. Not fired by PersonalSpace or flat worlds |
-| Write the whole city in population (`PopulateChunkEvent.Post` or an `IWorldGenerator`) | World `setBlock` with lighting for about 25,000 blocks per city chunk is far too slow, and writing the +8 area spreads each chunk over four. `Post` also comes before RWG's snow. Kept only for the light work of the population phase |
+| Write the whole city in population (`PopulateChunkEvent.Post` or an `IWorldGenerator`) | World `setBlock` with lighting for about 25,000 blocks per city chunk is far too slow, and writing the +8 area spreads each chunk over four. `Post` also comes before RWG's snow. Kept only for the population phase's world work: tile entities, torches and the command-block tick |
 | Mixins into RWG2's and RWG's `provideChunk` and `populate` | Two GPL classes that change between releases, and nothing for flat or PersonalSpace. Not needed, since the wrapper sits at the same points |
 | Mixins into `ChunkProviderServer.originalLoadChunk` / `populate` | Hodgepodge, ArchaicFix and Variable-Horizons redirect calls in exactly these methods. Injections there are brittle and order-dependent |
 | Replace the overworld `WorldProvider` | Clashes with any other mod doing the same, and cannot reach PersonalSpace |
@@ -233,12 +235,13 @@ For the throwaway prototype on the build server (S2), which overlays a flat 3 ×
 1. **Install timing.** On a new world, the wrapper counts chunks generated before installation; the expected count is zero. Repeat on an existing world with a chunk-loader ticket, to see whether the `createChunkProvider` mixin fallback is needed.
 2. **Oracle accuracy.** Compare the oracle height with the generated chunk's real height at (8, 8) over 4,096 chunks per generator, and report the error distribution. Check that the second classic-RWG instance has no visible side effects (`InitMapGenEvent` listeners, RWG's static noise flag and canyon colors).
 3. **Height histogram** for RWG2 Continents and classic RWG over the same region. It decides whether `heightSampleSize = 3` and the upstream level thresholds give sensible city levels on RWG, or whether an RWG-tuned profile is needed.
-4. **The footprint rule (§3a)**: implement the write guard, fall back to the footprint restore if the guard can't tell RWG's decoration writes apart, and measure both against the budget. Screenshots of city edges and interiors:
+4. **The footprint rule (§3a)**: implement the write guard over every delegate `populate`, fall back to the footprint restore only if the guard can't tell RWG's writes apart, measure the spill with `logCascadingWorldgen`, and measure the cost against the budget. Screenshots of city edges and interiors:
    - RWG trees in parks and yards, and none on streets, roofs or inside buildings; boulders and small ruins likewise; landmarks;
    - lakes and dungeons in cellars before and after the vetoes;
    - NHCore oil deposits, Railcraft geodes and quarries;
    - landmark cores left untouched, with RWG's decoration and the village's own pieces ([0006](0006-build-around-other-worldgen.md));
-   - snow on streets.
+   - snow on streets;
+   - lamps and glowstone in a fresh city at night, lit by ArchaicFix's Phosphor without a relight (§3).
 
 5. **Budget numbers** per §8 (B1 to B5), written back here.
 6. **Cascades:** zero ArchaicFix warnings attributed to this mod, and Hodgepodge's neighbor-fill count unchanged against the baseline.

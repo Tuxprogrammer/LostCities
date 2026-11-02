@@ -4,7 +4,7 @@ How this mod differs from Lost Cities 1.20 and how it fits into GT New Horizons.
 
 Target pack: **GTNH 2.9.0** ([0002](../design/0002-target-pack.md)), with RWG2 Continents as the default overworld generator.
 
-Status: **all areas `00` to `09` are written** (spikes S2 to S4). `00-pack-integration` is accepted. Areas `01` to `09` are deviation tables against their original-spec areas, built from the design records and the [decision log](../design/decision-log.md); their rows are *Accepted* where they cite a decision, and every *Proposed* item they leave open is listed in [OPEN-QUESTIONS](OPEN-QUESTIONS.md#open) with what settles it ([ROADMAP](../ROADMAP.md)).
+Status: **all areas `00` to `09` are written** (spikes S2 to S4). `00-pack-integration` is accepted. Areas `01` to `09` are deviation tables against their original-spec areas, built from the design records and the [decision log](../design/decision-log.md); their rows are *Accepted* where they cite a decision. Every item they once proposed was answered by the owner in decision log D31, so the new spec has no open questions ([OPEN-QUESTIONS](OPEN-QUESTIONS.md)); the milestones in the [ROADMAP](../ROADMAP.md) build the answers.
 
 ## What this mod is for
 
@@ -17,7 +17,7 @@ Every change here serves that, and every system uses what the pack already has b
 - Each area mirrors an original-spec area, plus `00-pack-integration` for cross-cutting pack topics. Its `index.md` has a **deviation table**: every original sheet, what this mod does instead, and the decision behind it.
 - **Status words.**
   - *Accepted* means a decision record in [docs/design/](../design/README.md) settles it; the record is linked.
-  - *Proposed* means this spec suggests it and the owner has not decided. Every proposal is listed in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with its recommendation and what settles it: the milestone that builds it, or the owner.
+  - *Proposed* means this spec suggests it and the owner has not decided. Every proposal is listed in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with its recommendation and what settles it: the milestone that builds it, or the owner. Areas `01` to `09` hold none at present; the proposed [integration-opportunities.md](00-pack-integration/integration-opportunities.md) keeps its own owner rows.
   - *Verified* facts about other mods cite the file and line at the pack's tag; *unverified* ones say so and must be checked from source before code (`gtnh-integration-research`).
 - Numbers carry units: blocks, chunks, block-Y levels, ticks.
 
@@ -35,7 +35,7 @@ Every change here serves that, and every system uses what the pack already has b
 | [`07-scattered`](07-scattered/index.md) | Scattered structures among pack structures |
 | [`08-loot-mobs-blocks`](08-loot-mobs-blocks/index.md) | Pack loot at EV or below, pack mobs and vanilla spawners |
 | [`09-client-ui`](09-client-ui/index.md) | Whatever client UI survives without a world type of our own |
-| [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | What is still undecided, who or what settles it, and the recommendation |
+| [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | What is still undecided (none at present), who or what settles it, and the recommendation; and where each settled question was answered |
 
 ## Decisions this spec builds on
 

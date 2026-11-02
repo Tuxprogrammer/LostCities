@@ -2,13 +2,13 @@
 
 Every height-dependent number and profile option upstream uses in terrain, layout, damage, highways and railways, with this mod's value and range. [0005](../../design/0005-rwg-overlay.md#6-height-mapping-q2) §6 sets the rule and assigns the full per-option list to this area.
 
-Status: *Accepted* from 0005 §6 for the rule and the rows it names; rows marked *Proposed* apply the rule where 0005 does not name the option, and are collected in the area's [Proposed, not decided](index.md#proposed-not-decided) or in [06-highways-railways](../06-highways-railways/index.md#proposed-not-decided). Option defaults and ranges are upstream's, from [profile-options.md](../../original-spec/02-profiles-dimensions/profile-options.md); `02-profiles-dimensions` owns the options themselves.
+Status: *Accepted* from 0005 §6 for the rule and the rows it names. The rows that apply the rule where 0005 does not name the option were settled by the owner's answers in D31: `buildingMinFloors` (P03-14) here, and the highway and railway limits (P06-6, P06-7) owned by [06-highways-railways](../06-highways-railways/index.md#railways-railway-layoutmd-railway-partsmd). Option defaults and ranges are upstream's, from [profile-options.md](../../original-spec/02-profiles-dimensions/profile-options.md); `02-profiles-dimensions` owns the options themselves.
 
 ## The rule
 
 1. **Sea level is the same**, so numbers relative to it carry over unchanged. RWG2 and classic RWG fill water for `y < 63`, so the top water block is Y 62, as in the 1.20 overworld ([rwg.md](../00-pack-integration/rwg.md#rwg2-206-one-overworld-chunk)).
 2. **Only the build range changes**: Y 0 to 255 (16 sections) instead of −64 to 319. RWG places bedrock at Y 0 to 4.
-3. **An option whose range reaches above 255 or below 0 is clamped to 0 to 255 at load, with a warning** (0005 §6). For options counted in city levels (6 blocks each), this spec clamps the resulting Y instead (*Proposed*, see the rows).
+3. **An option whose range reaches above 255 or below 0 is clamped to 0 to 255 at load, with a warning** (0005 §6). For options counted in city levels (6 blocks each), the clamp applies to the resulting Y instead, as the highway and railway rows say (D31).
 4. Hard-coded world limits (0, 1, 255, 256) in upstream's loops become named constants for the 1.7.10 limits, and the 256 "corner exists" sentinel becomes an explicit flag (TERR-24, CITY-22).
 
 ## Build range and water
@@ -44,7 +44,7 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names; rows marked
 | Height cap per chunk | `cityGround + 6 × floors < maxBuild − 8` (Y 312) | the same formula, so below Y 248 | Floors drop one at a time until it holds. With at most 21 floors at city level 8 (ground Y 119), the top floor's base stays below Y 248 |
 | Part tops | up to `maxBuild − 1` | at most Y 254 | 0005 §6: the layout clamps floors per chunk so nothing passes Y 254; a building whose roof part would pass it drops a floor |
 | `buildingMaxFloors` | 8, range 0 to 60 | 8, range 0 to 22 | 0005 §6 |
-| `buildingMinFloors` | 0, range 0 to 60 | 0, range 0 to 22 (*Proposed*) | Upstream lets the minimum win over the maximum; the per-chunk cap still applies |
+| `buildingMinFloors` | 0, range 0 to 60 | 0, range 0 to 22 (P03-14, D31) | The same range as `buildingMaxFloors`, since upstream lets the minimum win over the maximum; the per-chunk cap still applies |
 | `buildingMinFloorsChance`, `buildingMaxFloorsChance` | 4 and 6, range 1 to 60 | same | Bounds of a draw, not heights |
 | `buildingMinCellars`, `buildingMaxCellars` | 0 and 3, range 0 to 20; city level added to the maximum | same | The bottom bound (Y 2) drops cellars that would reach it |
 | Clear above the roof (`clearToMax`) | to `min(maxBuild − 8, sampled height + 10)` | to `min(248, oracle height + 10)` | |
@@ -81,13 +81,14 @@ Status: *Accepted* from 0005 §6 for the rule and the rows it names; rows marked
 
 | Option or number | Upstream default | Upstream range | Here | Notes |
 |---|---|---|---|---|
-| Highway ground | `groundLevel + 6 × level` | | same | Level 0 = Y 71 |
-| `highwayNetworkLevel` | 0 | 0 to 32 | 0, range 0 to the highest level whose tallest bundled part (12 blocks, `highway_open`) ends at or below Y 255: 28 at `groundLevel` 71 (*Proposed*) | Upstream's 32 is Y 263 |
+| Highway ground | `groundLevel + 6 × level` | | same | Level 0 = Y 71 ([Highways.java#L58](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/gen/Highways.java#L58)) |
+| `highwayNetworkLevel` | 0 | 0 to 32 | 0, clamped at load with a warning, in any level mode, to `floor((255 − (maxHighwayPartHeight − 1) − groundLevel) / 6)`, where `maxHighwayPartHeight` is the tallest loaded highway part (12 blocks, `highway_open`, in the bundled set): 28 at `groundLevel` 71. A profile with `groundLevel` above 244 is rejected, since no level fits (P06-6, D31) | Upstream's 32 is Y 263. Only level mode 4 reads the option ([IntercityHighwayPlanner.java#L335](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/highway/IntercityHighwayPlanner.java#L335)) |
+| Highway clearance | 15 blocks above open and bridge parts ([Highways.java#L73-L77](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/gen/Highways.java#L73-L77)) | | 15 blocks, capped at Y 255 (P06-6, D31) | |
 | Highway support columns | at most 40 blocks down while empty | | same | Stop at RWG's bedrock, as at any solid block |
 | Highway support parts | down to the minimum build height while empty | | down to Y 1 | |
 | Highway tunnel test (non-city chunk) | height > `groundLevel + 6 × level + 3` | | same, oracle height | |
-| Railway level | −3 + `railwayLevelOffset` | offset −8 to 2 | same | Y 53 by default; Y 5 to 65 over the offset range at `groundLevel` 71, all above RWG's bedrock |
-| Railway Y floor | none | | *Proposed*: a profile whose `groundLevel` and offset put the railway below Y 5 is rejected at load with a message | |
+| Railway level | −3 + `railwayLevelOffset` | offset −8 to 2 | same: rail Y = `groundLevel + 6 × (−3 + railwayLevelOffset)` ([Railway.java#L19-L23](https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/Railway.java#L19-L23)) | Y 53 by default; Y 5 to 65 over the offset range at `groundLevel` 71, all above RWG's bedrock |
+| Railway Y floor | none | | Y 5, above RWG's bedrock at Y 0 to 4: a `railwayLevelOffset` that puts the rail below it is clamped up to the lowest offset that reaches Y 5, with a warning, as other out-of-range values are; a `groundLevel` below 11, where even the highest offset (2) cannot reach Y 5, is rejected, since no clamp fixes it (P06-7, P-PROF-1, D31) | |
 | Surface-station clearing | to height + 4 | | same, oracle height | |
 | `monorailOffset` | −2 | −100 to 100 | deferred with monorails | D12 |
 

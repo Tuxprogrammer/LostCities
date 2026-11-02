@@ -48,7 +48,7 @@ Blocks per role (a block can hold several roles):
 | Smooth sandstone and its stairs and slab | `enableSmoothSandstone=false` | vanilla cut sandstone (`minecraft:sandstone:2`), `etfuturum:stone_slab:3`; smooth *red* sandstone is on |
 | Basalt, smooth basalt | `enableBasalt=false` | Botania's basalt (`Botania:stone:1`, a dark stone, not GT basalt) |
 | Mud, packed mud, mud bricks | `enableMud=false` | Ztones Roen and Kryp for earthy desert masonry |
-| Moss, azalea | `enableMossAzalea=false` | vanilla mossy cobblestone and vines, Botania's Solid Vine, glow lichen here |
+| Moss, azalea | `enableMossAzalea=false` | `chisel:moss:0` for the moss block (D31), vanilla mossy cobblestone and vines, Botania's Solid Vine, glow lichen here |
 | Crimson, warped, mangrove, bamboo woods | experiments off, `enableBambooBlocks=false` | cherry is the only new wood; stripped logs and bark of every vanilla, BoP and Witchery wood are on |
 | Dripstone, lightning rod, composter, beehives, sculk | off | none needed |
 
