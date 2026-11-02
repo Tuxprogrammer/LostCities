@@ -276,11 +276,11 @@ public final class CityFinder {
     /** Pitch of the repair view, degrees. */
     static final float REPAIR_PITCH = 25f;
     /** How far to the side of a pair of buildings the feather view stands. */
-    static final int FEATHER_BACK = 34;
-    /** How far above the city's ground the feather view stands. */
-    static final int FEATHER_HEIGHT = 22;
+    static final int FEATHER_BACK = 44;
+    /** How far above the taller roof of the pair the feather view stands. */
+    static final int FEATHER_HEIGHT = 10;
     /** Pitch of the feather view, degrees. */
-    static final float FEATHER_PITCH = 15f;
+    static final float FEATHER_PITCH = 25f;
     /** Fewest floors of a building worth entering. */
     static final int INTERIOR_MIN_FLOORS = 2;
 
@@ -541,7 +541,7 @@ public final class CityFinder {
                 ground,
                 z,
                 viewX,
-                ground + FEATHER_HEIGHT,
+                ground + Math.max(layout.floors(), other.floors()) * ChunkPlan.FLOOR_HEIGHT + FEATHER_HEIGHT,
                 viewZ,
                 yawToward(viewX, viewZ, x, z),
                 FEATHER_PITCH,
