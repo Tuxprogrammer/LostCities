@@ -262,7 +262,11 @@ public final class GtnhLayerScenario implements Scenario {
             int x = lx + offset[0];
             int yy = y + offset[1];
             int z = lz + offset[2];
-            if (x >= 0 && x < 16 && z >= 0 && z < 16 && yy > 0 && yy < 256
+            if (x >= 0 && x < 16
+                && z >= 0
+                && z < 16
+                && yy > 0
+                && yy < 256
                 && isRawGtStone(chunk.getBlock(x, yy, z), chunk.getBlockMetadata(x, yy, z))) {
                 return true;
             }
