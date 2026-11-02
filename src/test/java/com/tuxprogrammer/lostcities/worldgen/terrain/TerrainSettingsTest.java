@@ -54,6 +54,19 @@ public class TerrainSettingsTest {
         assertTrue(settings.ruinChance() > 0, "ruins stay on");
     }
 
+    /** Small chances are written as plain decimals, as docs/config.md shows them. */
+    @Test
+    public void floatsAreWrittenInPlainDecimal() {
+        assertEquals("0.0004", TerrainSettings.text(0.0004f));
+        assertEquals("0.002", TerrainSettings.text(0.002f));
+        assertEquals("3.0", TerrainSettings.text(3.0f));
+        assertEquals(
+            "0.0004",
+            TerrainSettings.defaults()
+                .toValues()
+                .get("explosionChance"));
+    }
+
     /** AR-8: the damage numbers stay profile options, so a profile can ask for upstream's look. */
     @Test
     public void upstreamsDamageNumbersStayConfigurable() {

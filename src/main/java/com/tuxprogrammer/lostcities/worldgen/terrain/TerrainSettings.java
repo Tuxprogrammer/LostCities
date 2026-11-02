@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -164,7 +165,10 @@ public final class TerrainSettings {
         rubbleDirtScale = r.floatValue("rubbleDirtScale", 3.0f, 0f, 100f);
         rubbleLeaveScale = r.floatValue("rubbleLeaveScale", 6.0f, 0f, 100f);
         vineChance = r.floatValue("vineChance", 0.009f, 0f, 1f);
-        preventLakesRavinesInCities = r.booleanValue("preventLakesRavinesInCities", true);
+        // The profile key is preventLakesInCities (P-PROF-6); 1.12's name, which worlds pinned before M09 hold, still
+        // reads.
+        preventLakesRavinesInCities = r
+            .booleanValue("preventLakesInCities", r.booleanValue("preventLakesRavinesInCities", true));
         softEdgeWidth = r.intValue("softEdgeWidth", 6, 2, 12);
         landmarkMargin = r.intValue("landmarkMargin", 2, 0, 16);
         generateLighting = r.booleanValue("generateLighting", false);
@@ -194,6 +198,20 @@ public final class TerrainSettings {
         return new TerrainSettings(new Reader(values));
     }
 
+    /**
+     * Returns a float as a snapshot and the docs write it: plain decimal, never scientific notation, so the default
+     * {@code explosionChance} reads {@code 0.0004} rather than {@code Float.toString}'s {@code 4.0E-4}.
+     *
+     * @param value the value
+     * @return its shortest plain decimal text
+     */
+    static String text(float value) {
+        if (Float.isNaN(value) || Float.isInfinite(value)) {
+            return Float.toString(value);
+        }
+        return new BigDecimal(Float.toString(value)).toPlainString();
+    }
+
     /** Returns every resolved value by option name, in name order, as a snapshot stores them. */
     public Map<String, String> toValues() {
         Map<String, String> out = new TreeMap<>();
@@ -211,35 +229,35 @@ public final class TerrainSettings {
         out.put("terrainFixUpperMinOffset", Integer.toString(terrainFixUpperMinOffset));
         out.put("terrainFixUpperMaxOffset", Integer.toString(terrainFixUpperMaxOffset));
         out.put("oceanCorrectionBorder", Integer.toString(oceanCorrectionBorder));
-        out.put("explosionChance", Float.toString(explosionChance));
+        out.put("explosionChance", text(explosionChance));
         out.put("explosionMinRadius", Integer.toString(explosionMinRadius));
         out.put("explosionMaxRadius", Integer.toString(explosionMaxRadius));
         out.put("explosionMinHeight", Integer.toString(explosionMinHeight));
         out.put("explosionMaxHeight", Integer.toString(explosionMaxHeight));
-        out.put("miniExplosionChance", Float.toString(miniExplosionChance));
+        out.put("miniExplosionChance", text(miniExplosionChance));
         out.put("miniExplosionMinRadius", Integer.toString(miniExplosionMinRadius));
         out.put("miniExplosionMaxRadius", Integer.toString(miniExplosionMaxRadius));
         out.put("miniExplosionMinHeight", Integer.toString(miniExplosionMinHeight));
         out.put("miniExplosionMaxHeight", Integer.toString(miniExplosionMaxHeight));
         out.put("explosionsInCitiesOnly", Boolean.toString(explosionsInCitiesOnly));
         out.put("debrisToNearbyChunkFactor", Integer.toString(debrisToNearbyChunkFactor));
-        out.put("ruinChance", Float.toString(ruinChance));
-        out.put("ruinMinlevelPercent", Float.toString(ruinMinlevelPercent));
-        out.put("ruinMaxlevelPercent", Float.toString(ruinMaxlevelPercent));
+        out.put("ruinChance", text(ruinChance));
+        out.put("ruinMinlevelPercent", text(ruinMinlevelPercent));
+        out.put("ruinMaxlevelPercent", text(ruinMaxlevelPercent));
         out.put("rubbleLayer", Boolean.toString(rubbleLayer));
-        out.put("rubbleDirtScale", Float.toString(rubbleDirtScale));
-        out.put("rubbleLeaveScale", Float.toString(rubbleLeaveScale));
-        out.put("vineChance", Float.toString(vineChance));
-        out.put("preventLakesRavinesInCities", Boolean.toString(preventLakesRavinesInCities));
+        out.put("rubbleDirtScale", text(rubbleDirtScale));
+        out.put("rubbleLeaveScale", text(rubbleLeaveScale));
+        out.put("vineChance", text(vineChance));
+        out.put("preventLakesInCities", Boolean.toString(preventLakesRavinesInCities));
         out.put("softEdgeWidth", Integer.toString(softEdgeWidth));
         out.put("landmarkMargin", Integer.toString(landmarkMargin));
         out.put("generateLighting", Boolean.toString(generateLighting));
         out.put("generateSpawners", Boolean.toString(generateSpawners));
         out.put("generateLoot", Boolean.toString(generateLoot));
-        out.put("chestWithoutLootChance", Float.toString(chestWithoutLootChance));
+        out.put("chestWithoutLootChance", text(chestWithoutLootChance));
         out.put("avoidWater", Boolean.toString(avoidWater));
         out.put("bridgeSupports", Boolean.toString(bridgeSupports));
-        out.put("randomLeafBlockChance", Float.toString(randomLeafBlockChance));
+        out.put("randomLeafBlockChance", text(randomLeafBlockChance));
         out.put("randomLeafBlockThickness", Integer.toString(randomLeafBlockThickness));
         return out;
     }

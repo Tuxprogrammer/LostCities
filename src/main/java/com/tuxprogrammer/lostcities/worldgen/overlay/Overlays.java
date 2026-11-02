@@ -19,7 +19,7 @@ import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
 import com.tuxprogrammer.lostcities.config.DecorativeMetalsConfig;
 import com.tuxprogrammer.lostcities.config.ProfilesConfig;
-import com.tuxprogrammer.lostcities.config.profile.BuiltinProfiles;
+import com.tuxprogrammer.lostcities.config.profile.ProfileSetup;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.ModuleState;
@@ -242,7 +242,7 @@ public final class Overlays {
      */
     private static ProfileSnapshot resolve(String profile, WorldServer world) {
         AssetSet assets = LoadedAssets.isLoaded() ? LoadedAssets.current() : null;
-        return ProfileSnapshot
+        ProfileSnapshot snapshot = ProfileSnapshot
             .resolve(
                 profile,
                 planSource(),
@@ -253,6 +253,8 @@ public final class Overlays {
                 HeightOracles.worldType(world),
                 Tags.VERSION)
             .withStructureSettings(StructureOracles.settingsSummary(world));
+        java.util.Map<String, String> values = ProfileSetup.withTestOverrides(snapshot.values());
+        return values == snapshot.values() ? snapshot : snapshot.withValues(values);
     }
 
     /** Warns once when the loaded asset set differs from the one a world was pinned with, naming the files (P05-3). */
@@ -354,24 +356,6 @@ public final class Overlays {
      * @return the profile's name, or {@code null} when the dimension is not listed
      */
     static String profileFor(int dimension) {
-        for (String entry : ProfilesConfig.dimensionProfiles) {
-            int equals = entry == null ? -1 : entry.indexOf('=');
-            if (equals <= 0) {
-                continue;
-            }
-            try {
-                if (Integer.parseInt(
-                    entry.substring(0, equals)
-                        .trim())
-                    == dimension) {
-                    String profile = entry.substring(equals + 1)
-                        .trim();
-                    return profile.isEmpty() ? BuiltinProfiles.DEFAULT : profile;
-                }
-            } catch (NumberFormatException e) {
-                LostCities.LOG.warn("dimensionProfiles entry '{}' has no dimension number; ignored", entry);
-            }
-        }
-        return null;
+        return ProfileSetup.profileFor(dimension);
     }
 }

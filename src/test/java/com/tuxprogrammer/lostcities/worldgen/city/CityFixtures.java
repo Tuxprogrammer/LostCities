@@ -101,6 +101,27 @@ public final class CityFixtures {
         return new LayoutCityPlan(context, oracle, terrain);
     }
 
+    /**
+     * Returns the layout of a test world pinned with a profile: its terrain settings and its layout profile both from
+     * the profile's values, as {@code OverlayWorld} builds them.
+     *
+     * @param seed   the world seed
+     * @param values the profile's values
+     * @return the planner
+     */
+    public static LayoutPlanner planner(long seed, com.tuxprogrammer.lostcities.config.profile.ProfileValues values) {
+        TerrainSettings settings = TerrainSettings.fromValues(values.asMap());
+        WorldStyle worldStyle = ASSETS.worldStyle(CityProfiles.worldStyle(values));
+        return new LayoutPlanner(
+            LayoutInputs
+                .builder(
+                    seed,
+                    CityProfiles.layoutProfile(settings, values),
+                    new LayoutAssets(ASSETS, worldStyle, plains()),
+                    terrain())
+                .build());
+    }
+
     /** Returns the real plan source of the default test world. */
     public static LayoutCityPlan plan() {
         return plan(SEED, StructureOracle.NONE, LayoutLog.SILENT);

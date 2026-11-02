@@ -5,10 +5,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.asset.view.LayoutAssets;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
+import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
 import com.tuxprogrammer.lostcities.core.Module;
 import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
@@ -52,6 +55,7 @@ public final class OverlayWorld {
     private final GenerationTimers timers = new GenerationTimers();
     private final HeightProbe probe = new HeightProbe();
     private final ChunkHeights heights;
+    private final TerrainHeightOracle columns;
     private final CachedCityPlan plan;
     private final PlanPrefetcher prefetcher;
     private final TerrainPhase terrainPhase;
@@ -81,6 +85,7 @@ public final class OverlayWorld {
             classifier,
             BlockRefs::exists);
         TerrainHeightOracle columns = ChunkColumnCache.wrap(oracle, probe);
+        this.columns = columns;
         this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
         this.biomes = new WorldBiomes(world);
         this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers);
@@ -124,11 +129,14 @@ public final class OverlayWorld {
             return null;
         }
         AssetSet assets = LoadedAssets.current();
-        WorldStyle worldStyle = assets.worldStyle(CityProfiles.WORLD_STYLE);
+        ProfileValues values = snapshot.profileValues();
+        AssetId worldStyleId = CityProfiles.worldStyle(values);
+        WorldStyle worldStyle = assets.worldStyle(worldStyleId);
         if (worldStyle == null) {
+            // Avoids PROF-13: a missing world style leaves the dimension without cities, never a crash.
             LostCities.LOG.error(
                 "World style {} is not loaded; dimension {} gets no cities",
-                CityProfiles.WORLD_STYLE,
+                worldStyleId,
                 world.provider.dimensionId);
             return null;
         }
@@ -138,7 +146,7 @@ public final class OverlayWorld {
             LayoutInputs
                 .builder(
                     world.getSeed(),
-                    CityProfiles.layoutProfile(settings),
+                    CityProfiles.layoutProfile(settings, values),
                     new LayoutAssets(assets, worldStyle, biomes),
                     terrain)
                 .dimension(DimensionKey.forDimension(world.provider.dimensionId))
@@ -151,12 +159,44 @@ public final class OverlayWorld {
             planner,
             assets,
             worldStyle,
-            new CityPalettes(assets, snapshot.metalFlags()),
+            new CityPalettes(
+                assets,
+                snapshot.metalFlags(),
+                profileBlock(values, "baseBlock", world.provider.dimensionId),
+                profileBlock(values, "liquidBlock", world.provider.dimensionId)),
             settings,
             biomes,
             classifier,
             message -> LostCities.LOG.warn("[cities] {}", message));
         return new LayoutCityPlan(context, structures, terrain);
+    }
+
+    /**
+     * Resolves a profile's block option ({@code baseBlock} or {@code liquidBlock}) through the block-name map. An
+     * unknown name logs once and falls back to upstream's stone or water, as upstream does
+     * (docs/new-spec/02-profiles-dimensions/profile-options.md).
+     *
+     * @return the block, or {@code null} for the fallback
+     */
+    private static BlockRef profileBlock(ProfileValues values, String key, int dimension) {
+        String name = values.getString(key);
+        if (name.equals(
+            ProfileValues.defaults()
+                .getString(key))) {
+            // Upstream's stone and water, which the style blocks hold already.
+            return null;
+        }
+        java.util.List<String> problems = new java.util.ArrayList<>();
+        BlockRef block = LoadedAssets.resolveBlock(name, problems);
+        if (block == null) {
+            LostCities.LOG.error(
+                "Profile option {}='{}' of dimension {} names no block ({}); using the default",
+                key,
+                name,
+                dimension,
+                String.join("; ", problems));
+        }
+        return block;
     }
 
     /** Wraps a structure oracle so each call is timed (the {@code structures} series of the timers). */
@@ -369,6 +409,11 @@ public final class OverlayWorld {
      */
     public WorldTerrainView terrainView() {
         return new WorldTerrainView(world, heights);
+    }
+
+    /** Returns the per-column height oracle, behind the world's column cache. */
+    public TerrainHeightOracle columns() {
+        return columns;
     }
 
     /** Returns the chunk heights. */
