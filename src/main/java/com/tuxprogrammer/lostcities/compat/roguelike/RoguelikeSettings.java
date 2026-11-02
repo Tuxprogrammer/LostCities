@@ -106,7 +106,8 @@ public final class RoguelikeSettings {
     }
 
     /**
-     * Returns the bound of the cell offset draw, {@code cellSize − minSeparation} (39 in the pack). Roguelike would throw
+     * Returns the bound of the cell offset draw, {@code cellSize − minSeparation} (39 in the pack). Roguelike would
+     * throw
      * on a bound below 1; the oracle then predicts nothing.
      */
     public int offsetBound() {

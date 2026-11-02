@@ -76,8 +76,7 @@ class RoguelikeOracleTest {
         int[][] candidates = grid.candidates(chunk[0], chunk[1]);
         int[] third = candidates[2];
         // Mountains (no air at Y 100) everywhere but a flat 30-block plateau around the third candidate.
-        TerrainHeightOracle heights = (x, z) -> Math.abs(x - third[0]) <= 15 && Math.abs(z - third[1]) <= 15 ? 72
-            : 120;
+        TerrainHeightOracle heights = (x, z) -> Math.abs(x - third[0]) <= 15 && Math.abs(z - third[1]) <= 15 ? 72 : 120;
         RoguelikeOracle.Prediction prediction = oracle(heights, 16).predict(0, 0);
         int expected = -1;
         for (int i = 0; i < candidates.length; i++) {
@@ -135,10 +134,9 @@ class RoguelikeOracleTest {
                             lot.maxChunkX() + 1,
                             lot.maxChunkZ() + 1,
                             lot.maxChunkX() + 1,
-                            lot.maxChunkZ() + 1))
-                                .contains(
-                                    prediction.landmark()
-                                        .id()));
+                            lot.maxChunkZ() + 1)).contains(
+                                prediction.landmark()
+                                    .id()));
                 // The lot lies within the reach the query uses.
                 assertTrue(Math.abs(lot.minChunkX() - prediction.chunkX()) <= RoguelikeOracle.REACH_CHUNKS);
                 assertTrue(Math.abs(lot.maxChunkZ() - prediction.chunkZ()) <= RoguelikeOracle.REACH_CHUNKS);

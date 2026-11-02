@@ -59,6 +59,7 @@ public final class SteeringRule {
 
     /** How the rule decided. */
     public enum Outcome {
+
         /** The lot touches nothing the city holds: Roguelike's own test decides. */
         CLEAR,
         /** The lot is a predicted site's reserved lot: Roguelike's own test decides. */

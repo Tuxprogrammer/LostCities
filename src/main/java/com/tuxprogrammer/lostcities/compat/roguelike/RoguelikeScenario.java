@@ -285,11 +285,24 @@ public final class RoguelikeScenario implements Scenario {
         List<String> a = new ArrayList<>();
         List<String> b = new ArrayList<>();
         for (RoguelikeOracle.Prediction prediction : predictions) {
-            a.add(ids(forward.landmarksTouching(prediction.chunkX(), prediction.chunkZ(), prediction.chunkX(), prediction.chunkZ())));
+            a.add(
+                ids(
+                    forward.landmarksTouching(
+                        prediction.chunkX(),
+                        prediction.chunkZ(),
+                        prediction.chunkX(),
+                        prediction.chunkZ())));
         }
         for (int i = predictions.size() - 1; i >= 0; i--) {
             RoguelikeOracle.Prediction prediction = predictions.get(i);
-            b.add(0, ids(backward.landmarksTouching(prediction.chunkX(), prediction.chunkZ(), prediction.chunkX(), prediction.chunkZ())));
+            b.add(
+                0,
+                ids(
+                    backward.landmarksTouching(
+                        prediction.chunkX(),
+                        prediction.chunkZ(),
+                        prediction.chunkX(),
+                        prediction.chunkZ())));
         }
         context.check(a.equals(b), "expected the same landmarks in either query order, found " + a + " and " + b);
     }
