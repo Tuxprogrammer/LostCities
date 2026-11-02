@@ -31,15 +31,18 @@ public final class PopulateVetoes {
      */
     @SubscribeEvent
     public void onPopulate(PopulateChunkEvent.Populate event) {
-        switch (event.type) {
-            case LAKE, LAVA, DUNGEON, CUSTOM -> {
-                OverlayWorld overlay = overlays.get(event.world);
-                if (overlay != null && overlay.populationAreaTouchesCity(event.chunkX, event.chunkZ)) {
-                    event.setResult(Event.Result.DENY);
-                    vetoed++;
-                }
-            }
-            default -> {}
+        // Not a switch: mods add values to this enum at runtime (Forestry's hives do), and a switch's ordinal table,
+        // sized when it is first used, would be too short for them.
+        PopulateChunkEvent.Populate.EventType type = event.type;
+        if (type != PopulateChunkEvent.Populate.EventType.LAKE && type != PopulateChunkEvent.Populate.EventType.LAVA
+            && type != PopulateChunkEvent.Populate.EventType.DUNGEON
+            && type != PopulateChunkEvent.Populate.EventType.CUSTOM) {
+            return;
+        }
+        OverlayWorld overlay = overlays.get(event.world);
+        if (overlay != null && overlay.populationAreaTouchesCity(event.chunkX, event.chunkZ)) {
+            event.setResult(Event.Result.DENY);
+            vetoed++;
         }
     }
 

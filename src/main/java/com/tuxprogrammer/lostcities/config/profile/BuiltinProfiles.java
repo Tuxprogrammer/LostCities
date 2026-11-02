@@ -38,8 +38,12 @@ public final class BuiltinProfiles {
      */
     public static Map<String, String> values(String name) {
         if (DEFAULT.equals(name)) {
-            return TerrainSettings.defaults()
+            Map<String, String> values = TerrainSettings.defaults()
                 .toValues();
+            // RWG already places bedrock at Y 0 to 4 and the overlay writes none (0005 §6), so the built-in profile
+            // says so; a custom profile asking for a bedrock layer gets a warning that it has no effect.
+            values.put("bedrockLayer", "0");
+            return values;
         }
         throw new IllegalArgumentException("unknown profile '" + name + "'; known: " + names());
     }
