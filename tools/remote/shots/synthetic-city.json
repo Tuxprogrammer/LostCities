@@ -4,10 +4,10 @@
   "world": {"name": "shots-rwg2c", "level_type": "RWG2_CONTINENTS", "seed": "4242", "fresh": true},
   "server_jvm": "-Dlostcitiesnh.planSource=synthetic",
   "time": 6000,
-  "render_distance": 10,
+  "render_distance": 12,
   "fov": 70,
   "shots": [
-    {"name": "above", "x": 32905, "z": 32905, "y": "top+55", "yaw": 135, "pitch": 35, "wait": 3,
+    {"name": "above", "x": 32884, "z": 32884, "y": "top+50", "yaw": 135, "pitch": 33, "wait": 3,
      "caption": "City from above: the 13 x 13-chunk synthetic city from its south-east corner, looking north-west."},
     {"name": "street", "x": 32776, "z": 32866, "y": "top+1", "yaw": 180, "pitch": 3, "wait": 3,
      "caption": "Street level: the north-south street through the city center, looking north."},
