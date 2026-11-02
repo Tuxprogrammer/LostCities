@@ -8,3 +8,4 @@ Balance waits for the beta phase ([0004](../design/0004-gtnh-layer-and-tier-ceil
 | Spawner density and GT's spawner hardness | [loot-and-mobs.md](00-pack-integration/loot-and-mobs.md), D20 | How hard a building is to move into; each city as a stock of Broken Spawners |
 | Loot quantities and tier weighting | [loot-and-mobs.md](00-pack-integration/loot-and-mobs.md), D20 | How far city loot pushes early-game progression |
 | City frequency and size near spawn | [spawn.md](00-pack-integration/spawn.md), D21 | How quickly a new player reaches a city and its loot |
+| Decorative metal flags and the per-building metal cap | [block catalog](05-assets/block-catalog/index.md), D29 | How many ingots a city gives away, above all steel and aluminum; whether any metal should default off |
