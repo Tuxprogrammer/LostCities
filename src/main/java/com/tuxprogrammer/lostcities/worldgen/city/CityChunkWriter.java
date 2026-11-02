@@ -144,7 +144,7 @@ public final class CityChunkWriter {
             writeBuilding();
         } else {
             writeStreet();
-            if (plan.maxHighwayLevel() < 0 && layout.slope() == null) {
+            if (plan.maxHighwayLevel() < 0 && !surfaceRail() && layout.slope() == null) {
                 writeStairs();
             }
             clearDoorSteps();
@@ -353,7 +353,7 @@ public final class CityChunkWriter {
             corridors(xCorridor, zCorridor);
         }
         int level = plan.cityLevel();
-        boolean canDoStreetOrPark = plan.highwayXLevel() != level && plan.highwayZLevel() != level;
+        boolean canDoStreetOrPark = !networkAtGround(level);
         if (!canDoStreetOrPark) {
             return;
         }
@@ -409,6 +409,34 @@ public final class CityChunkWriter {
         front(height, Direction.ZMIN, Transform.ROTATE_90);
         front(height, Direction.XMAX, Transform.ROTATE_180);
         front(height, Direction.ZMAX, Transform.ROTATE_270);
+    }
+
+    /**
+     * Upstream's {@code canDoStreetOrPark} test, negated: a highway's deck at the city's level anywhere across the chunk
+     * (a ramp reaching it included, M06), a surface station, or a surface station extension at the city's level takes
+     * the street's place. Without networks, upstream's two highway levels.
+     */
+    private boolean networkAtGround(int level) {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        if (networks == null) {
+            return plan.highwayXLevel() == level || plan.highwayZLevel() == level;
+        }
+        if (networks.highway(chunkX, chunkZ)
+            .deckAt(level)) {
+            return true;
+        }
+        com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = networks.railChunk(chunkX, chunkZ);
+        return rail.type() == com.tuxprogrammer.lostcities.layout.view.RailChunkType.STATION_SURFACE
+            || rail.type() == com.tuxprogrammer.lostcities.layout.view.RailChunkType.STATION_EXTENSION_SURFACE
+                && rail.level() >= level;
+    }
+
+    /** Whether the chunk's railway reaches the surface: no stair goes on it (upstream's street decorations). */
+    private boolean surfaceRail() {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        return networks != null && networks.railChunk(chunkX, chunkZ)
+            .type()
+            .isSurface();
     }
 
     private void normalStreetSection(int height) {
