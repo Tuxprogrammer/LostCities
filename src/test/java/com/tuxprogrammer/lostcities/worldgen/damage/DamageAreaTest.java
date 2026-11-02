@@ -35,8 +35,10 @@ public class DamageAreaTest {
     }
 
     @Test
-    public void searchRangeIsThreeChunksForDefaults() {
-        assertEquals(3, DamageArea.searchRange(TerrainSettings.defaults()));
+    public void searchRangeIsTwoChunksForDefaults() {
+        // AR-8: the default big radius is below 24, so (23 + 15) / 16 = 2; upstream's 35 gave 3.
+        assertEquals(2, DamageArea.searchRange(TerrainSettings.defaults()));
+        assertEquals(3, DamageArea.searchRange(settings("explosionMaxRadius", "35")));
     }
 
     @Test
@@ -61,7 +63,10 @@ public class DamageAreaTest {
         assertTrue(first.hasExplosions());
         Explosion big = DamageArea.bigExplosionAt(42L, ALL_CITY.chunk(10, -3), always);
         assertTrue(big.y() >= 6 + 75 && big.y() < 6 + 90, "center Y = 6 x level + 75..89, got " + big.y());
-        assertTrue(big.radius() >= 15 && big.radius() < 35);
+        assertTrue(
+            big.radius() >= TerrainSettings.DEFAULT_EXPLOSION_MIN_RADIUS
+                && big.radius() < TerrainSettings.DEFAULT_EXPLOSION_MAX_RADIUS,
+            "radius " + big.radius());
     }
 
     @Test

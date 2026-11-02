@@ -13,7 +13,9 @@ import java.util.TreeMap;
  * ({@link #toValues}), so a world keeps the numbers it was created with (docs/design/0005-rwg-overlay.md §7).
  *
  * <p>
- * Defaults are upstream's {@code default} profile (docs/original-spec/02-profiles-dimensions/profile-options.md).
+ * Defaults are upstream's {@code default} profile (docs/original-spec/02-profiles-dimensions/profile-options.md),
+ * except the explosion chances and radii and the ruin chance, which are much lower (the {@code DEFAULT_} constants,
+ * AR-8).
  * Ranges follow docs/new-spec/03-terrain/height-mapping.md: anything that could leave Y 0 to 255 is clamped with a
  * warning, and every min/max pair is ordered at load so a draw between them never throws (TERR-03, PROF-06). Keys
  * are upstream's profile option names, plus this mod's own ({@code preventLakesRavinesInCities} from 1.12,
@@ -33,6 +35,25 @@ public final class TerrainSettings {
 
     /** Upstream's default city level thresholds, Y 75 to 131 in steps of 8. */
     private static final int[] DEFAULT_LEVEL_HEIGHTS = { 75, 83, 91, 99, 107, 115, 123, 131 };
+
+    /**
+     * Default chance per city chunk of a big explosion: 0.0004, a fifth of upstream's 0.002. Deviation (AR-8,
+     * docs/new-spec/03-terrain/index.md, "Explosions, damage, debris, ruins, rubble"): damage is an occasional accent,
+     * not the look of a city.
+     */
+    public static final float DEFAULT_EXPLOSION_CHANCE = 0.0004f;
+    /** Default smallest big-explosion radius, blocks: 12 (upstream 15). Deviation as above. */
+    public static final int DEFAULT_EXPLOSION_MIN_RADIUS = 12;
+    /** Default big-explosion radius bound, blocks, exclusive: 24 (upstream 35). Deviation as above. */
+    public static final int DEFAULT_EXPLOSION_MAX_RADIUS = 24;
+    /** Default chance per city chunk of a mini explosion: 0.005, a sixth of upstream's 0.03. Deviation as above. */
+    public static final float DEFAULT_MINI_EXPLOSION_CHANCE = 0.005f;
+    /** Default smallest mini-explosion radius, blocks: 4 (upstream 5). Deviation as above. */
+    public static final int DEFAULT_MINI_EXPLOSION_MIN_RADIUS = 4;
+    /** Default mini-explosion radius bound, blocks, exclusive: 9 (upstream 12). Deviation as above. */
+    public static final int DEFAULT_MINI_EXPLOSION_MAX_RADIUS = 9;
+    /** Default chance per building of a ruined top: 0.015 (upstream 0.05). Deviation as above. */
+    public static final float DEFAULT_RUIN_CHANCE = 0.015f;
 
     private final int groundLevel;
     private final int seaLevel;
@@ -101,15 +122,27 @@ public final class TerrainSettings {
         terrainFixUpperMinOffset = upper[0];
         terrainFixUpperMaxOffset = upper[1];
         oceanCorrectionBorder = r.intValue("oceanCorrectionBorder", 4, -255, 255);
-        explosionChance = r.floatValue("explosionChance", 0.002f, 0f, 1f);
-        int[] radius = r.orderedPair("explosionMinRadius", 15, "explosionMaxRadius", 35, 1, 3000);
+        explosionChance = r.floatValue("explosionChance", DEFAULT_EXPLOSION_CHANCE, 0f, 1f);
+        int[] radius = r.orderedPair(
+            "explosionMinRadius",
+            DEFAULT_EXPLOSION_MIN_RADIUS,
+            "explosionMaxRadius",
+            DEFAULT_EXPLOSION_MAX_RADIUS,
+            1,
+            3000);
         explosionMinRadius = radius[0];
         explosionMaxRadius = radius[1];
         int[] height = r.orderedPair("explosionMinHeight", 75, "explosionMaxHeight", 90, 1, WorldLimits.MAX_Y);
         explosionMinHeight = height[0];
         explosionMaxHeight = height[1];
-        miniExplosionChance = r.floatValue("miniExplosionChance", 0.03f, 0f, 1f);
-        int[] miniRadius = r.orderedPair("miniExplosionMinRadius", 5, "miniExplosionMaxRadius", 12, 1, 3000);
+        miniExplosionChance = r.floatValue("miniExplosionChance", DEFAULT_MINI_EXPLOSION_CHANCE, 0f, 1f);
+        int[] miniRadius = r.orderedPair(
+            "miniExplosionMinRadius",
+            DEFAULT_MINI_EXPLOSION_MIN_RADIUS,
+            "miniExplosionMaxRadius",
+            DEFAULT_MINI_EXPLOSION_MAX_RADIUS,
+            1,
+            3000);
         miniExplosionMinRadius = miniRadius[0];
         miniExplosionMaxRadius = miniRadius[1];
         int[] miniHeight = r
@@ -118,7 +151,7 @@ public final class TerrainSettings {
         miniExplosionMaxHeight = miniHeight[1];
         explosionsInCitiesOnly = r.booleanValue("explosionsInCitiesOnly", true);
         debrisToNearbyChunkFactor = r.intValue("debrisToNearbyChunkFactor", 200, 1, 10000);
-        ruinChance = r.floatValue("ruinChance", 0.05f, 0f, 1f);
+        ruinChance = r.floatValue("ruinChance", DEFAULT_RUIN_CHANCE, 0f, 1f);
         float ruinMin = r.floatValue("ruinMinlevelPercent", 0.8f, 0f, 1f);
         float ruinMax = r.floatValue("ruinMaxlevelPercent", 1.0f, 0f, 1f);
         if (ruinMax < ruinMin) {

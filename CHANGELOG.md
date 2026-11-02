@@ -25,3 +25,7 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - VillageNames structure oracles (milestone M05): where VillageNames villages and ocean monuments will generate, predicted from the seed, VillageNames' config and the biome provider without generating anything, with each village's full plan, its gates and its ground height.
 - For development only, off in a normal game: a clean screenshot mode for the client (`-Dlostcitiesnh.capture=true` with the test hooks), which hides the GUI, hand, chat, tutorial toast and HUD overlays and reports when a viewpoint has loaded, and a shot-list runner that takes review screenshots on the real pack (`tools/remote/lc-remote.sh shots`).
 - With VillageNames installed, a seed now builds the same villages on every server run: the order in which Forge asks mods for village buildings is fixed, where before it changed from run to run.
+
+### Changed
+
+- Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
