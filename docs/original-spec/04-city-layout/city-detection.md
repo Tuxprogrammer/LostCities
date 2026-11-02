@@ -133,7 +133,7 @@ A float city factor in `[0, 1]` and a boolean raw city flag per chunk, handed to
 
 ## 10. Bugs
 
-CITY-01, CITY-04, CITY-05, CITY-07, CITY-34 (heightmap sample grid; see [city-level.md](city-level.md)).
+CITY-01, CITY-04, CITY-05, CITY-07, CITY-34 (heightmap sample grid; see [city-level.md](city-level.md)), CITY-39 (spawn-distance overflow), CITY-40 (predefined radius cut at the search square).
 
 ## Deviations in the new mod
 

@@ -1,7 +1,5 @@
-// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
-// @formatter:on
 
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 

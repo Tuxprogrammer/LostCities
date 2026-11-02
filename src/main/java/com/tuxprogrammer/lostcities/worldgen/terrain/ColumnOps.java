@@ -1,8 +1,6 @@
-// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.terrain;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/LostCityTerrainFeature.java
 // Avoids: TERR-06, TERR-23, TERR-24
-// @formatter:on
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;

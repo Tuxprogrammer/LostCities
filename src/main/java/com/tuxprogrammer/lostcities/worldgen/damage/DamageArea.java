@@ -1,8 +1,6 @@
-// @formatter:off
 package com.tuxprogrammer.lostcities.worldgen.damage;
 // Ported from Lost Cities (MIT): https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/DamageArea.java
 // Avoids: PROF-06, TERR-19
-// @formatter:on
 
 import java.util.ArrayList;
 import java.util.Collections;

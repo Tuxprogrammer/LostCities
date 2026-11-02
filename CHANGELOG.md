@@ -11,3 +11,4 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - The `lostcitiesnh` network channel, with no packets yet.
 - `/lostcities test` (aliases `/lost`, `/lostcitiesnh`; subcommand alias `scenario`): the in-world scenario harness for development and real-pack testing, operator only and off in a normal game.
 - English lang file for every message and config label.
+- The city layout (milestone M03), not yet wired into world generation: upstream Lost Cities' city detection, city styles, hierarchical streets and bridges, buildings and multibuildings, parks, stairs and corridors, with every upstream bug in that logic fixed; and the rules for building cities around other mods' structures: villages sewn in as a city's old town with lanes to their gates, plazas and road detours around landmarks, and buildings that step down toward an AE2 meteorite's crater.

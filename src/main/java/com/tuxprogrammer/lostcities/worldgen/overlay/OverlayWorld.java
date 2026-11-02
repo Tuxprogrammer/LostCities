@@ -239,6 +239,11 @@ public final class OverlayWorld {
         return recorder;
     }
 
+    /** Returns the layout's terrain view over this world (D51), for M05's {@code LayoutPlanner}. */
+    public WorldTerrainView terrainView() {
+        return new WorldTerrainView(world, heights);
+    }
+
     /** Returns the chunk heights. */
     public ChunkHeights heights() {
         return heights;
