@@ -18,12 +18,16 @@
         "palette": "bricks_desert"
       },
       {
-        "factor": 1.0,
-        "palette": "bricks_desert_red"
+        "factor": 0.6,
+        "palette": "bricks_desert_rough"
       },
       {
-        "factor": 1.0,
-        "palette": "bricks_desert_orange"
+        "factor": 0.8,
+        "palette": "bricks_desert_bleached"
+      },
+      {
+        "factor": 0.5,
+        "palette": "bricks_desert_taupe"
       }
     ],
     [

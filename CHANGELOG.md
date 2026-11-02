@@ -29,3 +29,4 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 ### Changed
 
 - Explosion craters and ruined buildings are much rarer and craters smaller by default: damage is an occasional accent, not the look of a city. A profile can still ask for upstream Lost Cities' amounts.
+- Desert cities use a muted palette: sandstone, white and light gray terracotta and smooth sandstone, without red or orange buildings, floors or park borders.

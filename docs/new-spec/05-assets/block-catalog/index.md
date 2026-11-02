@@ -116,7 +116,7 @@ One pool per upstream palette family or character role in [catalog-palettes.md](
 
 | Group | Pools |
 |---|---|
-| [Brick and stone walls](#brick-and-stone-walls) | [stone-brick main wall](#stone-brick-main-wall), [accent](#accent), [band](#band), [stone-brick rubble](#stone-brick-rubble), [red-brick main wall](#red-brick-main-wall), [red-brick rubble](#red-brick-rubble), [cyan terracotta](#cyan-terracotta-walls), [gray terracotta](#gray-terracotta-walls), [light gray terracotta](#light-gray-terracotta-walls), [terracotta bands](#terracotta-bands), [desert main wall](#desert-main-wall), [desert accent and trim](#desert-accent-and-trim), [orange desert](#orange-desert-walls), [red desert](#red-desert-walls), [desert band](#desert-band), [quartz main wall](#quartz-main-wall), [quartz rubble](#quartz-rubble), [deepslate building](#deepslate-building), [blackstone building](#blackstone-building), [stone-and-brick building](#stone-and-brick-building) |
+| [Brick and stone walls](#brick-and-stone-walls) | [stone-brick main wall](#stone-brick-main-wall), [accent](#accent), [band](#band), [stone-brick rubble](#stone-brick-rubble), [red-brick main wall](#red-brick-main-wall), [red-brick rubble](#red-brick-rubble), [cyan terracotta](#cyan-terracotta-walls), [gray terracotta](#gray-terracotta-walls), [light gray terracotta](#light-gray-terracotta-walls), [terracotta bands](#terracotta-bands), [desert main wall](#desert-main-wall), [desert accent and trim](#desert-accent-and-trim), [bleached desert](#bleached-desert-walls), [taupe desert](#taupe-desert-walls), [desert band](#desert-band), [quartz main wall](#quartz-main-wall), [quartz rubble](#quartz-rubble), [deepslate building](#deepslate-building), [blackstone building](#blackstone-building), [stone-and-brick building](#stone-and-brick-building) |
 | [Quartz and glass](#quartz-and-glass) | [quartz block and column](#quartz-block-and-column), [quartz stairs](#quartz-stairs), [clear glass blocks](#clear-glass-blocks), [tinted glass blocks](#tinted-glass-blocks), [clear panes](#clear-panes), [tinted panes](#tinted-panes), [white and city-sphere glass](#white-and-city-sphere-glass) |
 | [Streets, highways and fittings](#streets-highways-and-fittings) | [street and floor slab](#street-and-floor-slab), [primary roads](#primary-roads), [sidewalks and plazas](#sidewalks-and-plazas), [highway surface](#highway-surface), [street variant brick](#street-variant-brick), [pillars and beds](#pillars-and-beds), [bottom slabs](#bottom-slabs), [walls](#walls), [iron bars](#iron-bars), [stone-brick stairs](#stone-brick-stairs), [stone stairs](#stone-stairs), [street markings](#street-markings) |
 | [Interiors and roofs](#interiors-and-roofs) | [interior floors](#interior-floors), [ceilings](#ceilings), [roofs](#roofs), [doors](#doors), [trapdoors and hatches](#trapdoors-and-hatches), [wood trim](#wood-trim) |
@@ -355,60 +355,56 @@ GT's Coke Oven Bricks and Firebricks fit this family too, but they are casings (
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:sandstone:2` | 34 | | | Upstream |
+| Baseline: `minecraft:sandstone:2` | 42 | | | Upstream |
 | `minecraft:sandstone:1` (chiseled) | 12 | baseline | | Vanilla variety |
 | `chisel:sandstone:4` to `:7`, `:9` to `:11` (pillars) | 12 | baseline | SP | Columns and trims |
 | `Railcraft:brick.sandy:3` (ornate) | 8 | baseline | SP, H | Carved band |
 | `Ztones:tile.solsBlock:4`, `Ztones:tile.roenBlock:9` | 8 | baseline | | Framed cream panels |
-| `etfuturum:red_sandstone:1`, `:2` | 8 | `minecraft:sandstone:2` | | Red desert trim |
 | `Botania:biomeStoneA:5` | 6 | baseline | SP | Botania's desert stone |
 | `Ztones:tile.krypBlock:5` | 4 | baseline | | Smooth tan framed |
 | `TConstruct:SpeedBlock:5`, `:6` (fancy, chiseled brownstone) | 5 | baseline | SPD | Panel and relief trims |
 | `gregtech:gt.blockconcretes:14` (chiseled light concrete) | 3 | baseline | SPD, SP | Carved tan trim |
 
-#### Orange desert walls
+#### Bleached desert walls
 
-`bricks_desert_orange` `#`, `X`.
-
-| Candidate | Weight | Fallback | Flags | Why |
-|---|---|---|---|---|
-| Baseline: `minecraft:stained_hardened_clay:1` | 45 | | BH | Upstream |
-| `chisel:hardened_clay_orange:2` to `:8` | 12 | baseline | SP | Patterned, not a boulder host |
-| `etfuturum:concrete:1` | 10 | baseline | | Flat orange |
-| `chisel:hempcrete:1` | 8 | baseline | SP | Hard colored concrete |
-| `Ztones:tile.solsBlock:1`, `:2`, `Ztones:tile.iszmBlock:13`, `Ztones:tile.zestBlock:12` | 10 | baseline | | Orange, ochre and vermilion render |
-| `GalaxySpace:barnardaFgrunt` | 5 | baseline | H | Flat orange-tan; not a host |
-| `etfuturum:red_sandstone:0` | 5 | `minecraft:sandstone:0` | | Red sandstone |
-| `Ztones:tile.crayBlock:13` | 5 | baseline | | Salmon terracotta |
-
-#### Red desert walls
-
-`bricks_desert_red` `#`, `X`.
+`bricks_desert_bleached` `#`, this mod's palette (AR-16): white terracotta's pale beige, with cut sandstone trim. It and the taupe walls replace upstream's `bricks_desert_orange` and `bricks_desert_red` in the desert style, so a desert city stays muted ([05-assets](../index.md#styles-and-city-styles)); those two palettes are unused and get no pool.
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:stained_hardened_clay:14` | 45 | | BH | Upstream |
-| `chisel:hardened_clay_red:2` to `:8` | 12 | baseline | SP | Patterned |
-| `etfuturum:concrete:14` | 10 | baseline | | Flat red |
-| `chisel:hempcrete:14` | 8 | baseline | SP | Hard colored concrete |
-| `Ztones:tile.solsBlock:12` to `:15`, `Ztones:tile.fortBlock:13`, `Ztones:tile.mystBlock:5` | 10 | baseline | | Rust and brick-red render |
-| `gregtech:gt.blockgranites:11`, `:15` | 5 | baseline | BH, H | Red granite brick and smooth |
-| `Railcraft:brick.bloodstained:0`, `:2` | 5 | baseline | SP, H | Dark red masonry |
-| `Ztones:tile.lairBlock:4` | 5 | baseline | | Red bricks |
+| Baseline: `minecraft:stained_hardened_clay:0` | 45 | | BH | The palette's block (AR-16) |
+| `chisel:hardened_clay_white:2` to `:8` | 15 | baseline | SP | Patterned |
+| `Ztones:tile.roenBlock:0`, `:7`, `Ztones:tile.solsBlock:3` | 12 | baseline | | Chalk and cream render |
+| `TConstruct:decoration.multibrick:9` (bone brick), `Railcraft:brick.bleachedbone:0` | 10 | baseline | SP (Railcraft) | Pale cream brick |
+| `etfuturum:end_bricks:0` | 8 | baseline | | Pale yellow brick |
+| `Ztones:tile.krypBlock:5` | 5 | baseline | | Smooth tan framed |
+| `Botania:biomeStoneA:5` | 5 | baseline | SP | Botania's desert stone |
+
+#### Taupe desert walls
+
+`bricks_desert_taupe` `#`, this mod's palette (AR-16): light gray terracotta's muted taupe, the earthy wall of a desert city, with cut sandstone trim. Low saturation only: nothing here is a saturated red or orange.
+
+| Candidate | Weight | Fallback | Flags | Why |
+|---|---|---|---|---|
+| Baseline: `minecraft:stained_hardened_clay:8` | 45 | | BH | The palette's block (AR-16) |
+| `chisel:hardened_clay_lightgray:2` to `:8` | 15 | baseline | SP | Patterned |
+| `Ztones:tile.krypBlock:3` | 10 | baseline | | Taupe tiles |
+| `chisel:hempcrete:8` | 8 | baseline | SP | Hard colored concrete |
+| `Ztones:tile.mystBlock:15`, `Ztones:tile.crayBlock:0` | 8 | baseline | | Matte warm gray |
+| `TConstruct:SpeedBlock:2`, `:3` (brownstone, brownstone brick) | 8 | baseline | SPD | Tan-brown stone and brick; walls only (D28 rule 3) |
+| `Thaumcraft:blockCosmeticSolid:11` (ancient stone) | 6 | baseline | | Olive-tan old stone |
 
 #### Desert band
 
-`$` in the desert brick palettes and `S` in `default_desert`: red sandstone double slab.
+`$` in the desert brick palettes and `S` in `default_desert`: smooth sandstone (`minecraft:double_stone_slab:9`), the pale band and floor of a muted desert city (AR-16; upstream's orange red sandstone double slab is replaced).
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `etfuturum:double_red_sandstone_slab:0` | 45 | `minecraft:double_stone_slab:1` | | Upstream (D19) |
-| `etfuturum:smooth_red_sandstone:0` | 15 | baseline fallback | | Seamless band |
-| `etfuturum:red_sandstone:2` (cut) | 10 | `minecraft:sandstone:2` | | Cut red band |
-| `minecraft:double_stone_slab:9` (smooth sandstone top) | 10 | | | Pale band |
-| `Railcraft:brick.sandy:2` | 8 | `minecraft:sandstone:2` | SP, H | Sandy block |
-| `Ztones:tile.solsBlock:12` | 7 | baseline fallback | | Rust band |
-| `Ztones:tile.krypBlock:3` | 5 | baseline fallback | | Taupe tiles |
+| Baseline: `minecraft:double_stone_slab:9` (smooth sandstone) | 50 | | | The palette's block (AR-16) |
+| `minecraft:sandstone:2` (cut) | 15 | | | Pale band |
+| `minecraft:sandstone:1` (chiseled) | 10 | | | Carved band |
+| `Railcraft:brick.sandy:2` | 10 | baseline | SP, H | Sandy block |
+| `Ztones:tile.krypBlock:3` | 8 | baseline | | Taupe tiles |
+| `Ztones:tile.solsBlock:4` | 7 | baseline | | Framed cream |
 
 `bricks_desert_redsand` is unused upstream and fails to load there ([ASSET-03](../../../original-spec/05-assets/index.md#suspected-bugs)); it gets no pool.
 
@@ -655,14 +651,14 @@ Highway railings stay `minecraft:iron_bars`: upstream's `clearRailing` finds the
 
 #### Street variant brick
 
-`B` in `default` (bricks, the city style's `streetvariant`) and `default_desert` (red nether bricks).
+`B` in `default` (bricks, the city style's `streetvariant`) and `default_desert` (sandstone, AR-16: upstream's red nether bricks are replaced).
 
 | Candidate | Weight | Fallback | Flags | Why |
 |---|---|---|---|---|
-| Baseline: `minecraft:brick_block`; desert `etfuturum:red_netherbrick:0` | 50 | desert: `minecraft:nether_brick` | | Upstream (D19) |
+| Baseline: `minecraft:brick_block`; desert `minecraft:sandstone:0` | 50 | | | Upstream (D19); the desert's is AR-16's |
 | `chisel:brickCustom:1`, `:2`, `:3` | 15 | baseline | SP | Brick paving bonds |
 | `thaumicbases:oldBrick:0` | 10 | baseline | | Old brick |
-| Desert: `chisel:nether_brick:14`, `:15`, `Railcraft:brick.nether:2` | 10 | baseline | SP | Dark red paving |
+| Desert: `chisel:sandstone:8`, `:12`, `Railcraft:brick.sandy:0` | 10 | baseline | SP | Sandstone paving |
 | `Ztones:tile.lairBlock:4`, `:11` | 10 | baseline | | Red brick |
 | `HardcoreEnderExpansion:ravaged_brick:0` | 5 | baseline | | Worn brick |
 

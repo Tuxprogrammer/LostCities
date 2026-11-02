@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.asset.palette;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -8,14 +9,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.asset.AssetFile;
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.TestAssets;
 import com.tuxprogrammer.lostcities.asset.block.MetalFlags;
 import com.tuxprogrammer.lostcities.asset.model.Palette;
@@ -91,6 +96,44 @@ public class PaletteGoldenTest {
         CompiledPalette compiled = CompiledPalette.compile(MetalFlags.ALL_ON, layers);
         assertTrue(compiled.isDefined('}'), "ASSET-20: desert palettes define rubble");
         check("palette_desert_red_pack", compiled);
+    }
+
+    /**
+     * AR-16 (alpha review): every palette combination the desert style draws is muted. No wall, trim, band, floor or
+     * street block is a saturated red or orange: red, orange, magenta, pink, yellow or lime terracotta, Et Futurum's
+     * red sandstone family, or red nether bricks. The walls themselves come from the pale and earthy set.
+     */
+    @Test
+    public void theDesertStyleIsMuted() {
+        Set<String> walls = new HashSet<>();
+        for (long seed = 0; seed < 200; seed++) {
+            CompiledPalette compiled = CompiledPalette.compile(MetalFlags.ALL_ON, style(PACK, "desert", seed));
+            for (char c : new char[] { '#', 'X', '$', 'S', 'B' }) {
+                for (BlockRef block : compiled.getAll(c)) {
+                    String name = block.name();
+                    int meta = block.meta();
+                    boolean saturatedClay = name.equals("minecraft:stained_hardened_clay")
+                        && (meta == 1 || meta == 2 || meta == 4 || meta == 5 || meta == 6 || meta == 14);
+                    assertTrue(
+                        !saturatedClay && !name.startsWith("etfuturum:red_sandstone")
+                            && !name.startsWith("etfuturum:double_red_sandstone")
+                            && !name.equals("etfuturum:red_netherbrick")
+                            && !name.equals("minecraft:nether_brick"),
+                        "desert '" + c + "' (seed " + seed + "): " + block);
+                }
+            }
+            for (BlockRef block : compiled.getAll('#')) {
+                walls.add(block.name() + ":" + block.meta());
+            }
+        }
+        Set<String> pale = new HashSet<>(
+            Arrays.asList(
+                "minecraft:sandstone:0",
+                "minecraft:sandstone:2",
+                "minecraft:stained_hardened_clay:0",
+                "minecraft:stained_hardened_clay:8"));
+        assertTrue(pale.containsAll(walls), "desert walls: " + walls);
+        assertEquals(pale, walls, "every muted wall is drawn");
     }
 
     @Test

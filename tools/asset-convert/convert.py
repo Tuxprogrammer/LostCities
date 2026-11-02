@@ -16,7 +16,12 @@ each match, so a re-pin that moves a patched line fails loudly instead of shippi
   * bricks_desert_redsand's 1.12 'minecraft:red_sandstone@2' becomes its 1.20 name, minecraft:cut_red_sandstone
     (ASSET-03);
   * the desert palettes get a '}' rubble character (P05-5, D31; fixes ASSET-20) from two new variants this mod adds,
-    sandstone_rubble and red_sandstone_rubble.
+    sandstone_rubble and red_sandstone_rubble;
+  * the desert city style is muted (AR-16): its building palettes are bricks_desert and three palettes this mod adds,
+    bricks_desert_rough, bricks_desert_bleached and bricks_desert_taupe, instead of the saturated bricks_desert_red
+    and bricks_desert_orange (those two files stay bundled, unused); bricks_desert's '$' band and default_desert's
+    'S' (floors, park borders) become smooth sandstone instead of orange red sandstone, and default_desert's 'B'
+    street variant becomes sandstone instead of red nether bricks.
 
 Block names stay 1.20 names: the block-name map (data/lostcitiesnh/blockmap/mapping.json) turns them into 1.7.10
 blocks at load. The script also writes data/lostcitiesnh/assets.index, the list of bundled files the mod reads
@@ -71,6 +76,31 @@ TAGS = [
     ('"#minecraft:is_beach"', '"type:BEACH"'),
 ]
 
+DESERT_PALETTES_OLD = """      {
+        "factor": 1.0,
+        "palette": "bricks_desert_red"
+      },
+      {
+        "factor": 1.0,
+        "palette": "bricks_desert_orange"
+      }"""
+# AR-16: sandstone keeps the largest share; the bleached and taupe walls are the pale and earthy variety.
+DESERT_PALETTES_NEW = """      {
+        "factor": 0.6,
+        "palette": "bricks_desert_rough"
+      },
+      {
+        "factor": 0.8,
+        "palette": "bricks_desert_bleached"
+      },
+      {
+        "factor": 0.5,
+        "palette": "bricks_desert_taupe"
+      }"""
+
+RED_SANDSTONE_DOUBLE = '"block": "minecraft:red_sandstone_slab[type=double]"'
+SMOOTH_SANDSTONE = '"block": "minecraft:smooth_sandstone"'
+
 RUBBLE_ENTRY = """,
     {{
       "char": "}}",
@@ -79,6 +109,50 @@ RUBBLE_ENTRY = """,
     }}
   ]
 }}"""
+
+
+
+def desert_palette(wall, trim, band):
+    """A muted desert building palette (AR-16): '#' the wall, 'X' the trim, '$' the band, '}' sandstone rubble."""
+    return f"""{{
+  "palette": [
+    {{
+      "char": "X",
+      "block": "{trim}",
+      "damaged": "minecraft:iron_bars"
+    }},
+    {{
+      "char": "$",
+      "block": "{band}",
+      "damaged": "minecraft:iron_bars"
+    }},
+    {{
+      "char": "#",
+      "blocks": [
+{wall}
+      ],
+      "damaged": "minecraft:iron_bars"
+    }},
+    {{
+      "char": "}}",
+      "variant": "sandstone_rubble",
+      "damaged": "minecraft:iron_bars"
+    }}
+  ]
+}}
+"""
+
+
+def weighted(*pairs):
+    """The rows of a palette entry's 'blocks' list, each (random, block), as upstream writes them."""
+    rows = []
+    for weight, block in pairs:
+        rows.append(f"""        {{
+          "random": {weight},
+          "block": "{block}"
+        }}""")
+    return ",\n".join(rows)
+
 
 ADDED = {
     # Shaped like upstream's stonebrick_rubble: about 70 % full blocks, the rest slabs and stairs (P05-5, D31).
@@ -125,6 +199,21 @@ ADDED = {
   ]
 }
 """,
+    # AR-16: layered sandstone with chiseled trim, the rough face of the sandstone family.
+    "palettes/bricks_desert_rough.json": desert_palette(
+        weighted((40, "minecraft:cut_sandstone"), (2000, "minecraft:sandstone")),
+        "minecraft:chiseled_sandstone",
+        "minecraft:cut_sandstone"),
+    # AR-16: bleached walls, white terracotta's pale beige, with sandstone trim.
+    "palettes/bricks_desert_bleached.json": desert_palette(
+        weighted((2000, "minecraft:white_terracotta")),
+        "minecraft:cut_sandstone",
+        "minecraft:smooth_sandstone"),
+    # AR-16: the earthy one, light gray terracotta's muted taupe, with sandstone trim; never a saturated color.
+    "palettes/bricks_desert_taupe.json": desert_palette(
+        weighted((2000, "minecraft:light_gray_terracotta")),
+        "minecraft:cut_sandstone",
+        "minecraft:smooth_sandstone"),
 }
 
 
@@ -161,6 +250,12 @@ def convert(path, text):
         text = add_rubble(text, "sandstone_rubble", path)
     if path == "palettes/bricks_desert_red.json":
         text = add_rubble(text, "red_sandstone_rubble", path)
+    if path in ("palettes/bricks_desert.json", "palettes/default_desert.json"):
+        text = replace(text, RED_SANDSTONE_DOUBLE, SMOOTH_SANDSTONE, path, 1)
+    if path == "palettes/default_desert.json":
+        text = replace(text, '"block": "minecraft:red_nether_bricks"', '"block": "minecraft:sandstone"', path, 1)
+    if path == "styles/desert.json":
+        text = replace(text, DESERT_PALETTES_OLD, DESERT_PALETTES_NEW, path, 1)
     if path.startswith("worldstyles/"):
         text = replace(text, DESERT_BIOMES_OLD, DESERT_BIOMES_NEW, path, 1)
         if path == "worldstyles/standard.json":
