@@ -52,11 +52,11 @@ public final class PopulateVetoes {
             vetoed++;
         } else if (!RAILCRAFT_QUARRY.equals(type.name())
             && overlay.populationAreaTouchesScattered(event.chunkX, event.chunkZ)) {
-            // P07-4 (D31): a scattered structure is defended like a city building.
-            event.setResult(Event.Result.DENY);
-            vetoed++;
-            vetoedScattered++;
-        }
+                // P07-4 (D31): a scattered structure is defended like a city building.
+                event.setResult(Event.Result.DENY);
+                vetoed++;
+                vetoedScattered++;
+            }
     }
 
     /**
