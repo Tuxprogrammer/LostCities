@@ -51,6 +51,7 @@ public final class ModuleState {
         addIf(active, Module.HIGHWAYS, WorldgenConfig.highways);
         addIf(active, Module.RAILWAYS, WorldgenConfig.railways);
         addIf(active, Module.SCATTERED_STRUCTURES, WorldgenConfig.scatteredStructures);
+        addIf(active, Module.PALETTE_VARIETY, WorldgenConfig.paletteVariety);
         return new ModuleState(active);
     }
 

@@ -11,10 +11,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tuxprogrammer.lostcities.asset.Problems;
 import com.tuxprogrammer.lostcities.asset.json.JsonFields;
+import com.tuxprogrammer.lostcities.asset.variety.PaletteVariety;
 
 /**
  * The bundled block data the asset system reads besides the assets: the block-name map, the decorative-metal catalog,
- * the never-place list and the raw variety pools, all under {@code data/lostcitiesnh/blockmap/} in the jar. They are
+ * the never-place list, the raw variety pools and the palette variety drawn from them, all under
+ * {@code data/lostcitiesnh/blockmap/} in the jar. They are
  * this mod's own data, not upstream assets, so they are never overridden from the config folder: a pack that needs a
  * different block writes it in its asset overrides as {@code modid:name:meta}.
  *
@@ -27,9 +29,10 @@ public final class BlockData {
     private final MetalCatalog metals;
     private final NeverPlaceList neverPlace;
     private final JsonElement pools;
+    private final JsonElement variety;
 
     /**
-     * Holds already-read block data, for tests that build their own.
+     * Holds already-read block data, for tests that build their own; no palette variety.
      *
      * @param mapping    the block-name map
      * @param metals     the decorative-metal catalog
@@ -37,10 +40,33 @@ public final class BlockData {
      * @param pools      the raw pools document, or an empty object
      */
     public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools) {
+        this(mapping, metals, neverPlace, pools, emptyVariety());
+    }
+
+    /**
+     * Holds already-read block data.
+     *
+     * @param mapping    the block-name map
+     * @param metals     the decorative-metal catalog
+     * @param neverPlace the never-place list
+     * @param pools      the raw pools document, or an empty object
+     * @param variety    the raw palette-variety document
+     */
+    public BlockData(BlockMapping mapping, MetalCatalog metals, NeverPlaceList neverPlace, JsonElement pools,
+        JsonElement variety) {
         this.mapping = mapping;
         this.metals = metals;
         this.neverPlace = neverPlace;
         this.pools = pools;
+        this.variety = variety;
+    }
+
+    /** Returns a palette-variety document with no options and no styles. */
+    public static JsonElement emptyVariety() {
+        JsonObject out = new JsonObject();
+        out.add("options", new com.google.gson.JsonArray());
+        out.add("styles", new com.google.gson.JsonArray());
+        return out;
     }
 
     /**
@@ -55,11 +81,13 @@ public final class BlockData {
         JsonElement metals = read(anchor, MetalCatalog.RESOURCE, problems);
         JsonElement never = read(anchor, NeverPlaceList.RESOURCE, problems);
         JsonElement pools = read(anchor, VarietyPools.RESOURCE, problems);
+        JsonElement variety = read(anchor, PaletteVariety.RESOURCE, problems);
         return new BlockData(
             BlockMapping.parse(mapping, problems.in(origin(BlockMapping.RESOURCE))),
             MetalCatalog.parse(metals, problems.in(origin(MetalCatalog.RESOURCE))),
             NeverPlaceList.parse(never, problems.in(origin(NeverPlaceList.RESOURCE))),
-            pools);
+            pools,
+            variety);
     }
 
     /** Returns the block-name map. */
@@ -80,6 +108,11 @@ public final class BlockData {
     /** Returns the raw pools document, resolved by the loader against the registry. */
     public JsonElement pools() {
         return pools;
+    }
+
+    /** Returns the raw palette-variety document, parsed by the loader once the assets are loaded. */
+    public JsonElement variety() {
+        return variety;
     }
 
     /** Returns the origin label of a bundled data file, for problem lines. */

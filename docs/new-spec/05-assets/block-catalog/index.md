@@ -2,7 +2,7 @@
 
 The entry point to the catalog of every decorative and construction block GTNH 2.9.0 enables, judged against upstream Lost Cities' look ([decision log](../../../design/decision-log.md) D25). Upstream's cities feel synthetic partly because every building is made of the same handful of blocks; the catalog exists so palettes can draw weighted variety for each role instead of one stand-in per missing block. The [D19 block mapping](../../00-pack-integration/block-mapping.md) stays the baseline and the fallback when a mod is absent. D28 sets the rules the [variety pools](#variety-pools) below follow.
 
-Status: *Proposed*. The per-mod catalogs and these pools are inputs to palette design: the pools become palettes in M11, and their weights are judged at the screenshot reviews. The D28 rules they apply are accepted. City styles that would use distinct pools are candidates only; styles are an M11 or post-beta decision ([ROADMAP](../../../ROADMAP.md)).
+Status: the pools are *live*: M11 turned their candidates into the [palette variety](../asset-format.md#palette-variety) ([0011](../../../design/0011-palette-variety.md)), option palettes a building draws per role, and `tools/asset-convert/variety.py` names the candidates it uses as these tables do. Weights are first judgments, tuned at the beta review. The D28 rules they apply are accepted. City styles that would use distinct pools wait until after beta, with the GTNH-themed buildings ([ROADMAP](../../../ROADMAP.md)).
 
 ## How to read the catalog
 
@@ -231,8 +231,8 @@ Characters that keep upstream's block with no pool: `~` and `b` (structure void)
 | Railcraft quarried | `Railcraft:brick.quarried:5` (cobble), the baseline slabs and stairs (Railcraft's own are tile entities) | SP |
 | Deepslate or tuff bricks | `etfuturum:deepslate_bricks:1`, `etfuturum:cobbled_deepslate:0`, `etfuturum:deepslate_brick_slab:0`, `etfuturum:deepslate_brick_stairs`; `etfuturum:tuff_slab`, `etfuturum:tuff_brick_stairs` | |
 | Botania stones | `Botania:stone:0`, `:2`, `Botania:stone8Slab`, `Botania:stone8Stairs` | SP |
-| GT stones | `gregtech:gt.blockstones:12`, `:9`, `:10` (cracked, cobble, mossy cobble) | BH |
-| Any | `chisel:limestone:6`, `chisel:brutalism:5`, `:6` (weathered), `thaumicbases:oldCobble:0`, `minecraft:mossy_cobblestone`, `minecraft:gravel` sparingly (G) | |
+| GT stones | `gregtech:gt.blockstones:12`, `:9`, `:10` (cracked, cobble, mossy cobble) for basalt; `gregtech:gt.blockstones:4`, `:1` (cracked, cobble) for marble | BH |
+| Any | `chisel:limestone:6`, `chisel:marble:10` (marble walls), `chisel:brutalism:5`, `:6` (weathered), `thaumicbases:oldCobble:0`, `minecraft:mossy_cobblestone`, `minecraft:gravel` sparingly (G) | |
 
 #### Red-brick main wall
 
@@ -774,9 +774,9 @@ Floors in buildings where a part or a later overlay gives them their own charact
 |---|---|---|---|---|
 | Baseline: `minecraft:double_stone_slab:0` | 30 | | | Upstream |
 | `minecraft:planks:0` to `:5` and `minecraft:wooden_slab` | 10 | baseline | | Wood floors |
-| `Natura:planks` 1, 2, 3, 5, 6, 7 | 6 | `minecraft:planks:0` | | Metadata-only wood tones |
-| `BiomesOPlenty:planks` 2, 3, 6, 7, 8, 11, 12, 13, 14 | 6 | `minecraft:planks:0` | | Nine more tones |
-| `cookingforblockheads:<color>_kitchen_floor` (white, black, light gray, red, light blue) | 5 | `minecraft:stained_hardened_clay:0` | | Kitchens, diners, bathrooms; no tile entity |
+| `Natura:planks:1`, `:2`, `:3`, `:5`, `:6`, `:7` | 6 | `minecraft:planks:0` | | Metadata-only wood tones |
+| `BiomesOPlenty:planks:2`, `:3`, `:6`, `:7`, `:8`, `:11`, `:12`, `:13`, `:14` | 6 | `minecraft:planks:0` | | Nine more tones |
+| `cookingforblockheads:white_kitchen_floor:0`, `black_kitchen_floor:0`, `light_gray_kitchen_floor:0`, `red_kitchen_floor:0`, `light_blue_kitchen_floor:0` (registry names `<dye>_kitchen_floor`) | 5 | `minecraft:stained_hardened_clay:0` | | Kitchens, diners, bathrooms; no tile entity |
 | `minecraft:carpet:0`, `:7`, `:8`, `:12`, `:14`, `:15` over a floor block | 5 | skip | | Offices and apartments |
 | `Ztones:tile.laveBlock:8`, `Ztones:tile.ztylBlock:8` | 4 | baseline | | Pale tiles |
 | `etfuturum:polished_deepslate:0`, `etfuturum:smooth_stone:0` | 4 | baseline | | Lobbies |
@@ -924,10 +924,10 @@ Upstream's oak planks (`top1x1_5` local `o`), fence posts and the wood in its fu
 | Candidate | Slots of the 65 furniture slots | Fallback | Flags | Why |
 |---|---|---|---|---|
 | Baseline: upstream's six blocks | 40 | | TE (furnace, brewing stand, enchanting table) | Upstream |
-| `etfuturum:smoker`, `blast_furnace`, `smithing_table`, `cartography_table`, `loom`, `fletching_table` | 8 | `minecraft:crafting_table` | TE (smoker, blast furnace) | Usable workstations |
+| `etfuturum:smoker:0`, `blast_furnace:0`, `smithing_table:0`, `cartography_table:0`, `loom:0`, `fletching_table:0` | 8 | `minecraft:crafting_table` | TE (smoker, blast furnace) | Usable workstations |
 | `Natura:Natura.workbench:0` to `:12` | 5 | `minecraft:crafting_table` | | Wood-variant crafting tables, no tile entity |
 | `cookingforblockheads` counters, cabinets, sinks, ovens (kitchens) | 4 | `minecraft:crafting_table` | TE | Kitchens; facing in metadata |
-| `harvestcraft` sinks, cutting board, pot | 3 | `minecraft:cauldron` | | Kitchen dressing, no tile entity |
+| `harvestcraft:sink:0` to `:3`, `harvestcraft:cuttingboard:0`, `harvestcraft:pot:0` (sinks, cutting board, pot) | 3 | `minecraft:cauldron` | | Kitchen dressing, no tile entity |
 | `EnderIO:blockDarkSteelAnvil:0` to `:2`, Railcraft steel anvil | 2 | `minecraft:anvil` | | Industrial anvils |
 | `ExtraUtilities:filing:0`, `ExtraUtilities:trashcan:0` | 2 | `minecraft:crafting_table` | TE | Office and street bins |
 | `Thaumcraft:blockTable:0` | 1 | `minecraft:crafting_table` | TE | Arcane quarter |
@@ -1044,7 +1044,7 @@ Fence gates: `malisisdoors:<wood>FenceGate` and `Natura:fenceGate.<wood>`, with 
 | Baseline: upstream's flowers and saplings | 70 | | | Upstream |
 | `minecraft:red_flower:1` to `:8`, `minecraft:double_plant`, `minecraft:tallgrass:2` (ferns) | 15 | `minecraft:red_flower:0` | | Vanilla flowers upstream never used |
 | `etfuturum:cornflower:0`, `lily_of_the_valley:0`, `rose:0`, `pink_petals:0` | 12 | `minecraft:red_flower:0` | | 1.14+ flowers |
-| `BiomesOPlenty:flowers` 4 to 9, `flowers2` 0, 1, 3 to 8 | 12 | `minecraft:red_flower:0` | | Park flowers |
+| `BiomesOPlenty:flowers:1`, `:4` to `:9`, `BiomesOPlenty:flowers2:0`, `:1`, `:3` to `:5`, `:7`, `:8` (swampflower, hydrangea to anemone, hibiscus, lily of the valley, lavender, goldenrod, bluebells, icy iris, rose; all stay on grass, unlike miner's delight `flowers2:6`, which needs stone) | 12 | `minecraft:red_flower:0` | | Park flowers |
 | `Botania:flower:0` to `:15`, `Botania:shinyFlower` for lit beds | 10 | `minecraft:red_flower:0` | SP, L15 (shiny) | Mystical flowers; never spreading |
 | `Natura:GrassBlock:0` (topiary hedges and lawns, kept-up parks) | 5 | `minecraft:grass` | SP | Spawn-proof by D28's floor rule |
 | `Ztones:cleanDirt:0` (planter soil) | 4 | `minecraft:dirt` | | Planter beds |

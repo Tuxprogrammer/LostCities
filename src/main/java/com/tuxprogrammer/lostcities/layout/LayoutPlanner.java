@@ -87,6 +87,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     static final long BUILDING_X = 132897987541L;
     /** "LARGEBRG": salt of the separate large-bridge random. */
     static final long LARGE_BRIDGE_SALT = 0x4c41524745425247L;
+    /** Salt of a building's palette-variety seed ("VARIETY "), distinct from every other per-chunk draw. */
+    static final long VARIETY_SALT = 0x5641524945545920L;
     /** Salt of the separate random a capped building's roof part is drawn from (decision log D49). */
     static final long ROOF_SALT = 0x524f4f4643415050L;
     /** Highest floor block Y a building's roof part may start below: 1.7.10's {@code 256 - 2 - 6}. */
@@ -598,6 +600,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         StyleView palettes = assets
             .style(c.isCity && style != null ? style.styleName() : worldStyle.outsideStyleName());
         b.palettes = palettes == null ? new ArrayList<>() : new ArrayList<>(palettes.pickPalettes(random));
+        if (palettes != null) {
+            // Deviation (D25, M11): the palette variety, drawn from a seed of its own so the stream above is
+            // upstream's.
+            b.palettes.addAll(palettes.pickVariety(b.palettes, b.hasBuilding, varietySeed(x, z)));
+        }
         float loot = random.nextFloat();
         // Avoids LOOT-10: a multibuilding's top-left chunk rolls too, and its other chunks copy the result.
         b.noLoot = loot < profile.buildingWithoutLootChance;
@@ -1382,6 +1389,18 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      */
     QualityRandom buildingRandom(int chunkX, int chunkZ) {
         return new QualityRandom(seed + chunkZ * BUILDING_Z + chunkX * BUILDING_X);
+    }
+
+    /**
+     * Returns a chunk's palette-variety seed: a function of the world seed and the chunk alone, so a building's variety
+     * never depends on generation order (a multibuilding's chunks copy their top-left chunk's palettes).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the seed
+     */
+    long varietySeed(int x, int z) {
+        return seed ^ VARIETY_SALT ^ (long) x * BUILDING_Z ^ (long) z * BUILDING_X;
     }
 
     /** Looks up a city style, reporting an unknown name once. */
