@@ -2,7 +2,7 @@ package com.tuxprogrammer.lostcities.worldgen.height;
 
 /**
  * A bounded per-column cache in front of a height oracle that computes one column per call (RWG2's), so the plan
- * prefetcher's probe ({@link HeightProbe}) can fetch a village's ground estimate one column at a time, as
+ * prefetcher's probe ({@link HeightProbe}) can fetch a burst of columns one at a time, as
  * {@link ChunkColumnCache} lets it fetch one chunk at a time on classic RWG (docs/design/0005-rwg-overlay.md §8).
  *
  * <p>
@@ -12,7 +12,7 @@ package com.tuxprogrammer.lostcities.worldgen.height;
  */
 public final class ColumnHeightCache implements TerrainHeightOracle {
 
-    /** Columns cached: 8,192, about 100 KB; a village's ground estimate reads a few hundred. */
+    /** Columns cached: 8,192, about 100 KB; a burst of fetches reads a few hundred. */
     public static final int CAPACITY = 8192;
 
     /** Entries per set. */
@@ -30,6 +30,7 @@ public final class ColumnHeightCache implements TerrainHeightOracle {
     private final int[] heights = new int[CAPACITY];
     private final boolean[] filled = new boolean[CAPACITY];
     private final byte[] victims = new byte[SETS];
+    private long computations;
 
     /**
      * Wraps an oracle.
@@ -53,6 +54,7 @@ public final class ColumnHeightCache implements TerrainHeightOracle {
             throw probe.miss(() -> height(blockX, blockZ));
         }
         int height = oracle.height(blockX, blockZ);
+        computations++;
         int set = set(blockX, blockZ);
         int slot = set * WAYS + victim(set);
         keys[slot] = key;
@@ -64,6 +66,11 @@ public final class ColumnHeightCache implements TerrainHeightOracle {
     @Override
     public boolean isCached(int blockX, int blockZ) {
         return find(key(blockX, blockZ), blockX, blockZ) >= 0;
+    }
+
+    @Override
+    public long computations() {
+        return computations;
     }
 
     @Override

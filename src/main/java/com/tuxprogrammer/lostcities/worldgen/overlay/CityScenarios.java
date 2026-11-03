@@ -628,6 +628,9 @@ public final class CityScenarios {
         private RegionGenerator generator;
         private boolean warmedUp;
         private boolean done;
+        /** The plan cache's misses and the height cache's oracle calls when the warm-up ended. */
+        private long planMissesAtReset;
+        private long heightComputationsAtReset;
 
         @Override
         public String name() {
@@ -673,6 +676,8 @@ public final class CityScenarios {
                     .reset();
                 overlay.prefetcher()
                     .resetStats();
+                planMissesAtReset = overlay.planMisses();
+                heightComputationsAtReset = overlay.heightComputations();
                 warmedUp = true;
             }
         }
@@ -686,10 +691,12 @@ public final class CityScenarios {
                 LostCities.LOG.info("[LCNH-BUDGET] {}", line);
             }
             LostCities.LOG.info(
-                "[LCNH-BUDGET] {}, plan cache {} misses",
+                "[LCNH-BUDGET] {}, plan cache {} misses ({} after the warm-up), oracle calls after the warm-up {}",
                 overlay.prefetcher()
                     .summary(),
-                overlay.planMisses());
+                overlay.planMisses(),
+                overlay.planMisses() - planMissesAtReset,
+                overlay.heightComputations() - heightComputationsAtReset);
             StringBuilder failed = new StringBuilder();
             for (GenerationTimers.Verdict verdict : timers.budgets(overlay.cacheBytes())) {
                 LostCities.LOG.info("[LCNH-BUDGET] {}", verdict);

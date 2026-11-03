@@ -2,13 +2,13 @@ package com.tuxprogrammer.lostcities.worldgen.height;
 
 /**
  * A bounded per-chunk cache in front of a height oracle that computes whole chunks anyway (classic RWG): the first
- * column asked of a chunk fills all 256, and the rest of that chunk is an array read. The layout's chunk samples and
- * the structure oracles' ground estimates (several columns per village) then share one computation per chunk.
+ * column asked of a chunk fills all 256, and the rest of that chunk is an array read. The layout's chunk samples, the
+ * scattered planner's columns and the structure oracles' site tests then share one computation per chunk.
  *
  * <p>
  * A {@link #WAYS}-way set-associative table of {@link #CAPACITY} chunks owned by the world; eviction never changes an
- * answer, since the oracle is pure. It holds every chunk one village's ground estimate reads (about a hundred), so
- * the plan prefetcher can fetch them one at a time without a later one evicting an earlier one. While the world's
+ * answer, since the oracle is pure. It holds the few hundred chunks a burst of fetches reads, so the plan prefetcher
+ * can fetch them one at a time without a later one evicting an earlier one. While the world's
  * {@link HeightProbe} is active, a miss throws instead of computing. Not thread-safe; server thread only. Side:
  * server, and plain Java in tests.
  */
@@ -31,6 +31,7 @@ public final class ChunkColumnCache implements TerrainHeightOracle {
     private final long[] keys = new long[CAPACITY];
     private final int[][] columns = new int[CAPACITY][];
     private final byte[] victims = new byte[SETS];
+    private long computations;
 
     /**
      * Wraps an oracle, with a probe that is never active.
@@ -89,6 +90,7 @@ public final class ChunkColumnCache implements TerrainHeightOracle {
             // The key goes in after the heights, so a failing oracle leaves the slot unmatched.
             keys[slot] = Long.MIN_VALUE;
             oracle.chunkHeights(chunkX, chunkZ, heights);
+            computations++;
             keys[slot] = key(chunkX, chunkZ);
         }
         return heights[(blockX & 15) * 16 + (blockZ & 15)];
@@ -102,6 +104,11 @@ public final class ChunkColumnCache implements TerrainHeightOracle {
     @Override
     public HeightProbe probe() {
         return probe;
+    }
+
+    @Override
+    public long computations() {
+        return computations;
     }
 
     @Override
