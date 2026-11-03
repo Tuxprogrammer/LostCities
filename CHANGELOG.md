@@ -2,7 +2,7 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
-## 0.1.0-beta (unreleased)
+## 0.1.0-beta (2026-11-02)
 
 The first build for playtesting: the whole mod, unpolished, for GT New Horizons 2.9.0. Install the same jar on the server and every client, and use a new world ([README](README.md#installing)).
 
