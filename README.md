@@ -84,6 +84,7 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
   - a GregTech boulder can cut into a building;
   - highway ramps' slab half-steps contrast with the road, so ramps look striped;
   - a rail can have a gap where a junction sits under a shallow landmark.
+  - on some seeds a highway has steps taller than half a block or a step without ground under it, a railway has a broken track, or a few building doors are blocked (seen on seeds 1 and 777; seed 4242 is clean).
 - **No achievements or in-game guide yet.**
 
 Report what you find to the mod's issue tracker with the seed, world type, profile and coordinates (`/lostcities debug` at the spot helps).

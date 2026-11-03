@@ -48,6 +48,7 @@ Upstream bugs this port does not have are listed with their tests in [docs/origi
 
 - No monorails yet (deferred, D12). Highway ramps' slab half-steps contrast with the road surface, so ramps look striped; a rail can have a gap where a junction sits under a shallow landmark.
 - A village lane can rise two blocks where it crosses a chunk border.
+- On some seeds a highway has steps taller than half a block or without ground, a railway has a broken track, or a few doors are blocked (found by the three-seed checks on seeds 1 and 777; seed 4242 passes every scenario).
 - Where an AE2 meteorite's crater cuts city ground, the city ends at the pit's edge with no slope.
 - Other mods' trees beside a cabin can lean over it; a GregTech boulder can cut into a building.
 - On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region.
