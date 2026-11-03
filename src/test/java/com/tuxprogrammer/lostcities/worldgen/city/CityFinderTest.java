@@ -230,6 +230,60 @@ public class CityFinderTest {
     }
 
     @Test
+    public void theTaperViewStandsOutsideTheCityLookingAtItsCore() {
+        CityFinder finder = new CityFinder(PLAN.planner(), PLAN);
+        CityFinder.Result taper = finder.find(CityFinder.Kind.TAPER, 0, 0, 40);
+        assertNotNull(taper, "a city with open land within reach of its core");
+        com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan core = PLAN.chunk(taper.chunkX(), taper.chunkZ());
+        assertTrue(core.isCity(), "the core is city: " + taper.format());
+        CityFinder.Result center = finder.find(CityFinder.Kind.CENTER, 0, 0, 40);
+        assertTrue(
+            Math.abs(taper.chunkX() - center.chunkX()) <= CityFinder.TAPER_CORE
+                && Math.abs(taper.chunkZ() - center.chunkZ()) <= CityFinder.TAPER_CORE,
+            "the core is near the center: " + taper.format());
+        int viewChunkX = (int) Math.floor(taper.viewX()) >> 4;
+        int viewChunkZ = (int) Math.floor(taper.viewZ()) >> 4;
+        assertFalse(
+            PLAN.planner()
+                .plan(viewChunkX, viewChunkZ)
+                .isCity(),
+            "the view stands outside the city: " + taper.format());
+        double back = Math.hypot(taper.viewX() - taper.x() - 0.5, taper.viewZ() - taper.z() - 0.5);
+        assertTrue(back <= CityFinder.TAPER_MAX_BACK + 0.01, "within the render distance: " + taper.format());
+        assertTrue(taper.viewY() >= taper.y() + CityFinder.TAPER_LIFT, "above the core's ground: " + taper.format());
+        assertEquals(
+            Math.round(CityFinder.yawToward(taper.viewX(), taper.viewZ(), taper.x() + 0.5, taper.z() + 0.5)),
+            taper.yaw(),
+            0.01f,
+            "looks at the core");
+        assertTrue(taper.pitch() > -30f && taper.pitch() < 45f, "a skyline, not a map: " + taper.format());
+    }
+
+    @Test
+    public void theRampIsTheOneNearestTheCityNearestTheStart() {
+        LayoutCityPlan networks = NetworkWriterTest.networkPlan();
+        CityFinder finder = new CityFinder(networks.planner(), networks);
+        CityFinder.Result city = finder.find(CityFinder.Kind.CENTER, 0, 0, 160);
+        assertNotNull(city);
+        CityFinder.Result expected = finder.find(CityFinder.Kind.RAMP, city.x(), city.z(), 160);
+        assertNotNull(expected, "a ramp in the test world");
+        CityFinder.Result ramp = finder.nearest(CityFinder.Kind.RAMP, 0, 0, 160);
+        assertNotNull(ramp);
+        assertEquals(expected.chunkX(), ramp.chunkX(), ramp.format());
+        assertEquals(expected.chunkZ(), ramp.chunkZ(), ramp.format());
+        assertTrue(
+            ramp.label()
+                .endsWith("blocks from the city centered at " + city.x() + "," + city.z()),
+            ramp.format());
+        assertEquals(
+            finder.find(CityFinder.Kind.STREET, 0, 0, 40)
+                .format(),
+            finder.nearest(CityFinder.Kind.STREET, 0, 0, 40)
+                .format(),
+            "any other kind is the nearest");
+    }
+
+    @Test
     public void yawLooksTowardTheTarget() {
         assertEquals(0f, CityFinder.yawToward(0, 0, 0, 10), 0.01f, "south");
         assertEquals(90f, CityFinder.yawToward(0, 0, -10, 0), 0.01f, "west");

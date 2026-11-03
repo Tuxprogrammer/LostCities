@@ -39,7 +39,7 @@
         "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
       },
       "wait": 3,
-      "caption": "Building interior: the ground floor of the building nearest the spawn, looking toward its street door."
+      "caption": "Building interior: the ground floor of the building nearest the spawn, from inside a room with a wall at the back, looking along the room."
     },
     {
       "name": "edge",
@@ -109,7 +109,7 @@
         "timeout": 240
       },
       "wait": 3,
-      "caption": "Highway ramp (M06, AR-10): where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from above the ramp's edge: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
+      "caption": "Highway ramp (M06, AR-10): the ramp nearest the city near the spawn (the highway network keeps about 1,700 blocks from it on seed 4242), where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from above the ramp's edge: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
     },
     {
       "name": "station",
@@ -169,7 +169,7 @@
         "timeout": 180
       },
       "wait": 3,
-      "caption": "Tapering (AR-5): the city nearest the spawn from 48 blocks beyond its radius, low over the land; heights rise organically from low buildings and lots at the edge to the high-rise core."
+      "caption": "Tapering (AR-5): the city nearest the spawn from outside it, a little above its edge, looking at its core (the tallest building near the center); heights rise organically from low buildings and lots at the edge to the high-rise core."
     },
     {
       "name": "lot",

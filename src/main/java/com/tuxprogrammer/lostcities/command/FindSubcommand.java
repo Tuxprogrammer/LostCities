@@ -18,6 +18,7 @@ import com.tuxprogrammer.lostcities.core.DevEnvironment;
 import com.tuxprogrammer.lostcities.core.LangKeys;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFinder;
+import com.tuxprogrammer.lostcities.worldgen.city.InteriorView;
 import com.tuxprogrammer.lostcities.worldgen.city.ScatteredFinder;
 import com.tuxprogrammer.lostcities.worldgen.damage.DamageArea;
 import com.tuxprogrammer.lostcities.worldgen.damage.Explosion;
@@ -35,13 +36,21 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * radius is in chunks,
  * {@value #DEFAULT_RADIUS} by default, at most {@value #MAX_RADIUS}. With {@code best} after the radius, a soft edge,
  * reserved lot or village is the one within the radius that shows the city and the landmark together most clearly,
- * with a view framing both ({@link CityFinder#findBest}), not the nearest.
+ * with a view framing both ({@link CityFinder#findBest}), not the nearest. A ramp is the one nearest the city nearest
+ * the start ({@link CityFinder#nearest}).
+ *
+ * <p>
+ * The search starts at the sender's position: a player's, or the block (0, 0) for the server console
+ * ({@code MinecraftServer.getPlayerCoordinates}), which is where the shot runner's finds start, whatever shot came
+ * before. A search over a large radius can hold the server thread for tens of seconds (a {@code best} search over 200
+ * chunks on classic RWG, about 20 to 30 s), so the shot runner resolves every find before its client joins.
  *
  * <p>
  * Output: one chat line (a lang key), and one log line for automation:
  * {@code [LCNH-FIND] kind=interior block=X,Y,Z chunk=CX,CZ view=X,Y,Z,YAW,PITCH label=...}, whose view feeds
- * {@code /lostcities view <player> X Y Z YAW PITCH}. For a street or an interior the viewpoint is moved to the nearest
- * two-block air space with a floor on the walking level, reading the generated chunk (a command may load chunks).
+ * {@code /lostcities view <player> X Y Z YAW PITCH}. For a street the viewpoint is moved to the nearest two-block air
+ * space on the walking level, and for an interior into the ground floor's room, back to a wall and looking along the
+ * room ({@link InteriorView}), reading the generated chunk (a command may load chunks).
  *
  * <p>
  * Side: server.
@@ -93,14 +102,16 @@ public final class FindSubcommand implements Subcommand {
             overlay.cities()
                 .structures()).withRepairs((cx, cz) -> repaired(overlay, cx, cz));
         CityFinder.Result result = best ? finder.findBest(kind, at.posX, at.posZ, radius)
-            : finder.find(kind, at.posX, at.posZ, radius);
+            : finder.nearest(kind, at.posX, at.posZ, radius);
         if (result == null) {
             LostCities.LOG.info("{}kind={} none within {} chunks", TAG, kind.key(), radius);
             sender.addChatMessage(new ChatComponentTranslation(LangKeys.FIND_NONE, kind.key(), radius));
             return;
         }
-        if (kind == CityFinder.Kind.STREET || kind == CityFinder.Kind.INTERIOR) {
-            result = standingRoom(world, result, kind == CityFinder.Kind.INTERIOR);
+        if (kind == CityFinder.Kind.INTERIOR) {
+            result = insideRoom(world, result);
+        } else if (kind == CityFinder.Kind.STREET) {
+            result = standingRoom(world, result, false);
         }
         LostCities.LOG.info(TAG + result.format());
         sender.addChatMessage(
@@ -175,6 +186,27 @@ public final class FindSubcommand implements Subcommand {
                 format(result.viewZ()),
                 format(result.yaw()),
                 format(result.pitch())));
+    }
+
+    /**
+     * Moves an interior viewpoint into the building's ground floor with its back to a wall, looking along the longest
+     * stretch of open room ({@link InteriorView}); where no spot looks into a room, the nearest standing room instead.
+     */
+    static CityFinder.Result insideRoom(World world, CityFinder.Result result) {
+        world.getChunkFromChunkCoords(result.chunkX(), result.chunkZ());
+        int feet = (int) Math.floor(result.viewY());
+        InteriorView view = InteriorView
+            .choose(world::isAirBlock, result.chunkX(), result.chunkZ(), feet, result.viewX(), result.viewZ());
+        if (view == null) {
+            return standingRoom(world, result, true);
+        }
+        return result.withView(
+            view.x(),
+            feet,
+            view.z(),
+            view.yaw(),
+            view.pitch(),
+            result.label() + String.format(Locale.ROOT, ", room open %.0f blocks ahead", view.run()));
     }
 
     /**
