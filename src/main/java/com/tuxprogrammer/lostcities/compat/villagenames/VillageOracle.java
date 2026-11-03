@@ -25,7 +25,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * VillageNames' spawn-biome list, and its plan ({@link VillagePlans}) is sizeable. The landmark is
  * {@code village@<chunkX>,<chunkZ>} of kind {@link LandmarkKind#VILLAGE}, certainty {@link Certainty#EXACT}: its
  * footprint is every piece's box, its gates are {@link VillageGates}' and its ground is {@link GroundEstimates}'
- * median over the buildings.
+ * median over the buildings, computed when first read (only the finder and the scenarios read it).
  *
  * <p>
  * Pure, as {@link StructureOracle} requires: each start's answer is cached in a bounded cache, but the answer never
@@ -52,7 +52,7 @@ public final class VillageOracle implements StructureOracle {
     public static final int REACH_CHUNKS = 11;
     /** Starts kept in the cache: a layout query covers at most about nine grid cells. */
     public static final int CACHE_SIZE = 256;
-    /** Village plans kept for retries of a prediction whose ground estimate a probe abandoned. */
+    /** Village plans kept for the retry of a prediction a probe abandoned while its plan was fetched. */
     static final int PLAN_CACHE_SIZE = 16;
 
     /** Why a start chunk is or is not a village; for the scenario's report. */
@@ -128,8 +128,8 @@ public final class VillageOracle implements StructureOracle {
     private final BoundedCache<Prediction> cache;
     /**
      * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}): a plan prefetcher's probe (0005 §8)
-     * abandons a prediction at its first ground sample that is not cached and asks again once it is, and VillageNames'
-     * start constructor must not run again on every retry.
+     * abandons a prediction whose plan is not built, fetches the plan alone and asks again, and VillageNames' start
+     * constructor must not run again on the retry.
      */
     private final BoundedCache<VillagePlan> planCache = new BoundedCache<>(PLAN_CACHE_SIZE);
     /** The probe that guards the height oracle's cache; while it is active, a plan not built yet is fetched apart. */
@@ -257,7 +257,8 @@ public final class VillageOracle implements StructureOracle {
         for (Gate gate : VillageGates.find(plan.pieces(), gateClearance)) {
             builder.gate(gate);
         }
-        return builder.groundEstimate(GroundEstimates.median(heights, buildings))
+        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        return builder.groundEstimate(() -> GroundEstimates.median(heights, buildings))
             .build();
     }
 

@@ -3,11 +3,19 @@ package com.tuxprogrammer.lostcities.layout.landmark;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.IntSupplier;
 
 /**
  * Another generator's structure the layout knows about, as 0006 §1 defines it: its kind, a footprint of one or more
  * block rectangles, how certain the footprint is, an estimate of its ground height from the height oracle, a village's
  * gates and a meteorite's height cap. Immutable; per-mod structure oracles in {@code compat} build it.
+ *
+ * <p>
+ * The ground estimate may be given as a pure computation that runs on its first read
+ * ({@link Builder#groundEstimate(IntSupplier)}): no generation step reads it, only the finder's views and the
+ * scenarios do, so a landmark the layout meets during generation never pays for the height samples behind it
+ * (docs/design/0005-rwg-overlay.md §8, decision log D-PF-1). Read it on the server thread, like every height oracle.
  *
  * <p>
  * Side: both.
@@ -18,7 +26,9 @@ public final class Landmark {
     private final LandmarkKind kind;
     private final List<BlockRect> footprint;
     private final Certainty certainty;
-    private final int groundEstimate;
+    /** The estimate's computation until it is first read; {@code null} once {@link #groundEstimate} holds it. */
+    private IntSupplier groundSource;
+    private int groundEstimate;
     private final List<Gate> gates;
     private final HeightCap heightCap;
 
@@ -28,6 +38,7 @@ public final class Landmark {
         this.footprint = Collections.unmodifiableList(new ArrayList<>(builder.footprint));
         this.certainty = builder.certainty;
         this.groundEstimate = builder.groundEstimate;
+        this.groundSource = builder.groundSource;
         this.gates = Collections.unmodifiableList(new ArrayList<>(builder.gates));
         this.heightCap = builder.heightCap;
     }
@@ -64,8 +75,17 @@ public final class Landmark {
         return certainty;
     }
 
-    /** Returns the oracle's estimate of the landmark's ground height, block Y. */
+    /**
+     * Returns the oracle's estimate of the landmark's ground height, block Y. A lazily given estimate is computed on
+     * the first call and kept; its computation is pure, so every call answers the same.
+     */
     public int groundEstimate() {
+        IntSupplier source = groundSource;
+        if (source != null) {
+            // Kept only once complete: a height probe abandoning the computation leaves it to the next read.
+            groundEstimate = source.getAsInt();
+            groundSource = null;
+        }
         return groundEstimate;
     }
 
@@ -133,6 +153,7 @@ public final class Landmark {
         private final List<BlockRect> footprint = new ArrayList<>();
         private Certainty certainty = Certainty.EXACT;
         private int groundEstimate;
+        private IntSupplier groundSource;
         private final List<Gate> gates = new ArrayList<>();
         private HeightCap heightCap;
 
@@ -171,6 +192,19 @@ public final class Landmark {
          */
         public Builder groundEstimate(int y) {
             groundEstimate = y;
+            groundSource = null;
+            return this;
+        }
+
+        /**
+         * Sets the ground estimate as a pure computation, run on the estimate's first read
+         * ({@link Landmark#groundEstimate()}) rather than when the landmark is built.
+         *
+         * @param source computes the block Y; pure, and run on the server thread
+         * @return this builder
+         */
+        public Builder groundEstimate(IntSupplier source) {
+            groundSource = Objects.requireNonNull(source);
             return this;
         }
 

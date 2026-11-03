@@ -311,7 +311,7 @@ class VillageOracleTest {
     }
 
     @Test
-    void aGroundEstimateAbandonedMidwayDoesNotPlanTheVillageAgain() {
+    void theGroundEstimateWaitsForItsFirstReadAndSurvivesAnAbandonedRead() {
         Set<Long> known = new HashSet<>();
         TerrainHeightOracle retryingHeights = (x, z) -> {
             if (known.add(BoundedCache.key(x, z))) {
@@ -328,23 +328,22 @@ class VillageOracleTest {
             retryingHeights,
             2,
             VillageOracle.CACHE_SIZE);
-        List<Landmark> answer = null;
-        for (int attempt = 0; attempt < 10_000 && answer == null; attempt++) {
+        List<Landmark> answer = oracle.landmarksTouching(-150, -150, 150, 150);
+        assertTrue(known.isEmpty(), "no height is read before a ground estimate is (D-PF-1)");
+        assertEquals(plans.asked.size(), plans.calls, "each village planned once");
+        List<String> described = null;
+        for (int attempt = 0; attempt < 10_000 && described == null; attempt++) {
             try {
-                answer = oracle.landmarksTouching(-150, -150, 150, 150);
+                described = describeAll(answer);
             } catch (NotYet abandoned) {
-                // The prefetcher fetches the column and asks again.
+                // The height is fetched and the estimate asked again.
             }
         }
-        assertNotNull(answer);
-        assertEquals(
-            plans.asked.size(),
-            plans.calls,
-            "each village planned once, however often its ground was abandoned");
+        assertNotNull(described);
         assertEquals(
             describeAll(oracle(new FakePlans(), VillageOracle.CACHE_SIZE).landmarksTouching(-150, -150, 150, 150)),
-            describeAll(answer),
-            "the same landmarks as an oracle that never abandons");
+            described,
+            "the same landmarks and grounds as an oracle that never abandons");
     }
 
     @Test

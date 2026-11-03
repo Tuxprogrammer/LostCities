@@ -23,7 +23,8 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * ({@code StructureGenerator.doGenDungeon}). The landmark is {@code lootgames@<cx>,<cz>} of kind
  * {@link LandmarkKind#LOOTGAMES}, certainty {@link Certainty#EXACT}, footprint the room
  * {@code [16 cx − 2, 16 cx + 18] × [16 cz − 2, 16 cz + 18]} and the tunnel {@code x = 16 cx + 8},
- * {@code z = 16 cz + 19 … 16 cz + 33}, ground estimate the median oracle height over the room. A site where LootGames
+ * {@code z = 16 cz + 19 … 16 cz + 33}, ground estimate the median oracle height over the room, computed when first
+ * read (only the finder and the scenarios read it). A site where LootGames
  * finds no level or meets a tile entity in the room stays natural ground (0006 §5); a city chest or spawner could
  * never stop it, since the core has none.
  *
@@ -122,7 +123,8 @@ public final class LootGamesOracle implements StructureOracle {
             .footprint(room)
             .footprint(tunnel)
             .certainty(Certainty.EXACT)
-            .groundEstimate(ground(chunkX, chunkZ, room))
+            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            .groundEstimate(() -> ground(chunkX, chunkZ, room))
             .build();
     }
 
@@ -140,7 +142,7 @@ public final class LootGamesOracle implements StructureOracle {
     }
 
     /** The median oracle height at the room's center and corners. */
-    private int ground(int chunkX, int chunkZ, BlockRect room) {
+    private synchronized int ground(int chunkX, int chunkZ, BlockRect room) {
         if (heights == null) {
             return FALLBACK_Y;
         }

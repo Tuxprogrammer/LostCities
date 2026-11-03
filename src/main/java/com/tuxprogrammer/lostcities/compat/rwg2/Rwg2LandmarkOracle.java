@@ -48,7 +48,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * overlapping footprints, whose cores join.</li>
  * </ul>
  * Certainty is {@link Certainty#EXACT}: the terrain is RWG2's, from the same functions. The ground estimate is the
- * height oracle's median over the footprint's bounds.
+ * height oracle's median over the footprint's bounds, computed when first read.
  *
  * <p>
  * Pure: answers depend only on the predicates ({@link Rwg2Landforms}, a function of the world seed and RWG2's config)
@@ -233,8 +233,9 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
         for (BlockRect row : rows) {
             builder.footprint(row);
         }
-        Landmark built = builder
-            .groundEstimate(GroundEstimates.median(heights, Collections.singletonList(bounds(rows))))
+        List<BlockRect> groundBox = Collections.singletonList(bounds(rows));
+        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        Landmark built = builder.groundEstimate(() -> GroundEstimates.median(heights, groundBox))
             .build();
         return cache.put(center, built);
     }
@@ -447,8 +448,9 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
         for (BlockRect rect : rects) {
             builder.footprint(rect);
         }
-        Landmark built = builder
-            .groundEstimate(GroundEstimates.median(heights, Collections.singletonList(bounds(rects))))
+        List<BlockRect> groundBox = Collections.singletonList(bounds(rects));
+        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        Landmark built = builder.groundEstimate(() -> GroundEstimates.median(heights, groundBox))
             .build();
         return junctions.put(peak, built);
     }

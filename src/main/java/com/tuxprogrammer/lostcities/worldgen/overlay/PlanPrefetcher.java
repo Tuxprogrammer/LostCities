@@ -10,8 +10,8 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 
 /**
  * Plans chunks a little ahead of generation, a few height samples per server tick, so the burst of samples a layout
- * cell needs when it first meets new ground (a village's lanes, a multibuilding area, a village's ground estimate)
- * is not paid inside one chunk's terrain phase (docs/design/0005-rwg-overlay.md §8, budget B4).
+ * cell needs when it first meets new ground (a village's lanes, a multibuilding area, a scattered structure's
+ * surroundings) is not paid inside one chunk's terrain phase (docs/design/0005-rwg-overlay.md §8, budget B4).
  *
  * <ul>
  * <li>Targets: every chunk {@link #LEAD} chunks (Chebyshev distance) from a chunk the overlay just generated, newest
@@ -53,9 +53,8 @@ public final class PlanPrefetcher {
 
     /**
      * Fetches one target may need before it is planned without the probe instead: a guard against two values that
-     * keep evicting each other. A village's ground estimate reads about a hundred chunks; the first target in a fresh
-     * highway planning region needs a step per hub cell and per height those cells read, up to a few thousand
-     * (M06, {@code NetworkGate}).
+     * keep evicting each other. The first target in a fresh highway planning region needs a step per hub cell and
+     * per height those cells read, up to a few thousand (M06, {@code NetworkGate}).
      */
     static final int MAX_FETCHES_PER_TARGET = 8192;
     /** A fetch longer than this is named in the budget report by the class that asked for it, nanoseconds. */
