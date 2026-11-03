@@ -35,7 +35,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * landmark {@code witchery@<chunkX>,<chunkZ>} is of kind {@link LandmarkKind#WITCHERY}, certainty
  * {@link Certainty#UNION}, its footprint the union of every enabled type's box in every facing
  * ({@link WitcherySettings#unionOffsets()}: 23 × 23 blocks, offsets −9 to +13), and its ground the height oracle's
- * median over that lot.
+ * median over that lot, computed when first read (only the finder and the scenarios read it).
  *
  * <p>
  * RWG2's mixin on {@code WitcheryComponent.calcGroundHeight} can still cancel a structure, on uneven or hollow ground
@@ -156,7 +156,7 @@ public final class WitcheryOracle implements StructureOracle {
                 // Up to 441 biome samples: the plan prefetcher fetches them apart (0005 §8, B4).
                 throw probe.miss(() -> structureAt(chunkX, chunkZ));
             }
-            // Computed whole before it is cached: a height probe abandoning the ground estimate leaves nothing.
+            // Computed whole before it is cached; the ground estimate waits for its first read.
             cached = cache.put(key, compute(chunkX, chunkZ));
         }
         return cached == NONE ? null : cached;
@@ -206,7 +206,8 @@ public final class WitcheryOracle implements StructureOracle {
         return Landmark.builder(id(chunkX, chunkZ), LandmarkKind.WITCHERY)
             .footprint(lot)
             .certainty(Certainty.UNION)
-            .groundEstimate(GroundEstimates.median(heights, Collections.singletonList(lot)))
+            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            .groundEstimate(() -> GroundEstimates.median(heights, Collections.singletonList(lot)))
             .build();
     }
 

@@ -21,7 +21,7 @@ import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
  * when its biomes pass VillageNames' name test ({@link MonumentGrid#siteAccepts}). The landmark is
  * {@code monument@<chunkX>,<chunkZ>} of kind {@link LandmarkKind#OCEAN_MONUMENT}, certainty {@link Certainty#EXACT},
  * its footprint the 58 × 58 building ({@link MonumentGrid#footprint}) and its ground the height oracle's median over
- * it (the sea floor). Pure and cached like {@link VillageOracle}.
+ * it (the sea floor), computed when first read. Pure and cached like {@link VillageOracle}.
  *
  * <p>
  * Side: server (world generation), and plain Java in tests.
@@ -119,11 +119,11 @@ public final class MonumentOracle implements StructureOracle {
             return NONE;
         }
         BlockRect box = MonumentGrid.footprint(chunkX, chunkZ);
-        int ground = GroundEstimates.median(heights, Collections.singletonList(box));
         return Landmark.builder(id(chunkX, chunkZ), LandmarkKind.OCEAN_MONUMENT)
             .footprint(box)
             .certainty(Certainty.EXACT)
-            .groundEstimate(ground)
+            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            .groundEstimate(() -> GroundEstimates.median(heights, Collections.singletonList(box)))
             .build();
     }
 

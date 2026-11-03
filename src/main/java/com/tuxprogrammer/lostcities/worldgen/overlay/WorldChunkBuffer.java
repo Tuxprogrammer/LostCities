@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
@@ -108,6 +109,10 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             }
             section = new ExtendedBlockStorage(y & ~15, sky);
             sections[y >> 4] = section;
+        } else if (block.isAir() && holdsAir(section, x, y & 15, z, block.meta())) {
+            // Air over air changes nothing (D-PF-2): a building's interior air and a cleared range above the ground
+            // mostly meet air, and the section setter's block-ID lookup is most of a write's cost.
+            return;
         }
         if (!block.isAir() && y > topY) {
             topY = (y & ~15) + 15;
@@ -136,6 +141,11 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     /** Returns whether the chunk was written since it was attached, so its height map and sky light are stale. */
     public boolean needsLight() {
         return writes > 0;
+    }
+
+    /** Returns whether a section position holds air with the given metadata. */
+    private static boolean holdsAir(ExtendedBlockStorage section, int x, int y, int z, int meta) {
+        return section.getBlockByExtId(x, y, z) == Blocks.air && section.getExtBlockMetadata(x, y, z) == meta;
     }
 
     private static void check(int x, int y, int z) {

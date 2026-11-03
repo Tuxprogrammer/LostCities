@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.asset.transform.Transform;
+import com.tuxprogrammer.lostcities.layout.ChunkKeys;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlan;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.view.ScatteredView;
@@ -147,7 +148,7 @@ final class ScatteredContent {
      * @return the fit
      */
     GroundFit fit(ScatteredPlan plan) {
-        long key = ((long) plan.areaX() << 32) ^ (plan.areaZ() & 0xffffffffL);
+        long key = ChunkKeys.of(plan.areaX(), plan.areaZ());
         GroundFit[] cached = fits.get(key, ignored -> {
             GroundFit made = makeFit(plan);
             return made == null ? NO_FIT : new GroundFit[] { made };

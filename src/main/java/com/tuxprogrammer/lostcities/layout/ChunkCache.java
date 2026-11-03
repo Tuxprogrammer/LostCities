@@ -39,12 +39,12 @@ final class ChunkCache<V> {
 
     /** Returns the value for a coordinate pair, or {@code null}. */
     V get(int x, int z) {
-        return entries.get(key(x, z));
+        return entries.get(ChunkKeys.of(x, z));
     }
 
     /** Stores the value for a coordinate pair and returns it. */
     V put(int x, int z, V value) {
-        entries.put(key(x, z), value);
+        entries.put(ChunkKeys.of(x, z), value);
         return value;
     }
 
@@ -53,6 +53,15 @@ final class ChunkCache<V> {
         return entries.size();
     }
 
+    /**
+     * Returns the plain packing of a pair, {@code x << 32 ^ z}: the facade planner hashes it into a unit's priority and
+     * the sewing keys its lane cells by it, so it must never change. The cache's own map is keyed by
+     * {@link ChunkKeys#of}, which spreads over hash buckets (D-PF-3).
+     *
+     * @param x chunk or cell X
+     * @param z chunk or cell Z
+     * @return the packed pair
+     */
     static long key(int x, int z) {
         return ((long) x << 32) ^ (z & 0xffffffffL);
     }

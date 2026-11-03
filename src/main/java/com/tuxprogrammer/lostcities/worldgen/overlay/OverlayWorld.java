@@ -503,6 +503,14 @@ public final class OverlayWorld {
         return plan.misses();
     }
 
+    /**
+     * Returns how many times the height cache in front of the oracle has asked it: whole chunks on classic RWG,
+     * columns on RWG2, for the budget report.
+     */
+    public long heightComputations() {
+        return columns.computations();
+    }
+
     /** Returns the plan prefetcher. */
     public PlanPrefetcher prefetcher() {
         return prefetcher;

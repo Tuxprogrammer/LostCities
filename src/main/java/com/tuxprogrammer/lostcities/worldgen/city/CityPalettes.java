@@ -39,14 +39,21 @@ public final class CityPalettes {
     public static final int CHUNK_CAPACITY = 128;
     /** Part palettes kept: parts with their own palette over the chunk palettes in use. */
     public static final int PART_CAPACITY = 128;
-    /** Style blocks kept, one per chunk palette and city style. */
-    public static final int STYLE_CAPACITY = 128;
+    /**
+     * Style blocks kept: one per cached chunk palette, the last city style asked of it (a chunk palette's names come
+     * from its city style, so it is nearly always asked for one; D-PF-4).
+     */
+    public static final int STYLE_CAPACITY = CHUNK_CAPACITY;
 
     /** A compiled chunk palette with the key it is cached under. */
     public static final class ChunkPalette {
 
         private final String key;
         private final CompiledPalette palette;
+        /** The city style {@link #style} was built for, by identity; meaningful once {@link #styled}. */
+        private CityStyle styleOf;
+        private StyleBlocks style;
+        private boolean styled;
 
         ChunkPalette(String key, CompiledPalette palette) {
             this.key = key;
@@ -70,7 +77,6 @@ public final class CityPalettes {
     private final BlockRef liquid;
     private final LruCache<String, ChunkPalette> chunks = new LruCache<>(CHUNK_CAPACITY);
     private final LruCache<String, CompiledPalette> parts = new LruCache<>(PART_CAPACITY);
-    private final LruCache<String, StyleBlocks> styles = new LruCache<>(STYLE_CAPACITY);
 
     /**
      * Creates the caches of one world, with upstream's base and liquid blocks (stone and water).
@@ -156,7 +162,7 @@ public final class CityPalettes {
     /**
      * Returns the terrain blocks of a chunk: the city style's border, wall, iron bars, leaves and rubble characters and
      * the building's filler and rubble, resolved through the chunk palette; vanilla defaults where a character is
-     * unset or undefined.
+     * unset or undefined. Kept on the chunk palette for the last city style asked of it.
      *
      * @param chunk     the chunk palette
      * @param cityStyle the city style, or {@code null}
@@ -164,8 +170,16 @@ public final class CityPalettes {
      * @return the style blocks
      */
     public StyleBlocks styleBlocks(ChunkPalette chunk, CityStyle cityStyle, Building building) {
-        String key = chunk.key() + "|" + (cityStyle == null ? "" : cityStyle.id());
-        return styles.get(key, k -> buildStyle(chunk.palette(), cityStyle, building));
+        // Kept on the chunk palette for the last city style asked of it: the building is part of the palette's key,
+        // and the loaded assets give one object per city style.
+        if (chunk.styled && chunk.styleOf == cityStyle) {
+            return chunk.style;
+        }
+        StyleBlocks built = buildStyle(chunk.palette(), cityStyle, building);
+        chunk.styleOf = cityStyle;
+        chunk.style = built;
+        chunk.styled = true;
+        return built;
     }
 
     private StyleBlocks buildStyle(CompiledPalette palette, CityStyle cityStyle, Building building) {
@@ -289,7 +303,6 @@ public final class CityPalettes {
     public void clear() {
         chunks.clear();
         parts.clear();
-        styles.clear();
     }
 
     /** Returns the id of a full or bare asset name, or {@code null} for a malformed one. */

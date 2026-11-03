@@ -52,4 +52,11 @@ public class ChunkCacheTest {
         assertNotEquals(ChunkCache.key(-1, 0), ChunkCache.key(0, -1));
         assertNotEquals(ChunkCache.key(-1, -1), ChunkCache.key(0, -1));
     }
+
+    @Test
+    public void theKeyStaysThePlainPackingBecauseTheFacadePlannerHashesIt() {
+        // FacadePlanner mixes ChunkCache.key into a unit's priority: changing it would change generated facades.
+        assertEquals((3L << 32) ^ (-5 & 0xffffffffL), ChunkCache.key(3, -5));
+        assertEquals((-7L << 32) ^ 11L, ChunkCache.key(-7, 11));
+    }
 }

@@ -253,6 +253,7 @@ public final class PartWriter {
         boolean ceilings = placement.interior && palette.isDefined(PaletteVariety.CEILING);
         boolean lights = placement.interior && palette.isDefined(PaletteVariety.CEILING_LIGHT);
         boolean interior = floors || ceilings || lights;
+        boolean dryRun = target.dryRun();
         for (int x = 0; x < part.xsize(); x++) {
             for (int z = 0; z < part.zsize(); z++) {
                 char[] column = part.column(x, z);
@@ -275,6 +276,9 @@ public final class PartWriter {
                     }
                     int worldY = placement.oy + y;
                     if (worldY < WorldLimits.MIN_Y || worldY > WorldLimits.MAX_Y) {
+                        continue;
+                    }
+                    if (dryRun && skipsInDryRun(palette, c)) {
                         continue;
                     }
                     placeOne(placement, palette, c, rx, worldY, rz, nowater, forcedAir);
@@ -301,6 +305,7 @@ public final class PartWriter {
         CompiledPalette palette = placement.palette;
         boolean nowater = part.metaBoolean(Part.MetaKey.NOWATER);
         boolean forcedAir = part.metaBoolean(Part.MetaKey.FORCEDAIR);
+        boolean dryRun = target.dryRun();
         for (int x = 0; x < part.xsize(); x++) {
             int shift = x < shifts.length ? shifts[x] : 0;
             for (int z = 0; z < part.zsize(); z++) {
@@ -322,6 +327,9 @@ public final class PartWriter {
                     if (worldY < WorldLimits.MIN_Y || worldY > WorldLimits.MAX_Y) {
                         continue;
                     }
+                    if (dryRun && skipsInDryRun(palette, c)) {
+                        continue;
+                    }
                     placeOne(placement, palette, c, rx, worldY, rz, nowater, forcedAir);
                 }
             }
@@ -336,6 +344,22 @@ public final class PartWriter {
      */
     public void onPlace(java.util.function.Consumer<Placement> value) {
         listener = value;
+    }
+
+    /**
+     * Returns whether the population's dry run may pass over a character (D-PF-5): one that can list no job only sets
+     * blocks, which a dry run's target drops. Its palette draw is still taken, so the draws of the characters after it
+     * are the real write's; an undefined character draws nothing, as in {@link #placeOne}, and its warning comes from
+     * the real write.
+     */
+    private boolean skipsInDryRun(CompiledPalette palette, char c) {
+        if (palette.mayMakeJob(c)) {
+            return false;
+        }
+        if (palette.isRandom(c)) {
+            sequence.next();
+        }
+        return true;
     }
 
     private void placeOne(Placement placement, CompiledPalette palette, char c, int x, int y, int z, boolean nowater,

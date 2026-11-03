@@ -62,6 +62,16 @@ public interface TerrainHeightOracle {
     }
 
     /**
+     * Returns how many times a cache in front of an oracle has asked it, for the budget report (0005 §8): whole chunks
+     * for {@link ChunkColumnCache}, columns for {@link ColumnHeightCache}.
+     *
+     * @return the count; 0 for an oracle that is not such a cache
+     */
+    default long computations() {
+        return 0;
+    }
+
+    /**
      * Fills the heights of every column of a chunk, index {@code x × 16 + z}.
      *
      * @param chunkX chunk X

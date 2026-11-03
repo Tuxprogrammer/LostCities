@@ -2,12 +2,16 @@ package com.tuxprogrammer.lostcities.worldgen.terrain;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.TestTerrain;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
+import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
 
 /** Upstream's column operations, against docs/original-spec/03-terrain/city-chunk-terrain.md. */
 public class ColumnOpsTest {
@@ -123,5 +127,83 @@ public class ColumnOpsTest {
         assertDoesNotThrow(() -> ColumnOps.clearRange(buffer, 0, 0, -20, 300, false, 63, TestTerrain.WATER));
         assertDoesNotThrow(() -> ColumnOps.fill(buffer, 0, 0, -5, 512, STONE));
         assertEquals(STONE, buffer.get(0, WorldLimits.MAX_Y, 0));
+    }
+
+    /** Counts the writes a buffer receives. */
+    private static final class CountingBuffer implements ChunkBuffer {
+
+        final ArrayChunkBuffer inner;
+        int writes;
+
+        CountingBuffer(ArrayChunkBuffer inner) {
+            this.inner = inner;
+        }
+
+        @Override
+        public BlockRef get(int x, int y, int z) {
+            return inner.get(x, y, z);
+        }
+
+        @Override
+        public void set(int x, int y, int z, BlockRef block) {
+            writes++;
+            inner.set(x, y, z, block);
+        }
+    }
+
+    /** The copy as upstream writes it, every row: what moveUp must leave in the buffer. */
+    private static void moveUpEveryRow(ChunkBuffer buffer, int height) {
+        int y = Math.min(height, WorldLimits.MAX_Y);
+        while (y > WorldLimits.MIN_Y && CLASSES.isFoliageOrEmpty(buffer.get(0, y, 0))) {
+            y--;
+        }
+        if (y >= height) {
+            return;
+        }
+        int target = Math.min(height, WorldLimits.MAX_Y);
+        for (int source = y; source > WorldLimits.MIN_Y && target >= WorldLimits.MIN_Y; source--) {
+            BlockRef block = buffer.get(0, source, 0);
+            if (block.isAir() || (CLASSES.flags(block) & BlockClassifier.BEDROCK) != 0) {
+                break;
+            }
+            buffer.set(0, target, 0, block);
+            target--;
+        }
+    }
+
+    @Test
+    public void moveUpLeavesTheSameColumnAsWritingEveryRow() {
+        BlockRef[] kinds = { STONE, STONE, STONE, TestTerrain.DIRT, TestTerrain.SAND, BlockRef.AIR };
+        Random random = new Random(4242);
+        for (int trial = 0; trial < 500; trial++) {
+            int top = 20 + random.nextInt(200);
+            ArrayChunkBuffer expected = column(top, TestTerrain.GRASS);
+            ArrayChunkBuffer actual = column(top, TestTerrain.GRASS);
+            for (int y = 5; y < top; y++) {
+                if (random.nextInt(8) == 0) {
+                    BlockRef block = kinds[random.nextInt(kinds.length)];
+                    expected.set(0, y, 0, block);
+                    actual.set(0, y, 0, block);
+                }
+            }
+            int height = top - 3 + random.nextInt(60);
+            moveUpEveryRow(expected, height);
+            ColumnOps.moveUp(actual, CLASSES, 0, 0, height);
+            for (int y = 0; y < WorldLimits.BUILD_HEIGHT; y++) {
+                assertEquals(expected.get(0, y, 0), actual.get(0, y, 0), "trial " + trial + " at " + y);
+            }
+        }
+    }
+
+    @Test
+    public void moveUpWritesOnlyTheRowsThatChange() {
+        CountingBuffer buffer = new CountingBuffer(column(64, TestTerrain.GRASS));
+        ColumnOps.moveUp(buffer, CLASSES, 0, 0, 67);
+        assertEquals(TestTerrain.GRASS, buffer.get(0, 67, 0));
+        assertEquals(STONE, buffer.get(0, 64, 0));
+        // Rows 65 to 67 were air, row 64 was grass: the stone below only meets more stone.
+        assertTrue(
+            buffer.writes <= 4,
+            "a stone column raised by three writes its top four rows, wrote " + buffer.writes);
     }
 }

@@ -84,4 +84,31 @@ public class CityPalettesTest {
                 CityFixtures.ASSETS.cityStyle(AssetId.parse("citystyle_standard")),
                 CityFixtures.ASSETS.building(AssetId.parse("building1"))));
     }
+
+    @Test
+    public void aChunkPaletteAskedForAnotherCityStyleAnswersAsAFreshCacheWould() {
+        CityPalettes palettes = new CityPalettes(CityFixtures.ASSETS, MetalFlags.ALL_ON);
+        CityPalettes.ChunkPalette chunk = palettes
+            .chunk(Arrays.asList("lostcities:common", "lostcities:default"), "lostcities:building1");
+        com.tuxprogrammer.lostcities.asset.model.CityStyle standard = CityFixtures.ASSETS
+            .cityStyle(AssetId.parse("citystyle_standard"));
+        com.tuxprogrammer.lostcities.asset.model.Building building = CityFixtures.ASSETS
+            .building(AssetId.parse("building1"));
+        StyleBlocks withStyle = palettes.styleBlocks(chunk, standard, building);
+        StyleBlocks without = palettes.styleBlocks(chunk, null, building);
+        StyleBlocks again = palettes.styleBlocks(chunk, standard, building);
+        CityPalettes fresh = new CityPalettes(CityFixtures.ASSETS, MetalFlags.ALL_ON);
+        CityPalettes.ChunkPalette freshChunk = fresh
+            .chunk(Arrays.asList("lostcities:common", "lostcities:default"), "lostcities:building1");
+        assertEquals(withStyle.border(), again.border());
+        assertEquals(withStyle.leaves(), again.leaves());
+        assertEquals(
+            fresh.styleBlocks(freshChunk, null, building)
+                .border(),
+            without.border());
+        assertEquals(
+            fresh.styleBlocks(freshChunk, null, building)
+                .leaves(),
+            without.leaves());
+    }
 }
