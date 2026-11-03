@@ -53,3 +53,4 @@ __pycache__/
 
 # Local review renders and contact sheets (decision log D25), never committed
 /docs/previews/
+# Local settings and secrets (see .env.example)
