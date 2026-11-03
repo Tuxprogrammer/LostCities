@@ -27,10 +27,17 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
  * </ul>
  *
  * <p>
- * Each operation reads and writes only the given column of one chunk buffer and allocates nothing.
+ * Each operation reads and writes only the given column of one chunk buffer and allocates nothing. {@code moveUp}
+ * leaves out a write whose position already holds the block (D-PF-2): raising a column copies it down to bedrock or a
+ * cave, and most of that copy is stone onto stone, so only the rows where the column changes are written. The blocks
+ * that end up in the buffer are the same.
  * Side: both (plain Java).
  */
 public final class ColumnOps {
+
+    /** Per thread, the blocks {@code moveUp} has read in the column it is raising, indexed by Y. */
+    private static final ThreadLocal<BlockRef[]> READ = ThreadLocal
+        .withInitial(() -> new BlockRef[WorldLimits.BUILD_HEIGHT]);
 
     /** Returned by {@link #moveDown} and {@link #moveUp} when they changed nothing (upstream's sentinel). */
     public static final int NOT_TOUCHED = Short.MIN_VALUE;
@@ -140,15 +147,23 @@ public final class ColumnOps {
         }
         int touched = NOT_TOUCHED;
         int target = Math.min(height, WorldLimits.MAX_Y);
+        BlockRef[] read = READ.get();
         for (int source = y; source > WorldLimits.MIN_Y && target >= WorldLimits.MIN_Y; source--) {
             BlockRef block = buffer.get(x, source, z);
+            read[source - WorldLimits.MIN_Y] = block;
             if (block.isAir() || (classes.flags(block) & BlockClassifier.BEDROCK) != 0) {
                 break;
             }
             if (touched == NOT_TOUCHED) {
                 touched = source;
             }
-            buffer.set(x, target, z, block);
+            // A target at or below y was read as a source earlier in this loop (target >= source) and has not been
+            // written since (every earlier write went higher), so read[target] is what it holds now.
+            // Block references are canonical, so the same block is the same reference; a copy that compares unequal
+            // is written, which is always right.
+            if (target > y || block != read[target - WorldLimits.MIN_Y]) {
+                buffer.set(x, target, z, block);
+            }
             target--;
         }
         return touched;
