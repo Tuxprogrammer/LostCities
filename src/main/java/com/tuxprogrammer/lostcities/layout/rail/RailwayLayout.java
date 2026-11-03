@@ -6,6 +6,7 @@ package com.tuxprogrammer.lostcities.layout.rail;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.tuxprogrammer.lostcities.layout.ChunkKeys;
 import com.tuxprogrammer.lostcities.layout.random.QualityRandom;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 
@@ -95,7 +96,7 @@ public final class RailwayLayout {
     }
 
     private static long key(int x, int z) {
-        return ((long) x << 32) ^ (z & 0xffffffffL);
+        return ChunkKeys.of(x, z);
     }
 
     /**

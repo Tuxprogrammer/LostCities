@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.tuxprogrammer.lostcities.layout.ChunkKeys;
 import com.tuxprogrammer.lostcities.layout.random.StableHash;
 
 /**
@@ -665,7 +666,7 @@ public final class HighwayPlanner {
             // Avoids HWY-06: switched off means no highway anywhere.
             return HighwayInfo.NONE;
         }
-        Long key = ((long) chunkX << 32) ^ (chunkZ & 0xffffffffL);
+        Long key = ChunkKeys.of(chunkX, chunkZ);
         HighwayInfo cached = chunks.get(key);
         if (cached != null) {
             return cached;
