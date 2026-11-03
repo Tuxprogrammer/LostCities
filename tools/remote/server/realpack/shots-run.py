@@ -4,13 +4,17 @@
 usage: python3 -I shots-run.py --mod <jar> [--shotlist <file>|-] [--label <name>] [--level-type <type>]
                                [--seed <seed>] [--world <name>] [--fresh|--reuse-world] [--jvm '<server args>']
                                [--client-jvm '<client args>'] [--only <name,...>] [--display <80-89>]
-                               [--lock-wait <s>] [--deadline <s>] [--check]
+                               [--lock-wait <s>] [--deadline <s>] [--finds-only] [--check]
 
-Boots the real-pack server (run.sh) for the shot list's world with the jar and the test hooks, waits for "Done",
-joins with the real-pack client (client-run.sh, clean capture on, one retry if the join fails), locks time and
-weather, then for each shot moves the player with /lostcities view, waits until the client logs that the viewpoint
-has settled (chunks in, terrain built), waits the shot's extra seconds and screenshots the display. Then it stops the
-client and the server and writes runs/shots-<id>/: the PNGs, results.json, index.html (the review page) and run.done.
+Boots the real-pack server (run.sh) for the shot list's world with the jar and the test hooks, waits for "Done", and
+resolves every shot's find on the server alone: a find can hold the server thread for half a minute, which drops a
+joined client (vanilla's client read timeout is 20 s). Then it joins with the real-pack client (client-run.sh, clean
+capture on, the read timeout raised, one retry if the join fails), locks time and weather, and for each shot moves the
+player with /lostcities view, waits until the client logs that the viewpoint has settled (chunks in, terrain built),
+waits the shot's extra seconds and screenshots the display. A client that drops is brought back (the mod's own rejoin,
+else a new client) and the shot it lost is taken again. Then it stops the client and the server and writes
+runs/shots-<id>/: the PNGs, results.json, index.html (the review page) and run.done. --finds-only stops after the
+finds, without a client.
 The shot list comes from --shotlist or stdin; its format is in tools/remote/README.md ("Shot lists"). --check only
 validates the list and prints the plan, and needs nothing from the build server, so the laptop runs it first.
 Every wait is bounded; on any exit the client and server are stopped through their own scripts.
@@ -37,6 +41,11 @@ SETTLED = re.compile(r"\[LCNH-CAPTURE\] settled x=(?P<x>-?[\d.]+) y=(?P<y>-?[\d.
                      r"yaw=(?P<yaw>-?[\d.]+) pitch=(?P<pitch>-?[\d.]+) top=(?P<top>-?\d+) ticks=(?P<ticks>\d+)")
 STATE = re.compile(r"\[LCNH-CAPTURE\] (settled|moving)")
 CRASH = re.compile(r"Minecraft Crash Report|A fatal error has been detected")
+FIND_NONE = re.compile(r"\[LCNH-FIND\] kind=\S+ none within \d+ chunks")
+READ_TIMEOUT = 180        # the client's read timeout for the run, seconds (vanilla's is 20)
+REJOIN_WAIT = 60          # seconds to wait for the mod's own rejoin after a drop before starting a new client
+CLIENT_RESTARTS = 2       # new clients started after drops, at most, per run
+SHOT_RETAKES = 1          # times a shot the client dropped out of is taken again
 
 LIST_DEFAULTS = {"title": "", "user": "LCBot", "time": 6000, "render_distance": 10, "fov": 70, "clouds": False,
                  "mobs": False, "server_jvm": "", "client_jvm": "", "setup": [], "settle_timeout": 300, "stable_timeout": 120,
@@ -53,6 +62,10 @@ STABLE_INTERVAL = 3       # seconds between frames
 
 class Abort(Exception):
     """Stops the run; the finally block still cleans up."""
+
+
+class ClientLost(Exception):
+    """The client left the server or died during a shot; the shot is taken again once it is back."""
 
 
 def fail(msg):
@@ -203,6 +216,8 @@ class Run:
         self.hold = os.path.join(self.dir, "client.hold")
         self.results, self.status, self.notes = [], "error", []
         self.server_run_dir = self.client_run_dir = ""
+        self.join_mark = 0        # console offset where the current client's join began
+        self.restarts = 0         # new clients started after drops
 
     # -- logging and helpers -------------------------------------------------------------------------------------
 
@@ -334,7 +349,8 @@ class Run:
                  "-Dlostcitiesnh.captureServer=%s" % SERVER_ADDRESS,
                  "-Dlostcitiesnh.captureFov=%d" % int(p["fov"]),
                  "-Dlostcitiesnh.captureRenderDistance=%d" % int(p["render_distance"]),
-                 "-Dlostcitiesnh.captureClouds=%s" % ("true" if p["clouds"] else "false")]
+                 "-Dlostcitiesnh.captureClouds=%s" % ("true" if p["clouds"] else "false"),
+                 "-Dlostcitiesnh.captureReadTimeout=%d" % READ_TIMEOUT]
         return " ".join(props + [x for x in (p["client_jvm"], self.args.client_jvm or "") if x])
 
     def join(self):
@@ -381,12 +397,61 @@ class Run:
                 if drops:
                     self.notes.append("client %d: joined after %d dropped join" % (attempt, drops))
                 self.log("%s joined (client %d)" % (user, attempt))
+                self.join_mark = mark
                 return
             self.log("join attempt %d failed: %s; stopping that client" % (attempt, result))
             self.notes.append("join attempt %d: %s" % (attempt, result))
             self.stop(self.client, "client", 1)   # TERM now: its trap stops the JVM and Xvfb
             self.client = None
         raise Abort("the client could not join twice")
+
+    def connection(self):
+        """Returns "in" when the current client's last join or drop on the console is a join, else "out"."""
+        user = self.plan["user"]
+        events = re.findall(r"\b%s (joined the game|lost connection)" % user, self.console.text(self.join_mark))
+        return "in" if events and events[-1] == "joined the game" else "out"
+
+    def drops(self):
+        """Returns how many times the user has dropped since the current client's join began."""
+        return len(re.findall(r"\b%s lost connection" % self.plan["user"], self.console.text(self.join_mark)))
+
+    def ensure_client(self):
+        """Makes sure the client is in the world: waits for the mod's own rejoin after a drop, else starts a new one.
+
+        Player settings (game mode and the list's setup) are sent again after a rejoin; time and weather are the
+        world's and stay locked.
+        """
+        if self.client is not None and self.client.poll() is None and self.connection() == "in":
+            return
+        if self.client is not None and self.client.poll() is None:
+            self.log("client dropped; waiting up to %d s for its own rejoin" % REJOIN_WAIT)
+            self.wait_for("the client's rejoin", lambda: self.connection() == "in" or self.client.poll() is not None,
+                          REJOIN_WAIT, poll=2)
+            if self.connection() == "in" and self.client.poll() is None:
+                self.notes.append("the client dropped and rejoined by itself")
+                self.after_join()
+                return
+        if self.restarts >= CLIENT_RESTARTS:
+            raise Abort("the client dropped again after %d new clients" % self.restarts)
+        self.restarts += 1
+        self.notes.append("the client dropped; new client %d started" % self.restarts)
+        self.log("starting a new client (%d of %d)" % (self.restarts, CLIENT_RESTARTS))
+        if self.client is not None:
+            open(self.hold, "w").close()
+            self.stop(self.client, "client", 5)
+            self.client = None
+        self.join()
+        self.after_join()
+
+    def after_join(self):
+        """Sets the player up after a join (game mode, the list's setup) and waits for the clean capture."""
+        p = self.plan
+        self.send("gamemode 1 %s" % p["user"])
+        for cmd in p["setup"]:
+            self.send(cmd.replace("{user}", p["user"]))
+        if not self.wait_for("the client's clean capture",
+                             lambda: "[LCNH-CAPTURE] active in world" in self.client_log.text(), 120):
+            raise Abort("the client never reported clean capture; is the jar's client hook in it?")
 
     def last_state(self):
         """Returns the client's latest capture state line as a settled match, "moving", or None."""
@@ -402,7 +467,9 @@ class Run:
         """Waits until the client reports a settled viewpoint at (x, y, z); returns the match or None."""
         def at_target():
             if self.client.poll() is not None:
-                raise Abort("the client died")
+                raise ClientLost("the client exited")
+            if self.connection() != "in":
+                raise ClientLost("the client lost its connection")
             st = self.last_state()
             if st is None or st == "moving":
                 return None
@@ -460,6 +527,45 @@ class Run:
 
     # -- shots -----------------------------------------------------------------------------------------------------
 
+    def find(self, shot):
+        """Sends a shot's find to the server and keeps what it found in shot["found"], or why not in shot["missed"].
+
+        Finds run before the client joins (resolve_finds): one can hold the server thread for tens of seconds, and the
+        console's finds all start at the block (0, 0), so their order and the player's position do not matter.
+        """
+        f = shot["find"]
+        mark = self.console.size()
+        t = time.time()
+        self.send(f["cmd"])
+        m = self.wait_for("a line matching the find regex",
+                          lambda: re.search(f["match"], self.console.text(mark), re.M)
+                          or FIND_NONE.search(self.console.text(mark)),
+                          int(f.get("timeout", 120)))
+        secs = int(time.time() - t)
+        if m is None or m.re is FIND_NONE:
+            shot["missed"] = ("find found nothing: %s" % m.group(0).strip() if m is not None
+                              else "find: no console line matched %r" % f["match"])
+            self.log("find %r -> %s (%d s)" % (f["cmd"], shot["missed"], secs))
+            return
+        found = {"x": float(m.group("x")), "z": float(m.group("z")), "line": m.group(0).strip(), "seconds": secs}
+        for key in ("y", "yaw", "pitch"):
+            if key in m.re.groupindex and m.group(key):
+                found[key] = float(m.group(key))
+        shot["found"] = found
+        self.log("find %r -> %s (%d s)" % (f["cmd"], found["line"], secs))
+
+    def resolve_finds(self):
+        """Resolves every find with no client on the server, so no find's stall can drop it."""
+        t = time.time()
+        for shot in self.plan["shots"]:
+            if shot["find"] is not None:
+                if self.left() < 120:
+                    raise Abort("run deadline reached while resolving finds")
+                self.find(shot)
+        n = sum(1 for s in self.plan["shots"] if s["find"] is not None)
+        if n:
+            self.notes.append("%d finds resolved before the client joined, in %d s" % (n, time.time() - t))
+
     def resolve(self, shot):
         """Returns (x, y, z) for a shot, where y may still be top-relative: ("top", n)."""
         dx, dy, dz = shot["offset"]
@@ -467,21 +573,14 @@ class Run:
         if shot["find"] is None:
             x, z = shot["x"], shot["z"]
         else:
-            f = shot["find"]
-            mark = self.console.size()
-            self.send(f["cmd"])
-            m = self.wait_for("a line matching the find regex",
-                              lambda: re.search(f["match"], self.console.text(mark), re.M),
-                              int(f.get("timeout", 120)))
-            if m is None:
-                raise ValueError("find: no console line matched %r" % f["match"])
-            x, z = float(m.group("x")), float(m.group("z"))
-            base_y = float(m.group("y")) if "y" in m.re.groupindex and m.group("y") else None
+            if "found" not in shot:
+                raise ValueError(shot.get("missed", "find: not resolved"))
+            found = shot["found"]
+            x, z, base_y = found["x"], found["z"], found.get("y")
             # A find may print the view direction too: named groups yaw and pitch, used when the shot sets none.
             for key in ("yaw", "pitch"):
-                if key in m.re.groupindex and m.group(key) and not shot[key + "_set"]:
-                    shot[key] = float(m.group(key))
-            self.log("find %r -> %s" % (f["cmd"], m.group(0).strip()))
+                if key in found and not shot[key + "_set"]:
+                    shot[key] = found[key]
         y = shot["y"]
         if y is None:
             y = base_y if base_y is not None else DEFAULT_Y
@@ -491,8 +590,30 @@ class Run:
         return x + dx, float(y) + dy, z + dz
 
     def take(self, shot):
+        """Takes one shot; a shot the client dropped out of is taken again, at most SHOT_RETAKES times."""
+        for attempt in range(SHOT_RETAKES + 1):
+            self.ensure_client()
+            drops = self.drops()
+            r = self.take_once(shot)
+            lost = r.pop("lost", None)
+            if lost is None and self.drops() > drops:
+                lost = "the client dropped during the shot"
+            if lost is None:
+                return
+            r["status"] = "client-lost"
+            r["error"] = lost
+            self.log("shot %s: %s" % (shot["name"], lost))
+            if attempt < SHOT_RETAKES:
+                self.results.pop()
+                self.notes.append("shot %s taken again: %s" % (shot["name"], lost))
+
+    def take_once(self, shot):
+        """Takes one shot once and returns its result; "lost" in it says the client dropped out of it."""
         r = {"name": shot["name"], "caption": shot["caption"], "status": "error", "yaw": shot["yaw"],
              "pitch": shot["pitch"]}
+        if shot.get("found"):
+            r["find_seconds"] = shot["found"]["seconds"]
+            r["found"] = shot["found"]["line"]
         self.results.append(r)
         t = time.time()
         try:
@@ -524,24 +645,34 @@ class Run:
         except ValueError as e:
             r["status"] = "failed"
             r["error"] = str(e)
+        except ClientLost as e:
+            r["lost"] = str(e)
         r["seconds"] = int(time.time() - t)
         self.log("shot %s: %s in %d s" % (shot["name"], r["status"], r["seconds"]))
+        return r
 
     def run(self):
         p = self.plan
         self.wait_for_locks()
         self.start_server()
-        self.join()
-        self.send("gamemode 1 %s" % p["user"])
+        self.resolve_finds()
+        if self.args.finds_only:
+            for shot in p["shots"]:
+                r = {"name": shot["name"], "caption": shot["caption"],
+                     "status": "found" if shot.get("found") else "failed" if shot["find"] is not None else "fixed"}
+                if shot.get("found"):
+                    r.update(found=shot["found"]["line"], find_seconds=shot["found"]["seconds"])
+                elif shot.get("missed"):
+                    r["error"] = shot["missed"]
+                self.results.append(r)
+            self.status = "ok" if all(r["status"] != "failed" for r in self.results) else "partial"
+            return
         self.send("gamerule doDaylightCycle false")
         self.send("time set %d" % p["time"])
         self.send("weather clear 1000000")
         self.send("gamerule doMobSpawning %s" % ("true" if p["mobs"] else "false"))
-        for cmd in p["setup"]:
-            self.send(cmd.replace("{user}", p["user"]))
-        if not self.wait_for("the client's clean capture",
-                             lambda: "[LCNH-CAPTURE] active in world" in self.client_log.text(), 120):
-            raise Abort("the client never reported clean capture; is the jar's client hook in it?")
+        self.join()
+        self.after_join()
         for shot in p["shots"]:
             if self.left() < 60:
                 self.notes.append("run deadline reached before shot %s" % shot["name"])
@@ -602,6 +733,8 @@ def review_page(s):
         flag = "" if r["status"] == "ok" else ' <span class="bad">%s</span>' % e(r["status"])
         err = '<p class="bad">%s</p>' % e(r["error"]) if r.get("error") else ""
         timing = "%d s (stable after %s s)" % (r.get("seconds", 0), r.get("stable_seconds", "?"))
+        if "find_seconds" in r:
+            timing += " · find %d s" % r["find_seconds"]
         cards.append('<figure>%s<figcaption><h2>%s%s</h2><p>%s</p><p class="meta">%s · %s</p>%s</figcaption>'
                      '</figure>' % (img, e(r["name"]), flag, e(r["caption"]), e(pos), e(timing), err))
     notes = "".join("<li>%s</li>" % e(n) for n in s["notes"])
@@ -657,6 +790,7 @@ def main():
     ap.add_argument("--join-timeout", type=int, default=420)
     ap.add_argument("--deadline", type=int, default=5400, help="bound on the whole run, in seconds")
     ap.add_argument("--check", action="store_true", help="validate the shot list, print the plan and exit")
+    ap.add_argument("--finds-only", action="store_true", help="boot the server, resolve the finds and stop")
     args = ap.parse_args()
     if args.label and not NAME.match(args.label):
         sys.exit("bad --label: %s" % args.label)

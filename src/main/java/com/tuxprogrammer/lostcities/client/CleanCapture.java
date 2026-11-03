@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +22,9 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 /**
  * Clean screenshot capture for the alpha review set (tools/remote/README.md, "Shot lists"): a dev-only client mode,
@@ -39,6 +43,8 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  * never saved by this class; the shot runner also restores the client's options files after the run.</li>
  * <li>With {@code -Dlostcitiesnh.captureServer=<host>:<port>}, the client joins that server from the main menu by
  * itself, avoiding a race in FML's startup join ({@code joinFromMenu}).</li>
+ * <li>With {@code -Dlostcitiesnh.captureReadTimeout=<s>}, the connection's read timeout is raised from vanilla's 20 s
+ * once in the world ({@code raiseReadTimeout}), so a server thread held for a while does not drop the client.</li>
  * <li>Each tick a {@link SettleTracker} watches the camera, the chunks around it and the terrain build queue
  * ({@link TerrainProbe}), and the log gets {@code [LCNH-CAPTURE] settled ...} once the viewpoint is complete and still,
  * and {@code [LCNH-CAPTURE] moving} when it changes. The runner waits for a settled line at its viewpoint, then
@@ -70,6 +76,7 @@ public final class CleanCapture {
     private int joins;
     private int idleTicks;
     private GuiScreen lastScreen;
+    private NetworkManager timed;
 
     private CleanCapture(CaptureSettings settings, TerrainProbe probe) {
         this.settings = settings;
@@ -132,6 +139,7 @@ public final class CleanCapture {
             return;
         }
         keepFrameClean(mc);
+        raiseReadTimeout();
         if (!announced) {
             announced = true;
             LostCities.LOG.info("{} active in world: {}", TAG, settings);
@@ -229,6 +237,33 @@ public final class CleanCapture {
         FMLClientHandler.instance()
             .connectToRealmsServer(host, port);
         mc.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), mc, host, port));
+    }
+
+    /**
+     * Replaces the connection's {@code timeout} handler (vanilla's {@code ReadTimeoutHandler(20)}) with one of the
+     * capture's read timeout, once per connection. The pipeline is changed on the channel's event loop, where Netty
+     * expects it.
+     */
+    private void raiseReadTimeout() {
+        int seconds = settings.readTimeout();
+        NetworkManager manager = FMLClientHandler.instance()
+            .getClientToServerNetworkManager();
+        if (seconds <= CaptureSettings.VANILLA_READ_TIMEOUT || manager == null || manager == timed) {
+            return;
+        }
+        timed = manager;
+        Channel channel = manager.channel();
+        if (channel == null || manager.isLocalChannel()) {
+            return;
+        }
+        channel.eventLoop()
+            .execute(() -> {
+                ChannelPipeline pipeline = channel.pipeline();
+                if (pipeline.get("timeout") != null) {
+                    pipeline.replace("timeout", "timeout", new ReadTimeoutHandler(seconds));
+                    LostCities.LOG.info("{} read timeout raised to {} s", TAG, seconds);
+                }
+            });
     }
 
     /** Hides the GUI, the hand and the toast, keeps first person, and closes any screen but terrain download. */

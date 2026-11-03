@@ -30,9 +30,21 @@ public final class CaptureSettings {
      * {@link CleanCapture}).
      */
     public static final String SERVER_PROPERTY = "lostcitiesnh.captureServer";
+    /**
+     * Seconds the client waits for a packet from the server before it drops the connection: 20 to 600, default
+     * vanilla's {@value #VANILLA_READ_TIMEOUT}. Vanilla's client pipeline hard-codes 20 s ({@code NetworkManager}'s
+     * {@code ReadTimeoutHandler(20)}, Forge 10.13.4.1614; FML's {@code fml.readTimeout} sets only the server's side),
+     * so a server thread held longer by a test-hook command or a burst of chunk generation dropped the shot runner's
+     * client (M06's classic-RWG run). The capture raises it once the client is connected ({@link CleanCapture}).
+     */
+    public static final String READ_TIMEOUT_PROPERTY = "lostcitiesnh.captureReadTimeout";
 
     static final int DEFAULT_FOV = 70;
     static final int DEFAULT_RENDER_DISTANCE = 10;
+    /** Vanilla's client read timeout, in seconds. */
+    static final int VANILLA_READ_TIMEOUT = 20;
+    /** Longest read timeout the capture sets, in seconds. */
+    static final int MAX_READ_TIMEOUT = 600;
 
     private final int fov;
     private final int renderDistance;
@@ -40,9 +52,11 @@ public final class CaptureSettings {
     private final boolean clouds;
     private final String serverHost;
     private final int serverPort;
+    private final int readTimeout;
 
     private CaptureSettings(int fov, int renderDistance, int chunkRadius, boolean clouds, String serverHost,
-        int serverPort) {
+        int serverPort, int readTimeout) {
+        this.readTimeout = readTimeout;
         this.fov = fov;
         this.renderDistance = renderDistance;
         this.chunkRadius = chunkRadius;
@@ -75,7 +89,11 @@ public final class CaptureSettings {
                 port = parsed;
             }
         }
-        return new CaptureSettings(fov, renderDistance, chunkRadius, clouds, host, port);
+        int readTimeout = clamp(
+            intValue(properties, READ_TIMEOUT_PROPERTY, VANILLA_READ_TIMEOUT),
+            VANILLA_READ_TIMEOUT,
+            MAX_READ_TIMEOUT);
+        return new CaptureSettings(fov, renderDistance, chunkRadius, clouds, host, port, readTimeout);
     }
 
     /** Returns whether the client joins a server by itself from the main menu. */
@@ -108,6 +126,11 @@ public final class CaptureSettings {
         return chunkRadius;
     }
 
+    /** Returns the client's read timeout, in seconds. */
+    public int readTimeout() {
+        return readTimeout;
+    }
+
     /** Returns whether clouds are drawn. */
     public boolean clouds() {
         return clouds;
@@ -123,7 +146,9 @@ public final class CaptureSettings {
             + " clouds="
             + clouds
             + " server="
-            + (serverHost == null ? "none" : serverHost + ":" + serverPort);
+            + (serverHost == null ? "none" : serverHost + ":" + serverPort)
+            + " readTimeout="
+            + readTimeout;
     }
 
     private static int intValue(Properties properties, String key, int fallback) {

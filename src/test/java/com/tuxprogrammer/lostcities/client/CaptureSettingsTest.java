@@ -86,4 +86,37 @@ public class CaptureSettingsTest {
         assertEquals(70, settings.fov());
         assertEquals(10, settings.renderDistance());
     }
+
+    @Test
+    public void theReadTimeoutIsVanillasUnlessRaised() {
+        assertEquals(
+            20,
+            CaptureSettings.from(new Properties())
+                .readTimeout(),
+            "vanilla's 20 s");
+        Properties p = new Properties();
+        p.setProperty(CaptureSettings.READ_TIMEOUT_PROPERTY, "180");
+        assertEquals(
+            180,
+            CaptureSettings.from(p)
+                .readTimeout());
+        p.setProperty(CaptureSettings.READ_TIMEOUT_PROPERTY, "5");
+        assertEquals(
+            20,
+            CaptureSettings.from(p)
+                .readTimeout(),
+            "never below vanilla's");
+        p.setProperty(CaptureSettings.READ_TIMEOUT_PROPERTY, "100000");
+        assertEquals(
+            600,
+            CaptureSettings.from(p)
+                .readTimeout(),
+            "at most ten minutes");
+        p.setProperty(CaptureSettings.READ_TIMEOUT_PROPERTY, "soon");
+        assertEquals(
+            20,
+            CaptureSettings.from(p)
+                .readTimeout(),
+            "a malformed value is vanilla's");
+    }
 }

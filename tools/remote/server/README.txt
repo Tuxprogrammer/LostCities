@@ -159,16 +159,24 @@ Shot runner: realpack/shots-run.py   (python3 -I; laptop side: lc-remote.sh shot
   python3 -I shots-run.py --mod <jar> [--shotlist <file>|-] [--label <name>] [--level-type <t>] [--seed <s>]
       [--world <name>] [--fresh|--reuse-world] [--jvm '<server args>'] [--client-jvm '<client args>']
       [--only <a,b>] [--display 80-89] [--lock-wait <s>] [--boot-timeout <s>] [--join-timeout <s>]
-      [--deadline <s>] [--check]
+      [--deadline <s>] [--finds-only] [--check]
   Reads a JSON shot list (stdin by default). Waits for run.lock and client.lock to be free (45 s polls,
   --lock-wait 1800), runs run.sh (test hooks, --view-distance = render distance, --cmds
-  'until:LCSHOTS-END-<id>') and waits for "Done (", then client-run.sh --hold --restore-options with
-  -Dlostcitiesnh.capture=true (the mod's clean capture: GUI, hand, toast and overlays hidden, logs
-  "[LCNH-CAPTURE] settled ..." when a viewpoint's chunks are in and built). No --server: the client joins
-  from the main menu itself (-Dlostcitiesnh.captureServer=127.0.0.1:25800), because FML's startup join
-  races its own handshake latch ("playClientBlock is null"); the runner restarts the client once if it has
-  not joined (dropped twice, exited, crashed, --join-timeout 420). Locks time and weather
-  (gamerule doDaylightCycle false, time set, weather clear 1000000), creative mode, no mob spawning.
+  'until:LCSHOTS-END-<id>') and waits for "Done (". Then it sends every shot's find ("lostcities find ...")
+  with no client on the server: a find over a large radius holds the server thread for 20 to 30 s on
+  classic RWG, and vanilla's client drops after 20 s without a packet (M06's run lost its client twice
+  that way). Console finds all start at block (0, 0), so the order does not matter. A find that logs
+  "[LCNH-FIND] kind=... none within" fails its shot at once. --finds-only stops here (no client).
+  Then client-run.sh --hold --restore-options with -Dlostcitiesnh.capture=true (the mod's clean capture:
+  GUI, hand, toast and overlays hidden, logs "[LCNH-CAPTURE] settled ..." when a viewpoint's chunks are
+  in and built) and -Dlostcitiesnh.captureReadTimeout=180 (the client's read timeout, raised from 20 s).
+  No --server: the client joins from the main menu itself (-Dlostcitiesnh.captureServer=127.0.0.1:25800),
+  because FML's startup join races its own handshake latch ("playClientBlock is null"); the runner
+  restarts the client once if it has not joined (dropped twice, exited, crashed, --join-timeout 420).
+  Locks time and weather (gamerule doDaylightCycle false, time set, weather clear 1000000), creative mode,
+  no mob spawning. Before each shot it checks the console for the account's last join or drop: after a
+  drop it waits 60 s for the mod's own rejoin, else starts a new client (at most 2 per run), sends the
+  game mode and setup again, and takes again (once) a shot the client dropped out of.
   Per shot: console "lostcities view" through run.sh's stdin fifo, wait for the settled line at the
   target, the shot's wait, then xwd | convert every 3 s until 3 frames in a row each change under 0.3%
   of a 160x90 grayscale thumbnail (stable_timeout 120 s; the last frame is the shot). Then touches the hold file, says LCSHOTS-END-<id> so
