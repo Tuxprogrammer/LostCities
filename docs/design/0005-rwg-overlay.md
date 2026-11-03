@@ -203,7 +203,7 @@ The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceede
 | B5: plan and height caches, bound | **4.1 MB** (≤ 16) | **4.1 MB** (≤ 16) |
 | Oracle call, p50 / p99.9 (inside the terrain phase) | 0.33 / 1.66 | 0.79 / 1.39 (classic RWG computes all 256 columns) |
 
-Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99.9 over 1,269 chunks was 11.5 ms on RWG2 Continents: the first city chunks of a server's life, which B4's warm-up rule excludes. Java Flight Recorder attributed classic RWG's alpha-gate bursts (RWG's `getNewNoise` under the layout's samples, VillageNames' start constructor; D125); three seeds and Hodgepodge's `showChunkGenDebug` cross-check remain open.
+Cold, in the `overlay.city` scenario before JIT warm-up, the terrain phase's p99.9 over 1,269 chunks was 11.5 ms on RWG2 Continents: the first city chunks of a server's life, which B4's warm-up rule excludes. Java Flight Recorder attributed classic RWG's alpha-gate bursts (RWG's `getNewNoise` under the layout's samples, VillageNames' start constructor; D125); the three seeds were run in the beta performance pass (below); Hodgepodge's `showChunkGenDebug` cross-check remains open.
 
 **Measured in M05** (D81's method, `city.budget`, decision log D117): the same server, seed 4242, real cities, 65 × 65 chunks in spiral order starting 20 chunks beside the city nearest the spawn, the first 512 dropped, the M05J release jar. Times in milliseconds.
 
@@ -252,6 +252,36 @@ Every budget holds on both world types. The terrain phase's worst chunk is 3.5 m
 | Layout height sample, p50 / p99.9 | 0.33 / 0.78, 0.36 / 0.88 | 0.92 / 1.67, 0.92 / 1.73 |
 
 Every budget still holds on both world types; the rise cap's base levels, the margin's strip and the lane grades cost nothing the timers can see (the World half's own jar, before the merges, measured B3 at 9.1 % and 12.8 %, B4 at 3.9 and 7.5 ms). Each pair of worlds printed the same `city.real` hashes (RWG2 Continents `5b9ab82a…`/`6666e91e…`, classic RWG `3d6c14d5…`/`6ea4b3bf…`), and no ArchaicFix cascade warning names this mod as the first frame that asked for the chunk (52 to 66 per run, all from Et Futurum's glow lichen, cave vines and geodes, ExtraBees, LootGames, Thaumcraft, HarvestCraft, NHCore's oil fix and Forge's chunk I/O).
+
+**Measured in the beta performance pass**: the same method and sequence (`city.real`, `scattered.real`, `city.walk`, `city.sewing`, then `city.budget`; `network.highway` and `network.railway` after the budget), `gtnh` with M01 to M12 and M05R merged (`36fd4b57`) against the same tree with the performance pass (D-PF-1 to D-PF-6), real-pack instance 1, one run at a time; another lane's shot runs shared the box with some of them. Times in milliseconds; where two fresh worlds differ, both are given.
+
+| Seed 4242 | RWG2 Continents, before | RWG2 Continents, after | Classic RWG, before | Classic RWG, after |
+|---|---|---|---|---|
+| RWG `provideChunk` + `populate`, total | 19,060 | 18,052 / 17,984 | 16,293 | 16,439 / 16,402 |
+| Terrain phase, total (city chunks) | 1,205 (999) | 925 / 932 (772 / 777) | 1,227 (962) | 1,083 / 1,053 (853 / 822) |
+| Population phase, total | 197 | 134 / 138 | 191 | 152 / 146 |
+| Prefetcher, total | 1,004 | 775 / 783 | 1,158 | 800 / 796 |
+| of which height fetches: layout samples, column cache | 171, 37 | 171 / 177, 1 / 1 | 336, 175 | 380 / 380, 2 / 2 |
+| of which structure fetches: Witchery, villages, others | 21, 5, 57 | 3 / 3, 5 / 5, 63 / 64 | 87, 22, 18 | 2 / 2, 21 / 21, 20 / 20 |
+| of which attempts abandoned at a missing value | 294 | 216 / 213 | 123 | 74 / 76 |
+| Fetches; whole-chunk oracle calls after the warm-up (classic) | 1,836 | 1,678 / 1,685 | 742 | 508 / 506; 450 / 447 |
+| **B3**: overlay share of RWG's total | 12.6 % (2,406) | **10.2 % / 10.3 %** (1,834; 1,853) | 15.8 %, **over** (2,576) | **12.4 % / 12.2 %** (2,034; 1,995) |
+| B1: terrain phase on city chunks, p95 (≤ RWG `provideChunk` p50) | 1.31 (≤ 2.36) | **1.05** (≤ 2.10) | 1.31 (≤ 2.10) | **1.18** (≤ 2.36) |
+| B2: population phase on city chunks, p95 | 0.46 | **0.33** (≤ 2.10) | 0.43 | **0.33** (≤ 1.44) |
+| B4: worst p99.9 of terrain, population and prefetch tick | 8.39 | **5.05 / 4.82** | 7.08 | **6.87 / 6.79** |
+| B5: plan, height and palette caches, bound | 15.9 MB | **15.9 MB** | 15.9 MB | **15.9 MB** |
+
+The three-seed method, one fresh world per seed and type (B3, overlay over RWG's total):
+
+| | RWG2 Continents, before | after | Classic RWG, before | after |
+|---|---|---|---|---|
+| Seed 4242 | 12.6 % | **10.2 % / 10.3 %** | 15.8 % | **12.4 % / 12.2 %** |
+| Seed 1 | 9.4 % (1,922 of 20,432) | **7.6 %** (1,480 of 19,591) | 13.3 % (2,121 of 15,953) | **10.4 %** (1,573 of 15,182) |
+| Seed 777 | 9.1 % (2,525 of 27,770) | **6.7 %** (1,633 of 24,540) | 9.7 % (2,026 of 20,844) | **7.2 %** (1,470 of 20,384) |
+
+B1, B2, B4 and B5 hold in every one of these worlds, before and after; the tightest is B4 on classic RWG, seed 777, a prefetch tick that builds a VillageNames start (9.7 ms before, 9.9 ms after, against 10). Every world prints the `city.real` and `scattered.real` hashes of the same seed and type without the pass: RWG2 Continents `7f415738…`/`a28bfabb…`, `9176fabd…`/`34729b47…`, `71f11dd5…`/`3510fe86…` and classic RWG `4c414645…`/`58368d6d…`, `98d3896f…`/`9a9f427f…`, `3d10858e…`/`a0af9582…` for seeds 4242, 1 and 777. No cascade trace (53 to 97 per run) has this mod's code as its first frame. On seed 4242 every scenario passes on both world types; on the other seeds the same scenarios fail before and after the pass (classic RWG seed 1: `network.highway`, 213 steps above half a block; RWG2 seed 1: `city.walk`, doors 94.3 %, and `network.highway`, 2 steps without ground; RWG2 seed 777: `network.railway`, 1 broken track).
+
+Where the time went (Java Flight Recorder, classic RWG, seed 4242): before the pass, whole-chunk height computations (`getNewNoise`) were three fifths of the prefetcher, two fifths of those for landmarks' ground estimates, which no generation step reads (D-PF-1); the terrain phase was mostly block reads and writes, a fifth of it in `moveUp`'s copy of a column (mostly stone onto stone) and an eighth in the section setter's block-ID lookup (D-PF-2); hash maps keyed by packed chunk pairs had turned their buckets into trees (D-PF-3); style blocks missed their cache (D-PF-4); and the population's dry run resolved every block of every part (D-PF-5). What is left is near its floor: the layout's own height samples (one whole classic chunk each, 0.85 ms, about 450 per region), the planning, and the terrain phase's block reads and writes.
 
 ## Consequences
 

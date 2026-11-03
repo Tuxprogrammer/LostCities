@@ -31,7 +31,7 @@ A **landmark** is another generator's structure the layout knows about. The layo
 | `kind` | Village, Roguelike, Witchery, LootGames, meteorite, terrain landmark |
 | `footprint` | One or more rectangles in block X and Z |
 | `certainty` | `EXACT` (the footprint is the structure), `UNION` (the structure lies somewhere inside), `CANDIDATE` (predicted; may not appear) |
-| `groundEstimate` | Block Y, from the height oracle |
+| `groundEstimate` | Block Y, from the height oracle; computed on its first read, since only the finder's views and the scenarios read it (decision log D-PF-1) |
 | `gates` | Villages only: points on the footprint where a village path ends toward the outside, with their direction |
 | `heightCap` | Meteorites only: the paraboloid the city must stay under |
 
