@@ -76,3 +76,9 @@ Dev environments load a handful of mods. Players load hundreds. Test the release
 - Assume the test is wrong before the code: lag, ambient spawns, neighboring terrain, leaked state, or a pack mod.
 - Make the failure message say what was observed ("expected 3 flags in arena, found 2; nearest other flag 40 blocks away"), so the next run diagnoses it.
 - Fix the cause; never add retries that hide it.
+
+## Where each layer runs
+
+- Verification tiers (T1 every change, T2 lane landing, T3 batch, T4 gates) are defined in `mod-port-budget`; keep the layer-to-tier mapping in your CONTRIBUTING.
+- Heavy runs (real pack, clients, shot lists) go on the build host: `remote-build-runner`. Wait on their done-markers (`waiting-on-remote-jobs`) and read summaries, not logs (`quiet-tool-output`).
+- Review screenshots as a contact sheet first (`cheap-screenshot-review`).
