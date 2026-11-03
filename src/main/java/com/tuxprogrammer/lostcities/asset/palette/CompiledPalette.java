@@ -55,6 +55,8 @@ public final class CompiledPalette {
     /** The slots of the ASCII characters by code, for the writer's per-block lookups; the maps hold the rest. */
     private final BlockChoice[][] asciiSlots = new BlockChoice[ASCII][];
     private final PaletteEntry[] asciiInfo = new PaletteEntry[ASCII];
+    /** Whether an ASCII character can give a population job ({@link #mayMakeJob}). */
+    private final boolean[] asciiJobs = new boolean[ASCII];
 
     /** Characters below this code are looked up in arrays: every character the bundled parts use. */
     private static final int ASCII = 128;
@@ -76,6 +78,37 @@ public final class CompiledPalette {
                 asciiInfo[entry.getKey()] = entry.getValue();
             }
         }
+        for (char c = 0; c < ASCII; c++) {
+            asciiJobs[c] = computeMayMakeJob(c);
+        }
+    }
+
+    /**
+     * Returns whether placing a character can give a population job: its entry is a torch, a loot chest or a spawner,
+     * or it or one of its blocks carries a tile-entity template. Any other character only ever sets a block or leaves
+     * one, so the population's dry run of a part need not resolve it (D-PF-5).
+     *
+     * @param c the character
+     * @return {@code false} when no placement of it lists a job
+     */
+    public boolean mayMakeJob(char c) {
+        return c < ASCII ? asciiJobs[c] : computeMayMakeJob(c);
+    }
+
+    private boolean computeMayMakeJob(char c) {
+        PaletteEntry entry = infoOf(c);
+        if (entry != null && (entry.torch() || entry.loot() != null || entry.mob() != null || entry.tag() != null)) {
+            return true;
+        }
+        BlockChoice[] slots = slotsOf(c);
+        if (slots != null) {
+            for (BlockChoice choice : slots) {
+                if (choice != null && choice.tag() != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** Returns a character's slots: an array read for ASCII, a map lookup otherwise. */
