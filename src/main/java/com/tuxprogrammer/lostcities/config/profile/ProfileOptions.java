@@ -297,34 +297,34 @@ public final class ProfileOptions {
             Status.LIVE,
             "04-city-layout",
             conflicts.toArray(new String[0]));
-        // Railways: the layout reads the dungeon chance; the rest wait for M06.
+        // Railways: the layout reads the dungeon chance, the railway grid the rest (M06).
         chance(c, "railwayDungeonChance", "0.01", "04-city-layout");
-        flag(c, "railwaysCanEnd", false, Status.PENDING, "M06");
-        flag(c, "railwaysEnabled", true, Status.PENDING, "M06");
-        flag(c, "railwayStationsEnabled", true, Status.PENDING, "M06");
-        flag(c, "railwaySurfaceStationsEnabled", true, Status.PENDING, "M06");
-        option(c, "railwayLevelOffset", Type.INT, "0", d(-8), d(2), Status.PENDING, "M06");
-        option(c, "railwaySpacingNorthSouth", Type.INT, "10", d(4), d(128), Status.PENDING, "M06");
-        option(c, "railwaySpacingEastWest", Type.INT, "10", d(4), d(128), Status.PENDING, "M06");
+        flag(c, "railwaysCanEnd", false, Status.LIVE, "06-highways-railways");
+        flag(c, "railwaysEnabled", true, Status.LIVE, "06-highways-railways");
+        flag(c, "railwayStationsEnabled", true, Status.LIVE, "06-highways-railways");
+        flag(c, "railwaySurfaceStationsEnabled", true, Status.LIVE, "06-highways-railways");
+        option(c, "railwayLevelOffset", Type.INT, "0", d(-8), d(2), Status.LIVE, "06-highways-railways");
+        option(c, "railwaySpacingNorthSouth", Type.INT, "10", d(4), d(128), Status.LIVE, "06-highways-railways");
+        option(c, "railwaySpacingEastWest", Type.INT, "10", d(4), d(128), Status.LIVE, "06-highways-railways");
         // Highways: only the intercity planner's options survive (D11).
         dropped(c, "highwayRequiresTwoCities", Type.BOOLEAN, "true");
-        option(c, "highwayLevelFromCities", Type.INT, "3", d(0), d(4), Status.PENDING, "M06");
+        option(c, "highwayLevelFromCities", Type.INT, "3", d(0), d(4), Status.LIVE, "06-highways-railways");
         dropped(c, "highwayDistanceMask", Type.INT, "7");
         dropped(c, "highwayMainPerlinScale", Type.FLOAT, "50.0");
         dropped(c, "highwaySecondaryPerlinScale", Type.FLOAT, "10.0");
         dropped(c, "highwayPerlinFactor", Type.FLOAT, "2.0");
-        flag(c, "highwaySupports", true, Status.PENDING, "M06");
+        flag(c, "highwaySupports", true, Status.LIVE, "06-highways-railways");
         dropped(c, "highwayGenerationMode", Type.STRING, "INTERCITY_NETWORK_V1");
-        option(c, "highwayPlanningCellSize", Type.INT, "128", d(32), d(512), Status.PENDING, "M06");
-        option(c, "highwayHubSampleSpacing", Type.INT, "16", d(1), d(512), Status.PENDING, "M06");
-        option(c, "highwayHubMinimumPotential", Type.FLOAT, "0.2", d(0), d(1), Status.PENDING, "M06");
-        option(c, "highwayHubSearchRadiusCells", Type.INT, "2", d(0), d(8), Status.PENDING, "M06");
-        option(c, "highwayMinimumHubDistance", Type.INT, "64", d(0), d(4096), Status.PENDING, "M06");
-        option(c, "highwayMaximumHubDistance", Type.INT, "320", d(0), d(4096), Status.PENDING, "M06");
-        option(c, "highwayMaximumConnectionsPerHub", Type.INT, "2", d(1), d(8), Status.PENDING, "M06");
-        option(c, "highwayMinimumRouteLength", Type.INT, "40", d(0), d(4096), Status.PENDING, "M06");
-        option(c, "highwayRouteCityPenalty", Type.FLOAT, "1.0", d(0), d(1000), Status.PENDING, "M06");
-        option(c, "highwayNetworkLevel", Type.INT, "0", d(0), d(32), Status.PENDING, "M06");
+        option(c, "highwayPlanningCellSize", Type.INT, "128", d(32), d(512), Status.LIVE, "06-highways-railways");
+        option(c, "highwayHubSampleSpacing", Type.INT, "16", d(1), d(512), Status.LIVE, "06-highways-railways");
+        option(c, "highwayHubMinimumPotential", Type.FLOAT, "0.2", d(0), d(1), Status.LIVE, "06-highways-railways");
+        option(c, "highwayHubSearchRadiusCells", Type.INT, "2", d(0), d(8), Status.LIVE, "06-highways-railways");
+        option(c, "highwayMinimumHubDistance", Type.INT, "64", d(0), d(4096), Status.LIVE, "06-highways-railways");
+        option(c, "highwayMaximumHubDistance", Type.INT, "320", d(0), d(4096), Status.LIVE, "06-highways-railways");
+        option(c, "highwayMaximumConnectionsPerHub", Type.INT, "2", d(1), d(8), Status.LIVE, "06-highways-railways");
+        option(c, "highwayMinimumRouteLength", Type.INT, "40", d(0), d(4096), Status.LIVE, "06-highways-railways");
+        option(c, "highwayRouteCityPenalty", Type.FLOAT, "1.0", d(0), d(1000), Status.LIVE, "06-highways-railways");
+        option(c, "highwayNetworkLevel", Type.INT, "0", d(0), d(32), Status.LIVE, "06-highways-railways");
         // Modes and switches.
         flag(c, "editMode", false, Status.LIVE, "01-core");
         dropped(c, "generateNether", Type.BOOLEAN, "false");
@@ -426,8 +426,8 @@ public final class ProfileOptions {
                 null,
                 null,
                 null,
-                Status.PENDING,
-                "M06",
+                Status.LIVE,
+                "06-highways-railways",
                 false,
                 null));
         List<String> treatments = new ArrayList<>();

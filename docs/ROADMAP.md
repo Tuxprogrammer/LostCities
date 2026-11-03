@@ -173,6 +173,35 @@ Status: **S1 to S4 are done** (2026-11-01). S3 is done now that the new-spec are
 - [x] A server and a client with different configs still join. *Real pack: the server with `highways` and `iron` off and `nodamage` mapped to dimension 0, the client with its default config; the client joined and played until the server stopped.*
 - [x] Two fresh worlds of the same seed and a non-default profile hash identically (`city.real`). *`tallbuildings` with `forceSpawnInBuilding`, RWG2 Continents, seed 4242: terrain `c2fbbf50…`, population `7ab26747…` in both.*
 
+## M06 · Highways and railways
+
+**Lane:** Layout, with World. **Parallel with:** M07, M08, M10, M11, M12.
+
+**Entry gate:**
+- the alpha gate and M05R (met);
+- M09's highway and railway options pinned in `ProfileOptions` and checked by `ProfileValidator` (met);
+- the new-spec area [06-highways-railways](new-spec/06-highways-railways/index.md) and [0006](design/0006-build-around-other-worldgen.md) accepted (met).
+
+**Scope** ([0013](design/0013-highway-and-railway-networks.md)):
+- **The intercity highway planner**, pure Java in `layout.highway`: hubs, candidates, sector-first selection, mutual acceptance, ownership, routes and the chunk query of [intercity-planner.md](original-spec/06-highways-railways/intercity-planner.md); the city potential mirrors the layout's own city factor; bounded least-recently-used caches; overlapping routes share their lowest level (HWY-09).
+- **Obstacles** (0006, D31, alpha review AR-10): a landmark core and its margin (the edge ring) are obstacles. A route prefers a shape that crosses none, detours around one, or ends before it; hubs never lie in one.
+- **Deliberate ends** (AR-10): a highway ends at a hub's city or before an obstacle on a plaza at the ground's level, reached by ramps of one level per chunk with half-slab steps; it is never cut off in the air or inside a hill.
+- **Highway parts** in city and non-city chunks: tunnel, open and bridge pieces, straight, crossing, bend and T, the clearing above, supports, ramps and plazas. A highway chunk keeps RWG's decoration off its deck, and lakes, lava and dungeons stay out of it, so no slope or pit eats it.
+- **The railway grid** of [railway-layout.md](original-spec/06-highways-railways/railway-layout.md): stations, extensions, descents, splits, bends and rails that end; with HWY-01, HWY-07, HWY-08 and HWY-15 fixed.
+- **Railways and landmark cores** (D30, D31): a deep line passes under a core; a shallow line dips under it and climbs back with upstream's descent parts; a station in a core is dropped, and one in a margin is underground with no staircase.
+- **Railway parts**: every rail type, water variants, the clearing above surface stations, track reduction, staircases, rail dungeons and their tunnels, and rail-dungeon loot.
+- **Subways** (city rail corridors) are M05's and stay as they are. **Monorails** stay deferred with the sphere landscapes (D12).
+- **Switches**: the module flags `highways` and `railways` and the profile options `highwaysEnabled`, `railwaysEnabled`, `railwayStationsEnabled` and `railwaySurfaceStationsEnabled`. Every M06 option is live, and each one is documented.
+- **Cost** (P06-8): the plan prefetcher computes hub cells one at a time inside its tick budget, so a chunk phase seldom pays for a fresh area.
+- **Tools**: `/lostcities find highway|ramp|station|railway`, the scenarios `network.highway` and `network.railway`, and highway and railway shots in both alpha shot lists.
+
+**Exit gate:**
+- [x] Unit tests cover the planner's hashing, hubs, candidates, selection, acceptance, ownership and route geometry against the spec's numbers, and obstacles, detours, dead ends, ramps, plazas and levels. The layout is deterministic across query order and cache size. Each HWY bug the code could reproduce has its `doesNotReproduce` test, and the ported code passes the gate. *`HighwayPlannerTest`, `HighwayInfoTest`, `HighwaySettingsTest`, `RunTest`: HWY-06, 09, 10, 11, 14 and 15; `PortedCodeGateTest` passes; 1,063 tests after the M12 merge.*
+- [x] Unit and golden tests cover the railway layout (grid, stations, descents, ends, dips under cores) and the writers (every highway piece, ramp and plaza, every rail type). *`RailwayLayoutTest` (HWY-01, 08, 15), `NetworkWriterTest` (HWY-02, HWY-12, CITY-19) with five goldens: a highway, a ramp, a plaza, a line and a split; the guarded band of tunnels and lines (D256, `FootprintGuardTest`); no edge lot on a network chunk; every cache together within B5.*
+- [x] On the real pack, on RWG2 Continents and classic RWG, seed 4242, instance 1: two fresh worlds print the same `city.real` hashes; B1 to B5 hold by D81's method; no cascade warning names this mod's code first; `city.walk` passes. *2026-11-02, the M06 jar merged with M07, M08, M10, M11 and M12, the verification sequence (city.real, city.walk, network.highway, network.railway, city.sewing, scattered.real, city.budget): RWG2 Continents terrain `7f415738…` population `a28bfabb…` in both worlds, classic RWG `4c414645…` and `58368d6d…` in both; B3 10.9 % and 11.1 % (RWG2), 12.4 % and 12.7 % (classic); B4 at most 4.6 and 5.1 ms; B5 15.9 MB; 0 cascade warnings with this mod's code first; `city.walk`, `city.sewing` and `scattered.real` pass. Gas stations and restaurants stand beside highways at their odds over the areas with a spot (RWG2: 7 and 5 placed for 4.0 ± 1.9 and 1.9 ± 1.3; classic: 10 and 3 for 8.3 ± 2.7 and 4.3 ± 2.0). The cost on classic RWG with docs/testing's sequence: B3 15.6 % with networks, 14.4 % without, about 93 ms of overlay time (0.6 % of RWG's), in the prefetcher's height fetches (749 for 501); the terrain and population phases are unchanged within noise. B3 over 15 % on `gtnh` is left to the combined performance pass after wave 2.*
+- [x] `network.highway` walks a highway deck between two cities, from one city's streets to the other's, with no step higher than half a block; `network.railway` follows a railway line through a station and past a junction with no gap in its track. *RWG2: a 116-chunk run from a level-0 city to a level-4 one, 1,851 steps; classic RWG: a 138-chunk run with a detour (22 bends) and 32 tunnel chunks, 2,403 steps; no step above half a block, no gap, no blocked headroom, both ends at their city's ground, in all four worlds. The line east of the station at chunk (−11, 9) through its split: 10 boundaries, none broken.*
+- [ ] Both alpha shot lists add highway, ramp, station and railway shots, rerun with the M06 jar, and every image is looked at. *Pending: the orchestrator reruns both lists with the combined jar. The network shots now follow the soft-edge view, so their searches start inside the city near the spawn. RWG2 Continents with the final M06 jar (`reference/remote/shots/shots-20261102-165344-alpha-rwg2`, 18 of 19): the highway runs out of a city between its lamp gantries, the surface station has three tracks between its platforms, and the rail tunnel is lit; the ramp's view, searched from the far highway view, never settled. In the classic RWG run the client was dropped twice by the server stalling in `find village 200 best` (22 s) and `find softedge 200 best` (29 s); after the second drop it had no rejoins left, so every shot from the soft edge on is blank.*
+
 ## M08 · GTNH layer
 
 **Lane:** Integration. **Parallel with:** M05R, M09.
@@ -279,7 +308,7 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 | Milestone | Lane | Covers |
 |---|---|---|
-| M06 · Highways and railways | Layout | Highways, the intercity highway planner, railways, stations, subways and monorails over RWG terrain; highways detour around landmark cores or end before them, and shallow railways dip under a core and climb back (D31) ([0006](design/0006-build-around-other-worldgen.md)) |
+| M06 · Highways and railways | Layout | Done but for the review shots, which the orchestrator reruns with the combined jar: scope and gates [above](#m06--highways-and-railways) |
 | M07 · Scattered structures | Layout | Scattered structures and decorative stuff; scattered structures stay out of landmark cores and edge rings, which replace upstream's structure avoidance ([0006](design/0006-build-around-other-worldgen.md)); lakes, lava, dungeons and oil denied under their footprints; oil rigs only in RWG2's deep ocean, none on classic RWG, which has no oceans (D31) |
 | M08 · GTNH layer | Integration | Loot at EV or below, pack mobs and spawners, GT ore-vein coexistence, other pack worldgen: the structure oracles under `compat` (Roguelike Dungeons, Witchery, LootGames, AE2, RWG2; the VillageNames oracle lands in M05), the Roguelike Dungeons steering mixin (which also keeps towers out of scattered footprints, D31), and the AE2 crater basin ([0006](design/0006-build-around-other-worldgen.md)) |
 | M09 · Profiles and config | Core | Every profile option that survives, server-owner config, profile selection without a world-preset screen |

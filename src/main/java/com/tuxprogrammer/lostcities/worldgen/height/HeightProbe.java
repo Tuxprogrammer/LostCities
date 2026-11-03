@@ -100,13 +100,15 @@ public final class HeightProbe {
         if (fetch == null) {
             return false;
         }
-        lastFetchSource = sourceOf(fetch);
+        String source = sourceOf(fetch);
         boolean was = active;
         active = false;
         try {
             fetch.run();
         } finally {
             active = was;
+            // A fetch that fetches in turn (the highway planner's hub steps, M06) is named by the outer one.
+            lastFetchSource = source;
         }
         return true;
     }

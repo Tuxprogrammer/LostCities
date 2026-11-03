@@ -53,9 +53,11 @@ public final class PlanPrefetcher {
 
     /**
      * Fetches one target may need before it is planned without the probe instead: a guard against two values that
-     * keep evicting each other. A village's ground estimate reads about a hundred chunks.
+     * keep evicting each other. A village's ground estimate reads about a hundred chunks; the first target in a fresh
+     * highway planning region needs a step per hub cell and per height those cells read, up to a few thousand
+     * (M06, {@code NetworkGate}).
      */
-    static final int MAX_FETCHES_PER_TARGET = 512;
+    static final int MAX_FETCHES_PER_TARGET = 8192;
     /** A fetch longer than this is named in the budget report by the class that asked for it, nanoseconds. */
     static final long SLOW_FETCH_NANOS = 2_000_000L;
 

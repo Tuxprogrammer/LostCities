@@ -125,4 +125,31 @@ public class HeightProbeTest {
         assertTrue(HeightProbe.isProbe(probe.miss(() -> {})));
         assertFalse(HeightProbe.isProbe(new IllegalStateException()));
     }
+
+    /** A fetch that misses and fetches in turn, as the highway planner's hub step does (M06). */
+    private static final class OuterFetch implements Runnable {
+
+        private final HeightProbe probe;
+
+        OuterFetch(HeightProbe probe) {
+            this.probe = probe;
+        }
+
+        @Override
+        public void run() {
+            probe.miss(() -> {});
+            probe.fetchMissing();
+        }
+    }
+
+    @Test
+    public void aFetchThatFetchesInTurnIsNamedByTheOuterOne() {
+        HeightProbe probe = new HeightProbe();
+        probe.miss(new OuterFetch(probe));
+        assertTrue(probe.fetchMissing());
+        assertEquals("HeightProbeTest$OuterFetch", probe.lastFetchSource());
+        probe.miss(() -> {});
+        assertTrue(probe.fetchMissing());
+        assertEquals("HeightProbeTest", probe.lastFetchSource(), "a lambda is named by its enclosing class");
+    }
 }

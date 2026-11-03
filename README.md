@@ -72,7 +72,7 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 
 ## Known limits
 
-- **No highways or railways in this build.** Highways, railways, subways, stations, gas stations and restaurants are still being ported; the `highways` and `railways` switches do nothing yet.
+- **No monorails.** Highways, railways, stations, rail dungeons, gas stations and restaurants are in; upstream's monorails are not yet.
 - **Overworld only, on RWG or flat.** Upstream's floating, space, cavern and sphere landscapes and their profiles, and the separate Lost City dimension, are not included.
 - **No world-preset screen.** Profiles are chosen in the config, as above.
 - **Not balanced yet.** Loot amounts, spawner density, city size and frequency are upstream's numbers within the pack's EV ceiling; the list to tune is in [docs/new-spec/beta-balance-list.md](docs/new-spec/beta-balance-list.md).
@@ -81,7 +81,9 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
   - a village lane can rise two blocks where it crosses a chunk border, so you jump there;
   - where an AE2 meteorite's crater cuts into a city, the city ends at the pit's edge with no slope down;
   - other mods' trees standing beside a cabin can lean over it;
-  - a GregTech boulder can cut into a building.
+  - a GregTech boulder can cut into a building;
+  - highway ramps' slab half-steps contrast with the road, so ramps look striped;
+  - a rail can have a gap where a junction sits under a shallow landmark.
 - **No achievements or in-game guide yet.**
 
 Report what you find to the mod's issue tracker with the seed, world type, profile and coordinates (`/lostcities debug` at the spot helps).

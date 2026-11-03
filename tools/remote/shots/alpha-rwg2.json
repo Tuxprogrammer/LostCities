@@ -1,5 +1,5 @@
 {
-  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view. M07 adds a cabin and a radio tower and an oil rig; M12 adds the taper, lot, repair and feather views (docs/design/0012, 0011).",
+  "comment": "M05 alpha gate and M05R review round: real cities on RWG2 Continents, seed 4242. Each shot's position and view come from /lostcities find (decision log D115); the monument shot is dropped (AR-15) for the rise cap's view. M07 adds a cabin and a radio tower and an oil rig; M06 adds the highway, ramp, station and railway shots; M12 adds the taper, lot, repair and feather views (docs/design/0012, 0011).",
   "title": "Alpha review: real cities on RWG2 Continents, seed 4242",
   "world": {
     "name": "alpha-rwg2c",
@@ -90,6 +90,46 @@
       "caption": "Soft edge: the city's margin, a chunk of natural ground the blend slopes from the city's edge to a village's ground, with the strip that meets the village's own edge and the lane's steps; the city builds inside it (AR-10, AR-11).",
       "pitch": 35,
       "y": "top+20"
+    },
+    {
+      "name": "highway",
+      "find": {
+        "cmd": "lostcities find highway 128",
+        "match": "kind=highway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Highway (M06): the straight highway piece above ground nearest the spawn with highway ahead of it, from behind it along its axis, 15 blocks above the deck. Open road in a city, a bridge with railings and supports outside one; the surface is upstream's cyan terracotta."
+    },
+    {
+      "name": "ramp",
+      "find": {
+        "cmd": "lostcities find ramp 192",
+        "match": "kind=ramp block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Highway ramp (M06, AR-10): where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from above the ramp's edge: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
+    },
+    {
+      "name": "station",
+      "find": {
+        "cmd": "lostcities find station 128",
+        "match": "kind=station block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Railway station (M06): the surface station nearest the spawn, from 30 blocks above it, looking down."
+    },
+    {
+      "name": "railway",
+      "find": {
+        "cmd": "lostcities find railway 96",
+        "match": "kind=railway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Railway (M06): inside the tunnel of the east-west line nearest the spawn, at the track, looking east along the line."
     },
     {
       "name": "scattered",

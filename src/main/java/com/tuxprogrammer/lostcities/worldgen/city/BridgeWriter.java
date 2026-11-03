@@ -235,7 +235,7 @@ final class BridgeWriter {
      * Upstream's {@code Supports.generatePart}: repeats a support part's columns down from {@code topY}, each column
      * stopping at the first block that is not air or liquid.
      */
-    private static void supportPart(CityWriteContext context, Part part, CityPalettes.ChunkPalette chunkPalette,
+    static void supportPart(CityWriteContext context, Part part, CityPalettes.ChunkPalette chunkPalette,
         Transform transform, int topY, CityTarget target) {
         if (part.height() == 0) {
             return;

@@ -155,6 +155,53 @@ final class CityMap {
         return factors.put(chunkX, chunkZ, computeCityFactor(chunkX, chunkZ));
     }
 
+    /**
+     * Returns a chunk's city factor without caching it: the highway planner's city potential samples thousands of
+     * chunks once each, which would only push the city's own chunks out of the cache (M06).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the factor, the same as {@link #cityFactor}
+     */
+    float uncachedCityFactor(int chunkX, int chunkZ) {
+        Float cached = factors.get(chunkX, chunkZ);
+        return cached != null ? cached : computeCityFactor(chunkX, chunkZ);
+    }
+
+    /**
+     * Returns a chunk's city factor before the height window, the rise cap and the biome multiplier: the centers'
+     * overlap (or the Perlin rarity) times the spawn multiplier, 1 on predefined content. The full factor is at most
+     * this times the world style's largest biome multiplier, which the highway planner's pruning relies on (M06).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the raw factor, not clamped
+     */
+    float rawCityFactor(int chunkX, int chunkZ) {
+        if (predefined.occupant(chunkX, chunkZ) != null) {
+            return 1.0f;
+        }
+        float factor = 0;
+        if (rarity != null) {
+            factor = rarity.getCityFactor(chunkX, chunkZ);
+        } else {
+            for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
+                for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
+                    if (isCityCenter(cx, cz)) {
+                        factor += contribution(cx, cz, chunkX, chunkZ);
+                    }
+                }
+            }
+            for (PredefinedCity city : distantPredefined(chunkX, chunkZ)) {
+                factor += contribution(city.chunkX(), city.chunkZ(), chunkX, chunkZ);
+            }
+        }
+        if (profile.citySpawnDistance2 > 0) {
+            factor *= (float) spawnMultiplier(chunkX, chunkZ);
+        }
+        return factor;
+    }
+
     private float computeCityFactor(int chunkX, int chunkZ) {
         // Avoids CITY-07: every occupied chunk of a predefined building or street is forced, whatever the footprint.
         if (predefined.occupant(chunkX, chunkZ) != null) {

@@ -146,8 +146,9 @@ public final class FootprintGuard {
         if (WORLDS[top] != world) {
             return false;
         }
-        if (y < PLANS[top].chunk(chunkX, chunkZ)
-            .footprintBottom(x & 15, z & 15)) {
+        com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan chunk = PLANS[top].chunk(chunkX, chunkZ);
+        if (y < chunk.footprintBottom(x & 15, z & 15) && !chunk.inGuardBand(y)) {
+            // The guarded band (M06): a highway tunnel's or a railway's Y range, in every column of the chunk.
             return false;
         }
         dropped++;

@@ -128,6 +128,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     final WorldStyleView worldStyle;
     final TerrainView terrain;
     final InfrastructureView infrastructure;
+    final Networks networks;
     final LayoutLog log;
     final HierarchicalStreetPlanner streets;
     final HierarchicalBridgePlanner bridges;
@@ -156,7 +157,6 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.assets = inputs.assets;
         this.worldStyle = inputs.assets.worldStyle();
         this.terrain = inputs.terrain;
-        this.infrastructure = inputs.infrastructure;
         this.log = inputs.log;
         int cache = inputs.cacheSize;
         this.streets = new HierarchicalStreetPlanner(seed, dimension, profile.streets);
@@ -171,6 +171,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.cities = new CityMap(seed, profile, worldStyle, terrain, predefined, cache);
         this.levels = new CityLevels(profile, terrain, cities, cache);
         this.sewing = new Sewing(profile, cities, zones, streets, predefined, cache);
+        // M06: the networks read the city map, levels and zones built above, never a plan.
+        this.networks = inputs.networks == null ? null : new Networks(this, inputs.networks);
+        this.infrastructure = networks == null ? inputs.infrastructure : networks;
         this.urbanity = new Urbanity(seed, profile, cities, this::isCityForRoads, cache);
         this.facades = new FacadePlanner(this, cache);
         this.multiChunks = new ChunkCache<>(Math.max(64, cache / 64));
@@ -184,6 +187,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** Returns the profile the layout reads (M09: the world's pinned profile). */
     public LayoutProfile profile() {
         return profile;
+    }
+
+    /**
+     * Returns the world's highway and railway networks, or {@code null} when the inputs gave no network settings (the
+     * layout then reads {@link LayoutInputs}' infrastructure view).
+     *
+     * @return the networks, or {@code null}
+     */
+    public Networks networks() {
+        return networks;
     }
 
     /** Returns the street field (raw roads) of this dimension. */
@@ -1382,7 +1395,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     public boolean hasCorridor(int chunkX, int chunkZ, Orientation orientation) {
         ChunkPlan plan = plan(chunkX, chunkZ);
         boolean candidate = orientation == Orientation.X ? plan.xRailCorridor : plan.zRailCorridor;
-        if (!candidate) {
+        // M06: the railways module switches the subways off too; their draws stay, so nothing else moves.
+        if (!candidate || networks != null && !networks.subways()) {
             return false;
         }
         return corridorEndsAtCellars(chunkX, chunkZ, orientation, -1)

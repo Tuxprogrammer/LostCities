@@ -5,10 +5,16 @@ import java.util.Map;
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValidator;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
+import com.tuxprogrammer.lostcities.core.Module;
+import com.tuxprogrammer.lostcities.core.ModuleState;
 import com.tuxprogrammer.lostcities.layout.LayoutProfile;
 import com.tuxprogrammer.lostcities.layout.MultiBuildingStreetConflict;
+import com.tuxprogrammer.lostcities.layout.NetworkSettings;
+import com.tuxprogrammer.lostcities.layout.highway.HighwaySettings;
+import com.tuxprogrammer.lostcities.layout.highway.PlanningGate;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
+import com.tuxprogrammer.lostcities.layout.rail.RailwaySettings;
 import com.tuxprogrammer.lostcities.layout.street.StreetPlannerSettings;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
@@ -110,6 +116,60 @@ public final class CityProfiles {
             builder.landmarkTreatment(entry.getKey(), entry.getValue());
         }
         return builder.build();
+    }
+
+    /**
+     * Returns a world's highway and railway settings (M06) from its pinned profile values and module flags: a module
+     * switched off and the profile's own switch both turn their network off. Values a validated profile always has in
+     * range; should a pinned value still fail the planner's checks, upstream's defaults stand in, so a world is never
+     * refused for its snapshot (P-PROF-7).
+     *
+     * @param values  the world's pinned profile values
+     * @param modules the world's pinned module flags
+     * @param gate    schedules the highway planner's hub cells
+     * @return the settings
+     */
+    public static NetworkSettings networkSettings(ProfileValues values, ModuleState modules, PlanningGate gate) {
+        boolean highways = modules.isActive(Module.HIGHWAYS) && values.getBoolean("highwaysEnabled");
+        boolean railways = modules.isActive(Module.RAILWAYS);
+        HighwaySettings highwaySettings;
+        try {
+            highwaySettings = HighwaySettings.builder()
+                .enabled(highways)
+                .supports(values.getBoolean("highwaySupports"))
+                .hubs(
+                    values.getInt("highwayPlanningCellSize"),
+                    values.getInt("highwayHubSampleSpacing"),
+                    values.getFloat("highwayHubMinimumPotential"),
+                    values.getInt("highwayHubSearchRadiusCells"))
+                .connections(
+                    values.getInt("highwayMinimumHubDistance"),
+                    values.getInt("highwayMaximumHubDistance"),
+                    values.getInt("highwayMaximumConnectionsPerHub"),
+                    values.getInt("highwayMinimumRouteLength"),
+                    values.getFloat("highwayRouteCityPenalty"))
+                .levels(values.getInt("highwayLevelFromCities"), values.getInt("highwayNetworkLevel"))
+                .railwaySpacing(values.getInt("railwaySpacingNorthSouth"), values.getInt("railwaySpacingEastWest"))
+                .build();
+        } catch (IllegalArgumentException e) {
+            highwaySettings = HighwaySettings.builder()
+                .enabled(highways)
+                .build();
+        }
+        RailwaySettings railwaySettings;
+        try {
+            railwaySettings = new RailwaySettings(
+                railways && values.getBoolean("railwaysEnabled"),
+                railways && values.getBoolean("railwayStationsEnabled"),
+                values.getBoolean("railwaySurfaceStationsEnabled"),
+                values.getBoolean("railwaysCanEnd"),
+                values.getInt("railwayLevelOffset"),
+                values.getInt("railwaySpacingNorthSouth"),
+                values.getInt("railwaySpacingEastWest"));
+        } catch (IllegalArgumentException e) {
+            railwaySettings = new RailwaySettings(railways, railways, true, false, 0, 10, 10);
+        }
+        return new NetworkSettings(highwaySettings, railwaySettings, gate, railways);
     }
 
     /**

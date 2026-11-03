@@ -97,7 +97,7 @@ public final class OverlayWorld {
         this.columns = columns;
         this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
         this.biomes = new WorldBiomes(world);
-        this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers, refs);
+        this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers, probe, refs);
         this.editMode = snapshot.profileValues()
             .getBoolean(EDIT_MODE);
         if (editMode && cities != null) {
@@ -143,7 +143,7 @@ public final class OverlayWorld {
      */
     private static LayoutCityPlan layoutPlan(WorldServer world, ProfileSnapshot snapshot, TerrainSettings settings,
         TerrainHeightOracle oracle, ChunkHeights heights, WorldBiomes biomes, RegistryBlockClassifier classifier,
-        GenerationTimers timers, BlockRefs refs) {
+        GenerationTimers timers, HeightProbe probe, BlockRefs refs) {
         if (!ProfileSnapshot.PLAN_LAYOUT.equals(snapshot.planSource())) {
             return null;
         }
@@ -179,6 +179,7 @@ public final class OverlayWorld {
                     terrain)
                 .dimension(DimensionKey.forDimension(world.provider.dimensionId))
                 .structures(structures)
+                .networks(CityProfiles.networkSettings(values, snapshot.moduleState(), new NetworkGate(probe)))
                 .log(message -> LostCities.LOG.warn("[layout] {}", message))
                 .cacheSize(LayoutCityPlan.LAYOUT_CACHE_SIZE)
                 .build());
@@ -363,7 +364,8 @@ public final class OverlayWorld {
 
     /**
      * Returns whether the population area of a chunk (the chunk and its +X, +Z and +X+Z neighbors, which the vanilla
-     * +8 offset spreads decoration over) touches a city chunk: then lakes, lava, dungeons and oil are vetoed (0005 §3).
+     * +8 offset spreads decoration over) touches a city chunk or a highway: then lakes, lava, dungeons and oil are
+     * vetoed (0005 §3, M06).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
@@ -392,7 +394,8 @@ public final class OverlayWorld {
         for (int dz = 0; dz <= 1; dz++) {
             for (int dx = 0; dx <= 1; dx++) {
                 ChunkPlan touched = plan.chunk(chunkX + dx, chunkZ + dz);
-                if (scattered ? touched.isScattered() : touched.isCity()) {
+                // M06: no lake or pit eats a highway either (alpha review AR-10).
+                if ((scattered ? touched.isScattered() : touched.isCity()) || touched.hasHighway()) {
                     return true;
                 }
             }

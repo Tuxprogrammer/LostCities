@@ -224,9 +224,12 @@ final class SewingScenario implements Scenario {
                         .chunkClasses()
                         .get(ChunkRecorder.key(cx, cz));
                     // A core is never city and never takes content (ChunkPlan rejects it); where the recorder saw
-                    // the chunk generate, it must also have come out untouched unless it carries a lane.
-                    if (!plan.isCore()
-                        || plan.lane() == null && treated != null && treated != TerrainPhase.ChunkClass.UNTOUCHED) {
+                    // the chunk generate, it must also have come out untouched unless it carries a lane, or a railway
+                    // deep enough to pass under it (D30, M06), which writes nothing near its surface.
+                    if (!plan.isCore() || plan.lane() == null
+                        && plan.network() == com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent.NONE
+                        && treated != null
+                        && treated != TerrainPhase.ChunkClass.UNTOUCHED) {
                         count.coresWritten++;
                     }
                 }

@@ -6,10 +6,9 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 
 | Status | IDs |
 |---|---|
-| tested | 161 |
-| cannot occur | 37 |
+| tested | 170 |
+| cannot occur | 35 |
 | kept | 1 |
-| M06 | 7 |
 | not a bug | 1 |
 
 - **tested**: a `doesNotReproduce` test proves the bug does not come back.
@@ -59,7 +58,7 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 | ASSET-31 |  | crash | tested | `MultiBuildingTest#doesNotReproduceASSET31_theGridMustMatchItsSize` |
 | ASSET-32 |  | crash | tested | `CityChunkWriterTest#doesNotReproduceASSET32_anEmptyPartListPicksNothingAndDrawsNothing`<br>`CityStyleTest#doesNotReproduceASSET32_anEmptyStreetPartListIsRejected`<br>`WorldStyleTest#doesNotReproduceASSET32_anEmptyPartListIsRejected` |
 | HWY-04 |  | crash | cannot occur | Legacy noise highways are not ported (D11) |
-| HWY-12 |  | crash | tested | `BridgeWriterTest#doesNotReproduceHWY12_anUndefinedDeckCharacterIsSkippedNotThrown`<br>`PartWriterTest#doesNotReproduceHWY12_anUndefinedCharacterIsSkippedAndReportedOnce` |
+| HWY-12 |  | crash | tested | `BridgeWriterTest#doesNotReproduceHWY12_anUndefinedDeckCharacterIsSkippedNotThrown`<br>`NetworkWriterTest#doesNotReproduceHWY12_aSupportOrRailBlockMissingFromThePaletteIsSkippedNotThrown`<br>`PartWriterTest#doesNotReproduceHWY12_anUndefinedCharacterIsSkippedAndReportedOnce` |
 | SCAT-06 |  | crash | tested | `ScatteredPlannerTest#doesNotReproduceSCAT06_zeroWeightsLeaveTheAreaEmpty`<br>`WorldStyleTest#doesNotReproduceSCAT06_aZeroScatteredTotalIsRejected` |
 | SCAT-08 |  | crash | tested | `ScatteredWriterTest#doesNotReproduceSCAT08_theRepeatedSliceStopsAtYOne` |
 | UI-01 |  | crash | cannot occur | The upstream world-creation screens (profile screen, preview, config widgets) are deferred or dropped; profiles are chosen through `dimensionProfiles` and GTNHLib's config screen ([0005](../design/0005-rwg-overlay.md) §7, D14, D31; new-spec 09-client-ui) |
@@ -103,7 +102,7 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 | CITY-11 |  | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY11_onlyNeighborsThatCouldHoldABuildingCount` |
 | CITY-16 |  | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY16_cellarsAreUniformBetweenMinimumAndMaximum` |
 | CITY-18 |  | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY18_floorsAndCellarsAreFittedOnceAndQueriesArePure` |
-| CITY-19 | HWY-07 | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY19_planningNeverRemovesRails` |
+| CITY-19 | HWY-07 | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY19_planningNeverRemovesRails`<br>`NetworkWriterTest#doesNotReproduceCITY19_aBuildingBlocksOnlyItsOwnChunksRail` |
 | CITY-20 |  | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY20_cacheEvictionNeverChangesAPlan` |
 | CITY-21 |  | worldgen | tested | `LayoutPlannerTest#doesNotReproduceCITY21_majorityTiesGoToTheOwnStyleThenTheFirstName` |
 | CITY-26 |  | worldgen | tested | `MultiChunkTest#doesNotReproduceCITY26_railClearanceUsesTheFootprintsOwnLevel` |
@@ -120,11 +119,11 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 | ASSET-15 |  | worldgen | tested | `AssetLoaderTest#doesNotReproduceASSET15_theStuffIndexExistsAtLoad` |
 | ASSET-28 |  | worldgen | tested | `AssetLoaderTest#doesNotReproduceASSET28_inheritanceIsResolvedRootFirstAtLoad`<br>`CityStyleTest#doesNotReproduceASSET28_aMissingParentOrACycleRejectsTheStyle` |
 | ASSET-33 |  | worldgen | tested | `ConditionContextTest#doesNotReproduceASSET33_namesAreFullIds`<br>`ConditionGuardTest#doesNotReproduceASSET33_bareAndFullNamesMatch`<br>`NameMatcherTest#doesNotReproduceASSET33_bareAndFullNamesMatchEachOther` |
-| HWY-01 |  | worldgen | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
-| HWY-02 |  | worldgen | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
-| HWY-06 |  | worldgen | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
-| HWY-08 |  | worldgen | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
-| HWY-11 |  | worldgen | cannot occur | No saved hub data: highways are a pure function of seed, coordinates and profile (D11) |
+| HWY-01 |  | worldgen | tested | `RailwayLayoutTest#doesNotReproduceHWY01_theWestTestOfTheThreeTrackSpotLooksWest` |
+| HWY-02 |  | worldgen | tested | `NetworkWriterTest#doesNotReproduceHWY02_aNorthSouthPieceTestsItsWestAndEastNeighbors` |
+| HWY-06 |  | worldgen | tested | `HighwayPlannerTest#doesNotReproduceHWY06_highwaysSwitchedOffGiveNoHighwayAnywhere` |
+| HWY-08 |  | worldgen | tested | `RailwayLayoutTest#doesNotReproduceHWY08_eachWorldsLayoutAnswersFromItsOwnProfile` |
+| HWY-11 |  | worldgen | tested | `HighwayPlannerTest#doesNotReproduceHWY11_noHubIsStoredSoHistoryNeverChangesAnAnswer` |
 | SCAT-01 |  | worldgen | tested | `ScatteredPlannerTest#doesNotReproduceSCAT01_footprintsKeepOutOfEveryLandmarkZone` |
 | SCAT-02 |  | worldgen | tested | `ScatteredPlannerTest#doesNotReproduceSCAT02_theFootprintDecisionDoesNotDependOnOrder` |
 | SCAT-05 |  | worldgen | tested | `ScatteredPlannerTest#doesNotReproduceSCAT05_eachEntryGetsExactlyItsWeight` |
@@ -170,9 +169,9 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 | CITY-23 |  | performance | cannot occur | Legacy bridges and the `LEGACY` street mode are not ported (D11) |
 | ASSET-26 |  | performance | tested | `CityPalettesTest#doesNotReproduceASSET26_aPartsPaletteIsCompiledOncePerChunkPalette` |
 | HWY-05 |  | performance | cannot occur | Legacy noise highways are not ported (D11) |
-| HWY-10 |  | performance | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
-| HWY-14 |  | performance | cannot occur | No planning thread pool: the highway planner runs on the server thread (D11) |
-| HWY-15 |  | performance | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
+| HWY-10 |  | performance | tested | `HighwayPlannerTest#doesNotReproduceHWY10_theCachesEvictTheLeastRecentlyUsedEntry` |
+| HWY-14 |  | performance | tested | `HighwayPlannerTest#doesNotReproduceHWY14_planningRunsOnTheCallersThreadWithNoPool` |
+| HWY-15 |  | performance | tested | `HighwayPlannerTest#doesNotReproduceHWY15_theChunkCacheIsBounded`<br>`RailwayLayoutTest#doesNotReproduceHWY15_theCachesAreBounded` |
 | SCAT-03 |  | performance | tested | `ScatteredPlannerTest#doesNotReproduceSCAT03_cachesStayBounded` |
 | SCAT-14 |  | performance | tested | `ScatteredPlannerTest#doesNotReproduceSCAT14_theCacheIsBoundedAndADroppedPlanComesBackTheSame` |
 | SCAT-15 |  | performance | tested | `ScatteredPlannerTest#doesNotReproduceSCAT15_theHighwaySearchReadsNoTerrainWithoutAHighway` |
@@ -192,7 +191,7 @@ Every ID in [BUGS.md](BUGS.md) and how this mod keeps it out: a regression test 
 | ASSET-18 | LOOT-09 | visual | tested | `MetaRotationTest#doesNotReproduceASSET18_everyDirectionalBlockTurns`<br>`PartWriterTest#doesNotReproduceASSET18_directionalBlocksTurnWithThePart` |
 | ASSET-20 |  | visual | tested | `PaletteGoldenTest#doesNotReproduceASSET20_everyDesertPaletteDefinesRubble` |
 | ASSET-30 |  | visual | tested | `CompiledPaletteTest#doesNotReproduceASSET30_damageBelongsToTheDeclaringCharacterAndReferencesCopyIt`<br>`PaletteTest#doesNotReproduceASSET30_damagedBelongsToTheDeclaringCharacter` |
-| HWY-09 |  | visual | M06 | Milestone M06 (highways and railways) is still landing; its regression tests land with its code |
+| HWY-09 |  | visual | tested | `HighwayPlannerTest#doesNotReproduceHWY09_overlappingRoutesShareTheirLowestLevelAndNeverBreak` |
 | LOOT-08 |  | visual | tested | `RegistryBlockClassifierTest#doesNotReproduceLOOT08_everyBlockThatEmitsLightIsALight` |
 | UI-05 |  | visual | cannot occur | The upstream world-creation screens (profile screen, preview, config widgets) are deferred or dropped; profiles are chosen through `dimensionProfiles` and GTNHLib's config screen ([0005](../design/0005-rwg-overlay.md) §7, D14, D31; new-spec 09-client-ui) |
 | CORE-08 |  | cosmetic | tested | `ProfileRegressionsTest#doesNotReproduceCORE08_heightSampleSizeIsDocumentedWithItsRealDefault` |

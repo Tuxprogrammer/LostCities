@@ -285,6 +285,51 @@ public final class PartWriter {
     }
 
     /**
+     * Writes a part with each of its X slices raised by its own number of blocks: a highway ramp, whose straight part
+     * climbs along its axis (M06, design record 0013). Part-local X is the axis the shifts follow, before the
+     * transform.
+     *
+     * @param placement the part and where it goes
+     * @param shifts    blocks each part-local X slice is raised by, indexed by part-local X
+     * @return the Y above the part's last slice at its lowest column
+     */
+    public int placeShifted(Placement placement, int[] shifts) {
+        if (listener != null) {
+            listener.accept(placement);
+        }
+        Part part = placement.part;
+        CompiledPalette palette = placement.palette;
+        boolean nowater = part.metaBoolean(Part.MetaKey.NOWATER);
+        boolean forcedAir = part.metaBoolean(Part.MetaKey.FORCEDAIR);
+        for (int x = 0; x < part.xsize(); x++) {
+            int shift = x < shifts.length ? shifts[x] : 0;
+            for (int z = 0; z < part.zsize(); z++) {
+                char[] column = part.column(x, z);
+                if (column == null) {
+                    continue;
+                }
+                int rx = placement.ox + placement.transform.rotateX(x, z);
+                int rz = placement.oz + placement.transform.rotateZ(x, z);
+                if (rx < 0 || rx > 15 || rz < 0 || rz > 15) {
+                    continue;
+                }
+                for (int y = 0; y < column.length; y++) {
+                    char c = column[y];
+                    if (c == ' ') {
+                        continue;
+                    }
+                    int worldY = placement.oy + shift + y;
+                    if (worldY < WorldLimits.MIN_Y || worldY > WorldLimits.MAX_Y) {
+                        continue;
+                    }
+                    placeOne(placement, palette, c, rx, worldY, rz, nowater, forcedAir);
+                }
+            }
+        }
+        return placement.oy + part.height();
+    }
+
+    /**
      * Sets what is told of each part before it is written: the part editor's recorder in an {@code editMode} world.
      *
      * @param value the listener, or {@code null} for none

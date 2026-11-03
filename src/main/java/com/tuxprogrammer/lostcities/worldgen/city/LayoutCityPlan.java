@@ -64,6 +64,8 @@ public final class LayoutCityPlan implements CityPlan {
     static final int LANE_FOOTPRINT_DEPTH = 4;
     /** Reach of the structure oracle around a core chunk when its lanes are drawn, in chunks. */
     static final int CORE_LANE_REACH = 1;
+    /** "NETWORK!": the network writer's palette sequence salt, so its draws never follow the city writer's. */
+    static final long NETWORK_SEQUENCE = 0x4e4554574f524b21L;
 
     /**
      * Entries of each layout planner cache (D57) in a live world: smaller than the planner's default so the world's
@@ -167,7 +169,10 @@ public final class LayoutCityPlan implements CityPlan {
         long styles = (long) CityPalettes.STYLE_CAPACITY * STYLE_BYTES;
         long scatteredBytes = scattered == null ? 0
             : 2L * SCATTERED_CACHE_SIZE * SCATTERED_PLAN_BYTES + (long) ScatteredContent.FIT_CACHE * GROUND_FIT_BYTES;
-        return layout + palettes + styles + scatteredBytes;
+        long networks = planner.networks() == null ? 0
+            : planner.networks()
+                .estimatedCacheBytes();
+        return layout + palettes + styles + scatteredBytes + networks;
     }
 
     @Override
@@ -199,7 +204,8 @@ public final class LayoutCityPlan implements CityPlan {
                 return cell.gate() != null && cell.gate()
                     .equals(gate);
             });
-        return com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.builder(chunkX, chunkZ, ChunkKind.LANDMARK_CORE)
+        com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Builder builder = com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan
+            .builder(chunkX, chunkZ, ChunkKind.LANDMARK_CORE)
             .cityLevel(plan.cityLevel())
             .groundY(natural)
             .naturalHeight(natural)
@@ -207,8 +213,10 @@ public final class LayoutCityPlan implements CityPlan {
             .lane(LaneShapes.path(lane, material(chunkX, chunkZ)))
             .label(
                 "landmark core " + plan.zone()
-                    .landmarkId())
-            .build();
+                    .landmarkId());
+        // Only a railway deep enough to pass under the core reaches here (D30, D31); it needs no footprint.
+        network(builder, chunkX, chunkZ, natural, null);
+        return builder.build();
     }
 
     private com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan outside(int chunkX, int chunkZ, ChunkPlan plan,
@@ -234,6 +242,7 @@ public final class LayoutCityPlan implements CityPlan {
             // 07-scattered: a structure's share, its jobs and guard, and the ground fits that reach this chunk.
             footprint = scattered.addTo(builder, chunkX, chunkZ, footprint);
         }
+        footprint = network(builder, chunkX, chunkZ, natural, footprint);
         boolean[] lane = LaneShapes.forCell(plan.lane(), chunkX, chunkZ);
         if (lane != null) {
             builder.lane(graded(plan.lane(), LaneShapes.path(lane, material(chunkX, chunkZ)), chunkX, chunkZ));
@@ -342,9 +351,87 @@ public final class LayoutCityPlan implements CityPlan {
         if (!plan.hasBuilding()) {
             builder.edgeSource(() -> edges(chunkX, chunkZ));
         }
-
+        footprint = network(builder, chunkX, chunkZ, natural, footprint);
         return builder.footprint(footprint)
             .build();
+    }
+
+    /**
+     * Adds a chunk's highways, railways and rail dungeon (M06): the network writer, the flag that keeps lakes, lava and
+     * dungeons out of a highway's population area, the footprint above a highway's deck or a surface station, the
+     * guarded band of its tunnels and underground lines, and the network's population jobs after the chunk's own (call
+     * it after the chunk's own job source is set).
+     *
+     * @param builder   the chunk's plan builder
+     * @param footprint the chunk's footprint so far, or {@code null}
+     * @return the footprint with the network's columns added
+     */
+    private int[] network(com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.Builder builder, int chunkX, int chunkZ,
+        int natural, int[] footprint) {
+        if (!NetworkWriter.hasWork(planner, chunkX, chunkZ)) {
+            return footprint;
+        }
+        builder.network(
+            (buffer,
+                contentContext) -> new NetworkWriter(
+                    context,
+                    chunkX,
+                    chunkZ,
+                    new BufferTarget(buffer, contentContext),
+                    contentContext.random(),
+                    new PaletteSequence(context.worldSeed() ^ NETWORK_SEQUENCE, chunkX, chunkZ),
+                    natural).railings(scattered())
+                        .write());
+        builder.highway(
+            planner.networks()
+                .highway(chunkX, chunkZ)
+                .hasHighway());
+        builder.addJobSource(() -> networkDryRun(chunkX, chunkZ, natural));
+        int[] band = NetworkWriter.guardBand(context, chunkX, chunkZ, natural);
+        if (band != null) {
+            builder.guardBand(band[0], band[1]);
+        }
+        int bottom = NetworkWriter.footprintBottom(context, chunkX, chunkZ, natural);
+        if (bottom == Integer.MAX_VALUE) {
+            return footprint;
+        }
+        int[] out = footprint;
+        if (out == null) {
+            out = new int[256];
+            Arrays.fill(out, com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan.NO_FOOTPRINT);
+        }
+        for (int i = 0; i < 256; i++) {
+            out[i] = Math.min(out[i], bottom);
+        }
+        return out;
+    }
+
+    /** Lists the network's population jobs by running its writer against a {@link JobTarget}. */
+    private List<PopulationJob> networkDryRun(int chunkX, int chunkZ, int natural) {
+        ChunkPlan plan = planner.plan(chunkX, chunkZ);
+        JobTarget target = new JobTarget(
+            new JobTarget.Facts(
+                context.worldSeed(),
+                chunkX,
+                chunkZ,
+                settings.groundLevel(),
+                plan.cityGroundLevel(),
+                plan.hasBuilding() ? plan.cellars() : 0,
+                plan.hasBuilding() ? plan.floors() : 0,
+                context.biomes()
+                    .biomeOfChunk(chunkX, chunkZ),
+                plan.noLoot(),
+                settings.generateLoot(),
+                settings.chestWithoutLootChance()));
+        new NetworkWriter(
+            context,
+            chunkX,
+            chunkZ,
+            target,
+            new Random(TerrainPhase.networkSeed(context.worldSeed(), chunkX, chunkZ)),
+            new PaletteSequence(context.worldSeed() ^ NETWORK_SEQUENCE, chunkX, chunkZ),
+            natural).write();
+        return target.jobs();
     }
 
     /** Returns whether a street chunk is a park or open lot, whose columns stay outside the footprint. */
