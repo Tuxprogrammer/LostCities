@@ -58,8 +58,8 @@ public final class CityFinder {
         /** A straight railway line in its tunnel, seen from inside (M06). */
         RAILWAY,
         /**
-         * A city center seen from outside the city, low over the land: the skyline that tapers from the core to the
-         * edge (alpha review AR-5).
+         * A city's core seen from outside the city, a little above its edge: the skyline that tapers from the core to
+         * the edge (alpha review AR-5).
          */
         TAPER,
         /** An edge lot: an empty lot, an excavation or a foundation (AR-6); dug ones first. */
@@ -196,6 +196,21 @@ public final class CityFinder {
         }
 
         /**
+         * Returns this result with another viewpoint and view direction, for the command's interior view.
+         *
+         * @param newX     the viewpoint's X
+         * @param newY     the viewpoint's Y
+         * @param newZ     the viewpoint's Z
+         * @param newYaw   the view's yaw, degrees
+         * @param newPitch the view's pitch, degrees
+         * @param newLabel what stands at the target
+         * @return the result
+         */
+        public Result withView(double newX, double newY, double newZ, float newYaw, float newPitch, String newLabel) {
+            return new Result(kind, chunkX, chunkZ, x, y, z, newX, newY, newZ, newYaw, newPitch, newLabel);
+        }
+
+        /**
          * Returns the one-line machine-readable form the command logs and automation reads:
          * {@code kind=street block=X,Y,Z chunk=CX,CZ view=X,Y,Z,YAW,PITCH label=...}.
          *
@@ -265,12 +280,27 @@ public final class CityFinder {
     static final int STREET_EYE = 2;
     /** Pitch of the street view, degrees. */
     static final float STREET_PITCH = 8f;
-    /** How far beyond a city's radius the taper view stands, in blocks. */
-    static final int TAPER_BACK = 48;
-    /** How far above the city's ground the taper view stands. */
-    static final int TAPER_HEIGHT = 38;
-    /** Pitch of the taper view, degrees: nearly level, so the skyline shows. */
-    static final float TAPER_PITCH = 12f;
+    /** How far from a city's center the taper view looks for the core's tallest building, in chunks. */
+    static final int TAPER_CORE = 5;
+    /**
+     * Farthest the taper view stands from the core, in blocks: inside the capture's render distance (10 chunks, 160
+     * blocks), with room for the fog.
+     */
+    static final int TAPER_MAX_BACK = 144;
+    /** How far beyond the city's last chunk the taper view stands, in blocks. */
+    static final int TAPER_OUT = 24;
+    /** Height of the taper view above the highest ground or roof between it and the city's edge, in blocks. */
+    static final int TAPER_LIFT = 14;
+    /**
+     * Share of the line from the taper view to the center whose ground and roofs it rises above: the land outside and
+     * the low edge, not the core it looks at.
+     */
+    static final double TAPER_SIGHT = 0.5;
+    /** Points sampled on a line of sight. */
+    static final int SIGHT_SAMPLES = 8;
+    /** The eight compass steps, X and Z: south, west, north, east, then the diagonals. */
+    static final int[][] COMPASS = { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 }, { 1, 1 }, { -1, 1 }, { -1, -1 },
+        { 1, -1 } };
     /** How far beside a lot the lot view stands, on each horizontal axis. */
     static final int LOT_BACK = 14;
     /** How far above the city's ground the lot view stands. */
@@ -344,7 +374,7 @@ public final class CityFinder {
      */
     public Result findBest(Kind kind, int blockX, int blockZ, int radius) {
         if (kind != Kind.SOFTEDGE && kind != Kind.RESERVED && kind != Kind.VILLAGE) {
-            return find(kind, blockX, blockZ, radius);
+            return nearest(kind, blockX, blockZ, radius);
         }
         return new LandmarkViews(planner, plan, structures).best(kind, blockX, blockZ, radius);
     }
@@ -360,6 +390,46 @@ public final class CityFinder {
      */
     public Result find(Kind kind, int blockX, int blockZ, int radius) {
         return find(kind, blockX, blockZ, radius, result -> true);
+    }
+
+    /**
+     * Finds what the command's plain form shows: the nearest thing of a kind, except a ramp, which is the ramp
+     * nearest the city nearest the start (searched from that city's center, within the same radius), so the ramp shot
+     * follows the city the other shots show wherever the search starts; with no city in reach, the ramp nearest the
+     * start.
+     *
+     * @param kind   what to find
+     * @param blockX the start's block X
+     * @param blockZ the start's block Z
+     * @param radius how far to look, in chunks
+     * @return the find, or {@code null}
+     */
+    public Result nearest(Kind kind, int blockX, int blockZ, int radius) {
+        if (kind != Kind.RAMP) {
+            return find(kind, blockX, blockZ, radius);
+        }
+        Result city = find(Kind.CENTER, blockX, blockZ, radius);
+        if (city == null) {
+            return find(kind, blockX, blockZ, radius);
+        }
+        Result ramp = find(kind, city.x, city.z, radius);
+        if (ramp == null) {
+            return null;
+        }
+        long distance = Math.round(Math.hypot(ramp.x - city.x, ramp.z - city.z));
+        return new Result(
+            ramp.kind,
+            ramp.chunkX,
+            ramp.chunkZ,
+            ramp.x,
+            ramp.y,
+            ramp.z,
+            ramp.viewX,
+            ramp.viewY,
+            ramp.viewZ,
+            ramp.yaw,
+            ramp.pitch,
+            ramp.label + ", " + distance + " blocks from the city centered at " + city.x + "," + city.z);
     }
 
     /**
@@ -494,27 +564,107 @@ public final class CityFinder {
         return null;
     }
 
-    /** A city center seen from outside its radius, low over the land, looking north at the skyline. */
+    /**
+     * A city's skyline seen from outside the city, a little above its edge, looking at its core: the tallest building
+     * by its own height within {@link #TAPER_CORE} chunks of the center (AR-5 makes the core the tallest part). Of the
+     * eight compass directions from the core it takes the one with open land (two chunks of no city in a row) within
+     * {@link #TAPER_MAX_BACK} blocks whose view looks down least, so the skyline shows against the sky rather than a
+     * map from above (ties: the first direction). The view stands {@link #TAPER_OUT} blocks beyond the city's last
+     * chunk, {@link #TAPER_LIFT} blocks above the highest ground or roof on the outer half of its line of sight, and
+     * looks at the core's middle height. A center with no open land within reach gives no view; the next center does.
+     */
     private Result taper(int chunkX, int chunkZ) {
         Result center = center(chunkX, chunkZ);
         if (center == null) {
             return null;
         }
-        double back = planner.cityRadius(chunkX, chunkZ) + TAPER_BACK;
-        double viewZ = center.z + back + 0.5;
-        return new Result(
-            Kind.TAPER,
-            chunkX,
-            chunkZ,
-            center.x,
-            center.y,
-            center.z,
-            center.x + 0.5,
-            center.y + TAPER_HEIGHT,
-            viewZ,
-            180f,
-            TAPER_PITCH,
-            "city skyline from " + Math.round(back) + " blocks south of its center");
+        // The core: the tallest building near the center, by its own height (a terrace on a hill is not a tower);
+        // ties go to the one nearer the center.
+        int coreX = chunkX;
+        int coreZ = chunkZ;
+        int coreHeight = -1;
+        int coreDistance = Integer.MAX_VALUE;
+        for (int dz = -TAPER_CORE; dz <= TAPER_CORE; dz++) {
+            for (int dx = -TAPER_CORE; dx <= TAPER_CORE; dx++) {
+                com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan chunk = plan.chunk(chunkX + dx, chunkZ + dz);
+                if (!chunk.isCity()) {
+                    continue;
+                }
+                int height = chunk.maxHeight() - chunk.groundY();
+                int distance = dx * dx + dz * dz;
+                if (height > coreHeight || height == coreHeight && distance < coreDistance) {
+                    coreHeight = height;
+                    coreDistance = distance;
+                    coreX = chunkX + dx;
+                    coreZ = chunkZ + dz;
+                }
+            }
+        }
+        int coreTop = plan.chunk(coreX, coreZ)
+            .maxHeight();
+        int ground = plan.chunk(coreX, coreZ)
+            .groundY();
+        int targetX = (coreX << 4) + 8;
+        int targetZ = (coreZ << 4) + 8;
+        double targetY = (ground + coreTop) / 2.0;
+        LandmarkViews sight = new LandmarkViews(planner, plan, structures);
+        Result best = null;
+        double bestSlope = Double.MAX_VALUE;
+        for (int[] step : COMPASS) {
+            double length = Math.hypot(step[0], step[1]);
+            int edge = 0;
+            for (int walk = 1; (walk - 0.5) * 16 * length + TAPER_OUT <= TAPER_MAX_BACK && edge == 0; walk++) {
+                if (!planner.plan(coreX + step[0] * walk, coreZ + step[1] * walk)
+                    .isCity()
+                    && !planner.plan(coreX + step[0] * (walk + 1), coreZ + step[1] * (walk + 1))
+                        .isCity()) {
+                    edge = walk;
+                }
+            }
+            if (edge == 0) {
+                continue;
+            }
+            // From the core's middle to the first chunk past the city, then TAPER_OUT blocks on.
+            double back = (edge - 0.5) * 16 * length + TAPER_OUT;
+            double viewX = targetX + 0.5 + step[0] / length * back;
+            double viewZ = targetZ + 0.5 + step[1] / length * back;
+            // Above what stands on the outer half of the line of sight, so the land and the edge do not fill the frame.
+            int highest = ground;
+            for (int i = 0; i <= SIGHT_SAMPLES; i++) {
+                double t = i / (double) SIGHT_SAMPLES * TAPER_SIGHT;
+                int x = (int) Math.floor(viewX + (targetX - viewX) * t);
+                int z = (int) Math.floor(viewZ + (targetZ - viewZ) * t);
+                highest = Math.max(highest, sight.obstacle(x >> 4, z >> 4));
+            }
+            double viewY = highest + TAPER_LIFT;
+            double slope = (viewY + LandmarkViews.EYE - targetY) / back;
+            if (slope >= bestSlope) {
+                continue;
+            }
+            bestSlope = slope;
+            best = new Result(
+                Kind.TAPER,
+                coreX,
+                coreZ,
+                targetX,
+                ground,
+                targetZ,
+                viewX,
+                viewY,
+                viewZ,
+                Math.round(yawToward(viewX, viewZ, targetX + 0.5, targetZ + 0.5)),
+                Math.round((float) Math.toDegrees(Math.atan(slope))),
+                String.format(
+                    Locale.ROOT,
+                    "skyline of the city centered at %d,%d: its core rises to Y %d; seen from %d blocks out, %d"
+                        + " blocks above the core's ground",
+                    center.x,
+                    center.z,
+                    coreTop,
+                    Math.round(back),
+                    Math.round(viewY - ground)));
+        }
+        return best;
     }
 
     /** An edge lot, seen from beside it; a lot that is not dug only when no dug one is near (scored by distance). */
