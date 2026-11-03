@@ -5,7 +5,7 @@ Abandoned cities for the **GT New Horizons** overworld (Minecraft 1.7.10). This 
 Explore cities that were here before you, salvage what they left behind, or move into a block of buildings and build your base inside it.
 
 > [!NOTE]
-> **Beta (0.1.0-beta).** The whole mod is in, unpolished: this build is for playtesting. Loot, spawners and city density are not balanced yet, and the [known limits](#known-limits) below are real. Use a new world.
+> **Beta (0.1.0-beta).** The whole mod is in, unpolished: this build is for playtesting. Balance (loot, spawners, city size and density) is tuned during this beta review, against the [balance list](docs/new-spec/beta-balance-list.md); the [known limits](#known-limits) below are real. Use a new world.
 
 ## What it does
 
@@ -72,10 +72,8 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 
 ## Known limits
 
-- **No monorails.** Highways, railways, stations, rail dungeons, gas stations and restaurants are in; upstream's monorails are not yet.
-- **Overworld only, on RWG or flat.** Upstream's floating, space, cavern and sphere landscapes and their profiles, and the separate Lost City dimension, are not included.
+- **Overworld only, on RWG or flat.** Upstream's floating, space, cavern and sphere landscapes and their profiles, and the separate Lost City dimension, are not included, nor the monorails only the space landscape builds (D12).
 - **No world-preset screen.** Profiles are chosen in the config, as above.
-- **Not balanced yet.** Loot amounts, spawner density, city size and frequency are upstream's numbers within the pack's EV ceiling; the list to tune is in [docs/new-spec/beta-balance-list.md](docs/new-spec/beta-balance-list.md).
 - **World generation cost.** On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region (about 10 to 12 % on RWG2 Continents); a performance pass is under way.
 - **Visual rough edges:**
   - a village lane can rise two blocks where it crosses a chunk border, so you jump there;
