@@ -130,9 +130,8 @@ public final class NetworkWriter {
         this.chunkPalette = context.chunkPalette(plan);
         this.palette = chunkPalette.palette();
         this.worldStyle = context.worldStyle();
-        this.cityStyle = context.assets()
-            .cityStyle(CityPalettes.id(plan.cityStyle()));
-        com.tuxprogrammer.lostcities.worldgen.plan.StyleBlocks style = context.styleBlocks(plan);
+        this.cityStyle = context.cityStyle(plan.cityStyle());
+        com.tuxprogrammer.lostcities.worldgen.plan.StyleBlocks style = context.styleBlocks(plan, chunkPalette);
         this.liquid = style.liquid();
         this.writer = new PartWriter(target, sequence, context.rules(plan, style), context.log());
         PartRecorder recorder = context.recorder();

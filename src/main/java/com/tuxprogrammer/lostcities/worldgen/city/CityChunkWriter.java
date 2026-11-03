@@ -129,8 +129,8 @@ public final class CityChunkWriter {
         this.chunkZ = chunkZ;
         this.chunkPalette = context.chunkPalette(plan);
         this.palette = chunkPalette.palette();
-        this.cityStyle = assets.cityStyle(CityPalettes.id(plan.cityStyle()));
-        this.style = context.styleBlocks(plan);
+        this.cityStyle = context.cityStyle(plan.cityStyle());
+        this.style = context.styleBlocks(plan, chunkPalette);
         this.writer = new PartWriter(target, sequence, context.rules(plan, style), context.log());
         PartRecorder recorder = context.recorder();
         if (!target.dryRun() && recorder != PartRecorder.NONE) {

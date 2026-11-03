@@ -1,7 +1,9 @@
 package com.tuxprogrammer.lostcities.worldgen.city;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.tuxprogrammer.lostcities.asset.AssetSet;
@@ -40,6 +42,15 @@ public final class CityWriteContext {
     private final BlockClassifier classifier;
     private final LayoutLog log;
     private PartRecorder recorder = PartRecorder.NONE;
+    /**
+     * City styles and buildings by the names plans carry, resolved once each (D-PF-4); {@link #UNRESOLVED} for a name
+     * the assets lack. Bounded by the loaded assets' names.
+     */
+    private final Map<String, Object> styles = new HashMap<>();
+    private final Map<String, Object> buildings = new HashMap<>();
+
+    /** A name that resolves to no asset. */
+    private static final Object UNRESOLVED = new Object();
 
     /**
      * Creates the context of one world.
@@ -149,9 +160,51 @@ public final class CityWriteContext {
      * @return the style blocks
      */
     public StyleBlocks styleBlocks(ChunkPlan plan) {
-        CityStyle cityStyle = assets.cityStyle(CityPalettes.id(plan.cityStyle()));
-        Building building = plan.building() == null ? null : assets.building(CityPalettes.id(plan.building()));
-        return palettes.styleBlocks(chunkPalette(plan), cityStyle, building);
+        return styleBlocks(plan, chunkPalette(plan));
+    }
+
+    /**
+     * Returns a chunk's terrain blocks from its palette, when the caller already has it ({@link #chunkPalette}).
+     *
+     * @param plan  the chunk's layout plan
+     * @param chunk the chunk's palette
+     * @return the style blocks
+     */
+    public StyleBlocks styleBlocks(ChunkPlan plan, CityPalettes.ChunkPalette chunk) {
+        return palettes.styleBlocks(chunk, cityStyle(plan.cityStyle()), building(plan.building()));
+    }
+
+    /**
+     * Returns the city style a plan names, resolved once per name.
+     *
+     * @param name the style's asset name, or {@code null}
+     * @return the city style, or {@code null} when the assets lack it
+     */
+    public CityStyle cityStyle(String name) {
+        if (name == null) {
+            return assets.cityStyle(null);
+        }
+        Object found = styles.get(name);
+        if (found == null) {
+            CityStyle style = assets.cityStyle(CityPalettes.id(name));
+            found = style == null ? UNRESOLVED : style;
+            styles.put(name, found);
+        }
+        return found == UNRESOLVED ? null : (CityStyle) found;
+    }
+
+    /** Returns the building a plan names, or {@code null}. */
+    private Building building(String name) {
+        if (name == null) {
+            return null;
+        }
+        Object found = buildings.get(name);
+        if (found == null) {
+            Building building = assets.building(CityPalettes.id(name));
+            found = building == null ? UNRESOLVED : building;
+            buildings.put(name, found);
+        }
+        return found == UNRESOLVED ? null : (Building) found;
     }
 
     /**
