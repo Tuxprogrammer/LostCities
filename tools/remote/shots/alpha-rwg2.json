@@ -92,36 +92,6 @@
       "y": "top+20"
     },
     {
-      "name": "scattered",
-      "find": {
-        "cmd": "lostcities find scattered:cabin 200",
-        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
-        "timeout": 300
-      },
-      "wait": 3,
-      "caption": "Scattered structure: the cabin nearest the spawn, from the south-east and a little above. The ground under it is leveled and slopes back to RWG's terrain around it, with no cliff and nothing inside it (M07, design record 0009)."
-    },
-    {
-      "name": "tower",
-      "find": {
-        "cmd": "lostcities find scattered:radiotower 200",
-        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
-        "timeout": 300
-      },
-      "wait": 3,
-      "caption": "Scattered structure: the radio tower nearest the spawn, from the south-east and above: level ground under its legs, meeting RWG's terrain without a cliff (M07, 0009)."
-    },
-    {
-      "name": "oilrig",
-      "find": {
-        "cmd": "lostcities find scattered:oilrig 200",
-        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
-        "timeout": 300
-      },
-      "wait": 3,
-      "caption": "Oil rig: the one nearest the spawn, in RWG2's deep ocean (the oracle's floor at Y 45 or lower), from the south-east (M07, D31)."
-    },
-    {
       "name": "highway",
       "find": {
         "cmd": "lostcities find highway 128",
@@ -160,6 +130,36 @@
       },
       "wait": 3,
       "caption": "Railway (M06): inside the tunnel of the east-west line nearest the spawn, at the track, looking east along the line."
+    },
+    {
+      "name": "scattered",
+      "find": {
+        "cmd": "lostcities find scattered:cabin 200",
+        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Scattered structure: the cabin nearest the spawn, from the south-east and a little above. The ground under it is leveled and slopes back to RWG's terrain around it, with no cliff and nothing inside it (M07, design record 0009)."
+    },
+    {
+      "name": "tower",
+      "find": {
+        "cmd": "lostcities find scattered:radiotower 200",
+        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Scattered structure: the radio tower nearest the spawn, from the south-east and above: level ground under its legs, meeting RWG's terrain without a cliff (M07, 0009)."
+    },
+    {
+      "name": "oilrig",
+      "find": {
+        "cmd": "lostcities find scattered:oilrig 200",
+        "match": "kind=scattered block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Oil rig: the one nearest the spawn, in RWG2's deep ocean (the oracle's floor at Y 45 or lower), from the south-east (M07, D31)."
     },
     {
       "name": "taper",
