@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-/** A landmark's ground estimate, given as a value or computed on its first read (D-PF-1). */
+/** A landmark's ground estimate, given as a value or computed on its first read (D263). */
 public class LandmarkGroundTest {
 
     private static Landmark.Builder lot() {

@@ -347,7 +347,7 @@ public final class PartWriter {
     }
 
     /**
-     * Returns whether the population's dry run may pass over a character (D-PF-5): one that can list no job only sets
+     * Returns whether the population's dry run may pass over a character (D267): one that can list no job only sets
      * blocks, which a dry run's target drops. Its palette draw is still taken, so the draws of the characters after it
      * are the real write's; an undefined character draws nothing, as in {@link #placeOne}, and its warning comes from
      * the real write.

@@ -1,7 +1,7 @@
 package com.tuxprogrammer.lostcities.layout;
 
 /**
- * Keys of chunk or cell coordinate pairs for hash maps of boxed {@code Long}s (D-PF-3).
+ * Keys of chunk or cell coordinate pairs for hash maps of boxed {@code Long}s (D265).
  *
  * <p>
  * {@code Long.hashCode} of the plain packing {@code x << 32 | z} is {@code x ^ z}: nearby chunks share a handful of

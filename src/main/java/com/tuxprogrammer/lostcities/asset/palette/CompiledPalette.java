@@ -86,7 +86,7 @@ public final class CompiledPalette {
     /**
      * Returns whether placing a character can give a population job: its entry is a torch, a loot chest or a spawner,
      * or it or one of its blocks carries a tile-entity template. Any other character only ever sets a block or leaves
-     * one, so the population's dry run of a part need not resolve it (D-PF-5).
+     * one, so the population's dry run of a part need not resolve it (D267).
      *
      * @param c the character
      * @return {@code false} when no placement of it lists a job

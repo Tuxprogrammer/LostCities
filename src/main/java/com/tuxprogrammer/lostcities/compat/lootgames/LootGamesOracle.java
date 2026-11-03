@@ -123,7 +123,7 @@ public final class LootGamesOracle implements StructureOracle {
             .footprint(room)
             .footprint(tunnel)
             .certainty(Certainty.EXACT)
-            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            // Read only by the finder and the scenarios: computed on first read (D263).
             .groundEstimate(() -> ground(chunkX, chunkZ, room))
             .build();
     }

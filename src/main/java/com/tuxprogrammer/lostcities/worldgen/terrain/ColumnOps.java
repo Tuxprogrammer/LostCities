@@ -28,7 +28,7 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
  *
  * <p>
  * Each operation reads and writes only the given column of one chunk buffer and allocates nothing. {@code moveUp}
- * leaves out a write whose position already holds the block (D-PF-2): raising a column copies it down to bedrock or a
+ * leaves out a write whose position already holds the block (D264): raising a column copies it down to bedrock or a
  * cave, and most of that copy is stone onto stone, so only the rows where the column changes are written. The blocks
  * that end up in the buffer are the same.
  * Side: both (plain Java).

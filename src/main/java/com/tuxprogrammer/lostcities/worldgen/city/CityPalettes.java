@@ -41,7 +41,7 @@ public final class CityPalettes {
     public static final int PART_CAPACITY = 128;
     /**
      * Style blocks kept: one per cached chunk palette, the last city style asked of it (a chunk palette's names come
-     * from its city style, so it is nearly always asked for one; D-PF-4).
+     * from its city style, so it is nearly always asked for one; D266).
      */
     public static final int STYLE_CAPACITY = CHUNK_CAPACITY;
 

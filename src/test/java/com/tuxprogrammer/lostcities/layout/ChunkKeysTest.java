@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-/** The mixed chunk keys of the layout's hash maps (D-PF-3). */
+/** The mixed chunk keys of the layout's hash maps (D265). */
 public class ChunkKeysTest {
 
     @Test

@@ -16,7 +16,7 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 
 /**
- * The population's dry run passes over the characters that can list no job (D-PF-5): its jobs must be those of a pass
+ * The population's dry run passes over the characters that can list no job (D267): its jobs must be those of a pass
  * that resolves every character, chunk for chunk, draws included.
  */
 public class DryRunJobsTest {

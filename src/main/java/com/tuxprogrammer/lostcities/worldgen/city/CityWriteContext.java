@@ -43,7 +43,7 @@ public final class CityWriteContext {
     private final LayoutLog log;
     private PartRecorder recorder = PartRecorder.NONE;
     /**
-     * City styles and buildings by the names plans carry, resolved once each (D-PF-4); {@link #UNRESOLVED} for a name
+     * City styles and buildings by the names plans carry, resolved once each (D266); {@link #UNRESOLVED} for a name
      * the assets lack. Bounded by the loaded assets' names.
      */
     private final Map<String, Object> styles = new HashMap<>();

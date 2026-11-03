@@ -15,7 +15,7 @@ import java.util.function.IntSupplier;
  * The ground estimate may be given as a pure computation that runs on its first read
  * ({@link Builder#groundEstimate(IntSupplier)}): no generation step reads it, only the finder's views and the
  * scenarios do, so a landmark the layout meets during generation never pays for the height samples behind it
- * (docs/design/0005-rwg-overlay.md §8, decision log D-PF-1). Read it on the server thread, like every height oracle.
+ * (docs/design/0005-rwg-overlay.md §8, decision log D263). Read it on the server thread, like every height oracle.
  *
  * <p>
  * Side: both.

@@ -329,7 +329,7 @@ class VillageOracleTest {
             2,
             VillageOracle.CACHE_SIZE);
         List<Landmark> answer = oracle.landmarksTouching(-150, -150, 150, 150);
-        assertTrue(known.isEmpty(), "no height is read before a ground estimate is (D-PF-1)");
+        assertTrue(known.isEmpty(), "no height is read before a ground estimate is (D263)");
         assertEquals(plans.asked.size(), plans.calls, "each village planned once");
         List<String> described = null;
         for (int attempt = 0; attempt < 10_000 && described == null; attempt++) {

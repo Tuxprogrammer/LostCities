@@ -206,7 +206,7 @@ public final class WitcheryOracle implements StructureOracle {
         return Landmark.builder(id(chunkX, chunkZ), LandmarkKind.WITCHERY)
             .footprint(lot)
             .certainty(Certainty.UNION)
-            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            // Read only by the finder and the scenarios: computed on first read (D263).
             .groundEstimate(() -> GroundEstimates.median(heights, Collections.singletonList(lot)))
             .build();
     }

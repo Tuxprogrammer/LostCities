@@ -110,7 +110,7 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             section = new ExtendedBlockStorage(y & ~15, sky);
             sections[y >> 4] = section;
         } else if (block.isAir() && holdsAir(section, x, y & 15, z, block.meta())) {
-            // Air over air changes nothing (D-PF-2): a building's interior air and a cleared range above the ground
+            // Air over air changes nothing (D264): a building's interior air and a cleared range above the ground
             // mostly meet air, and the section setter's block-ID lookup is most of a write's cost.
             return;
         }

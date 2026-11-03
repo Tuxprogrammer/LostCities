@@ -257,7 +257,7 @@ public final class VillageOracle implements StructureOracle {
         for (Gate gate : VillageGates.find(plan.pieces(), gateClearance)) {
             builder.gate(gate);
         }
-        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        // Read only by the finder and the scenarios: computed on first read (D263).
         return builder.groundEstimate(() -> GroundEstimates.median(heights, buildings))
             .build();
     }

@@ -122,7 +122,7 @@ public final class MonumentOracle implements StructureOracle {
         return Landmark.builder(id(chunkX, chunkZ), LandmarkKind.OCEAN_MONUMENT)
             .footprint(box)
             .certainty(Certainty.EXACT)
-            // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+            // Read only by the finder and the scenarios: computed on first read (D263).
             .groundEstimate(() -> GroundEstimates.median(heights, Collections.singletonList(box)))
             .build();
     }

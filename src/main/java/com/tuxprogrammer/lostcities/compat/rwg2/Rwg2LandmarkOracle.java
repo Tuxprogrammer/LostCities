@@ -234,7 +234,7 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
             builder.footprint(row);
         }
         List<BlockRect> groundBox = Collections.singletonList(bounds(rows));
-        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        // Read only by the finder and the scenarios: computed on first read (D263).
         Landmark built = builder.groundEstimate(() -> GroundEstimates.median(heights, groundBox))
             .build();
         return cache.put(center, built);
@@ -449,7 +449,7 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
             builder.footprint(rect);
         }
         List<BlockRect> groundBox = Collections.singletonList(bounds(rects));
-        // Read only by the finder and the scenarios: computed on first read (D-PF-1).
+        // Read only by the finder and the scenarios: computed on first read (D263).
         Landmark built = builder.groundEstimate(() -> GroundEstimates.median(heights, groundBox))
             .build();
         return junctions.put(peak, built);

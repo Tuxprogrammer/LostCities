@@ -56,7 +56,7 @@ final class ChunkCache<V> {
     /**
      * Returns the plain packing of a pair, {@code x << 32 ^ z}: the facade planner hashes it into a unit's priority and
      * the sewing keys its lane cells by it, so it must never change. The cache's own map is keyed by
-     * {@link ChunkKeys#of}, which spreads over hash buckets (D-PF-3).
+     * {@link ChunkKeys#of}, which spreads over hash buckets (D265).
      *
      * @param x chunk or cell X
      * @param z chunk or cell Z
