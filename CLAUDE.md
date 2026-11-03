@@ -2,7 +2,7 @@
 
 Lost Cities: New Horizons backports McJty's Lost Cities (MIT, upstream branch `1.20`) to **GT New Horizons 2.9.0 (Minecraft 1.7.10, Forge)**. It is faithful to the original's functionality, not its bugs. Cities generate in the GTNH overworld over RWG terrain, with a GTNH layer on top. This file is a map: load the skill or document you need, not everything up front.
 
-Skills live in [.claude/skills/](.claude/skills/). Claude Code loads one automatically when its description matches the task; you can also ask for one by name.
+Skills live in [.claude/skills/](.claude/skills/); agent definitions in [.claude/agents/](.claude/agents/), guard hooks in [.claude/hooks/](.claude/hooks/) (see [.claude/README.md](.claude/README.md)), brief templates in [docs/agent-setup/](docs/agent-setup/README.md), and quiet-run and wait helpers in [tools/agent/](tools/agent/README.md). Claude Code loads one automatically when its description matches the task; you can also ask for one by name.
 
 ## Non-negotiables
 
@@ -17,6 +17,7 @@ Skills live in [.claude/skills/](.claude/skills/). Claude Code loads one automat
 9. **Tests and comments ship with the code.** → `testing-gtnh-mods`, [CONTRIBUTING § Testing](CONTRIBUTING.md#testing)
 10. **Never edit `build.gradle.kts` or `settings.gradle.kts`.** They come from the GTNH buildscript. Use `dependencies.gradle`, `repositories.gradle`, `gradle.properties`.
 11. **Nothing machine-specific in git:** no hostnames, usernames, local paths, IPs or secrets. → `release-and-public-repo`
+12. **Spend tokens like they're scarce.** Subagents default to Sonnet at medium effort (`.claude/settings.json`); use Opus only for hard design or code, and say why. Every agent brief has a hard stop (report by ~120 calls or ~200k context) and at most two verification rounds; lanes never merge `gtnh`, the orchestrator integrates once. Wait on long jobs with one capped done-marker loop. → `orchestrating-parallel-agents`, `agent-context-budget`, `mod-port-budget`
 
 ## Skills
 
@@ -34,6 +35,14 @@ Skills live in [.claude/skills/](.claude/skills/). Claude Code loads one automat
 | [release-and-public-repo](.claude/skills/release-and-public-repo/SKILL.md) | Tags, changelogs, upgrade notes, going public |
 | [port-workflow](.claude/skills/port-workflow/SKILL.md) | Roadmap and gates, decision records, landing, long jobs, agents |
 | [pack-contribution-policy](.claude/skills/pack-contribution-policy/SKILL.md) | Before planning any submission to a pack or another mod |
+| [mod-port-budget](.claude/skills/mod-port-budget/SKILL.md) | Budgets, verification tiers T1–T4 and doc depth for a port run by agents |
+| [orchestrating-parallel-agents](.claude/skills/orchestrating-parallel-agents/SKILL.md) | Spawning, briefing or supervising agents: scope, model, stop rules |
+| [agent-context-budget](.claude/skills/agent-context-budget/SKILL.md) | Any session past ~60 calls or ~150k context; handing off |
+| [integration-merge-choreography](.claude/skills/integration-merge-choreography/SKILL.md) | Landing lanes on `gtnh`: one integrator, when to re-verify |
+| [remote-build-runner](.claude/skills/remote-build-runner/SKILL.md) | Slots, instances and runs on the build server |
+| [waiting-on-remote-jobs](.claude/skills/waiting-on-remote-jobs/SKILL.md) | Waiting on builds, servers, clients or shot runs |
+| [quiet-tool-output](.claude/skills/quiet-tool-output/SKILL.md) | Commands or files with large output: builds, logs, diffs, docs |
+| [cheap-screenshot-review](.claude/skills/cheap-screenshot-review/SKILL.md) | Looking at screenshots or shot-list output |
 
 ## Where to look
 
