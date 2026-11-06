@@ -15,7 +15,7 @@ public enum LandmarkKind {
     /** A VillageNames ocean monument (D32). */
     OCEAN_MONUMENT(false, false),
     /** A Roguelike Dungeons tower (a predicted candidate). */
-    ROGUELIKE(false, true),
+    ROGUELIKE(false, false),
     /** A Witchery structure (the union of its possible footprints). */
     WITCHERY(false, false),
     /** A LootGames room and its entrance tunnel. */
@@ -34,8 +34,10 @@ public enum LandmarkKind {
     }
 
     /**
-     * Returns whether this kind's structure reaches deep underground from its footprint: a Roguelike Dungeons tower's
-     * levels and a LootGames room. No railway passes under such a core (D-p4v-4).
+     * Returns whether this kind's structure reaches deep underground inside its footprint, whatever the ground: a
+     * LootGames room. No link-network line passes under such a core (D-p4v-4). Roguelike Dungeons towers are not
+     * counted: their levels spread far past the lot, so the steering rule keeps the dungeon off link lines instead
+     * ({@code SteeringRule}, D-p4v-6).
      */
     public boolean reachesUnderground() {
         return underground;

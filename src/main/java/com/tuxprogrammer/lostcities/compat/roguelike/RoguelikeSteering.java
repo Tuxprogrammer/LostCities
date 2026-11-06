@@ -6,6 +6,7 @@ import net.minecraftforge.common.DimensionManager;
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
+import com.tuxprogrammer.lostcities.layout.link.LinkRails;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.worldgen.city.LayoutCityPlan;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
@@ -19,7 +20,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * <p>
  * Every answer comes from the layout, which is pure, so the steering never loads a chunk and never depends on the
  * order chunks generate in: city chunks from the cached plan, edge rings from the layout's landmark zones, scattered
- * footprints from {@link OverlayWorld#scatteredFootprints()}, predicted sites from the world's structure oracle. A
+ * footprints from {@link OverlayWorld#scatteredFootprints()}, predicted sites from the world's structure oracle, link
+ * track from the railway layout's link lines (D-p4v-6). A
  * layout failure is logged and leaves the point to Roguelike's own test, so a broken plan never stops a dungeon.
  *
  * <p>
@@ -104,6 +106,18 @@ public final class RoguelikeSteering {
                 }
             }
             return false;
+        }
+
+        @Override
+        public boolean hasLinkTrack(int chunkX, int chunkZ) {
+            if (cities == null) {
+                return false;
+            }
+            LinkRails lines = cities.planner()
+                .networks()
+                .railways()
+                .links();
+            return lines != null && lines.openings(chunkX, chunkZ) != 0;
         }
     }
 }

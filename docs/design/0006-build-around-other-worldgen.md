@@ -103,7 +103,7 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 - Every layout input is pure; the layout never reads blocks other mods placed, `data/Village.dat`, AE2's spawn data, or the live structure generators' maps. Those fill in generation order and are used only by tests that check the oracles.
 - Other structures' blocks land after our terrain phase. They land in cores, on RWG's ground, so they behave as in the wild.
 - Our population phase writes only inside our footprint; cores are outside it.
-- **Steering.** One compat mixin, on `Dungeon.validLocation` (Roguelike Dungeons), makes a candidate invalid inside a city chunk or edge ring unless it is that dungeon's predicted site, and invalid inside a scattered structure's footprint ([07-scattered](../new-spec/07-scattered/index.md), D31). The dungeon lands in its lot, outside the city, or not at all, whatever order chunks generate in.
+- **Steering.** One compat mixin, on `Dungeon.validLocation` (Roguelike Dungeons), makes a candidate invalid inside a city chunk or edge ring unless it is that dungeon's predicted site, and invalid inside a scattered structure's footprint ([07-scattered](../new-spec/07-scattered/index.md), D31), and invalid, predicted or not, within 122 blocks of a link-network line's track, the reach of its levels (D-p4v-6). The dungeon lands in its lot, outside the city, or not at all, whatever order chunks generate in.
 - **Misses.** A lot whose structure does not appear stays natural ground. A structure that lands in the city anyway (Thaumcraft) is accepted; a per-generator guard (T4) follows only if the alpha screenshots show it. No restore pass ever rewrites another mod's blocks.
 
 ### 6. Treatments by generator

@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 
 /**
- * Link-network lines and landmark cores (D322, D-p4v-4). Round 1 of {@code network.railway} on seed 4242 found a
- * line's tunnel at Y 54 cut through by a Roguelike Dungeons tower's stairwell and rooms (spawner at Y 50) under
- * ground near Y 100: the deep-ground test let the line pass, though that kind of landmark reaches down past any
- * railway level. A line whose chunks cross such a core now carries no track, as a too-shallow core already did.
+ * Link-network lines and landmark cores (D322, D-p4v-4). A landmark whose structure reaches underground inside its
+ * core (a LootGames room) blocks a line at any railway level, as a too-shallow core already did; the deep-ground test
+ * applies only to surface landmarks. Roguelike Dungeons towers, whose levels reach far past their lot, are steered
+ * off link lines instead ({@code SteeringRuleTest}, D-p4v-6).
  */
 public class LinkRailCoresTest {
 
@@ -77,7 +77,7 @@ public class LinkRailCoresTest {
         assertFalse(
             layout.rail(40, 10)
                 .isPresent(),
-            "no track crosses a Roguelike tower's core");
+            "no track crosses an underground core");
         assertFalse(
             layout.rail(20, 10)
                 .isPresent(),

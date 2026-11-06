@@ -47,6 +47,20 @@ public final class RoguelikeOracle implements StructureOracle {
     /** Half the side of a lot, blocks: the 21 × 21 footprint around the site. */
     public static final int LOT_HALF = 10;
     /**
+     * How far, in blocks, a dungeon's top level can reach from its site, horizontally: 122 (D-p4v-6). The tower stands
+     * on the 21 × 21 lot, but its levels spread under the ground around it. Roguelike Dungeons 1.6.6-GTNH builds the
+     * first level at Y 50 with its origin at the site ({@code DungeonGenerator.TOPLEVEL}, L16-L27); a room grows new
+     * tunnels only while it lies less than {@code levelRange} (80 in the pack and by default) from that origin
+     * ({@code LevelGeneratorClassic} L232-L236, {@code DungeonLevel.inRange}); a tunnel runs on while it is within
+     * {@code levelScatter} (10) of a room, then at most {@code 2 × levelScatter} more blocks before its room
+     * ({@code LevelGeneratorClassic} L176-L193); and the widest rooms reach 12 blocks from their center
+     * ({@code DungeonsPrison.getSize}, {@code DungeonTreetho.getSize}). So 80 + 10 + 20 + 12. The top level's rooms rise
+     * up to 10 blocks above Y 50, through the depths a railway tunnel takes; the deeper levels lie 10 blocks apart
+     * below it. Defaults: {@code RogueConfig} L78-L83; the pack's {@code config/roguelike_dungeons/roguelike.cfg} keeps
+     * them. Source tag 1.6.6-GTNH, https://github.com/GTNewHorizons/Roguelike-Dungeons/tree/1.6.6-GTNH.
+     */
+    public static final int LEVEL_REACH = 122;
+    /**
      * How far, in chunks, a lot can reach from its dungeon chunk: a candidate lies up to 99 blocks from the origin, 4
      * blocks into the chunk, and the lot 10 blocks further.
      */

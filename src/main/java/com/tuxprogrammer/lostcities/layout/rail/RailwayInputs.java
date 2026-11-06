@@ -65,8 +65,8 @@ public interface RailwayInputs {
     boolean isMargin(int chunkX, int chunkZ);
 
     /**
-     * Returns whether a chunk is the core of a landmark that reaches underground (a Roguelike Dungeons tower's levels,
-     * a LootGames room): no railway level passes under it (D-p4v-4).
+     * Returns whether a chunk is the core of a landmark that reaches underground (a LootGames room): no link-network
+     * line passes under it at any railway level (D-p4v-4).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
