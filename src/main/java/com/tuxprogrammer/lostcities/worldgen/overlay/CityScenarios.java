@@ -613,14 +613,31 @@ public final class CityScenarios {
                     int oz = z + side.stepZ();
                     boolean door = world.getBlock(x, y + 1, z) instanceof BlockDoor;
                     boolean open = passable(ox, y + 1, oz) && passable(ox, y + 2, oz);
+                    int by = passable(ox, y + 1, oz) ? y + 2 : y + 1;
                     String blocker = open ? ""
-                        : ":blocked by " + Block.blockRegistry
-                            .getNameForObject(world.getBlock(ox, passable(ox, y + 1, oz) ? y + 2 : y + 1, oz));
+                        : ":blocked by " + Block.blockRegistry.getNameForObject(world.getBlock(ox, by, oz))
+                            + "@y"
+                            + by
+                            + describeOutside(chunkX + side.stepX(), chunkZ + side.stepZ());
                     doors.add(
                         door && open,
                         plan.building() + "@" + x + "," + (y + 1) + "," + z + (door ? "" : ":nodoor") + blocker);
                 }
             }
+        }
+
+        /** The layout of the chunk outside a door, for the failure line: what stands there, to find the writer. */
+        private String describeOutside(int chunkX, int chunkZ) {
+            ChunkPlan outside = planner.plan(chunkX, chunkZ);
+            return "[city=" + outside.isCity()
+                + ",building=" + (outside.hasBuilding() ? outside.building() : null)
+                + ",street=" + outside.streetType()
+                + ",road=" + outside.plannedRoad()
+                + ",park=" + outside.parkPart()
+                + ",bridge=" + outside.bridgePart()
+                + ",stair=" + outside.stairPart()
+                + ",fountain=" + outside.fountainPart()
+                + ",level=" + outside.cityLevel() + "]";
         }
 
         private boolean passable(int x, int y, int z) {
