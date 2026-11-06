@@ -995,6 +995,13 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         b.lotFootprint = new MultiPos(x - lot.x, z - lot.z, lot.dimX, lot.dimZ);
         if (lot.kind.isDug()) {
             b.lotDepth = lot.cellars * profile.floorPitch;
+            // D-p3-5: a dug lot stands for a building with cellars, so it follows upstream's rule for one: no rail
+            // corridor runs through it, and a rail dungeon stays only below its cellars.
+            b.xRailCorridor = false;
+            b.zRailCorridor = false;
+            if (b.railDungeonPart != null && infrastructure.railwayLevel() >= b.characteristics.cityLevel - lot.cellars) {
+                b.railDungeonPart = null;
+            }
         }
         if (lot.kind == LotKind.FOUNDATION) {
             b.lotColumnFloors = lot.frameFloors;
@@ -1044,14 +1051,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         int frame = Math.max(1, capFloors(lot.frameFloors, cityGround, profile.floorPitch));
         LotKind kind = lot.kind;
-        boolean under = false;
-        for (int x = lot.x; x < lot.x + lot.dimX; x++) {
-            for (int z = lot.z; z < lot.z + lot.dimZ; z++) {
-                under |= lotSite(x, z).railUnder;
-            }
-        }
-        if (under || kind == LotKind.PIT && cellars == 0) {
-            // A corridor or rail dungeon runs under the lot, or the class has no cellar to dig: an empty lot.
+        if (kind == LotKind.PIT && cellars == 0) {
+            // The class has no cellar to dig: an empty lot. Rail corridors under a dug lot give way to it (D-p3-5).
             kind = LotKind.BARE;
         }
         return new ConstructionLots.Draw(
@@ -1108,11 +1109,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             boolean open = !building && b.hierarchicalOpen && b.parkPart == null && b.streetType == StreetType.PARK;
             boolean eligible = (building || open) && b.highwayXLevel < 0 && b.highwayZLevel < 0;
             site = eligible
-                ? new LotSite(
-                    true,
-                    c.cityLevel,
-                    maxCellars(b.settings, null, c.cityLevel),
-                    b.xRailCorridor || b.zRailCorridor || b.railDungeonPart != null)
+                ? new LotSite(true, c.cityLevel, maxCellars(b.settings, null, c.cityLevel))
                 : LotSite.NONE;
         }
         return lotSites.put(x, z, site);
@@ -1121,18 +1118,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** What a construction lot needs to know of one chunk of its footprint. */
     private static final class LotSite {
 
-        static final LotSite NONE = new LotSite(false, 0, 0, false);
+        static final LotSite NONE = new LotSite(false, 0, 0);
 
         final boolean eligible;
         final int cityLevel;
         final int maxCellars;
-        final boolean railUnder;
 
-        LotSite(boolean eligible, int cityLevel, int maxCellars, boolean railUnder) {
+        LotSite(boolean eligible, int cityLevel, int maxCellars) {
             this.eligible = eligible;
             this.cityLevel = cityLevel;
             this.maxCellars = maxCellars;
-            this.railUnder = railUnder;
         }
     }
 

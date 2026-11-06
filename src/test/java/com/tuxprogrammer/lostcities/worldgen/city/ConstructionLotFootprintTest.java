@@ -86,6 +86,7 @@ public class ConstructionLotFootprintTest {
     public void depthIsWholeCellarsAndTheFrameStaysUnderTheClassFloors() {
         LayoutPlanner planner = real().planner();
         int dug = 0;
+        int deepMulti = 0;
         for (int x = -R; x <= R; x++) {
             for (int z = -R; z <= R; z++) {
                 ChunkPlan p = planner.plan(x, z);
@@ -96,6 +97,15 @@ public class ConstructionLotFootprintTest {
                 if (p.lot()
                     .isDug()) {
                     dug++;
+                    if (p.lotDepth() > 0 && p.lotFootprint()
+                        .width()
+                        * p.lotFootprint()
+                            .height()
+                        > 1) {
+                        deepMulti++;
+                    }
+                    // D-p3-5: a dug lot gives way to no rail corridor.
+                    assertTrue(!p.xRailCorridor() && !p.zRailCorridor(), "corridor through the lot at " + x + "," + z);
                     assertEquals(0, p.lotDepth() % p.floorPitch(), "depth " + p.lotDepth());
                     assertTrue(p.lotDepth() / p.floorPitch() <= 3, "cellars " + p.lotDepth() / p.floorPitch());
                 }
@@ -105,6 +115,34 @@ public class ConstructionLotFootprintTest {
             }
         }
         assertTrue(dug > 0, "the test world has dug construction lots");
+        assertTrue(deepMulti > 0, "the test world has a dug construction lot of more than one chunk with cellars");
+    }
+
+    /**
+     * The shipped ring strengths (the default profile's 1.0 and {@code rarecities}' 1.5) dig: before D-p3-5 a rail
+     * corridor candidate under any chunk of a footprint left almost every lot bare.
+     */
+    @Test
+    public void theShippedRingStrengthsDigPitsWithCellars() {
+        for (String rings : new String[] { "1.0", "1.5" }) {
+            LayoutPlanner planner = plan("densityRings", rings, "lotFootprints", "true").planner();
+            int pits = 0;
+            int ringLots = 0;
+            for (int x = -R; x <= R; x++) {
+                for (int z = -R; z <= R; z++) {
+                    ChunkPlan p = planner.plan(x, z);
+                    if (p.lot() == LotKind.NONE || p.lotFootprint()
+                        .isSingle()) {
+                        continue;
+                    }
+                    ringLots++;
+                    if (p.lot() == LotKind.PIT && p.lotDepth() >= p.floorPitch()) {
+                        pits++;
+                    }
+                }
+            }
+            assertTrue(pits * 5 >= ringLots, "rings " + rings + ": " + pits + " pit chunks of " + ringLots);
+        }
     }
 
     @Test
