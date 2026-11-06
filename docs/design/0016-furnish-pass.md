@@ -1,6 +1,6 @@
 # 0016 · Furnish pass: sparse room furniture and GT machines as set dressing
 
-- Status: Proposed (city-realism phase 6b; decision log D-p6b-1 to D-p6b-8). Implementation pending, see `handoff/lane-p6b-furnish.md`.
+- Status: Proposed (city-realism phase 6b; decision log D-p6b-1 to D-p6b-6). Implementation pending, see `handoff/lane-p6b-furnish.md`.
 - Gate: beta
 - Amends: building interiors of [docs/original-spec](../original-spec/README.md) (upstream writes no furniture beyond what parts draw)
 - Date: 2026-11-06
