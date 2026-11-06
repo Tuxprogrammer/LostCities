@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.ChestGenHooks;
 
 import com.tuxprogrammer.lostcities.LostCities;
@@ -139,7 +140,30 @@ public final class PopulationPhase {
         if (world.isAirBlock(x, job.y(), z) || !(tileAt(x, job.y(), z) instanceof IInventory)) {
             return false;
         }
-        return world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
+        return clearQuietly(x, job.y(), z);
+    }
+
+    /**
+     * Turns a block of this chunk into air without its block hooks: the tile entity is dropped and the section written
+     * straight, then clients are told. {@code World.setBlock} would run the block's {@code breakBlock}, and a chest's
+     * comparator update there reads its neighbors, loading the next chunk when the chest stands on the edge. Only
+     * blocks that neither give nor block light are cleared this way (chests, spawners), so light and height map hold.
+     */
+    private boolean clearQuietly(int x, int y, int z) {
+        if (y < 0 || y > 255) {
+            return false;
+        }
+        Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+        ExtendedBlockStorage section = chunk.getBlockStorageArray()[y >> 4];
+        if (section == null) {
+            return false;
+        }
+        world.removeTileEntity(x, y, z);
+        section.func_150818_a(x & 15, y & 15, z & 15, Blocks.air);
+        section.setExtBlockMetadata(x & 15, y & 15, z & 15, 0);
+        chunk.setChunkModified();
+        world.markBlockForUpdate(x, y, z);
+        return true;
     }
 
     /** Fills a chest with a loot category's contents (see the comment on the scratch inventory). */
@@ -180,7 +204,7 @@ public final class PopulationPhase {
         }
         String mob = SpawnerMobs.resolve(job.argument());
         if (mob.isEmpty()) {
-            return world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
+            return clearQuietly(x, job.y(), z);
         }
         TileEntity tile = tileAt(x, job.y(), z);
         if (tile instanceof TileEntityMobSpawner spawner) {
@@ -249,7 +273,7 @@ public final class PopulationPhase {
             if (completion.mob() != null && tile instanceof TileEntityMobSpawner spawner) {
                 String mob = SpawnerMobs.resolve(completion.mob());
                 if (mob.isEmpty()) {
-                    world.setBlock(x, level, z, Blocks.air, 0, SEND_TO_CLIENTS);
+                    clearQuietly(x, level, z);
                     continue;
                 }
                 spawner.func_145881_a()

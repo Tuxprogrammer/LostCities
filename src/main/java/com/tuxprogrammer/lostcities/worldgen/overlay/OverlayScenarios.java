@@ -40,7 +40,7 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
  * (1024, 1024), drops the first 512 chunks as JIT warm-up, and fails when budget B1 to B4 is exceeded (0005 §8).</li>
  * </ul>
  * The city scenarios need a world pinned with the synthetic plan source ({@code -Dlostcitiesnh.planSource=synthetic}
- * with the test hooks).
+ * with the test hooks); without that property {@code overlay.city} is left out of {@code all} and runs only when named.
  *
  * <p>
  * Side: server.
@@ -138,6 +138,15 @@ public final class OverlayScenarios {
         @Override
         public String name() {
             return "overlay.city";
+        }
+
+        /**
+         * Runs under {@code all} only on a server started with the synthetic plan; on any other world it checks
+         * nothing that world can show (a real-pack world plans real cities), so it runs only when named.
+         */
+        @Override
+        public boolean manualOnly() {
+            return !ProfileSnapshot.PLAN_SYNTHETIC.equals(System.getProperty(Overlays.PLAN_SOURCE_PROPERTY));
         }
 
         @Override
