@@ -179,10 +179,8 @@ public final class MultiblockShapes {
 
     private static double number(JsonObject json, String key, double fallback) {
         return json.has(key) && json.get(key)
-            .isJsonPrimitive()
-                ? json.get(key)
-                    .getAsDouble()
-                : fallback;
+            .isJsonPrimitive() ? json.get(key)
+                .getAsDouble() : fallback;
     }
 
     /** Returns the shapes. */
@@ -330,7 +328,8 @@ public final class MultiblockShapes {
                     .getAsJsonObject();
                 int meta = (int) number(b, "meta", 0);
                 if (e.getKey()
-                    .length() != 1 || meta < 0 || meta > BlockRef.MAX_META) {
+                    .length() != 1 || meta < 0
+                    || meta > BlockRef.MAX_META) {
                     throw new IllegalStateException(where + ": bad legend entry " + e.getKey());
                 }
                 legend.put(
@@ -595,8 +594,11 @@ public final class MultiblockShapes {
                 for (Cell anchor : anchors) {
                     int x = worldX(cx, facing, anchor.row, anchor.col);
                     int z = worldZ(cz, facing, anchor.row, anchor.col);
-                    if (x < 0 || z < 0 || x > 15 || z > 15 || !view.get(x, y, z)
-                        .equals(anchor.block)) {
+                    if (x < 0 || z < 0
+                        || x > 15
+                        || z > 15
+                        || !view.get(x, y, z)
+                            .equals(anchor.block)) {
                         all = false;
                         break;
                     }

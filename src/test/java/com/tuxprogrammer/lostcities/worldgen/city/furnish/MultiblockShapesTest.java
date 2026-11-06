@@ -100,8 +100,10 @@ public class MultiblockShapesTest {
         assertTrue(shapes.allows(RoomKind.INDUSTRIAL));
         assertFalse(shapes.allows(RoomKind.OFFICE));
         for (MultiblockShapes.Shape shape : shapes.shapes()) {
-            assertTrue(shape.cells()
-                .size() < shape.fullCells(), shape.id());
+            assertTrue(
+                shape.cells()
+                    .size() < shape.fullCells(),
+                shape.id());
             assertTrue(shape.placedLayers() < shape.layers(), shape.id());
             assertFalse(FurnishPalette.denied(shape.controllerId()), shape.id());
         }
@@ -159,8 +161,9 @@ public class MultiblockShapesTest {
                 .count();
             assertTrue(controllers <= 1, "at most one multiblock per chunk");
             long tiles = placed.stream()
-                .filter(p -> p.item()
-                    .tile())
+                .filter(
+                    p -> p.item()
+                        .tile())
                 .count();
             assertTrue(tiles <= FurnishPass.TILES_PER_CHUNK, "chunk tile cap");
             if (controllers == 0) {
@@ -188,14 +191,16 @@ public class MultiblockShapesTest {
             MultiblockShapes.Shape shape = MultiblockShapes.bundled()
                 .shapes()
                 .stream()
-                .filter(s -> s.controllerId() == controller.item()
-                    .gtId())
+                .filter(
+                    s -> s.controllerId() == controller.item()
+                        .gtId())
                 .findFirst()
                 .get();
             assertTrue(casings > 0);
             assertTrue(casings < shape.fullCells(), shape.id() + " must stay incomplete");
-            assertTrue(casings <= shape.cells()
-                .size());
+            assertTrue(
+                casings <= shape.cells()
+                    .size());
             assertTrue(reachable(buffer, controller));
         }
         assertTrue(placedShapes >= 10, "multiblocks are placed: " + placedShapes);
@@ -267,12 +272,8 @@ public class MultiblockShapesTest {
             if (controller == null) {
                 continue;
             }
-            List<FurnishPass.Completion> done = FurnishPass.completions(
-                buffer::get,
-                Y,
-                FurnishPass.jobArgument(RoomKind.INDUSTRIAL, salt),
-                palettes(),
-                always());
+            List<FurnishPass.Completion> done = FurnishPass
+                .completions(buffer::get, Y, FurnishPass.jobArgument(RoomKind.INDUSTRIAL, salt), palettes(), always());
             FurnishPass.Completion match = null;
             for (FurnishPass.Completion c : done) {
                 if (c.y() >= 0) {

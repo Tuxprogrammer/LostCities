@@ -135,14 +135,14 @@ public final class FurnishPass {
      * Furnishes the floors of one chunk, with partial multiblocks in the room kinds the shapes allow (decision 14).
      * A multiblock's controller counts against the tile caps, and a chunk holds at most one multiblock.
      *
-     * @param view      the chunk's blocks, read after the building and its overlays are written
-     * @param sink      where items go
-     * @param standing  the standing level of each floor, one above its slab
-     * @param kinds     each floor's room kind
-     * @param salts     each floor's salt ({@link #floorSalt})
-     * @param palettes  the palettes
-     * @param scale     density multiplier: 1, or 0.5 for a ruined building
-     * @param known     whether a block registry name is registered
+     * @param view        the chunk's blocks, read after the building and its overlays are written
+     * @param sink        where items go
+     * @param standing    the standing level of each floor, one above its slab
+     * @param kinds       each floor's room kind
+     * @param salts       each floor's salt ({@link #floorSalt})
+     * @param palettes    the palettes
+     * @param scale       density multiplier: 1, or 0.5 for a ruined building
+     * @param known       whether a block registry name is registered
      * @param multiblocks the partial multiblock shapes, or {@link MultiblockShapes#none()}
      * @return the items placed, in placement order
      */
@@ -190,11 +190,12 @@ public final class FurnishPass {
      * position ({@link MultiblockShapes#pick}), the first facing whose box fits. The box must not touch a kept-clear
      * cell and must leave the room in one piece. Uses its own random, so the room's item draws do not move.
      *
+     * @param front receives the cell in front of the controller, which stays clear
      * @return whether one was placed (its controller is one tile entity)
      */
     private static boolean placeMultiblock(BlockView view, RoomScanner.Floor floor, int room, boolean[] free,
         List<Integer> cells, MultiblockShapes multiblocks, long salt, float scale, Predicate<String> known,
-        BlockSink sink, List<Placed> out) {
+        BlockSink sink, List<Placed> out, int[] front) {
         Random random = new Random(SeedMix.mix(salt ^ MULTIBLOCK_STREAM, room));
         if (random.nextFloat() >= multiblocks.chance() * scale) {
             return false;
@@ -228,9 +229,16 @@ public final class FurnishPass {
                     continue;
                 }
                 shape.place(sink, known, salt, multiblocks.decay(), x, z, y, facing);
+                front[0] = ((z + (facing < 2 ? (facing == 0 ? -1 : 1) : 0)) << 4)
+                    | (x + (facing >= 2 ? (facing == 2 ? -1 : 1) : 0));
                 int controllerY = y + shape.controllerLayer();
                 out.add(
-                    new Placed(x, controllerY, z, room, FurnishItem.machine(shape.controllerId(), MultiblockShapes.CONTROLLER_META, true, 1)));
+                    new Placed(
+                        x,
+                        controllerY,
+                        z,
+                        room,
+                        FurnishItem.machine(shape.controllerId(), MultiblockShapes.CONTROLLER_META, true, 1)));
                 return true;
             }
         }
@@ -259,8 +267,9 @@ public final class FurnishPass {
                     continue;
                 }
                 int ni = (n[1] << 4) | n[0];
-                if (!box[ni] && !inRoom[ni] && view.get(n[0], y, n[1])
-                    .isAir()) {
+                if (!box[ni] && !inRoom[ni]
+                    && view.get(n[0], y, n[1])
+                        .isAir()) {
                     return true;
                 }
             }
@@ -269,8 +278,8 @@ public final class FurnishPass {
     }
 
     private static int furnishRoom(RoomScanner.Floor floor, int room, FurnishPalette palette, Random random, long salt,
-        float scale, Predicate<String> known, int chunkTilesLeft, BlockSink sink, List<Placed> out,
-        BlockView view, MultiblockShapes multiblocks, boolean[] multiblockDone) {
+        float scale, Predicate<String> known, int chunkTilesLeft, BlockSink sink, List<Placed> out, BlockView view,
+        MultiblockShapes multiblocks, boolean[] multiblockDone) {
         List<Integer> cells = floor.cells(room);
         boolean[] free = new boolean[256];
         List<Integer> slots = new ArrayList<>();
@@ -284,12 +293,13 @@ public final class FurnishPass {
             return 0;
         }
         int tiles = 0;
+        int[] front = { -1 };
         if (multiblocks != null && !multiblockDone[0]
             && Math.min(Math.min(palette.maxTiles(), TILES_PER_ROOM), chunkTilesLeft) >= 1
-            && placeMultiblock(view, floor, room, free, cells, multiblocks, salt, scale, known, sink, out)) {
+            && placeMultiblock(view, floor, room, free, cells, multiblocks, salt, scale, known, sink, out, front)) {
             multiblockDone[0] = true;
             tiles = 1;
-            slots.removeIf(c -> !free[c]);
+            slots.removeIf(c -> !free[c] || c == front[0]);
         }
         Collections.shuffle(slots, random);
         float wanted = palette.density() * scale * slots.size();
@@ -408,10 +418,10 @@ public final class FurnishPass {
      * block at the floor's level or one above it is first tried as a partial multiblock's controller: the shape its
      * position picks, and a facing whose casings all match, name the controller and its facing.
      *
-     * @param view       the populated chunk
-     * @param y          the floor's standing level
-     * @param argument   the job's argument
-     * @param palettes   the palettes
+     * @param view        the populated chunk
+     * @param y           the floor's standing level
+     * @param argument    the job's argument
+     * @param palettes    the palettes
      * @param multiblocks the multiblock shapes
      * @return the completions, each with its own Y
      */
