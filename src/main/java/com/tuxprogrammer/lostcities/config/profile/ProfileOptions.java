@@ -477,7 +477,20 @@ public final class ProfileOptions {
         newTerrain("cityConnected", Type.BOOLEAN, null, null);
         newTerrain("cityTaper", Type.FLOAT, d(0), d(1));
         newTerrain("edgeLotChance", Type.FLOAT, d(0), d(1));
-        newTerrain("packHouseChance", Type.FLOAT, d(0), d(1));
+        // New worlds get 0.25; worlds pinned before the key existed have no pack houses (D282).
+        add(
+            new ProfileOption(
+                "packHouseChance",
+                Category.LOSTCITY,
+                Type.FLOAT,
+                "0.25",
+                d(0),
+                d(1),
+                null,
+                Status.LIVE,
+                "03-terrain",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(

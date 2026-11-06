@@ -147,7 +147,8 @@ public final class TerrainSettings {
         cityConnected = r.booleanValue("cityConnected", true);
         cityTaper = r.floatValue("cityTaper", 1.0f, 0f, 1f);
         edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
-        packHouseChance = r.floatValue("packHouseChance", 0.25f, 0f, 1f);
+        // 0 is the pre-pin world's value; new pins take the option's 0.25 (D282).
+        packHouseChance = r.floatValue("packHouseChance", 0f, 0f, 1f);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
