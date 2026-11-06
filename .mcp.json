@@ -3,7 +3,8 @@
     "semantic-search": {
       "type": "stdio",
       "command": "python3",
-      "args": ["-I", "tools/semantic-search/server.py"]
+      "args": ["-I", "tools/semantic-search/server.py"],
+      "alwaysLoad": true
     }
   }
 }

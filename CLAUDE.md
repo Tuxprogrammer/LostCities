@@ -4,6 +4,20 @@ Lost Cities: New Horizons backports McJty's Lost Cities (MIT, upstream branch `1
 
 Skills live in [.claude/skills/](.claude/skills/); agent definitions in [.claude/agents/](.claude/agents/), guard hooks in [.claude/hooks/](.claude/hooks/) (see [.claude/README.md](.claude/README.md)), brief templates in [docs/agent-setup/](docs/agent-setup/README.md), and quiet-run and wait helpers in [tools/agent/](tools/agent/README.md). Claude Code loads one automatically when its description matches the task; you can also ask for one by name.
 
+## First step in every session and every subagent: load the search tool
+
+[.mcp.json](.mcp.json) sets `alwaysLoad: true` on the `semantic-search` server, so its tools should already be callable. If they instead appear only as deferred names (older Claude Code, or a setting that overrides it), calling one before its schema is loaded fails with `InputValidationError`. Then your **first tool call**, before any grep, glob or file read, is:
+
+```
+ToolSearch  query: "select:mcp__semantic-search__semantic_search,mcp__semantic-search__semantic_index_status,mcp__semantic-search__semantic_reindex"  max_results: 3
+```
+
+- **Subagents too.** Whether a subagent gets the schemas up front is not documented, so check your own tool list and load them yourself if they are deferred. Do not rely on the brief to remind you.
+- **Not listed as deferred?** Then the tool is already callable; skip the load. **Not listed at all?** The MCP server is not approved or not running: use the CLI fallback below and say so in your report.
+- **Use it first** for any "where is / how does / which doc covers" question when you do not know the exact identifier or file. Use grep or `git grep 1.20 <pattern>` once you do. Don't open several candidate files to find something; one search replaces that.
+- **Index looks stale?** Call `semantic_index_status`; if it is behind the current commit, call `semantic_reindex`.
+- **CLI fallback** (same index, no MCP needed): `python3 -I tools/semantic-search/index.py --query "..." -k 5 [--source upstream|repo] [--kind java|docs|data]`.
+
 ## Non-negotiables
 
 1. **Ported code meets the bar before it lands.** Upstream is MIT, so its code may be ported, but a port is a rewrite in our style, with Javadoc, tests, a provenance header and every known upstream bug fixed. See [CONTRIBUTING § Ported code](CONTRIBUTING.md#ported-code) and [0001](docs/design/0001-port-policy-and-licensing.md).
@@ -48,7 +62,7 @@ Skills live in [.claude/skills/](.claude/skills/); agent definitions in [.claude
 
 | You need… | Read |
 |---|---|
-| Where something is specified, decided or implemented, here or upstream, when you don't know its name | The `semantic_search` MCP tool ([tools/semantic-search/](tools/semantic-search/README.md)); grep or `git grep <pattern> 1.20` for exact names |
+| Where something is specified, decided or implemented, here or upstream, when you don't know its name | The `semantic_search` MCP tool, loaded via ToolSearch as in "First step" above ([tools/semantic-search/](tools/semantic-search/README.md)); grep or `git grep <pattern> 1.20` for exact names |
 | Upstream code and assets | The local `1.20` branch, pinned at `f18a094d`: `git show 1.20:<path>`. Never commit to it except to fast-forward from upstream |
 | The binding rules: workflow, porting, architecture, worldgen, GTNH integration, code, tests, assets, landing | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | What to build next, and its gates | [docs/ROADMAP.md](docs/ROADMAP.md) |

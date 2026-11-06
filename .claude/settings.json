@@ -1,6 +1,6 @@
 {
   "bashOutputMaxChars": 12000,
-  "autoCompactWindow": 250000,
+  "autoCompactWindow": 200000,
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
     "CLAUDE_CODE_SUBAGENT_EFFORT": "medium"

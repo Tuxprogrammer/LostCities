@@ -6,7 +6,7 @@ What is in this folder and how to turn it on. Nothing here is active until you c
 |---|---|
 | `skills/` | Skills Claude Code loads when a task matches a skill's `description`. Active as soon as the folder exists. Mapped in the root `CLAUDE.md`. |
 | `agents/` | Three subagent definitions: `port-researcher`, `port-builder`, `port-integrator`. Each sets `model`, `maxTurns` and `autoCompactWindow`. Active as soon as the folder exists. |
-| `hooks/context-guard.py` | PostToolUse hook. Reads the transcript, and above 150k context (`CTX_WARN`) tells the agent its size, above 200k (`CTX_STOP`) tells it to write a handoff and stop. |
+| `hooks/context-guard.py` | PostToolUse hook. Reads the transcript, and above 150k context (`CTX_WARN`) tells the agent its size. It also works out whether autocompaction is on and where it fires (settings, agent frontmatter `autoCompactWindow`, env). If compaction fires at or before 200k (`CTX_STOP`), the note is informational and asks for no handoff. Otherwise, above 200k, it tells the agent to write a handoff and stop. `CTX_AUTOCOMPACT=0/1` overrides the detection. |
 | `hooks/output-guard.py` | PreToolUse hook for Bash and Read. Blocks reading a spilled `tool-results` file whole, `cat` of two or more `.md` files, and `cat` of a decision log or roadmap. `CONTACT_SHEETS=1` also blocks opening a single image when a `sheets/` folder sits next to it. |
 | `settings.example.json` | Suggested settings: hook wiring, a lower `bashOutputMaxChars`, an `autoCompactWindow`, and default subagent model and effort through `env`. |
 

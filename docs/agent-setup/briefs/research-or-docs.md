@@ -6,7 +6,7 @@
 <one or two sentences. For catalog work, give the exact output table columns.>
 
 ## Scope
-- Sources: `<paths or repo@tag>`. Find with the semantic search tool or `rg -l`, then read only matching files by line range.
+- Sources: `<paths or repo@tag>`. Load `semantic_search` first (ToolSearch `select:mcp__semantic-search__semantic_search`; see CLAUDE.md "First step"), find with it or `rg -l`, then read only matching files by line range.
 - Output: `<one file path>`, at most <N> lines. Facts with citations (repo@tag:path:line); no prose beyond what the table needs.
 
 ## Limits (hard)

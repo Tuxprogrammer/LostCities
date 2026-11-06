@@ -10,7 +10,7 @@ Every API call re-reads the whole context, and an agent session grows its contex
 ## Rules
 
 1. **Know your size.** If a hook reports context size (`.claude/hooks/context-guard.py`), obey it. If not, estimate: about 36k at start, plus about 2.5k per call, plus anything big you read.
-2. **Hand off at 200k, or at 120 calls**, whichever comes first, unless the brief sets another limit. Do not "finish this one thing" past the limit.
+2. **Hand off at 200k, or at 120 calls**, whichever comes first, unless the brief sets another limit. The exception is when autocompaction is on and fires at or before 200k; the hook says so. Then keep working, because the summary arrives before the limit, and the 120-call rule still applies. Do not "finish this one thing" past the limit.
 3. **Write the handoff and stop.** Write `handoff/<task>.md`, at most 60 lines, holding:
    - goal and stop condition, copied from the brief;
    - commits made, with SHAs, and what is verified, with the evidence path;

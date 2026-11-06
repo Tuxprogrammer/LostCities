@@ -1,7 +1,7 @@
 {
   "_comment": "SUGGESTED settings, not active. Copy to .claude/settings.json (shared) or .claude/settings.local.json (just you) and delete this _comment key. See .claude/README.md for what was verified and what is only suggested.",
   "bashOutputMaxChars": 12000,
-  "autoCompactWindow": 250000,
+  "autoCompactWindow": 200000,
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
     "CLAUDE_CODE_SUBAGENT_EFFORT": "medium"
