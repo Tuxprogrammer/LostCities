@@ -14,7 +14,9 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * <b>transition</b> is a straight strip from the middle of its side to the chunk's center, a diagonal strip from the
  * center to its corner, and a disc at the center that fills the outside of the turn. A <b>plaza</b> with a corner
  * opening adds a disc at that corner outside its own chunk (the plaza's part covers its chunk), which fills the wedges
- * between the plaza and the diagonal leaving it.
+ * between the plaza and the diagonal leaving it. A <b>link junction</b> is a strip from the center to each of its
+ * openings and a disc at the center; a column in several strips takes the one it lies deepest in, so the railings run
+ * only along the junction's outer edge.
  *
  * <p>
  * Height. A diagonal ramp climbs {@link #RAMP_HALF_STEPS} half blocks (one city level) evenly along its length, so
@@ -84,8 +86,8 @@ public final class LinkGeometry {
     private LinkGeometry() {}
 
     /**
-     * Returns whether a writer copies a piece's deck column by column: a diagonal, a transition, or a plaza that opens
-     * on a corner.
+     * Returns whether a writer copies a piece's deck column by column: a diagonal, a transition, a link junction, or a
+     * plaza that opens on a corner.
      *
      * @param piece the piece
      * @return whether {@link #column} can cover anything for it
@@ -145,6 +147,29 @@ public final class LinkGeometry {
                     return new Column(level, 0, HALF_WIDTH + s[0], s[1]);
                 }
                 return Math.hypot(cx - ox, cz - oz) < HALF_WIDTH ? new Column(level, 0, 0, 0) : null;
+            }
+            case LINK_JUNCTION: {
+                // A strip from the center to each opening, each run west to east (north to south for a side on Z),
+                // so the two halves of a straight or diagonal line read as one strip. Where strips overlap the column
+                // keeps the one it lies deepest in, so railings stand only on the junction's outer edge.
+                Column best = null;
+                for (int i = 0; i + 2 < o.length; i += 3) {
+                    double ex = ox + o[i] * HALF_WIDTH;
+                    double ez = oz + o[i + 1] * HALF_WIDTH;
+                    boolean outward = o[i] > 0 || o[i] == 0 && o[i + 1] > 0;
+                    double[] s = outward ? strip(ox, oz, ex, ez, cx, cz) : strip(ex, ez, ox, oz, cx, cz);
+                    if (s == null) {
+                        continue;
+                    }
+                    double along = (outward ? Math.hypot(ex - ox, ez - oz) : 0) + s[0];
+                    if (best == null || Math.abs(s[1]) < Math.abs(best.across())) {
+                        best = new Column(o[i + 2], 0, along, s[1]);
+                    }
+                }
+                if (best == null && o.length > 2 && Math.hypot(cx - ox, cz - oz) < HALF_WIDTH) {
+                    best = new Column(o[2], 0, 0, 0);
+                }
+                return best;
             }
             case CROSSING: {
                 if (Math.floorDiv(x, 16) == chunkX && Math.floorDiv(z, 16) == chunkZ) {

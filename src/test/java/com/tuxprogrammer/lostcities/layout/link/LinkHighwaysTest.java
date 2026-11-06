@@ -95,7 +95,8 @@ public class LinkHighwaysTest {
             "east side");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, -1, 1, 0), "near corner");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 1, 1, 1), "transitions stay flat");
-        assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 0, 1, 0), "a quarter bend");
+        assertEquals(Shape.BEND, Piece.link(-1, 0, 0, 0, 1, 0).shape(), "a quarter bend is the staircase's bend");
+        assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 0, 1, 1), "bends stay flat");
     }
 
     @Test
@@ -320,6 +321,133 @@ public class LinkHighwaysTest {
         HighwayInfo xOnly = new HighwayInfo(java.util.Collections.singletonList(Piece.link(-1, 0, 2, 1, 0, 2)), -1, -1);
         assertEquals(2, xOnly.xLevel());
         assertEquals(-1, xOnly.zLevel());
+    }
+
+    // ------------------------------------------------------------------ junctions and staircase (0015 §3, §5)
+
+    @Test
+    public void flatPiecesAtOneLevelBecomeOneJunction() {
+        Piece j = one(Piece.link(-1, 0, 2, 1, 0, 2), Piece.link(-1, 0, 2, 1, -1, 2));
+        assertEquals(Shape.LINK_JUNCTION, j.shape(), "straight and branch");
+        assertTrue(j.coded());
+        assertEquals(2, j.levelAt(-1, 0));
+        assertEquals(2, j.levelAt(1, 0));
+        assertEquals(2, j.levelAt(1, -1));
+        assertEquals(-1, j.levelAt(0, -1), "no opening north");
+        Piece x = one(Piece.link(-1, -1, 0, 1, 1, 0), Piece.link(1, -1, 0, -1, 1, 0));
+        assertEquals(Shape.LINK_JUNCTION, x.shape(), "X of two diagonals");
+        assertEquals(4, x.openings().length / 3);
+        Piece fork = one(Piece.link(-1, 0, 1, 1, -1, 1), Piece.link(-1, 0, 1, 1, 1, 1));
+        assertEquals(3, fork.openings().length / 3, "fork of two transitions");
+        Piece plaza = one(Piece.plaza(1, 1, 0), Piece.link(-1, -1, 1, 1, 1, 1));
+        assertEquals(Shape.CROSSING, plaza.shape(), "a plaza takes in a diagonal");
+        assertEquals(1, plaza.levelAt(1, 1));
+        assertEquals(1, plaza.levelAt(-1, -1));
+        // Sides only: parts with the legacy quarter turns.
+        Piece bend = Piece.sides(0, -1, 0, 0, 1);
+        assertEquals(Shape.BEND, bend.shape());
+        assertEquals(0, bend.quarterTurns(), "west and south");
+        assertEquals(1, Piece.sides(0, 0, -1, -1, 0).quarterTurns(), "north and west");
+        assertEquals(2, Piece.sides(0, 0, -1, 1, 0).quarterTurns(), "north and east");
+        assertEquals(3, Piece.sides(0, 0, 1, 1, 0).quarterTurns(), "south and east");
+        Piece t = one(bend, Piece.link(-1, 0, 0, 1, 0, 0));
+        assertEquals(Shape.T_JUNCTION, t.shape());
+        assertEquals(0, t.quarterTurns(), "no north side");
+        assertEquals(3, one(Piece.sides(0, 0, -1, 1, 0), Piece.link(0, -1, 0, 0, 1, 0)).quarterTurns(), "no west");
+        assertFalse(t.coded());
+        List<Piece> apart = LinkHighways.merge(
+            java.util.Arrays
+                .asList(Piece.link(-1, -1, 0, 1, 1, 1), Piece.link(-1, 0, 1, 1, 0, 1), Piece.link(0, -1, 3, 0, 1, 3)));
+        assertEquals(3, apart.size(), "ramps and other levels stay apart");
+    }
+
+    @Test
+    public void aLinkJunctionIsOneDeckWithRailingsOnlyOnItsOuterEdge() {
+        Piece branch = Piece.link(-1, 0, 0, 1, -1, 0);
+        Piece j = one(Piece.link(-1, 0, 0, 1, 0, 0), branch);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                LinkGeometry.Column c = LinkGeometry.column(0, 0, j, x, z);
+                assertNotNull(c, "the straight road is all deck at " + x + "," + z);
+                if (z >= 1 && z <= 14) {
+                    assertTrue(c.row() >= 1 && c.row() <= 14, "no railing across the straight road at " + x + "," + z);
+                }
+            }
+        }
+        Piece d1 = Piece.link(-1, -1, 0, 1, 1, 0);
+        Piece d2 = Piece.link(1, -1, 0, -1, 1, 0);
+        Piece xj = one(d1, d2);
+        for (Piece[] pair : new Piece[][] { { j, branch }, { xj, d1 }, { xj, d2 } }) {
+            for (int x = -16; x < 32; x++) {
+                for (int z = -16; z < 32; z++) {
+                    LinkGeometry.Column part = LinkGeometry.column(0, 0, pair[1], x, z);
+                    boolean disc = part != null && part.along() == 0 && part.across() == 0;
+                    if (part == null || disc || Math.abs(part.across()) >= LinkGeometry.HALF_WIDTH - 1) {
+                        continue;
+                    }
+                    LinkGeometry.Column c = LinkGeometry.column(0, 0, pair[0], x, z);
+                    assertNotNull(c, pair[0] + " covers " + x + "," + z);
+                    assertTrue(c.row() >= 1 && c.row() <= 14, pair[0] + " has no railing inside a road at " + x + "," + z);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void aLinkOverABridgeOrTunnelTakesTheStaircase() {
+        CityLinkGraph.Link link = new CityLinkGraph.Link(0, 0, 30, 20);
+        LinkHighways.Ends river = new LinkHighways.Ends() {
+
+            @Override
+            public int level(int chunkX, int chunkZ) {
+                return chunkX == 0 && chunkZ == 0 ? 1 : 3;
+            }
+
+            @Override
+            public int radius(int chunkX, int chunkZ) {
+                return 0;
+            }
+
+            @Override
+            public boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
+                return chunkX == 15;
+            }
+        };
+        assertFalse(new LinkHighways(null, ends(0, 1, 3, 0, 0)).profile(link).staircase(), "no fallback on open land");
+        LinkHighways view = new LinkHighways(null, river);
+        LinkHighways.Profile p = view.profile(link);
+        assertTrue(p.staircase());
+        List<LinkRaster.Step> path = link.path();
+        int ramps = 0;
+        for (int i = p.start(); i <= p.end(); i++) {
+            Piece piece = view.piece(link, i);
+            assertFalse(LinkGeometry.coded(piece), "no 45° piece on the staircase: " + piece);
+            if (p.inLevel(i) != p.outLevel(i)) {
+                ramps++;
+                assertEquals(Shape.RAMP, piece.shape());
+            }
+            if (i < p.end()) {
+                LinkRaster.Step s = path.get(i);
+                Piece next = view.piece(link, i + 1);
+                boolean corner = s.outDx() != 0 && s.outDz() != 0;
+                int here = piece.levelAt(s.outDx(), corner ? 0 : s.outDz());
+                int there = next.levelAt(corner ? 0 : -s.outDx(), -s.outDz());
+                assertTrue(here >= 0, "opens toward the next chunk at " + i);
+                assertEquals(here, there, "seam " + i);
+                if (corner) {
+                    Piece between = Piece.sides(here, -s.outDx(), 0, 0, s.outDz());
+                    assertEquals(Shape.BEND, between.shape(), "the side chunk between is a bend");
+                }
+            }
+        }
+        assertEquals(2, ramps, "the climb moves to straight chunks");
+        assertEquals(3, p.outLevel(p.end()));
+    }
+
+    private static Piece one(Piece... pieces) {
+        List<Piece> merged = LinkHighways.merge(java.util.Arrays.asList(pieces));
+        assertEquals(1, merged.size(), merged.toString());
+        return merged.get(0);
     }
 
     private static long sq(long v) {

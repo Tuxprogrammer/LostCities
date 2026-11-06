@@ -26,9 +26,15 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * steps at a seam.
  *
  * <p>
- * Where links share a chunk, identical pieces merge, two plazas at one level merge, and a straight piece along each
- * axis at one level becomes a crossing; other pieces are all written, lowest first. A diagonal deck spills into the two
- * side neighbors at each corner it opens on; those chunks report the spill so buildings keep clear.
+ * Where links share a chunk, identical pieces merge and all flat pieces at one level become one: a plaza, a straight
+ * piece, bend, T or crossing, or a coded link junction ({@link #merge}); ramps and other levels are written lowest
+ * first. A diagonal deck spills into the two side neighbors at each corner it opens on; those chunks report the spill
+ * so buildings keep clear.
+ *
+ * <p>
+ * Staircase fallback (0015 §3). A link whose 45° deck would cover a bridge or a tunnel chunk
+ * ({@link Ends#bridgeOrTunnel}) takes a corner staircase instead: each 45° step becomes a step along X and one along Z
+ * through the side chunk between, which holds a bend, so every piece is a part and none is written in code.
  *
  * <p>
  * Pure: reads only the graph and the {@link Ends} oracle (terrain-derived), so it answers the same in any order and
@@ -36,7 +42,7 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  */
 public final class LinkHighways {
 
-    /** City facts at a link's ends. */
+    /** City facts at a link's ends, and the terrain a 45° deck must not cross. */
     public interface Ends {
 
         /**
@@ -56,6 +62,21 @@ public final class LinkHighways {
          * @return the radius in blocks; 0 or less writes the link from the center itself
          */
         int radius(int chunkX, int chunkZ);
+
+        /**
+         * Returns whether a 45° deck between two levels in a chunk would be a bridge or a tunnel (0015 §3, the
+         * staircase fallback): water or ground more than a level below the lower deck, or ground above the higher.
+         * The default never falls back.
+         *
+         * @param chunkX    chunk X
+         * @param chunkZ    chunk Z
+         * @param lowLevel  the deck's lower level there
+         * @param highLevel the deck's higher level there
+         * @return whether the link takes the staircase instead
+         */
+        default boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
+            return false;
+        }
     }
 
     /**
@@ -67,12 +88,22 @@ public final class LinkHighways {
         private final int end;
         private final int[] in;
         private final int[] out;
+        private final boolean staircase;
 
-        Profile(int start, int end, int[] in, int[] out) {
+        Profile(int start, int end, int[] in, int[] out, boolean staircase) {
             this.start = start;
             this.end = end;
             this.in = in;
             this.out = out;
+            this.staircase = staircase;
+        }
+
+        /**
+         * Returns whether the link takes the corner staircase (0015 §3): each 45° step is two straight steps, along X
+         * first, through the side chunk between, which holds a bend.
+         */
+        public boolean staircase() {
+            return staircase;
         }
 
         /** Returns the path index of the first written chunk, the plaza at the lower end. */
@@ -130,6 +161,11 @@ public final class LinkHighways {
     public LinkHighways(CityLinkGraph graph, Ends ends) {
         this.graph = graph;
         this.ends = ends;
+    }
+
+    /** Returns the city and terrain facts the view reads. */
+    public Ends ends() {
+        return ends;
     }
 
     /** Returns the graph. */
@@ -213,6 +249,7 @@ public final class LinkHighways {
                 out.add(piece);
             }
         }
+        out.addAll(staircaseBends(chunkX, chunkZ));
         List<HighwayInfo.Piece> merged = merge(out);
         own.put(key, merged);
         return merged;
@@ -232,15 +269,29 @@ public final class LinkHighways {
         }
         LinkRaster.Step step = link.path()
             .get(index);
+        // Openings toward the previous and the next chunk. On the staircase a corner toward the next chunk becomes the
+        // side along X (the bend chunk between lies along X first), and a corner toward the previous one the side along Z.
+        int prevDx = -step.inDx();
+        int prevDz = -step.inDz();
+        int nextDx = step.outDx();
+        int nextDz = step.outDz();
+        if (profile.staircase) {
+            if (prevDx != 0 && prevDz != 0) {
+                prevDx = 0;
+            }
+            if (nextDx != 0 && nextDz != 0) {
+                nextDz = 0;
+            }
+        }
         if (index == profile.start || index == profile.end) {
             List<Integer> steps = new ArrayList<>();
             if (index < profile.end) {
-                steps.add(step.outDx());
-                steps.add(step.outDz());
+                steps.add(nextDx);
+                steps.add(nextDz);
             }
             if (index > profile.start) {
-                steps.add(-step.inDx());
-                steps.add(-step.inDz());
+                steps.add(prevDx);
+                steps.add(prevDz);
             }
             int[] array = new int[steps.size()];
             for (int i = 0; i < array.length; i++) {
@@ -248,8 +299,31 @@ public final class LinkHighways {
             }
             return HighwayInfo.Piece.plaza(profile.in[index], array);
         }
-        return HighwayInfo.Piece
-            .link(-step.inDx(), -step.inDz(), profile.in[index], step.outDx(), step.outDz(), profile.out[index]);
+        return HighwayInfo.Piece.link(prevDx, prevDz, profile.in[index], nextDx, nextDz, profile.out[index]);
+    }
+
+    /**
+     * Returns the bends a staircase link puts in a side chunk off its path (0015 §3): for a 45° step from P to Q, the
+     * chunk one step along X from P, joining P's side to Q's side at the step's level.
+     */
+    private List<HighwayInfo.Piece> staircaseBends(int chunkX, int chunkZ) {
+        List<HighwayInfo.Piece> out = new ArrayList<>();
+        for (int sx = -1; sx <= 1; sx += 2) {
+            for (CityLinkGraph.Hit hit : graph.hits(chunkX - sx, chunkZ)) {
+                Profile profile = profile(hit.link());
+                int i = hit.index();
+                if (!profile.staircase || i < profile.start || i >= profile.end) {
+                    continue;
+                }
+                LinkRaster.Step step = hit.link()
+                    .path()
+                    .get(i);
+                if (step.outDx() == sx && step.outDz() != 0) {
+                    out.add(HighwayInfo.Piece.sides(profile.out[i], -sx, 0, 0, step.outDz()));
+                }
+            }
+        }
+        return out;
     }
 
     /**
@@ -281,11 +355,48 @@ public final class LinkHighways {
         while (end >= 0 && inside(path.get(end), link.bx(), link.bz(), rb)) {
             end--;
         }
+        if (start > end) {
+            return new Profile(start, end, new int[n], new int[n], false);
+        }
+        Profile diagonal = levels(link, ends, start, end, false);
+        return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true) : diagonal;
+    }
+
+    /**
+     * Returns whether a link falls back to the staircase (0015 §3): some chunk its 45° deck covers, a diagonal or
+     * transition chunk or a side chunk a corner spills into, would hold a bridge or a tunnel.
+     */
+    private static boolean staircase(CityLinkGraph.Link link, Ends ends, Profile p) {
+        List<LinkRaster.Step> path = link.path();
+        for (int i = p.start; i <= p.end; i++) {
+            LinkRaster.Step step = path.get(i);
+            boolean cornerIn = i > p.start && step.inDx() != 0 && step.inDz() != 0;
+            boolean cornerOut = i < p.end && step.outDx() != 0 && step.outDz() != 0;
+            if (!cornerIn && !cornerOut) {
+                continue;
+            }
+            int low = Math.min(p.in[i], p.out[i]);
+            int high = Math.max(p.in[i], p.out[i]);
+            if (ends.bridgeOrTunnel(step.chunkX(), step.chunkZ(), low, high)) {
+                return true;
+            }
+            if (cornerOut && (ends.bridgeOrTunnel(step.chunkX() + step.outDx(), step.chunkZ(), p.out[i], p.out[i])
+                || ends.bridgeOrTunnel(step.chunkX(), step.chunkZ() + step.outDz(), p.out[i], p.out[i]))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Places a link's ramps (class Javadoc). On the staircase the 45° chunks become flat bends, so only straight chunks
+     * ramp.
+     */
+    private static Profile levels(CityLinkGraph.Link link, Ends ends, int start, int end, boolean staircase) {
+        List<LinkRaster.Step> path = link.path();
+        int n = path.size();
         int[] in = new int[n];
         int[] out = new int[n];
-        if (start > end) {
-            return new Profile(start, end, in, out);
-        }
         int la = ends.level(link.ax(), link.az());
         int lb = ends.level(link.bx(), link.bz());
         int need = Math.abs(lb - la);
@@ -293,7 +404,7 @@ public final class LinkHighways {
         for (int i = start + 1; i < end; i++) {
             LinkRaster.Kind kind = path.get(i)
                 .kind();
-            if (kind == LinkRaster.Kind.DIAGONAL || kind == LinkRaster.Kind.STRAIGHT) {
+            if (kind == LinkRaster.Kind.STRAIGHT || kind == LinkRaster.Kind.DIAGONAL && !staircase) {
                 candidates.add(i);
             }
         }
@@ -322,7 +433,7 @@ public final class LinkHighways {
             }
             out[i] = level;
         }
-        return new Profile(start, end, in, out);
+        return new Profile(start, end, in, out, staircase);
     }
 
     private static boolean inside(LinkRaster.Step step, int cx, int cz, int radius) {
@@ -334,28 +445,35 @@ public final class LinkHighways {
         return 256L * (dx * dx + dz * dz) <= (long) radius * radius;
     }
 
+    /**
+     * Merges the pieces several links write in one chunk (0015 §5). Identical pieces merge. All flat pieces at one level
+     * become one: a plaza when one is a plaza (it opens on all of their openings), else a straight piece, bend, T or
+     * crossing when they open only on sides, else a {@link HighwayInfo.Shape#LINK_JUNCTION}. Ramps and pieces at other
+     * levels stay, lowest first, so the lower passes under.
+     *
+     * @param pieces the pieces, in any order
+     * @return the merged pieces, lowest first
+     */
     static List<HighwayInfo.Piece> merge(List<HighwayInfo.Piece> pieces) {
         List<HighwayInfo.Piece> out = new ArrayList<>();
+        Map<Integer, List<HighwayInfo.Piece>> flat = new LinkedHashMap<>();
         for (HighwayInfo.Piece piece : pieces) {
-            if (!out.contains(piece)) {
-                out.add(piece);
+            if (out.contains(piece)) {
+                continue;
+            }
+            out.add(piece);
+            if (piece.level() == piece.topLevel()) {
+                flat.computeIfAbsent(piece.level(), k -> new ArrayList<>())
+                    .add(piece);
             }
         }
-        // Plazas at one level, or a straight piece on each axis at one level, become one crossing.
-        boolean changed = true;
-        while (changed) {
-            changed = false;
-            outer: for (int i = 0; i < out.size(); i++) {
-                for (int j = i + 1; j < out.size(); j++) {
-                    HighwayInfo.Piece joined = join(out.get(i), out.get(j));
-                    if (joined != null) {
-                        out.remove(j);
-                        out.set(i, joined);
-                        changed = true;
-                        break outer;
-                    }
-                }
+        for (Map.Entry<Integer, List<HighwayInfo.Piece>> entry : flat.entrySet()) {
+            List<HighwayInfo.Piece> group = entry.getValue();
+            if (group.size() < 2) {
+                continue;
             }
+            out.removeAll(group);
+            out.add(join(entry.getKey(), group));
         }
         out.sort((a, b) -> {
             int c = Integer.compare(a.level(), b.level());
@@ -364,24 +482,13 @@ public final class LinkHighways {
         return Collections.unmodifiableList(out);
     }
 
-    private static HighwayInfo.Piece join(HighwayInfo.Piece a, HighwayInfo.Piece b) {
-        boolean aFlat = a.level() == a.topLevel();
-        boolean bFlat = b.level() == b.topLevel();
-        if (!aFlat || !bFlat || a.level() != b.level()) {
-            return null;
-        }
-        boolean aJoins = a.shape() == HighwayInfo.Shape.CROSSING || a.shape() == HighwayInfo.Shape.STRAIGHT;
-        boolean bJoins = b.shape() == HighwayInfo.Shape.CROSSING || b.shape() == HighwayInfo.Shape.STRAIGHT;
-        if (!aJoins || !bJoins) {
-            return null;
-        }
-        boolean crossing = a.shape() == HighwayInfo.Shape.CROSSING || b.shape() == HighwayInfo.Shape.CROSSING
-            || a.axis() != b.axis();
-        if (!crossing) {
-            return null;
-        }
+    /** Joins flat pieces at one level into one ({@link #merge}). */
+    private static HighwayInfo.Piece join(int level, List<HighwayInfo.Piece> group) {
         List<Integer> steps = new ArrayList<>();
-        for (HighwayInfo.Piece p : new HighwayInfo.Piece[] { a, b }) {
+        boolean plaza = false;
+        boolean corner = false;
+        for (HighwayInfo.Piece p : group) {
+            plaza |= p.shape() == HighwayInfo.Shape.CROSSING;
             int[] o = p.openings();
             for (int i = 0; i + 2 < o.length; i += 3) {
                 boolean seen = false;
@@ -391,6 +498,7 @@ public final class LinkHighways {
                 if (!seen) {
                     steps.add(o[i]);
                     steps.add(o[i + 1]);
+                    corner |= o[i] != 0 && o[i + 1] != 0;
                 }
             }
         }
@@ -398,7 +506,10 @@ public final class LinkHighways {
         for (int i = 0; i < array.length; i++) {
             array[i] = steps.get(i);
         }
-        return HighwayInfo.Piece.plaza(a.level(), array);
+        if (plaza) {
+            return HighwayInfo.Piece.plaza(level, array);
+        }
+        return corner ? HighwayInfo.Piece.linkJunction(level, array) : HighwayInfo.Piece.sides(level, array);
     }
 
     private static long key(int x, int z) {

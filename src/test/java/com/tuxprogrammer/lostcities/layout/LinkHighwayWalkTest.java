@@ -49,6 +49,16 @@ public class LinkHighwayWalkTest {
     }
 
     @Test
+    public void linksTakeTheStaircaseOverARiverAndThroughAHill() {
+        // A river four chunks wide across the whole map, and a hill ridge 30 blocks above the land.
+        LayoutFixtures.FakeTerrain terrain = new LayoutFixtures.FakeTerrain(
+            (x, z) -> x >= 20 && x <= 23 ? 50 : z >= -40 && z <= -30 ? 100 : 70).water(20, -100000, 23, 100000);
+        int[] counts = walk(planner(7919L, terrain));
+        assertTrue(counts[0] > 0, "the land links its cities");
+        assertTrue(counts[2] > 0, "some links take the staircase");
+    }
+
+    @Test
     public void legacyLayoutStillAnswersFromThePlanner() {
         LayoutPlanner legacy = new LayoutPlanner(
             LayoutInputs.builder(
@@ -70,7 +80,7 @@ public class LinkHighwayWalkTest {
 
     /**
      * Walks every link with an end in the 7 × 7 cells around the origin; returns how many were written and how many of
-     * those change level.
+     * those change level and take the staircase.
      */
     private static int[] walk(LayoutPlanner planner) {
         Networks networks = planner.networks();
@@ -81,6 +91,7 @@ public class LinkHighwayWalkTest {
         Set<CityLinkGraph.Link> seen = new HashSet<>();
         int written = 0;
         int ramped = 0;
+        int staircase = 0;
         for (int cx = -3; cx <= 3; cx++) {
             for (int cz = -3; cz <= 3; cz++) {
                 for (CityLinkGraph.Link link : graph.links(cx, cz)) {
@@ -93,11 +104,12 @@ public class LinkHighwayWalkTest {
                     }
                     written++;
                     ramped += p.inLevel(p.start()) != p.outLevel(p.end()) ? 1 : 0;
+                    staircase += p.staircase() ? 1 : 0;
                     walkOne(planner, networks, link, p);
                 }
             }
         }
-        return new int[] { written, ramped };
+        return new int[] { written, ramped, staircase };
     }
 
     private static void walkOne(LayoutPlanner planner, Networks networks, CityLinkGraph.Link link,
@@ -129,6 +141,34 @@ public class LinkHighwayWalkTest {
                 int dz = next.chunkZ() - s.chunkZ();
                 int level = p.outLevel(i);
                 assertEquals(level, p.inLevel(i + 1), link + " profile seam " + i);
+                if (dx != 0 && dz != 0) {
+                    if (p.staircase()) {
+                        // Two straight steps, along X first, through a bend in the side chunk between (0015 §3).
+                        int bx = s.chunkX() + dx;
+                        List<HighwayInfo.Piece> bend = networks.highway(bx, s.chunkZ())
+                            .pieces(bx, s.chunkZ());
+                        assertTrue(opens(pieces, dx, 0, level), link + " steps along X at " + i);
+                        assertTrue(opens(bend, -dx, 0, level) && opens(bend, 0, dz, level), link + " bends at " + i);
+                        assertTrue(
+                            opens(
+                                networks.highway(next.chunkX(), next.chunkZ())
+                                    .pieces(next.chunkX(), next.chunkZ()),
+                                0,
+                                -dz,
+                                level),
+                            link + " steps along Z into " + (i + 1));
+                        continue;
+                    }
+                    // No 45° deck over a bridge or through a tunnel: such a link takes the staircase.
+                    LinkHighways.Ends ends = networks.linkHighways()
+                        .ends();
+                    assertTrue(
+                        !ends.bridgeOrTunnel(s.chunkX(), s.chunkZ(), level, level)
+                            && !ends.bridgeOrTunnel(next.chunkX(), next.chunkZ(), level, level)
+                            && !ends.bridgeOrTunnel(s.chunkX() + dx, s.chunkZ(), level, level)
+                            && !ends.bridgeOrTunnel(s.chunkX(), s.chunkZ() + dz, level, level),
+                        link + " runs 45° over a bridge or tunnel at " + i);
+                }
                 assertTrue(opens(pieces, dx, dz, level), link + " leaves chunk " + i + " at level " + level);
                 assertTrue(
                     opens(

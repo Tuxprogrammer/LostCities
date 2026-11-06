@@ -64,7 +64,13 @@ public final class HighwayInfo {
          * A link piece that turns 45° (0015 §3), written in code: half straight from the middle of one side to the
          * chunk's center, half diagonal from the center to a corner. Always flat.
          */
-        TRANSITION
+        TRANSITION,
+        /**
+         * Where links of the city link network meet at one level and at least one opens on a corner (0015 §5), written
+         * in code: a strip from the chunk's center to every opening and a disc at the center, one deck with railings
+         * only on its outer edge. A bend, T or X of 45° and straight roads. Always flat.
+         */
+        LINK_JUNCTION
     }
 
     /** One route through the chunk. */
@@ -159,6 +165,7 @@ public final class HighwayInfo {
          * for north-east to south-west.</li>
          * <li>A side and a corner away from it: {@link Shape#TRANSITION}; its quarter turn is the side's (west 0,
          * north 1, east 2, south 3).</li>
+         * <li>Two sides at right angles and one level: {@link Shape#BEND} (the staircase fallback, 0015 §3).</li>
          * </ul>
          *
          * @param aDx    first opening's X step
@@ -195,6 +202,10 @@ public final class HighwayInfo {
                     turns,
                     openings);
             }
+            if (!aCorner && !bCorner && aLevel == bLevel && (aDx != 0) != (bDx != 0)) {
+                // Two sides at right angles: a bend (the staircase fallback, 0015 §3).
+                return sides(aLevel, aDx, aDz, bDx, bDz);
+            }
             if (aCorner != bCorner && aLevel == bLevel) {
                 int sDx = aCorner ? bDx : aDx;
                 int sDz = aCorner ? bDz : aDz;
@@ -225,6 +236,92 @@ public final class HighwayInfo {
                 openings[i * 3 + 2] = level;
             }
             return new Piece(Shape.CROSSING, null, level, level, 0, openings);
+        }
+
+        /**
+         * Creates the piece of the city link network that joins several sides at one level (0015 §3, §5): two opposite
+         * sides make a {@link Shape#STRAIGHT}, two at right angles a {@link Shape#BEND}, three a
+         * {@link Shape#T_JUNCTION} and four a crossing, each with the legacy part's quarter turn (as upstream's
+         * {@code getJunction}).
+         *
+         * @param level the level
+         * @param steps the sides, as {@code dx, dz} pairs; each a side, not a corner
+         * @return the piece
+         * @throws IllegalArgumentException for a corner, or fewer than two distinct sides
+         */
+        public static Piece sides(int level, int... steps) {
+            boolean w = false;
+            boolean e = false;
+            boolean n = false;
+            boolean s = false;
+            for (int i = 0; i + 1 < steps.length; i += 2) {
+                int dx = steps[i];
+                int dz = steps[i + 1];
+                if ((dx == 0) == (dz == 0)) {
+                    throw new IllegalArgumentException("not a side: " + dx + "," + dz);
+                }
+                w |= dx < 0;
+                e |= dx > 0;
+                n |= dz < 0;
+                s |= dz > 0;
+            }
+            int count = (w ? 1 : 0) + (e ? 1 : 0) + (n ? 1 : 0) + (s ? 1 : 0);
+            List<Integer> list = new ArrayList<>();
+            if (w) {
+                list.add(-1);
+                list.add(0);
+            }
+            if (e) {
+                list.add(1);
+                list.add(0);
+            }
+            if (n) {
+                list.add(0);
+                list.add(-1);
+            }
+            if (s) {
+                list.add(0);
+                list.add(1);
+            }
+            int[] openings = new int[list.size() / 2 * 3];
+            for (int i = 0; i < list.size() / 2; i++) {
+                openings[i * 3] = list.get(i * 2);
+                openings[i * 3 + 1] = list.get(i * 2 + 1);
+                openings[i * 3 + 2] = level;
+            }
+            switch (count) {
+                case 2:
+                    if (w && e || n && s) {
+                        return link(openings[0], openings[1], level, openings[3], openings[4], level);
+                    }
+                    int bend = w && s ? 0 : n && w ? 1 : n && e ? 2 : 3;
+                    return new Piece(Shape.BEND, null, level, level, bend, openings);
+                case 3:
+                    int t = !n ? 0 : !e ? 1 : !s ? 2 : 3;
+                    return new Piece(Shape.T_JUNCTION, null, level, level, t, openings);
+                case 4:
+                    return new Piece(Shape.CROSSING, null, level, level, 0, openings);
+                default:
+                    throw new IllegalArgumentException("fewer than two sides");
+            }
+        }
+
+        /**
+         * Creates the {@link Shape#LINK_JUNCTION} where links meet at one level with at least one corner opening
+         * (0015 §5).
+         *
+         * @param level the level
+         * @param steps the openings, as distinct {@code dx, dz} pairs
+         * @return the piece
+         */
+        public static Piece linkJunction(int level, int... steps) {
+            int[] openings = new int[steps.length / 2 * 3];
+            for (int i = 0; i < steps.length / 2; i++) {
+                openings[i * 3] = steps[i * 2];
+                openings[i * 3 + 1] = steps[i * 2 + 1];
+                openings[i * 3 + 2] = level;
+            }
+            return new Piece(Shape.LINK_JUNCTION, null, level, level, 0, openings);
         }
 
         /**
@@ -272,7 +369,7 @@ public final class HighwayInfo {
 
         /** Returns whether a writer places this piece in code rather than from a part (0015 §3). */
         public boolean coded() {
-            return shape == Shape.DIAGONAL || shape == Shape.TRANSITION;
+            return shape == Shape.DIAGONAL || shape == Shape.TRANSITION || shape == Shape.LINK_JUNCTION;
         }
 
         /** Returns whether this piece opens on a corner, so its deck spills into the two chunks beside it. */

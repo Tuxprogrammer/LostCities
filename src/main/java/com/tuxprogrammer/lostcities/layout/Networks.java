@@ -177,6 +177,14 @@ public final class Networks implements InfrastructureView {
                     }
                     return new int[] { c.chunkX(), c.chunkZ() };
                 }
+
+                @Override
+                public boolean blocked(int chunkX, int chunkZ) {
+                    // A landmark's core or margin (0013 §1, 0015 §6).
+                    Zone zone = zones.zone(chunkX, chunkZ)
+                        .zone();
+                    return zone == Zone.CORE || zone == Zone.EDGE_RING || zone == Zone.AVOID_RING;
+                }
             }, LINK_CACHE_CELLS);
             // Highways follow the links (0015 §3, §5): each end's city level and radius come from the terrain-only
             // level oracle and the grid.
@@ -190,6 +198,17 @@ public final class Networks implements InfrastructureView {
                 @Override
                 public int radius(int chunkX, int chunkZ) {
                     return Math.max(0, grid.radiusAt(chunkX, chunkZ));
+                }
+
+                @Override
+                public boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
+                    // The staircase fallback (0015 §3): the tunnel test is ChunkPlan.isTunnel's outside a city; a
+                    // bridge stands over water or over ground more than one level below the deck.
+                    int height = planner.terrain.height(chunkX, chunkZ);
+                    int ground = planner.profile.groundLevel;
+                    return height > ground + highLevel * ChunkPlan.FLOOR_HEIGHT + 3
+                        || height < ground + (lowLevel - 1) * ChunkPlan.FLOOR_HEIGHT
+                        || planner.terrain.isWaterBiome(chunkX, chunkZ);
                 }
             });
         } else {

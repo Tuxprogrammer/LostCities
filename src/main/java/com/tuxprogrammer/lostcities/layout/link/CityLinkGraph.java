@@ -44,6 +44,18 @@ public final class CityLinkGraph {
          * @return the center, or {@code null} when the cell's center yields no city
          */
         int[] cityCenter(int cellX, int cellZ);
+
+        /**
+         * Returns whether a link must not cross a chunk: a landmark's core or margin (0013 §1, 0015 §6). The default
+         * blocks nothing.
+         *
+         * @param chunkX chunk X
+         * @param chunkZ chunk Z
+         * @return whether the chunk is blocked
+         */
+        default boolean blocked(int chunkX, int chunkZ) {
+            return false;
+        }
     }
 
     /** One link: two city centers, lower end first. */
@@ -196,8 +208,9 @@ public final class CityLinkGraph {
     }
 
     /**
-     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE}, nearest
-     * first, ties to the lower end. Empty when the cell has no node. Not symmetric; see {@link #links}.
+     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} whose path
+     * crosses no {@link Nodes#blocked} chunk, nearest first, ties to the lower end; when every such path is blocked, the
+     * nearest alone. Empty when the cell has no node. Not symmetric; see {@link #links}.
      *
      * @param cellX cell X
      * @param cellZ cell Z
@@ -238,11 +251,28 @@ public final class CityLinkGraph {
                 return c != 0 ? c : Long.compare(p[2], q[2]);
             });
         }
+        // Landmarks (0015 §6): a link whose path crosses a blocked chunk is passed over for the next nearest, unless
+        // every candidate is blocked; then the node keeps its nearest, so no node is cut off.
         List<Link> out = new ArrayList<>();
-        for (int i = 0; i < Math.min(NEAREST, found.size()); i++) {
-            out.add(new Link(self[0], self[1], (int) found.get(i)[1], (int) found.get(i)[2]));
+        for (int i = 0; i < found.size() && out.size() < NEAREST; i++) {
+            Link link = new Link(self[0], self[1], (int) found.get(i)[1], (int) found.get(i)[2]);
+            if (!crossesBlocked(link)) {
+                out.add(link);
+            }
+        }
+        if (out.isEmpty() && !found.isEmpty()) {
+            out.add(new Link(self[0], self[1], (int) found.get(0)[1], (int) found.get(0)[2]));
         }
         return neighbors.put(cellX, cellZ, Collections.unmodifiableList(out));
+    }
+
+    private boolean crossesBlocked(Link link) {
+        for (LinkRaster.Step step : link.path()) {
+            if (nodes.blocked(step.chunkX(), step.chunkZ())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

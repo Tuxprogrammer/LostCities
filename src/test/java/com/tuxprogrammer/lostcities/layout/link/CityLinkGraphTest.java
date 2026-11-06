@@ -224,4 +224,97 @@ class CityLinkGraphTest {
             assertFalse(links.isEmpty());
         }
     }
+
+    /** The grid nodes with landmark discs of radius 6 chunks on a 40-chunk lattice, offset so some links cross them. */
+    private static final class Landmarks implements CityLinkGraph.Nodes {
+
+        private final Nodes nodes;
+
+        Landmarks(Nodes nodes) {
+            this.nodes = nodes;
+        }
+
+        @Override
+        public int cell() {
+            return nodes.cell();
+        }
+
+        @Override
+        public int[] cityCenter(int cellX, int cellZ) {
+            return nodes.cityCenter(cellX, cellZ);
+        }
+
+        @Override
+        public boolean blocked(int chunkX, int chunkZ) {
+            int dx = Math.floorMod(chunkX + 20, 40) - 20;
+            int dz = Math.floorMod(chunkZ + 7, 40) - 20;
+            return dx * dx + dz * dz <= 36;
+        }
+    }
+
+    @Test
+    void linksPassOverLandmarksWhenTheNodeHasAnotherChoice() {
+        Landmarks nodes = new Landmarks(grid(4242L));
+        CityLinkGraph graph = new CityLinkGraph(nodes, 512);
+        int dropped = 0;
+        for (int cx = -5; cx <= 5; cx++) {
+            for (int cz = -5; cz <= 5; cz++) {
+                int[] self = graph.node(cx, cz);
+                if (self == null) {
+                    continue;
+                }
+                List<long[]> all = new ArrayList<>();
+                for (int ox = -8; ox <= 8; ox++) {
+                    for (int oz = -8; oz <= 8; oz++) {
+                        int[] o = graph.node(cx + ox, cz + oz);
+                        if (o == null || ox == 0 && oz == 0) {
+                            continue;
+                        }
+                        long d = (long) (o[0] - self[0]) * (o[0] - self[0])
+                            + (long) (o[1] - self[1]) * (o[1] - self[1]);
+                        if (d <= 160L * 160L) {
+                            all.add(new long[] { d, o[0], o[1] });
+                        }
+                    }
+                }
+                all.sort((p, q) -> p[0] != q[0] ? Long.compare(p[0], q[0])
+                    : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
+                List<long[]> open = new ArrayList<>();
+                for (int i = 0; i < all.size(); i++) {
+                    boolean blocked = blocked(nodes, self, all.get(i));
+                    if (!blocked) {
+                        open.add(all.get(i));
+                    } else if (i < CityLinkGraph.NEAREST) {
+                        dropped++;
+                    }
+                }
+                List<CityLinkGraph.Link> chosen = graph.chosen(cx, cz);
+                if (open.isEmpty()) {
+                    assertEquals(all.isEmpty() ? 0 : 1, chosen.size(), "a node keeps its nearest when all are blocked");
+                    continue;
+                }
+                assertEquals(Math.min(CityLinkGraph.NEAREST, open.size()), chosen.size());
+                for (int i = 0; i < chosen.size(); i++) {
+                    CityLinkGraph.Link link = chosen.get(i);
+                    long[] want = open.get(i);
+                    boolean matches = link.ax() == want[1] && link.az() == want[2]
+                        || link.bx() == want[1] && link.bz() == want[2];
+                    assertTrue(matches, "choice " + i + " of " + cx + "," + cz + " is the next unblocked node");
+                    for (LinkRaster.Step step : link.path()) {
+                        assertTrue(!nodes.blocked(step.chunkX(), step.chunkZ()), link + " crosses a landmark");
+                    }
+                }
+            }
+        }
+        assertTrue(dropped > 0, "some nearest link crosses a landmark, so the test has teeth");
+    }
+
+    private static boolean blocked(CityLinkGraph.Nodes nodes, int[] self, long[] other) {
+        for (LinkRaster.Step step : LinkRaster.rasterize(self[0], self[1], (int) other[1], (int) other[2])) {
+            if (nodes.blocked(step.chunkX(), step.chunkZ())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
