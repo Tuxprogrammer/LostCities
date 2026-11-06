@@ -87,6 +87,7 @@ public final class TerrainSettings {
     private final String cityHighwayLayout;
     private final boolean cityDistricts;
     private final boolean roomRules;
+    private final boolean rampSurface;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -167,6 +168,7 @@ public final class TerrainSettings {
         cityDistricts = r.booleanValue("cityDistricts", false);
         // false is the pre-pin value (D282): the legacy loot and spawner placement and building-name room kinds.
         roomRules = r.booleanValue("roomRules", false);
+        rampSurface = r.booleanValue("rampSurface", false);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -301,6 +303,7 @@ public final class TerrainSettings {
         out.put("cityHighwayLayout", cityHighwayLayout);
         out.put("cityDistricts", Boolean.toString(cityDistricts));
         out.put("roomRules", Boolean.toString(roomRules));
+        out.put("rampSurface", Boolean.toString(rampSurface));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -464,6 +467,17 @@ public final class TerrainSettings {
      */
     public boolean roomRules() {
         return roomRules;
+    }
+
+    /**
+     * Returns whether a highway ramp's whole-block columns are topped with the half slabs' material
+     * ({@code rampSurface}, KI-2, design record 0013 §2), so the ramp reads as one surface instead of stripes of slab
+     * and road; false keeps the stripes (worlds pinned before the key).
+     *
+     * @return whether ramps get one surface
+     */
+    public boolean rampSurface() {
+        return rampSurface;
     }
 
     /** Returns whether building floors get furniture ({@code furnish}, design record 0016). */

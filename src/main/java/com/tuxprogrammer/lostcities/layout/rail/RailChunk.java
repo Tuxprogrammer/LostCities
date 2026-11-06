@@ -41,6 +41,11 @@ public final class RailChunk {
     private final boolean staircase;
     /** The sides a link-network line opens on (0015 §3), {@code LinkRails} bits; 0 on the legacy grid. */
     private final int openings;
+    /**
+     * For a straight line that stops before a landmark core it cannot pass ({@code railwayCoreEnds}, design record
+     * 0013 §5): the side its buffer faces, west (north along Z) or east (south); {@code null} for a line through.
+     */
+    private final Direction buffer;
 
     /**
      * Creates an upstream rail chunk.
@@ -77,6 +82,20 @@ public final class RailChunk {
         this.topLevel = Math.max(level, topLevel);
         this.staircase = staircase;
         this.openings = 0;
+        this.buffer = null;
+    }
+
+    private RailChunk(RailChunk base, Direction buffer) {
+        this.type = base.type;
+        this.direction = base.direction;
+        this.level = base.level;
+        this.tracks = base.tracks;
+        this.roofed = base.roofed;
+        this.alongZ = base.alongZ;
+        this.topLevel = base.topLevel;
+        this.staircase = base.staircase;
+        this.openings = base.openings;
+        this.buffer = buffer;
     }
 
     private RailChunk(RailChunkType type, int level, boolean staircase, int openings) {
@@ -89,6 +108,7 @@ public final class RailChunk {
         this.topLevel = level;
         this.staircase = staircase;
         this.openings = openings;
+        this.buffer = null;
     }
 
     /**
@@ -160,6 +180,26 @@ public final class RailChunk {
         return staircase;
     }
 
+    /**
+     * Returns the side a straight line's buffer stop faces where the line stops before a core it cannot pass
+     * ({@code railwayCoreEnds}): {@link Direction#WEST} for west or north, {@link Direction#EAST} for east or south.
+     *
+     * @return the side, or {@code null} for a line that runs through
+     */
+    public Direction buffer() {
+        return buffer;
+    }
+
+    /**
+     * Returns this straight line with a buffer stop on one side.
+     *
+     * @param side west (north along Z) or east (south)
+     * @return the copy
+     */
+    RailChunk withBuffer(Direction side) {
+        return new RailChunk(this, side);
+    }
+
     /** Returns whether there is a rail at all. */
     public boolean isPresent() {
         return type != RailChunkType.NONE;
@@ -197,6 +237,7 @@ public final class RailChunk {
             + " tracks "
             + tracks
             + (alongZ ? " along Z" : "")
-            + (openings != 0 ? " openings " + openings : "");
+            + (openings != 0 ? " openings " + openings : "")
+            + (buffer != null ? " buffer " + buffer : "");
     }
 }

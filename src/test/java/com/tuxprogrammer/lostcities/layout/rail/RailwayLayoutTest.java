@@ -211,6 +211,72 @@ public class RailwayLayoutTest {
     }
 
     @Test
+    public void withCoreEndsTheLineStopsOnABufferBeforeTheCoreChunkLeftOut() {
+        Inputs inputs = new Inputs();
+        inputs.cores.add(key(3, 9));
+        inputs.coreGround = 60;
+        RailwayLayout layout = layout(RailwaySettings.DEFAULTS.withCoreEnds(true), inputs);
+        assertFalse(
+            layout.rail(3, 9)
+                .isPresent(),
+            "the shallow core chunk still carries no railway");
+        RailChunk before = layout.rail(2, 9);
+        assertEquals(RailChunkType.HORIZONTAL, before.type());
+        assertEquals(RailChunk.Direction.EAST, before.buffer(), "its buffer faces the core to the east");
+        assertEquals(null, layout.rail(1, 9).buffer(), "the line further west runs through");
+        assertEquals(
+            RailChunkType.THREE_SPLIT,
+            layout.rail(4, 9)
+                .type(),
+            "the junction past the core is unchanged");
+        // Off by default: the legacy gap, nothing else changes.
+        RailwayLayout legacy = layout(RailwaySettings.DEFAULTS, inputs);
+        assertEquals(null, legacy.rail(2, 9).buffer());
+        for (int x = -12; x < 30; x++) {
+            for (int z = -12; z < 30; z++) {
+                RailChunk on = layout.rail(x, z);
+                RailChunk off = legacy.rail(x, z);
+                if (on.buffer() == null) {
+                    assertEquals(off.toString(), on.toString(), "only chunks beside the gap change at " + x + "," + z);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void withCoreEndsANorthSouthLineStopsOnABufferToo() {
+        Inputs inputs = new Inputs();
+        RailwayLayout plain = layout(RailwaySettings.DEFAULTS, inputs);
+        int vx = Integer.MIN_VALUE;
+        int vz = 0;
+        for (int x = 0; x < 20 && vx == Integer.MIN_VALUE; x++) {
+            for (int z = 0; z < 20; z++) {
+                if (plain.rail(x, z).type() == RailChunkType.VERTICAL
+                    && plain.rail(x, z + 1).type() == RailChunkType.VERTICAL
+                    && plain.rail(x, z + 2).type() == RailChunkType.VERTICAL) {
+                    vx = x;
+                    vz = z;
+                    break;
+                }
+            }
+        }
+        assertTrue(vx != Integer.MIN_VALUE, "the grid has a north-south line");
+        Inputs cored = new Inputs();
+        // Shallow core from the next chunk south to past the line's end: no room to dip after it.
+        for (int z = vz + 1; z < vz + 24; z++) {
+            cored.cores.add(key(vx, z));
+        }
+        cored.coreGround = 60;
+        RailwayLayout layout = layout(RailwaySettings.DEFAULTS.withCoreEnds(true), cored);
+        assertFalse(
+            layout.rail(vx, vz + 1)
+                .isPresent());
+        RailChunk end = layout.rail(vx, vz);
+        assertEquals(RailChunkType.VERTICAL, end.type());
+        assertEquals(RailChunk.Direction.EAST, end.buffer(), "its buffer faces the core to the south");
+    }
+
+    @Test
     public void aStationSpotInACoreIsNoStationAndOneInAMarginHasNoStaircase() {
         Inputs inputs = new Inputs();
         inputs.city = (x, z) -> true;

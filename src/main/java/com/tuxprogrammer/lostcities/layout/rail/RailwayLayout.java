@@ -170,9 +170,53 @@ public final class RailwayLayout {
         if (cached != null) {
             return cached;
         }
-        RailChunk value = links != null ? linkRail(chunkX, chunkZ) : underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
+        RailChunk value;
+        if (links != null) {
+            value = linkRail(chunkX, chunkZ);
+        } else {
+            value = cored(chunkX, chunkZ);
+            if (settings.coreEnds()) {
+                value = buffers(chunkX, chunkZ, value);
+            }
+        }
         finals.put(key, value);
         return value;
+    }
+
+    /** Upstream's grid with the rules for landmark cores applied, before any buffer stop. */
+    private RailChunk cored(int chunkX, int chunkZ) {
+        return underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
+    }
+
+    /**
+     * {@code railwayCoreEnds} (0013 §5, KI-3): a straight line beside a chunk the core rules left out stops on a
+     * buffer facing it, so the line ends deliberately instead of running into the gap. A line chunk with such a gap on
+     * both sides is left out as well. Stations, junctions and slopes are unchanged.
+     */
+    private RailChunk buffers(int chunkX, int chunkZ, RailChunk info) {
+        boolean straight = info.type() == RailChunkType.HORIZONTAL || info.type() == RailChunkType.VERTICAL;
+        if (!straight) {
+            return info;
+        }
+        boolean alongZ = info.type() == RailChunkType.VERTICAL;
+        int stepX = alongZ ? 0 : 1;
+        int stepZ = alongZ ? 1 : 0;
+        boolean before = leftOut(chunkX - stepX, chunkZ - stepZ);
+        boolean after = leftOut(chunkX + stepX, chunkZ + stepZ);
+        if (before && after) {
+            return RailChunk.NONE;
+        }
+        if (before) {
+            return info.withBuffer(RailChunk.Direction.WEST);
+        }
+        return after ? info.withBuffer(RailChunk.Direction.EAST) : info;
+    }
+
+    /** Whether upstream's grid has a rail in a chunk that the rules for landmark cores leave out. */
+    private boolean leftOut(int chunkX, int chunkZ) {
+        // Only a core chunk is ever left out, so the cheap tests go first.
+        return inputs.isCore(chunkX, chunkZ) && grid(chunkX, chunkZ).isPresent()
+            && !cored(chunkX, chunkZ).isPresent();
     }
 
     /** A chunk of the city link network's lines (class Javadoc). */

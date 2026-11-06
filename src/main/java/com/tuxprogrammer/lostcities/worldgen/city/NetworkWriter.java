@@ -503,10 +503,22 @@ public final class NetworkWriter {
         return out;
     }
 
-    /** A bottom half slab on the deck of every column a half block up. */
+    /** The top of a ramp's whole-block columns under {@code rampSurface}: the half slab's material, a full block. */
+    static final BlockRef RAMP_SURFACE = BlockRef.of("minecraft:double_stone_slab", 0);
+
+    /**
+     * A bottom half slab on the deck of every column a half block up. Under {@code rampSurface} (KI-2), the deck's top
+     * block of every other raised column becomes {@link #RAMP_SURFACE}, so the whole ramp shows the slab's material
+     * instead of stripes of slab and road.
+     */
     private void rampSlabs(Part part, Transform transform, int deckY, int[] halfSteps) {
+        boolean surface = context.settings()
+            .rampSurface();
         for (int px = 0; px < 16; px++) {
             if ((halfSteps[px] & 1) == 0) {
+                if (surface && halfSteps[px] > 0) {
+                    rampSurface(part, transform, deckY + halfSteps[px] / 2, px);
+                }
                 continue;
             }
             for (int pz = 0; pz < part.zsize(); pz++) {
@@ -520,6 +532,24 @@ public final class NetworkWriter {
                     .isAir()) {
                     target.set(x, y + 1, z, RAMP_SLAB);
                 }
+            }
+        }
+    }
+
+    /** Tops one whole-block ramp column's deck with {@link #RAMP_SURFACE} where a half slab would sit on it. */
+    private void rampSurface(Part part, Transform transform, int y, int px) {
+        if (y + 1 > WorldLimits.MAX_Y) {
+            return;
+        }
+        for (int pz = 0; pz < part.zsize(); pz++) {
+            int x = transform.rotateX(px, pz);
+            int z = transform.rotateZ(px, pz);
+            if (x < 0 || x > 15 || z < 0 || z > 15) {
+                continue;
+            }
+            if (!context.isEmpty(target.get(x, y, z)) && target.get(x, y + 1, z)
+                .isAir()) {
+                target.set(x, y, z, RAMP_SURFACE);
             }
         }
     }
@@ -670,6 +700,12 @@ public final class NetworkWriter {
                 transform = rail.direction() == RailChunk.Direction.EAST ? Transform.MIRROR_X : Transform.ROTATE_NONE;
                 break;
             case HORIZONTAL:
+                if (rail.buffer() != null) {
+                    // railwayCoreEnds: upstream's end part, its buffer toward the core chunk left out (0013 §5).
+                    slot = "railshorizontalend";
+                    transform = rail.buffer() == RailChunk.Direction.EAST ? Transform.ROTATE_NONE : Transform.MIRROR_X;
+                    break;
+                }
                 slot = horizontalUnderWater(height) ? "railshorizontalwater" : "railshorizontal";
                 break;
             case VERTICAL:
@@ -721,8 +757,41 @@ public final class NetworkWriter {
         if (rail.tracks() < 3) {
             reduceTracks(rail, part, transform, height, railMain);
         }
+        if (rail.type() == RailChunkType.VERTICAL && rail.buffer() != null && !target.dryRun()) {
+            verticalBuffer(rail.buffer(), height, railMain);
+        }
         if (staircase) {
             staircase(rail);
+        }
+    }
+
+    /** The first row past a north-south line's buffer stop, counted from the chunk edge it faces. */
+    static final int BUFFER_ROWS = 4;
+
+    /**
+     * {@code railwayCoreEnds} on a north-south line (0013 §5): upstream has no north-south end part, so the track
+     * stops {@link #BUFFER_ROWS} blocks from the edge facing the core chunk left out, on a block of the rail's own
+     * material; the rails past it are taken up.
+     *
+     * @param side     the side the buffer faces: west for north, east for south
+     * @param height   the part's floor Y
+     * @param railMain the rail's support block, the stop
+     */
+    private void verticalBuffer(RailChunk.Direction side, int height, BlockRef railMain) {
+        boolean south = side == RailChunk.Direction.EAST;
+        int stop = south ? 15 - BUFFER_ROWS : BUFFER_ROWS;
+        for (int x = 0; x < 16; x++) {
+            for (int y = height + 1; y <= height + 2; y++) {
+                if (isRail(target.get(x, y, stop))) {
+                    target.set(x, y, stop, railMain);
+                }
+                for (int i = 0; i < BUFFER_ROWS; i++) {
+                    int z = south ? 15 - i : i;
+                    if (isRail(target.get(x, y, z))) {
+                        target.set(x, y, z, BlockRef.AIR);
+                    }
+                }
+            }
         }
     }
 

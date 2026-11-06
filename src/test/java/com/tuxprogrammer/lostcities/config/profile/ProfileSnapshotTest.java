@@ -278,6 +278,40 @@ public class ProfileSnapshotTest {
     }
 
     @Test
+    public void aSnapshotWithoutRailwayCoreEndsKeepsTheGap() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        ProfileSnapshot pinned = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertFalse(
+            com.tuxprogrammer.lostcities.worldgen.city.CityProfiles
+                .networkSettings(pinned.profileValues(), ModuleState.allActive(), null)
+                .railways()
+                .coreEnds());
+        ProfileSnapshot fresh = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            ProfileOptions.defaults(),
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "new");
+        assertTrue(
+            com.tuxprogrammer.lostcities.worldgen.city.CityProfiles
+                .networkSettings(fresh.profileValues(), ModuleState.allActive(), null)
+                .railways()
+                .coreEnds());
+    }
+
+    @Test
     public void aSnapshotWithoutDensityRingsGetsNoRings() {
         java.util.Map<String, String> old = new java.util.TreeMap<>();
         old.put("groundLevel", "71");
