@@ -102,6 +102,9 @@ public class ProfileOptionsTest {
         for (java.lang.reflect.Field field : type.getDeclaredFields()) {
             if (java.lang.reflect.Modifier.isStatic(field.getModifiers())
                 || "landmarkTreatments".equals(field.getName())
+                // Deliberate deviations whose defaults are on in a world and off in a bare builder (city shape).
+                || java.util.Arrays.asList("cityGrade", "cityGradeRadius", "cityAvoidOcean", "cityConnected")
+                    .contains(field.getName())
                 || "seaLevel".equals(field.getName()) && a instanceof LayoutProfile
                     && ((LayoutProfile) a).waterLevel() == ((LayoutProfile) b).waterLevel()) {
                 // The world resolves -1 to RWG's 63 before the layout sees it; the water level is what counts.
