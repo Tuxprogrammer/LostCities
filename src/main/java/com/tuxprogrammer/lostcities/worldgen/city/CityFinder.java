@@ -4,10 +4,14 @@ import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
+import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
 
 /**
@@ -67,7 +71,21 @@ public final class CityFinder {
         /** A building chunk an explosion reached whose damage was partly repaired (AR-9). */
         REPAIR,
         /** A building beside a building of another city style: where facade colors feather (AR-17). */
-        FEATHER;
+        FEATHER,
+        /**
+         * A building with an industrial floor (a workshop, oil rig or radio tower) or, failing that, a cellar, whose
+         * room kind the furnish pass fills with GT machines and partial multiblocks (0016); the view stands in that
+         * floor's room.
+         */
+        GTROOM,
+        /** A building with a residential or office floor, furnished with several pieces (0016). */
+        FURNISHED,
+        /** An empty edge lot that holds a house built by another pack mod's generator, seen from its street (0011). */
+        PACKHOUSE,
+        /** A straight piece of a city's beltway, the ring highway around its inner rings, seen along the ring (0017). */
+        BELTWAY,
+        /** An industrial yard, else the plaza, of a city's districts (city-realism phase 5c), seen from above. */
+        DISTRICT;
 
         /** Returns the lower-case name the command takes. */
         public String key() {
@@ -326,6 +344,9 @@ public final class CityFinder {
     private final CityPlan plan;
     private final StructureOracle structures;
     private BiPredicate<Integer, Integer> repaired = (x, z) -> false;
+    private boolean furnishOn;
+    private boolean roomRules;
+    private long furnishSeed;
 
     /**
      * Creates the finder of one world, without its structure oracle: {@link #findBest} finds nothing.
@@ -358,6 +379,21 @@ public final class CityFinder {
      */
     public CityFinder withRepairs(BiPredicate<Integer, Integer> test) {
         this.repaired = test;
+        return this;
+    }
+
+    /**
+     * Tells the finder how the world furnishes its rooms, which {@link Kind#GTROOM} and {@link Kind#FURNISHED} need to
+     * name a floor's room kind; without it, neither finds anything.
+     *
+     * @param seed      the world seed
+     * @param roomRules whether the world uses the room-palette table ({@code roomRules})
+     * @return this finder
+     */
+    public CityFinder withFurnish(long seed, boolean roomRules) {
+        this.furnishOn = true;
+        this.furnishSeed = seed;
+        this.roomRules = roomRules;
         return this;
     }
 
@@ -405,6 +441,14 @@ public final class CityFinder {
      * @return the find, or {@code null}
      */
     public Result nearest(Kind kind, int blockX, int blockZ, int radius) {
+        if (kind == Kind.GTROOM) {
+            Result industrial = find(kind, blockX, blockZ, radius, found -> found.label.startsWith(INDUSTRIAL_LABEL));
+            return industrial != null ? industrial : find(kind, blockX, blockZ, radius);
+        }
+        if (kind == Kind.DISTRICT) {
+            Result yard = find(kind, blockX, blockZ, radius, found -> found.label.startsWith(LotKind.INDUSTRY.label()));
+            return yard != null ? yard : find(kind, blockX, blockZ, radius);
+        }
         if (kind != Kind.RAMP) {
             return find(kind, blockX, blockZ, radius);
         }
@@ -515,6 +559,16 @@ public final class CityFinder {
                 return repair(chunkX, chunkZ);
             case FEATHER:
                 return feather(chunkX, chunkZ);
+            case GTROOM:
+                return gtRoom(chunkX, chunkZ);
+            case FURNISHED:
+                return furnished(chunkX, chunkZ);
+            case PACKHOUSE:
+                return packHouse(chunkX, chunkZ);
+            case BELTWAY:
+                return beltway(chunkX, chunkZ);
+            case DISTRICT:
+                return district(chunkX, chunkZ);
             default:
                 return village(chunkX, chunkZ);
         }
@@ -966,22 +1020,12 @@ public final class CityFinder {
                 .isSingle()) {
             return null;
         }
-        String door = null;
-        float yaw = 0f;
-        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
-            .values()) {
-            ChunkPlan neighbor = planner.plan(chunkX + side.stepX(), chunkZ + side.stepZ());
-            if (planner.doorway(chunkX, chunkZ, 0, side) == com.tuxprogrammer.lostcities.layout.Doorway.DOOR
-                && neighbor.isCity()
-                && !neighbor.hasBuilding()) {
-                door = side.name();
-                yaw = doorYaw(side);
-                break;
-            }
-        }
-        if (door == null) {
+        com.tuxprogrammer.lostcities.layout.Direction side = streetDoor(chunkX, chunkZ);
+        if (side == null) {
             return null;
         }
+        String door = side.name();
+        float yaw = doorYaw(side);
         int ground = layout.cityGroundLevel();
         int x = (chunkX << 4) + 8;
         int z = (chunkZ << 4) + 8;
@@ -998,6 +1042,20 @@ public final class CityFinder {
             yaw,
             0f,
             "building " + layout.building() + ", " + layout.floors() + " floors, door " + door);
+    }
+
+    /** Returns the side of a building's ground-floor door onto an open city chunk, or {@code null} for none. */
+    private com.tuxprogrammer.lostcities.layout.Direction streetDoor(int chunkX, int chunkZ) {
+        for (com.tuxprogrammer.lostcities.layout.Direction side : com.tuxprogrammer.lostcities.layout.Direction
+            .values()) {
+            ChunkPlan neighbor = planner.plan(chunkX + side.stepX(), chunkZ + side.stepZ());
+            if (planner.doorway(chunkX, chunkZ, 0, side) == com.tuxprogrammer.lostcities.layout.Doorway.DOOR
+                && neighbor.isCity()
+                && !neighbor.hasBuilding()) {
+                return side;
+            }
+        }
+        return null;
     }
 
     private Result edge(int chunkX, int chunkZ) {
@@ -1190,5 +1248,191 @@ public final class CityFinder {
     static float yawToward(double fromX, double fromZ, double toX, double toZ) {
         double degrees = Math.toDegrees(Math.atan2(-(toX - fromX), toZ - fromZ));
         return (float) ((degrees + 360.0) % 360.0);
+    }
+
+    /** Label prefix of a {@link Kind#GTROOM} find on an industrial floor (the cellar fallback says "basement"). */
+    static final String INDUSTRIAL_LABEL = "industrial floor";
+    /** How far from a pack house's middle, on its door side, its view stands, in blocks: the street chunk's middle. */
+    static final int HOUSE_BACK = 16;
+    /** Height of the pack house view above the ground. */
+    static final int HOUSE_EYE = 4;
+    /** Pitch of the pack house view, degrees. */
+    static final float HOUSE_PITCH = 10f;
+    /** How far from a district chunk's middle its view stands on each axis, in blocks. */
+    static final int DISTRICT_BACK = 30;
+    /** Height of the district view above the ground. */
+    static final int DISTRICT_HEIGHT = 34;
+    /** Pitch of the district view, degrees. */
+    static final float DISTRICT_PITCH = 35f;
+
+    /**
+     * Returns the room kind the furnish pass gives a floor of a building chunk: the same call, with the same salt,
+     * the chunk writer makes, so the finder and the world agree without reading a block.
+     */
+    RoomKind roomKind(ChunkPlan layout, int chunkX, int chunkZ, int floor) {
+        AssetId id = CityPalettes.id(layout.building());
+        return RoomKind.forFloor(
+            id == null ? null : id.path(),
+            floor,
+            FurnishPass.floorSalt(furnishSeed, chunkX, chunkZ, floor),
+            roomRules);
+    }
+
+    /**
+     * A room of a building chunk the furnish pass fills as one of the wanted kinds, entered by the ground-floor door
+     * the interior finder uses. Floors above ground come first, from the ground up; cellars follow when asked.
+     */
+    private Result room(Kind kind, int chunkX, int chunkZ, java.util.function.Predicate<RoomKind> wanted,
+        boolean cellars) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        if (!furnishOn || !layout.hasBuilding()
+            || layout.ruinHeight() >= 0
+            || !layout.multiPos()
+                .isSingle()) {
+            return null;
+        }
+        for (int floor = 0; floor < layout.floors() + (cellars ? layout.cellars() : 0); floor++) {
+            // Above-ground floors first (0, 1, ...), then the cellars (-1, -2, ...).
+            int level = floor < layout.floors() ? floor : -(floor - layout.floors() + 1);
+            RoomKind room = roomKind(layout, chunkX, chunkZ, level);
+            if (!wanted.test(room)) {
+                continue;
+            }
+            com.tuxprogrammer.lostcities.layout.Direction side = streetDoor(chunkX, chunkZ);
+            if (side == null) {
+                return null;
+            }
+            int y = layout.cityGroundLevel() + level * layout.floorPitch();
+            int x = (chunkX << 4) + 8;
+            int z = (chunkZ << 4) + 8;
+            String what = level < 0 ? "basement " + -level
+                : room == RoomKind.INDUSTRIAL ? INDUSTRIAL_LABEL + " " + level : room.id() + " floor " + level;
+            return new Result(
+                kind,
+                chunkX,
+                chunkZ,
+                x,
+                y,
+                z,
+                x + 0.5,
+                y + FEET,
+                z + 0.5,
+                doorYaw(side),
+                0f,
+                what + " of building " + layout.building() + ", " + layout.floors() + " floors, door " + side.name());
+        }
+        return null;
+    }
+
+    private Result gtRoom(int chunkX, int chunkZ) {
+        return room(Kind.GTROOM, chunkX, chunkZ, k -> k == RoomKind.INDUSTRIAL || k == RoomKind.BASEMENT, true);
+    }
+
+    private Result furnished(int chunkX, int chunkZ) {
+        return room(Kind.FURNISHED, chunkX, chunkZ, k -> k == RoomKind.RESIDENTIAL || k == RoomKind.OFFICE, false);
+    }
+
+    /** An empty edge lot holding a pack house, seen from the street chunk its door faces. */
+    private Result packHouse(int chunkX, int chunkZ) {
+        int door = plan.chunk(chunkX, chunkZ)
+            .packHouseSide();
+        if (door < 0 || door > 3) {
+            return null;
+        }
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        int[][] steps = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+        int ground = layout.cityGroundLevel();
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        double viewX = x + steps[door][0] * HOUSE_BACK + 0.5;
+        double viewZ = z + steps[door][1] * HOUSE_BACK + 0.5;
+        return new Result(
+            Kind.PACKHOUSE,
+            chunkX,
+            chunkZ,
+            x,
+            ground,
+            z,
+            viewX,
+            ground + HOUSE_EYE,
+            viewZ,
+            yawToward(viewX, viewZ, x, z),
+            HOUSE_PITCH,
+            "pack house, door " + new String[] { "NORTH", "EAST", "SOUTH", "WEST" }[door]);
+    }
+
+    /** A straight piece of a beltway with the beltway ahead of it along its axis, seen like a highway. */
+    private Result beltway(int chunkX, int chunkZ) {
+        com.tuxprogrammer.lostcities.layout.Networks networks = planner.networks();
+        if (networks == null || networks.linkHighways() == null
+            || networks.linkHighways()
+                .cities() == null) {
+            return null;
+        }
+        com.tuxprogrammer.lostcities.layout.link.CityHighways cities = networks.linkHighways()
+            .cities();
+        com.tuxprogrammer.lostcities.layout.link.CityHighways.Plan belt = cities.beltwayAtOrBeyondRing(chunkX, chunkZ);
+        if (belt == null) {
+            return null;
+        }
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape straight = com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Shape.STRAIGHT;
+        com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece piece = belt.pieces()
+            .get(com.tuxprogrammer.lostcities.layout.link.CityHighways.key(chunkX, chunkZ));
+        if (piece == null || piece.shape() != straight) {
+            return null;
+        }
+        boolean alongX = piece.axis() == com.tuxprogrammer.lostcities.layout.highway.Axis.X;
+        for (int ahead = 1; ahead < HIGHWAY_RUN; ahead++) {
+            long key = com.tuxprogrammer.lostcities.layout.link.CityHighways
+                .key(chunkX + (alongX ? ahead : 0), chunkZ + (alongX ? 0 : ahead));
+            com.tuxprogrammer.lostcities.layout.highway.HighwayInfo.Piece next = belt.pieces()
+                .get(key);
+            if (next == null || next.shape() != straight) {
+                return null;
+            }
+        }
+        int deck = planner.profile().groundLevel + piece.level() * ChunkPlan.LEVEL_HEIGHT;
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        return new Result(
+            Kind.BELTWAY,
+            chunkX,
+            chunkZ,
+            x,
+            deck,
+            z,
+            x + 0.5 - (alongX ? HIGHWAY_BACK : 0),
+            deck + HIGHWAY_EYE,
+            z + 0.5 - (alongX ? 0 : HIGHWAY_BACK),
+            alongX ? -90f : 0f,
+            HIGHWAY_PITCH,
+            "beltway " + piece + ", city centered at " + (belt.centerX() << 4) + "," + (belt.centerZ() << 4));
+    }
+
+    /** An industrial yard or a plaza chunk, seen from a corner above, so the city around it shows. */
+    private Result district(int chunkX, int chunkZ) {
+        ChunkPlan layout = planner.plan(chunkX, chunkZ);
+        LotKind lot = layout.lot();
+        if (lot != LotKind.INDUSTRY && lot != LotKind.PLAZA) {
+            return null;
+        }
+        int ground = layout.cityGroundLevel();
+        int x = (chunkX << 4) + 8;
+        int z = (chunkZ << 4) + 8;
+        double viewX = x + DISTRICT_BACK + 0.5;
+        double viewZ = z + DISTRICT_BACK + 0.5;
+        return new Result(
+            Kind.DISTRICT,
+            chunkX,
+            chunkZ,
+            x,
+            ground,
+            z,
+            viewX,
+            ground + DISTRICT_HEIGHT,
+            viewZ,
+            yawToward(viewX, viewZ, x, z),
+            DISTRICT_PITCH,
+            lot.label() + String.format(Locale.ROOT, ", intensity %.2f", layout.intensity()));
     }
 }
