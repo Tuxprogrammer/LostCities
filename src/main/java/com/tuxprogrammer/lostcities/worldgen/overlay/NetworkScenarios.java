@@ -439,7 +439,7 @@ public final class NetworkScenarios {
             }
             if (Double.isNaN(standing)) {
                 gaps++;
-                note("no ground at " + x + "," + z + " near Y " + deck);
+                note("no ground at " + x + "," + z + " near Y " + deck + column(x, z, deck));
                 previous = Double.NaN;
                 return;
             }
@@ -450,9 +450,31 @@ public final class NetworkScenarios {
             }
             if (!Double.isNaN(previous) && Math.abs(standing - previous) > MAX_STEP + 1e-6) {
                 tooHigh++;
-                note(String.format(Locale.ROOT, "step %.1f -> %.1f at %d,%d", previous, standing, x, z));
+                note(
+                    String.format(Locale.ROOT, "step %.1f -> %.1f at %d,%d", previous, standing, x, z)
+                        + column(x, z, deck));
             }
             previous = standing;
+        }
+
+        /**
+         * The blocks of a column from two under the expected deck to two over it, for a failure's note, so a real-pack
+         * run shows what stood there without a second run.
+         */
+        private String column(int x, int z, int deck) {
+            StringBuilder out = new StringBuilder(" [deck ").append(deck)
+                .append(':');
+            for (int y = deck - 2; y <= deck + 2; y++) {
+                Block block = world.getBlock(x, y, z);
+                out.append(' ')
+                    .append(y)
+                    .append('=')
+                    .append(Block.blockRegistry.getNameForObject(block))
+                    .append(':')
+                    .append(world.getBlockMetadata(x, y, z));
+            }
+            return out.append(']')
+                .toString();
         }
 
         private void note(String example) {
@@ -592,6 +614,9 @@ public final class NetworkScenarios {
                 return;
             }
             WorldServer world = context.world();
+            int groundLevel = overlay.cities()
+                .planner()
+                .profile().groundLevel;
             int boundaries = 0;
             int broken = 0;
             int rails = 0;
@@ -607,8 +632,13 @@ public final class NetworkScenarios {
                     break;
                 }
                 int edge = ((stationX + i) << 4) + 15;
-                List<int[]> out = railsAt(world, edge, stationZ);
-                List<int[]> in = railsAt(world, edge + 1, stationZ);
+                int[] band = band(
+                    groundLevel,
+                    rail.level(),
+                    networks.railChunk(stationX + i + 1, stationZ)
+                        .level());
+                List<int[]> out = railsAt(world, edge, stationZ, band);
+                List<int[]> in = railsAt(world, edge + 1, stationZ, band);
                 boundaries++;
                 rails += out.size();
                 boolean ok = !out.isEmpty() && matches(out, in) && matches(in, out);
@@ -640,11 +670,23 @@ public final class NetworkScenarios {
             context.check(broken == 0, "expected every track to continue into the next chunk, " + broken + " broken");
         }
 
-        /** The rails on one block column of a chunk row: {z, y} pairs. */
-        private static List<int[]> railsAt(WorldServer world, int x, int chunkZ) {
+        /**
+         * The Y band a boundary's rails are looked for in: from the lower chunk's line level up through the higher
+         * one's, one city level ({@link ChunkPlan#LEVEL_HEIGHT}) each, as the writer lays a rail part at
+         * {@code cityGround(level)}. A city's own rails a level or more above the line, such as a building's minecart
+         * track, are not the line's (KI-5, 0013 section 5 "Verification").
+         */
+        static int[] band(int groundLevel, int levelA, int levelB) {
+            int low = groundLevel + Math.min(levelA, levelB) * ChunkPlan.LEVEL_HEIGHT;
+            int high = groundLevel + Math.max(levelA, levelB) * ChunkPlan.LEVEL_HEIGHT + ChunkPlan.LEVEL_HEIGHT - 1;
+            return new int[] { Math.max(1, low), Math.min(255, high) };
+        }
+
+        /** The rails on one block column of a chunk row inside a Y band: {z, y} pairs. */
+        private static List<int[]> railsAt(WorldServer world, int x, int chunkZ, int[] band) {
             List<int[]> out = new ArrayList<>();
             for (int z = chunkZ << 4; z < (chunkZ << 4) + 16; z++) {
-                for (int y = 1; y < 200; y++) {
+                for (int y = band[0]; y <= band[1]; y++) {
                     if (world.getBlock(x, y, z) instanceof BlockRailBase) {
                         out.add(new int[] { z, y });
                     }
