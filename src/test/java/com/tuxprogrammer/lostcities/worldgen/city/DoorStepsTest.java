@@ -94,6 +94,11 @@ public class DoorStepsTest {
         public void clearToMax(int fromY) {}
 
         @Override
+        public void chest(int x, int y, int z, com.tuxprogrammer.lostcities.asset.model.PaletteEntry info,
+            com.tuxprogrammer.lostcities.asset.block.TileTemplate template,
+            com.tuxprogrammer.lostcities.asset.transform.Transform transform, PartWriter.Placement placement) {}
+
+        @Override
         public void torch(int x, int y, int z) {}
 
         @Override
