@@ -365,6 +365,10 @@ public final class TerrainBlend {
                         + BANK_WOBBLE * context.transitionNoise(worldX * 3 + 7, worldZ * 3 + 7));
                 maxHeight = Math.min(maxHeight + offset + rough, WorldLimits.BUILD_HEIGHT);
                 minHeight = Math.max(minHeight + offset + rough, WorldLimits.MIN_Y);
+                if (ColumnOps.surface(buffer, classes, x, z, false) < SEA_FLOOR_BELOW) {
+                    // Sea floor in a shore chunk: raising it would wall a pool of sea into the water.
+                    continue;
+                }
                 int touched = ColumnOps
                     .moveDown(buffer, classes, x, z, (int) Math.floor(maxHeight), WorldLimits.BUILD_HEIGHT, waterLevel);
                 if (touched == ColumnOps.NOT_TOUCHED) {
