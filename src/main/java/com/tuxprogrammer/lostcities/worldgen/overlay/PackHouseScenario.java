@@ -18,7 +18,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  * {@code packhouse.real} (real pack, fresh world): generates the region around the nearest edge lot that holds a
  * pack house and checks that
  * <ul>
- * <li>the lot chunk holds the house's blocks above its ground, and none in the outermost columns of the chunk;</li>
+ * <li>the lot chunk holds the house's blocks above its ground, and none (apart from the terrain's own trees and plants) in the
+ * outermost columns of the chunk;</li>
  * <li>no chunk was generated while a population ran (no cascade);</li>
  * <li>building the house a second time gives the same blocks (the piece is a pure function of the seed and chunk).</li>
  * </ul>
@@ -131,8 +132,17 @@ final class PackHouseScenario implements Scenario {
                 for (int y = ground + 1; y <= ground + HASH_HEIGHT; y++) {
                     if (chunk.getBlock(x, y, z) != Blocks.air) {
                         blocks++;
-                        if (x == 0 || x == 15 || z == 0 || z == 15) {
+                        if ((x == 0 || x == 15 || z == 0 || z == 15) && !natural(chunk.getBlock(x, y, z))) {
                             edge++;
+                            if (edge <= 6) {
+                                LostCities.LOG.info(
+                                    "[LCNH-PACKHOUSE] edge block {} at ({}, {}, {}) ground {}",
+                                    Block.blockRegistry.getNameForObject(chunk.getBlock(x, y, z)),
+                                    x,
+                                    y,
+                                    z,
+                                    ground);
+                            }
                         }
                     }
                 }
@@ -156,6 +166,16 @@ final class PackHouseScenario implements Scenario {
             kind,
             blocks,
             Long.toHexString(first));
+    }
+
+    /** Trees, plants and snow that the terrain's own population puts at the chunk edge; not part of any house. */
+    private static boolean natural(Block block) {
+        String name = String.valueOf(Block.blockRegistry.getNameForObject(block));
+        return name.contains("log") || name.contains("leaves")
+            || name.contains("grass")
+            || name.contains("flower")
+            || name.contains("snow")
+            || name.contains("vine");
     }
 
     private static long hash(Chunk chunk, int ground) {
