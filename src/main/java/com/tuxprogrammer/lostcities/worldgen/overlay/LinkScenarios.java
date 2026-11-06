@@ -281,10 +281,7 @@ final class LinkScenarios {
                     }
                     List<int[]> out = railsAcross(world, c[0], c[1], n[0] - c[0], n[1] - c[1], false);
                     List<int[]> in = railsAcross(world, c[0], c[1], n[0] - c[0], n[1] - c[1], true);
-                    Boundary verdict = judge(
-                        out,
-                        in,
-                        overlay.damaged(c[0], c[1]) || overlay.damaged(n[0], n[1]));
+                    Boundary verdict = judge(out, in, overlay.damaged(c[0], c[1]) || overlay.damaged(n[0], n[1]));
                     if (verdict == Boundary.DAMAGED) {
                         damaged++;
                     } else if (verdict == Boundary.BROKEN) {
@@ -293,7 +290,8 @@ final class LinkScenarios {
                     if (verdict != Boundary.JOINED) {
                         if (examples.size() < 6) {
                             examples.add(
-                                (verdict == Boundary.DAMAGED ? "(explosion) " : "") + "chunk " + c[0]
+                                (verdict == Boundary.DAMAGED ? "(explosion) " : "") + "chunk "
+                                    + c[0]
                                     + ","
                                     + c[1]
                                     + " to "

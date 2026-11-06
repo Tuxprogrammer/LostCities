@@ -44,7 +44,8 @@ public class LinkScenariosTest {
         assertEquals(Boundary.BROKEN, LinkScenarios.RailLeg.judge(rails(7, 54), rails(7, 57), false));
         assertEquals(Boundary.BROKEN, LinkScenarios.RailLeg.judge(rails(7, 54), rails(3, 54), false));
         assertEquals(Boundary.BROKEN, LinkScenarios.RailLeg.judge(rails(7, 54), Collections.<int[]>emptyList(), false));
-        assertEquals(Boundary.BROKEN, LinkScenarios.RailLeg.judge(Arrays.asList(new int[] { 7, 54 }, new int[] { 8, 54 }),
-            rails(7, 54), false));
+        assertEquals(
+            Boundary.BROKEN,
+            LinkScenarios.RailLeg.judge(Arrays.asList(new int[] { 7, 54 }, new int[] { 8, 54 }), rails(7, 54), false));
     }
 }
