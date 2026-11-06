@@ -83,11 +83,11 @@ public class CityDistrictsTest {
 
     @Test
     public void bigCitiesGetATwoByTwoPlaza() {
-        LayoutPlanner p = planner(SEED, "true", "cityMinRadius", "170", "cityMaxRadius", "220");
+        LayoutPlanner p = planner(SEED, "true");
         int cities = 0;
         int full = 0;
         for (int[] c : centers(p)) {
-            if (!p.centerYieldsCity(c[0], c[1]) || p.cityRadius(c[0], c[1]) < 160) {
+            if (!p.centerYieldsCity(c[0], c[1]) || p.cityRadius(c[0], c[1]) < 112) {
                 continue;
             }
             cities++;

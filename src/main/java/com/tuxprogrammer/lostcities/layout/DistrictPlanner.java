@@ -36,7 +36,7 @@ import com.tuxprogrammer.lostcities.layout.view.Selection;
 final class DistrictPlanner {
 
     /** City radius in blocks from which the plaza is 2 x 2 chunks. */
-    static final int BIG_CITY_RADIUS = 160;
+    static final int BIG_CITY_RADIUS = 112;
     /** The industrial site's ring distance. */
     static final float SITE_DISTANCE = 0.62f;
     /** Chance that a chunk around the site is a yard. */
