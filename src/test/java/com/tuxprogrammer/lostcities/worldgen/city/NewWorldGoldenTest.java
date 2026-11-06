@@ -68,7 +68,7 @@ public class NewWorldGoldenTest {
 
     /** The first chunk, ring by ring from the origin, with a piece of a shape that is not a tunnel. */
     private static int[] piece(HighwayInfo.Shape shape) {
-        for (int ring = 0; ring <= SEARCH; ring++) {
+        for (int ring = 0; ring <= 160; ring++) {
             for (int dz = -ring; dz <= ring; dz++) {
                 for (int dx = -ring; dx <= ring; dx++) {
                     if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) {
