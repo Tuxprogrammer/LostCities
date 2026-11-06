@@ -24,6 +24,13 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
  */
 public final class WorldChunkBuffer implements ChunkBuffer {
 
+    /**
+     * Debug aid ({@code -Dlostcitiesnh.debugWool=true}): every solid block the mod writes is red wool, so what it
+     * built stands out from the terrain it sits in. Never on in play.
+     */
+    private static final boolean DEBUG_WOOL = Boolean.getBoolean("lostcitiesnh.debugWool");
+    private static final int DEBUG_WOOL_META = 14;
+
     private final BlockRefs refs;
     private Chunk chunk;
     private ExtendedBlockStorage[] sections;
@@ -121,8 +128,15 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             lastWrittenBlock = refs.block(block);
             lastWrittenRef = block;
         }
-        section.func_150818_a(x, y & 15, z, lastWrittenBlock);
-        section.setExtBlockMetadata(x, y & 15, z, block.meta());
+        Block written = lastWrittenBlock;
+        int writtenMeta = block.meta();
+        if (DEBUG_WOOL && !block.isAir() && !written.getMaterial()
+            .isLiquid()) {
+            written = net.minecraft.init.Blocks.wool;
+            writtenMeta = DEBUG_WOOL_META;
+        }
+        section.func_150818_a(x, y & 15, z, written);
+        section.setExtBlockMetadata(x, y & 15, z, writtenMeta);
         writes++;
     }
 
