@@ -445,7 +445,9 @@ public final class LayoutProfile {
             return this;
         }
 
-        /** @param cell {@code cityGridCell}, 0 for chance mode @param jitter {@code cityGridJitter} @return this builder */
+        /**
+         * @param cell {@code cityGridCell}, 0 for chance mode @param jitter {@code cityGridJitter} @return this builder
+         */
         public Builder cityGrid(int cell, int jitter) {
             cityGridCell = cell;
             cityGridJitter = jitter;
