@@ -20,6 +20,7 @@ import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
+import com.tuxprogrammer.lostcities.compat.packhouses.PackHouses;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.random.DimensionKey;
 import com.tuxprogrammer.lostcities.worldgen.city.CityPalettes;
@@ -297,6 +298,33 @@ public final class OverlayWorld {
             timers.countFailure();
             LostCities.LOG
                 .error("Population phase failed for chunk ({}, {}) of dimension {}", chunkX, chunkZ, dimension, e);
+        }
+        if (chunkPlan.packHouseSide() >= 0) {
+            packHouse(chunkX, chunkZ, chunkPlan);
+        }
+    }
+
+    /**
+     * Builds the pack house of an edge lot inside the populated chunk (docs/design/0011-city-edges-and-character.md,
+     * pack houses) and returns the kind built. Also the scenario's way to rebuild it for the determinism check.
+     *
+     * @param chunkX    chunk X
+     * @param chunkZ    chunk Z
+     * @param chunkPlan the chunk's plan, with a pack house side
+     * @return the kind's id, or {@code null} when nothing was built
+     */
+    String packHouse(int chunkX, int chunkZ, ChunkPlan chunkPlan) {
+        boolean framed = FootprintGuard.pushHouse(world, plan);
+        try {
+            return PackHouses.build(world, chunkX, chunkZ, chunkPlan.groundY(), chunkPlan.packHouseSide());
+        } catch (RuntimeException e) {
+            timers.countFailure();
+            LostCities.LOG.error("Pack house failed for chunk ({}, {}) of dimension {}", chunkX, chunkZ, dimension, e);
+            return null;
+        } finally {
+            if (framed) {
+                FootprintGuard.pop();
+            }
         }
     }
 

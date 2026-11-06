@@ -79,6 +79,7 @@ public final class TerrainSettings {
     private final boolean cityConnected;
     private final float cityTaper;
     private final float edgeLotChance;
+    private final float packHouseChance;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -139,6 +140,7 @@ public final class TerrainSettings {
         cityConnected = r.booleanValue("cityConnected", true);
         cityTaper = r.floatValue("cityTaper", 1.0f, 0f, 1f);
         edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
+        packHouseChance = r.floatValue("packHouseChance", 0.25f, 0f, 1f);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -265,6 +267,7 @@ public final class TerrainSettings {
         out.put("cityConnected", Boolean.toString(cityConnected));
         out.put("cityTaper", text(cityTaper));
         out.put("edgeLotChance", text(edgeLotChance));
+        out.put("packHouseChance", text(packHouseChance));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -397,6 +400,11 @@ public final class TerrainSettings {
      */
     public float cityTaper() {
         return cityTaper;
+    }
+
+    /** Returns the share of empty edge lots that hold a pack mod's village house ({@code packHouseChance}). */
+    public float packHouseChance() {
+        return packHouseChance;
     }
 
     /** Returns the chance of an edge lot at a city's very edge ({@code edgeLotChance}; AR-6, 0011 §3). */

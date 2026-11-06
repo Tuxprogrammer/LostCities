@@ -469,6 +469,7 @@ public final class ProfileOptions {
         newTerrain("cityConnected", Type.BOOLEAN, null, null);
         newTerrain("cityTaper", Type.FLOAT, d(0), d(1));
         newTerrain("edgeLotChance", Type.FLOAT, d(0), d(1));
+        newTerrain("packHouseChance", Type.FLOAT, d(0), d(1));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(

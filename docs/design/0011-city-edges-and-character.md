@@ -45,6 +45,8 @@ After the plan's draws, a separate lot random turns some low-intensity chunks in
 - The lot clears everything above city ground, its street base is filled before it digs, and it gets no rubble or leaf piles.
 - Lots are labeled `empty lot`, `excavation (depth n)` and `foundation (depth n)`, and `/lostcities find lot` finds the nearest.
 
+**Addition (Phase 2e, D-p2e-1 to D-p2e-8): pack houses.** An empty (bare) lot is picked at `packHouseChance` (default 0.25) by a hash of the world seed and chunk, so the choice never depends on generation order. Its population phase calls a pack mod's own village-piece generator the way a village does (`VillagerRegistry.getVillageComponent`, vanilla's factories for vanilla pieces) on a random seeded from the world seed and chunk, then `addComponentParts` with the chunk's box. Nothing is copied. The house is centered on the lot at the lot's ground, its door toward a neighboring city chunk, and pieces over 12 blocks wide are skipped, so no write comes within 2 blocks of the chunk edge and no neighbor chunk is loaded. Houses come from vanilla, Railcraft, Tinkers' Construct, Forestry and Witchery, each in a `compat` package and skipped when the mod is absent or its config disables the house. The villager counters are raised so no villagers spawn.
+
 ### 4. Partial repairs
 
 - Each explosion is repaired with chance `damageRepairChance` (default 0.5), decided from the world seed and the explosion's center, so every chunk it reaches agrees.
