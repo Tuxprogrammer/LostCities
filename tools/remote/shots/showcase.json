@@ -1,0 +1,125 @@
+{
+  "comment": "Showcase shots for the README: current gtnh with the realism features at their defaults, one seed, viewpoints from /lostcities find.",
+  "title": "Showcase: Lost Cities New Horizons on RWG2 Continents",
+  "world": {
+    "name": "showcase-rwg2c",
+    "level_type": "RWG2_CONTINENTS",
+    "seed": "4242",
+    "fresh": true
+  },
+  "time": 6000,
+  "render_distance": 10,
+  "fov": 70,
+  "setup": [
+    "effect {user} 16 999999 0"
+  ],
+  "shots": [
+    {
+      "name": "above",
+      "find": {
+        "cmd": "lostcities find center",
+        "match": "kind=center block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+      },
+      "wait": 3,
+      "caption": "City from above: the city nearest the spawn, from south of its center, looking north."
+    },
+    {
+      "name": "street",
+      "find": {
+        "cmd": "lostcities find street",
+        "match": "kind=street block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+      },
+      "wait": 3,
+      "caption": "Street level: the primary street nearest the spawn with open street ahead, from head height."
+    },
+    {
+      "name": "interior",
+      "find": {
+        "cmd": "lostcities find interior",
+        "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+      },
+      "wait": 3,
+      "caption": "Building interior: the ground floor of the building nearest the spawn, from inside a room with a wall at the back, looking along the room."
+    },
+    {
+      "name": "edge",
+      "find": {
+        "cmd": "lostcities find edge",
+        "match": "kind=edge block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) "
+      },
+      "wait": 3,
+      "caption": "City edge: where the city meets RWG2 terrain, from just above the land outside it, looking into the city.",
+      "y": "top+10"
+    },
+    {
+      "name": "village",
+      "find": {
+        "cmd": "lostcities find village 48 best",
+        "match": "kind=village block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Village sewn into the city: a village's gate where the city's lane meets it, seen from beside the lane, the city on one side and the village on the other. The clearest gate within 48 chunks of the spawn, of the village by the pond that the reserved-lot and soft-edge shots show; 120 chunks out the clearest is a village in a forest of tall trees."
+    },
+    {
+      "name": "highway",
+      "find": {
+        "cmd": "lostcities find highway 128",
+        "match": "kind=highway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Highway (M06): the straight highway piece above ground nearest the spawn with highway ahead of it, from behind it along its axis, 15 blocks above the deck. Open road in a city, a bridge with railings and supports outside one; the surface is upstream's cyan terracotta."
+    },
+    {
+      "name": "ramp",
+      "find": {
+        "cmd": "lostcities find ramp 192",
+        "match": "kind=ramp block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Highway ramp (M06, AR-10): the ramp nearest the city near the spawn (the highway network keeps about 1,700 blocks from it on seed 4242), where a highway climbs or falls a level to reach a city's streets or the ground at a dead end, seen from above the ramp's edge: the deck rises a half block every column or two, with half slabs on the half steps, so it is walked without jumping."
+    },
+    {
+      "name": "station",
+      "find": {
+        "cmd": "lostcities find station 128",
+        "match": "kind=station block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Railway station (M06): the surface station nearest the spawn, from 30 blocks above it, looking down."
+    },
+    {
+      "name": "railway",
+      "find": {
+        "cmd": "lostcities find railway 96",
+        "match": "kind=railway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Railway (M06): inside the tunnel of the east-west line nearest the spawn, at the track, looking east along the line."
+    },
+    {
+      "name": "taper",
+      "find": {
+        "cmd": "lostcities find taper 96",
+        "match": "kind=taper block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 180
+      },
+      "wait": 3,
+      "caption": "Tapering (AR-5): the city nearest the spawn from outside it, a little above its edge, looking at its core (the tallest building near the center); heights rise organically from low buildings and lots at the edge to the high-rise core."
+    },
+    {
+      "name": "feather",
+      "find": {
+        "cmd": "lostcities find feather 160",
+        "match": "kind=feather block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Color feathering (AR-17): two neighboring buildings of different city styles; their facades stay within the contrast limit, no pale building beside a dark saturated one."
+    }
+  ]
+}
