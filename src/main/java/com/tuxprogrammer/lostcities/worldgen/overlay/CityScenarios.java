@@ -13,7 +13,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.asset.AssetId;
+import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.compat.HeightOracles;
+import com.tuxprogrammer.lostcities.core.assets.LoadedAssets;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.Doorway;
@@ -499,7 +502,7 @@ public final class CityScenarios {
             for (int f = -plan.cellars(); f < plan.floors(); f++) {
                 int y = bottom + plan.floorPitch() * (f + plan.cellars());
                 String where = plan.building() + "@" + (baseX + 8) + "," + y + "," + (baseZ + 8) + "/f" + f;
-                floors.add(floorShare(baseX, y, baseZ) >= FLOOR_SOLID_SHARE, where);
+                floors.add(designedOpen(plan, f) || floorShare(baseX, y, baseZ) >= FLOOR_SOLID_SHARE, where);
                 walls.add(wallShare(plan, chunkX, chunkZ, f, y) >= WALL_CLOSED_SHARE, where);
                 if (f + 1 < plan.floors()) {
                     stairs.add(hasClimb(plan, chunkX, chunkZ, y), where);
@@ -507,6 +510,45 @@ public final class CityScenarios {
                 if (f == 0) {
                     doors(plan, chunkX, chunkZ, y);
                 }
+            }
+        }
+
+        /**
+         * Whether the floor's own parts leave the floor level mostly open by design, as a mall's atrium or a
+         * courtyard does: the part's lowest slice has solid characters on under {@link #FLOOR_SOLID_SHARE} of the
+         * 14 by 14 interior, counting both parts of a floor together.
+         */
+        private boolean designedOpen(ChunkPlan plan, int floor) {
+            Part first = part(plan.floorPart(floor));
+            Part second = part(plan.floorPart2(floor));
+            if (first == null && second == null) {
+                return false;
+            }
+            int solid = 0;
+            for (int z = 1; z < 15; z++) {
+                for (int x = 1; x < 15; x++) {
+                    if (filled(first, x, z) || filled(second, x, z)) {
+                        solid++;
+                    }
+                }
+            }
+            return solid / (14.0 * 14.0) < FLOOR_SOLID_SHARE;
+        }
+
+        private static boolean filled(Part part, int x, int z) {
+            return part != null && x < part.xsize() && z < part.zsize() && part.height() > 0
+                && part.get(x, 0, z) != ' ';
+        }
+
+        private static Part part(String name) {
+            if (name == null) {
+                return null;
+            }
+            try {
+                return LoadedAssets.current()
+                    .part(AssetId.parse(name));
+            } catch (IllegalArgumentException e) {
+                return null;
             }
         }
 
