@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
+import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
@@ -117,6 +118,25 @@ final class LandmarkZones {
      */
     boolean inCoreOrRing(Landmark landmark, int chunkX, int chunkZ) {
         return landmark.coreDistance(chunkX, chunkZ, profile.landmarkMargin) <= EDGE_RING_DISTANCE;
+    }
+
+    /**
+     * Returns whether a chunk lies in the core of a landmark, not ignored, that reaches underground
+     * ({@link LandmarkKind#reachesUnderground()}): no railway passes under it (D-p4v-4).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return whether it is such a core
+     */
+    boolean undergroundCore(int chunkX, int chunkZ) {
+        for (Landmark landmark : near(chunkX, chunkZ)) {
+            if (landmark.kind()
+                .reachesUnderground() && profile.treatment(landmark.kind()) != LandmarkTreatment.IGNORE
+                && landmark.coreDistance(chunkX, chunkZ, profile.landmarkMargin) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Returns a chunk's zone. */

@@ -65,6 +65,18 @@ public interface RailwayInputs {
     boolean isMargin(int chunkX, int chunkZ);
 
     /**
+     * Returns whether a chunk is the core of a landmark that reaches underground (a Roguelike Dungeons tower's levels,
+     * a LootGames room): no railway level passes under it (D-p4v-4).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return whether it is an underground core
+     */
+    default boolean isUndergroundCore(int chunkX, int chunkZ) {
+        return false;
+    }
+
+    /**
      * Returns the lowest oracle ground around a core chunk, block Y: what a railway must stay 8 blocks under.
      *
      * @param chunkX chunk X

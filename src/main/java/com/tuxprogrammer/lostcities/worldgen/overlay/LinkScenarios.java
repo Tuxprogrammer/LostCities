@@ -222,15 +222,47 @@ final class LinkScenarios {
             return out;
         }
 
+        /** A boundary's verdict: track meets across it, it does not, or an explosion reaches it (not judged). */
+        enum Boundary {
+            /** Track on both sides, meeting. */
+            JOINED,
+            /** No track, or track that does not meet. */
+            BROKEN,
+            /** Broken where an explosion reaches either chunk: upstream's damage, counted, not judged (D-p4v-5). */
+            DAMAGED
+        }
+
         /**
-         * Follows the line from one station to the other.
+         * Judges one boundary of a line from the rails in the two facing columns.
          *
-         * @param context  the scenario
-         * @param networks the networks
+         * @param out     the rails in this chunk's boundary column, as {across, y}
+         * @param in      the rails in the neighbor's facing column
+         * @param damaged whether an explosion reaches either chunk
+         * @return the verdict
          */
-        void verify(ScenarioContext context, Networks networks) {
+        static Boundary judge(List<int[]> out, List<int[]> in, boolean damaged) {
+            boolean joined = !out.isEmpty() && NetworkScenarios.RailwayRide.matches(out, in)
+                && NetworkScenarios.RailwayRide.matches(in, out);
+            if (joined) {
+                return Boundary.JOINED;
+            }
+            return damaged ? Boundary.DAMAGED : Boundary.BROKEN;
+        }
+
+        /**
+         * Follows the line from one station to the other. A boundary an explosion reaches is counted, not judged, as
+         * the highway walk and {@code city.walk} treat damage (D-p4v-5).
+         *
+         * @param context the scenario
+         * @param overlay the overlay
+         */
+        void verify(ScenarioContext context, OverlayWorld overlay) {
+            Networks networks = overlay.cities()
+                .planner()
+                .networks();
             WorldServer world = context.world();
             int broken = 0;
+            int damaged = 0;
             int unopened = 0;
             int tees = 0;
             int levers = 0;
@@ -249,12 +281,19 @@ final class LinkScenarios {
                     }
                     List<int[]> out = railsAcross(world, c[0], c[1], n[0] - c[0], n[1] - c[1], false);
                     List<int[]> in = railsAcross(world, c[0], c[1], n[0] - c[0], n[1] - c[1], true);
-                    if (out.isEmpty() || !NetworkScenarios.RailwayRide.matches(out, in)
-                        || !NetworkScenarios.RailwayRide.matches(in, out)) {
+                    Boundary verdict = judge(
+                        out,
+                        in,
+                        overlay.damaged(c[0], c[1]) || overlay.damaged(n[0], n[1]));
+                    if (verdict == Boundary.DAMAGED) {
+                        damaged++;
+                    } else if (verdict == Boundary.BROKEN) {
                         broken++;
+                    }
+                    if (verdict != Boundary.JOINED) {
                         if (examples.size() < 6) {
                             examples.add(
-                                "chunk " + c[0]
+                                (verdict == Boundary.DAMAGED ? "(explosion) " : "") + "chunk " + c[0]
                                     + ","
                                     + c[1]
                                     + " to "
@@ -291,13 +330,14 @@ final class LinkScenarios {
             LostCities.LOG.info(
                 String.format(
                     Locale.ROOT,
-                    "%sline %s: %d chunks, %d boundaries, %d broken, %d not opened, stations at both ends %s,"
-                        + " T junctions %d with %d levers",
+                    "%sline %s: %d chunks, %d boundaries, %d broken, %d broken where an explosion reaches,"
+                        + " %d not opened, stations at both ends %s, T junctions %d with %d levers",
                     NetworkScenarios.TAG,
                     link,
                     route.size(),
                     route.size() - 1,
                     broken,
+                    damaged,
                     unopened,
                     stations,
                     tees,

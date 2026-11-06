@@ -19,7 +19,7 @@ public class RailwayLayoutTest {
     static final int GROUND = 71;
 
     /** Inputs over predicates: cities, levels, cores, margins and the lowest ground of cores. */
-    static final class Inputs implements RailwayInputs {
+    static class Inputs implements RailwayInputs {
 
         BiPredicate<Integer, Integer> city = (x, z) -> false;
         ToIntBiFunction<Integer, Integer> level = (x, z) -> 0;

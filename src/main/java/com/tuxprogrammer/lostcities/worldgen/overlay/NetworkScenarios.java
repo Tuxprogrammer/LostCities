@@ -588,7 +588,7 @@ public final class NetworkScenarios {
                 .planner()
                 .networks();
             if (leg != null) {
-                leg.verify(context, networks);
+                leg.verify(context, overlay);
                 return;
             }
             WorldServer world = context.world();
