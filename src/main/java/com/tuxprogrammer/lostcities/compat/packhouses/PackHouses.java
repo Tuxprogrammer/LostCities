@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
@@ -30,7 +31,16 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
  * <p>
  * Villagers never spawn from these pieces (their counters are raised), and a house wider or deeper than
  * {@value #MAX_SPAN} blocks is skipped so a two-block margin keeps its walls, chests and doors off the chunk's edge,
- * where placing a tile entity would read the next chunk.
+ * where placing a tile entity would read the next chunk. {@link #place} checks that margin again before anything is
+ * written ({@link #insideWithMargin}).
+ *
+ * <p>
+ * Every piece gets a village start piece ({@link #villageStart}) the way a village's pieces do, with the lot's biome
+ * and
+ * whether it is a desert. Forestry's bee house reads the start in its constructor and fails without one
+ * (ForestryMC 4.11.40, {@code ComponentVillageBeeHouse.java:74}); vanilla's pieces read it for their desert blocks and
+ * Forge's village block event. No pack piece reads the world while it is made, and each one guards its world writes by
+ * the box it is given, so a house reads and writes only its own chunk (docs/design/decision-log.md, D369).
  *
  * <p>
  * Side: server.
@@ -39,6 +49,9 @@ public final class PackHouses {
 
     /** The widest and deepest box built: leaves a two-block margin in a chunk. */
     public static final int MAX_SPAN = 12;
+
+    /** The least distance from a house's box to its chunk's edge. */
+    public static final int MARGIN = (16 - MAX_SPAN) / 2;
 
     /** A house kind: a vanilla piece class, or a mod's piece class registered with Forge's villager registry. */
     static final class Kind {
@@ -148,7 +161,7 @@ public final class PackHouses {
     }
 
     /** Finds a vanilla piece class's static factory by its shape (Start, List, Random, five ints), not its name. */
-    private static Method factory(Class<?> piece) {
+    static Method factory(Class<?> piece) {
         for (Method method : piece.getDeclaredMethods()) {
             Class<?>[] p = method.getParameterTypes();
             if (Modifier.isStatic(method.getModifiers()) && p.length == 8
@@ -163,20 +176,95 @@ public final class PackHouses {
         return null;
     }
 
-    private static StructureComponent create(Usable use, Random random, int x, int y, int z, int mode) {
+    /**
+     * Returns a village start piece for a lot: what a village gives each of its pieces. Only its desert flag and biome
+     * are set; no pack piece reads its other fields while it is made or built.
+     *
+     * @param biome the lot's biome, or {@code null} when unknown
+     * @return the start piece
+     */
+    static StructureVillagePieces.Start villageStart(BiomeGenBase biome) {
+        StructureVillagePieces.Start start = new StructureVillagePieces.Start();
+        start.biome = biome;
+        // Vanilla's own rule (MapGenVillage's start piece): only these two biomes build sandstone villages.
+        start.inDesert = biome != null && (biome == BiomeGenBase.desert || biome == BiomeGenBase.desertHills);
+        return start;
+    }
+
+    /**
+     * Returns whether a box lies inside a chunk with at least {@link #MARGIN} blocks to each side edge.
+     *
+     * @param box    the box
+     * @param chunkX the chunk X
+     * @param chunkZ the chunk Z
+     * @return whether the box is inside with the margin
+     */
+    static boolean insideWithMargin(StructureBoundingBox box, int chunkX, int chunkZ) {
+        int x0 = chunkX << 4;
+        int z0 = chunkZ << 4;
+        return box.minX >= x0 + MARGIN && box.maxX <= x0 + 15 - MARGIN
+            && box.minZ >= z0 + MARGIN
+            && box.maxZ <= z0 + 15 - MARGIN;
+    }
+
+    private static StructureComponent create(Usable use, StructureVillagePieces.Start start, Random random, int x,
+        int y, int z, int mode) {
         try {
             Object made;
             if (use.factory != null) {
-                made = use.factory.invoke(null, null, new ArrayList<Object>(), random, x, y, z, mode, 0);
+                made = use.factory.invoke(null, start, new ArrayList<Object>(), random, x, y, z, mode, 0);
             } else {
                 made = VillagerRegistry
-                    .getVillageComponent(use.weight, null, new ArrayList<Object>(), random, x, y, z, mode, 0);
+                    .getVillageComponent(use.weight, start, new ArrayList<Object>(), random, x, y, z, mode, 0);
             }
             return made instanceof StructureComponent component ? component : null;
         } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
             LostCities.LOG.warn("Pack house {} could not be created", use.kind.id, e);
             return null;
         }
+    }
+
+    /**
+     * Makes a lot's piece, centered in its chunk, without touching the world: measured at the origin, then made again
+     * at the centered box. A factory's box is a pure translation of its inputs, so the second piece has the measured
+     * size. Returns {@code null} when the piece cannot be made, is wider or deeper than {@value #MAX_SPAN}, or is not
+     * inside the chunk with its margin.
+     *
+     * @param use       the kind
+     * @param start     the village start piece
+     * @param pieceSeed the lot's piece seed
+     * @param random    the random the piece is made and later built with, seeded with {@code pieceSeed}
+     * @param chunkX    the lot's chunk X
+     * @param chunkZ    the lot's chunk Z
+     * @param y         the box's bottom Y
+     * @param doorSide  the side the door faces, 0 north, 1 east, 2 south, 3 west
+     * @return the piece
+     */
+    static StructureComponent place(Usable use, StructureVillagePieces.Start start, long pieceSeed, Random random,
+        int chunkX, int chunkZ, int y, int doorSide) {
+        int mode = Math.floorMod(doorSide, 4);
+        StructureComponent trial = create(use, start, new Random(pieceSeed), 0, y, 0, mode);
+        if (trial == null) {
+            return null;
+        }
+        StructureBoundingBox measured = trial.getBoundingBox();
+        int width = measured.getXSize();
+        int depth = measured.getZSize();
+        if (width > MAX_SPAN || depth > MAX_SPAN) {
+            return null;
+        }
+        int minX = (chunkX << 4) + (16 - width) / 2;
+        int minZ = (chunkZ << 4) + (16 - depth) / 2;
+        StructureComponent piece = create(use, start, random, minX - measured.minX, y, minZ - measured.minZ, mode);
+        if (piece == null) {
+            return null;
+        }
+        StructureBoundingBox box = piece.getBoundingBox();
+        if (box.minX != minX || box.minZ != minZ || box.minY != y || !insideWithMargin(box, chunkX, chunkZ)) {
+            LostCities.LOG.warn("Pack house {} built at an unexpected box {}; skipped", use.kind.id, box);
+            return null;
+        }
+        return piece;
     }
 
     /**
@@ -212,30 +300,13 @@ public final class PackHouses {
         Usable use = list.get(PackHouseSelection.kind(seed, chunkX, chunkZ, list.size()));
         long pieceSeed = StableHash
             .mix64(seed ^ PackHouseSelection.SEED_SALT ^ chunkX * 341873128712L ^ chunkZ * 132897987541L);
-        int mode = Math.floorMod(doorSide, 4);
-        int y = groundY + 1;
-        // Measure the box at the origin, then rebuild it centered in the chunk. A factory's box is a pure translation
-        // of its inputs, so the second build has the measured size.
-        StructureComponent trial = create(use, new Random(pieceSeed), 0, y, 0, mode);
-        if (trial == null) {
-            return null;
-        }
-        StructureBoundingBox measured = trial.getBoundingBox();
-        int width = measured.getXSize();
-        int depth = measured.getZSize();
-        if (width > MAX_SPAN || depth > MAX_SPAN) {
-            return null;
-        }
-        int minX = (chunkX << 4) + (16 - width) / 2;
-        int minZ = (chunkZ << 4) + (16 - depth) / 2;
+        // The populated chunk is loaded, so its biome is read from the chunk itself.
+        StructureVillagePieces.Start start = villageStart(
+            world.getBiomeGenForCoords((chunkX << 4) + 8, (chunkZ << 4) + 8));
         Random random = new Random(pieceSeed);
-        StructureComponent piece = create(use, random, minX - measured.minX, y, minZ - measured.minZ, mode);
+        int y = groundY + 1;
+        StructureComponent piece = place(use, start, pieceSeed, random, chunkX, chunkZ, y, doorSide);
         if (piece == null) {
-            return null;
-        }
-        StructureBoundingBox box = piece.getBoundingBox();
-        if (box.minX != minX || box.minZ != minZ || box.minY != y) {
-            LostCities.LOG.warn("Pack house {} built at an unexpected box {}; skipped", use.kind.id, box);
             return null;
         }
         PieceFields.apply(piece, StructureVillagePieces.Village.class, y);
