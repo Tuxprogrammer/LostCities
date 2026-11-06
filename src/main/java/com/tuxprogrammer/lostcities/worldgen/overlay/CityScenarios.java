@@ -648,7 +648,9 @@ public final class CityScenarios {
             StringBuilder out = new StringBuilder("{");
             for (int dy = -2; dy <= 3; dy++) {
                 out.append(dy == -2 ? "" : ",")
-                    .append(Block.blockRegistry.getNameForObject(world.getBlock(x, y + dy, z)));
+                    .append(Block.blockRegistry.getNameForObject(world.getBlock(x, y + dy, z)))
+                    .append(':')
+                    .append(world.getBlockMetadata(x, y + dy, z));
             }
             return out.append('}')
                 .toString();
