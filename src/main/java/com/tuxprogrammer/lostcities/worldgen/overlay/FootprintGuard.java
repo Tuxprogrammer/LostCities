@@ -183,11 +183,17 @@ public final class FootprintGuard {
      * @param y      block Y
      * @param z      local Z, 0 to 15
      * @param block  the block being written
-     * @return {@code true} to drop the write
+     * @return {@code true} to drop the write; always {@code false} for a client world
      */
     public static boolean drops(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
+        // A client world never guards: in single player the client thread runs the same chunk setter while the
+        // integrated server pushes and pops frames, and read twice the depth could change between the reads.
+        if (world != null && world.isRemote) {
+            return false;
+        }
+        int frames = depth;
         byte mode = topMode;
-        if (mode == OFF || mode == HOUSE) {
+        if (frames == 0 || mode == OFF || mode == HOUSE) {
             return false;
         }
         boolean treePart = block != null && isTreePart(block);
@@ -195,7 +201,7 @@ public final class FootprintGuard {
         if (mode == TREES && !treePart || mode == SNOW && !snow) {
             return false;
         }
-        int top = depth - 1;
+        int top = frames - 1;
         if (WORLDS[top] != world) {
             return false;
         }
@@ -231,10 +237,12 @@ public final class FootprintGuard {
      * @param block  the block being written
      */
     public static void noteUnguardedWrite(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
-        if (depth == 0 || !(block instanceof BlockLog || block instanceof BlockLeavesBase)) {
+        int frames = depth;
+        if (frames == 0 || world != null && world.isRemote
+            || !(block instanceof BlockLog || block instanceof BlockLeavesBase)) {
             return;
         }
-        int top = depth - 1;
+        int top = frames - 1;
         if (MODE[top] == HOUSE) {
             return;
         }

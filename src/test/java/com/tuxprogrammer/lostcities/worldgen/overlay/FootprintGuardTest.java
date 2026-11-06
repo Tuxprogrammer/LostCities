@@ -3,13 +3,17 @@ package com.tuxprogrammer.lostcities.worldgen.overlay;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.world.World;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import sun.misc.Unsafe;
 
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
@@ -58,6 +62,32 @@ public class FootprintGuardTest {
         assertFalse(FootprintGuard.drops(null, 2, 0, 7, 77, 7, null), "a tree on the hill passes");
         FootprintGuard.pop();
         assertFalse(FootprintGuard.drops(null, 2, 0, 0, 70, 0, null), "no population, no guard");
+    }
+
+    /**
+     * 0.2.0-beta crash: the client thread's chunk setter (a multi-block change packet) read the guard's stack while
+     * the integrated server popped it, and indexed -1. A client world is never guarded, whatever the stack holds.
+     */
+    @Test
+    public void neverGuardsAClientWorld() throws Exception {
+        World client = clientWorld();
+        FootprintGuard.push(client, PLAN, true);
+        assertFalse(FootprintGuard.drops(client, 0, 0, 3, 80, 3, null), "a client world's write passes");
+        FootprintGuard.noteUnguardedWrite(client, 0, 0, 3, 80, 3, null);
+        FootprintGuard.pop();
+        assertFalse(FootprintGuard.drops(client, 0, 0, 3, 80, 3, null), "and with no frame at all");
+    }
+
+    /** A world object marked remote, made without running a constructor (nothing of it is used but the flag). */
+    private static World clientWorld() throws Exception {
+        Field field = Unsafe.class.getDeclaredField("theUnsafe");
+        field.setAccessible(true);
+        Unsafe unsafe = (Unsafe) field.get(null);
+        World world = (World) unsafe.allocateInstance(net.minecraft.client.multiplayer.WorldClient.class);
+        Field remote = World.class.getField("isRemote");
+        unsafe.putBoolean(world, unsafe.objectFieldOffset(remote), true);
+        assertTrue(world.isRemote);
+        return world;
     }
 
     @AfterEach

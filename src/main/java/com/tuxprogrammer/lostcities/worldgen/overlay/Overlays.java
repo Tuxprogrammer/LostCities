@@ -147,6 +147,10 @@ public final class Overlays {
      */
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
+        if (event.world.isRemote) {
+            // The client thread fires this too in single player; the map belongs to the server thread.
+            return;
+        }
         OverlayWorld overlay = worlds.remove(event.world);
         if (overlay != null) {
             for (String line : overlay.timers()
