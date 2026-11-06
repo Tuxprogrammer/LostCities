@@ -155,9 +155,10 @@ final class PackHouseScenario implements Scenario {
         }
         context.check(blocks >= MIN_BLOCKS, "expected the house's blocks above the lot's ground, found " + blocks);
         context.check(edge == 0, "expected no house block in the chunk's outermost columns, found " + edge);
-        long first = hash(chunk, ground);
+        long full = hash(chunk, ground, true);
+        long first = hash(chunk, ground, false);
         String kind = overlay.packHouse(lotX, lotZ, lot);
-        long second = hash(chunk, ground);
+        long second = hash(chunk, ground, false);
         context.check(kind != null, "expected the second build to place a house");
         context.check(
             first == second,
@@ -170,7 +171,7 @@ final class PackHouseScenario implements Scenario {
             lotZ,
             kind,
             blocks,
-            Long.toHexString(first));
+            Long.toHexString(full));
     }
 
     /** Trees, plants and snow that the terrain's own population puts at the chunk edge; not part of any house. */
@@ -191,14 +192,23 @@ final class PackHouseScenario implements Scenario {
         return "minecraft:cobblestone_wall".equals(Block.blockRegistry.getNameForObject(block));
     }
 
-    private static long hash(Chunk chunk, int ground) {
+    /**
+     * Hashes the blocks above the ground. A rebuild over the first build cannot plant the garden's flowers again (the
+     * roof now shades them, Forestry's {@code canBlockStay}), so the in-place comparison leaves flowers out; the
+     * flowers' determinism is what two fresh runs of one seed compare, through the logged full hash.
+     */
+    private static long hash(Chunk chunk, int ground, boolean flowers) {
         long h = 1125899906842597L;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = ground + 1; y <= ground + HASH_HEIGHT; y++) {
                     Block block = chunk.getBlock(x, y, z);
+                    if (!flowers && String.valueOf(Block.blockRegistry.getNameForObject(block))
+                        .contains("flower")) {
+                        block = Blocks.air;
+                    }
                     h = 31 * h + Block.getIdFromBlock(block);
-                    h = 31 * h + chunk.getBlockMetadata(x, y, z);
+                    h = 31 * h + (block == Blocks.air ? 0 : chunk.getBlockMetadata(x, y, z));
                 }
             }
         }
