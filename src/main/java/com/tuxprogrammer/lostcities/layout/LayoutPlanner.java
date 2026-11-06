@@ -967,9 +967,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         // Avoids CITY-15: the cap loop stops at 0, and a chunk it empties holds no building.
         boolean capped = false;
         // At a taller pitch fewer floors fit under the cap: towers stay under Y 248 (0014).
-        int fit = capFloors(f, cityGround, profile.floorPitch);
-        if (fit < f) {
-            f = fit;
+        int fitFloors = capFloors(f, cityGround, profile.floorPitch);
+        if (fitFloors < f) {
+            f = fitFloors;
             capped = true;
         }
         b.drawnFloors = f;
