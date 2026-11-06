@@ -352,7 +352,7 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `cityMaxRise` | `2` | 0 to 8 | live | City levels a city chunk may rise above its city's base level; one more is cut down to it, higher ground is left out of the city; 8 is no cap |
 | `cityGrade` | `1` | 0 to 8 | live | City levels a city chunk may sit above or below its city's base level: hills are cut and hollows filled to within this many levels (8 blocks each), so neighboring streets and buildings stay close in height; 8 is no limit |
 | `cityGradeRadius` | `1` | 0 to 4 | live | Chunks around a city chunk whose mean terrain height sets its level, so neighbors change level gradually; 0 uses the chunk's own height |
-| `cityAvoidOcean` | `true` | | live | Chunks in an ocean biome are never city |
+| `cityAvoidOcean` | `true` | | live | Chunks in an ocean biome are never city, and neither are chunks whose RWG terrain height is under sea level (63), which catches shallow water in biomes not tagged ocean. A profile with its own `seaLevel` (a drowned city) skips the height test |
 | `cityConnected` | `true` | | live | A city chunk must join its city's center through other city chunks, edge to edge; a chunk that terrain, water or a landmark cut off leaves the city instead of standing alone (center mode only) |
 | `cityTaper` | `1.0` | 0 to 1 | live | How strongly building heights follow the urban intensity: low at a city's edge, a high-rise core at its center, varied by noise ([0011](design/0011-city-edges-and-character.md)); 0 is upstream's floor count |
 | `edgeLotChance` | `0.45` | 0 to 1 | live | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation instead; it falls to 0 at intensity 0.4, and open lots take half of it |
@@ -373,6 +373,7 @@ JVM properties, not config keys. They exist for development and real-pack testin
 | `-Dlostcitiesnh.testHooks=true` | Turns on the scenario command and harness, and the `view` and `find` commands, outside the development environment ([docs/testing/](testing/README.md)) |
 | `-Dlostcitiesnh.selfCheck=true` or `false` | Runs the dev self-check at `postInit` outside the development environment, or skips it inside |
 | `-Dlostcitiesnh.scenarios=<selector>` | Runs the selected scenarios once the server has started, where the test hooks are on |
+| `-Dlostcitiesnh.debugWool=true` | Paints each terrain stage's blocks in a wool color, for finding which stage wrote what ([docs/testing/](testing/README.md#debug-wool)) |
 | `-Dlostcitiesnh.stopAfterScenarios=true` | Stops the server after that run's summary line |
 | `-Dlostcitiesnh.assetReport=true` | Logs the full asset report at `postInit`: every problem, every fallback block taken and every variety-pool block the registry lacks ([asset-format.md](new-spec/05-assets/asset-format.md#the-block-name-map)) |
 | `-Dlostcitiesnh.prefetch=false` | Turns off the plan prefetcher, which plans chunks a few chunks ahead of generation a little each server tick so a city meeting new ground does not stall one chunk's generation ([0005](design/0005-rwg-overlay.md) §8). What is generated is the same either way; for comparing budget runs |

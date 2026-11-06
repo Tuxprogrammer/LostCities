@@ -61,7 +61,7 @@ All need operator level 2. `/lost` and `/lostcitiesnh` are aliases of `/lostciti
 | `/lostcities profile [list \| info <profile> \| reload \| pin <profile> confirm]` | Show, list, inspect, reload or pin profiles |
 | `/lostcities saveprofile <profile> <newName>` | Copy a profile to a file you can edit |
 | `/lostcities locate <building>` | The nearest places a building stands, from the plan, without generating anything |
-| `/lostcities debug` and `/lostcities map` | The layout of the chunk you stand in, and a 41 × 41-chunk map of cities and landmarks, to the server log |
+| `/lostcities debug [<x> <z>]` and `/lostcities map [<x> <z>]` | The layout of a chunk, and a 41 × 41-chunk map of cities and landmarks around it, to the server log. `<x> <z>` are block coordinates; without them the sender's position is used. From the server console, or `execute` without coordinates, they print usage |
 | `/lostcities timers` (or `timings`) | World generation timings |
 | `/lostcities createbuilding <building> <floors> <cellars> <x> <y> <z>` | Build a building at a position |
 | `listparts`, `locatepart`, `editpart`, `resumeedit`, `createpart`, `exportpart` | The part editor, in a world created with the `editMode` profile option; exports go to `config/lostcitiesnh/export/parts/` |
