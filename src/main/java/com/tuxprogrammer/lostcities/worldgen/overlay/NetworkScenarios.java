@@ -253,6 +253,15 @@ public final class NetworkScenarios {
                             .ordinal()]++;
                     }
                     HighwayInfo here = networks.highway(chunkX, chunkZ);
+                    ChunkPlan chunkPlan = planner.plan(chunkX, chunkZ);
+                    walk.where = " in chunk " + chunkX + "," + chunkZ
+                        + " "
+                        + here.pieces(chunkX, chunkZ)
+                        + (chunkPlan.isCity() ? " city level " + chunkPlan.cityLevel() : " no city")
+                        + " natural "
+                        + overlay.plan()
+                            .chunk(chunkX, chunkZ)
+                            .naturalHeight();
                     if (planner.plan(chunkX, chunkZ)
                         .isTunnel(
                             Math.max(here.xLevel(), here.zLevel()),
@@ -404,6 +413,8 @@ public final class NetworkScenarios {
         int exempted;
         /** Whether the current step lies where an explosion reaches: counted, not judged. */
         boolean exempt;
+        /** The current chunk's pieces and plan, appended to a failure's note. */
+        String where = "";
         final List<String> examples = new ArrayList<>();
         private double previous = Double.NaN;
 
@@ -479,7 +490,7 @@ public final class NetworkScenarios {
 
         private void note(String example) {
             if (examples.size() < 8) {
-                examples.add(example);
+                examples.add(example + where);
             }
         }
 
