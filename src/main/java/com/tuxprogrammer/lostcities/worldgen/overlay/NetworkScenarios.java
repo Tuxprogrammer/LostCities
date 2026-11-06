@@ -254,7 +254,9 @@ public final class NetworkScenarios {
                     }
                     HighwayInfo here = networks.highway(chunkX, chunkZ);
                     ChunkPlan chunkPlan = planner.plan(chunkX, chunkZ);
-                    walk.where = " in chunk " + chunkX + "," + chunkZ
+                    walk.where = " in chunk " + chunkX
+                        + ","
+                        + chunkZ
                         + " "
                         + here.pieces(chunkX, chunkZ)
                         + (chunkPlan.isCity() ? " city level " + chunkPlan.cityLevel() : " no city")

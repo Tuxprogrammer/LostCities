@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The network scenarios' measures (KI-5). The highway walk stands on a block's collision top, so a thin snow layer on a
- * bridge in a cold biome is no step. The legacy {@code network.railway} scan band: a boundary's rails are looked for only in the line's own city
+ * bridge in a cold biome is no step. The legacy {@code network.railway} scan band: a boundary's rails are looked for
+ * only in the line's own city
  * levels, so a city's rail a level or more above the line is not counted as a track that fails to continue.
  */
 public class NetworkScenariosTest {
