@@ -86,6 +86,7 @@ public final class TerrainSettings {
     private final boolean furnish;
     private final String cityHighwayLayout;
     private final boolean cityDistricts;
+    private final boolean doorStepsOpen;
     private final boolean roomRules;
     private final float damageRepairChance;
     private final float facadeContrast;
@@ -165,6 +166,7 @@ public final class TerrainSettings {
         cityHighwayLayout = r.choiceValue("cityHighwayLayout", "none", "none", "beltway", "cutthrough", "random");
         // false is the pre-pin world's value (no districts); new pins take the option's true (D282, D350).
         cityDistricts = r.booleanValue("cityDistricts", false);
+        doorStepsOpen = r.booleanValue("doorStepsOpen", false);
         // false is the pre-pin value (D282): the legacy loot and spawner placement and building-name room kinds.
         roomRules = r.booleanValue("roomRules", false);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
@@ -300,6 +302,7 @@ public final class TerrainSettings {
         out.put("furnish", Boolean.toString(furnish));
         out.put("cityHighwayLayout", cityHighwayLayout);
         out.put("cityDistricts", Boolean.toString(cityDistricts));
+        out.put("doorStepsOpen", Boolean.toString(doorStepsOpen));
         out.put("roomRules", Boolean.toString(roomRules));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
@@ -446,6 +449,11 @@ public final class TerrainSettings {
     /** Returns the strength of the density rings and building classes ({@code densityRings}); 0 is off. */
     public float densityRings() {
         return densityRings;
+    }
+
+    /** Returns {@code doorStepsOpen}: whether door steps are kept open past a station's walls and on a lower roof. */
+    public boolean doorStepsOpen() {
+        return doorStepsOpen;
     }
 
     /** Returns {@code cityDistricts}: whether the plaza, industrial yards and park belt are planned (phase 5c). */

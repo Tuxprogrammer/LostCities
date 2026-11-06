@@ -287,7 +287,10 @@ public final class CityChunkWriter {
         for (PartWriter.Placement overlay : overlays) {
             writer.place(overlay);
         }
-        clearRoofDoorSteps(lowest + plan.floorPitch() * (cellars + floors));
+        if (context.settings()
+            .doorStepsOpen()) {
+            clearRoofDoorSteps(lowest + plan.floorPitch() * (cellars + floors));
+        }
         if (context.settings()
             .furnish()) {
             furnish(cellars, floors, lowest, buildingId);

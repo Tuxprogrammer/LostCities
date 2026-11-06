@@ -203,7 +203,8 @@ public final class NetworkWriter {
         writeHighways();
         writeRailway();
         writeRailDungeon();
-        if (plan.isCity() && !plan.hasBuilding()) {
+        if (plan.isCity() && !plan.hasBuilding() && context.settings()
+            .doorStepsOpen()) {
             // A station's wall or platform edge must not stand in a building's doorway.
             CityChunkWriter.clearDoorSteps(planner, chunkX, chunkZ, plan.cityGroundLevel(), target);
         }
