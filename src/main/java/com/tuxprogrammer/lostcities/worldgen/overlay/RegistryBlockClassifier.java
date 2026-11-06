@@ -138,7 +138,8 @@ public final class RegistryBlockClassifier implements BlockClassifier {
             // Vanilla returns the field and ignores the world; a mod that reads the world gets null and may throw.
             return block.getBlockHardness(null, 0, 0, 0);
         } catch (RuntimeException e) {
-            LostCities.LOG.debug("Hardness of {} needs a world; treating it as breakable", block, e);
+            // One line, no stack trace: the fallback is expected for such mods and is not an error.
+            LostCities.LOG.debug("Hardness of {} needs a world ({}); treating it as breakable", block, e.toString());
             return 0f;
         }
     }
