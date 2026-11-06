@@ -116,7 +116,8 @@ public final class GenerationSafety {
     }
 
     /**
-     * Returns whether a block's world-aware opacity was read and found safe to write during generation ({@link #CHECKED}).
+     * Returns whether a block's world-aware opacity was read and found safe to write during generation
+     * ({@link #CHECKED}).
      *
      * @param name the registry name
      * @return {@code true} when cleared
