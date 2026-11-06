@@ -1,6 +1,6 @@
 # 0015 · City link network: highways and railways that never dead-end
 
-- Status: Accepted for §1–§6 (graph, routing, highway pieces, walk test, junctions, city entry, staircase fallback, landmark drops; lane p4b, sessions 3–5); rails (§3) and §7 Proposed (see `handoff/lane-p4b-links.md`)
+- Status: Accepted for §1–§6 (graph, routing, highway pieces, walk test, junctions, city entry, staircase fallback, landmark drops; lane p4b, sessions 3–5); rails (§3, D-p4b-13/14: coded staircase lines from city-center station to station, no line through a shallow core) and §7 (stations only on links whose both ends are cities) Accepted in session 6; ramp/flat overlap fixed (D-p4b-15); live in `rarecities` (D-p4b-16)
 - Gate: city-realism Phase 4b
 - Amends: [0013](0013-highway-and-railway-networks.md) for worlds with `networkLayout=links`; 0013 stays the rule for `legacy`
 - Date: 2026-11-06
@@ -41,7 +41,7 @@ Every network chunk comes from a link path whose ends are nodes, and consecutive
 
 - **City entry** (built, D-p4b-6). A link's chunks inside an end's city radius (the grid radius, from the center chunk to the chunk) are not written; the first chunk outside is a plaza (the `_bi` crossing part) at that city's level, open on every side, so it meets the city's edge streets. A link whose cities' radii cover its whole path writes nothing.
 - **Shared chunks** (built, D-p4b-7, D-p4b-10). Identical pieces merge. All flat pieces at one level become one piece with all their openings: a plaza when one of them is a plaza; else a straight, bend, T or crossing part when they open only on sides (legacy quarter turns); else a `LINK_JUNCTION`, written in code as a strip from the center to each opening plus a disc at the center, where a column covered by several strips copies the cross-section of the one it lies deepest in, so railings stand only on the junction's outer edge. Ramps and pieces at other levels stay, written lowest first, so the lower passes under. Tests: `LinkHighwaysTest.flatPiecesAtOneLevelBecomeOneJunction`, `aLinkJunctionIsOneDeckWithRailingsOnlyOnItsOuterEdge`.
-- **Not built:** a ramp sharing a chunk with a flat piece whose level lies within the ramp's range still overlaps it.
+- **Ramps never share a chunk** (D-p4b-15): a link's ramp candidates skip every chunk another link's path hits.
 
 ### 6. Obstacles (built, D-p4b-12)
 
