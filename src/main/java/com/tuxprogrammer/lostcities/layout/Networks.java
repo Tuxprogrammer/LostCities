@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.layout;
 
+import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.highway.CityPotential;
@@ -30,10 +31,14 @@ public final class Networks implements InfrastructureView {
 
     /** City factors this close to zero skip the pruning bound, as upstream. */
     private static final float FACTOR_EPSILON = 0.0001f;
+    /** Cells the link graph's node and link caches hold. */
+    private static final int LINK_CACHE_CELLS = 1024;
 
     private final HighwayPlanner highways;
     private final RailwayLayout railways;
     private final boolean subways;
+    /** The city link graph ({@code networkLayout=links} with grid-placed cities), or {@code null}. */
+    private final CityLinkGraph links;
 
     /**
      * Builds the networks of a planner's world.
@@ -153,6 +158,39 @@ public final class Networks implements InfrastructureView {
             inputs,
             planner.profile.groundLevel,
             planner.worldStyle.railPartHeight6());
+        final CityGrid grid = cities.grid();
+        if (settings.links() && grid != null) {
+            // centerYieldsCity reads characteristics(...).isCity, which never reads the infrastructure view, so the
+            // graph does not depend on the networks it drives (0015 §1).
+            this.links = new CityLinkGraph(new CityLinkGraph.Nodes() {
+
+                @Override
+                public int cell() {
+                    return grid.cell();
+                }
+
+                @Override
+                public int[] cityCenter(int cellX, int cellZ) {
+                    CityGrid.Center c = grid.center(cellX, cellZ);
+                    if (c == null || !planner.centerYieldsCity(c.chunkX(), c.chunkZ())) {
+                        return null;
+                    }
+                    return new int[] { c.chunkX(), c.chunkZ() };
+                }
+            }, LINK_CACHE_CELLS);
+        } else {
+            this.links = null;
+        }
+    }
+
+    /**
+     * Returns the city link graph, or {@code null} unless the profile reads {@code networkLayout=links} and places
+     * cities on the grid.
+     *
+     * @return the graph, or {@code null}
+     */
+    public CityLinkGraph links() {
+        return links;
     }
 
     /**
