@@ -187,7 +187,13 @@ public final class HighwayInfo {
             if (aCorner && bCorner && opposite) {
                 boolean aWest = aDx < 0;
                 int turns = aDx == aDz ? 0 : 1;
-                return new Piece(Shape.DIAGONAL, null, aWest ? aLevel : bLevel, aWest ? bLevel : aLevel, turns, openings);
+                return new Piece(
+                    Shape.DIAGONAL,
+                    null,
+                    aWest ? aLevel : bLevel,
+                    aWest ? bLevel : aLevel,
+                    turns,
+                    openings);
             }
             if (aCorner != bCorner && aLevel == bLevel) {
                 int sDx = aCorner ? bDx : aDx;
@@ -200,8 +206,7 @@ public final class HighwayInfo {
                     return new Piece(Shape.TRANSITION, null, aLevel, aLevel, turns, openings);
                 }
             }
-            throw new IllegalArgumentException(
-                "no link piece opens on " + aDx + "," + aDz + " and " + bDx + "," + bDz);
+            throw new IllegalArgumentException("no link piece opens on " + aDx + "," + aDz + " and " + bDx + "," + bDz);
         }
 
         /**

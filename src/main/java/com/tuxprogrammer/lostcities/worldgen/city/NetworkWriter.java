@@ -220,7 +220,8 @@ public final class NetworkWriter {
      * Writes the link pieces made in code (0015 §3): every column of this chunk that a diagonal, a transition or a
      * plaza's corner opening in this chunk or one of its eight neighbors covers gets the straight part's cross-section
      * at that column's deck height, with the ramp slab, the clearing above and supports as for a straight piece. Reads
-     * only the planner; writes only this chunk, so no cascade. The part is the slot's first, so neighbors that write the
+     * only the planner; writes only this chunk, so no cascade. The part is the slot's first, so neighbors that write
+     * the
      * same strip agree.
      */
     private void linkColumns() {
@@ -254,8 +255,7 @@ public final class NetworkWriter {
             .supports();
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                LinkGeometry.Column c = LinkGeometry
-                    .highest(xs, zs, pieces, count, chunkX * 16 + x, chunkZ * 16 + z);
+                LinkGeometry.Column c = LinkGeometry.highest(xs, zs, pieces, count, chunkX * 16 + x, chunkZ * 16 + z);
                 if (c != null) {
                     linkColumn(c, x, z, supports);
                 }

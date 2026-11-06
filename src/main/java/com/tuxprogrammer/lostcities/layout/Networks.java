@@ -121,14 +121,12 @@ public final class Networks implements InfrastructureView {
 
             @Override
             public int highwayXLevel(int chunkX, int chunkZ) {
-                return highway(chunkX, chunkZ)
-                    .xLevel();
+                return highway(chunkX, chunkZ).xLevel();
             }
 
             @Override
             public int highwayZLevel(int chunkX, int chunkZ) {
-                return highway(chunkX, chunkZ)
-                    .zLevel();
+                return highway(chunkX, chunkZ).zLevel();
             }
 
             @Override
@@ -266,14 +264,12 @@ public final class Networks implements InfrastructureView {
 
     @Override
     public int highwayXLevel(int chunkX, int chunkZ) {
-        return highway(chunkX, chunkZ)
-            .xLevel();
+        return highway(chunkX, chunkZ).xLevel();
     }
 
     @Override
     public int highwayZLevel(int chunkX, int chunkZ) {
-        return highway(chunkX, chunkZ)
-            .zLevel();
+        return highway(chunkX, chunkZ).zLevel();
     }
 
     @Override

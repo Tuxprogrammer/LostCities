@@ -340,7 +340,8 @@ public final class PartWriter {
     /**
      * Places one column of a part at a column of the chunk, raised by a shift: the column-by-column writer of the
      * city link network's diagonal pieces (0015 §3), which copies a straight part's cross-section. The placement's
-     * transform and origin are ignored; its palette, Y origin and rules apply as in {@link #place}. Never writes outside
+     * transform and origin are ignored; its palette, Y origin and rules apply as in {@link #place}. Never writes
+     * outside
      * the chunk.
      *
      * @param placement the part and palette; its {@code oy} is the part's bottom

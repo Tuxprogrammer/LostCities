@@ -80,7 +80,9 @@ public final class LinkHighways {
             return start;
         }
 
-        /** Returns the path index of the last written chunk, the plaza at the upper end; below {@link #start} when none. */
+        /**
+         * Returns the path index of the last written chunk, the plaza at the upper end; below {@link #start} when none.
+         */
         public int end() {
             return end;
         }
@@ -246,13 +248,8 @@ public final class LinkHighways {
             }
             return HighwayInfo.Piece.plaza(profile.in[index], array);
         }
-        return HighwayInfo.Piece.link(
-            -step.inDx(),
-            -step.inDz(),
-            profile.in[index],
-            step.outDx(),
-            step.outDz(),
-            profile.out[index]);
+        return HighwayInfo.Piece
+            .link(-step.inDx(), -step.inDz(), profile.in[index], step.outDx(), step.outDz(), profile.out[index]);
     }
 
     /**

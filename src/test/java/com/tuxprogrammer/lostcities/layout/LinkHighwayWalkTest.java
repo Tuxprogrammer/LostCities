@@ -62,8 +62,10 @@ public class LinkHighwayWalkTest {
                 LayoutFixtures.flatTerrain())
                 .networks(NetworkSettings.DEFAULTS.withLinks(false))
                 .build());
-        assertEquals(null, legacy.networks()
-            .linkHighways());
+        assertEquals(
+            null,
+            legacy.networks()
+                .linkHighways());
     }
 
     /**
@@ -129,8 +131,12 @@ public class LinkHighwayWalkTest {
                 assertEquals(level, p.inLevel(i + 1), link + " profile seam " + i);
                 assertTrue(opens(pieces, dx, dz, level), link + " leaves chunk " + i + " at level " + level);
                 assertTrue(
-                    opens(networks.highway(next.chunkX(), next.chunkZ())
-                        .pieces(next.chunkX(), next.chunkZ()), -dx, -dz, level),
+                    opens(
+                        networks.highway(next.chunkX(), next.chunkZ())
+                            .pieces(next.chunkX(), next.chunkZ()),
+                        -dx,
+                        -dz,
+                        level),
                     link + " enters chunk " + (i + 1) + " at level " + level);
             }
         }

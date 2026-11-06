@@ -78,12 +78,21 @@ public class LinkHighwaysTest {
         Piece t = Piece.link(-1, 0, 3, 1, 1, 3);
         assertEquals(Shape.TRANSITION, t.shape());
         assertEquals(0, t.quarterTurns(), "west side");
-        assertEquals(3, Piece.link(1, -1, 0, 0, 1, 0)
-            .quarterTurns(), "south side");
-        assertEquals(1, Piece.link(0, -1, 0, -1, 1, 0)
-            .quarterTurns(), "north side");
-        assertEquals(2, Piece.link(1, 0, 0, -1, -1, 0)
-            .quarterTurns(), "east side");
+        assertEquals(
+            3,
+            Piece.link(1, -1, 0, 0, 1, 0)
+                .quarterTurns(),
+            "south side");
+        assertEquals(
+            1,
+            Piece.link(0, -1, 0, -1, 1, 0)
+                .quarterTurns(),
+            "north side");
+        assertEquals(
+            2,
+            Piece.link(1, 0, 0, -1, -1, 0)
+                .quarterTurns(),
+            "east side");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, -1, 1, 0), "near corner");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 1, 1, 1), "transitions stay flat");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 0, 1, 0), "a quarter bend");
@@ -92,20 +101,25 @@ public class LinkHighwaysTest {
     @Test
     public void straightPiecesOnBothAxesMergeIntoACrossing() {
         List<Piece> merged = LinkHighways.merge(
-            java.util.Arrays.asList(
-                Piece.link(-1, 0, 2, 1, 0, 2),
-                Piece.link(0, -1, 2, 0, 1, 2),
-                Piece.link(-1, 0, 2, 1, 0, 2)));
+            java.util.Arrays
+                .asList(Piece.link(-1, 0, 2, 1, 0, 2), Piece.link(0, -1, 2, 0, 1, 2), Piece.link(-1, 0, 2, 1, 0, 2)));
         assertEquals(1, merged.size());
-        assertEquals(Shape.CROSSING, merged.get(0)
-            .shape());
-        assertEquals(4, merged.get(0)
-            .openings().length / 3);
+        assertEquals(
+            Shape.CROSSING,
+            merged.get(0)
+                .shape());
+        assertEquals(
+            4,
+            merged.get(0)
+                .openings().length / 3);
         List<Piece> stacked = LinkHighways
             .merge(java.util.Arrays.asList(Piece.link(-1, 0, 3, 1, 0, 3), Piece.link(0, -1, 1, 0, 1, 1)));
         assertEquals(2, stacked.size(), "different levels pass over each other");
-        assertEquals(1, stacked.get(0)
-            .level(), "lowest first");
+        assertEquals(
+            1,
+            stacked.get(0)
+                .level(),
+            "lowest first");
     }
 
     // ------------------------------------------------------------------ profiles
@@ -126,15 +140,18 @@ public class LinkHighwaysTest {
         assertEquals(Shape.CROSSING, plaza.shape());
         assertEquals(2, plaza.level());
         assertNull(view.piece(link, p.start() - 1), "inside the city");
-        assertEquals(Shape.CROSSING, view.piece(link, p.end())
-            .shape());
+        assertEquals(
+            Shape.CROSSING,
+            view.piece(link, p.end())
+                .shape());
     }
 
     @Test
     public void citiesThatCoverTheWholeLinkWriteNothing() {
         CityLinkGraph.Link link = new CityLinkGraph.Link(0, 0, 6, 0);
-        assertFalse(LinkHighways.compute(link, ends(256, 0, 0, 0, 0))
-            .written());
+        assertFalse(
+            LinkHighways.compute(link, ends(256, 0, 0, 0, 0))
+                .written());
     }
 
     @Test
@@ -285,7 +302,9 @@ public class LinkHighwaysTest {
 
     @Test
     public void linkInfoReportsLevelsOnBothAxesForDiagonalsAndSpills() {
-        HighwayInfo diagonal = new HighwayInfo(java.util.Collections.singletonList(Piece.link(-1, -1, 2, 1, 1, 3)), -1,
+        HighwayInfo diagonal = new HighwayInfo(
+            java.util.Collections.singletonList(Piece.link(-1, -1, 2, 1, 1, 3)),
+            -1,
             -1);
         assertTrue(diagonal.hasHighway());
         assertEquals(3, diagonal.xLevel());
@@ -295,8 +314,9 @@ public class LinkHighwaysTest {
         assertTrue(spill.hasHighway());
         assertTrue(spill.spill());
         assertEquals(1, spill.xLevel());
-        assertTrue(spill.pieces(0, 0)
-            .isEmpty());
+        assertTrue(
+            spill.pieces(0, 0)
+                .isEmpty());
         HighwayInfo xOnly = new HighwayInfo(java.util.Collections.singletonList(Piece.link(-1, 0, 2, 1, 0, 2)), -1, -1);
         assertEquals(2, xOnly.xLevel());
         assertEquals(-1, xOnly.zLevel());

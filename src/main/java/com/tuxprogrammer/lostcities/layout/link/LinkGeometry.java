@@ -124,8 +124,7 @@ public final class LinkGeometry {
                 int lb = o[5];
                 double length = Math.hypot(bx - ax, bz - az);
                 double frac = s[0] / length;
-                int half = la == lb ? 0
-                    : (int) Math.round(RAMP_HALF_STEPS * (lb > la ? frac : 1 - frac));
+                int half = la == lb ? 0 : (int) Math.round(RAMP_HALF_STEPS * (lb > la ? frac : 1 - frac));
                 return new Column(Math.min(la, lb), half, s[0], s[1]);
             }
             case TRANSITION: {
