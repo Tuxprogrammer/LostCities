@@ -26,11 +26,11 @@ import com.tuxprogrammer.lostcities.asset.model.Palette;
  * street border, the foundation fill and the walls of every chunk the building stands on.
  *
  * <p>
- * Pins the RWG2 seed 777 boot crash: {@code nh_residential} mapped {@code y} (the style's {@code streetblocks.border}) to
- * farmland and {@code w} ({@code streetblocks.wall}) to wheat, so a residential lot raised over low ground filled its
- * foundation with a solid cube of farmland. Farmland under a solid block turns to dirt on any neighbor update, and
- * each conversion notifies the next, so the first update recursed through the cube until the stack overflowed
- * (decision log D-farm-1).
+ * Pins the RWG2 seed 777 boot crash: {@code nh_residential} mapped {@code y}, the style's
+ * {@code streetblocks.border}, to farmland and {@code w} ({@code streetblocks.wall}) to wheat, so a residential lot
+ * raised over low ground filled its foundation with a solid cube of farmland. Farmland under a solid block turns to
+ * dirt on any neighbor update, and each conversion notifies the next, so the first update recursed through the cube
+ * until the stack overflowed (decision log D-farm-1).
  */
 public class BuildingPaletteStyleCharsTest {
 
