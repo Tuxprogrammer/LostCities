@@ -23,7 +23,12 @@ Instance 4, fresh rarecities, RWG2_CONTINENTS, seed 4242. Run 20261106-144732-i4
   - Possible gap: Roguelike rooms reaching outside the landmark core and margin could still cut a line. Watch for it.
 - **D-p4v-5:** the railway scenario counts boundaries an explosion reaches separately and does not fail on them, as the highway walk already does. Test: `LinkScenariosTest`.
 - Build green on 1d81330f: 1236 tests, 0 failures. Spotless diff in 03d771a3.
-- Real-pack round 2 (the last round): instance 4, world p4vrare2. Result: see the final report or the console under `reference/remote/realpack/`.
+- **Real-pack round 2 (the last round) FAILED.** Run 20261106-145911-i4 (main checkout, `reference/remote/realpack/20261106-145911-i4/console.log`), world p4vrare2, seed 4242.
+  - Passed: `city.real`, `city.walk`, `network.highway`. 50 cascade warnings, none attributed to our terrain or population code.
+  - `network.railway` failed. The same line -46,-17 -> -40,27 has the same 4 "none | none" boundaries at x=-45, z -4..1, with 0 damaged. So D-p4v-4 did not block this line.
+  - Likely cause: `RoguelikeOracle.landmark` gives only a 21 x 21 footprint around the tower. The dungeon's underground levels spread over about 6 chunks (z -4..1), so the line's chunks are outside the core. The prediction may also be off or missing.
+  - Next: log `zones.near` and `undergroundCore` along x=-45, z -6..3 for this seed. Then either widen ROGUELIKE's underground reach (the levels' radius) for the rail Blocked test, or have the steering mixin keep dungeon levels off link-line chunks.
+  - The D-p4v-4 row and the 0015 bullet describe the intent; they need a correction once this is fixed.
 
 ## Not done
 - **KI-3 (legacy rail gap under a shallow landmark).** Confirmed by design: `RailwayLayout.underCores` returns NONE for a junction, station or slope under a shallow core (0013 "No room"). This is a different cause from the link failure. A fix would be RAILS_END_HERE buffers beside the dropped chunk. It changes legacy goldens, so it needs a D282-style gate (ProfileOption, `legacyDefault`, TerrainSettings default = legacy) and a decision. README now says the link network leaves such a line out.
