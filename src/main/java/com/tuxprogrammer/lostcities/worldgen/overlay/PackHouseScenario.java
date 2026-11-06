@@ -130,9 +130,13 @@ final class PackHouseScenario implements Scenario {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = ground + 1; y <= ground + HASH_HEIGHT; y++) {
+                    boolean onEdge = x == 0 || x == 15 || z == 0 || z == 15;
                     if (chunk.getBlock(x, y, z) != Blocks.air) {
+                        if (onEdge && y == ground + 1 && isBorderWall(chunk.getBlock(x, y, z))) {
+                            continue;
+                        }
                         blocks++;
-                        if ((x == 0 || x == 15 || z == 0 || z == 15) && !natural(chunk.getBlock(x, y, z))) {
+                        if (onEdge && !natural(chunk.getBlock(x, y, z))) {
                             edge++;
                             if (edge <= 6) {
                                 LostCities.LOG.info(
@@ -175,8 +179,15 @@ final class PackHouseScenario implements Scenario {
             || name.contains("grass")
             || name.contains("flower")
             || name.contains("snow")
-            || name.contains("vine")
-            || name.contains("wall");
+            || name.contains("vine");
+    }
+
+    /**
+     * The street-level border wall that {@code CityTerrain.borderColumn} writes at ground + 1 on an edge column where
+     * the neighbor is lower and parks are allowed (upstream's park fence). It is not part of any house.
+     */
+    private static boolean isBorderWall(Block block) {
+        return "minecraft:cobblestone_wall".equals(Block.blockRegistry.getNameForObject(block));
     }
 
     private static long hash(Chunk chunk, int ground) {
