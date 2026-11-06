@@ -77,9 +77,7 @@ public enum RoomKind {
         if (floor == 0 && commercial) {
             return random.nextInt(3) == 0 ? KITCHEN : SHOP;
         }
-        if (name.contains("house") || name.contains("cottage")
-            || name.contains("walkup")
-            || name.contains("cabin")) {
+        if (name.contains("house") || name.contains("cottage") || name.contains("walkup") || name.contains("cabin")) {
             return RESIDENTIAL;
         }
         if (name.contains("library") || name.contains("center")) {

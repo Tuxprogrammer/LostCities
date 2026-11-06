@@ -22,7 +22,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
  */
 public class FurnishCityTest {
 
-    private static final LayoutCityPlan BARE = CityFixtures.plan(CityFixtures.SEED, StructureOracle.NONE, LayoutLog.SILENT);
+    private static final LayoutCityPlan BARE = CityFixtures
+        .plan(CityFixtures.SEED, StructureOracle.NONE, LayoutLog.SILENT);
     private static final LayoutCityPlan FURNISHED = CityFixtures.plan(
         CityFixtures.SEED,
         TerrainSettings.fromValues(java.util.Collections.singletonMap("furnish", "true")),
@@ -61,7 +62,19 @@ public class FurnishCityTest {
                         }
                         assertTrue(
                             before.isAir(),
-                            "chunk " + c[0] + "," + c[1] + " at " + x + "," + y + "," + z + ": " + before + " -> " + after);
+                            "chunk " + c[0]
+                                + ","
+                                + c[1]
+                                + " at "
+                                + x
+                                + ","
+                                + y
+                                + ","
+                                + z
+                                + ": "
+                                + before
+                                + " -> "
+                                + after);
                         totals[0]++;
                         if (tileBlock(after)) {
                             tiles++;

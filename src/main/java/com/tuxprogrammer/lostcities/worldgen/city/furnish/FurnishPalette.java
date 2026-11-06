@@ -38,9 +38,9 @@ public final class FurnishPalette {
      * creator, teleporter, tesseracts, repellators, world accelerators, lightning rods, miners, rock breakers, pumps,
      * pollution cleaners, the Thaumcraft researcher and ME hatches. Each pair is an inclusive range.
      */
-    static final int[][] DENIED_MACHINES = { { 238, 238 }, { 349, 349 }, { 11304, 11306 }, { 951, 951 },
-        { 1145, 1145 }, { 833, 834 }, { 1146, 1149 }, { 11100, 11103 }, { 1174, 1175 }, { 679, 681 }, { 441, 444 },
-        { 1140, 1142 }, { 758, 761 }, { 956, 956 }, { 2710, 2718 } };
+    static final int[][] DENIED_MACHINES = { { 238, 238 }, { 349, 349 }, { 11304, 11306 }, { 951, 951 }, { 1145, 1145 },
+        { 833, 834 }, { 1146, 1149 }, { 11100, 11103 }, { 1174, 1175 }, { 679, 681 }, { 441, 444 }, { 1140, 1142 },
+        { 758, 761 }, { 956, 956 }, { 2710, 2718 } };
 
     /** Mixes a block position into a machine pick. */
     private static final long POS_X = 341873128712L;

@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
-import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
-import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
@@ -34,6 +31,9 @@ import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.street.Orientation;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
