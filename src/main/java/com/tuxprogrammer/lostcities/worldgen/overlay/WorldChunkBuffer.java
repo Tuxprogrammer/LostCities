@@ -29,7 +29,8 @@ public final class WorldChunkBuffer implements ChunkBuffer {
      * built stands out from the terrain it sits in. Never on in play.
      */
     private static final boolean DEBUG_WOOL = Boolean.getBoolean("lostcitiesnh.debugWool");
-    private static final int DEBUG_WOOL_META = 14;
+    /** The debug wool's color; the terrain phase sets it per stage so a screenshot shows which stage built what. */
+    public static volatile int debugWoolMeta = 1;
 
     private final BlockRefs refs;
     private Chunk chunk;
@@ -134,7 +135,7 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             && !written.getMaterial()
                 .isLiquid()) {
             written = net.minecraft.init.Blocks.wool;
-            writtenMeta = DEBUG_WOOL_META;
+            writtenMeta = debugWoolMeta;
         }
         section.func_150818_a(x, y & 15, z, written);
         section.setExtBlockMetadata(x, y & 15, z, writtenMeta);
