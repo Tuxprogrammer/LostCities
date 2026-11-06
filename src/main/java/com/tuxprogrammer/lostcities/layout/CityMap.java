@@ -75,6 +75,8 @@ final class CityMap {
     private final ActivePredefined predefined;
     private final CityRarityMap rarity;
     private final int searchRadius;
+    /** The jittered grid of centers, or {@code null} in chance mode. */
+    private final CityGrid grid;
     private final ChunkCache<Float> factors;
     private final ChunkCache<String> styles;
     private final ChunkCache<Integer> bases;
@@ -90,6 +92,10 @@ final class CityMap {
             ? new CityRarityMap(seed, profile.cityPerlinScale, profile.cityPerlinOffset, profile.cityPerlinInnerScale)
             : null;
         this.searchRadius = (profile.cityMaxRadius + 15) / CHUNK;
+        this.grid = profile.cityGridCell > 0 && profile.cityChance >= 0
+            ? new CityGrid(seed, profile.cityGridCell, profile.cityGridJitter, profile.cityMinRadius,
+                profile.cityMaxRadius)
+            : null;
         this.factors = new ChunkCache<>(cacheSize);
         this.styles = new ChunkCache<>(cacheSize);
         this.bases = new ChunkCache<>(Math.min(cacheSize, BASE_CACHE));
@@ -98,6 +104,37 @@ final class CityMap {
     /** Returns whether the profile uses Perlin rarity instead of city centers. */
     boolean perlinMode() {
         return rarity != null;
+    }
+
+    /** Returns the jittered grid of centers, or {@code null} in chance and Perlin modes. */
+    CityGrid grid() {
+        return grid;
+    }
+
+    /**
+     * Returns the grid centers in the search square around a chunk as {@code {chunkX, chunkZ}} pairs, or {@code null}
+     * when the profile places centers by chance. Predefined cities are not included.
+     */
+    List<int[]> gridCentersNear(int chunkX, int chunkZ) {
+        if (grid == null) {
+            return null;
+        }
+        List<int[]> out = new ArrayList<>();
+        for (CityGrid.Center c : grid.centersNear(chunkX, chunkZ, searchRadius)) {
+            out.add(new int[] { c.chunkX(), c.chunkZ() });
+        }
+        for (PredefinedCity city : predefined.cities()) {
+            if (Math.abs(city.chunkX() - chunkX) <= searchRadius && Math.abs(city.chunkZ() - chunkZ) <= searchRadius) {
+                boolean listed = false;
+                for (int[] c : out) {
+                    listed |= c[0] == city.chunkX() && c[1] == city.chunkZ();
+                }
+                if (!listed) {
+                    out.add(new int[] { city.chunkX(), city.chunkZ() });
+                }
+            }
+        }
+        return out;
     }
 
     /** Returns the half-width, in chunks, of the square searched for city centers around a chunk. */
@@ -113,6 +150,9 @@ final class CityMap {
         if (predefined.cityAt(chunkX, chunkZ) != null) {
             return true;
         }
+        if (grid != null) {
+            return grid.isCenter(chunkX, chunkZ);
+        }
         Random random = new Random(seed + chunkZ * CENTER_Z + chunkX * CENTER_X);
         return random.nextDouble() < profile.cityChance;
     }
@@ -122,6 +162,12 @@ final class CityMap {
         PredefinedCity city = predefined.cityAt(chunkX, chunkZ);
         if (city != null) {
             return city.radius();
+        }
+        if (grid != null) {
+            int gridRadius = grid.radiusAt(chunkX, chunkZ);
+            if (gridRadius >= 0) {
+                return gridRadius;
+            }
         }
         Random random = new Random(seed + chunkZ * RADIUS_Z + chunkX * RADIUS_X);
         int range = Math.max(1, profile.cityMaxRadius - profile.cityMinRadius);
@@ -185,10 +231,17 @@ final class CityMap {
         if (rarity != null) {
             factor = rarity.getCityFactor(chunkX, chunkZ);
         } else {
-            for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
-                for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
-                    if (isCityCenter(cx, cz)) {
-                        factor += contribution(cx, cz, chunkX, chunkZ);
+            List<int[]> near = gridCentersNear(chunkX, chunkZ);
+            if (near != null) {
+                for (int[] c : near) {
+                    factor += contribution(c[0], c[1], chunkX, chunkZ);
+                }
+            } else {
+                for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
+                    for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
+                        if (isCityCenter(cx, cz)) {
+                            factor += contribution(cx, cz, chunkX, chunkZ);
+                        }
                     }
                 }
             }
@@ -211,10 +264,17 @@ final class CityMap {
         if (rarity != null) {
             factor = rarity.getCityFactor(chunkX, chunkZ);
         } else {
-            for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
-                for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
-                    if (isCityCenter(cx, cz)) {
-                        factor += contribution(cx, cz, chunkX, chunkZ);
+            List<int[]> near = gridCentersNear(chunkX, chunkZ);
+            if (near != null) {
+                for (int[] c : near) {
+                    factor += contribution(c[0], c[1], chunkX, chunkZ);
+                }
+            } else {
+                for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
+                    for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
+                        if (isCityCenter(cx, cz)) {
+                            factor += contribution(cx, cz, chunkX, chunkZ);
+                        }
                     }
                 }
             }
@@ -348,15 +408,25 @@ final class CityMap {
             float factor = rarity.getCityFactor(chunkX, chunkZ);
             contributions.add(new Contribution(factor, styleOrAlternative(factor, chunkX, chunkZ)));
         } else {
-            for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
-                for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
-                    if (!isCityCenter(cx, cz)) {
-                        continue;
-                    }
-                    float factor = contribution(cx, cz, chunkX, chunkZ);
+            List<int[]> near = gridCentersNear(chunkX, chunkZ);
+            if (near != null) {
+                for (int[] c : near) {
+                    float factor = contribution(c[0], c[1], chunkX, chunkZ);
                     if (factor > 0) {
-                        // Avoids CITY-03: the style of this contribution's own center, not the chunk's.
-                        contributions.add(new Contribution(factor, styleOrAlternative(factor, cx, cz)));
+                        contributions.add(new Contribution(factor, styleOrAlternative(factor, c[0], c[1])));
+                    }
+                }
+            } else {
+                for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {
+                    for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
+                        if (!isCityCenter(cx, cz)) {
+                            continue;
+                        }
+                        float factor = contribution(cx, cz, chunkX, chunkZ);
+                        if (factor > 0) {
+                            // Avoids CITY-03: the style of this contribution's own center, not the chunk's.
+                            contributions.add(new Contribution(factor, styleOrAlternative(factor, cx, cz)));
+                        }
                     }
                 }
             }
@@ -415,6 +485,19 @@ final class CityMap {
                 bestFactor = factor;
                 best = new int[] { city.chunkX(), city.chunkZ() };
             }
+        }
+        List<int[]> near = gridCentersNear(chunkX, chunkZ);
+        if (near != null) {
+            for (int[] c : near) {
+                float factor = contribution(c[0], c[1], chunkX, chunkZ);
+                boolean tieWins = best != null && factor == bestFactor
+                    && (c[1] < best[1] || c[1] == best[1] && c[0] < best[0]);
+                if (factor > bestFactor || tieWins && factor > 0) {
+                    bestFactor = factor;
+                    best = c;
+                }
+            }
+            return best;
         }
         for (int cz = chunkZ - searchRadius; cz <= chunkZ + searchRadius; cz++) {
             for (int cx = chunkX - searchRadius; cx <= chunkX + searchRadius; cx++) {

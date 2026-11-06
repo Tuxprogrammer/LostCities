@@ -212,6 +212,14 @@ public final class ProfileValidator {
         if (number(values, "cityChance") >= 0) {
             pair(values, "cityMinRadius", "cityMaxRadius", errors);
         }
+        if ("grid".equals(values.get("cityPlacement"))) {
+            if (number(values, "cityChance") < 0) {
+                errors.add("cityPlacement grid cannot be combined with Perlin rarity (negative cityChance)");
+            }
+            if (number(values, "cityGridCell") - 2 * number(values, "cityGridJitter") < 1) {
+                errors.add("cityGridJitter must be below half of cityGridCell");
+            }
+        }
         pair(values, "buildingMinFloors", "buildingMaxFloors", errors);
         pair(values, "buildingMinCellars", "buildingMaxCellars", errors);
         pair(values, "ruinMinlevelPercent", "ruinMaxlevelPercent", errors);

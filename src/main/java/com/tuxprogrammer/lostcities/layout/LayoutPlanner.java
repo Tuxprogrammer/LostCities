@@ -276,6 +276,35 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
+     * Returns the city centers whose grid cells intersect a chunk window, or {@code null} when this profile places
+     * centers by chance ({@code cityPlacement=chance}). Pure layout: no terrain, no filters, O(cells). Predefined
+     * cities are not listed. Whether a center yields a city is {@link #centerYieldsCity}.
+     *
+     * @param minChunkX first chunk X of the window
+     * @param minChunkZ first chunk Z
+     * @param maxChunkX last chunk X (inclusive)
+     * @param maxChunkZ last chunk Z (inclusive)
+     * @return the centers, or {@code null} outside grid mode
+     */
+    public java.util.List<CityGrid.Center> gridCenters(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
+        CityGrid grid = cities.grid();
+        return grid == null ? null : grid.centersInCellsOf(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
+    }
+
+    /**
+     * Returns whether a city center actually yields a city after the terrain filters: its chunk is a city chunk (the
+     * height window, {@code cityAvoidOcean}, the rise cap, {@code cityConnected} and the city mask all applied). This
+     * reads the terrain and zone oracles; a pure layout test uses {@link #gridCenters} instead.
+     *
+     * @param chunkX the center's chunk X
+     * @param chunkZ the center's chunk Z
+     * @return whether the center is a center and its chunk is city
+     */
+    public boolean centerYieldsCity(int chunkX, int chunkZ) {
+        return cities.isCityCenter(chunkX, chunkZ) && characteristics(chunkX, chunkZ).isCity;
+    }
+
+    /**
      * Returns the radius, in blocks, of the city centered on a chunk; meaningful only for a {@link #isCityCenter}.
      *
      * @param chunkX chunk X
@@ -483,22 +512,35 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         int r = cities.searchRadius();
         boolean reached = false;
+        java.util.List<int[]> near = cities.gridCentersNear(x, z);
+        if (near != null) {
+            for (int[] c : near) {
+                if (inComponent(c[0], c[1], x, z, r)) {
+                    return true;
+                }
+            }
+            return near.isEmpty();
+        }
         for (int cz = z - r; cz <= z + r; cz++) {
             for (int cx = x - r; cx <= x + r; cx++) {
                 if (!cities.isCityCenter(cx, cz)) {
                     continue;
                 }
                 reached = true;
-                boolean[] member = component(cx, cz);
-                int side = 2 * r + 1;
-                int ix = x - cx + r;
-                int iz = z - cz + r;
-                if (ix >= 0 && iz >= 0 && ix < side && iz < side && member[iz * side + ix]) {
+                if (inComponent(cx, cz, x, z, r)) {
                     return true;
                 }
             }
         }
         return !reached;
+    }
+
+    private boolean inComponent(int cx, int cz, int x, int z, int r) {
+        boolean[] member = component(cx, cz);
+        int side = 2 * r + 1;
+        int ix = x - cx + r;
+        int iz = z - cz + r;
+        return ix >= 0 && iz >= 0 && ix < side && iz < side && member[iz * side + ix];
     }
 
     /**
