@@ -10,9 +10,9 @@
   "slices": [
     [
       "GGGGGGGrGGGGGGGG",
-      "GGGGGGGrGyyyyyGG",
-      "GGGGGGGrGyy~yyGG",
-      "GGGGGGGrGyyyyyGG",
+      "GGGGGGGrGuuuuuGG",
+      "GGGGGGGrGuu~uuGG",
+      "GGGGGGGrGuuuuuGG",
       "GGGGGGGrGGGGGGGG",
       "GGGGKKKKKKKKGGGG",
       "GGGGKQQQQQQKGGGG",
@@ -28,9 +28,9 @@
     ],
     [
       "ffffff    ffffff",
-      "f        wwwww f",
-      "f H      ww ww f",
-      "f H      wwwww f",
+      "f        AAAAA f",
+      "f H      AA AA f",
+      "f H      AAAAA f",
       "f              f",
       "f   UVV1UVVU   f",
       "    VFc   8V    ",
