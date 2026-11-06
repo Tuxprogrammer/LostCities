@@ -47,8 +47,8 @@ public final class LinkRailGeometry {
         if (acrossX && acrossZ) {
             return true;
         }
-        return acrossX && (x < INSIDE_LOW && (sides & LinkRails.WEST) != 0
-            || x > INSIDE_HIGH && (sides & LinkRails.EAST) != 0)
+        return acrossX
+            && (x < INSIDE_LOW && (sides & LinkRails.WEST) != 0 || x > INSIDE_HIGH && (sides & LinkRails.EAST) != 0)
             || acrossZ && (z < INSIDE_LOW && (sides & LinkRails.NORTH) != 0
                 || z > INSIDE_HIGH && (sides & LinkRails.SOUTH) != 0);
     }

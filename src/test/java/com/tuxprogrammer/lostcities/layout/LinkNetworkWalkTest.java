@@ -88,8 +88,9 @@ public class LinkNetworkWalkTest {
     public void everyLineRunsFromCityCenterToCityCenter() {
         Networks networks = planner(7919L, LayoutFixtures.flatTerrain()).networks();
         CityLinkGraph graph = networks.links();
-        assertNotNull(networks.railways()
-            .links());
+        assertNotNull(
+            networks.railways()
+                .links());
         Set<CityLinkGraph.Link> seen = new HashSet<>();
         int lines = 0;
         for (int cx = -3; cx <= 3; cx++) {
@@ -206,7 +207,9 @@ public class LinkNetworkWalkTest {
         assertEquals(LinkRailGeometry.WALL, LinkRailGeometry.role(bend, 3, 7));
         assertEquals(LinkRailGeometry.INSIDE, LinkRailGeometry.role(bend, 7, 0));
         assertEquals(LinkRailGeometry.NONE, LinkRailGeometry.role(bend, 0, 0));
-        assertEquals(RailChunkType.DOUBLE_BEND, RailChunk.link(RailChunkType.DOUBLE_BEND, -3, false, bend)
-            .type());
+        assertEquals(
+            RailChunkType.DOUBLE_BEND,
+            RailChunk.link(RailChunkType.DOUBLE_BEND, -3, false, bend)
+                .type());
     }
 }

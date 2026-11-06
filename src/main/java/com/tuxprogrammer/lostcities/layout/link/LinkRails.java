@@ -19,7 +19,8 @@ import java.util.Map;
  * lines share a chunk their openings join; a line never stops between its two cities.
  *
  * <p>
- * Landmark cores keep the railways out (0013 §5): a line any of whose chunks is {@link Blocked} carries no track at all,
+ * Landmark cores keep the railways out (0013 §5): a line any of whose chunks is {@link Blocked} carries no track at
+ * all,
  * so no line ends at a core (D-p4b-14).
  *
  * <p>

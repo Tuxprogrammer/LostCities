@@ -109,9 +109,7 @@ public final class RailwayLayout {
         this.partHeight6 = Math.max(1, partHeight6);
         // A core the railway level does not fit under keeps the whole line out (0013 §5, D-p4b-14).
         this.links = graph == null ? null
-            : new LinkRails(
-                graph,
-                (x, z) -> inputs.isCore(x, z) && deepestFit(x, z) < settings.railwayLevel());
+            : new LinkRails(graph, (x, z) -> inputs.isCore(x, z) && deepestFit(x, z) < settings.railwayLevel());
     }
 
     /** Returns the lines of the city link network, or {@code null} on upstream's grid. */
@@ -172,8 +170,7 @@ public final class RailwayLayout {
         if (cached != null) {
             return cached;
         }
-        RailChunk value = links != null ? linkRail(chunkX, chunkZ)
-            : underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
+        RailChunk value = links != null ? linkRail(chunkX, chunkZ) : underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
         finals.put(key, value);
         return value;
     }
