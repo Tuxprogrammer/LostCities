@@ -107,6 +107,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** Salt of the separate random the taper's high-rise core draws from (0011 §2). */
     static final long TAPER_SALT = 0x5441504552494e47L;
     /** Salt of the separate random edge lots draw from (0011 §3). */
+    static final int RING_ATTEMPTS = 6;
+    static final long RING_SALT = 0x52494e4753504c54L;
     static final long LOT_SALT = 0x45444745_4c4f5453L;
     /** Intensity below which a chunk may become an edge lot (0011 §3). */
     static final float LOT_INTENSITY = 0.4f;
@@ -474,6 +476,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         String style = isCity && !could ? majorityStyle(x, z) : cities.cityStyleName(x, z);
         String building = candidateBuilding(x, z, pos, multi, style, random);
+        if (isCity && profile.densityRings > 0 && pos.isSingle() && predefined.buildingAtTopLeft(x, z) == null) {
+            building = ringBuilding(x, z, style, building);
+        }
         return new ChunkCharacteristics(
             x,
             z,
@@ -781,6 +786,55 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         return name;
     }
 
+    /** The chunk's ring distance (D-p2c-1): 0 at a city's center, 1 where the city ends. */
+    float ringDistance(int x, int z) {
+        return DensityRings.distance(cities.cityFactor(x, z), profile.cityThreshold);
+    }
+
+    /**
+     * Density rings (D-p2c-1): re-picks a single's building by class for its ring, and in the outer and edge rings
+     * swaps in one of the five originals. Draws from a random of its own, so the building stream is unchanged.
+     *
+     * @param picked the style's pick
+     * @return the building for the chunk
+     */
+    private String ringBuilding(int x, int z, String style, String picked) {
+        float strength = profile.densityRings;
+        DensityRings.Ring ring = DensityRings.Ring.of(ringDistance(x, z));
+        QualityRandom r = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ RING_SALT);
+        CityStyleView view = cityStyle(style);
+        String chosen = picked;
+        boolean accepted = false;
+        for (int attempt = 0; attempt < RING_ATTEMPTS && !accepted; attempt++) {
+            if (chosen != null
+                && r.nextFloat() < DensityRings.acceptance(DensityRings.classOf(chosen), ring, strength)) {
+                accepted = true;
+            } else if (view != null) {
+                String next = view.pick(Selection.BUILDINGS, r, x, z);
+                if (next != null && assets.building(next) != null) {
+                    chosen = next;
+                }
+            }
+        }
+        boolean swap = r.nextFloat() < DensityRings.originalChance(ring, strength) || !accepted;
+        int which = r.nextInt(DensityRings.ORIGINALS.length);
+        if (swap && ring.ordinal() >= DensityRings.Ring.INNER.ordinal()) {
+            String original = DensityRings.ORIGINALS[which];
+            if (assets.building(original) != null) {
+                return original;
+            }
+        }
+        return accepted ? chosen : picked;
+    }
+
+    /** Whether a multibuilding's class is accepted in the ring of its top-left chunk (D-p2c-1). */
+    private boolean ringAcceptsMulti(int x, int z, String multi) {
+        QualityRandom r = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ RING_SALT);
+        float chance = DensityRings
+            .acceptance(DensityRings.classOf(multi), DensityRings.Ring.of(ringDistance(x, z)), profile.densityRings);
+        return r.nextFloat() < chance;
+    }
+
     // ================================================================== plan
 
     private ChunkPlan computePlan(int x, int z) {
@@ -805,6 +859,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
                     break;
                 }
             }
+        }
+        if (has && profile.densityRings > 0
+            && topLeft == null
+            && c.multiPos.isMulti()
+            && predefined.occupant(x, z) == null) {
+            has = ringAcceptsMulti(x, z, c.multiBuilding);
         }
         b.isCity = c.isCity;
         b.hasBuilding = has;
@@ -837,8 +897,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      */
     private void drawLot(ChunkPlan.Builder b, int x, int z) {
         ChunkCharacteristics c = b.characteristics;
-        if (!c.isCity || profile.edgeLotChance <= 0
-            || b.intensity >= LOT_INTENSITY
+        boolean edgeLots = profile.edgeLotChance > 0 && b.intensity < LOT_INTENSITY;
+        float ringLot = profile.densityRings > 0 && c.isCity
+            ? DensityRings.lotChance(ringDistance(x, z), profile.densityRings)
+            : 0f;
+        if (!c.isCity || !edgeLots && ringLot <= 0
             || c.multiPos.isMulti()
             || predefined.occupant(x, z) != null
             || b.highwayXLevel >= 0
@@ -855,7 +918,10 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             return;
         }
         QualityRandom lots = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ LOT_SALT);
-        float chance = profile.edgeLotChance * (1f - b.intensity / LOT_INTENSITY) * (building ? 1f : OPEN_LOT_SHARE);
+        float chance = edgeLots
+            ? profile.edgeLotChance * (1f - b.intensity / LOT_INTENSITY) * (building ? 1f : OPEN_LOT_SHARE)
+            : 0f;
+        chance += ringLot * (building ? 1f : OPEN_LOT_SHARE);
         float roll = lots.nextFloat();
         float kindRoll = lots.nextFloat();
         float depthRoll = lots.nextFloat();
@@ -1003,6 +1069,11 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         int f = profile.buildingMinFloors + random.nextInt(bound) + 1;
         if (taper > 0) {
             f = taperFloors(f, intensity, taper, x, z);
+        }
+        if (profile.densityRings > 0 && c.isCity) {
+            // Density rings (D-p2c-1): the floors follow the curve over the ring distance.
+            int cap = DensityRings.floorCap(ringDistance(x, z), profile.buildingMaxFloors, profile.densityRings);
+            f = Math.max(DensityRings.floorLow(cap, profile.densityRings), Math.min(f, cap));
         }
         f = Math.min(f, maxFloors);
         f = Math.max(f, minFloors(b.settings, building));

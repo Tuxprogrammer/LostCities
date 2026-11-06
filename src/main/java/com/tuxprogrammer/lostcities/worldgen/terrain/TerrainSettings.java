@@ -81,6 +81,7 @@ public final class TerrainSettings {
     private final float cityTaper;
     private final float edgeLotChance;
     private final float packHouseChance;
+    private final float densityRings;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -149,6 +150,8 @@ public final class TerrainSettings {
         edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
         // 0 is the pre-pin world's value; new pins take the option's 0.25 (D282).
         packHouseChance = r.floatValue("packHouseChance", 0f, 0f, 1f);
+        // 0 is the pre-pin world's value (rings off); new pins take the option's 1.0 (D282, D-p2c-1).
+        densityRings = r.floatValue("densityRings", 0f, 0f, 2f);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -277,6 +280,7 @@ public final class TerrainSettings {
         out.put("cityTaper", text(cityTaper));
         out.put("edgeLotChance", text(edgeLotChance));
         out.put("packHouseChance", text(packHouseChance));
+        out.put("densityRings", text(densityRings));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -417,6 +421,11 @@ public final class TerrainSettings {
      */
     public float cityTaper() {
         return cityTaper;
+    }
+
+    /** Returns the strength of the density rings and building classes ({@code densityRings}); 0 is off. */
+    public float densityRings() {
+        return densityRings;
     }
 
     /** Returns the share of empty edge lots that hold a pack mod's village house ({@code packHouseChance}). */

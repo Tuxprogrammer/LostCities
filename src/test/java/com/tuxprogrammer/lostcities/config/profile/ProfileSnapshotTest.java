@@ -193,6 +193,39 @@ public class ProfileSnapshotTest {
     }
 
     @Test
+    public void aSnapshotWithoutDensityRingsGetsNoRings() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        ProfileSnapshot snapshot = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertEquals(
+            0f,
+            snapshot.terrainSettings()
+                .densityRings(),
+            0f);
+        assertEquals(
+            1f,
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                ProfileOptions.defaults(),
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "new").terrainSettings()
+                    .densityRings(),
+            0f);
+    }
+
+    @Test
     public void aSnapshotWithoutFloorPitchResolvesToTheLegacyPitch() {
         java.util.Map<String, String> old = new java.util.TreeMap<>();
         old.put("groundLevel", "71");
