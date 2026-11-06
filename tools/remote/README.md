@@ -46,6 +46,7 @@ The server-side scripts live in [server/](server/), laid out as they sit under `
 - `--level-type <type>` and `--seed <seed>`: apply only to a new world.
 - `--cmds '<cmd>; wait:<s>; until:<regex>'`: console commands sent once the server is up. `wait:` and `until:` are steps for the script, not commands. An `until:` waits for a console line written since the last command was sent, so several steps can wait for the same regex (`until:\[LCNH-SCENARIO\] Scenarios:` after each scenario).
 - `--jvm '<args>'`, `--timeout <s>`, `--run-timeout <s>`.
+- `--jvm=-Dlostcitiesnh.debugWool=true`: paints each terrain stage in a wool color, so a screenshot shows which stage wrote what; the color key is in [docs/testing/](../../docs/testing/README.md#debug-wool).
 - `--set-config '<file under config/>:<key>=<value>'` (repeatable): changes one config value for this run only and puts the file back when the run ends, however it ends. The overlay scenarios use it for ArchaicFix's `logCascadingWorldgen`, which the pack ships off.
 - `--view-distance <3-15>`: the server's `view-distance` for this run (the box's default is 6), put back when the run ends. The shot runner sets it to the capture's render distance.
 - `--instance <0-7>`: which copy of the pack server runs. 0, the default, is `realpack/server/` on port 25800; shot runs always use it. 1 to 7 are copies of it without its worlds, in `realpack/instances/<n>/server/` on port 25820+n, each with its own lock, so headless runs (scenarios, hashes, budgets) from several slots go in parallel. A copy is made on first use from `realpack/instances/template/`, which is itself copied once from the pack server while no instance-0 run holds its lock; an instance keeps its own worlds after that. To pick up a changed pack server, delete `instances/`. Give each parallel slot its own instance.
@@ -93,7 +94,9 @@ Use creative mode and a safe height. A survival teleport into the air falls. Van
 
 ## Shot lists
 
-Review screenshots, such as the alpha gate's set ([ROADMAP](../../docs/ROADMAP.md), M05), come from a shot list: a small committed JSON file under [shots/](shots/) naming a world and its viewpoints. One command takes them all, clean:
+Review screenshots, such as the alpha gate's set ([ROADMAP](../../docs/ROADMAP.md), M05), come from a shot list: a small committed JSON file under [shots/](shots/) naming a world and its viewpoints. For viewpoints on a chunk found with `/lostcities debug [<x> <z>]` or `/lostcities map [<x> <z>]` (block coordinates), see the example list [shots/chunk-query-example.json](shots/chunk-query-example.json).
+
+One command takes them all, clean:
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot m05s

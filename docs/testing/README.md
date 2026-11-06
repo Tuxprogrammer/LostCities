@@ -198,6 +198,26 @@ tools/remote/lc-remote.sh shots tools/remote/shots/alpha-rwg.json --slot <slot>
 
 The client runs with the mod's clean capture (`-Dlostcitiesnh.testHooks=true -Dlostcitiesnh.capture=true`, `client.CleanCapture`): no GUI, hand, chat, tutorial toast or pack overlays, and a `[LCNH-CAPTURE] settled` line once the chunks around a viewpoint have arrived and the build queue is empty; the runner waits for it, then screenshots until the picture holds still. The format, the runner's steps and its bounds are in [tools/remote/README.md](../../tools/remote/README.md#shot-lists). `CaptureSettingsTest` and `SettleTrackerTest` cover the capture's settings and its settle rule; the runner itself is proved by the demo set in the M05S report.
 
+## Debug wool
+
+`-Dlostcitiesnh.debugWool=true` (any run, no test hooks needed) paints every solid block the terrain phase writes in a wool color that names the stage that wrote it, so a screenshot shows which stage made a wall, a step or a stray block. Blocks no stage writes keep RWG's material. Colors come from `TerrainPhase.stage(<woolMeta>)`:
+
+| Wool | Stage |
+|---|---|
+| Pink | Chunk entry: the terrain blend and soft-edge strips on a non-city chunk, and a core chunk's village lane |
+| Orange | City chunk: high-water fill |
+| Cyan | City chunk: leveling the ground to its target heights |
+| Red | City chunk: room cut for a building |
+| Yellow | City chunk: street base and borders |
+| Lime | City chunk: the chunk's content (building or street) |
+| Magenta | City chunk: ruins, rubble, retaining walls and the finishing content (stuff columns) |
+| Purple | Scattered structure's ground, leveled and faded into RWG |
+| Gray | Non-city chunk content (a bridge span or similar) |
+| Green | Village lanes (grade, relax, lay) and the events after a non-city chunk |
+| White | Highways, railways and the rail dungeon, written last |
+
+On a remote run, pass it as `--jvm=-Dlostcitiesnh.debugWool=true` ([tools/remote/](../../tools/remote/README.md)). Treat the output as a debugging aid only: never leave it on for a world you keep.
+
 ## Dev client
 
 `./gradlew runClient --mcJvmArgs=-Dlostcitiesnh.quitAtMainMenu=true` boots the dev client; once the main menu has been open for 60 client ticks, the client logs `[LCNH-CLIENT] main menu reached`, saves a screenshot to `run/client/screenshots/` and closes itself. On the build server it runs under an Xvfb display from our range (`lc_xvfb`), through `bin/lc-build.sh` so the slot lock and build timeout apply.
