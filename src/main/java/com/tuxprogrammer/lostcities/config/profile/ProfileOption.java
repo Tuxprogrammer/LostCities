@@ -204,7 +204,11 @@ public final class ProfileOption {
                 // Plain decimal, as TerrainSettings writes its defaults: 0.0004, not 4.0E-4.
                 return TerrainSettings.text((float) clamped);
             case DOUBLE:
-                return Double.toString(clamped);
+                // Plain decimal when Java would use an exponent: 0.00025, not 2.5E-4.
+                String text = Double.toString(clamped);
+                return text.indexOf('E') < 0 ? text
+                    : new java.math.BigDecimal(text).stripTrailingZeros()
+                        .toPlainString();
             default:
                 throw new IllegalStateException(key + " is not a number option");
         }
