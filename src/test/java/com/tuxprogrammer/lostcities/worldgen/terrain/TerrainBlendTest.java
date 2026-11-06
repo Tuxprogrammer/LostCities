@@ -47,7 +47,9 @@ public class TerrainBlendTest {
         };
     }
 
-    /** A city east of X = 0 at ground 90; west of it the oracle says {@code natural} (a shore at 70, sea floor at 55). */
+    /**
+     * A city east of X = 0 at ground 90; west of it the oracle says {@code natural} (a shore at 70, sea floor at 55).
+     */
     private static CityPlan cityEastOfWithNatural(int natural) {
         return (cx, cz) -> {
             if (cx >= 0) {
