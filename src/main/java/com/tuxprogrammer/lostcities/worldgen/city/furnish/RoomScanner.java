@@ -107,16 +107,16 @@ public final class RoomScanner {
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
                 int i = (z << 4) | x;
-                boolean open = view.get(x, y, z)
-                    .isAir()
-                    && view.get(x, y + 1, z)
-                        .isAir();
+                // Each of the four levels is read once; reads are pure, so this is the same floor as reading them
+                // per test, at four block reads a column instead of up to seven.
+                BlockRef under = view.get(x, y - 2, z);
                 BlockRef below = view.get(x, y - 1, z);
+                BlockRef at = view.get(x, y, z);
+                BlockRef above = view.get(x, y + 1, z);
+                boolean open = at.isAir() && above.isAir();
                 cell[i] = open && !below.isAir() && !isLiquid(below);
                 hole[i] = open && below.isAir();
-                for (int dy = -2; dy <= 1 && !passage[i]; dy++) {
-                    passage[i] = isPassage(view.get(x, y + dy, z));
-                }
+                passage[i] = isPassage(under) || isPassage(below) || isPassage(at) || isPassage(above);
                 floor.room[i] = NO_ROOM;
                 floor.wall[i] = -1;
             }
@@ -208,13 +208,14 @@ public final class RoomScanner {
         if (block.isAir()) {
             return false;
         }
+        // Matches the name after the mod ID in place: the scan calls this for most blocks of every floor, so it
+        // allocates nothing.
         String name = block.name();
-        int colon = name.indexOf(':');
-        String path = colon < 0 ? name : name.substring(colon + 1);
-        return path.contains("door") || path.contains("stairs")
-            || path.contains("ladder")
-            || path.contains("rail")
-            || path.contains("gate");
+        int from = name.indexOf(':') + 1;
+        return name.indexOf("door", from) >= 0 || name.indexOf("stairs", from) >= 0
+            || name.indexOf("ladder", from) >= 0
+            || name.indexOf("rail", from) >= 0
+            || name.indexOf("gate", from) >= 0;
     }
 
     private static boolean isLiquid(BlockRef block) {

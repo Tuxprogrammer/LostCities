@@ -40,6 +40,8 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     private static final boolean DEBUG_WOOL = Boolean.getBoolean("lostcitiesnh.debugWool");
     /** The debug wool's color; the terrain phase sets it per stage so a screenshot shows which stage built what. */
     public static volatile int debugWoolMeta = 1;
+    /** Slots of the written-block cache; a power of two. */
+    private static final int WRITABLE_SLOTS = 64;
 
     private final BlockRefs refs;
     private Chunk chunk;
@@ -55,6 +57,10 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     private Block lastWrittenBlock;
     private Block standIn;
     private final BlockRef[] machineRefs = new BlockRef[16];
+    // What each recently written reference writes, direct-mapped by identity (D-perf-1): a building alternates a
+    // handful of blocks, and the registry and opacity lookups behind writable() were a twentieth of the terrain phase.
+    private final BlockRef[] writableKeys = new BlockRef[WRITABLE_SLOTS];
+    private final Block[] writableBlocks = new Block[WRITABLE_SLOTS];
     private final Set<String> dropped = new HashSet<>();
 
     /**
@@ -138,7 +144,7 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             topY = (y & ~15) + 15;
         }
         if (block != lastWrittenRef) {
-            lastWrittenBlock = writable(block);
+            lastWrittenBlock = cachedWritable(block);
             lastWrittenRef = block;
         }
         Block written = lastWrittenBlock;
@@ -182,6 +188,27 @@ public final class WorldChunkBuffer implements ChunkBuffer {
      * @return the block to write, or {@code null} to write nothing
      */
     Block writable(BlockRef ref) {
+        return cachedWritable(ref);
+    }
+
+    /**
+     * {@link #writable} through a small direct-mapped cache keyed by the reference's identity. The answer for a
+     * reference never changes in a world, so the cache changes no block written; it is bounded and belongs to this
+     * buffer, which belongs to the world. A slot holding {@code null} for a block not written is told apart from an
+     * empty slot by its key.
+     */
+    private Block cachedWritable(BlockRef ref) {
+        int slot = System.identityHashCode(ref) & (WRITABLE_SLOTS - 1);
+        if (writableKeys[slot] == ref) {
+            return writableBlocks[slot];
+        }
+        Block out = resolveWritable(ref);
+        writableKeys[slot] = ref;
+        writableBlocks[slot] = out;
+        return out;
+    }
+
+    private Block resolveWritable(BlockRef ref) {
         Block block = refs.block(ref);
         Block out = TerrainStandIns.terrainBlock(block, ref.name(), standIn());
         if (out == null && dropped.add(ref.name())) {
