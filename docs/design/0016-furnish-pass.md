@@ -1,6 +1,6 @@
 # 0016 · Furnish pass: sparse room furniture and GT machines as set dressing
 
-- Status: Proposed (city-realism phase 6b; decision log D-p6b-1 to D-p6b-6). Implementation pending, see `handoff/lane-p6b-furnish.md`.
+- Status: Accepted (city-realism phase 6b; decision log D-p6b-1 to D-p6b-10). Built as described: `worldgen/city/furnish/` (`RoomScanner`, `FurnishPass`, `FurnishPalette(s)`, `RoomKind`), palettes in `data/lostcitiesnh/furnish/` (D-p6b-7), tile entities and GT MetaTileEntities completed by a `FURNISH` population job (D-p6b-8, D-p6b-9); no partial multiblocks yet (D-p6b-10).
 - Gate: beta
 - Amends: building interiors of [docs/original-spec](../original-spec/README.md) (upstream writes no furniture beyond what parts draw)
 - Date: 2026-11-06
