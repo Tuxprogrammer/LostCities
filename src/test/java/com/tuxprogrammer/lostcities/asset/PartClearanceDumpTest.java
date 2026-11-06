@@ -191,6 +191,7 @@ public class PartClearanceDumpTest {
         String fillers = "";
         String ceilingShare = "";
         String repeatRow = "none";
+        String nearRow = "";
         int stairCount;
         int ladderCount;
         String k90 = "-";
@@ -318,6 +319,7 @@ public class PartClearanceDumpTest {
         StringBuilder csv = new StringBuilder(
             "part,height,role,floor_cellar_buildings,cellar_capable_buildings,top_buildings,overlay_buildings,walkable,"
                 + "clear_min,clear_median,clear_max,pct_under_4,top3_fillers,share_fillers_in_top3_rows,repeat_row_y,"
+                + "near_row_fixtures,"
                 + "stair_blocks,ladder_blocks,stretch_rows_for_90pct,stretch_rows_for_100pct,notes,buildings\n");
         for (Row r : rows.values()) {
             csv.append(
@@ -338,6 +340,7 @@ public class PartClearanceDumpTest {
                     q(r.fillers),
                     q(r.ceilingShare),
                     r.repeatRow,
+                    q(r.nearRow),
                     "" + r.stairCount,
                     "" + r.ladderCount,
                     r.k90,
@@ -346,7 +349,10 @@ public class PartClearanceDumpTest {
                     q(String.join(" ", r.buildings))))
                 .append('\n');
         }
-        Files.write(OUT.resolve("clearance.csv"), csv.toString().getBytes(StandardCharsets.UTF_8));
+        Files.write(
+            OUT.resolve("clearance.csv"),
+            csv.toString()
+                .getBytes(StandardCharsets.UTF_8));
 
         int floorParts = 0;
         int noWalk = 0;
@@ -382,11 +388,32 @@ public class PartClearanceDumpTest {
             k90Hist.merge(r.kNeed90, 1, Integer::sum);
             k100Hist.merge(r.kNeed100, 1, Integer::sum);
         }
-        String md = "floorParts=" + floorParts + "\nnoWalkable=" + noWalk + "\nheightHistogram=" + heights
-            + "\nmedianClearHistogram=" + medians + "\nmedianUnder4=" + medianUnder4 + "\nanyColumnUnder4=" + anyUnder4
-            + "\ncapacityUnder4(height-1<4)=" + capUnder4 + "\nwithRepeatRow=" + withRow + "\nwithStairs=" + withStairs
-            + "\nwithLadders=" + withLadder + "\nwithStairsOrLadders=" + withEither
-            + "\nrowsFor90pct(-1=none)=" + k90Hist + "\nrowsFor100pct(-1=none)=" + k100Hist + "\n";
+        String md = "floorParts=" + floorParts
+            + "\nnoWalkable="
+            + noWalk
+            + "\nheightHistogram="
+            + heights
+            + "\nmedianClearHistogram="
+            + medians
+            + "\nmedianUnder4="
+            + medianUnder4
+            + "\nanyColumnUnder4="
+            + anyUnder4
+            + "\ncapacityUnder4(height-1<4)="
+            + capUnder4
+            + "\nwithRepeatRow="
+            + withRow
+            + "\nwithStairs="
+            + withStairs
+            + "\nwithLadders="
+            + withLadder
+            + "\nwithStairsOrLadders="
+            + withEither
+            + "\nrowsFor90pct(-1=none)="
+            + k90Hist
+            + "\nrowsFor100pct(-1=none)="
+            + k100Hist
+            + "\n";
         Files.write(OUT.resolve("summary-data.md"), md.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -542,6 +569,46 @@ public class PartClearanceDumpTest {
             if (ok && clearCols * 2 >= walkable && clearCols > bestClear) {
                 bestClear = clearCols;
                 bestY = y;
+            }
+        }
+        if (bestY <= 0) {
+            int bestFix = Integer.MAX_VALUE;
+            int nearY = -1;
+            Map<String, Integer> nearNames = new TreeMap<>();
+            for (int y = 1; y < h; y++) {
+                int clearCols = 0;
+                int fix = 0;
+                Map<String, Integer> names = new TreeMap<>();
+                for (int x = 0; x < xs; x++) {
+                    for (int z = 0; z < zs; z++) {
+                        Cell c = map.get(grid[x][z][y]);
+                        if (c.air) {
+                            clearCols += walk[x][z] ? 1 : 0;
+                        } else if (c.fixture || c.clear) {
+                            fix++;
+                            names.merge(c.name, 1, Integer::sum);
+                        }
+                    }
+                }
+                if (clearCols * 2 >= walkable && fix < bestFix) {
+                    bestFix = fix;
+                    nearY = y;
+                    nearNames = names;
+                }
+            }
+            if (nearY > 0) {
+                StringBuilder nb = new StringBuilder("y" + nearY + " " + bestFix + " fixture blocks:");
+                int shown = 0;
+                for (Map.Entry<String, Integer> e : sortByValue(nearNames).entrySet()) {
+                    if (shown++ < 3) {
+                        nb.append(' ')
+                            .append(e.getKey())
+                            .append(" x")
+                            .append(e.getValue())
+                            .append(';');
+                    }
+                }
+                r.nearRow = nb.toString();
             }
         }
         if (bestY > 0) {
