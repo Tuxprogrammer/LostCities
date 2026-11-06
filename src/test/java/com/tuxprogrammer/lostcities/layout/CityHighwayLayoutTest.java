@@ -28,6 +28,9 @@ public class CityHighwayLayoutTest {
 
     private static final int CELLS = 3;
 
+    /** A landmark column no test chunk reaches. */
+    private static final int NO_LANDMARK = Integer.MIN_VALUE;
+
     private static LayoutPlanner planner(long seed, CityHighwayLayout layout) {
         LayoutProfile profile = LayoutProfile.builder()
             .cityChance(0.00025)
@@ -175,12 +178,12 @@ public class CityHighwayLayoutTest {
 
     @Test
     public void citiesWithoutTheRoomNeverGetABeltway() {
-        CityHighways.Cities full = cities(256, -1);
+        CityHighways.Cities full = cities(256, NO_LANDMARK);
         assertEquals(CityHighways.Kind.BELTWAY, new CityHighways(1L, CityHighwayLayout.BELTWAY, null, full).plan(0, 0)
             .kind());
         // Small: the ring's corners would leave no city outside.
         assertNotEquals(CityHighways.Kind.BELTWAY,
-            new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(150, -1)).plan(0, 0)
+            new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(150, NO_LANDMARK)).plan(0, 0)
                 .kind());
         // Tapered around a landmark (a village core five chunks off the center).
         assertNotEquals(CityHighways.Kind.BELTWAY,
@@ -286,11 +289,11 @@ public class CityHighwayLayoutTest {
     /** The ring list helper's size, a sanity check of the closed square. */
     @Test
     public void aRingHasEightTimesHalfChunks() {
-        CityHighways.Plan p = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, -1)).plan(0, 0);
+        CityHighways.Plan p = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, NO_LANDMARK)).plan(0, 0);
         assertEquals(8 * p.half(), p.pieces()
             .size());
         assertEquals(3, p.level(), "one level above the highest city level under it");
-        List<HighwayInfo.Piece> corner = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, -1))
+        List<HighwayInfo.Piece> corner = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, NO_LANDMARK))
             .pieces(p.half(), p.half());
         assertEquals(1, corner.size());
     }

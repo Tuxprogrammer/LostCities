@@ -508,6 +508,11 @@ public final class CityHighways {
                         steps.add(route.get(k + 1)[0] - c[0]);
                         steps.add(route.get(k + 1)[1] - c[1]);
                     }
+                    if (steps.size() == 2) {
+                        // An end runs straight on out to its link's plaza piece, which merges with it.
+                        steps.add(-steps.get(0));
+                        steps.add(-steps.get(1));
+                    }
                     int[] array = new int[steps.size()];
                     for (int s = 0; s < array.length; s++) {
                         array[s] = steps.get(s);
