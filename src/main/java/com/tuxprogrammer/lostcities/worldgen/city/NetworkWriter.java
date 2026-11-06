@@ -20,6 +20,7 @@ import com.tuxprogrammer.lostcities.layout.Networks;
 import com.tuxprogrammer.lostcities.layout.highway.Axis;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
 import com.tuxprogrammer.lostcities.layout.link.LinkGeometry;
+import com.tuxprogrammer.lostcities.layout.link.LinkRailGeometry;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
@@ -75,6 +76,8 @@ public final class NetworkWriter {
     static final int RAMP_HALF_STEPS = 2 * ChunkPlan.FLOOR_HEIGHT;
     /** The half slab on a ramp's half steps: smooth stone, bottom half. */
     static final BlockRef RAMP_SLAB = BlockRef.of("minecraft:stone_slab", 0);
+    /** Powers a link line's mid-arm powered rail (0015 §3). */
+    static final BlockRef REDSTONE_BLOCK = BlockRef.of("minecraft:redstone_block", 0);
     /** The rows of a three-track part's tracks, part-local Z. */
     static final int TRACK_SOUTH = 9;
     static final int TRACK_MIDDLE = 7;
@@ -637,6 +640,10 @@ public final class NetworkWriter {
         }
         int height = context.settings()
             .cityGround(rail.level());
+        if (rail.coded()) {
+            linkRail(rail, height);
+            return;
+        }
         Transform transform = Transform.ROTATE_NONE;
         boolean staircase = false;
         boolean clearUpper = false;
@@ -716,6 +723,53 @@ public final class NetworkWriter {
         }
         if (staircase) {
             staircase(rail);
+        }
+    }
+
+    /**
+     * Writes a link-network line in code (0015 §3): every tunnel column copies the slot's first
+     * {@code railshorizontal} part's cross-section (its interior row 4 inside, its wall row 3 for walls), turned to
+     * run along Z on north and south arms; then the track, one vanilla rail per column shaped to join its neighbors,
+     * with a powered rail over a redstone block mid-arm. Writes only this chunk.
+     */
+    private void linkRail(RailChunk rail, int height) {
+        List<Part> parts = worldStyle.parts("railways", "railshorizontal");
+        if (parts == null || parts.isEmpty()) {
+            return;
+        }
+        Part part = parts.get(0);
+        PartWriter.Placement placement = placement(part, Transform.ROTATE_NONE, height, HardAir.AIR);
+        int sides = rail.openings();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int role = LinkRailGeometry.role(sides, x, z);
+                if (role == LinkRailGeometry.NONE) {
+                    continue;
+                }
+                int along = LinkRailGeometry.alongZ(x, z) ? z : x;
+                writer.placeColumn(placement, along, role == LinkRailGeometry.WALL ? 3 : 4, x, z, 0);
+            }
+        }
+        if (target.dryRun()) {
+            return;
+        }
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int shape = LinkRailGeometry.shape(sides, x, z);
+                if (shape < 0) {
+                    continue;
+                }
+                if (LinkRailGeometry.powered(sides, x, z)) {
+                    target.set(x, height, z, REDSTONE_BLOCK);
+                    target.set(x, height + 1, z, BlockRef.of("minecraft:golden_rail", shape | 8));
+                } else {
+                    target.set(x, height + 1, z, BlockRef.of("minecraft:rail", shape));
+                }
+            }
+        }
+        BlockRef railMain = railMain(rail);
+        if (railMain != null && rail.type() == RailChunkType.HORIZONTAL) {
+            dungeonTunnels(height, railMain);
         }
     }
 

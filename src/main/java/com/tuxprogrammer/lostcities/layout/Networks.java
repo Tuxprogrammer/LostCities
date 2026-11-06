@@ -151,13 +151,6 @@ public final class Networks implements InfrastructureView {
                 return Math.min(lowest, planner.terrain.height(chunkX, chunkZ + 1));
             }
         };
-        this.subways = settings.subways();
-        this.railways = new RailwayLayout(
-            planner.seed,
-            settings.railways(),
-            inputs,
-            planner.profile.groundLevel,
-            planner.worldStyle.railPartHeight6());
         final CityGrid grid = cities.grid();
         if (settings.links() && grid != null) {
             // centerYieldsCity reads characteristics(...).isCity, which never reads the infrastructure view, so the
@@ -215,6 +208,14 @@ public final class Networks implements InfrastructureView {
             this.links = null;
             this.linkHighways = null;
         }
+        this.subways = settings.subways();
+        this.railways = new RailwayLayout(
+            planner.seed,
+            settings.railways(),
+            inputs,
+            planner.profile.groundLevel,
+            planner.worldStyle.railPartHeight6(),
+            links);
     }
 
     /**

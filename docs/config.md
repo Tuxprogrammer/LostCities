@@ -105,7 +105,7 @@ Ten profiles ship in the jar. Each is the defaults (`default`) with a few option
 |---|---|---|
 | `default` | Common cities, explosions | Nothing |
 | `nodamage` | No explosion damage, no ruins, no rubble | `explosionChance` 0, `miniExplosionChance` 0, `ruinChance` 0, `rubbleLayer` false |
-| `rarecities` | Cities are rare and large | `cityPlacement` grid (64-chunk cells, jitter 16), `cityChance` 0.00025 (about twice the distance between cities), `cityMinRadius` 100, `cityMaxRadius` 256 (about four times the area), `ruinChance` 0, `railwaysCanEnd` true |
+| `rarecities` | Cities are rare and large | `cityPlacement` grid (64-chunk cells, jitter 16), `cityChance` 0.00025 (about twice the distance between cities), `cityMinRadius` 100, `cityMaxRadius` 256 (about four times the area), `ruinChance` 0, `railwaysCanEnd` false, `networkLayout` links |
 | `onlycities` | The world is nearly all city | `cityChance` 0.2, `cityMaxRadius` 256 |
 | `tallbuildings` | Very tall buildings, heavier damage | `buildingMinFloors` 4, `buildingMaxFloors` 19, `buildingMinFloorsChance` 8, `buildingMaxFloorsChance` 15, `explosionChance` 0.006, `explosionMinHeight` 130, `explosionMaxHeight` 255, `explosionMaxRadius` 60, `miniExplosionChance` 0.09, `miniExplosionMinRadius` 3, `miniExplosionMaxRadius` 14, `miniExplosionMaxHeight` 255, `debrisToNearbyChunkFactor` 175, `ruinChance` 0.01 |
 | `safe` | No spawners, lighting, no loot | `generateSpawners` false, `generateLighting` true, `generateLoot` false |
@@ -234,7 +234,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `multiBuildingStreetConflict` | `OVERRIDE_MINOR` | BLOCK_ALL, OVERRIDE_MINOR, OVERRIDE_ALL | live | How random multibuildings meet planned roads: `BLOCK_ALL` lets any planned road block them, `OVERRIDE_MINOR` only primary roads, `OVERRIDE_ALL` none. Ignored by legacy streets |
 | `railwayDungeonChance` | `0.01` | 0 to 1 | live | Chance a chunk next to a railway holds a railway dungeon |
 | `railwaysCanEnd` | `false` |  | live | A station spot without a city above gets an end part when one side has no connection |
-| `networkLayout` | `legacy` | legacy, links | deferred | The highway and railway network. `legacy`: the M06 network. `links`: needs `cityPlacement` grid; each city links to its 3 nearest within 160 chunks and every network chunk lies on a link between two cities ([0015](design/0015-city-link-network.md)). The graph and routing exist; the writer does not read it yet |
+| `networkLayout` | `legacy` | legacy, links | live | The highway and railway network. `legacy`: the M06 network. `links`: needs `cityPlacement` grid; each city links to its 3 nearest within 160 chunks and every network chunk lies on a link between two cities ([0015](design/0015-city-link-network.md)). Highways follow the links; railways run one underground line per link from city-center station to city-center station and never dead-end. `rarecities` uses `links` |
 | `railwaysEnabled` | `true` |  | live | Railways on or off (stations still generate when off) |
 | `railwayStationsEnabled` | `true` |  | live | Railway stations on or off |
 | `railwaySurfaceStationsEnabled` | `true` |  | live | Surface stations allowed; otherwise underground only |

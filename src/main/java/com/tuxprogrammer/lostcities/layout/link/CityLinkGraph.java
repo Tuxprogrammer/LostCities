@@ -186,6 +186,11 @@ public final class CityLinkGraph {
         this.cellIndex = new Lru<>(Math.max(16, size / 8));
     }
 
+    /** Returns the grid cell size, in chunks. */
+    public int cell() {
+        return cell;
+    }
+
     /** Returns how many cells around a cell its links' ends may lie in. */
     public int reach() {
         return reach;

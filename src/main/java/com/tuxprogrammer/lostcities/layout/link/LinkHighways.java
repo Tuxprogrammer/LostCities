@@ -338,12 +338,35 @@ public final class LinkHighways {
         if (cached != null) {
             return cached;
         }
-        Profile profile = compute(link, ends);
+        // A ramp never shares its chunk with another link (0015 §5, D-p4b-15): decided from the paths alone, so it
+        // does not depend on the other links' levels.
+        Profile profile = compute(link, ends, (x, z) -> shared(link, x, z));
         profiles.put(link, profile);
         return profile;
     }
 
+    /** Whether another link's path crosses a chunk of this link's path. */
+    private boolean shared(CityLinkGraph.Link link, int x, int z) {
+        for (CityLinkGraph.Hit hit : graph.hits(x, z)) {
+            if (!hit.link()
+                .equals(link)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Answers whether a chunk of a link's path is shared with another link. */
+    interface Shared {
+
+        boolean shared(int chunkX, int chunkZ);
+    }
+
     static Profile compute(CityLinkGraph.Link link, Ends ends) {
+        return compute(link, ends, (x, z) -> false);
+    }
+
+    static Profile compute(CityLinkGraph.Link link, Ends ends, Shared shared) {
         List<LinkRaster.Step> path = link.path();
         int n = path.size();
         int ra = ends.radius(link.ax(), link.az());
@@ -359,8 +382,8 @@ public final class LinkHighways {
         if (start > end) {
             return new Profile(start, end, new int[n], new int[n], false);
         }
-        Profile diagonal = levels(link, ends, start, end, false);
-        return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true) : diagonal;
+        Profile diagonal = levels(link, ends, start, end, false, shared);
+        return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared) : diagonal;
     }
 
     /**
@@ -393,7 +416,8 @@ public final class LinkHighways {
      * Places a link's ramps (class Javadoc). On the staircase the 45° chunks become flat bends, so only straight chunks
      * ramp.
      */
-    private static Profile levels(CityLinkGraph.Link link, Ends ends, int start, int end, boolean staircase) {
+    private static Profile levels(CityLinkGraph.Link link, Ends ends, int start, int end, boolean staircase,
+        Shared shared) {
         List<LinkRaster.Step> path = link.path();
         int n = path.size();
         int[] in = new int[n];
@@ -405,7 +429,9 @@ public final class LinkHighways {
         for (int i = start + 1; i < end; i++) {
             LinkRaster.Kind kind = path.get(i)
                 .kind();
-            if (kind == LinkRaster.Kind.STRAIGHT || kind == LinkRaster.Kind.DIAGONAL && !staircase) {
+            LinkRaster.Step at = path.get(i);
+            if ((kind == LinkRaster.Kind.STRAIGHT || kind == LinkRaster.Kind.DIAGONAL && !staircase)
+                && !shared.shared(at.chunkX(), at.chunkZ())) {
                 candidates.add(i);
             }
         }
