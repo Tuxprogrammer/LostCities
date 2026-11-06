@@ -237,7 +237,7 @@ public class FurnishPassTest {
         assertEquals(RoomKind.SHOP, RoomKind.byId("shop"));
     }
 
-    /** A passage is told by the name after the mod ID only (the in-place match of D-perf-1). */
+    /** A passage is told by the name after the mod ID only (the in-place match of D381). */
     @Test
     void passagesMatchTheNameAfterTheModId() {
         assertTrue(RoomScanner.isPassage(DOOR));

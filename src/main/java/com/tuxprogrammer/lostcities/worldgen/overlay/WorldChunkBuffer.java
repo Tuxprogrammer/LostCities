@@ -57,7 +57,7 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     private Block lastWrittenBlock;
     private Block standIn;
     private final BlockRef[] machineRefs = new BlockRef[16];
-    // What each recently written reference writes, direct-mapped by identity (D-perf-1): a building alternates a
+    // What each recently written reference writes, direct-mapped by identity (D381): a building alternates a
     // handful of blocks, and the registry and opacity lookups behind writable() were a twentieth of the terrain phase.
     private final BlockRef[] writableKeys = new BlockRef[WRITABLE_SLOTS];
     private final Block[] writableBlocks = new Block[WRITABLE_SLOTS];
