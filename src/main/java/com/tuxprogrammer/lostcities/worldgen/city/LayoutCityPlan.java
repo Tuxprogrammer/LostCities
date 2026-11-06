@@ -319,6 +319,7 @@ public final class LayoutCityPlan implements CityPlan {
             .label(label(plan));
         if (plan.hasBuilding()) {
             builder.building(plan.floors(), plan.cellars());
+            builder.floorPitch(plan.floorPitch());
             if (plan.ruinHeight() >= 0) {
                 builder.ruinHeight(plan.ruinHeight());
             }
@@ -422,7 +423,7 @@ public final class LayoutCityPlan implements CityPlan {
                     .biomeOfChunk(chunkX, chunkZ),
                 plan.noLoot(),
                 settings.generateLoot(),
-                settings.chestWithoutLootChance()));
+                settings.chestWithoutLootChance()).withFloorPitch(plan.floorPitch()));
         new NetworkWriter(
             context,
             chunkX,
@@ -483,7 +484,8 @@ public final class LayoutCityPlan implements CityPlan {
                 plan.noLoot(),
                 settings.generateLoot(),
                 settings.chestWithoutLootChance())
-                    .withOptions(settings.vanillaLootCategories(), settings.enderZooHardMobs()));
+                    .withOptions(settings.vanillaLootCategories(), settings.enderZooHardMobs())
+                    .withFloorPitch(plan.floorPitch()));
         CityChunkWriter writer = new CityChunkWriter(
             context,
             chunkX,

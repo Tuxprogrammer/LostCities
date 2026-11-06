@@ -76,6 +76,8 @@ public final class Part {
     private final Palette palette;
     private final Map<String, Object> meta;
     private final char[][] columns;
+    /** Stretched copies by {@code extra * 256 + row}, made on first use (design record 0014). */
+    private final java.util.concurrent.ConcurrentHashMap<Integer, Part> stretched = new java.util.concurrent.ConcurrentHashMap<>();
 
     private Part(AssetId id, int xsize, int zsize, List<String> slices, Palette palette, Map<String, Object> meta) {
         this.id = id;
@@ -178,6 +180,24 @@ public final class Part {
     /** Returns the id an inline palette of an asset gets, upstream's {@code __local__} name. */
     static AssetId local(AssetId owner) {
         return AssetId.of(owner.namespace(), owner.path() + "/__local__");
+    }
+
+    /**
+     * Returns this part stretched to a taller floor pitch: row {@code row} written {@code extra} more times, with
+     * diagonal stair runs across it re-laid ({@link FloorStretch}). Copies are memoized, so the cost is paid once per
+     * part, row and extra; the original stays the part every pitch-6 world places.
+     *
+     * @param extra how many rows to add; 0 or less returns this part
+     * @param row   the repeat row, usually {@link FloorStretch#repeatRow(Part)} of the floor's main part
+     * @return the stretched part, with the same id, palette and metadata
+     */
+    public Part stretched(int extra, int row) {
+        if (extra <= 0 || row < 0 || row >= height()) {
+            return this;
+        }
+        return stretched.computeIfAbsent(
+            extra * 256 + row,
+            key -> new Part(id, xsize, zsize, FloorStretch.stretch(slices, xsize, zsize, extra, row), palette, meta));
     }
 
     /** Returns the id. */

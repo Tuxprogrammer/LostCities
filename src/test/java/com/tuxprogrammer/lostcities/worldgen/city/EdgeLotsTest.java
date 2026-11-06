@@ -120,7 +120,7 @@ public class EdgeLotsTest {
             }
             assertTrue(open > 40, "pit of lot " + c[0] + "," + c[1] + " depth " + depth + ": " + open + " open");
             if (plan.lot() == LotKind.FOUNDATION) {
-                int top = ground + plan.lotColumnFloors() * com.tuxprogrammer.lostcities.layout.ChunkPlan.FLOOR_HEIGHT
+                int top = ground + plan.lotColumnFloors() * com.tuxprogrammer.lostcities.layout.ChunkPlan.LEVEL_HEIGHT
                     - 1;
                 int[] grid = depth >= 4 ? EdgeLots.DEEP_COLUMNS : EdgeLots.SHALLOW_COLUMNS;
                 BlockRef column = buffer.get(grid[0], top, grid[0]);

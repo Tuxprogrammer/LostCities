@@ -130,6 +130,16 @@ public final class ProfileOption {
         return type;
     }
 
+    /**
+     * Returns the legacy default: the value a pinned snapshot without this key resolves to, while new pins take
+     * {@link #defaultValue()} (design record 0014).
+     *
+     * @return the legacy value as canonical text, or null when the option has none
+     */
+    public String legacyDefault() {
+        return ProfileOptions.legacyDefault(key);
+    }
+
     /** Returns the default as canonical text. */
     public String defaultValue() {
         return defaultValue;

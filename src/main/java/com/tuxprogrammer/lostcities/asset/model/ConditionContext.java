@@ -24,8 +24,14 @@ import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
  */
 public final class ConditionContext {
 
-    /** Blocks per floor (upstream's {@code FLOORHEIGHT}; docs/original-spec/05-assets/index.md, "Heights"). */
+    /**
+     * Blocks per floor at upstream's pitch ({@code FLOORHEIGHT}; docs/original-spec/05-assets/index.md, "Heights"), the
+     * legacy floor pitch; a world's own pitch may be taller (0014).
+     */
     public static final int FLOOR_HEIGHT = 6;
+
+    /** Blocks per city level, which the {@code level} condition counts in, whatever the floor pitch (0014). */
+    public static final int LEVEL_HEIGHT = 6;
 
     private final int level;
     private final int floor;
@@ -67,7 +73,20 @@ public final class ConditionContext {
      * @return the floor
      */
     public static int floorOf(int y, int groundLevel) {
-        return Math.floorDiv(y - groundLevel, FLOOR_HEIGHT);
+        return floorOf(y, groundLevel, FLOOR_HEIGHT);
+    }
+
+    /**
+     * Returns the floor a block is on at a floor pitch (0014): 0 for the {@code pitch} blocks from the ground up, −1 for
+     * the {@code pitch} below, and so on.
+     *
+     * @param y           the block's Y
+     * @param groundLevel the Y of the ground floor's lowest block
+     * @param pitch       blocks per floor
+     * @return the floor
+     */
+    public static int floorOf(int y, int groundLevel, int pitch) {
+        return Math.floorDiv(y - groundLevel, pitch);
     }
 
     /** Returns the level (stored for completeness; no test reads it, as upstream). */

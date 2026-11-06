@@ -17,6 +17,7 @@ import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.block.BlockChoice;
 import com.tuxprogrammer.lostcities.asset.model.Building;
 import com.tuxprogrammer.lostcities.asset.model.CityStyle;
+import com.tuxprogrammer.lostcities.asset.model.FloorStretch;
 import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.asset.palette.CompiledPalette;
 import com.tuxprogrammer.lostcities.asset.transform.Transform;
@@ -203,24 +204,32 @@ public final class CityChunkWriter {
         Building building = buildingId == null ? null : assets.building(buildingId);
         List<PartWriter.Placement> overlays = new ArrayList<>();
         int height = lowest;
+        int extra = plan.floorPitch() - ChunkPlan.LEVEL_HEIGHT;
         for (int f = -cellars; f <= floors; f++) {
             if (f == floors) {
                 target.clearToMax(height);
             }
             Part part = part(plan.floorPart(f));
+            Part overlay = part(plan.floorPart2(f));
+            if (f < floors && extra > 0 && part != null && part.height() == ChunkPlan.LEVEL_HEIGHT) {
+                // Floors and cellars stretch to the world's pitch; the roof does not (design record 0014). The
+                // overlay repeats the main part's row so the two stay aligned.
+                int row = FloorStretch.repeatRow(part);
+                part = part.stretched(extra, row);
+                overlay = overlay == null ? null : overlay.stretched(extra, row);
+            }
             if (part != null) {
                 // Floors below the roof take the interior characters of the palette variety (AR-3, D25).
                 writer.place(
                     placement(part, Transform.ROTATE_NONE, height, HardAir.AIR, buildingId).interior(f < floors));
             }
-            Part overlay = part(plan.floorPart2(f));
             if (overlay != null) {
                 overlays.add(placement(overlay, Transform.ROTATE_NONE, height, HardAir.AIR, buildingId));
             }
             if (f < floors && (building == null || building.allowDoors())) {
                 doors(height + 1, f, building);
             }
-            height += ChunkPlan.FLOOR_HEIGHT;
+            height += plan.floorPitch();
         }
         if (cellars > 0 && building != null && building.allowFillers()) {
             cellarFillers(lowest, building.filler());

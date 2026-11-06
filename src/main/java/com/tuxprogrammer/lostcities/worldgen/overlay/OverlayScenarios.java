@@ -351,8 +351,8 @@ public final class OverlayScenarios {
         private static int[] lights(WorldServer world, int chunkX, int chunkZ, ChunkPlan plan) {
             int total = 0;
             int lit = 0;
-            for (int level = plan.groundY(); level < plan.maxHeight(); level += WorldLimits.FLOOR_HEIGHT) {
-                int y = level + WorldLimits.FLOOR_HEIGHT - 1;
+            for (int level = plan.groundY(); level < plan.maxHeight(); level += plan.floorPitch()) {
+                int y = level + plan.floorPitch() - 1;
                 int x = (chunkX << 4) + 7;
                 int z = (chunkZ << 4) + 7;
                 if (y > WorldLimits.MAX_Y || world.getBlock(x, y, z) != Blocks.glowstone

@@ -490,7 +490,7 @@ public final class CityScenarios {
             int baseX = chunkX << 4;
             int baseZ = chunkZ << 4;
             for (int f = -plan.cellars(); f < plan.floors(); f++) {
-                int y = bottom + ChunkPlan.FLOOR_HEIGHT * (f + plan.cellars());
+                int y = bottom + plan.floorPitch() * (f + plan.cellars());
                 String where = plan.building() + "@" + (baseX + 8) + "," + y + "," + (baseZ + 8) + "/f" + f;
                 floors.add(floorShare(baseX, y, baseZ) >= FLOOR_SOLID_SHARE, where);
                 walls.add(wallShare(plan, chunkX, chunkZ, f, y) >= WALL_CLOSED_SHARE, where);
@@ -578,7 +578,7 @@ public final class CityScenarios {
 
         /** Whether stairs or a ladder rise from a floor toward the next within one chunk. */
         private boolean hasClimb(int baseX, int y, int baseZ) {
-            for (int dy = 1; dy <= ChunkPlan.FLOOR_HEIGHT; dy++) {
+            for (int dy = 1; dy <= ChunkPlan.LEVEL_HEIGHT; dy++) {
                 for (int z = 0; z < 16; z++) {
                     for (int x = 0; x < 16; x++) {
                         Block block = world.getBlock(baseX + x, y + dy, baseZ + z);

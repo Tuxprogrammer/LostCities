@@ -113,7 +113,7 @@ public final class ProfileSnapshot {
         String worldType, String createdBy) {
         this.profile = Objects.requireNonNull(profile);
         this.planSource = Objects.requireNonNull(planSource);
-        this.values = Collections.unmodifiableMap(new TreeMap<>(values));
+        this.values = Collections.unmodifiableMap(ProfileOptions.withLegacyDefaults(values));
         this.modules = Collections.unmodifiableMap(new TreeMap<>(modules));
         this.assetSetHash = Objects.requireNonNull(assetSetHash);
         this.assetFiles = Collections.unmodifiableMap(new TreeMap<>(assetFiles));

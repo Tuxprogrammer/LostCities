@@ -658,7 +658,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (!zone.inCraterBasin()) {
             return false;
         }
-        int ground = profile.groundLevel + levels.cityLevel(x, z) * ChunkPlan.FLOOR_HEIGHT;
+        int ground = profile.groundLevel + levels.cityLevel(x, z) * ChunkPlan.LEVEL_HEIGHT;
         return zone.heightCap() < ground + HeightCap.CITY_HEADROOM;
     }
 
@@ -666,7 +666,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (heightCap == Integer.MAX_VALUE) {
             return true;
         }
-        return profile.groundLevel + cityLevel * ChunkPlan.FLOOR_HEIGHT + 2 * ChunkPlan.FLOOR_HEIGHT <= heightCap;
+        // One floor and its roof, each a floor pitch tall (0014).
+        return profile.groundLevel + cityLevel * ChunkPlan.LEVEL_HEIGHT + 2 * profile.floorPitch <= heightCap;
     }
 
     /** The 3 × 3 street-majority vote over this chunk's window of pre-vote styles. */
@@ -770,6 +771,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         b.plannedRoad = c.isCity && !has ? c.plannedRoad : PlannedRoadType.NONE;
         b.hierarchicalOpen = c.isCity && !has && b.plannedRoad == PlannedRoadType.NONE && !b.predefinedStreet;
         b.groundLevel = profile.groundLevel;
+        b.floorPitch = profile.floorPitch;
         b.waterLevel = profile.waterLevel();
         CityStyleView style = cityStyle(c.cityStyle);
         b.settings = EffectiveCitySettings.resolve(profile, style);
@@ -945,7 +947,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     private void drawFloorsAndCellars(ChunkPlan.Builder b, int x, int z, QualityRandom random, BuildingView building) {
         ChunkCharacteristics c = b.characteristics;
-        int cityGround = profile.groundLevel + c.cityLevel * ChunkPlan.FLOOR_HEIGHT;
+        int cityGround = profile.groundLevel + c.cityLevel * ChunkPlan.LEVEL_HEIGHT;
         float cityFactor = cities.cityFactor(x, z);
         float taper = profile.cityTaper;
         // Deviation (AR-5, 0011 §2): the urban intensity takes the city factor's place, by cityTaper.
@@ -964,8 +966,10 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         f = Math.max(f, minFloors(b.settings, building));
         // Avoids CITY-15: the cap loop stops at 0, and a chunk it empties holds no building.
         boolean capped = false;
-        while (f > 0 && cityGround + f * ChunkPlan.FLOOR_HEIGHT >= MAX_ROOF_FLOOR_Y) {
-            f--;
+        // At a taller pitch fewer floors fit under the cap: towers stay under Y 248 (0014).
+        int fit = capFloors(f, cityGround, profile.floorPitch);
+        if (fit < f) {
+            f = fit;
             capped = true;
         }
         b.drawnFloors = f;
@@ -998,11 +1002,14 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         boolean checkRail = !worldStyle.buildingsBlockRailways() && rail.isPresent();
         if (highway >= 0 || checkRail) {
             int under = checkRail ? (highway >= 0 ? Math.max(highway, rail.level()) : rail.level()) : highway;
-            cellars = Math.max(0, Math.min(c.cityLevel - under - worldStyle.railPartHeight6(), cellars));
+            // The room is in city levels; at a taller pitch fewer cellars fill it (0014). Pitch 6 is upstream's cap.
+            int room = c.cityLevel - under - worldStyle.railPartHeight6();
+            int fit = room <= 0 ? 0 : room * ChunkPlan.LEVEL_HEIGHT / profile.floorPitch;
+            cellars = Math.max(0, Math.min(fit, cellars));
         }
         cellars = Math.max(0, Math.min(cellars, Math.max(0, maxCellars)));
         // Avoids CITY-18: fitted once here; the lowest cellar's floor stays above Y 2.
-        while (cellars > 0 && cityGround - cellars * ChunkPlan.FLOOR_HEIGHT <= MIN_BOTTOM_Y) {
+        while (cellars > 0 && cityGround - cellars * profile.floorPitch <= MIN_BOTTOM_Y) {
             cellars--;
         }
         b.cellars = cellars;
@@ -1035,24 +1042,41 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     /** The most floors a zone allows at this chunk (all of a multibuilding's chunks, for its top-left). */
     private int zoneFloorCap(ChunkCharacteristics c, int cityGround, int x, int z) {
         if (c.multiPos.isSingle()) {
-            return chunkFloorCap(c.zone, cityGround);
+            return chunkFloorCap(c.zone, cityGround, profile.floorPitch);
         }
         int cap = Integer.MAX_VALUE;
         for (int dx = 0; dx < c.multiPos.width(); dx++) {
             for (int dz = 0; dz < c.multiPos.height(); dz++) {
-                cap = Math.min(cap, chunkFloorCap(zones.zone(x + dx, z + dz), cityGround));
+                cap = Math.min(cap, chunkFloorCap(zones.zone(x + dx, z + dz), cityGround, profile.floorPitch));
             }
         }
         return cap;
     }
 
     /** One chunk's floor cap: 2 or 4 in transition rings, and the crater cap: the roof part's top under the cap. */
-    private static int chunkFloorCap(ZoneInfo zone, int cityGround) {
+    private static int chunkFloorCap(ZoneInfo zone, int cityGround, int pitch) {
         int cap = LandmarkZones.transitionFloorCap(zone.zone());
         if (zone.inCraterBasin()) {
-            cap = Math.min(cap, Math.floorDiv(zone.heightCap() - cityGround, ChunkPlan.FLOOR_HEIGHT) - 1);
+            cap = Math.min(cap, Math.floorDiv(zone.heightCap() - cityGround, pitch) - 1);
         }
         return cap;
+    }
+
+    /**
+     * Caps a floor count so the roof part's base stays under {@link #MAX_ROOF_FLOOR_Y}: at a taller pitch fewer floors
+     * fit (design record 0014).
+     *
+     * @param floors     the floors wanted
+     * @param cityGround the building's ground Y
+     * @param pitch      blocks per floor
+     * @return the most floors, from 0 to {@code floors}, with {@code cityGround + floors * pitch < 248}
+     */
+    static int capFloors(int floors, int cityGround, int pitch) {
+        int f = floors;
+        while (f > 0 && cityGround + f * pitch >= MAX_ROOF_FLOOR_Y) {
+            f--;
+        }
+        return f;
     }
 
     private int maxFloors(EffectiveCitySettings settings, BuildingView building) {

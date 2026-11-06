@@ -200,7 +200,7 @@ final class EdgeLots {
     private void columns(int height, int depth) {
         int[] grid = depth >= 4 ? DEEP_COLUMNS : SHALLOW_COLUMNS;
         int floors = plan.lotColumnFloors();
-        int top = Math.min(WorldLimits.MAX_Y - REBAR, height + floors * ChunkPlan.FLOOR_HEIGHT - 1);
+        int top = Math.min(WorldLimits.MAX_Y - REBAR, height + floors * plan.floorPitch() - 1);
         for (int gx : grid) {
             for (int gz : grid) {
                 for (int dx = 0; dx < 2; dx++) {
@@ -218,7 +218,7 @@ final class EdgeLots {
             }
         }
         if (floors >= 2) {
-            int deck = height + ChunkPlan.FLOOR_HEIGHT;
+            int deck = height + plan.floorPitch();
             int from = grid[0];
             int to = grid[1] + 1;
             for (int x = from; x <= to; x++) {

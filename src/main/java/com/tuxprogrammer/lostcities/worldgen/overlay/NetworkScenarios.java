@@ -313,7 +313,7 @@ public final class NetworkScenarios {
             int best = Integer.MAX_VALUE;
             for (HighwayInfo.Piece piece : networks.highway(chunkX, chunkZ)
                 .pieces(chunkX, chunkZ)) {
-                int y = planner.profile().groundLevel + piece.level() * ChunkPlan.FLOOR_HEIGHT;
+                int y = planner.profile().groundLevel + piece.level() * ChunkPlan.LEVEL_HEIGHT;
                 if (piece.shape() == HighwayInfo.Shape.RAMP) {
                     int along = piece.axis() == Axis.X ? blockX & 15 : blockZ & 15;
                     y += NetworkWriter.rampSteps(piece)[along] / 2;

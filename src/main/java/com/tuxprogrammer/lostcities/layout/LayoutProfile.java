@@ -77,6 +77,11 @@ public final class LayoutProfile {
      */
     public final float cityTaper;
     /**
+     * {@code floorPitch}: blocks per building floor and cellar, 6 (upstream, and worlds pinned before 0014) to 10; new
+     * worlds pin 8 (docs/design/0014-floor-pitch.md). City levels stay 6 apart whatever the pitch.
+     */
+    public final int floorPitch;
+    /**
      * {@code edgeLotChance}, 0 to 1: the chance that a building chunk at the very edge of a city is an empty or
      * construction lot instead (AR-6, 0011 §3); it falls to 0 at an intensity of 0.4.
      */
@@ -196,6 +201,7 @@ public final class LayoutProfile {
         cityAvoidOcean = b.cityAvoidOcean;
         cityConnected = b.cityConnected;
         cityTaper = b.cityTaper;
+        floorPitch = b.floorPitch;
         edgeLotChance = b.edgeLotChance;
         facadeContrast = b.facadeContrast;
         citySpawnDistance1 = b.citySpawnDistance1;
@@ -373,6 +379,7 @@ public final class LayoutProfile {
         private boolean cityAvoidOcean;
         private boolean cityConnected;
         private float cityTaper = 1f;
+        private int floorPitch = ChunkPlan.LEGACY_FLOOR_PITCH;
         private float edgeLotChance = .45f;
         private float facadeContrast = 45f;
         private int citySpawnDistance1 = 0;
@@ -480,6 +487,12 @@ public final class LayoutProfile {
         /** @param levels {@code cityMaxRise}, city levels @return this builder */
         public Builder cityMaxRise(int levels) {
             cityMaxRise = levels;
+            return this;
+        }
+
+        /** @param pitch {@code floorPitch}, blocks per building floor (0014) @return this builder */
+        public Builder floorPitch(int pitch) {
+            floorPitch = pitch;
             return this;
         }
 

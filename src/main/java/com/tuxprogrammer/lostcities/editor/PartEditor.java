@@ -237,7 +237,7 @@ public final class PartEditor {
                     });
                 written++;
             }
-            height += ChunkPlan.FLOOR_HEIGHT;
+            height += ChunkPlan.LEVEL_HEIGHT;
         }
         return written;
     }

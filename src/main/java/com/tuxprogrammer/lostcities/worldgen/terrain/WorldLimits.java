@@ -19,8 +19,23 @@ public final class WorldLimits {
     /** The build height, exclusive: upstream's {@code getMaxBuildHeight()} on 1.7.10. */
     public static final int BUILD_HEIGHT = 256;
 
-    /** Blocks per city level and per building floor (upstream {@code FLOORHEIGHT}). */
-    public static final int FLOOR_HEIGHT = 6;
+    /**
+     * Blocks per city level (upstream {@code FLOORHEIGHT}): city grounds, highway, rail and ramp levels and damage all
+     * step by it. Building floors no longer do; they use the world's floor pitch (design record 0014).
+     */
+    public static final int LEVEL_HEIGHT = 6;
+
+    /**
+     * Upstream's building floor pitch, the height of every floor and cellar part: the pitch of a world pinned before
+     * the pitch was pinned, and of every world with {@code floorPitch} 6 (design record 0014).
+     */
+    public static final int LEGACY_FLOOR_PITCH = 6;
+
+    /** The floor pitch new worlds pin: 6 plus 2 rows repeated in every floor part (design record 0014). */
+    public static final int FLOOR_PITCH = 8;
+
+    /** The highest floor pitch a profile may set. */
+    public static final int MAX_FLOOR_PITCH = 10;
 
     /** RWG's sea level on both versions: water fills {@code y < 63}, so the top water block is Y 62. */
     public static final int RWG_SEA_LEVEL = 63;

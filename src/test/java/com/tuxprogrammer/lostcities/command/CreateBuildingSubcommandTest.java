@@ -74,7 +74,7 @@ public class CreateBuildingSubcommandTest {
         assertEquals(20, CreateBuildingSubcommand.floorsThatFit(255 - 186 + 1 - 1, 10));
         int bottom = 200;
         int fit = CreateBuildingSubcommand.floorsThatFit(bottom, 2);
-        assertTrue(bottom + (fit + 2 + 1) * ChunkPlan.FLOOR_HEIGHT - 1 <= CreateBuildingSubcommand.TOP_Y);
-        assertTrue(bottom + (fit + 1 + 2 + 1) * ChunkPlan.FLOOR_HEIGHT - 1 > CreateBuildingSubcommand.TOP_Y);
+        assertTrue(bottom + (fit + 2 + 1) * ChunkPlan.LEVEL_HEIGHT - 1 <= CreateBuildingSubcommand.TOP_Y);
+        assertTrue(bottom + (fit + 1 + 2 + 1) * ChunkPlan.LEVEL_HEIGHT - 1 > CreateBuildingSubcommand.TOP_Y);
     }
 }

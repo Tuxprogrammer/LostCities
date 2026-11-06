@@ -60,6 +60,7 @@ public final class CityProfiles {
             .cityHeightWindow(settings.cityMinHeight(), settings.cityMaxHeight())
             .cityMaxRise(settings.cityMaxRise())
             .cityGrading(settings.cityGrade(), settings.cityGradeRadius())
+            .floorPitch(settings.floorPitch())
             .cityShape(settings.cityAvoidOcean(), settings.cityConnected())
             .character(settings.cityTaper(), settings.edgeLotChance(), settings.facadeContrast())
             .averageHeightmap(values.getBoolean("useAvgHeightmap"), settings.heightSampleSize())

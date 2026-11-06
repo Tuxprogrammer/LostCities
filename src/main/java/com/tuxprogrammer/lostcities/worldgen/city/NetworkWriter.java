@@ -71,7 +71,7 @@ public final class NetworkWriter {
     /** Blocks above the oracle height a surface station clears up to. */
     static final int STATION_CLEAR_MARGIN = 4;
     /** Half blocks a ramp climbs across one chunk: one city level. */
-    static final int RAMP_HALF_STEPS = 2 * ChunkPlan.FLOOR_HEIGHT;
+    static final int RAMP_HALF_STEPS = 2 * ChunkPlan.LEVEL_HEIGHT;
     /** The half slab on a ramp's half steps: smooth stone, bottom half. */
     static final BlockRef RAMP_SLAB = BlockRef.of("minecraft:stone_slab", 0);
     /** The rows of a three-track part's tracks, part-local Z. */

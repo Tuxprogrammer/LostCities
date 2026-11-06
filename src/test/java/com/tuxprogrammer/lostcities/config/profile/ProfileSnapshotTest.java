@@ -157,4 +157,51 @@ public class ProfileSnapshotTest {
         assertFalse(pinned.equals(snapshot));
         assertEquals(snapshot.profile(), pinned.profile());
     }
+
+    /** Design record 0014: a world pinned before {@code floorPitch} existed keeps upstream's 6; new pins get 8. */
+    @Test
+    public void aSnapshotWithoutFloorPitchResolvesToTheLegacyPitch() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        ProfileSnapshot snapshot = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertEquals("6", ProfileOptions.legacyDefault("floorPitch"));
+        assertEquals(
+            "6",
+            snapshot.values()
+                .get("floorPitch"));
+        assertEquals(
+            6,
+            snapshot.profileValues()
+                .getInt("floorPitch"));
+        assertEquals(
+            6,
+            snapshot.terrainSettings()
+                .floorPitch());
+        assertEquals(
+            "8",
+            ProfileOptions.defaults()
+                .get("floorPitch"));
+        old.put("floorPitch", "8");
+        ProfileSnapshot pinned = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "new");
+        assertEquals(
+            8,
+            pinned.terrainSettings()
+                .floorPitch());
+    }
 }
