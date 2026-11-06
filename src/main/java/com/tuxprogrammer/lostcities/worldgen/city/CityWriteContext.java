@@ -42,6 +42,7 @@ public final class CityWriteContext {
     private final BlockClassifier classifier;
     private final LayoutLog log;
     private PartRecorder recorder = PartRecorder.NONE;
+    private java.util.function.Predicate<String> knownBlocks = name -> true;
     /**
      * City styles and buildings by the names plans carry, resolved once each (D266); {@link #UNRESOLVED} for a name
      * the assets lack. Bounded by the loaded assets' names.
@@ -141,6 +142,23 @@ public final class CityWriteContext {
      */
     public void recorder(PartRecorder value) {
         recorder = java.util.Objects.requireNonNull(value);
+    }
+
+    /**
+     * Returns whether a block registry name is registered, for the furnish pass's soft resolution (design record
+     * 0016): every name until the overlay sets the live registry's test.
+     */
+    public java.util.function.Predicate<String> knownBlocks() {
+        return knownBlocks;
+    }
+
+    /**
+     * Sets the test of registered block names; the overlay sets it once, from the live registry.
+     *
+     * @param value the test, never {@code null}
+     */
+    public void knownBlocks(java.util.function.Predicate<String> value) {
+        knownBlocks = java.util.Objects.requireNonNull(value);
     }
 
     /**

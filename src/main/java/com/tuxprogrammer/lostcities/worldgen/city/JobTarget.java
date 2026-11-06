@@ -223,6 +223,13 @@ public final class JobTarget implements CityTarget {
         }
     }
 
+    @Override
+    public void furnish(int y, String argument) {
+        if (inChunk(0, y, 0)) {
+            jobs.add(PopulationJob.of(PopulationJob.Kind.FURNISH, 0, y, 0, argument));
+        }
+    }
+
     /** Whether a spawner's condition is upstream's {@code hardmobs}, which the EnderZoo option replaces. */
     private static boolean isHardMobs(PaletteEntry info) {
         return "hardmobs".equals(

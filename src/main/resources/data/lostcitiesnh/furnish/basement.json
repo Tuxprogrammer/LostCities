@@ -1,0 +1,19 @@
+{
+  "room": "basement",
+  "density": 0.25,
+  "maxItems": 4,
+  "maxTiles": 2,
+  "fallback": { "block": "chisel:factoryblock" },
+  "items": [
+    { "block": "chisel:factoryblock", "weight": 3 },
+    { "block": "minecraft:crafting_table", "weight": 2 },
+    { "block": "minecraft:anvil", "weight": 1 },
+    { "block": "etfuturum:barrel", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "gt": 201, "baseMeta": 1, "weight": 2 },
+    { "gt": 291, "baseMeta": 1, "weight": 1 },
+    { "gt": 351, "baseMeta": 1, "weight": 1 },
+    { "gt": 221, "baseMeta": 1, "weight": 1 },
+    { "gt": 151, "baseMeta": 1, "weight": 1 },
+    { "gt": 161, "baseMeta": 1, "weight": 1 }
+  ]
+}

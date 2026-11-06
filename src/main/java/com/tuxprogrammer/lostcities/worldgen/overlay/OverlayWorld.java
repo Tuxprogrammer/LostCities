@@ -198,6 +198,8 @@ public final class OverlayWorld {
             biomes,
             classifier,
             message -> LostCities.LOG.warn("[cities] {}", message));
+        // The furnish pass skips items of mods the pack does not have (design record 0016).
+        context.knownBlocks(name -> BlockRefs.exists(BlockRef.of(name, 0)));
         // 07-scattered: the module flag pinned with the world, and the profile's chance multiplier.
         ScatteredPlanner scattered = snapshot.moduleState()
             .isActive(Module.SCATTERED_STRUCTURES)

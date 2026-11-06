@@ -1,0 +1,15 @@
+{
+  "room": "shop",
+  "density": 0.35,
+  "maxItems": 6,
+  "maxTiles": 2,
+  "fallback": { "block": "minecraft:planks", "meta": 1 },
+  "items": [
+    { "block": "cookingforblockheads:counter", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 3 },
+    { "block": "etfuturum:barrel", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 2 },
+    { "block": "chisel:carpet", "meta": 14, "weight": 2 },
+    { "block": "minecraft:planks", "meta": 1, "weight": 2 },
+    { "block": "minecraft:hay_block", "weight": 1 },
+    { "block": "chisel:bookshelf", "meta": 5, "weight": 1 }
+  ]
+}

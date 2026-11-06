@@ -491,6 +491,20 @@ public final class ProfileOptions {
                 "03-terrain",
                 false,
                 null));
+        // New worlds get furniture; worlds pinned before the key existed keep empty rooms (D282, 0016).
+        add(
+            new ProfileOption(
+                "furnish",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "03-terrain",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -541,6 +555,8 @@ public final class ProfileOptions {
         legacyDefault("floorPitch", Integer.toString(WorldLimits.LEGACY_FLOOR_PITCH));
         // Worlds pinned before pack houses existed keep their edge lots as they were (D282).
         legacyDefault("packHouseChance", "0.0");
+        // Worlds pinned before the furnish pass keep their empty rooms (design record 0016).
+        legacyDefault("furnish", "false");
     }
 
     /**

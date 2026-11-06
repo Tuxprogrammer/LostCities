@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
@@ -241,6 +244,48 @@ public final class CityChunkWriter {
         for (PartWriter.Placement overlay : overlays) {
             writer.place(overlay);
         }
+        if (context.settings()
+            .furnish()) {
+            furnish(cellars, floors, lowest, buildingId);
+        }
+    }
+
+    /**
+     * Furnishes the building's floors and cellars, the roof excepted (design record 0016). The pass reads the blocks
+     * just written and draws from its own seeded randoms, so the rest of the chunk is the same with it on or off. The
+     * dry run cannot read blocks; it lists one population job per floor instead, which completes the tile entities of
+     * whatever furniture the real write placed.
+     */
+    private void furnish(int cellars, int floors, int lowest, AssetId buildingId) {
+        int count = cellars + floors;
+        int[] standing = new int[count];
+        RoomKind[] kinds = new RoomKind[count];
+        long[] salts = new long[count];
+        String name = buildingId == null ? null : buildingId.path();
+        for (int i = 0; i < count; i++) {
+            int floor = i - cellars;
+            standing[i] = lowest + i * plan.floorPitch() + 1;
+            salts[i] = FurnishPass.floorSalt(context.worldSeed(), chunkX, chunkZ, floor);
+            kinds[i] = RoomKind.forFloor(name, floor, salts[i]);
+        }
+        if (target.dryRun()) {
+            for (int i = 0; i < count; i++) {
+                target.furnish(standing[i], FurnishPass.jobArgument(kinds[i], salts[i]));
+            }
+            return;
+        }
+        // A ruined building is furnished at half density (0016, decision 8); the ruin and damage passes that follow
+        // take furniture with the blocks they remove.
+        float scale = plan.ruinHeight() < 0 ? 1f : 0.5f;
+        FurnishPass.run(
+            target::get,
+            target::set,
+            standing,
+            kinds,
+            salts,
+            FurnishPalettes.bundled(),
+            scale,
+            context.knownBlocks());
     }
 
     /**
