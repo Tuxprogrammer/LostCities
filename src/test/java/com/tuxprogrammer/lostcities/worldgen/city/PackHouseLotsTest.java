@@ -12,7 +12,14 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 /** Pack houses stand only on empty edge lots, at the option's rate, with a door side, the same on every query. */
 public class PackHouseLotsTest {
 
-    private static final LayoutCityPlan PLAN = CityFixtures.plan();
+    private static final double CHANCE = 0.25;
+    /** The default test world with a new world's pack-house rate; {@code TerrainSettings.defaults()} is pre-pin 0. */
+    private static final LayoutCityPlan PLAN = CityFixtures.plan(
+        CityFixtures.SEED,
+        com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings
+            .fromValues(java.util.Collections.singletonMap("packHouseChance", Double.toString(CHANCE))),
+        com.tuxprogrammer.lostcities.layout.landmark.StructureOracle.NONE,
+        com.tuxprogrammer.lostcities.layout.LayoutLog.SILENT);
     private static final int R = 60;
 
     @Test
@@ -44,7 +51,7 @@ public class PackHouseLotsTest {
             }
         }
         assertTrue(bare >= 20, "the test world has empty lots, found " + bare);
-        double chance = 0.25;
+        double chance = CHANCE;
         double sigma = Math.sqrt(bare * chance * (1 - chance));
         assertEquals(bare * chance, houses, 4 * sigma + 1, "houses among " + bare + " empty lots");
     }

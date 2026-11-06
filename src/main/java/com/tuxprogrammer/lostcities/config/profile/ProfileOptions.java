@@ -540,7 +540,7 @@ public final class ProfileOptions {
                 null));
         legacyDefault("floorPitch", Integer.toString(WorldLimits.LEGACY_FLOOR_PITCH));
         // Worlds pinned before pack houses existed keep their edge lots as they were (D282).
-        legacyDefault("packHouseChance", "0");
+        legacyDefault("packHouseChance", "0.0");
     }
 
     /**
