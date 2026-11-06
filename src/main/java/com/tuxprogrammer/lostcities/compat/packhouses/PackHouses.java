@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.BlockBush;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
@@ -336,6 +338,9 @@ public final class PackHouses {
             return null;
         } finally {
             world.rand = shared;
+        }
+        if (use.kind.id.equals("forestry.beehouse")) {
+            clearGarden(world, piece.getBoundingBox(), chunkBox);
         }
         return use.kind.id;
     }
