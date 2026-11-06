@@ -11,6 +11,10 @@
 - Build round 1 failed with 7 failures, all fixed above. Round 2 runs: `tools/remote/lc-remote.sh build p5 HEAD -- spotlessApply build`.
 - p4b's files (`NetworkScenarios`, rail pieces) are untouched.
 
+## Round 2 result (failed, rounds used up)
+
+1234 of 1235 tests pass (2 skipped). One failure is left: `CityHighwayLayoutTest.everyInterchangeAndCutThroughEndMeetsItsLink`, `expected: <1> but was: <0>`. A joined link's end level, `profile.inLevel`/`outLevel` at the plaza, stays at 0 while the city highway is at level 1. The likely cause is that the link has no rampable chunk before its plaza, so the ramp never climbs. A fix in `LinkHighways.compute` could force a climb onto the city highway or ramp on the city highway's own end chunks. The spotless diff has not been fetched, and the real-pack run has not been done.
+
 ## Remaining
 
 1. If round 2 is green, bring back the spotless diff and commit it:
