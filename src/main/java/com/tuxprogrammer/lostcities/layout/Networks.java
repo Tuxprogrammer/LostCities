@@ -199,8 +199,8 @@ public final class Networks implements InfrastructureView {
                     // bridge stands over water or over ground more than one level below the deck.
                     int height = planner.terrain.height(chunkX, chunkZ);
                     int ground = planner.profile.groundLevel;
-                    return height > ground + highLevel * ChunkPlan.FLOOR_HEIGHT + 3
-                        || height < ground + (lowLevel - 1) * ChunkPlan.FLOOR_HEIGHT
+                    return height > ground + highLevel * ChunkPlan.LEVEL_HEIGHT + 3
+                        || height < ground + (lowLevel - 1) * ChunkPlan.LEVEL_HEIGHT
                         || planner.terrain.isWaterBiome(chunkX, chunkZ);
                 }
             });
