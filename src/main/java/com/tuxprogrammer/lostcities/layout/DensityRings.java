@@ -21,7 +21,11 @@ public final class DensityRings {
 
     /** The rings, from the city's center out. */
     public enum Ring {
-        CORE, INNER, OUTER, EDGE;
+
+        CORE,
+        INNER,
+        OUTER,
+        EDGE;
 
         /** Returns the ring a normalized distance falls in. */
         public static Ring of(float d) {
@@ -31,7 +35,11 @@ public final class DensityRings {
 
     /** Building classes by height, from the audit of the shipped buildings. */
     public enum BuildingClass {
-        TOWER, HIGH_RISE, MID_RISE, LOW_RISE, HOUSE
+        TOWER,
+        HIGH_RISE,
+        MID_RISE,
+        LOW_RISE,
+        HOUSE
     }
 
     /** End of the core ring. */

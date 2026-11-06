@@ -806,7 +806,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         String chosen = picked;
         boolean accepted = false;
         for (int attempt = 0; attempt < RING_ATTEMPTS && !accepted; attempt++) {
-            if (chosen != null && r.nextFloat() < DensityRings.acceptance(DensityRings.classOf(chosen), ring, strength)) {
+            if (chosen != null
+                && r.nextFloat() < DensityRings.acceptance(DensityRings.classOf(chosen), ring, strength)) {
                 accepted = true;
             } else if (view != null) {
                 String next = view.pick(Selection.BUILDINGS, r, x, z);
@@ -859,7 +860,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
                 }
             }
         }
-        if (has && profile.densityRings > 0 && topLeft == null && c.multiPos.isMulti()
+        if (has && profile.densityRings > 0
+            && topLeft == null
+            && c.multiPos.isMulti()
             && predefined.occupant(x, z) == null) {
             has = ringAcceptsMulti(x, z, c.multiBuilding);
         }
@@ -895,7 +898,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     private void drawLot(ChunkPlan.Builder b, int x, int z) {
         ChunkCharacteristics c = b.characteristics;
         boolean edgeLots = profile.edgeLotChance > 0 && b.intensity < LOT_INTENSITY;
-        float ringLot = profile.densityRings > 0 && c.isCity ? DensityRings.lotChance(ringDistance(x, z), profile.densityRings)
+        float ringLot = profile.densityRings > 0 && c.isCity
+            ? DensityRings.lotChance(ringDistance(x, z), profile.densityRings)
             : 0f;
         if (!c.isCity || !edgeLots && ringLot <= 0
             || c.multiPos.isMulti()

@@ -42,8 +42,8 @@ public class DensityRingsTest {
     @Test
     public void classWeightsPutTowersInTheCoreAndHousesAtTheEdge() {
         assertTrue(
-            DensityRings.acceptance(BuildingClass.TOWER, Ring.CORE, 1f) > DensityRings
-                .acceptance(BuildingClass.TOWER, Ring.EDGE, 1f));
+            DensityRings.acceptance(BuildingClass.TOWER, Ring.CORE, 1f)
+                > DensityRings.acceptance(BuildingClass.TOWER, Ring.EDGE, 1f));
         assertEquals(0f, DensityRings.acceptance(BuildingClass.TOWER, Ring.EDGE, 1f), 0f);
         assertEquals(BuildingClass.HOUSE, DensityRings.classOf("nh_cottage"));
         assertEquals(BuildingClass.TOWER, DensityRings.classOf("building8"));
