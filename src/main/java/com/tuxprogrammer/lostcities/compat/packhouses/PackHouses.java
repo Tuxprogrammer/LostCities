@@ -35,7 +35,8 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
  * written ({@link #insideWithMargin}).
  *
  * <p>
- * Every piece gets a village start piece ({@link #villageStart}) the way a village's pieces do, with the lot's biome and
+ * Every piece gets a village start piece ({@link #villageStart}) the way a village's pieces do, with the lot's biome
+ * and
  * whether it is a desert. Forestry's bee house reads the start in its constructor and fails without one
  * (ForestryMC 4.11.40, {@code ComponentVillageBeeHouse.java:74}); vanilla's pieces read it for their desert blocks and
  * Forge's village block event. No pack piece reads the world while it is made, and each one guards its world writes by

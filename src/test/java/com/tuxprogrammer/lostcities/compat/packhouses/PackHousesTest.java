@@ -34,15 +34,8 @@ public class PackHousesTest {
         for (int[] chunk : CHUNKS) {
             for (int side = 0; side < 4; side++) {
                 long seed = 31L * chunk[0] + chunk[1] * 17L + side;
-                StructureComponent piece = PackHouses.place(
-                    use,
-                    PackHouses.villageStart(null),
-                    seed,
-                    new Random(seed),
-                    chunk[0],
-                    chunk[1],
-                    Y,
-                    side);
+                StructureComponent piece = PackHouses
+                    .place(use, PackHouses.villageStart(null), seed, new Random(seed), chunk[0], chunk[1], Y, side);
                 if (piece == null) {
                     continue;
                 }
