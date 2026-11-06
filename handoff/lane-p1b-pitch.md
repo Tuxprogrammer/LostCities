@@ -11,10 +11,12 @@ Stopped because both remote verification rounds were used up (round 1 failed to 
 - Tests: `FloorStretchTest` (22 parts with median clear ≥4, vertical runs continuous, building4 runs join floors, memoized), `FloorPitchCapTest`, `ProfileSnapshotTest.aSnapshotWithoutFloorPitchResolvesToTheLegacyPitch`. Existing goldens are unchanged because `TerrainSettings.defaults()` is pitch 6.
 - Docs: design record 0014, D-p1b-1 to D-p1b-7, the `docs/config.md` row.
 
-## Left to do
+## Finished (2026-11-06, second session)
 
-1. Run one build: `tools/remote/lc-remote.sh build p1b HEAD -- spotlessApply build`.
-2. Make pitch-8 goldens: add a `CityFixtures` variant with `floorPitch` 8 and a `city_building_p8` golden in `CityGoldenTest`, then run `-PupdateGoldens` remotely and fetch the `.sha256` files back.
-3. Run the headless city and network scenarios on `--instance 1`.
-4. Add a `floorPitch` row to `docs/new-spec/02-profiles-dimensions/profile-options.md`, list `floorPitch` under "What the snapshot holds" in `pinned-profile.md`, and add a deviation note for the floor height in the new-spec buildings sheet.
-5. The corridor openings at `groundLevel − 5 .. −3` leave a 2-block drop into an 8-pitch first cellar (0014, Consequences).
+1. Remote builds on slot p1b: `spotlessApply build -PupdateGoldens` and `spotlessCheck build` both green, 1152 tests, 0 failures.
+2. `CityFixtures.planAtPitch(int)` and the `city_building_p8` golden; every existing golden hash unchanged.
+3. Real-pack scenarios on `--instance 1` (RWG2_CONTINENTS, seed 4242, run 20261106-122422-i1): city.real, city.walk, city.sewing, network.highway, network.railway all PASS.
+4. Docs: `floorPitch` rows in profile-options.md and pinned-profile.md, floor-height and corridor rows in new-spec 04-city-layout.
+5. Corridor openings into taller cellars become 1-block steps (`CorridorSteps`, D-p1b-8, `CorridorStepsTest`).
+
+Ready for the integrator.
