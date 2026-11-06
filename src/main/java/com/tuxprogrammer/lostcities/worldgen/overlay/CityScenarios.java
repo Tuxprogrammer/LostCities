@@ -618,7 +618,8 @@ public final class CityScenarios {
                         : ":blocked by " + Block.blockRegistry.getNameForObject(world.getBlock(ox, by, oz))
                             + "@y"
                             + by
-                            + describeOutside(chunkX + side.stepX(), chunkZ + side.stepZ());
+                            + describeOutside(chunkX + side.stepX(), chunkZ + side.stepZ())
+                            + column(ox, oz, y);
                     doors.add(
                         door && open,
                         plan.building() + "@" + x + "," + (y + 1) + "," + z + (door ? "" : ":nodoor") + blocker);
@@ -637,7 +638,20 @@ public final class CityScenarios {
                 + ",bridge=" + outside.bridgePart()
                 + ",stair=" + outside.stairPart()
                 + ",fountain=" + outside.fountainPart()
+                + ",lot=" + outside.lot()
+                + ",highway=" + outside.maxHighwayLevel()
                 + ",level=" + outside.cityLevel() + "]";
+        }
+
+        /** The blocks of one column around a floor height, bottom to top, for the failure line. */
+        private String column(int x, int z, int y) {
+            StringBuilder out = new StringBuilder("{");
+            for (int dy = -2; dy <= 3; dy++) {
+                out.append(dy == -2 ? "" : ",")
+                    .append(Block.blockRegistry.getNameForObject(world.getBlock(x, y + dy, z)));
+            }
+            return out.append('}')
+                .toString();
         }
 
         private boolean passable(int x, int y, int z) {
