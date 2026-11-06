@@ -76,11 +76,9 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 - **No world-preset screen.** Profiles are chosen in the config, as above.
 - **World generation cost.** On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region (about 10 to 12 % on RWG2 Continents); a performance pass is under way.
 - **Visual rough edges:**
-  - other mods' trees standing beside a cabin can lean over it;
-  - a GregTech boulder can cut into a building;
   - highway ramps' slab half-steps contrast with the road, so ramps look striped;
   - a rail can have a gap where a junction sits under a shallow landmark.
-  - on some seeds a highway has steps taller than half a block or a step without ground under it, a railway has a broken track, or a few building doors are blocked (seen on seeds 1 and 777; seed 4242 is clean).
+  - on some seeds a highway has steps taller than half a block or a step without ground under it, or a railway has a broken track (seen on seeds 1 and 777; seed 4242 is clean).
 - **No achievements or in-game guide yet.**
 
 Report what you find to the mod's issue tracker with the seed, world type, profile and coordinates (`/lostcities debug` at the spot helps).

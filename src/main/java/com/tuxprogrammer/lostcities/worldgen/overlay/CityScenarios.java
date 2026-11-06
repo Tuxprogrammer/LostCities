@@ -422,16 +422,22 @@ public final class CityScenarios {
         private int total;
         private final StringBuilder examples = new StringBuilder();
         private int named;
+        private final int cap;
 
         Tally(String name) {
+            this(name, EXAMPLES);
+        }
+
+        Tally(String name, int cap) {
             this.name = name;
+            this.cap = cap;
         }
 
         void add(boolean pass, String where) {
             total++;
             if (pass) {
                 passed++;
-            } else if (named++ < EXAMPLES) {
+            } else if (named++ < cap) {
                 examples.append(' ')
                     .append(where);
             }
@@ -456,7 +462,7 @@ public final class CityScenarios {
         final Tally floors = new Tally("floors");
         final Tally walls = new Tally("walls");
         final Tally stairs = new Tally("stairs");
-        final Tally doors = new Tally("doors");
+        final Tally doors = new Tally("doors", 40);
         private int buildings;
         private int exempt;
 

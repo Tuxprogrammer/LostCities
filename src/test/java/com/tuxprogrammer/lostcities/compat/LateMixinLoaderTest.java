@@ -18,10 +18,19 @@ class LateMixinLoaderTest {
 
     @Test
     void roguelikeSteeringOnlyWithRoguelike() {
-        assertEquals(Collections.emptyList(), LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("gregtech"))));
+        assertEquals(
+            Collections.emptyList(),
+            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("NotEnoughItems"))));
         assertEquals(
             Collections.singletonList("MixinRoguelikeDungeon"),
-            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("Roguelike", "gregtech"))));
+            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("Roguelike", "NotEnoughItems"))));
+    }
+
+    @Test
+    void stoneBoulderGuardOnlyWithGregTech() {
+        assertEquals(
+            Collections.singletonList("MixinGtWorldgenStone"),
+            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("gregtech"))));
     }
 
     @Test
