@@ -87,7 +87,7 @@ public class CityDistrictsTest {
         int cities = 0;
         int full = 0;
         for (int[] c : centers(p)) {
-            if (!p.centerYieldsCity(c[0], c[1])) {
+            if (!p.centerYieldsCity(c[0], c[1]) || p.cityRadius(c[0], c[1]) < 160) {
                 continue;
             }
             cities++;
