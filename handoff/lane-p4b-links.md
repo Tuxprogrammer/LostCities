@@ -10,6 +10,8 @@ Session 4 (2026-11-06, "close the gaps") again began at about 161k of the 200k c
 
 Session 5 (2026-11-06) closed the remaining 3a gaps (junctions D-p4b-10, staircase D-p4b-11, landmark drops D-p4b-12), verified with one green remote `spotlessApply build` (1184 tests, 0 failures). **Next: step 4 (rails), then 5 and 6.** Start fresh.
 
+Session 6 (2026-11-06) landed step 4 (rails, D-p4b-13/14), the ramp overlap fix (D-p4b-15) and most of step 5 (networkLayout LIVE, rarecities on links + railwaysCanEnd=false, D-p4b-16, docs), plus `LinkNetworkWalkTest` (rail reciprocity and stations, center-to-center lines, highway chunks on written links, ramp overlap, coded geometry). One green remote `spotlessApply build` (1189 tests, 0 failures) at `01066338`. Began at about 160k context, so handed off. **Left: items 7 to 10 below.** Start fresh.
+
 Why handed off (session 1): the session began at about 156k of a 200k context budget, so this lane landed the pure core and stopped.
 
 ## Design
@@ -38,7 +40,14 @@ Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-netwo
 5. **Switch on.** Make `networkLayout` LIVE, set `rarecities` to `links` and `railwaysCanEnd` to `false`, and update the config and spec rows and 0015's status. Leave the "legacy default" pin for pinned worlds to the orchestrator.
 6. **Verify (one round):** a remote `spotlessApply build`, then the `network.highway` and `network.railway` headless scenarios on `--instance 4` with a fresh `rarecities` world (`tools/remote/README.md` "Real-pack arguments"). The layout-level walk test exists (`LinkHighwayWalkTest`); extend it to rails.
 
+7. **Links golden.** Add a `networkLayout=links` golden to `LayoutGoldenTest` (legacy goldens untouched; they stayed green in session 6).
+8. **Scenarios.** `worldgen/overlay/NetworkScenarios` `network.highway`/`network.railway` are legacy-specific (HighwayWalk reads `HighwayPlanner.ownedRoutes`, RailwayRide looks for grid station spots and a THREE_SPLIT). Add links branches (walk `Networks.links()` paths; ride from one station END chunk to the other via `RailChunk.openings`), then one realpack round on `--instance 4` with a fresh `rarecities` world: `city.real`, `city.walk`, `network.highway`, `network.railway`, no cascade warnings.
+9. **README known issue** "highway steps and broken track on seeds 1 and 777": not re-checked yet. Those seeds use the legacy network; re-check after the realpack run.
+10. **Integrator:** add `legacyDefault("networkLayout", "legacy")` (D282 mechanism, on `gtnh` only) when merging this lane. Then delete this file.
+
 ## Notes
+
+- Known limits (D-p4b-13): at a T the vanilla center rail joins two arms; a cart on the third arm meets it from the side. A line through another city's center makes a coded junction there, no station.
 
 - Open gaps from session 5: (a) a ramp sharing a chunk with a flat piece at a level inside the ramp's range still overlaps it (only same-level flat pieces merge); (b) the staircase is decided from the 45° profile's levels, so a staircase link whose re-planned levels differ could in rare cases still meet a bridge on a straight chunk, which is fine (straight parts bridge as legacy); (c) none of this is seen in-game yet: generation only reads the graph with `networkLayout=links`, still DEFERRED.
 
