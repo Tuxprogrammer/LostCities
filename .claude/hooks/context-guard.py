@@ -1,7 +1,7 @@
 """context-guard.py - PostToolUse hook: tell the agent its context size, and when to hand off.
 
-Reads the hook payload on stdin (uses `transcript_path`, `cwd`, and `agent_type` when a subagent
-fires it), takes the usage of the last assistant message from the end of the transcript, and,
+Reads the hook payload on stdin (uses `transcript_path`, `cwd`, and `agent_id` / `agent_type` when a
+subagent fires it, reading the subagent's own transcript), takes the usage of the last assistant message from the end of the transcript, and,
 above a threshold, injects a short note through `additionalContext`. Agents cannot otherwise see
 their own context size.
 
@@ -118,12 +118,29 @@ def autocompact(payload):
     return enabled, window
 
 
+def transcript(payload):
+    """The firing agent's own transcript.
+
+    For a subagent's tool call the payload's ``transcript_path`` is the parent session's, so reading
+    it would report the parent's context as the subagent's (three agents handed off at once on that
+    misreading). A subagent's own transcript is ``<session dir>/subagents/agent-<agent_id>.jsonl``.
+    """
+    path = payload.get("transcript_path") or ""
+    agent_id = payload.get("agent_id")
+    if path and agent_id and re.match(r"^[A-Za-z0-9_-]+$", str(agent_id)):
+        own = os.path.join(path[:-len(".jsonl")] if path.endswith(".jsonl") else path,
+                           "subagents", "agent-%s.jsonl" % agent_id)
+        # Never fall back to the parent's transcript for a subagent: say nothing rather than mislead.
+        return own if os.path.exists(own) else ""
+    return path
+
+
 def main():
     try:
         payload = json.load(sys.stdin)
     except ValueError:
         return
-    u = last_usage(payload.get("transcript_path") or "")
+    u = last_usage(transcript(payload))
     if not u:
         return
     ctx = u.get("input_tokens", 0) + u.get("cache_read_input_tokens", 0) + u.get("cache_creation_input_tokens", 0)
