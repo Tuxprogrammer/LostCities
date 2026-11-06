@@ -71,6 +71,7 @@ public final class DevSelfCheck {
         if (CityLoot.defaults() != null) {
             checks.add(new LootCheck());
         }
+        checks.add(new FurnishCheck());
         return checks;
     }
 

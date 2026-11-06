@@ -84,6 +84,7 @@ public final class TerrainSettings {
     private final float densityRings;
     private final boolean lotFootprints;
     private final boolean furnish;
+    private final boolean roomRules;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -158,6 +159,8 @@ public final class TerrainSettings {
         lotFootprints = r.booleanValue("lotFootprints", false);
         // false is the pre-pin world's value; new pins take the option's true (D282, design record 0016).
         furnish = r.booleanValue("furnish", false);
+        // false is the pre-pin value (D282): the legacy loot and spawner placement and building-name room kinds.
+        roomRules = r.booleanValue("roomRules", false);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -289,6 +292,7 @@ public final class TerrainSettings {
         out.put("densityRings", text(densityRings));
         out.put("lotFootprints", Boolean.toString(lotFootprints));
         out.put("furnish", Boolean.toString(furnish));
+        out.put("roomRules", Boolean.toString(roomRules));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -439,6 +443,14 @@ public final class TerrainSettings {
     /** Returns {@code lotFootprints}: whether construction lots take their ring class's real size (phase 3). */
     public boolean lotFootprints() {
         return lotFootprints;
+    }
+
+    /**
+     * Returns whether rooms follow the room rules ({@code roomRules}, design record 0016): the building-to-room-kind
+     * table, loot chests only in fitting rooms and spawners only in cellars and industrial floors, both thinned.
+     */
+    public boolean roomRules() {
+        return roomRules;
     }
 
     /** Returns whether building floors get furniture ({@code furnish}, design record 0016). */

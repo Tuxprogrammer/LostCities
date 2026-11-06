@@ -517,7 +517,8 @@ public final class LayoutCityPlan implements CityPlan {
                 settings.generateLoot(),
                 settings.chestWithoutLootChance())
                     .withOptions(settings.vanillaLootCategories(), settings.enderZooHardMobs())
-                    .withFloorPitch(plan.floorPitch()));
+                    .withFloorPitch(plan.floorPitch())
+                    .withRoomRules(settings.roomRules()));
         CityChunkWriter writer = new CityChunkWriter(
             context,
             chunkX,

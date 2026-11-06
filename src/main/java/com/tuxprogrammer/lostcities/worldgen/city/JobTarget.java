@@ -8,12 +8,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.block.TileTemplate;
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
 import com.tuxprogrammer.lostcities.asset.model.ConditionContext;
 import com.tuxprogrammer.lostcities.asset.model.PaletteEntry;
 import com.tuxprogrammer.lostcities.asset.transform.Transform;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomFit;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.PopulationJob;
 import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
 
@@ -62,6 +66,7 @@ public final class JobTarget implements CityTarget {
         final boolean vanillaLoot;
         final boolean enderZooHardMobs;
         final int floorPitch;
+        final boolean roomRules;
 
         /**
          * Collects the facts.
@@ -94,9 +99,10 @@ public final class JobTarget implements CityTarget {
             this.vanillaLoot = false;
             this.enderZooHardMobs = false;
             this.floorPitch = ConditionContext.FLOOR_HEIGHT;
+            this.roomRules = false;
         }
 
-        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs, int floorPitch) {
+        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs, int floorPitch, boolean roomRules) {
             this.worldSeed = base.worldSeed;
             this.chunkX = base.chunkX;
             this.chunkZ = base.chunkZ;
@@ -111,6 +117,7 @@ public final class JobTarget implements CityTarget {
             this.vanillaLoot = vanillaLoot;
             this.enderZooHardMobs = enderZooHardMobs;
             this.floorPitch = floorPitch;
+            this.roomRules = roomRules;
         }
 
         /**
@@ -123,7 +130,7 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the options
          */
         public Facts withOptions(boolean vanillaLoot, boolean enderZooHardMobs) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch, roomRules);
         }
 
         /**
@@ -134,7 +141,18 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the pitch
          */
         public Facts withFloorPitch(int pitch) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs, pitch);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, pitch, roomRules);
+        }
+
+        /**
+         * Returns these facts with the world's {@code roomRules}: chests and spawners keep to fitting rooms and are
+         * thinned (design record 0016).
+         *
+         * @param on whether the room rules apply
+         * @return the facts with the rules
+         */
+        public Facts withRoomRules(boolean on) {
+            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch, on);
         }
     }
 
@@ -185,7 +203,8 @@ public final class JobTarget implements CityTarget {
             return;
         }
         String category = "";
-        if (!facts.noLoot && facts.generateLoot) {
+        boolean stays = !facts.roomRules || roomAllows(x, y, z, placement, true);
+        if (stays && !facts.noLoot && facts.generateLoot) {
             Random random = positionRandom(x, y, z);
             if (random.nextFloat() >= facts.chestWithoutLootChance) {
                 String value = info.loot()
@@ -201,6 +220,11 @@ public final class JobTarget implements CityTarget {
     @Override
     public void spawner(int x, int y, int z, PaletteEntry info, PartWriter.Placement placement) {
         if (!inChunk(x, y, z)) {
+            return;
+        }
+        if (facts.roomRules && !roomAllows(x, y, z, placement, false)) {
+            // An empty mob makes the population phase clear the spawner block.
+            jobs.add(PopulationJob.of(PopulationJob.Kind.SPAWNER, x, y, z, ""));
             return;
         }
         Random random = positionRandom(x, y, z);
@@ -228,6 +252,35 @@ public final class JobTarget implements CityTarget {
         if (inChunk(0, y, 0)) {
             jobs.add(PopulationJob.of(PopulationJob.Kind.FURNISH, 0, y, 0, argument));
         }
+    }
+
+    /**
+     * Whether the room rules let a part's chest or spawner stay (design record 0016, decision 11): the floor must be a
+     * fitting room kind and the position must survive the thinning. Below the city ground, outside a building, the
+     * cellar and corridor rule applies. Rail dungeon chests are not part of any room and stay unfiltered.
+     */
+    private boolean roomAllows(int x, int y, int z, PartWriter.Placement placement, boolean chest) {
+        long worldX = (facts.chunkX << 4) + x;
+        long worldZ = (facts.chunkZ << 4) + z;
+        float keep = chest ? RoomFit.CHEST_KEEP : RoomFit.SPAWNER_KEEP;
+        if (!RoomFit.survives(facts.worldSeed, worldX, y, worldZ, keep)) {
+            return false;
+        }
+        int floor = ConditionContext.floorOf(y, facts.cityGround, facts.floorPitch);
+        AssetId building = placement.building();
+        RoomKind kind;
+        if (building == null || facts.floors + facts.cellars == 0) {
+            kind = floor < 0 ? RoomKind.BASEMENT : null;
+        } else if (floor >= facts.floors) {
+            kind = null;
+        } else {
+            long salt = FurnishPass.floorSalt(facts.worldSeed, facts.chunkX, facts.chunkZ, floor);
+            kind = RoomKind.forFloor(building.path(), floor, salt, true);
+        }
+        if (kind == null) {
+            return false;
+        }
+        return chest ? RoomFit.lootFits(kind) : RoomFit.spawnerFits(kind);
     }
 
     /** Whether a spawner's condition is upstream's {@code hardmobs}, which the EnderZoo option replaces. */

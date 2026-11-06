@@ -307,10 +307,14 @@ public final class FurnishPass {
                                 x,
                                 z,
                                 machine.gtId(),
-                                machineTemplate(machine.gtId(), machineFacing(view, x, y, z))));
+                                machineTemplate(machine.gtId(), machineFacing(view, x, y, z)),
+                                null,
+                                null));
                     }
                 } else if (palette.isTileBlock(block.name())) {
-                    out.add(new Completion(x, z, 0, ""));
+                    String loot = FurnishPalette.CHEST.equals(block.name()) ? palette.lootAt(salt, x, y, z) : null;
+                    String mob = FurnishPalette.SPAWNER.equals(block.name()) ? palette.mobAt(salt, x, y, z) : null;
+                    out.add(new Completion(x, z, 0, "", loot, mob));
                 }
             }
         }
@@ -324,8 +328,12 @@ public final class FurnishPass {
         private final int z;
         private final int gtId;
         private final String template;
+        private final String loot;
+        private final String mob;
 
-        Completion(int x, int z, int gtId, String template) {
+        Completion(int x, int z, int gtId, String template, String loot, String mob) {
+            this.loot = loot;
+            this.mob = mob;
             this.x = x;
             this.z = z;
             this.gtId = gtId;
@@ -348,6 +356,16 @@ public final class FurnishPass {
         }
 
         /** Returns the template as JSON text, empty for a plain tile entity. */
+        /** Returns the loot category to fill a chest with, or {@code null} for anything else. */
+        public String loot() {
+            return loot;
+        }
+
+        /** Returns the mob a spawner takes, or {@code null} for anything else. */
+        public String mob() {
+            return mob;
+        }
+
         public String template() {
             return template;
         }
