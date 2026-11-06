@@ -46,6 +46,10 @@ public final class FootprintGuard {
     static final byte ALL = 1;
     /** A frame that drops only tree parts in the footprint: the other mods' {@code IWorldGenerator}s. */
     static final byte TREES = 2;
+    /** RWG's snow and ice pass after {@code Post}: only snow layers on a door's approach are dropped. */
+    static final byte SNOW = 3;
+    /** GregTech's stone boulders: every write in the footprint is dropped, like {@link #ALL}, and Post does not end it. */
+    static final byte STONE = 4;
 
     private static final byte[] MODE = new byte[MAX_DEPTH];
     private static int depth;
@@ -77,6 +81,31 @@ public final class FootprintGuard {
      */
     public static boolean pushTrees(World world, CityPlan plan) {
         return push(world, plan, TREES);
+    }
+
+    /**
+     * Pushes a frame around one GregTech stone-boulder generator ({@code MixinGtWorldgenStone}). GT runs after the
+     * closing tree generator, so no tree frame covers it. A frame left by a throw is replaced rather than stacked.
+     *
+     * @param world the world being populated
+     * @param plan  that world's plan source
+     * @return whether the frame was pushed
+     */
+    public static boolean pushStone(World world, CityPlan plan) {
+        if (topIsStone(world)) {
+            pop();
+        }
+        return push(world, plan, STONE);
+    }
+
+    /**
+     * Returns whether the top frame is a stone frame of a world: what the boulder generator's return pops.
+     *
+     * @param world the world
+     * @return {@code true} when it is
+     */
+    public static boolean topIsStone(World world) {
+        return depth > 0 && MODE[depth - 1] == STONE && WORLDS[depth - 1] == world;
     }
 
     private static boolean push(World world, CityPlan plan, byte mode) {
@@ -120,8 +149,8 @@ public final class FootprintGuard {
      */
     public static void endOfDecoration(World world) {
         if (depth > 0 && WORLDS[depth - 1] == world && MODE[depth - 1] == ALL) {
-            MODE[depth - 1] = OFF;
-            topMode = OFF;
+            MODE[depth - 1] = SNOW;
+            topMode = SNOW;
         }
     }
 
@@ -139,7 +168,13 @@ public final class FootprintGuard {
      * @return {@code true} to drop the write
      */
     public static boolean drops(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
-        if (topMode == OFF || topMode == TREES && !isTreePart(block)) {
+        byte mode = topMode;
+        if (mode == OFF) {
+            return false;
+        }
+        boolean treePart = block != null && isTreePart(block);
+        boolean snow = block != null && block.getMaterial() == Material.snow;
+        if (mode == TREES && !treePart || mode == SNOW && !snow) {
             return false;
         }
         int top = depth - 1;
@@ -147,6 +182,17 @@ public final class FootprintGuard {
             return false;
         }
         com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan chunk = PLANS[top].chunk(chunkX, chunkZ);
+        if ((treePart || snow) && y > chunk.groundY()
+            && y <= chunk.groundY() + 2
+            && chunk.keepsClear(x & 15, z & 15)) {
+            // A door's approach stays open whoever writes into it, in or out of the footprint: a park's tree crown
+            // or a snow layer in the doorway blocked the street doors (known issue of 0.1.0-beta).
+            dropped++;
+            return true;
+        }
+        if (mode == SNOW) {
+            return false;
+        }
         if (y < chunk.footprintBottom(x & 15, z & 15) && !chunk.inGuardBand(y)) {
             // The guarded band (M06): a highway tunnel's or a railway's Y range, in every column of the chunk.
             return false;

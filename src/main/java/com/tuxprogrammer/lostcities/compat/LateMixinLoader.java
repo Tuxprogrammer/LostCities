@@ -14,6 +14,8 @@ import com.gtnewhorizon.gtnhmixins.LateMixin;
  *
  * <ul>
  * <li>{@code MixinRoguelikeDungeon}: the Roguelike Dungeons steering (0006 §5), when {@code Roguelike} is loaded.</li>
+ * <li>{@code MixinGtWorldgenStone}: the footprint frame around GregTech's stone boulders, when {@code gregtech} is
+ * loaded.</li>
  * </ul>
  *
  * <p>
@@ -26,6 +28,8 @@ public final class LateMixinLoader implements ILateMixinLoader {
     public static final String CONFIG = "mixins.lostcitiesnh.late.json";
     /** Roguelike Dungeons' mod ID (the compat package's constant would load more than a mixin loader should). */
     static final String ROGUELIKE = "Roguelike";
+    /** GregTech's mod ID. */
+    static final String GREGTECH = "gregtech";
 
     @Override
     public String getMixinConfig() {
@@ -45,6 +49,9 @@ public final class LateMixinLoader implements ILateMixinLoader {
      */
     static List<String> mixinsFor(Set<String> loadedMods) {
         List<String> mixins = new ArrayList<>();
+        if (loadedMods.contains(GREGTECH)) {
+            mixins.add("MixinGtWorldgenStone");
+        }
         if (loadedMods.contains(ROGUELIKE)) {
             mixins.add("MixinRoguelikeDungeon");
         }

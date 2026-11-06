@@ -27,6 +27,17 @@ public class FootprintGuardTest {
                 .footprint(footprint)
                 .build();
         }
+        if (cx == 3 && cz == 0) {
+            // A park beside a building: no footprint (the yard is RWG's), the door's approach is columns (7, 7) and
+            // (8, 7) of the chunk, at ground Y 71.
+            boolean[] approach = new boolean[256];
+            approach[(7 << 4) | 7] = true;
+            approach[(7 << 4) | 8] = true;
+            return ChunkPlan.builder(3, 0, ChunkKind.CITY)
+                .groundY(71)
+                .edgeSource(() -> new ChunkPlan.Edges(new int[4], approach))
+                .build();
+        }
         if (cx == 2 && cz == 0) {
             // A highway tunnel's chunk: no footprint, a guarded band from Y 69 to 76 (M06).
             return ChunkPlan.builder(2, 0, ChunkKind.NONE)
@@ -104,5 +115,50 @@ public class FootprintGuardTest {
         assertTrue(FootprintGuard.drops(null, 0, 0, 3, 80, 3, saguaro), "a saguaro inside a footprint");
         assertFalse(FootprintGuard.drops(null, 1, 0, 3, 80, 3, saguaro), "the desert outside keeps its saguaros");
         FootprintGuard.pop();
+    }
+
+    /** Known issue of 0.1.0-beta: a park tree's crown over a street door; the yard beside it keeps its trees. */
+    @Test
+    public void aDoorApproachRefusesTreePartsEvenOutsideTheFootprint() {
+        Block leaves = new Block(Material.leaves) {};
+        Block ore = new Block(Material.rock) {};
+        FootprintGuard.pushTrees(null, PLAN);
+        assertTrue(FootprintGuard.drops(null, 3, 0, 7, 72, 7, leaves), "leaves in the doorway");
+        assertTrue(FootprintGuard.drops(null, 3, 0, 8, 73, 7, leaves), "leaves at head height");
+        assertFalse(FootprintGuard.drops(null, 3, 0, 7, 74, 7, leaves), "a crown above the door passes");
+        assertFalse(FootprintGuard.drops(null, 3, 0, 4, 72, 7, leaves), "the yard's other columns pass");
+        assertFalse(FootprintGuard.drops(null, 3, 0, 7, 72, 7, ore), "a vein passes");
+        FootprintGuard.pop();
+    }
+
+    /** Known issue of 0.1.0-beta: RWG's snow pass after Post put a snow layer in a doorway. */
+    @Test
+    public void snowAfterPostIsRefusedOnlyOnADoorApproach() {
+        Block layer = new Block(Material.snow) {};
+        Block ice = new Block(Material.ice) {};
+        FootprintGuard.push(null, PLAN, true);
+        FootprintGuard.endOfDecoration(null);
+        assertTrue(FootprintGuard.drops(null, 3, 0, 7, 72, 7, layer), "a layer in the doorway");
+        assertFalse(FootprintGuard.drops(null, 3, 0, 4, 72, 7, layer), "snow elsewhere stays");
+        assertFalse(FootprintGuard.drops(null, 0, 0, 3, 80, 3, layer), "snow on a roof stays");
+        assertFalse(FootprintGuard.drops(null, 3, 0, 7, 72, 7, ice), "ice is not snow");
+        FootprintGuard.pop();
+    }
+
+    /** Known issue of 0.1.0-beta: a GregTech boulder cut into a building; outside the footprint it is untouched. */
+    @Test
+    public void aStoneFrameDropsEveryWriteInTheFootprintOnly() {
+        Block granite = new Block(Material.rock) {};
+        FootprintGuard.pushStone(null, PLAN);
+        assertTrue(FootprintGuard.topIsStone(null));
+        assertTrue(FootprintGuard.drops(null, 0, 0, 3, 80, 3, granite), "a boulder inside the footprint");
+        assertFalse(FootprintGuard.drops(null, 0, 0, 3, 60, 3, granite), "below the footprint passes");
+        assertFalse(FootprintGuard.drops(null, 1, 0, 3, 80, 3, granite), "outside the city passes");
+        FootprintGuard.endOfDecoration(null);
+        assertTrue(FootprintGuard.drops(null, 0, 0, 3, 80, 3, granite), "Post does not end a stone frame");
+        FootprintGuard.pushStone(null, PLAN);
+        FootprintGuard.pop();
+        assertFalse(FootprintGuard.topIsStone(null), "a frame left by a throw is replaced, not stacked");
+        assertFalse(FootprintGuard.drops(null, 0, 0, 3, 80, 3, granite));
     }
 }
