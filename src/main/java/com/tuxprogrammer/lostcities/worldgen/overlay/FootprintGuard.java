@@ -48,7 +48,9 @@ public final class FootprintGuard {
     static final byte TREES = 2;
     /** RWG's snow and ice pass after {@code Post}: only snow layers on a door's approach are dropped. */
     static final byte SNOW = 3;
-    /** GregTech's stone boulders: every write in the footprint is dropped, like {@link #ALL}, and Post does not end it. */
+    /**
+     * GregTech's stone boulders: every write in the footprint is dropped, like {@link #ALL}, and Post does not end it.
+     */
     static final byte STONE = 4;
 
     private static final byte[] MODE = new byte[MAX_DEPTH];
@@ -182,9 +184,7 @@ public final class FootprintGuard {
             return false;
         }
         com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan chunk = PLANS[top].chunk(chunkX, chunkZ);
-        if ((treePart || snow) && y > chunk.groundY()
-            && y <= chunk.groundY() + 2
-            && chunk.keepsClear(x & 15, z & 15)) {
+        if ((treePart || snow) && y > chunk.groundY() && y <= chunk.groundY() + 2 && chunk.keepsClear(x & 15, z & 15)) {
             // A door's approach stays open whoever writes into it, in or out of the footprint: a park's tree crown
             // or a snow layer in the doorway blocked the street doors (known issue of 0.1.0-beta).
             dropped++;

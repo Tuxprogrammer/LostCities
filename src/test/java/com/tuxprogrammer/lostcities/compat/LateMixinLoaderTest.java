@@ -18,7 +18,9 @@ class LateMixinLoaderTest {
 
     @Test
     void roguelikeSteeringOnlyWithRoguelike() {
-        assertEquals(Collections.emptyList(), LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("NotEnoughItems"))));
+        assertEquals(
+            Collections.emptyList(),
+            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("NotEnoughItems"))));
         assertEquals(
             Collections.singletonList("MixinRoguelikeDungeon"),
             LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("Roguelike", "NotEnoughItems"))));
