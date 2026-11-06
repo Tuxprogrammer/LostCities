@@ -1,12 +1,17 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishItem;
 
 /**
  * A {@link ChunkBuffer} backed by a real chunk's {@code ExtendedBlockStorage} sections: the terrain phase writes RWG's
@@ -18,6 +23,10 @@ import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBuffer;
  * No lighting or block updates happen here; the terrain phase recomputes the height map and sky light once at the
  * end. Reads and writes allocate nothing once each block has been seen ({@link BlockRefs}). Positions outside the
  * chunk are rejected, never aliased (TERR-14).
+ *
+ * <p>
+ * No block whose light opacity reads the world is ever written: a GT machine goes in as its stand-in and reads back as
+ * the machine, any other such block is dropped ({@link TerrainStandIns}).
  *
  * <p>
  * Server thread only. Side: server.
@@ -44,6 +53,9 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     private BlockRef lastReadRef;
     private BlockRef lastWrittenRef;
     private Block lastWrittenBlock;
+    private Block standIn;
+    private final BlockRef[] machineRefs = new BlockRef[16];
+    private final Set<String> dropped = new HashSet<>();
 
     /**
      * Creates a buffer that can be pointed at chunks one after another.
@@ -92,7 +104,7 @@ public final class WorldChunkBuffer implements ChunkBuffer {
         if (block == lastReadBlock && meta == lastReadMeta) {
             return lastReadRef;
         }
-        BlockRef ref = refs.ref(block, meta);
+        BlockRef ref = isStandIn(block) ? machineRef(meta) : refs.ref(block, meta);
         lastReadBlock = block;
         lastReadMeta = meta;
         lastReadRef = ref;
@@ -126,10 +138,13 @@ public final class WorldChunkBuffer implements ChunkBuffer {
             topY = (y & ~15) + 15;
         }
         if (block != lastWrittenRef) {
-            lastWrittenBlock = refs.block(block);
+            lastWrittenBlock = writable(block);
             lastWrittenRef = block;
         }
         Block written = lastWrittenBlock;
+        if (written == null) {
+            return;
+        }
         int writtenMeta = block.meta();
         if (DEBUG_WOOL && !block.isAir()
             && !written.getMaterial()
@@ -157,6 +172,87 @@ public final class WorldChunkBuffer implements ChunkBuffer {
     /** Returns whether the chunk was written since it was attached, so its height map and sky light are stale. */
     public boolean needsLight() {
         return writes > 0;
+    }
+
+    /**
+     * Returns the block this buffer writes for a reference: its registered block, the stand-in for a GT machine, or
+     * {@code null} for any other block whose light opacity reads the world ({@link TerrainStandIns}).
+     *
+     * @param ref the reference
+     * @return the block to write, or {@code null} to write nothing
+     */
+    Block writable(BlockRef ref) {
+        Block block = refs.block(ref);
+        Block out = TerrainStandIns.terrainBlock(block, ref.name(), standIn());
+        if (out == null && dropped.add(ref.name())) {
+            LostCities.LOG.warn(
+                "Block {} reads the world for its light opacity, which would regenerate the chunk; not written",
+                ref.name());
+        }
+        return out;
+    }
+
+    /**
+     * Swaps the GT machine stand-ins between two levels back to the machine, at the same metadata, straight in the
+     * chunk's sections. Run by the population phase, where the chunk is loaded, before the machines' tile entities
+     * are made. The stand-in's opacity is the machine's, so the chunk's light stays right; nothing outside the chunk
+     * is read or told.
+     *
+     * @param minY the lowest level, inclusive
+     * @param maxY the highest level, inclusive
+     * @return the number of blocks swapped
+     */
+    public int restoreStandIns(int minY, int maxY) {
+        Block marker = standIn();
+        Block machine = refs.block(BlockRef.of(FurnishItem.GT_MACHINES, 0));
+        if (!isStandIn(marker) || machine == null || machine == Blocks.air) {
+            return 0;
+        }
+        int swapped = 0;
+        for (int y = Math.max(minY, 0); y <= Math.min(maxY, 255); y++) {
+            ExtendedBlockStorage section = sections[y >> 4];
+            if (section == null) {
+                continue;
+            }
+            for (int z = 0; z < 16; z++) {
+                for (int x = 0; x < 16; x++) {
+                    if (section.getBlockByExtId(x, y & 15, z) == marker) {
+                        int meta = section.getExtBlockMetadata(x, y & 15, z);
+                        section.func_150818_a(x, y & 15, z, machine);
+                        section.setExtBlockMetadata(x, y & 15, z, meta);
+                        swapped++;
+                    }
+                }
+            }
+        }
+        if (swapped > 0) {
+            lastReadBlock = null;
+            lastReadMeta = -1;
+            chunk.setChunkModified();
+        }
+        return swapped;
+    }
+
+    /** Whether a block met in the chunk is the GT machine stand-in; never air, should the stand-in not resolve. */
+    private boolean isStandIn(Block block) {
+        return block != null && block != Blocks.air && block == standIn();
+    }
+
+    /** Returns the GT machine a stand-in at a metadata reads as. */
+    private BlockRef machineRef(int meta) {
+        BlockRef ref = machineRefs[meta & 15];
+        if (ref == null) {
+            ref = BlockRef.of(FurnishItem.GT_MACHINES, meta & 15);
+            machineRefs[meta & 15] = ref;
+        }
+        return ref;
+    }
+
+    private Block standIn() {
+        if (standIn == null) {
+            standIn = refs.block(TerrainStandIns.STAND_IN_REF);
+        }
+        return standIn;
     }
 
     /** Returns whether a section position holds air with the given metadata. */

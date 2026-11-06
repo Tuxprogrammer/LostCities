@@ -25,6 +25,7 @@ Building floors are empty shells apart from what the parts draw. The owner wants
 
 - Older worlds keep empty interiors; new worlds get furniture.
 - Furniture never crosses the chunk: it is placed only in the chunk being written, and tile entities go through the population phase's chunk-only `tileAt` (no cascade).
+- GT machines are written during the terrain phase as a `minecraft:monster_egg` stand-in at the machine's meta and swapped back by the furnish job before `tileAt`: GT's `BlockMachines.getLightOpacity` reads its tile entity through the world, which before the chunk is in the chunk map regenerates it (D378, `TerrainStandIns`).
 - Lane 6c extended the palettes (data) and added the building table; lane 6d moved spawners and loot (decisions 10 to 12).
 - Every placed GT machine ticks; the cap is the only bound on that cost, so it is a hard limit in code, not a palette value.
 

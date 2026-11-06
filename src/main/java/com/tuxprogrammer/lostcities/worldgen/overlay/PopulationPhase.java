@@ -19,6 +19,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.MultiblockShapes;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.PopulationJob;
 import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
@@ -221,6 +222,9 @@ public final class PopulationPhase {
      */
     private int furnish(PopulationJob job, int chunkX, int chunkZ) {
         int done = 0;
+        // The terrain phase wrote the floor's GT machines as stand-ins (D378): loose machines stand on the floor,
+        // multiblock controllers within its placed layers. Swapped back first, so each gets its tile entity below.
+        reader.restoreStandIns(job.y(), job.y() + MultiblockShapes.MAX_PLACED_LAYERS - 1);
         for (FurnishPass.Completion completion : FurnishPass
             .completions(reader::get, job.y(), job.argument(), FurnishPalettes.bundled())) {
             int x = (chunkX << 4) + completion.x();
