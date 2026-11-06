@@ -8,6 +8,8 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayObstacles;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
+import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
+import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayInputs;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayLayout;
@@ -30,10 +32,15 @@ public final class Networks implements InfrastructureView {
 
     /** City factors this close to zero skip the pruning bound, as upstream. */
     private static final float FACTOR_EPSILON = 0.0001f;
+    /** Cells the link graph's node and link caches hold. */
+    private static final int LINK_CACHE_CELLS = 1024;
 
     private final HighwayPlanner highways;
     private final RailwayLayout railways;
     private final boolean subways;
+    /** The city link graph ({@code networkLayout=links} with grid-placed cities), or {@code null}. */
+    private final CityLinkGraph links;
+    private final LinkHighways linkHighways;
 
     /**
      * Builds the networks of a planner's world.
@@ -114,14 +121,12 @@ public final class Networks implements InfrastructureView {
 
             @Override
             public int highwayXLevel(int chunkX, int chunkZ) {
-                return highways.info(chunkX, chunkZ)
-                    .xLevel();
+                return highway(chunkX, chunkZ).xLevel();
             }
 
             @Override
             public int highwayZLevel(int chunkX, int chunkZ) {
-                return highways.info(chunkX, chunkZ)
-                    .zLevel();
+                return highway(chunkX, chunkZ).zLevel();
             }
 
             @Override
@@ -146,13 +151,89 @@ public final class Networks implements InfrastructureView {
                 return Math.min(lowest, planner.terrain.height(chunkX, chunkZ + 1));
             }
         };
+        final CityGrid grid = cities.grid();
+        if (settings.links() && grid != null) {
+            // centerYieldsCity reads characteristics(...).isCity, which never reads the infrastructure view, so the
+            // graph does not depend on the networks it drives (0015 §1).
+            this.links = new CityLinkGraph(new CityLinkGraph.Nodes() {
+
+                @Override
+                public int cell() {
+                    return grid.cell();
+                }
+
+                @Override
+                public int[] cityCenter(int cellX, int cellZ) {
+                    CityGrid.Center c = grid.center(cellX, cellZ);
+                    if (c == null || !planner.centerYieldsCity(c.chunkX(), c.chunkZ())) {
+                        return null;
+                    }
+                    return new int[] { c.chunkX(), c.chunkZ() };
+                }
+
+                @Override
+                public boolean blocked(int chunkX, int chunkZ) {
+                    // A landmark's core or margin (0013 §1, 0015 §6).
+                    Zone zone = zones.zone(chunkX, chunkZ)
+                        .zone();
+                    return zone == Zone.CORE || zone == Zone.EDGE_RING || zone == Zone.AVOID_RING;
+                }
+            }, LINK_CACHE_CELLS);
+            // Highways follow the links (0015 §3, §5): each end's city level and radius come from the terrain-only
+            // level oracle and the grid.
+            this.linkHighways = new LinkHighways(links, new LinkHighways.Ends() {
+
+                @Override
+                public int level(int chunkX, int chunkZ) {
+                    return levels.cityLevel(chunkX, chunkZ);
+                }
+
+                @Override
+                public int radius(int chunkX, int chunkZ) {
+                    return Math.max(0, grid.radiusAt(chunkX, chunkZ));
+                }
+
+                @Override
+                public boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
+                    // The staircase fallback (0015 §3): the tunnel test is ChunkPlan.isTunnel's outside a city; a
+                    // bridge stands over water or over ground more than one level below the deck.
+                    int height = planner.terrain.height(chunkX, chunkZ);
+                    int ground = planner.profile.groundLevel;
+                    return height > ground + highLevel * ChunkPlan.FLOOR_HEIGHT + 3
+                        || height < ground + (lowLevel - 1) * ChunkPlan.FLOOR_HEIGHT
+                        || planner.terrain.isWaterBiome(chunkX, chunkZ);
+                }
+            });
+        } else {
+            this.links = null;
+            this.linkHighways = null;
+        }
         this.subways = settings.subways();
         this.railways = new RailwayLayout(
             planner.seed,
             settings.railways(),
             inputs,
             planner.profile.groundLevel,
-            planner.worldStyle.railPartHeight6());
+            planner.worldStyle.railPartHeight6(),
+            links);
+    }
+
+    /**
+     * Returns the city link graph, or {@code null} unless the profile reads {@code networkLayout=links} and places
+     * cities on the grid.
+     *
+     * @return the graph, or {@code null}
+     */
+    public CityLinkGraph links() {
+        return links;
+    }
+
+    /**
+     * Returns the highways along the link graph, or {@code null} outside {@code networkLayout=links}. When present,
+     * {@link #highway} answers from it instead of the legacy planner (0015 §3).
+     */
+    public LinkHighways linkHighways() {
+        return linkHighways;
     }
 
     /**
@@ -187,7 +268,7 @@ public final class Networks implements InfrastructureView {
      * @return the highway info
      */
     public HighwayInfo highway(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ);
+        return linkHighways != null ? linkHighways.info(chunkX, chunkZ) : highways.info(chunkX, chunkZ);
     }
 
     /**
@@ -203,14 +284,12 @@ public final class Networks implements InfrastructureView {
 
     @Override
     public int highwayXLevel(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ)
-            .xLevel();
+        return highway(chunkX, chunkZ).xLevel();
     }
 
     @Override
     public int highwayZLevel(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ)
-            .zLevel();
+        return highway(chunkX, chunkZ).zLevel();
     }
 
     @Override

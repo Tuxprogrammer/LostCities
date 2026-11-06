@@ -24,6 +24,7 @@ public final class NetworkSettings {
     private final RailwaySettings railways;
     private final PlanningGate gate;
     private final boolean subways;
+    private final boolean links;
 
     /**
      * Creates the settings, with the cities' subways on.
@@ -50,6 +51,33 @@ public final class NetworkSettings {
         this.railways = railways;
         this.gate = gate;
         this.subways = subways;
+        this.links = false;
+    }
+
+    private NetworkSettings(NetworkSettings base, PlanningGate gate, boolean links) {
+        this.highways = base.highways;
+        this.railways = base.railways;
+        this.gate = gate;
+        this.subways = base.subways;
+        this.links = links;
+    }
+
+    /**
+     * Returns whether the networks follow the city link graph ({@code networkLayout=links}, 0015), which needs
+     * grid-placed cities; otherwise they follow the legacy hub grid.
+     */
+    public boolean links() {
+        return links;
+    }
+
+    /**
+     * Returns these settings with the link layout on or off.
+     *
+     * @param on whether the networks follow the city link graph
+     * @return the settings
+     */
+    public NetworkSettings withLinks(boolean on) {
+        return new NetworkSettings(this, gate, on);
     }
 
     /** Returns the highway settings. */
@@ -79,6 +107,6 @@ public final class NetworkSettings {
      * @return the settings
      */
     public NetworkSettings withGate(PlanningGate newGate) {
-        return new NetworkSettings(highways, railways, newGate, subways);
+        return new NetworkSettings(this, newGate, links);
     }
 }

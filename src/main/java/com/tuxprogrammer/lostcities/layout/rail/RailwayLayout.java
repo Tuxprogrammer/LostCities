@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.tuxprogrammer.lostcities.layout.ChunkKeys;
+import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
+import com.tuxprogrammer.lostcities.layout.link.LinkRails;
 import com.tuxprogrammer.lostcities.layout.random.QualityRandom;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 
@@ -31,6 +33,13 @@ import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
  * outside the core. Where the line has no room for that before its junctions, or a junction or station itself would be
  * too shallow under a core, that core chunk carries no railway.</li>
  * </ul>
+ *
+ * <p>
+ * City link network ({@code networkLayout=links}, 0015 §3): with a {@link CityLinkGraph} the grid is not used. Every
+ * line follows a link ({@link LinkRails}) at the railway level from one city's center to another's, so no line ends in
+ * the open whatever {@code railwaysCanEnd} says; each center a line ends at is an underground station along X (with
+ * its staircase, except in a landmark margin), and every other chunk is a straight, bend, T or crossing written in
+ * code ({@link RailChunk#coded()}).
  *
  * <p>
  * Spec: docs/original-spec/06-highways-railways/railway-layout.md, docs/new-spec/06-highways-railways/index.md. Not
@@ -65,6 +74,8 @@ public final class RailwayLayout {
     private final int partHeight6;
     private final Map<Long, RailChunk> flagged = lru(CACHE_SIZE);
     private final Map<Long, RailChunk> finals = lru(CACHE_SIZE);
+    /** The lines of the city link network, or {@code null} on the legacy grid. */
+    private final LinkRails links;
 
     /**
      * Builds the railway layout of one world.
@@ -76,11 +87,34 @@ public final class RailwayLayout {
      * @param partHeight6 the world style's {@code railpartheight6}: a rail part's height in levels
      */
     public RailwayLayout(long seed, RailwaySettings settings, RailwayInputs inputs, int groundLevel, int partHeight6) {
+        this(seed, settings, inputs, groundLevel, partHeight6, null);
+    }
+
+    /**
+     * Builds the railway layout of one world, along a city link graph when one is given (0015 §3).
+     *
+     * @param seed        the world seed
+     * @param settings    the railway settings
+     * @param inputs      what it reads
+     * @param groundLevel the profile's ground level, block Y of city level 0
+     * @param partHeight6 the world style's {@code railpartheight6}: a rail part's height in levels
+     * @param graph       the city link graph, or {@code null} for upstream's grid
+     */
+    public RailwayLayout(long seed, RailwaySettings settings, RailwayInputs inputs, int groundLevel, int partHeight6,
+        CityLinkGraph graph) {
         this.seed = seed;
         this.settings = settings;
         this.inputs = inputs;
         this.groundLevel = groundLevel;
         this.partHeight6 = Math.max(1, partHeight6);
+        // A core the railway level does not fit under keeps the whole line out (0013 §5, D322).
+        this.links = graph == null ? null
+            : new LinkRails(graph, (x, z) -> inputs.isCore(x, z) && deepestFit(x, z) < settings.railwayLevel());
+    }
+
+    /** Returns the lines of the city link network, or {@code null} on upstream's grid. */
+    public LinkRails links() {
+        return links;
     }
 
     private static <V> Map<Long, V> lru(int capacity) {
@@ -136,9 +170,36 @@ public final class RailwayLayout {
         if (cached != null) {
             return cached;
         }
-        RailChunk value = underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
+        RailChunk value = links != null ? linkRail(chunkX, chunkZ) : underCores(chunkX, chunkZ, grid(chunkX, chunkZ));
         finals.put(key, value);
         return value;
+    }
+
+    /** A chunk of the city link network's lines (class Javadoc). */
+    private RailChunk linkRail(int chunkX, int chunkZ) {
+        int bits = links.openings(chunkX, chunkZ);
+        int sides = bits & LinkRails.SIDES;
+        if (sides == 0 || !settings.enabled()) {
+            return RailChunk.NONE;
+        }
+        int level = settings.railwayLevel();
+        boolean alongX = (sides & (LinkRails.NORTH | LinkRails.SOUTH)) == 0;
+        if ((bits & LinkRails.END) != 0 && alongX && settings.stations()) {
+            return RailChunk.link(RailChunkType.STATION_UNDERGROUND, level, !inputs.isMargin(chunkX, chunkZ), sides);
+        }
+        RailChunkType type;
+        if (sides == (LinkRails.EAST | LinkRails.WEST)) {
+            type = RailChunkType.HORIZONTAL;
+        } else if (sides == (LinkRails.NORTH | LinkRails.SOUTH)) {
+            type = RailChunkType.VERTICAL;
+        } else if (Integer.bitCount(sides) == 1) {
+            type = RailChunkType.RAILS_END_HERE;
+        } else if (Integer.bitCount(sides) == 2) {
+            type = RailChunkType.DOUBLE_BEND;
+        } else {
+            type = RailChunkType.THREE_SPLIT;
+        }
+        return RailChunk.link(type, level, false, sides);
     }
 
     // ================================================================== upstream's grid

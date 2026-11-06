@@ -344,7 +344,8 @@ public final class ChunkPlan {
 
     /**
      * Returns the lowest Y of a column's footprint, the volume the write guard keeps RWG's decoration out of: every
-     * column the city writes in a building, street, bridge, highway or railway, from its lowest written block up to
+     * column the city writes in a building, street, bridge, highway (a neighbor's diagonal deck spilling in included)
+     * or railway, from its lowest written block up to
      * Y 255 (0005 §3a, P03-1). Parks, yards, edge-ring parks, soft-edge strips and landmark cores are outside it.
      *
      * @param x local X, 0 to 15

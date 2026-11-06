@@ -39,6 +39,8 @@ public final class RailChunk {
     private final boolean alongZ;
     private final int topLevel;
     private final boolean staircase;
+    /** The sides a link-network line opens on (0015 §3), {@code LinkRails} bits; 0 on the legacy grid. */
+    private final int openings;
 
     /**
      * Creates an upstream rail chunk.
@@ -74,6 +76,48 @@ public final class RailChunk {
         this.alongZ = alongZ;
         this.topLevel = Math.max(level, topLevel);
         this.staircase = staircase;
+        this.openings = 0;
+    }
+
+    private RailChunk(RailChunkType type, int level, boolean staircase, int openings) {
+        this.type = type;
+        this.direction = Direction.BI;
+        this.level = level;
+        this.tracks = 1;
+        this.roofed = null;
+        this.alongZ = false;
+        this.topLevel = level;
+        this.staircase = staircase;
+        this.openings = openings;
+    }
+
+    /**
+     * Creates a rail chunk of the city link network ({@code networkLayout=links}, 0015 §3): one track at one level,
+     * opening on the given sides. A station is the underground station part; every other type is written in code
+     * ({@link #coded()}).
+     *
+     * @param type      its type: a station, or the closest legacy type for the city layout and the API
+     * @param level     its level
+     * @param staircase for a station, whether it gets its staircase to the surface
+     * @param openings  the sides it opens on, {@code LinkRails} bits, not 0
+     * @return the rail chunk
+     */
+    public static RailChunk link(RailChunkType type, int level, boolean staircase, int openings) {
+        return new RailChunk(type, level, staircase, openings);
+    }
+
+    /**
+     * Returns the sides a link-network line opens on: north 1, east 2, south 4, west 8; 0 on the legacy grid.
+     *
+     * @return the bits
+     */
+    public int openings() {
+        return openings;
+    }
+
+    /** Returns whether the chunk is a link-network line written in code, not a part (0015 §3). */
+    public boolean coded() {
+        return openings != 0 && !type.isStation();
     }
 
     /** Returns its type. */
@@ -152,6 +196,7 @@ public final class RailChunk {
             + (topLevel != level ? ".." + topLevel : "")
             + " tracks "
             + tracks
-            + (alongZ ? " along Z" : "");
+            + (alongZ ? " along Z" : "")
+            + (openings != 0 ? " openings " + openings : "");
     }
 }

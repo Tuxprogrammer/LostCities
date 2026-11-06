@@ -176,7 +176,13 @@ public final class CityProfiles {
         } catch (IllegalArgumentException e) {
             railwaySettings = new RailwaySettings(railways, railways, true, false, 0, 10, 10);
         }
-        return new NetworkSettings(highwaySettings, railwaySettings, gate, railways);
+        boolean links;
+        try {
+            links = "links".equals(values.getString("networkLayout"));
+        } catch (IllegalArgumentException e) {
+            links = false;
+        }
+        return new NetworkSettings(highwaySettings, railwaySettings, gate, railways).withLinks(links);
     }
 
     /**

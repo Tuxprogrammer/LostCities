@@ -21,13 +21,18 @@ import com.tuxprogrammer.lostcities.asset.model.Part;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.asset.palette.CompiledPalette;
 import com.tuxprogrammer.lostcities.asset.view.LayoutAssets;
+import com.tuxprogrammer.lostcities.layout.LayoutFixtures;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LayoutProfile;
 import com.tuxprogrammer.lostcities.layout.NetworkSettings;
 import com.tuxprogrammer.lostcities.layout.Networks;
 import com.tuxprogrammer.lostcities.layout.highway.Axis;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
+import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
+import com.tuxprogrammer.lostcities.layout.link.LinkRaster;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
@@ -314,6 +319,69 @@ public class NetworkWriterTest {
         golden("network_plaza", piece(HighwayInfo.Shape.CROSSING));
         golden("network_rail", rail(RailChunkType.HORIZONTAL));
         golden("network_split", rail(RailChunkType.THREE_SPLIT));
+    }
+
+    /**
+     * A diagonal link deck spills into the side chunks at its corners (0015 §3); those chunks put the spilled levels in
+     * their footprint, or in their guard band where the deck runs underground, so RWG's trees and other mods'
+     * decoration cannot grow up through it.
+     */
+    @Test
+    public void spillFromALinkDiagonalIsInTheFootprintOrGuardBand() {
+        LayoutPlanner planner = new LayoutPlanner(
+            LayoutInputs.builder(
+                7919L,
+                LayoutProfile.builder()
+                    .cityChance(0.00025)
+                    .cityRadius(100, 256)
+                    .cityGrid(64, 16)
+                    .build(),
+                LayoutFixtures.standardAssets(),
+                LayoutFixtures.flatTerrain())
+                .networks(NetworkSettings.DEFAULTS.withLinks(true))
+                .build());
+        TerrainSettings settings = TerrainSettings.defaults();
+        CityWriteContext context = new CityWriteContext(
+            7919L,
+            planner,
+            CityFixtures.ASSETS,
+            CityFixtures.ASSETS.worldStyle(CityProfiles.WORLD_STYLE),
+            new CityPalettes(CityFixtures.ASSETS, MetalFlags.ALL_ON),
+            settings,
+            CityFixtures.plains(),
+            new NameBlockClassifier(),
+            LOG::add);
+        Networks networks = planner.networks();
+        LinkHighways view = networks.linkHighways();
+        int checked = 0;
+        for (int cx = -3; cx <= 3; cx++) {
+            for (int cz = -3; cz <= 3; cz++) {
+                for (CityLinkGraph.Link link : networks.links()
+                    .links(cx, cz)) {
+                    LinkHighways.Profile p = view.profile(link);
+                    for (int i = p.start(); p.written() && i <= p.end(); i++) {
+                        LinkRaster.Step s = link.path()
+                            .get(i);
+                        for (int[] d : new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }) {
+                            int x = s.chunkX() + d[0];
+                            int z = s.chunkZ() + d[1];
+                            HighwayInfo info = networks.highway(x, z);
+                            if (!info.spill()) {
+                                continue;
+                            }
+                            checked++;
+                            int low = settings.cityGround(info.spillLow());
+                            int bottom = NetworkWriter.footprintBottom(context, x, z, 64);
+                            int[] band = NetworkWriter.guardBand(context, x, z, 64);
+                            boolean guarded = band != null && band[0] < low
+                                && band[1] >= settings.cityGround(info.spillHigh());
+                            assertTrue(bottom <= low || guarded, "spill into " + x + "," + z + " from " + link);
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(checked > 0, "some diagonal spills near the origin");
     }
 
     private static void golden(String name, int[] at) throws IOException {

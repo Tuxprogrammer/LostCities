@@ -135,9 +135,11 @@ public final class BuiltinProfiles {
             "ruinChance",
             "0",
             "railwaysCanEnd",
-            "true",
+            "false",
             "densityRings",
-            "1.5");
+            "1.5",
+            "networkLayout",
+            "links");
         profile(out, "onlycities", "cityChance", "0.2", "cityMaxRadius", "256");
         profile(
             out,

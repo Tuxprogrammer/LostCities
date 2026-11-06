@@ -303,6 +303,10 @@ public final class ProfileOptions {
         // Railways: the layout reads the dungeon chance, the railway grid the rest (M06).
         chance(c, "railwayDungeonChance", "0.01", "04-city-layout");
         flag(c, "railwaysCanEnd", false, Status.LIVE, "06-highways-railways");
+        // Deviation: the city link network (0015). "legacy" is the M06 network and the default, so a world pinned
+        // before this option existed reads "legacy"; "links" needs cityPlacement=grid. Deferred until the network
+        // writer reads it (D309).
+        choice(c, "networkLayout", "legacy", Status.LIVE, "06-highways-railways", "legacy", "links");
         flag(c, "railwaysEnabled", true, Status.LIVE, "06-highways-railways");
         flag(c, "railwayStationsEnabled", true, Status.LIVE, "06-highways-railways");
         flag(c, "railwaySurfaceStationsEnabled", true, Status.LIVE, "06-highways-railways");
@@ -556,6 +560,8 @@ public final class ProfileOptions {
         // Worlds pinned before pack houses existed keep their edge lots as they were (D282).
         legacyDefault("packHouseChance", "0.0");
         legacyDefault("densityRings", "0.0");
+        // Worlds pinned before the link network keep the legacy highways and railways, whatever the default becomes.
+        legacyDefault("networkLayout", "legacy");
     }
 
     /**

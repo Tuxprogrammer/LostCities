@@ -53,7 +53,24 @@ public final class HighwayInfo {
         /** A T; unrotated it joins west, east and south. */
         T_JUNCTION,
         /** A straight piece whose deck climbs or falls one level across the chunk. */
-        RAMP
+        RAMP,
+        /**
+         * A 45° piece of the city link network (0015 §3), written in code: it enters and leaves the chunk at opposite
+         * corners and may climb or fall one level along its length. Its deck spills into the two side neighbors at each
+         * corner.
+         */
+        DIAGONAL,
+        /**
+         * A link piece that turns 45° (0015 §3), written in code: half straight from the middle of one side to the
+         * chunk's center, half diagonal from the center to a corner. Always flat.
+         */
+        TRANSITION,
+        /**
+         * Where links of the city link network meet at one level and at least one opens on a corner (0015 §5), written
+         * in code: a strip from the chunk's center to every opening and a disc at the center, one deck with railings
+         * only on its outer edge. A bend, T or X of 45° and straight roads. Always flat.
+         */
+        LINK_JUNCTION
     }
 
     /** One route through the chunk. */
@@ -113,6 +130,7 @@ public final class HighwayInfo {
         private final int lowLevel;
         private final int highLevel;
         private final int quarterTurns;
+        private final int[] openings;
 
         /**
          * Creates a piece.
@@ -124,11 +142,272 @@ public final class HighwayInfo {
          * @param quarterTurns clockwise quarter turns from the part's unrotated form, 0 to 3
          */
         public Piece(Shape shape, Axis axis, int lowLevel, int highLevel, int quarterTurns) {
+            this(shape, axis, lowLevel, highLevel, quarterTurns, null);
+        }
+
+        private Piece(Shape shape, Axis axis, int lowLevel, int highLevel, int quarterTurns, int[] openings) {
             this.shape = shape;
             this.axis = axis;
             this.lowLevel = lowLevel;
             this.highLevel = highLevel;
             this.quarterTurns = quarterTurns;
+            this.openings = openings;
+        }
+
+        /**
+         * Creates a piece of the city link network from the sides it opens on (0015 §3). An opening is a step toward a
+         * neighbor chunk: a side ({@code (±1, 0)}, {@code (0, ±1)}) or a corner ({@code (±1, ±1)}), with the deck's
+         * level where it leaves by it.
+         *
+         * <ul>
+         * <li>Two sides opposite each other: {@link Shape#STRAIGHT}, or {@link Shape#RAMP} when the levels differ.</li>
+         * <li>Two opposite corners: {@link Shape#DIAGONAL}; quarter turn 0 for the north-west to south-east line, 1
+         * for north-east to south-west.</li>
+         * <li>A side and a corner away from it: {@link Shape#TRANSITION}; its quarter turn is the side's (west 0,
+         * north 1, east 2, south 3).</li>
+         * <li>Two sides at right angles and one level: {@link Shape#BEND} (the staircase fallback, 0015 §3).</li>
+         * </ul>
+         *
+         * @param aDx    first opening's X step
+         * @param aDz    first opening's Z step
+         * @param aLevel the level at the first opening
+         * @param bDx    second opening's X step
+         * @param bDz    second opening's Z step
+         * @param bLevel the level at the second opening
+         * @return the piece
+         * @throws IllegalArgumentException for any other pair of openings
+         */
+        public static Piece link(int aDx, int aDz, int aLevel, int bDx, int bDz, int bLevel) {
+            int[] openings = { aDx, aDz, aLevel, bDx, bDz, bLevel };
+            boolean aCorner = aDx != 0 && aDz != 0;
+            boolean bCorner = bDx != 0 && bDz != 0;
+            boolean opposite = aDx == -bDx && aDz == -bDz && (aDx != 0 || aDz != 0);
+            if (!aCorner && !bCorner && opposite) {
+                Axis axis = aDx != 0 ? Axis.X : Axis.Z;
+                // Legacy convention: lowLevel is the level at the west or north side.
+                boolean aFirst = aDx + aDz < 0;
+                int west = aFirst ? aLevel : bLevel;
+                int east = aFirst ? bLevel : aLevel;
+                Shape shape = west == east ? Shape.STRAIGHT : Shape.RAMP;
+                return new Piece(shape, axis, west, east, axis == Axis.X ? 0 : 1, openings);
+            }
+            if (aCorner && bCorner && opposite) {
+                boolean aWest = aDx < 0;
+                int turns = aDx == aDz ? 0 : 1;
+                return new Piece(
+                    Shape.DIAGONAL,
+                    null,
+                    aWest ? aLevel : bLevel,
+                    aWest ? bLevel : aLevel,
+                    turns,
+                    openings);
+            }
+            if (!aCorner && !bCorner && aLevel == bLevel && (aDx != 0) != (bDx != 0)) {
+                // Two sides at right angles: a bend (the staircase fallback, 0015 §3).
+                return sides(aLevel, aDx, aDz, bDx, bDz);
+            }
+            if (aCorner != bCorner && aLevel == bLevel) {
+                int sDx = aCorner ? bDx : aDx;
+                int sDz = aCorner ? bDz : aDz;
+                int cDx = aCorner ? aDx : bDx;
+                int cDz = aCorner ? aDz : bDz;
+                // The corner lies on the far half: it shares no sign with the side's step.
+                if (sDx != 0 && cDx == -sDx || sDz != 0 && cDz == -sDz) {
+                    int turns = sDx < 0 ? 0 : sDz < 0 ? 1 : sDx > 0 ? 2 : 3;
+                    return new Piece(Shape.TRANSITION, null, aLevel, aLevel, turns, openings);
+                }
+            }
+            throw new IllegalArgumentException("no link piece opens on " + aDx + "," + aDz + " and " + bDx + "," + bDz);
+        }
+
+        /**
+         * Creates the plaza a link ends on (0013 §2, 0015 §5): a crossing at one level, with the steps the link leaves
+         * by. A plaza is open on every side; a corner step means a diagonal leaves from its corner.
+         *
+         * @param level the plaza's level
+         * @param steps the steps the links leave by, as {@code dx, dz} pairs
+         * @return the piece
+         */
+        public static Piece plaza(int level, int... steps) {
+            int[] openings = new int[steps.length / 2 * 3];
+            for (int i = 0; i < steps.length / 2; i++) {
+                openings[i * 3] = steps[i * 2];
+                openings[i * 3 + 1] = steps[i * 2 + 1];
+                openings[i * 3 + 2] = level;
+            }
+            return new Piece(Shape.CROSSING, null, level, level, 0, openings);
+        }
+
+        /**
+         * Creates the piece of the city link network that joins several sides at one level (0015 §3, §5): two opposite
+         * sides make a {@link Shape#STRAIGHT}, two at right angles a {@link Shape#BEND}, three a
+         * {@link Shape#T_JUNCTION} and four a crossing, each with the legacy part's quarter turn (as upstream's
+         * {@code getJunction}).
+         *
+         * @param level the level
+         * @param steps the sides, as {@code dx, dz} pairs; each a side, not a corner
+         * @return the piece
+         * @throws IllegalArgumentException for a corner, or fewer than two distinct sides
+         */
+        public static Piece sides(int level, int... steps) {
+            boolean w = false;
+            boolean e = false;
+            boolean n = false;
+            boolean s = false;
+            for (int i = 0; i + 1 < steps.length; i += 2) {
+                int dx = steps[i];
+                int dz = steps[i + 1];
+                if ((dx == 0) == (dz == 0)) {
+                    throw new IllegalArgumentException("not a side: " + dx + "," + dz);
+                }
+                w |= dx < 0;
+                e |= dx > 0;
+                n |= dz < 0;
+                s |= dz > 0;
+            }
+            int count = (w ? 1 : 0) + (e ? 1 : 0) + (n ? 1 : 0) + (s ? 1 : 0);
+            List<Integer> list = new ArrayList<>();
+            if (w) {
+                list.add(-1);
+                list.add(0);
+            }
+            if (e) {
+                list.add(1);
+                list.add(0);
+            }
+            if (n) {
+                list.add(0);
+                list.add(-1);
+            }
+            if (s) {
+                list.add(0);
+                list.add(1);
+            }
+            int[] openings = new int[list.size() / 2 * 3];
+            for (int i = 0; i < list.size() / 2; i++) {
+                openings[i * 3] = list.get(i * 2);
+                openings[i * 3 + 1] = list.get(i * 2 + 1);
+                openings[i * 3 + 2] = level;
+            }
+            switch (count) {
+                case 2:
+                    if (w && e || n && s) {
+                        return link(openings[0], openings[1], level, openings[3], openings[4], level);
+                    }
+                    int bend = w && s ? 0 : n && w ? 1 : n && e ? 2 : 3;
+                    return new Piece(Shape.BEND, null, level, level, bend, openings);
+                case 3:
+                    int t = !n ? 0 : !e ? 1 : !s ? 2 : 3;
+                    return new Piece(Shape.T_JUNCTION, null, level, level, t, openings);
+                case 4:
+                    return new Piece(Shape.CROSSING, null, level, level, 0, openings);
+                default:
+                    throw new IllegalArgumentException("fewer than two sides");
+            }
+        }
+
+        /**
+         * Creates the {@link Shape#LINK_JUNCTION} where links meet at one level with at least one corner opening
+         * (0015 §5).
+         *
+         * @param level the level
+         * @param steps the openings, as distinct {@code dx, dz} pairs
+         * @return the piece
+         */
+        public static Piece linkJunction(int level, int... steps) {
+            int[] openings = new int[steps.length / 2 * 3];
+            for (int i = 0; i < steps.length / 2; i++) {
+                openings[i * 3] = steps[i * 2];
+                openings[i * 3 + 1] = steps[i * 2 + 1];
+                openings[i * 3 + 2] = level;
+            }
+            return new Piece(Shape.LINK_JUNCTION, null, level, level, 0, openings);
+        }
+
+        /**
+         * Returns the openings of a link piece as {@code dx, dz, level} triples, or an empty array for a legacy piece.
+         * Callers must not modify it.
+         */
+        public int[] openings() {
+            return openings == null ? new int[0] : openings;
+        }
+
+        /**
+         * Returns the deck's level where this piece meets the neighbor one step away, or −1 when the piece does not
+         * open toward it. A crossing opens at its level on every side and on each of its corner openings; a straight
+         * piece or ramp on the two ends of its axis; a link piece on its openings.
+         *
+         * @param dx the step's X, −1 to 1
+         * @param dz the step's Z, −1 to 1
+         * @return the level, or −1
+         */
+        public int levelAt(int dx, int dz) {
+            if (openings != null) {
+                for (int i = 0; i + 2 < openings.length; i += 3) {
+                    if (openings[i] == dx && openings[i + 1] == dz) {
+                        return openings[i + 2];
+                    }
+                }
+            }
+            boolean side = (dx == 0) != (dz == 0);
+            if (!side) {
+                return -1;
+            }
+            if (junction()) {
+                return level();
+            }
+            if ((shape == Shape.STRAIGHT || shape == Shape.RAMP) && openings == null) {
+                if (axis == Axis.X && dz == 0) {
+                    return dx < 0 ? lowLevel : highLevel;
+                }
+                if (axis == Axis.Z && dx == 0) {
+                    return dz < 0 ? lowLevel : highLevel;
+                }
+            }
+            return -1;
+        }
+
+        /** Returns whether a writer places this piece in code rather than from a part (0015 §3). */
+        public boolean coded() {
+            return shape == Shape.DIAGONAL || shape == Shape.TRANSITION || shape == Shape.LINK_JUNCTION;
+        }
+
+        /** Returns whether this piece opens on a corner, so its deck spills into the two chunks beside it. */
+        public boolean opensOnCorner() {
+            for (int i = 0; openings != null && i + 2 < openings.length; i += 3) {
+                if (openings[i] != 0 && openings[i + 1] != 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Piece)) {
+                return false;
+            }
+            Piece p = (Piece) o;
+            return shape == p.shape && axis == p.axis
+                && lowLevel == p.lowLevel
+                && highLevel == p.highLevel
+                && quarterTurns == p.quarterTurns
+                && java.util.Arrays.equals(sortedOpenings(), p.sortedOpenings());
+        }
+
+        @Override
+        public int hashCode() {
+            return ((shape.hashCode() * 31 + lowLevel) * 31 + highLevel) * 31 + quarterTurns;
+        }
+
+        private long[] sortedOpenings() {
+            int[] o = openings();
+            long[] keys = new long[o.length / 3];
+            for (int i = 0; i < keys.length; i++) {
+                keys[i] = ((long) (o[i * 3] + 1) * 3 + (o[i * 3 + 1] + 1)) << 32 | (o[i * 3 + 2] & 0xffffffffL);
+            }
+            java.util.Arrays.sort(keys);
+            return keys;
         }
 
         /** Returns the part kind. */
@@ -190,6 +469,9 @@ public final class HighwayInfo {
     private final Deck xDeck;
     private final Deck zDeck;
     private final List<Hit> hits;
+    private final List<Piece> linkPieces;
+    private final int spillLow;
+    private final int spillHigh;
 
     /**
      * Creates the info of a chunk.
@@ -202,6 +484,66 @@ public final class HighwayInfo {
         this.xDeck = xDeck;
         this.zDeck = zDeck;
         this.hits = Collections.unmodifiableList(new ArrayList<>(hits));
+        this.linkPieces = null;
+        this.spillLow = -1;
+        this.spillHigh = -1;
+    }
+
+    /**
+     * Creates the info of a chunk of the city link network ({@code networkLayout=links}, 0015): its own pieces, lowest
+     * first, and the levels of any diagonal deck that spills into it from a neighbor (0015 §3).
+     *
+     * @param pieces    the chunk's own pieces, lowest first
+     * @param spillLow  the lowest level of a deck spilling in from a neighbor, or −1 for none
+     * @param spillHigh the highest such level, or −1
+     */
+    public HighwayInfo(List<Piece> pieces, int spillLow, int spillHigh) {
+        this.xDeck = null;
+        this.zDeck = null;
+        this.hits = Collections.emptyList();
+        this.linkPieces = Collections.unmodifiableList(new ArrayList<>(pieces));
+        this.spillLow = spillLow;
+        this.spillHigh = spillHigh;
+    }
+
+    /** Returns whether this chunk belongs to the city link network rather than the legacy planner. */
+    public boolean linked() {
+        return linkPieces != null;
+    }
+
+    /** Returns whether a link deck from a neighbor spills into this chunk (0015 §3). */
+    public boolean spill() {
+        return spillLow >= 0;
+    }
+
+    /**
+     * Returns the lowest level of a link deck spilling in from a neighbor, so the footprint and the guard band can
+     * cover
+     * the spilled columns (0015 §3).
+     *
+     * @return the level, or −1 for no spill
+     */
+    public int spillLow() {
+        return spillLow;
+    }
+
+    /**
+     * Returns the highest top level of a link deck spilling in from a neighbor.
+     *
+     * @return the level, or −1 for no spill
+     */
+    public int spillHigh() {
+        return spillHigh;
+    }
+
+    private int linkLevel(Axis skip) {
+        int level = spillHigh;
+        for (Piece piece : linkPieces) {
+            if (piece.axis() != skip || piece.axis() == null) {
+                level = Math.max(level, piece.topLevel());
+            }
+        }
+        return level;
     }
 
     /** Returns the deck along X, or {@code null}. */
@@ -221,7 +563,7 @@ public final class HighwayInfo {
 
     /** Returns whether a highway passes. */
     public boolean hasHighway() {
-        return xDeck != null || zDeck != null;
+        return xDeck != null || zDeck != null || linkPieces != null && (!linkPieces.isEmpty() || spillLow >= 0);
     }
 
     /**
@@ -229,11 +571,18 @@ public final class HighwayInfo {
      * building or cellar stays clear of the whole ramp; −1 when there is none.
      */
     public int xLevel() {
+        if (linkPieces != null) {
+            // A diagonal, transition, plaza or spill counts on both axes, so buildings keep clear (0015 §3).
+            return linkLevel(Axis.Z);
+        }
         return xDeck == null ? -1 : xDeck.max();
     }
 
     /** Returns the city level of the north-south highway, as {@link #xLevel()}; −1 when there is none. */
     public int zLevel() {
+        if (linkPieces != null) {
+            return linkLevel(Axis.X);
+        }
         return zDeck == null ? -1 : zDeck.max();
     }
 
@@ -244,6 +593,17 @@ public final class HighwayInfo {
      * @return whether a deck touches it
      */
     public boolean deckAt(int level) {
+        if (linkPieces != null) {
+            if (spillLow >= 0 && spillLow <= level && level <= spillHigh) {
+                return true;
+            }
+            for (Piece piece : linkPieces) {
+                if (piece.level() <= level && level <= piece.topLevel()) {
+                    return true;
+                }
+            }
+            return false;
+        }
         return xDeck != null && xDeck.min() <= level && level <= xDeck.max()
             || zDeck != null && zDeck.min() <= level && level <= zDeck.max();
     }
@@ -269,6 +629,9 @@ public final class HighwayInfo {
      * @return the pieces; empty when no highway passes
      */
     public List<Piece> pieces(int chunkX, int chunkZ) {
+        if (linkPieces != null) {
+            return new ArrayList<>(linkPieces);
+        }
         List<Piece> out = new ArrayList<>();
         if (!hasHighway()) {
             return out;

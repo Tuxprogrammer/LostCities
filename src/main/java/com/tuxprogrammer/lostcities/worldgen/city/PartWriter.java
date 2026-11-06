@@ -338,6 +338,46 @@ public final class PartWriter {
     }
 
     /**
+     * Places one column of a part at a column of the chunk, raised by a shift: the column-by-column writer of the
+     * city link network's diagonal pieces (0015 §3), which copies a straight part's cross-section. The placement's
+     * transform and origin are ignored; its palette, Y origin and rules apply as in {@link #place}. Never writes
+     * outside
+     * the chunk.
+     *
+     * @param placement the part and palette; its {@code oy} is the part's bottom
+     * @param px        the part's column X, 0 to {@code xsize − 1}
+     * @param pz        the part's column Z, 0 to {@code zsize − 1}
+     * @param x         the chunk column X, 0 to 15
+     * @param z         the chunk column Z, 0 to 15
+     * @param shift     blocks to raise the column
+     */
+    public void placeColumn(Placement placement, int px, int pz, int x, int z, int shift) {
+        Part part = placement.part;
+        if (x < 0 || x > 15 || z < 0 || z > 15 || px < 0 || px >= part.xsize() || pz < 0 || pz >= part.zsize()) {
+            return;
+        }
+        char[] column = part.column(px, pz);
+        if (column == null) {
+            return;
+        }
+        CompiledPalette palette = placement.palette;
+        boolean nowater = part.metaBoolean(Part.MetaKey.NOWATER);
+        boolean forcedAir = part.metaBoolean(Part.MetaKey.FORCEDAIR);
+        boolean dryRun = target.dryRun();
+        for (int y = 0; y < column.length; y++) {
+            char c = column[y];
+            int worldY = placement.oy + shift + y;
+            if (c == ' ' || worldY < WorldLimits.MIN_Y || worldY > WorldLimits.MAX_Y) {
+                continue;
+            }
+            if (dryRun && skipsInDryRun(palette, c)) {
+                continue;
+            }
+            placeOne(placement, palette, c, x, worldY, z, nowater, forcedAir);
+        }
+    }
+
+    /**
      * Sets what is told of each part before it is written: the part editor's recorder in an {@code editMode} world.
      *
      * @param value the listener, or {@code null} for none

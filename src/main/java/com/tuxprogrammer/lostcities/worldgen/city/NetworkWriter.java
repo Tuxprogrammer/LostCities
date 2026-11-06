@@ -19,6 +19,8 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.Networks;
 import com.tuxprogrammer.lostcities.layout.highway.Axis;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
+import com.tuxprogrammer.lostcities.layout.link.LinkGeometry;
+import com.tuxprogrammer.lostcities.layout.link.LinkRailGeometry;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
@@ -74,6 +76,8 @@ public final class NetworkWriter {
     static final int RAMP_HALF_STEPS = 2 * ChunkPlan.LEVEL_HEIGHT;
     /** The half slab on a ramp's half steps: smooth stone, bottom half. */
     static final BlockRef RAMP_SLAB = BlockRef.of("minecraft:stone_slab", 0);
+    /** Powers a link line's mid-arm powered rail (0015 §3). */
+    static final BlockRef REDSTONE_BLOCK = BlockRef.of("minecraft:redstone_block", 0);
     /** The rows of a three-track part's tracks, part-local Z. */
     static final int TRACK_SOUTH = 9;
     static final int TRACK_MIDDLE = 7;
@@ -206,7 +210,121 @@ public final class NetworkWriter {
     private void writeHighways() {
         HighwayInfo info = networks.highway(chunkX, chunkZ);
         for (HighwayInfo.Piece piece : info.pieces(chunkX, chunkZ)) {
-            highwayPiece(piece);
+            if (!piece.coded()) {
+                highwayPiece(piece);
+            }
+        }
+        if (info.linked()) {
+            linkColumns();
+        }
+    }
+
+    /**
+     * Writes the link pieces made in code (0015 §3): every column of this chunk that a diagonal, a transition or a
+     * plaza's corner opening in this chunk or one of its eight neighbors covers gets the straight part's cross-section
+     * at that column's deck height, with the ramp slab, the clearing above and supports as for a straight piece. Reads
+     * only the planner; writes only this chunk, so no cascade. The part is the slot's first, so neighbors that write
+     * the
+     * same strip agree.
+     */
+    private void linkColumns() {
+        int[] xs = new int[16];
+        int[] zs = new int[16];
+        HighwayInfo.Piece[] pieces = new HighwayInfo.Piece[16];
+        int count = 0;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                for (HighwayInfo.Piece piece : networks.highway(chunkX + dx, chunkZ + dz)
+                    .pieces(chunkX + dx, chunkZ + dz)) {
+                    if (!LinkGeometry.coded(piece)) {
+                        continue;
+                    }
+                    if (count == pieces.length) {
+                        xs = java.util.Arrays.copyOf(xs, count * 2);
+                        zs = java.util.Arrays.copyOf(zs, count * 2);
+                        pieces = java.util.Arrays.copyOf(pieces, count * 2);
+                    }
+                    xs[count] = chunkX + dx;
+                    zs[count] = chunkZ + dz;
+                    pieces[count++] = piece;
+                }
+            }
+        }
+        if (count == 0) {
+            return;
+        }
+        boolean supports = networks.highways()
+            .settings()
+            .supports();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                LinkGeometry.Column c = LinkGeometry.highest(xs, zs, pieces, count, chunkX * 16 + x, chunkZ * 16 + z);
+                if (c != null) {
+                    linkColumn(c, x, z, supports);
+                }
+            }
+        }
+    }
+
+    private void linkColumn(LinkGeometry.Column c, int x, int z, boolean supports) {
+        int deckY = context.settings()
+            .cityGround(c.level());
+        int shift = c.half() / 2;
+        boolean tunnel = plan.isTunnel(c.level() + (c.half() > 0 ? 1 : 0), naturalHeight);
+        List<Part> parts = worldStyle.parts("highways", tunnel ? "tunnel" : "bridge");
+        if (parts == null || parts.isEmpty()) {
+            return;
+        }
+        Part part = parts.get(0);
+        int px = Math.floorMod((int) Math.floor(c.along()), part.xsize());
+        int pz = Math.min(part.zsize() - 1, c.row());
+        PartWriter.Placement placement = placement(part, Transform.ROTATE_NONE, deckY, HardAir.WATERLEVEL);
+        writer.placeColumn(placement, px, pz, x, z, shift);
+        if (target.dryRun()) {
+            return;
+        }
+        int y = deckY + shift;
+        if ((c.half() & 1) == 1 && y + 1 <= WorldLimits.MAX_Y
+            && !context.isEmpty(target.get(x, y, z))
+            && target.get(x, y + 1, z)
+                .isAir()) {
+            target.set(x, y + 1, z, RAMP_SLAB);
+        }
+        if (!tunnel) {
+            clearColumn(x, z, deckY + part.height() + shift);
+        }
+        if (supports && (pz == 0 || pz == part.zsize() - 1) && Math.floorMod((int) Math.floor(c.along()), 8) == 0) {
+            Character support = part.metaCharacter(Part.MetaKey.SUPPORT);
+            if (support == null) {
+                support = worldStyle.highwaySupport();
+            }
+            BlockRef block = support == null ? null
+                : supportBlock(
+                    context,
+                    context.palettes()
+                        .forPart(chunkPalette, part),
+                    support,
+                    part);
+            if (block != null) {
+                column(Transform.ROTATE_NONE, y, x, z, block, null);
+            }
+        }
+    }
+
+    private void clearColumn(int x, int z, int from) {
+        boolean drowned = context.settings()
+            .waterLevel()
+            > context.settings()
+                .groundLevel();
+        int waterLevel = context.settings()
+            .waterLevel();
+        int to = Math.min(WorldLimits.MAX_Y, from + CLEAR_HEIGHT - 1);
+        for (int y = from; y <= to; y++) {
+            BlockRef here = target.get(x, y, z);
+            if (here.isAir() || context.isFoliage(here)) {
+                continue;
+            }
+            target.set(x, y, z, drowned && y <= waterLevel ? liquid : BlockRef.AIR);
         }
     }
 
@@ -522,6 +640,10 @@ public final class NetworkWriter {
         }
         int height = context.settings()
             .cityGround(rail.level());
+        if (rail.coded()) {
+            linkRail(rail, height);
+            return;
+        }
         Transform transform = Transform.ROTATE_NONE;
         boolean staircase = false;
         boolean clearUpper = false;
@@ -601,6 +723,53 @@ public final class NetworkWriter {
         }
         if (staircase) {
             staircase(rail);
+        }
+    }
+
+    /**
+     * Writes a link-network line in code (0015 §3): every tunnel column copies the slot's first
+     * {@code railshorizontal} part's cross-section (its interior row 4 inside, its wall row 3 for walls), turned to
+     * run along Z on north and south arms; then the track, one vanilla rail per column shaped to join its neighbors,
+     * with a powered rail over a redstone block mid-arm. Writes only this chunk.
+     */
+    private void linkRail(RailChunk rail, int height) {
+        List<Part> parts = worldStyle.parts("railways", "railshorizontal");
+        if (parts == null || parts.isEmpty()) {
+            return;
+        }
+        Part part = parts.get(0);
+        PartWriter.Placement placement = placement(part, Transform.ROTATE_NONE, height, HardAir.AIR);
+        int sides = rail.openings();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int role = LinkRailGeometry.role(sides, x, z);
+                if (role == LinkRailGeometry.NONE) {
+                    continue;
+                }
+                int along = LinkRailGeometry.alongZ(x, z) ? z : x;
+                writer.placeColumn(placement, along, role == LinkRailGeometry.WALL ? 3 : 4, x, z, 0);
+            }
+        }
+        if (target.dryRun()) {
+            return;
+        }
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int shape = LinkRailGeometry.shape(sides, x, z);
+                if (shape < 0) {
+                    continue;
+                }
+                if (LinkRailGeometry.powered(sides, x, z)) {
+                    target.set(x, height, z, REDSTONE_BLOCK);
+                    target.set(x, height + 1, z, BlockRef.of("minecraft:golden_rail", shape | 8));
+                } else {
+                    target.set(x, height + 1, z, BlockRef.of("minecraft:rail", shape));
+                }
+            }
+        }
+        BlockRef railMain = railMain(rail);
+        if (railMain != null && rail.type() == RailChunkType.HORIZONTAL) {
+            dungeonTunnels(height, railMain);
         }
     }
 
@@ -874,6 +1043,14 @@ public final class NetworkWriter {
                         .cityGround(piece.level()));
             }
         }
+        // A neighbor's diagonal deck spills into this chunk's side columns: guard them too (0015 §3), or RWG's trees
+        // and other mods' decoration grow up through the deck.
+        if (info.spill() && !plan.isTunnel(info.spillHigh(), naturalHeight)) {
+            bottom = Math.min(
+                bottom,
+                context.settings()
+                    .cityGround(info.spillLow()));
+        }
         RailChunk rail = networks.railChunk(chunkX, chunkZ);
         if (rail.isPresent() && rail.type()
             .isSurface() && rail.level() + 2 >= plan.cityLevel()) {
@@ -907,12 +1084,17 @@ public final class NetworkWriter {
         TerrainSettings settings = context.settings();
         int bottom = Integer.MAX_VALUE;
         int top = Integer.MIN_VALUE;
-        for (HighwayInfo.Piece piece : networks.highway(chunkX, chunkZ)
-            .pieces(chunkX, chunkZ)) {
+        HighwayInfo info = networks.highway(chunkX, chunkZ);
+        for (HighwayInfo.Piece piece : info.pieces(chunkX, chunkZ)) {
             if (plan.isTunnel(piece.topLevel(), naturalHeight)) {
                 bottom = Math.min(bottom, settings.cityGround(piece.level()) - 1);
                 top = Math.max(top, settings.cityGround(piece.topLevel()) + PART_LEVEL_HEIGHT);
             }
+        }
+        // A diagonal deck spilling in underground needs its band here as well (0015 §3).
+        if (info.spill() && plan.isTunnel(info.spillHigh(), naturalHeight)) {
+            bottom = Math.min(bottom, settings.cityGround(info.spillLow()) - 1);
+            top = Math.max(top, settings.cityGround(info.spillHigh()) + PART_LEVEL_HEIGHT);
         }
         RailChunk rail = networks.railChunk(chunkX, chunkZ);
         if (rail.isPresent()) {
