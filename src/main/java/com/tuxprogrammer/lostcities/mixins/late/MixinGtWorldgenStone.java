@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -24,8 +25,9 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.StoneGuard;
  *
  * <p>
  * A late mixin, applied only when GregTech is loaded ({@code compat.LateMixinLoader}); the target is named by string
- * so nothing here links GT. Side: both (mixin loading), acting on the server only.
+ * so nothing here links GT, and {@code @Pseudo} lets the build pass without GT on the compile classpath. Side: both (mixin loading), acting on the server only.
  */
+@Pseudo
 @Mixin(targets = "gregtech.common.WorldgenStone", remap = false)
 public abstract class MixinGtWorldgenStone {
 
