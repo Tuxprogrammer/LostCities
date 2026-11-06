@@ -123,7 +123,10 @@ class SteeringRuleTest {
         assertTrue(SteeringRule.Outcome.RAIL.refuses());
         layout.predicted.add(FakeLayout.key(8, 8));
         layout.edge.add(FakeLayout.key(0, 0));
-        assertEquals(SteeringRule.Outcome.RAIL, SteeringRule.decide(8, 8, layout), "the reserved lot does not excuse it");
+        assertEquals(
+            SteeringRule.Outcome.RAIL,
+            SteeringRule.decide(8, 8, layout),
+            "the reserved lot does not excuse it");
         // Chunk 9 starts at block 144, 136 blocks away; and a diagonal chunk past the circle is out of reach too.
         FakeLayout beyond = new FakeLayout();
         beyond.track.add(FakeLayout.key(9, 0));

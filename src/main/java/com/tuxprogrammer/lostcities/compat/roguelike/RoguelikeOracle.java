@@ -54,7 +54,8 @@ public final class RoguelikeOracle implements StructureOracle {
      * ({@code LevelGeneratorClassic} L232-L236, {@code DungeonLevel.inRange}); a tunnel runs on while it is within
      * {@code levelScatter} (10) of a room, then at most {@code 2 × levelScatter} more blocks before its room
      * ({@code LevelGeneratorClassic} L176-L193); and the widest rooms reach 12 blocks from their center
-     * ({@code DungeonsPrison.getSize}, {@code DungeonTreetho.getSize}). So 80 + 10 + 20 + 12. The top level's rooms rise
+     * ({@code DungeonsPrison.getSize}, {@code DungeonTreetho.getSize}). So 80 + 10 + 20 + 12. The top level's rooms
+     * rise
      * up to 10 blocks above Y 50, through the depths a railway tunnel takes; the deeper levels lie 10 blocks apart
      * below it. Defaults: {@code RogueConfig} L78-L83; the pack's {@code config/roguelike_dungeons/roguelike.cfg} keeps
      * them. Source tag 1.6.6-GTNH, https://github.com/GTNewHorizons/Roguelike-Dungeons/tree/1.6.6-GTNH.
