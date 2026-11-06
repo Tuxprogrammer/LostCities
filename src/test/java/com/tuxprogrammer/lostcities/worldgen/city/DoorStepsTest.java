@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.tuxprogrammer.lostcities.asset.block.BlockRef;
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.Doorway;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
