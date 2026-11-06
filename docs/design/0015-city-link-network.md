@@ -66,6 +66,16 @@ A node chooses its 3 nearest nodes within 160 chunks whose rasterized path cross
 | Diagonal parts as assets | Parts rotate in quarter turns; a 45° deck needs per-column geometry, which the ramp writer already does in code |
 | Region cache of hashed centers (plan option A) | The jittered grid (4a) makes the node query O(cells) |
 
+## Junctions and through-lines (lane 4b verify)
+
+- **T junctions are switches** (D-p4v-1). A chunk with track on three sides lays vanilla's unpowered curve at its
+  center with a lever beside it on the free side; the lever re-shapes the curve, so every arm reaches every other.
+  Four-way crossings remain an east-west straight: a known limit, since one vanilla rail cannot carry both lines.
+- **Lines stop at every city they cross** (D-p4v-2). `LinkRails.route` splits a line at any third city's center its
+  staircase passes through, so the line arrives and leaves along X and the center is a station.
+- **Verified by** `LayoutGoldenTest.rareCitiesLinkNetwork`, `LinkNetworkWalkTest` and the links branches of the
+  `network.highway` and `network.railway` scenarios (D-p4v-3).
+
 ## Still open
 
 Diagonal piece looks after the first shots (the owner expects to adjust them); whether predefined cities become nodes.
