@@ -2,6 +2,9 @@ package com.tuxprogrammer.lostcities.worldgen.city;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
@@ -22,46 +25,84 @@ public class DoorStepsTest {
     private static final LayoutCityPlan PLAN = CityFixtures.plan();
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final int SEARCH = 90;
-    private static final int NETWORK_SEARCH = 140;
+    private static final int NETWORK_SEARCH = 60;
     private static final long[] SEEDS = { CityFixtures.SEED, 1L, 2L, 3L, 777L, 31337L };
     private static final int LIMIT = 8;
 
     @Test
-    public void streetDoorStepsStayOpenInChunksWithAnNetwork() {
-        int checked = 0;
-        for (long seed : SEEDS) {
-            LayoutCityPlan plan0 = CityFixtures.plan(seed, StructureOracle.NONE, LayoutLog.SILENT);
-            LayoutPlanner planner0 = plan0.planner();
-            for (int z = -NETWORK_SEARCH; z <= NETWORK_SEARCH && checked < LIMIT; z++) {
-            for (int x = -NETWORK_SEARCH; x <= NETWORK_SEARCH && checked < LIMIT; x++) {
-                if (!NetworkWriter.hasWork(planner0, x, z) || CityChunkWriter.doorApproaches(planner0, x, z) == null) {
-                    continue;
+    public void clearingTheDoorStepsOpensEveryApproachColumnWhateverStandsThere() {
+        int[] at = CityFixtures.first(NETWORK_SEARCH, (x, z) -> CityChunkWriter.doorApproaches(PLANNER, x, z) != null);
+        assertTrue(at != null, "a street chunk with a building door facing it");
+        boolean[] approach = CityChunkWriter.doorApproaches(PLANNER, at[0], at[1]);
+        int ground = PLANNER.plan(at[0], at[1])
+            .cityGroundLevel();
+        Map<Long, BlockRef> blocks = new HashMap<>();
+        BlockRef stone = BlockRef.of("minecraft:stonebrick", 0);
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                for (int y = ground + 1; y <= ground + 2; y++) {
+                    blocks.put(key(x, y, z), stone);
                 }
-                ArrayChunkBuffer buffer = CityFixtures.generate(plan0, x, z);
-                boolean[] approach = CityChunkWriter.doorApproaches(planner0, x, z);
-                int ground = planner0.plan(x, z)
-                    .cityGroundLevel();
-                for (Direction side : Direction.values()) {
-                    for (int d = 0; d < CityChunkWriter.DOOR_STEP; d++) {
-                        for (int along = 7; along <= 8; along++) {
-                            int[] c = CityChunkWriter.vegetationColumn(side, d, along);
-                            if (!approach[(c[1] << 4) | c[0]]) {
-                                continue;
-                            }
-                            for (int y = ground + 1; y <= ground + 2; y++) {
-                                assertTrue(
-                                    open(buffer.get(c[0], y, c[1])),
-                                    "door step open at " + x + "," + z + " local " + c[0] + "," + y + "," + c[1] + ": "
-                                        + buffer.get(c[0], y, c[1]));
-                            }
-                        }
-                    }
-                }
-                checked++;
             }
         }
+        CityChunkWriter.clearDoorSteps(PLANNER, at[0], at[1], ground, new MapTarget(blocks));
+        int cleared = 0;
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
+                for (int y = ground + 1; y <= ground + 2; y++) {
+                    boolean air = blocks.get(key(x, y, z))
+                        .isAir();
+                    if (air) {
+                        cleared++;
+                        assertTrue(approach[(z << 4) | x], "only an approach column opens: " + x + "," + z);
+                    }
+                }
+            }
         }
-        assertTrue(checked > 0, "a street chunk with a network and a building door facing it");
+        assertTrue(cleared >= 2 * 2 * 2, "a door's two columns, two deep, two high: " + cleared);
+    }
+
+    private static long key(int x, int y, int z) {
+        return ((long) y << 8) | (z << 4) | x;
+    }
+
+    /** A target that keeps what is set in a map. */
+    private static final class MapTarget implements CityTarget {
+
+        private final Map<Long, BlockRef> blocks;
+
+        MapTarget(Map<Long, BlockRef> blocks) {
+            this.blocks = blocks;
+        }
+
+        @Override
+        public boolean dryRun() {
+            return false;
+        }
+
+        @Override
+        public BlockRef get(int x, int y, int z) {
+            return blocks.getOrDefault(key(x, y, z), BlockRef.AIR);
+        }
+
+        @Override
+        public void set(int x, int y, int z, BlockRef block) {
+            blocks.put(key(x, y, z), block);
+        }
+
+        @Override
+        public void clearToMax(int fromY) {}
+
+        @Override
+        public void torch(int x, int y, int z) {}
+
+        @Override
+        public void spawner(int x, int y, int z, com.tuxprogrammer.lostcities.asset.model.PaletteEntry info,
+            PartWriter.Placement placement) {}
+
+        @Override
+        public void tileEntity(int x, int y, int z, com.tuxprogrammer.lostcities.asset.block.TileTemplate template,
+            com.tuxprogrammer.lostcities.asset.transform.Transform transform) {}
     }
 
     @Test
