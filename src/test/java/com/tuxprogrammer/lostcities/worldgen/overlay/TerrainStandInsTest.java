@@ -62,6 +62,9 @@ public class TerrainStandInsTest {
         assertSame(standIn, TerrainStandIns.terrainBlock(new WorldReadingMachine(), FurnishItem.GT_MACHINES, standIn));
         assertNull(TerrainStandIns.terrainBlock(new WorldReadingMachine(), "somemod:lamp", standIn));
         assertSame(plain, TerrainStandIns.terrainBlock(plain, "minecraft:stone", standIn));
+        // A world-aware override read and cleared (MalisisDoors' doors under the vanilla names) is written as itself.
+        Block door = new WorldReadingMachine();
+        assertSame(door, TerrainStandIns.terrainBlock(door, "minecraft:iron_door", standIn));
     }
 
     /** The terrain buffer's write path: a TE-backed GT machine never reaches the chunk's sections as itself. */

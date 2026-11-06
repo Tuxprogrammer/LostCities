@@ -1,13 +1,12 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
+import com.tuxprogrammer.lostcities.core.assets.GenerationSafety;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishItem;
 
 /**
@@ -27,7 +26,7 @@ import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishItem;
  * {@link WorldChunkBuffer} see the stand-in as the machine, so every pass behaves as it did with the machine in place,
  * and the population phase, where the chunk is loaded, swaps each stand-in back before it creates the machine's tile
  * entity ({@link WorldChunkBuffer#restoreStandIns}). Any other block whose opacity reads the world is not written at
- * all during the terrain phase; none is known in the pack.
+ * all during the terrain phase, unless {@link GenerationSafety} lists it as read and safe.
  *
  * <p>
  * Side: server. Thread-safe.
@@ -45,9 +44,11 @@ public final class TerrainStandIns {
     private TerrainStandIns() {}
 
     /**
-     * Returns whether a block's light opacity depends on the world: whether its class overrides Forge's
-     * {@code Block.getLightOpacity(IBlockAccess, int, int, int)}. Such a block may read a tile entity or a neighbor
-     * through the world, which is not safe before the chunk is in the chunk map.
+     * Returns whether a block's light opacity may depend on the world: whether a mod class of it overrides Forge's
+     * {@code Block.getLightOpacity(IBlockAccess, int, int, int)}, read from its bytecode
+     * ({@link GenerationSafety#declaresWorldOpacity}; reflection would resolve client-only signatures on a server).
+     * Such a block may read a tile entity or a neighbor through the world, which is not safe before the chunk is in the
+     * chunk map.
      *
      * @param block the block
      * @return {@code true} when the opacity lookup is the block's own
@@ -60,15 +61,16 @@ public final class TerrainStandIns {
      * As {@link #readsWorld(Block)}, for a block class.
      *
      * @param type the block class
-     * @return {@code true} when the class or a superclass below {@code Block} overrides the lookup
+     * @return {@code true} when the class or a mod superclass below {@code Block} overrides the lookup
      */
     public static boolean readsWorld(Class<?> type) {
-        return READS_WORLD.computeIfAbsent(type, TerrainStandIns::overridesOpacity);
+        return READS_WORLD.computeIfAbsent(type, GenerationSafety::declaresWorldOpacity);
     }
 
     /**
      * Returns the block the terrain phase writes for a block: the block itself when its opacity does not read the
-     * world, the stand-in for a GT machine, and {@code null}, nothing, for any other block whose opacity does.
+     * world or was read and cleared ({@link GenerationSafety#isChecked}), the stand-in for a GT machine, and
+     * {@code null}, nothing, for any other block whose opacity does.
      *
      * @param block   the block the city wants
      * @param name    its registry name
@@ -79,15 +81,10 @@ public final class TerrainStandIns {
         if (!readsWorld(block)) {
             return block;
         }
-        return FurnishItem.GT_MACHINES.equals(name) ? standIn : null;
+        if (FurnishItem.GT_MACHINES.equals(name)) {
+            return standIn;
+        }
+        return GenerationSafety.isChecked(name) ? block : null;
     }
 
-    private static boolean overridesOpacity(Class<?> type) {
-        try {
-            Method method = type.getMethod("getLightOpacity", IBlockAccess.class, int.class, int.class, int.class);
-            return method.getDeclaringClass() != Block.class;
-        } catch (NoSuchMethodException | SecurityException e) {
-            return false;
-        }
-    }
 }

@@ -106,6 +106,26 @@ public final class GenerationSafety {
     }
 
     /**
+     * Returns whether a block class, a mod's, declares the world-aware light opacity anywhere below {@link Block}.
+     *
+     * @param type the block class
+     * @return {@code true} when a class of its own overrides the lookup
+     */
+    public static boolean declaresWorldOpacity(Class<?> type) {
+        return overrider(type) != null;
+    }
+
+    /**
+     * Returns whether a block's world-aware opacity was read and found safe to write during generation ({@link #CHECKED}).
+     *
+     * @param name the registry name
+     * @return {@code true} when cleared
+     */
+    public static boolean isChecked(String name) {
+        return CHECKED.containsKey(name);
+    }
+
+    /**
      * Returns the first class below {@link Block} that declares the world-aware opacity, or null. Reads each class's
      * bytes with ASM rather than reflection: reflecting a block's methods resolves their signatures, and many blocks
      * name client-only classes (icon registers) that a dedicated server cannot load.
