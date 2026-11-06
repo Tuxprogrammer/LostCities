@@ -18,6 +18,28 @@ Explore cities that were here before you, salvage what they left behind, or move
 - **Profiles.** Ten built-in profiles (`default`, `nodamage`, `rarecities`, `onlycities`, `tallbuildings`, `safe`, `ancient`, `wasteland`, `atlantis`, `largecities`), and your own in upstream's JSON format.
 - **For server owners and builders:** operator commands to inspect and locate cities and buildings, a part editor for making new buildings, and an [API](docs/api.md) for other mods.
 
+## Screenshots
+
+All taken in a GTNH 2.9.0 world on RWG2 Continents with the default settings.
+
+![A city's skyline over RWG terrain: tall towers in the core taper to low buildings at the edge.](docs/images/city-skyline-over-rwg-terrain.jpg)
+*A city's skyline over RWG terrain: tall towers in the core taper to low buildings at the edge.*
+
+![Where a city meets the overworld: streets and parks end at the forest.](docs/images/city-edge-meets-forest.jpg)
+*Where a city meets the overworld: streets and parks end at the forest.*
+
+![An elevated highway deck running between towers, with gantries and street lights.](docs/images/elevated-highway.jpg)
+*An elevated highway deck running between towers, with gantries and street lights.*
+
+![A surface railway station with its platforms, tracks and forecourt.](docs/images/railway-station-from-above.jpg)
+*A surface railway station with its platforms, tracks and forecourt.*
+
+![A railway line seen from inside its tunnel.](docs/images/railway-tunnel.jpg)
+*A railway line seen from inside its tunnel.*
+
+![A village sewn into the city's edge, next to a paved plaza and a river.](docs/images/village-beside-city-plaza.jpg)
+*A village sewn into the city's edge, next to a paved plaza and a river.*
+
 ## Requirements
 
 - **GT New Horizons 2.9.0**, server and client. The pack provides GTNHLib, the one hard dependency.
