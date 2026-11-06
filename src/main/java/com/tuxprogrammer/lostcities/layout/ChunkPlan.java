@@ -71,6 +71,7 @@ public final class ChunkPlan {
     final LotKind lot;
     final int lotDepth;
     final int lotColumnFloors;
+    final MultiPos lotFootprint;
 
     ChunkPlan(Builder b) {
         characteristics = b.characteristics;
@@ -111,6 +112,7 @@ public final class ChunkPlan {
         lot = b.lot;
         lotDepth = b.lotDepth;
         lotColumnFloors = b.lotColumnFloors;
+        lotFootprint = b.lotFootprint;
     }
 
     /** Returns chunk X. */
@@ -479,14 +481,29 @@ public final class ChunkPlan {
         return lot;
     }
 
-    /** Returns how deep a dug lot is, in blocks below city ground: 1, 2 or 4; 0 for any other chunk. */
+    /**
+     * Returns how deep a dug lot is, in blocks below city ground: 1, 2 or 4 for an edge lot, cellars × floor pitch for
+     * a construction lot at real size (0 for a slab at grade); 0 for any other chunk.
+     */
     public int lotDepth() {
         return lotDepth;
     }
 
-    /** Returns how many floors a foundation's columns rise above city ground: 1 to 3; 0 for any other chunk. */
+    /**
+     * Returns how many floors a foundation's frame rises above city ground: 1 to 3 for an edge lot, up to its class's
+     * floors for a construction lot at real size; 0 for any other chunk.
+     */
     public int lotColumnFloors() {
         return lotColumnFloors;
+    }
+
+    /**
+     * Returns where the chunk lies in its construction lot's footprint (city-realism phase 3): its offset in chunks and
+     * the footprint's size. {@link MultiPos#SINGLE} for an edge lot of one chunk drawn the 0011 way (and every chunk
+     * without a lot); a lot drawn at a real size, even 1 × 1, has a position.
+     */
+    public MultiPos lotFootprint() {
+        return lotFootprint;
     }
 
     @Override
@@ -540,5 +557,6 @@ public final class ChunkPlan {
         LotKind lot = LotKind.NONE;
         int lotDepth;
         int lotColumnFloors;
+        MultiPos lotFootprint = MultiPos.SINGLE;
     }
 }

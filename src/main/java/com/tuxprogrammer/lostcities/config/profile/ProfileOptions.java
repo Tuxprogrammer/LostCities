@@ -509,6 +509,20 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get construction lots at real sizes; worlds pinned before the key keep single-chunk lots (D325).
+        add(
+            new ProfileOption(
+                "lotFootprints",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "04-city-layout",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -562,6 +576,7 @@ public final class ProfileOptions {
         legacyDefault("densityRings", "0.0");
         // Worlds pinned before the link network keep the legacy highways and railways, whatever the default becomes.
         legacyDefault("networkLayout", "legacy");
+        legacyDefault("lotFootprints", "false");
     }
 
     /**

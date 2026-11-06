@@ -62,6 +62,7 @@ public final class CityProfiles {
             .cityGrading(settings.cityGrade(), settings.cityGradeRadius())
             .floorPitch(settings.floorPitch())
             .densityRings(settings.densityRings())
+            .lotFootprints(settings.lotFootprints())
             .cityShape(settings.cityAvoidOcean(), settings.cityConnected())
             .character(settings.cityTaper(), settings.edgeLotChance(), settings.facadeContrast())
             .averageHeightmap(values.getBoolean("useAvgHeightmap"), settings.heightSampleSize())

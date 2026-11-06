@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
@@ -146,6 +147,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     private final ChunkCache<ChunkCharacteristics> characteristicsCache;
     private final ChunkCache<ChunkPlan> plans;
     private final ChunkCache<Derived> derived;
+    private final ChunkCache<Optional<ConstructionLots.Draw>> lotCells;
+    private final ChunkCache<LotSite> lotSites;
     private final Set<String> warned = new HashSet<>();
 
     /**
@@ -184,6 +187,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.components = new ChunkCache<>(Math.max(16, Math.min(cache, 256)));
         this.plans = new ChunkCache<>(cache);
         this.derived = new ChunkCache<>(cache);
+        this.lotCells = new ChunkCache<>(Math.max(64, cache / 4));
+        this.lotSites = new ChunkCache<>(Math.max(64, cache / 4));
     }
 
     // ================================================================== public stages
@@ -847,6 +852,17 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     // ================================================================== plan
 
     private ChunkPlan computePlan(int x, int z) {
+        ChunkPlan.Builder b = computeBase(x, z);
+        drawLot(b, x, z);
+        applyPlaza(b, x, z);
+        return new ChunkPlan(b);
+    }
+
+    /**
+     * Plans a chunk up to its lot: every draw but {@link #drawLot} and the plaza. Pure, so a construction lot can ask
+     * it of the other chunks of its footprint (phase 3) without a plan of theirs.
+     */
+    private ChunkPlan.Builder computeBase(int x, int z) {
         ChunkCharacteristics c = characteristics(x, z);
         ChunkPlan.Builder b = new ChunkPlan.Builder();
         b.characteristics = c;
@@ -894,9 +910,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         drawLevels(b, x, z, random, building);
         drawTail(b, x, z, random, style);
         b.intensity = c.isCity ? urbanity.intensity(x, z) : 0f;
-        drawLot(b, x, z);
-        applyPlaza(b, x, z);
-        return new ChunkPlan(b);
+        return b;
     }
 
     /**
@@ -925,6 +939,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (!building && !open || infrastructure.rail(x, z)
             .isPresent()) {
             return;
+        }
+        if (profile.lotFootprints && ringLot > 0) {
+            // Phase 3 (D325): ring construction lots come from the chunk's cell, at their class's real size; the
+            // chunk's own roll keeps only the edge-lot chance.
+            ConstructionLots.Draw lot = constructionLot(ConstructionLots.cell(x), ConstructionLots.cell(z));
+            if (lot != null && lot.contains(x, z)) {
+                applyConstructionLot(b, lot, x, z);
+                return;
+            }
+            ringLot = 0f;
         }
         QualityRandom lots = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ LOT_SALT);
         float chance = edgeLots
@@ -959,6 +983,154 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         if (kind == LotKind.FOUNDATION) {
             b.lotColumnFloors = 1 + Math.min(LOT_MAX_COLUMN_FLOORS - 1, (int) (columnRoll * LOT_MAX_COLUMN_FLOORS));
+        }
+    }
+
+    /**
+     * Phase 3 (D325 to D327): turns a chunk of a construction lot's footprint into its part of the lot. Every
+     * chunk of the footprint gets the same kind, depth and frame, from the cell's draw.
+     */
+    private void applyConstructionLot(ChunkPlan.Builder b, ConstructionLots.Draw lot, int x, int z) {
+        if (b.hasBuilding) {
+            becomeOpenLot(b);
+            b.floors = 0;
+            b.cellars = 0;
+        }
+        b.streetType = StreetType.NORMAL;
+        b.parkPart = null;
+        b.fountainPart = null;
+        b.frontPart = null;
+        b.lot = lot.kind;
+        b.lotFootprint = new MultiPos(x - lot.x, z - lot.z, lot.dimX, lot.dimZ);
+        if (lot.kind.isDug()) {
+            b.lotDepth = lot.cellars * profile.floorPitch;
+            // D329: a dug lot stands for a building with cellars, so it follows upstream's rule for one: no rail
+            // corridor runs through it, and a rail dungeon stays only below its cellars.
+            b.xRailCorridor = false;
+            b.zRailCorridor = false;
+            if (b.railDungeonPart != null
+                && infrastructure.railwayLevel() >= b.characteristics.cityLevel - lot.cellars) {
+                b.railDungeonPart = null;
+            }
+        }
+        if (lot.kind == LotKind.FOUNDATION) {
+            b.lotColumnFloors = lot.frameFloors;
+        }
+    }
+
+    /**
+     * The construction lot of a cell, fitted to its chunks (phase 3), or {@code null}: the cell's draw, kept when
+     * every chunk of its footprint could hold a lot at one city level, else shrunk to its top-left chunk, else none.
+     * Its cellars are fitted above the world's floor and to the profile's maximum, its frame under the roof cap, and a
+     * pit with no cellars is a bare lot. Cached per cell; the answer depends on nothing but the seed and the cell.
+     */
+    ConstructionLots.Draw constructionLot(int cellX, int cellZ) {
+        Optional<ConstructionLots.Draw> cached = lotCells.get(cellX, cellZ);
+        if (cached != null) {
+            return cached.orElse(null);
+        }
+        ConstructionLots.Draw lot = fitConstructionLot(cellX, cellZ);
+        lotCells.put(cellX, cellZ, Optional.ofNullable(lot));
+        return lot;
+    }
+
+    private ConstructionLots.Draw fitConstructionLot(int cellX, int cellZ) {
+        int cornerX = cellX * ConstructionLots.CELL;
+        int cornerZ = cellZ * ConstructionLots.CELL;
+        ConstructionLots.Draw lot = ConstructionLots
+            .draw(seed, cellX, cellZ, ringDistance(cornerX, cornerZ), profile.densityRings, profile.buildingMaxFloors);
+        if (lot == null) {
+            return null;
+        }
+        if (!footprintFits(lot)) {
+            lot = lot.single();
+            if (!footprintFits(lot)) {
+                return null;
+            }
+        }
+        LotSite site = lotSite(lot.x, lot.z);
+        int cellars = Math.max(0, Math.min(lot.cellars, site.maxCellars));
+        int cityGround = profile.groundLevel + site.cityLevel * ChunkPlan.LEVEL_HEIGHT;
+        while (cellars > 0 && cityGround - cellars * profile.floorPitch <= MIN_BOTTOM_Y) {
+            cellars--;
+        }
+        int frame = Math.max(1, capFloors(lot.frameFloors, cityGround, profile.floorPitch));
+        LotKind kind = lot.kind;
+        if (kind == LotKind.PIT && cellars == 0) {
+            // The class has no cellar to dig: an empty lot. Rail corridors under a dug lot give way to it (D329).
+            kind = LotKind.BARE;
+        }
+        return new ConstructionLots.Draw(
+            lot.cls,
+            lot.x,
+            lot.z,
+            lot.dimX,
+            lot.dimZ,
+            kind,
+            cellars,
+            lot.classFloors,
+            Math.min(frame, lot.classFloors));
+    }
+
+    /** Whether every chunk of a footprint could hold a lot, all at one city level. */
+    private boolean footprintFits(ConstructionLots.Draw lot) {
+        int level = Integer.MIN_VALUE;
+        for (int x = lot.x; x < lot.x + lot.dimX; x++) {
+            for (int z = lot.z; z < lot.z + lot.dimZ; z++) {
+                LotSite site = lotSite(x, z);
+                if (!site.eligible || level != Integer.MIN_VALUE && site.cityLevel != level) {
+                    return false;
+                }
+                level = site.cityLevel;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Whether a chunk could be part of a construction lot, from its plan before lots: the edge-lot rules of 0011 §3
+     * (a single building chunk or an open lot; never a multibuilding, predefined content, highway, rail, lane or
+     * village ring). Only chunks that pass the cheap checks are planned, and a multibuilding never is, so this never
+     * asks for a plan that is asking for it.
+     */
+    private LotSite lotSite(int x, int z) {
+        LotSite cached = lotSites.get(x, z);
+        if (cached != null) {
+            return cached;
+        }
+        ChunkCharacteristics c = characteristics(x, z);
+        LotSite site;
+        if (!c.isCity || c.multiPos.isMulti()
+            || predefined.occupant(x, z) != null
+            || c.lane.role() != LaneRole.NONE
+            || c.zone.zone()
+                .isTransition()
+            || infrastructure.rail(x, z)
+                .isPresent()) {
+            site = LotSite.NONE;
+        } else {
+            ChunkPlan.Builder b = computeBase(x, z);
+            boolean building = b.hasBuilding;
+            boolean open = !building && b.hierarchicalOpen && b.parkPart == null && b.streetType == StreetType.PARK;
+            boolean eligible = (building || open) && b.highwayXLevel < 0 && b.highwayZLevel < 0;
+            site = eligible ? new LotSite(true, c.cityLevel, maxCellars(b.settings, null, c.cityLevel)) : LotSite.NONE;
+        }
+        return lotSites.put(x, z, site);
+    }
+
+    /** What a construction lot needs to know of one chunk of its footprint. */
+    private static final class LotSite {
+
+        static final LotSite NONE = new LotSite(false, 0, 0);
+
+        final boolean eligible;
+        final int cityLevel;
+        final int maxCellars;
+
+        LotSite(boolean eligible, int cityLevel, int maxCellars) {
+            this.eligible = eligible;
+            this.cityLevel = cityLevel;
+            this.maxCellars = maxCellars;
         }
     }
 
