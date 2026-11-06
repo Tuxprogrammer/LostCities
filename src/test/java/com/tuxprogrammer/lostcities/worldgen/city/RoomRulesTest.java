@@ -52,18 +52,8 @@ public class RoomRulesTest {
 
     /** The first job of one chest or spawner part at a chunk, height and building. */
     private static PopulationJob job(String part, int chunkX, int y, String building, boolean rules) {
-        JobTarget.Facts facts = new JobTarget.Facts(
-            9,
-            chunkX,
-            0,
-            71,
-            71,
-            2,
-            3,
-            BiomeDescriptor.NONE,
-            false,
-            true,
-            0f).withRoomRules(rules);
+        JobTarget.Facts facts = new JobTarget.Facts(9, chunkX, 0, 71, 71, 2, 3, BiomeDescriptor.NONE, false, true, 0f)
+            .withRoomRules(rules);
         JobTarget target = new JobTarget(facts);
         PartWriter writer = new PartWriter(
             target,

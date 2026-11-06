@@ -26,7 +26,8 @@ public final class RoomFit {
 
     /** Returns whether loot chests fit a room kind. */
     public static boolean lootFits(RoomKind kind) {
-        return kind == RoomKind.BASEMENT || kind == RoomKind.OFFICE || kind == RoomKind.KITCHEN
+        return kind == RoomKind.BASEMENT || kind == RoomKind.OFFICE
+            || kind == RoomKind.KITCHEN
             || kind == RoomKind.INDUSTRIAL;
     }
 

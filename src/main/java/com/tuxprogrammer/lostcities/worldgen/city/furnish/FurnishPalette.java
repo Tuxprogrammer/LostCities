@@ -65,7 +65,14 @@ public final class FurnishPalette {
 
     FurnishPalette(RoomKind room, float density, int maxItems, int maxTiles, FurnishItem fallback,
         List<FurnishItem> items) {
-        this(room, density, maxItems, maxTiles, fallback, items, Collections.<String, Integer>emptyMap(),
+        this(
+            room,
+            density,
+            maxItems,
+            maxTiles,
+            fallback,
+            items,
+            Collections.<String, Integer>emptyMap(),
             Collections.<String, Integer>emptyMap());
     }
 

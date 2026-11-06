@@ -47,7 +47,8 @@ public final class FurnishCheck implements SelfCheck {
                 if (block.startsWith("minecraft:")) {
                     out.add("furnish " + kind.id() + ": block " + block + " is not registered");
                 } else if (pack) {
-                    LostCities.LOG.warn("Furnish {}: block {} is not registered in this pack; it is skipped", kind.id(), block);
+                    LostCities.LOG
+                        .warn("Furnish {}: block {} is not registered in this pack; it is skipped", kind.id(), block);
                 }
             }
             for (String mob : palette.mobs()
