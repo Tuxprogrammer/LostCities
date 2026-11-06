@@ -285,6 +285,28 @@ B1, B2, B4 and B5 hold in every one of these worlds, before and after; the tight
 
 Where the time went (Java Flight Recorder, classic RWG, seed 4242): before the pass, whole-chunk height computations (`getNewNoise`) were three fifths of the prefetcher, two fifths of those for landmarks' ground estimates, which no generation step reads (D263); the terrain phase was mostly block reads and writes, a fifth of it in `moveUp`'s copy of a column (mostly stone onto stone) and an eighth in the section setter's block-ID lookup (D264); hash maps keyed by packed chunk pairs had turned their buckets into trees (D265); style blocks missed their cache (D266); and the population's dry run resolved every block of every part (D267). What is left is near its floor: the layout's own height samples (one whole classic chunk each, 0.85 ms, about 450 per region), the planning, and the terrain phase's block reads and writes.
 
+**Measured after city realism** (KI-8): the same method and sequence, with every new-world default the city-realism work added since the beta pass (floor pitch 8, furnished rooms with GT machines, partial multiblocks and D378's stand-ins, room rules, pack houses, density rings, the jittered network with 3-nearest links and diagonals, lot footprints, the beltway, districts, open door steps, ramp holds). `gtnh` at `2686a1ec` against the same tree with D-perf-1, real-pack instance 4, the only job on the build server, one fresh world per row: RWG2 Continents seed 4242 and classic RWG seed 777. Times in milliseconds.
+
+| | RWG2 Continents 4242, before | after | Classic RWG 777, before | after |
+|---|---|---|---|---|
+| RWG `provideChunk`, p50 (all chunks) | 2.10 | 2.36 | 1.97 | 1.97 |
+| RWG `populate`, p50 (all chunks) | 4.19 | 4.19 | 2.62 | 2.62 |
+| RWG `provideChunk` + `populate`, total | 18,244 | 18,500 | 20,457 | 20,239 |
+| Terrain phase, city chunks: p50 / p95 / p99.9 | 0.59 / 2.10 / 5.24 | 0.52 / 1.84 / 5.24 | 0.52 / 1.44 / 6.34 | 0.52 / 1.44 / 6.10 |
+| Terrain phase, total (city chunks) | 1,181 (1,005) | 1,100 (928) | 753 (561) | 746 (552) |
+| Population phase, city chunks: p50 / p95 / p99.9 | 0.066 / 0.66 / 1.57 | 0.066 / 0.66 / 1.05 | 0.074 / 0.52 / 15.3 | 0.074 / 0.52 / 14.4 |
+| Population phase, total | 213 | 209 | 139 | 141 |
+| Prefetch tick: p50 / p95 / p99.9; total | 0.92 / 3.67 / 5.22; 815 | 0.92 / 3.67 / 5.07; 815 | 0.59 / 3.67 / 9.84; 678 | 0.66 / 3.67 / 9.80; 694 |
+| Layout height sample, p50 / p99.9 | 0.49 / 0.80 | 0.52 / 0.73 | 0.79 / 1.44 | 0.79 / 1.44 |
+| **B1**: terrain phase on city chunks, p95 (≤ RWG `provideChunk` p50) | **2.10** (≤ 2.10, at the limit) | **1.84** (≤ 2.36) | **1.44** (≤ 1.97) | **1.44** (≤ 1.97) |
+| **B2**: population phase on city chunks, p95 (≤ 0.5 × RWG `populate` p50) | **0.66** (≤ 2.10) | **0.66** (≤ 2.10) | **0.52** (≤ 1.31) | **0.52** (≤ 1.31) |
+| **B3**: overlay share of RWG's total, prefetcher included | **12.1 %** (2,209 of 18,244) | **11.5 %** (2,124 of 18,500) | **7.7 %** (1,571 of 20,457) | **7.8 %** (1,580 of 20,239) |
+| **B4**: worst p99.9 of terrain, population and prefetch tick | **5.22** | **5.07** | **9.84** | **9.80** |
+| Invocations a GC pause fell into, set apart from B4 | 0 | 0 | 0 | 0 |
+| **B5**: plan, height and palette caches, bound | **15.9 MB** | **15.9 MB** | **15.9 MB** | **15.9 MB** |
+
+Every budget holds on both world types, before and after. Against the beta pass on the same seeds, city realism raised RWG2's terrain phase on city chunks from 772 to 1,005 ms and its p95 from 1.05 to 2.10 ms, exactly B1's limit, and B3 from 10.2 to 12.1 %. Classic RWG seed 777 rose only from 7.2 to 7.7 %. Java Flight Recorder on the RWG2 world put the furnish pass at about a seventh of the terrain phase, nearly all of it `RoomScanner.scan` (up to seven block reads a column and a substring per block), and the per-write block and opacity lookups behind `WorldChunkBuffer.writable` at about a twentieth. The rest is the city writer's part placement, `moveUp`'s column copy, the terrain blend and the section's own block reads. D-perf-1 reads each level once, matches names in place and caches the written block per reference. That took RWG2's city terrain phase to 928 ms with p95 1.84 ms. Classic RWG is unchanged within noise. Both worlds print the `city.real` and `scattered.real` hashes they printed before the change: RWG2 Continents `69471358…`/`94e530d4…` and classic RWG `6c88bbbc…`/`0d78f84a…`. The tightest budget is still B4 on classic RWG seed 777, a prefetch tick that builds a VillageNames start (9.8 ms, as in the beta pass). One classic population phase took 14 to 15 ms in both runs (chunk 76,3, no height samples), and B4's p99.9 over all chunks leaves it out.
+
 ## Consequences
 
 - **M04 scope:**

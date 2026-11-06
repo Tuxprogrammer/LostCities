@@ -236,4 +236,19 @@ public class FurnishPassTest {
         assertTrue(shop == RoomKind.SHOP || shop == RoomKind.KITCHEN, shop.id());
         assertEquals(RoomKind.SHOP, RoomKind.byId("shop"));
     }
+
+    /** A passage is told by the name after the mod ID only (the in-place match of D-perf-1). */
+    @Test
+    void passagesMatchTheNameAfterTheModId() {
+        assertTrue(RoomScanner.isPassage(DOOR));
+        assertTrue(RoomScanner.isPassage(STAIRS));
+        assertTrue(RoomScanner.isPassage(LADDER));
+        assertTrue(RoomScanner.isPassage(BlockRef.of("minecraft:golden_rail", 0)));
+        assertTrue(RoomScanner.isPassage(BlockRef.of("minecraft:fence_gate", 0)));
+        assertTrue(RoomScanner.isPassage(BlockRef.of("minecraft:trapdoor", 0)));
+        assertFalse(RoomScanner.isPassage(STONE));
+        assertFalse(RoomScanner.isPassage(BlockRef.AIR));
+        assertFalse(RoomScanner.isPassage(BlockRef.of("railcraft:cube", 0)));
+        assertFalse(RoomScanner.isPassage(BlockRef.of("doorgate:cobble", 0)));
+    }
 }
