@@ -162,7 +162,9 @@ final class PackHouseScenario implements Scenario {
         context.check(kind != null, "expected the second build to place a house");
         context.check(
             first == second,
-            "expected the same blocks from a second build of " + kind + ", got " + Long.toHexString(first)
+            "expected the same blocks from a second build of " + kind
+                + ", got "
+                + Long.toHexString(first)
                 + " then "
                 + Long.toHexString(second));
         LostCities.LOG.info(
