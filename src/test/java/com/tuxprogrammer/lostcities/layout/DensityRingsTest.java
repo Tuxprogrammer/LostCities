@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.layout.DensityRings.BuildingClass;
 import com.tuxprogrammer.lostcities.layout.DensityRings.Ring;
 
-/** The density rings (D-p2c-1): the curves in isolation, and over a test city. */
+/** The density rings (D306): the curves in isolation, and over a test city. */
 public class DensityRingsTest {
 
     private static final long SEED = 4242L;

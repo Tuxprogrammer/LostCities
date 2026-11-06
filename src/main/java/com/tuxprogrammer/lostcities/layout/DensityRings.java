@@ -3,7 +3,7 @@ package com.tuxprogrammer.lostcities.layout;
 import java.util.Locale;
 
 /**
- * City density rings and building classes (city-realism phase 2c, decision D-p2c-1): a tall core that tapers to
+ * City density rings and building classes (city-realism phase 2c, decision D306): a tall core that tapers to
  * low-rises, houses and parks at the edge. Original to this mod; upstream has no such notion.
  *
  * <p>

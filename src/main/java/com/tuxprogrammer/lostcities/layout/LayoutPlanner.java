@@ -786,13 +786,13 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         return name;
     }
 
-    /** The chunk's ring distance (D-p2c-1): 0 at a city's center, 1 where the city ends. */
+    /** The chunk's ring distance (D306): 0 at a city's center, 1 where the city ends. */
     float ringDistance(int x, int z) {
         return DensityRings.distance(cities.cityFactor(x, z), profile.cityThreshold);
     }
 
     /**
-     * Density rings (D-p2c-1): re-picks a single's building by class for its ring, and in the outer and edge rings
+     * Density rings (D306): re-picks a single's building by class for its ring, and in the outer and edge rings
      * swaps in one of the five originals. Draws from a random of its own, so the building stream is unchanged.
      *
      * @param picked the style's pick
@@ -827,7 +827,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         return accepted ? chosen : picked;
     }
 
-    /** Whether a multibuilding's class is accepted in the ring of its top-left chunk (D-p2c-1). */
+    /** Whether a multibuilding's class is accepted in the ring of its top-left chunk (D306). */
     private boolean ringAcceptsMulti(int x, int z, String multi) {
         QualityRandom r = new QualityRandom((seed + z * BUILDING_Z + x * BUILDING_X) ^ RING_SALT);
         float chance = DensityRings
@@ -1071,7 +1071,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             f = taperFloors(f, intensity, taper, x, z);
         }
         if (profile.densityRings > 0 && c.isCity) {
-            // Density rings (D-p2c-1): the floors follow the curve over the ring distance.
+            // Density rings (D306): the floors follow the curve over the ring distance.
             int cap = DensityRings.floorCap(ringDistance(x, z), profile.buildingMaxFloors, profile.densityRings);
             f = Math.max(DensityRings.floorLow(cap, profile.densityRings), Math.min(f, cap));
         }

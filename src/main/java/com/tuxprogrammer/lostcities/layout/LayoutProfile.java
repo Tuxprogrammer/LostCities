@@ -96,7 +96,7 @@ public final class LayoutProfile {
      */
     public final float facadeContrast;
     /**
-     * {@code densityRings}: the strength of the density rings and building classes (D-p2c-1); 0 is off, the layout
+     * {@code densityRings}: the strength of the density rings and building classes (D306); 0 is off, the layout
      * of worlds pinned before the option.
      */
     public final float densityRings;

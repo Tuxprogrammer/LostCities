@@ -491,7 +491,7 @@ public final class ProfileOptions {
                 "03-terrain",
                 false,
                 null));
-        // New worlds get 1.0; worlds pinned before the key existed have no rings (D282, D-p2c-1).
+        // New worlds get 1.0; worlds pinned before the key existed have no rings (D282, D306).
         add(
             new ProfileOption(
                 "densityRings",

@@ -150,7 +150,7 @@ public final class TerrainSettings {
         edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
         // 0 is the pre-pin world's value; new pins take the option's 0.25 (D282).
         packHouseChance = r.floatValue("packHouseChance", 0f, 0f, 1f);
-        // 0 is the pre-pin world's value (rings off); new pins take the option's 1.0 (D282, D-p2c-1).
+        // 0 is the pre-pin world's value (rings off); new pins take the option's 1.0 (D282, D306).
         densityRings = r.floatValue("densityRings", 0f, 0f, 2f);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
