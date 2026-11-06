@@ -9,6 +9,7 @@ public class PieceFieldsTest {
 
     /** Stands in for the village base class: a ground field at -1 and a villager counter at 0. */
     static class FakeVillage {
+
         protected int hpos = -1;
         private int villagers;
         private boolean desert;
@@ -16,6 +17,7 @@ public class PieceFieldsTest {
 
     /** Stands in for a mod's piece: its own private ground field, a counter of its own and unrelated ints. */
     static class FakeHouse extends FakeVillage {
+
         private int averageGroundLevel = -1;
         private int witchesSpawned;
         private int width = 9;
@@ -25,6 +27,7 @@ public class PieceFieldsTest {
 
     /** A piece with none of the fields. */
     static class Bare {
+
         private final String name = "x";
     }
 

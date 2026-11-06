@@ -42,6 +42,7 @@ public final class PackHouses {
 
     /** A house kind: a vanilla piece class, or a mod's piece class registered with Forge's villager registry. */
     static final class Kind {
+
         final String id;
         final String modId;
         final String pieceClass;
@@ -57,6 +58,7 @@ public final class PackHouses {
 
     /** A kind that is usable in this game: with its Forge piece weight, or vanilla's factory. */
     static final class Usable {
+
         final Kind kind;
         final StructureVillagePieces.PieceWeight weight;
         final Method factory;
@@ -80,11 +82,7 @@ public final class PackHouses {
         new Kind("tconstruct.smeltery", "TConstruct", "tconstruct.world.village.ComponentSmeltery", null),
         new Kind("tconstruct.toolworkshop", "TConstruct", "tconstruct.world.village.ComponentToolWorkshop", null),
         new Kind("forestry.beehouse", "Forestry", "forestry.apiculture.worldgen.ComponentVillageBeeHouse", null),
-        new Kind(
-            "witchery.apothecary",
-            "witchery",
-            "com.emoniph.witchery.worldgen.ComponentVillageApothecary",
-            null),
+        new Kind("witchery.apothecary", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageApothecary", null),
         new Kind("witchery.bookshop", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageBookShop", null),
         new Kind("witchery.hut", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageWitchHut", null) };
 
@@ -132,7 +130,10 @@ public final class PackHouses {
             names.append(u.kind.id)
                 .append(' ');
         }
-        LostCities.LOG.info("Pack houses available: {}", names.toString().trim());
+        LostCities.LOG.info(
+            "Pack houses available: {}",
+            names.toString()
+                .trim());
         usable = out;
         return out;
     }
@@ -195,11 +196,11 @@ public final class PackHouses {
     /**
      * Builds the house of a lot inside its chunk.
      *
-     * @param world     the world, whose chunk is loaded
-     * @param chunkX    the lot's chunk X
-     * @param chunkZ    the lot's chunk Z
-     * @param groundY   the block Y of the lot's ground surface
-     * @param doorSide  the side the door faces, 0 north, 1 east, 2 south, 3 west
+     * @param world    the world, whose chunk is loaded
+     * @param chunkX   the lot's chunk X
+     * @param chunkZ   the lot's chunk Z
+     * @param groundY  the block Y of the lot's ground surface
+     * @param doorSide the side the door faces, 0 north, 1 east, 2 south, 3 west
      * @return the id of the kind built, or {@code null} when nothing was built
      */
     public static String build(World world, int chunkX, int chunkZ, int groundY, int doorSide) {
@@ -209,7 +210,8 @@ public final class PackHouses {
         }
         long seed = world.getSeed();
         Usable use = list.get(PackHouseSelection.kind(seed, chunkX, chunkZ, list.size()));
-        long pieceSeed = StableHash.mix64(seed ^ PackHouseSelection.SEED_SALT ^ chunkX * 341873128712L ^ chunkZ * 132897987541L);
+        long pieceSeed = StableHash
+            .mix64(seed ^ PackHouseSelection.SEED_SALT ^ chunkX * 341873128712L ^ chunkZ * 132897987541L);
         int mode = Math.floorMod(doorSide, 4);
         int y = groundY + 1;
         // Measure the box at the origin, then rebuild it centered in the chunk. A factory's box is a pure translation

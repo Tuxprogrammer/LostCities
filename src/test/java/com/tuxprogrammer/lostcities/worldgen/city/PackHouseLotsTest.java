@@ -26,14 +26,20 @@ public class PackHouseLotsTest {
                 boolean empty = planner.plan(x, z)
                     .lot() == LotKind.BARE;
                 if (!empty) {
-                    assertEquals(-1, plan.packHouseSide(), "a house at (" + x + ", " + z + ") that is not an empty lot");
+                    assertEquals(
+                        -1,
+                        plan.packHouseSide(),
+                        "a house at (" + x + ", " + z + ") that is not an empty lot");
                     continue;
                 }
                 bare++;
                 if (plan.packHouseSide() >= 0) {
                     houses++;
                     assertTrue(plan.packHouseSide() < 4);
-                    assertEquals(plan.packHouseSide(), PLAN.chunk(x, z).packHouseSide());
+                    assertEquals(
+                        plan.packHouseSide(),
+                        PLAN.chunk(x, z)
+                            .packHouseSide());
                 }
             }
         }

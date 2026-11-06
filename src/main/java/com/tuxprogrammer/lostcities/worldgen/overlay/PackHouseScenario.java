@@ -18,7 +18,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  * {@code packhouse.real} (real pack, fresh world): generates the region around the nearest edge lot that holds a
  * pack house and checks that
  * <ul>
- * <li>the lot chunk holds the house's blocks above its ground, and none (apart from the terrain's own trees and plants) in the
+ * <li>the lot chunk holds the house's blocks above its ground, and none (apart from the terrain's own trees and plants)
+ * in the
  * outermost columns of the chunk;</li>
  * <li>no chunk was generated while a population ran (no cascade);</li>
  * <li>building the house a second time gives the same blocks (the piece is a pure function of the seed and chunk).</li>

@@ -25,6 +25,7 @@ public final class PieceFields {
 
     /** What {@link #apply} changed. */
     public static final class Result {
+
         private final int groundFields;
         private final int counterFields;
 
