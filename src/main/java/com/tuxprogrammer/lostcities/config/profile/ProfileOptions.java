@@ -581,7 +581,7 @@ public final class ProfileOptions {
                 false,
                 null));
         // New worlds stop a legacy rail line on a buffer before a core chunk it cannot pass; pinned worlds keep the gap
-        // (KI-3, 0013 §5, D366).
+        // (KI-3, 0013 §5, D367).
         add(
             new ProfileOption(
                 "railwayCoreEnds",
@@ -595,7 +595,7 @@ public final class ProfileOptions {
                 "06-highways-railways",
                 false,
                 null));
-        // New worlds give highway ramps one surface; pinned worlds keep the slab stripes (KI-2, 0013 §2, D367).
+        // New worlds give highway ramps one surface; pinned worlds keep the slab stripes (KI-2, 0013 §2, D368).
         add(
             new ProfileOption(
                 "rampSurface",
