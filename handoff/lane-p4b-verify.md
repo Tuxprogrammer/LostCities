@@ -1,4 +1,4 @@
-# Handoff: lane/p4b-verify (context limit reached, session 1)
+# Handoff: lane/p4b-verify (context limit reached, session 2)
 
 Branch `lane/p4b-verify`, from `gtnh` at 32847b4f. Commits: 3258e8ea, 27ecae29, 298760fa (and this handoff).
 
@@ -18,6 +18,14 @@ Instance 4, fresh rarecities, RWG2_CONTINENTS, seed 4242. Run 20261106-144732-i4
   - Next: compare the city footprint against x=-45, z -4..1, and check `NetworkWriter.linkRail` against city/building basement writers.
 - **Cascades.** 50 "Cascading world generation" warnings, none from our code. Our frames appear only as the scenario's own chunk loader at the stack root (`PathGenerator.tick`).
 
+## Session 2
+- **Railway failure diagnosed and fixed (D-p4v-4, 1d81330f).** I read the region files from the round 1 world. A Roguelike Dungeons tower (ground about Y 100, spawner at -713,50,-30, stairwell and rooms down to Y 31) cut the Y 54 tunnel at x=-45. It was not the city and not an explosion. `LandmarkKind.reachesUnderground()` (ROGUELIKE, LOOTGAMES) is used by `LandmarkZones.undergroundCore` and `RailwayInputs.isUndergroundCore`, and the LinkRails Blocked oracle now treats such a core as Blocked, so D322 drops the whole line. Legacy `underCores` is unchanged; no golden changed. Test: `LinkRailCoresTest`.
+  - Possible gap: Roguelike rooms reaching outside the landmark core and margin could still cut a line. Watch for it.
+- **D-p4v-5:** the railway scenario counts boundaries an explosion reaches separately and does not fail on them, as the highway walk already does. Test: `LinkScenariosTest`.
+- Build green on 1d81330f: 1236 tests, 0 failures. Spotless diff in 03d771a3.
+- Real-pack round 2 (the last round): instance 4, world p4vrare2. Result: see the final report or the console under `reference/remote/realpack/`.
+
 ## Not done
-- **Item 2, railway pass.** Diagnose the 4 broken boundaries above, then run round 2. Only one round is left.
-- **Item 4, README known issue** "highway steps / broken track on seeds 1 and 777" (legacy, README line 81). Not investigated. Earlier logs in `reference/remote/realpack/*/console.log` show "213 too high" on route cell(-1,0)-cell(0,0) and "1 broken" on RWG2 seed 777 from station 29,-11. See D269.
+- **KI-3 (legacy rail gap under a shallow landmark).** Confirmed by design: `RailwayLayout.underCores` returns NONE for a junction, station or slope under a shallow core (0013 "No room"). This is a different cause from the link failure. A fix would be RAILS_END_HERE buffers beside the dropped chunk. It changes legacy goldens, so it needs a D282-style gate (ProfileOption, `legacyDefault`, TerrainSettings default = legacy) and a decision. README now says the link network leaves such a line out.
+- **KI-5 (legacy highway steps and broken track on seeds 1 and 777).** Not investigated. Leads: "213 too high" on route cell(-1,0)-cell(0,0); "1 broken" on RWG2 seed 777 from station 29,-11; D269.
+- **KI-2 (ramp slab stripes).** Not started.
