@@ -1,0 +1,148 @@
+package com.tuxprogrammer.lostcities.worldgen.city;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import com.tuxprogrammer.lostcities.layout.ChunkPlan;
+import com.tuxprogrammer.lostcities.layout.LayoutLog;
+import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.MultiPos;
+import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
+import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
+
+/**
+ * Construction lots at real sizes (phase 3, D-p3-1 to D-p3-3) on the test world: footprints of up to 2 x 2 chunks that
+ * every chunk agrees on whatever order the chunks are planned in, depths of whole cellars, frames under their class's
+ * floors, pits dug across the inner chunk borders, and the pinned single-chunk lots when the option is off.
+ */
+public class ConstructionLotFootprintTest {
+
+    private static final long SEED = 1L;
+    private static final int R = 48;
+
+    private static LayoutCityPlan plan(String... values) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i + 1 < values.length; i += 2) {
+            map.put(values[i], values[i + 1]);
+        }
+        return CityFixtures.plan(SEED, TerrainSettings.fromValues(map), StructureOracle.NONE, LayoutLog.SILENT);
+    }
+
+    private static LayoutCityPlan real() {
+        return plan("densityRings", "2", "lotFootprints", "true");
+    }
+
+    private static String describe(ChunkPlan p) {
+        return p.lot() + "/" + p.lotDepth() + "/" + p.lotColumnFloors() + "/" + p.lotFootprint();
+    }
+
+    @Test
+    public void everyChunkOfAFootprintAgreesFromAnyQueryOrder() {
+        LayoutPlanner forward = real().planner();
+        LayoutPlanner backward = real().planner();
+        String[][] seen = new String[2 * R + 1][2 * R + 1];
+        for (int x = -R; x <= R; x++) {
+            for (int z = -R; z <= R; z++) {
+                seen[x + R][z + R] = describe(forward.plan(x, z));
+            }
+        }
+        int multi = 0;
+        for (int x = R; x >= -R; x--) {
+            for (int z = R; z >= -R; z--) {
+                ChunkPlan p = backward.plan(x, z);
+                assertEquals(seen[x + R][z + R], describe(p), "chunk " + x + "," + z);
+                MultiPos pos = p.lotFootprint();
+                if (p.lot() == LotKind.NONE || pos.isSingle()) {
+                    continue;
+                }
+                if (pos.width() * pos.height() > 1) {
+                    multi++;
+                }
+                int ox = x - pos.x();
+                int oz = z - pos.z();
+                for (int dx = 0; dx < pos.width(); dx++) {
+                    for (int dz = 0; dz < pos.height(); dz++) {
+                        ChunkPlan other = backward.plan(ox + dx, oz + dz);
+                        assertEquals(p.lot(), other.lot(), "footprint at " + ox + "," + oz);
+                        assertEquals(p.lotDepth(), other.lotDepth());
+                        assertEquals(p.lotColumnFloors(), other.lotColumnFloors());
+                        assertEquals(p.cityLevel(), other.cityLevel());
+                        assertEquals(new MultiPos(dx, dz, pos.width(), pos.height()), other.lotFootprint());
+                    }
+                }
+            }
+        }
+        assertTrue(multi > 0, "the test world has construction lots of more than one chunk");
+    }
+
+    @Test
+    public void depthIsWholeCellarsAndTheFrameStaysUnderTheClassFloors() {
+        LayoutPlanner planner = real().planner();
+        int dug = 0;
+        for (int x = -R; x <= R; x++) {
+            for (int z = -R; z <= R; z++) {
+                ChunkPlan p = planner.plan(x, z);
+                if (p.lot() == LotKind.NONE || p.lotFootprint()
+                    .isSingle()) {
+                    continue;
+                }
+                if (p.lot()
+                    .isDug()) {
+                    dug++;
+                    assertEquals(0, p.lotDepth() % p.floorPitch(), "depth " + p.lotDepth());
+                    assertTrue(p.lotDepth() / p.floorPitch() <= 3, "cellars " + p.lotDepth() / p.floorPitch());
+                }
+                if (p.lot() == LotKind.FOUNDATION) {
+                    assertTrue(p.lotColumnFloors() >= 1 && p.lotColumnFloors() <= 8, "frame " + p.lotColumnFloors());
+                }
+            }
+        }
+        assertTrue(dug > 0, "the test world has dug construction lots");
+    }
+
+    @Test
+    public void aMultiChunkPitIsDugAcrossItsInnerBorders() {
+        LayoutCityPlan source = real();
+        LayoutPlanner planner = source.planner();
+        int checked = 0;
+        for (int x = -R; x <= R && checked < 3; x++) {
+            for (int z = -R; z <= R && checked < 3; z++) {
+                ChunkPlan p = planner.plan(x, z);
+                MultiPos pos = p.lotFootprint();
+                if (!p.lot()
+                    .isDug() || pos.isSingle() || pos.width() < 2 || pos.x() != 0 || p.lotDepth() == 0) {
+                    continue;
+                }
+                checked++;
+                int ground = p.cityGroundLevel();
+                ArrayChunkBuffer left = CityFixtures.generate(source, x, z);
+                ArrayChunkBuffer right = CityFixtures.generate(source, x + 1, z);
+                for (int lz = EdgeLots.RIM + (pos.z() == 0 ? 0 : -EdgeLots.RIM); lz < 16 - EdgeLots.RIM; lz++) {
+                    assertTrue(left.get(15, ground, lz).isAir(), "seam west of " + (x + 1) + "," + z + " at " + lz);
+                    assertTrue(right.get(0, ground, lz).isAir(), "seam east of " + x + "," + z + " at " + lz);
+                }
+            }
+        }
+        assertTrue(checked > 0, "the test world has a lot two chunks wide");
+    }
+
+    @Test
+    public void theOptionOffKeepsThePinnedSingleChunkLots() {
+        LayoutPlanner absent = plan("densityRings", "1").planner();
+        LayoutPlanner off = plan("densityRings", "1", "lotFootprints", "false").planner();
+        for (int x = -30; x <= 30; x++) {
+            for (int z = -30; z <= 30; z++) {
+                ChunkPlan a = absent.plan(x, z);
+                assertEquals(describe(a), describe(off.plan(x, z)));
+                assertEquals(MultiPos.SINGLE, a.lotFootprint());
+            }
+        }
+    }
+}

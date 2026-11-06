@@ -475,6 +475,10 @@ public final class LayoutCityPlan implements CityPlan {
      */
     private int packHouseSide(ChunkPlan plan, int chunkX, int chunkZ) {
         if (plan.lot() != LotKind.BARE
+            || plan.lotFootprint()
+                .width()
+                * plan.lotFootprint()
+                    .height() > 1
             || !PackHouseSelection.picks(context.worldSeed(), chunkX, chunkZ, settings.packHouseChance())) {
             return -1;
         }
@@ -681,14 +685,23 @@ public final class LayoutCityPlan implements CityPlan {
                 .toLowerCase(java.util.Locale.ROOT) + " street";
         }
         if (plan.lot() != LotKind.NONE) {
-            return plan.lot()
-                .isDug()
-                    ? plan.lot()
-                        .label() + " (depth "
-                        + plan.lotDepth()
-                        + ")"
-                    : plan.lot()
-                        .label();
+            com.tuxprogrammer.lostcities.layout.MultiPos lot = plan.lotFootprint();
+            // A construction lot of more than one chunk names its size (phase 3).
+            String size = lot.width() * lot.height() > 1 ? lot.width() + "x" + lot.height() : null;
+            if (plan.lot()
+                .isDug()) {
+                return plan.lot()
+                    .label() + " (depth "
+                    + plan.lotDepth()
+                    + (size == null ? "" : ", " + size)
+                    + ")";
+            }
+            return size == null ? plan.lot()
+                .label()
+                : plan.lot()
+                    .label() + " ("
+                    + size
+                    + ")";
         }
         switch (plan.streetType()) {
             case PARK:

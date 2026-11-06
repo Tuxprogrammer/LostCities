@@ -505,6 +505,20 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get construction lots at real sizes; worlds pinned before the key keep single-chunk lots (D-p3-1).
+        add(
+            new ProfileOption(
+                "lotFootprints",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "04-city-layout",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -556,6 +570,7 @@ public final class ProfileOptions {
         // Worlds pinned before pack houses existed keep their edge lots as they were (D282).
         legacyDefault("packHouseChance", "0.0");
         legacyDefault("densityRings", "0.0");
+        legacyDefault("lotFootprints", "false");
     }
 
     /**

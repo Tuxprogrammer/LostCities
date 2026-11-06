@@ -100,6 +100,11 @@ public final class LayoutProfile {
      * of worlds pinned before the option.
      */
     public final float densityRings;
+    /**
+     * {@code lotFootprints}: whether ring construction lots take the real size, depth and frame of their ring's
+     * building class (city-realism phase 3); false is the single-chunk lots of worlds pinned before the option.
+     */
+    public final boolean lotFootprints;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -216,6 +221,7 @@ public final class LayoutProfile {
         edgeLotChance = b.edgeLotChance;
         facadeContrast = b.facadeContrast;
         densityRings = b.densityRings;
+        lotFootprints = b.lotFootprints;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -397,6 +403,7 @@ public final class LayoutProfile {
         private float edgeLotChance = .45f;
         private float facadeContrast = 45f;
         private float densityRings = 0f;
+        private boolean lotFootprints = false;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -523,6 +530,12 @@ public final class LayoutProfile {
         /** @param strength {@code densityRings}, 0 (off) to 2 @return this builder */
         public Builder densityRings(float strength) {
             densityRings = strength;
+            return this;
+        }
+
+        /** @param real {@code lotFootprints}: construction lots at real sizes @return this builder */
+        public Builder lotFootprints(boolean real) {
+            lotFootprints = real;
             return this;
         }
 

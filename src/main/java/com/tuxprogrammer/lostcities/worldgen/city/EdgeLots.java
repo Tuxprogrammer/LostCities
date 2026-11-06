@@ -5,6 +5,7 @@ import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.block.BlockChoice;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.MultiPos;
 import com.tuxprogrammer.lostcities.layout.random.StableHash;
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
@@ -26,6 +27,13 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * Every choice is a hash of the world seed and the block's position, so the lot is the same whenever it is written.
  *
  * <p>
+ * <b>Construction lots at real sizes</b> (city-realism phase 3, D-p3-2 and D-p3-3) span a footprint of up to 2 x 2
+ * chunks. Each chunk writes only its own columns, in the footprint's coordinates: the rim, walls and fence follow the
+ * footprint's outline (with a gap in the middle of each chunk's outer side), the pit runs across the inner chunk
+ * borders, and one ramp climbs from one side, steeper where the pit is deeper than the ramp is long. The frame is a
+ * concrete skeleton or a wooden scaffold, picked per footprint, with a deck over one bay at every floor below its top.
+ *
+ * <p>
  * Side: both (plain Java).
  */
 final class EdgeLots {
@@ -42,6 +50,8 @@ final class EdgeLots {
     static final int REBAR = 2;
     /** Salt of a lot's per-block hashes. */
     static final long SALT = 0x4c4f5447524f554eL;
+    /** Salt of a construction lot's frame choices. */
+    static final long FRAME_SALT = 0x4652414d45534b4cL;
 
     private final CityTarget target;
     private final ChunkPlan plan;
@@ -56,6 +66,15 @@ final class EdgeLots {
     private final BlockRef concrete;
     private final BlockRef fence;
     private final BlockRef rebar;
+    private final BlockRef scaffoldPost;
+    private final BlockRef scaffoldDeck;
+    /** Whether the lot was drawn at a real size (phase 3); false for the single-chunk lots of 0011 section 3. */
+    private final boolean real;
+    /** The chunk's offset in its footprint, in blocks, and the footprint's size in blocks. */
+    private final int offsetX;
+    private final int offsetZ;
+    private final int sizeX;
+    private final int sizeZ;
 
     EdgeLots(CityTarget target, ChunkPlan plan, AssetSet assets, long worldSeed) {
         this.target = target;
@@ -71,6 +90,14 @@ final class EdgeLots {
         this.concrete = code(assets, "lot.concrete", BlockRef.of("minecraft:stained_hardened_clay", 8));
         this.fence = code(assets, "lot.fence", BlockRef.of("minecraft:fence", 0));
         this.rebar = code(assets, "iron_bars", BlockRef.of("minecraft:iron_bars", 0));
+        this.scaffoldPost = code(assets, "lot.scaffold_post", BlockRef.of("minecraft:fence", 0));
+        this.scaffoldDeck = code(assets, "lot.scaffold_deck", BlockRef.of("minecraft:planks", 0));
+        MultiPos pos = plan.lotFootprint();
+        this.real = pos.isMulti();
+        this.offsetX = real ? pos.x() * 16 : 0;
+        this.offsetZ = real ? pos.z() * 16 : 0;
+        this.sizeX = real ? pos.width() * 16 : 16;
+        this.sizeZ = real ? pos.height() * 16 : 16;
     }
 
     private static BlockRef code(AssetSet assets, String key, BlockRef fallback) {
@@ -98,10 +125,15 @@ final class EdgeLots {
             return;
         }
         int depth = plan.lotDepth();
-        int rampSide = (int) Math.floorMod(StableHash.mix64(seed ^ plan.chunkX() * 31L ^ plan.chunkZ() * 17L), 4L);
-        for (int x = RIM; x < 16 - RIM; x++) {
-            for (int z = RIM; z < 16 - RIM; z++) {
-                int raised = ramp(x, z, rampSide, depth);
+        int rampSide = (int) Math.floorMod(StableHash.mix64(seed ^ originChunkX() * 31L ^ originChunkZ() * 17L), 4L);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int fx = offsetX + x;
+                int fz = offsetZ + z;
+                if (fx < RIM || fz < RIM || fx >= sizeX - RIM || fz >= sizeZ - RIM) {
+                    continue;
+                }
+                int raised = ramp(fx, fz, rampSide, depth, sizeX, sizeZ);
                 int floor = height - depth + raised;
                 for (int y = floor + 1; y <= height; y++) {
                     target.set(x, y, z, BlockRef.AIR);
@@ -121,9 +153,32 @@ final class EdgeLots {
         }
         walls(height, depth);
         if (kind == LotKind.FOUNDATION) {
-            columns(height, depth);
+            if (real) {
+                frame(height, depth);
+            } else {
+                columns(height, depth);
+            }
         }
-        fence(height, rampSide);
+        fence(height);
+    }
+
+    /** Chunk X of the footprint's top-left chunk (the chunk itself for a single-chunk edge lot). */
+    private int originChunkX() {
+        return plan.chunkX() - offsetX / 16;
+    }
+
+    /** Chunk Z of the footprint's top-left chunk. */
+    private int originChunkZ() {
+        return plan.chunkZ() - offsetZ / 16;
+    }
+
+    /** Whether a footprint column lies on the pit's outline, one column outside its inside. */
+    private boolean onOutline(int fx, int fz) {
+        boolean xEdge = fx == RIM - 1 || fx == sizeX - RIM;
+        boolean zEdge = fz == RIM - 1 || fz == sizeZ - RIM;
+        boolean xSpan = fx >= RIM - 1 && fx <= sizeX - RIM;
+        boolean zSpan = fz >= RIM - 1 && fz <= sizeZ - RIM;
+        return xEdge && zSpan || zEdge && xSpan;
     }
 
     /** The lot's ground at a column: two-block patches of clay and dirt, with single columns mixed in. */
@@ -153,46 +208,60 @@ final class EdgeLots {
      * climbs one block per column toward the rim, so its top meets city ground.
      */
     static int ramp(int x, int z, int side, int depth) {
+        return ramp(x, z, side, depth, 16, 16);
+    }
+
+    /**
+     * The ramp in a footprint of {@code sizeX x sizeZ} blocks (phase 3), in footprint coordinates. It lies in the
+     * middle of the first chunk along its side and runs inward one column per block of depth, as far as the pit
+     * allows; a pit deeper than that gets a steeper ramp, so the ramp's foot still meets the pit's floor. For a single
+     * chunk at most 4 deep it is the ramp of {@link #ramp(int, int, int, int)}.
+     */
+    static int ramp(int x, int z, int side, int depth, int sizeX, int sizeZ) {
         int along;
         int in;
+        int inside;
         switch (side) {
             case 0:
                 along = z;
                 in = x - RIM;
+                inside = sizeX - 2 * RIM;
                 break;
             case 1:
                 along = z;
-                in = 15 - RIM - x;
+                in = sizeX - 1 - RIM - x;
+                inside = sizeX - 2 * RIM;
                 break;
             case 2:
                 along = x;
                 in = z - RIM;
+                inside = sizeZ - 2 * RIM;
                 break;
             default:
                 along = x;
-                in = 15 - RIM - z;
+                in = sizeZ - 1 - RIM - z;
+                inside = sizeZ - 2 * RIM;
         }
-        if (along < GAP_FROM || along > GAP_TO || in >= depth) {
+        int run = Math.min(depth, inside - 1);
+        if (run <= 0 || along < GAP_FROM || along > GAP_TO || in < 0 || in >= run) {
             return 0;
         }
-        return depth - 1 - in;
+        int step = (depth + run - 1) / run;
+        return Math.max(0, depth - step * (in + 1));
     }
 
     /** Dresses the pit's walls in the lot's ground, so the dig shows clay and dirt rather than the fill under it. */
     private void walls(int height, int depth) {
-        for (int i = RIM - 1; i <= 16 - RIM; i++) {
-            for (int y = height - depth; y < height; y++) {
-                wall(RIM - 1, y, i);
-                wall(16 - RIM, y, i);
-                wall(i, y, RIM - 1);
-                wall(i, y, 16 - RIM);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                if (!onOutline(offsetX + x, offsetZ + z)) {
+                    continue;
+                }
+                BlockRef wall = ground(x, z);
+                for (int y = Math.max(WorldLimits.MIN_Y, height - depth); y < height; y++) {
+                    target.set(x, y, z, wall);
+                }
             }
-        }
-    }
-
-    private void wall(int x, int y, int z) {
-        if (y >= WorldLimits.MIN_Y && x >= 0 && x < 16 && z >= 0 && z < 16) {
-            target.set(x, y, z, ground(x, z));
         }
     }
 
@@ -229,20 +298,78 @@ final class EdgeLots {
         }
     }
 
-    /** A construction fence along the pit's edge, open in the middle of each side. */
-    private void fence(int height, int rampSide) {
+    /** A construction fence along the pit's edge, open in the middle of each chunk's side. */
+    private void fence(int height) {
         int y = height + 1;
         if (y > WorldLimits.MAX_Y) {
             return;
         }
-        for (int i = RIM - 1; i <= 16 - RIM; i++) {
-            if (i >= GAP_FROM && i <= GAP_TO) {
-                continue;
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int fx = offsetX + x;
+                int fz = offsetZ + z;
+                if (!onOutline(fx, fz)) {
+                    continue;
+                }
+                boolean xEdge = fx == RIM - 1 || fx == sizeX - RIM;
+                boolean zEdge = fz == RIM - 1 || fz == sizeZ - RIM;
+                // A corner lies on two sides; it stays open only where it falls in the gap of both.
+                boolean open = (!xEdge || z >= GAP_FROM && z <= GAP_TO) && (!zEdge || x >= GAP_FROM && x <= GAP_TO);
+                if (!open) {
+                    target.set(x, y, z, fence);
+                }
             }
-            target.set(RIM - 1, y, i, fence);
-            target.set(16 - RIM, y, i, fence);
-            target.set(i, y, RIM - 1, fence);
-            target.set(i, y, 16 - RIM, fence);
+        }
+    }
+
+    /**
+     * A construction lot's frame (phase 3, D-p3-3): the foundation's 2 x 2 column grid rising its floors at the
+     * pinned pitch, as a concrete skeleton topped with rebar or a wooden scaffold of fence posts, picked per
+     * footprint; at every floor below the top a deck covers one bay of the chunk's grid, a different bay per floor.
+     */
+    private void frame(int height, int depth) {
+        int[] grid = depth >= 4 ? DEEP_COLUMNS : SHALLOW_COLUMNS;
+        int floors = plan.lotColumnFloors();
+        int pitch = plan.floorPitch();
+        int top = Math.min(WorldLimits.MAX_Y - REBAR, height + floors * pitch - 1);
+        long footprint = StableHash
+            .mix64(seed ^ FRAME_SALT ^ originChunkX() * 341873128712L ^ originChunkZ() * 132897987541L);
+        boolean scaffold = (footprint & 1L) == 1L;
+        BlockRef post = scaffold ? scaffoldPost : concrete;
+        BlockRef deck = scaffold ? scaffoldDeck : concrete;
+        for (int gx : grid) {
+            for (int gz : grid) {
+                for (int dx = 0; dx < 2; dx++) {
+                    for (int dz = 0; dz < 2; dz++) {
+                        int x = gx + dx;
+                        int z = gz + dz;
+                        for (int y = Math.max(WorldLimits.MIN_Y, height - depth + 1); y <= top; y++) {
+                            target.set(x, y, z, post);
+                        }
+                        if (!scaffold) {
+                            for (int y = top + 1; y <= top + REBAR; y++) {
+                                target.set(x, y, z, (dx + dz) % 2 == 0 ? rebar : BlockRef.AIR);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int bays = grid.length - 1;
+        for (int k = 1; k < floors; k++) {
+            int y = height + k * pitch;
+            if (y > top) {
+                break;
+            }
+            long bay = StableHash
+                .mix64(footprint ^ plan.chunkX() * 31L ^ plan.chunkZ() * 17L ^ k * 0x9E3779B97F4A7C15L);
+            int bx = (int) Math.floorMod(bay, (long) bays);
+            int bz = (int) Math.floorMod(bay >>> 16, (long) bays);
+            for (int x = grid[bx]; x <= grid[bx + 1] + 1; x++) {
+                for (int z = grid[bz]; z <= grid[bz + 1] + 1; z++) {
+                    target.set(x, y, z, deck);
+                }
+            }
         }
     }
 }
