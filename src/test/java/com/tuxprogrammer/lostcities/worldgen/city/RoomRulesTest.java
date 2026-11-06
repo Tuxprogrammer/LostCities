@@ -124,7 +124,9 @@ public class RoomRulesTest {
             PopulationJob job = job("chest", x, 65, "nh_walkup", true);
             if (job.kind() == PopulationJob.Kind.CLEAR_CHEST) {
                 clears++;
-                assertTrue(job.argument().isEmpty());
+                assertTrue(
+                    job.argument()
+                        .isEmpty());
             } else {
                 chests++;
                 assertEquals(PopulationJob.Kind.CHEST, job.kind());

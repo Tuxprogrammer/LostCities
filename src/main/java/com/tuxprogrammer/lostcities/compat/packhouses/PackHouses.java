@@ -320,7 +320,8 @@ public final class PackHouses {
             (chunkX << 4) + 15,
             255,
             (chunkZ << 4) + 15);
-        // Forestry's bee house plants its flower garden and picks its bees from world.rand (ComponentVillageBeeHouse.java
+        // Forestry's bee house plants its flower garden and picks its bees from world.rand
+        // (ComponentVillageBeeHouse.java
         // 292, 302, 351, 382, 402, 405 at 4.11.40), which is unseeded noise in a village, so a regenerated chunk would
         // differ. World.rand is reseeded from the piece seed for the build and handed back to noise after it.
         reseed(world.rand, pieceSeed);
@@ -335,7 +336,9 @@ public final class PackHouses {
         return use.kind.id;
     }
 
-    /** Seeds a world's shared random for one piece's build so what the piece draws from it is a function of the seed. */
+    /**
+     * Seeds a world's shared random for one piece's build so what the piece draws from it is a function of the seed.
+     */
     static void reseed(Random worldRandom, long pieceSeed) {
         worldRandom.setSeed(pieceSeed ^ WORLD_RAND_SALT);
     }
