@@ -53,6 +53,9 @@ public final class FootprintGuard {
      */
     static final byte STONE = 4;
 
+    /** A frame around a pack house's own write: guards nothing and is not counted as a leak. */
+    static final byte HOUSE = 5;
+
     private static final byte[] MODE = new byte[MAX_DEPTH];
     private static int depth;
     /** The top frame's mode, kept apart so the common "no population" case is one field read. */
@@ -108,6 +111,19 @@ public final class FootprintGuard {
      */
     public static boolean topIsStone(World world) {
         return depth > 0 && MODE[depth - 1] == STONE && WORLDS[depth - 1] == world;
+    }
+
+    /**
+     * Pushes a frame around a pack house's write (a village piece placed by another mod): it drops nothing, and its
+     * logs and leaves are not counted as leaked foliage, but the frame keeps {@link #populating()} true so a chunk
+     * generated meanwhile still counts as a cascade.
+     *
+     * @param world the world being populated
+     * @param plan  that world's plan source
+     * @return whether the frame was pushed
+     */
+    public static boolean pushHouse(World world, CityPlan plan) {
+        return push(world, plan, HOUSE);
     }
 
     private static boolean push(World world, CityPlan plan, byte mode) {
@@ -171,7 +187,7 @@ public final class FootprintGuard {
      */
     public static boolean drops(World world, int chunkX, int chunkZ, int x, int y, int z, Block block) {
         byte mode = topMode;
-        if (mode == OFF) {
+        if (mode == OFF || mode == HOUSE) {
             return false;
         }
         boolean treePart = block != null && isTreePart(block);
@@ -219,6 +235,9 @@ public final class FootprintGuard {
             return;
         }
         int top = depth - 1;
+        if (MODE[top] == HOUSE) {
+            return;
+        }
         if (WORLDS[top] == world && y >= PLANS[top].chunk(chunkX, chunkZ)
             .footprintBottom(x & 15, z & 15)) {
             leakedFoliage++;

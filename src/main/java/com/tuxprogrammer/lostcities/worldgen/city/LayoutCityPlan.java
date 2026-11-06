@@ -34,6 +34,7 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.LanePath;
+import com.tuxprogrammer.lostcities.worldgen.plan.PackHouseSelection;
 import com.tuxprogrammer.lostcities.worldgen.plan.PopulationJob;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
@@ -316,6 +317,7 @@ public final class LayoutCityPlan implements CityPlan {
             .explosionChance(explosion == null ? Float.NaN : explosion)
             .content(cityContent(chunkX, chunkZ))
             .lot(plan.lot() != LotKind.NONE)
+            .packHouse(packHouseSide(plan, chunkX, chunkZ))
             .jobSource(() -> dryRun(chunkX, chunkZ, true))
             .finish(
                 (buffer, contentContext) -> new StuffWriter(context, chunkX, chunkZ, oreNames)
@@ -465,6 +467,29 @@ public final class LayoutCityPlan implements CityPlan {
                 new BufferTarget(buffer, contentContext),
                 contentContext.random(),
                 new PaletteSequence(context.worldSeed(), chunkX, chunkZ)).writeBridge();
+    }
+
+    /**
+     * Returns the door side (0 north, 1 east, 2 south, 3 west) of the pack house an empty edge lot holds, facing a
+     * street chunk where one is beside it, else a city chunk, else north; -1 when the lot holds none.
+     */
+    private int packHouseSide(ChunkPlan plan, int chunkX, int chunkZ) {
+        if (plan.lot() != LotKind.BARE
+            || !PackHouseSelection.picks(context.worldSeed(), chunkX, chunkZ, settings.packHouseChance())) {
+            return -1;
+        }
+        int[][] steps = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+        int city = -1;
+        for (int side = 0; side < 4; side++) {
+            ChunkPlan next = planner.plan(chunkX + steps[side][0], chunkZ + steps[side][1]);
+            if (next.isCity() && !next.hasBuilding() && next.lot() == LotKind.NONE) {
+                return side;
+            }
+            if (city < 0 && next.isCity()) {
+                city = side;
+            }
+        }
+        return Math.max(city, 0);
     }
 
     /**

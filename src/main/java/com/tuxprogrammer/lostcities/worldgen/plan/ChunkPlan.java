@@ -72,6 +72,7 @@ public final class ChunkPlan {
     private Supplier<Edges> edgeSource;
     private final String label;
     private final boolean lot;
+    private final int packHouseSide;
     private final boolean scattered;
     private final List<GroundFit> groundFits;
     private final ChunkContent finish;
@@ -107,6 +108,7 @@ public final class ChunkPlan {
         this.edgeSource = b.edgeSource;
         this.label = b.label;
         this.lot = b.lot;
+        this.packHouseSide = b.packHouseSide;
         this.scattered = b.scattered;
         this.groundFits = b.groundFits.isEmpty() ? Collections.<GroundFit>emptyList()
             : Collections.unmodifiableList(new ArrayList<>(b.groundFits));
@@ -119,6 +121,14 @@ public final class ChunkPlan {
      */
     public boolean isLot() {
         return lot;
+    }
+
+    /**
+     * Returns the side of the door of the pack house this edge lot holds (0 north, 1 east, 2 south, 3 west), or -1 for
+     * no house (docs/design/0011-city-edges-and-character.md, pack houses).
+     */
+    public int packHouseSide() {
+        return packHouseSide;
     }
 
     /**
@@ -507,6 +517,7 @@ public final class ChunkPlan {
         private Supplier<Edges> edgeSource;
         private String label = "";
         private boolean lot;
+        private int packHouseSide = -1;
         private boolean scattered;
         private final List<GroundFit> groundFits = new ArrayList<>();
         private ChunkContent finish = ChunkContent.NONE;
@@ -719,6 +730,12 @@ public final class ChunkPlan {
          */
         public Builder edgeSource(Supplier<Edges> source) {
             this.edgeSource = Objects.requireNonNull(source);
+            return this;
+        }
+
+        /** Marks the chunk's edge lot as holding a pack house whose door faces a side (0 north .. 3 west), -1 none. */
+        public Builder packHouse(int side) {
+            this.packHouseSide = side;
             return this;
         }
 

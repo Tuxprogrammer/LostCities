@@ -160,6 +160,39 @@ public class ProfileSnapshotTest {
 
     /** Design record 0014: a world pinned before {@code floorPitch} existed keeps upstream's 6; new pins get 8. */
     @Test
+    public void aSnapshotWithoutPackHouseChanceGetsNoPackHouses() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        ProfileSnapshot snapshot = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertEquals(
+            0f,
+            snapshot.terrainSettings()
+                .packHouseChance(),
+            0f);
+        assertEquals(
+            0.25f,
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                ProfileOptions.defaults(),
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "new").terrainSettings()
+                    .packHouseChance(),
+            0f);
+    }
+
+    @Test
     public void aSnapshotWithoutFloorPitchResolvesToTheLegacyPitch() {
         java.util.Map<String, String> old = new java.util.TreeMap<>();
         old.put("groundLevel", "71");
