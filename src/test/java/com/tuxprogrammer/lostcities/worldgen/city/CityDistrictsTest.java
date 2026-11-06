@@ -1,0 +1,174 @@
+package com.tuxprogrammer.lostcities.worldgen.city;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import com.tuxprogrammer.lostcities.layout.ChunkPlan;
+import com.tuxprogrammer.lostcities.layout.CityGrid;
+import com.tuxprogrammer.lostcities.layout.DensityRings;
+import com.tuxprogrammer.lostcities.layout.LayoutLog;
+import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.StreetType;
+import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
+
+/**
+ * City districts (phase 5c, D-p5c-1): the central plaza, the industrial yards and the park belt, on grid-placed
+ * cities with density rings; deterministic, and off for worlds pinned before the option.
+ */
+public class CityDistrictsTest {
+
+    private static final long SEED = 7L;
+    private static final int R = 220;
+
+    private static LayoutPlanner planner(long seed, String districts) {
+        Map<String, String> map = new HashMap<>();
+        map.put("cityPlacement", "grid");
+        map.put("networkLayout", "links");
+        map.put("densityRings", "1");
+        map.put("cityDistricts", districts);
+        return CityFixtures.plan(seed, TerrainSettings.fromValues(map), StructureOracle.NONE, LayoutLog.SILENT)
+            .planner();
+    }
+
+    private static List<CityGrid.Center> centers(LayoutPlanner p) {
+        List<CityGrid.Center> list = p.gridCenters(-R, -R, R, R);
+        assertTrue(list != null && !list.isEmpty(), "the test world has grid cities");
+        return list;
+    }
+
+    private static float ring(LayoutPlanner p, int x, int z) {
+        return DensityRings.distance(p.cityFactor(x, z), p.profile().cityThreshold);
+    }
+
+    @Test
+    public void theCenterChunkIsAPlazaAndNeverABuilding() {
+        LayoutPlanner p = planner(SEED, "true");
+        int plazas = 0;
+        int cities = 0;
+        for (CityGrid.Center c : centers(p)) {
+            if (!p.centerYieldsCity(c.chunkX(), c.chunkZ())) {
+                continue;
+            }
+            cities++;
+            ChunkPlan plan = p.plan(c.chunkX(), c.chunkZ());
+            assertFalse(plan.hasBuilding(), "no building at the center " + c.chunkX() + "," + c.chunkZ());
+            if (plan.lot() == LotKind.PLAZA) {
+                plazas++;
+            }
+        }
+        System.out.println("districts: cities=" + cities + " plazas=" + plazas);
+        assertTrue(cities > 0);
+        assertTrue(plazas * 2 >= cities, "most centers are plazas: " + plazas + " of " + cities);
+    }
+
+    @Test
+    public void bigCitiesGetATwoByTwoPlaza() {
+        LayoutPlanner p = planner(SEED, "true");
+        int big = 0;
+        for (CityGrid.Center c : centers(p)) {
+            if (!p.centerYieldsCity(c.chunkX(), c.chunkZ()) || p.cityRadius(c.chunkX(), c.chunkZ()) < 160) {
+                continue;
+            }
+            for (int dx = 0; dx <= 1; dx++) {
+                for (int dz = 0; dz <= 1; dz++) {
+                    ChunkPlan plan = p.plan(c.chunkX() + dx, c.chunkZ() + dz);
+                    if (plan.lot() == LotKind.PLAZA) {
+                        assertEquals(2, plan.lotFootprint().width());
+                        big++;
+                    }
+                }
+            }
+        }
+        System.out.println("districts: big plaza chunks=" + big);
+    }
+
+    @Test
+    public void yardsLieInTheOuterOrEdgeRing() {
+        LayoutPlanner p = planner(SEED, "true");
+        int yards = 0;
+        for (int x = -R; x <= R; x++) {
+            for (int z = -R; z <= R; z++) {
+                ChunkPlan plan = p.plan(x, z);
+                if (plan.lot() != LotKind.INDUSTRY) {
+                    continue;
+                }
+                yards++;
+                assertFalse(plan.hasBuilding());
+                assertTrue(ring(p, x, z) >= DensityRings.INNER_END, "yard ring at " + x + "," + z);
+            }
+        }
+        System.out.println("districts: yards=" + yards);
+        assertTrue(yards > 0, "some city has an industrial yard");
+    }
+
+    @Test
+    public void theBeltIsGreenAndOnlyInItsBand() {
+        LayoutPlanner p = planner(SEED, "true");
+        int band = 0;
+        int parks = 0;
+        for (int x = -R; x <= R; x++) {
+            for (int z = -R; z <= R; z++) {
+                if (!p.isCityRaw(x, z)) {
+                    continue;
+                }
+                float d = ring(p, x, z);
+                if (d >= 0.38f && d <= 0.52f) {
+                    band++;
+                    ChunkPlan plan = p.plan(x, z);
+                    if (!plan.hasBuilding() && plan.lot() == LotKind.NONE
+                        && plan.streetType() == StreetType.PARK
+                        && plan.parkPart() != null) {
+                        parks++;
+                    }
+                }
+            }
+        }
+        System.out.println("districts: band=" + band + " parks=" + parks);
+        assertTrue(band > 0);
+        double fraction = parks / (double) band;
+        assertTrue(fraction > 0.2 && fraction < 0.8, "belt fraction " + fraction);
+    }
+
+    @Test
+    public void districtsAreDeterministicWhateverTheQueryOrder() {
+        LayoutPlanner a = planner(SEED, "true");
+        LayoutPlanner b = planner(SEED, "true");
+        int span = 80;
+        String[][] seen = new String[2 * span + 1][2 * span + 1];
+        for (int x = -span; x <= span; x++) {
+            for (int z = -span; z <= span; z++) {
+                ChunkPlan plan = a.plan(x, z);
+                seen[x + span][z + span] = plan.lot() + "/" + plan.hasBuilding() + "/" + plan.streetType();
+            }
+        }
+        for (int x = span; x >= -span; x--) {
+            for (int z = span; z >= -span; z--) {
+                ChunkPlan plan = b.plan(x, z);
+                assertEquals(
+                    seen[x + span][z + span],
+                    plan.lot() + "/" + plan.hasBuilding() + "/" + plan.streetType(),
+                    x + "," + z);
+            }
+        }
+    }
+
+    @Test
+    public void withTheOptionOffNothingIsADistrict() {
+        LayoutPlanner p = planner(SEED, "false");
+        for (int x = -90; x <= 90; x++) {
+            for (int z = -90; z <= 90; z++) {
+                LotKind lot = p.plan(x, z).lot();
+                assertTrue(lot != LotKind.PLAZA && lot != LotKind.INDUSTRY, x + "," + z);
+            }
+        }
+    }
+}

@@ -63,6 +63,7 @@ public final class CityProfiles {
             .floorPitch(settings.floorPitch())
             .densityRings(settings.densityRings())
             .lotFootprints(settings.lotFootprints())
+            .cityDistricts(settings.cityDistricts())
             .cityShape(settings.cityAvoidOcean(), settings.cityConnected())
             .character(settings.cityTaper(), settings.edgeLotChance(), settings.facadeContrast())
             .averageHeightmap(values.getBoolean("useAvgHeightmap"), settings.heightSampleSize())

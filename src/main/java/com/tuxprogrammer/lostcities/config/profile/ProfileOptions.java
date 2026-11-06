@@ -523,6 +523,20 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get the plaza, industrial yards and park belt; pinned worlds keep their layout (D282, D-p5c-1).
+        add(
+            new ProfileOption(
+                "cityDistricts",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "04-city-layout",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -577,6 +591,7 @@ public final class ProfileOptions {
         // Worlds pinned before the link network keep the legacy highways and railways, whatever the default becomes.
         legacyDefault("networkLayout", "legacy");
         legacyDefault("lotFootprints", "false");
+        legacyDefault("cityDistricts", "false");
     }
 
     /**

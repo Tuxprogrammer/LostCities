@@ -132,6 +132,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     final TerrainView terrain;
     final InfrastructureView infrastructure;
     final Networks networks;
+    /** Plaza, industrial yards and park belt (phase 5c), or {@code null} when the profile has them off. */
+    final DistrictPlanner districts;
     final LayoutLog log;
     final HierarchicalStreetPlanner streets;
     final HierarchicalBridgePlanner bridges;
@@ -180,6 +182,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         // M06: the networks read the city map, levels and zones built above, never a plan.
         this.networks = inputs.networks == null ? null : new Networks(this, inputs.networks);
         this.infrastructure = networks == null ? inputs.infrastructure : networks;
+        this.districts = profile.cityDistricts ? new DistrictPlanner(this) : null;
         this.urbanity = new Urbanity(seed, profile, cities, this::isCityForRoads, cache);
         this.facades = new FacadePlanner(this, cache);
         this.multiChunks = new ChunkCache<>(Math.max(64, cache / 64));
@@ -853,6 +856,9 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     private ChunkPlan computePlan(int x, int z) {
         ChunkPlan.Builder b = computeBase(x, z);
+        if (districts != null) {
+            districts.apply(b, x, z, cityStyle(b.characteristics.cityStyle));
+        }
         drawLot(b, x, z);
         applyPlaza(b, x, z);
         return new ChunkPlan(b);
@@ -1523,7 +1529,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      * A chunk that loses its building after the street draws (a cap left no floor, or the asset matched no part)
      * becomes an open lot: a park with no park part, so no further random is drawn for it.
      */
-    private static void becomeOpenLot(ChunkPlan.Builder b) {
+    static void becomeOpenLot(ChunkPlan.Builder b) {
         b.hasBuilding = false;
         b.plannedRoad = b.characteristics.plannedRoad;
         b.hierarchicalOpen = b.isCity && b.plannedRoad == PlannedRoadType.NONE && !b.predefinedStreet;

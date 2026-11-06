@@ -214,6 +214,9 @@ final class MultiChunk {
                 if (planner.predefined.occupant(cx, cz) != null) {
                     return false;
                 }
+                if (planner.districts != null && planner.districts.reserved(cx, cz)) {
+                    return false;
+                }
                 if (planner.profile.multiBuildingStreetConflict.roadBlocks(planner.streets.getRoadType(cx, cz))) {
                     return false;
                 }

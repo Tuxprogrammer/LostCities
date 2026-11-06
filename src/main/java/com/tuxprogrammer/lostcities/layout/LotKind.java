@@ -16,7 +16,11 @@ public enum LotKind {
     /** An excavation: a pit dug 1, 2 or 4 blocks for a basement inside a rim at city level. */
     PIT("excavation"),
     /** A foundation: a pit with a concrete floor and concrete columns rising for a high-rise's first stage. */
-    FOUNDATION("foundation");
+    FOUNDATION("foundation"),
+    /** A paved central plaza with a monument (phase 5c); a chunk of the city's center, or of the 2 x 2 around it. */
+    PLAZA("plaza"),
+    /** An industrial yard (phase 5c): paved, fenced, dressed with GT casings; never dug. */
+    INDUSTRY("industrial yard");
 
     private final String label;
 

@@ -83,6 +83,7 @@ public final class TerrainSettings {
     private final float packHouseChance;
     private final float densityRings;
     private final boolean lotFootprints;
+    private final boolean cityDistricts;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -155,6 +156,8 @@ public final class TerrainSettings {
         densityRings = r.floatValue("densityRings", 0f, 0f, 2f);
         // false is the pre-pin world's value (single-chunk lots); new pins take the option's true (D282, D325).
         lotFootprints = r.booleanValue("lotFootprints", false);
+        // false is the pre-pin world's value (no districts); new pins take the option's true (D282, D-p5c-1).
+        cityDistricts = r.booleanValue("cityDistricts", false);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -285,6 +288,7 @@ public final class TerrainSettings {
         out.put("packHouseChance", text(packHouseChance));
         out.put("densityRings", text(densityRings));
         out.put("lotFootprints", Boolean.toString(lotFootprints));
+        out.put("cityDistricts", Boolean.toString(cityDistricts));
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -430,6 +434,11 @@ public final class TerrainSettings {
     /** Returns the strength of the density rings and building classes ({@code densityRings}); 0 is off. */
     public float densityRings() {
         return densityRings;
+    }
+
+    /** Returns {@code cityDistricts}: whether the plaza, industrial yards and park belt are planned (phase 5c). */
+    public boolean cityDistricts() {
+        return cityDistricts;
     }
 
     /** Returns {@code lotFootprints}: whether construction lots take their ring class's real size (phase 3). */
