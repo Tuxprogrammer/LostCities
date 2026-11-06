@@ -167,6 +167,11 @@ public final class CityProfiles {
                 .enabled(highways)
                 .build();
         }
+        try {
+            highwaySettings = highwaySettings.withRampHolds(values.getBoolean("highwayRampHolds"));
+        } catch (IllegalArgumentException e) {
+            // A profile without the key keeps ramps where other routes turn (KI-5), as worlds made before it.
+        }
         RailwaySettings railwaySettings;
         try {
             railwaySettings = new RailwaySettings(

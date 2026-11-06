@@ -98,7 +98,7 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 - **No world-preset screen.** Profiles are chosen in the config, as above.
 - **World generation cost.** On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region (about 10 to 12 % on RWG2 Continents); a performance pass is under way.
 - **Visual rough edges:**
-  - on some seeds a highway has steps taller than half a block or a step without ground under it, or a railway has a broken track (seen on seeds 1 and 777; seed 4242 is clean). Ramp stripes and the rail gap under a shallow landmark are fixed for new worlds (`rampSurface`, `railwayCoreEnds`).
+  - in worlds made before `highwayRampHolds`, a highway that turns where a neighboring route ramps can be cut by a tunnel wall. Ramp stripes, the rail gap under a shallow landmark and that cut are fixed for new worlds (`rampSurface`, `railwayCoreEnds`, `highwayRampHolds`; KI-5).
 - **No achievements or in-game guide yet.**
 
 Report what you find to the mod's issue tracker with the seed, world type, profile and coordinates (`/lostcities debug` at the spot helps).

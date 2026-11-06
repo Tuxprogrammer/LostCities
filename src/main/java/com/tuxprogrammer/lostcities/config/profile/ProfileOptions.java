@@ -595,6 +595,21 @@ public final class ProfileOptions {
                 "06-highways-railways",
                 false,
                 null));
+        // New worlds keep a highway run flat where another route turns or ends on it; pinned worlds keep the ramp there
+        // (KI-5, 0013 §2).
+        add(
+            new ProfileOption(
+                "highwayRampHolds",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "06-highways-railways",
+                false,
+                null));
         // New worlds give highway ramps one surface; pinned worlds keep the slab stripes (KI-2, 0013 §2, D368).
         add(
             new ProfileOption(
@@ -669,6 +684,7 @@ public final class ProfileOptions {
         legacyDefault("cityDistricts", "false");
         legacyDefault("roomRules", "false");
         legacyDefault("railwayCoreEnds", "false");
+        legacyDefault("highwayRampHolds", "false");
         legacyDefault("rampSurface", "false");
     }
 

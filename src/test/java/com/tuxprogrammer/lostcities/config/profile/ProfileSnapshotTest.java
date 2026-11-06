@@ -311,6 +311,41 @@ public class ProfileSnapshotTest {
                 .coreEnds());
     }
 
+    /** KI-5: a world pinned before {@code highwayRampHolds} keeps its ramps; a new world holds them. */
+    @Test
+    public void aSnapshotWithoutHighwayRampHoldsKeepsItsRamps() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        ProfileSnapshot pinned = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            old,
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "old");
+        assertFalse(
+            com.tuxprogrammer.lostcities.worldgen.city.CityProfiles
+                .networkSettings(pinned.profileValues(), ModuleState.allActive(), null)
+                .highways()
+                .rampHolds());
+        ProfileSnapshot fresh = new ProfileSnapshot(
+            "default",
+            ProfileSnapshot.PLAN_LAYOUT,
+            ProfileOptions.defaults(),
+            java.util.Collections.<String, Boolean>emptyMap(),
+            "none",
+            1,
+            "RWG",
+            "new");
+        assertTrue(
+            com.tuxprogrammer.lostcities.worldgen.city.CityProfiles
+                .networkSettings(fresh.profileValues(), ModuleState.allActive(), null)
+                .highways()
+                .rampHolds());
+    }
+
     @Test
     public void aSnapshotWithoutDensityRingsGetsNoRings() {
         java.util.Map<String, String> old = new java.util.TreeMap<>();

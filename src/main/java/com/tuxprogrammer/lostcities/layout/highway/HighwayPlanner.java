@@ -106,6 +106,8 @@ public final class HighwayPlanner {
     private final LruCache<HubKey, List<HubKey>> selections = new LruCache<>(SELECTION_CACHE);
     private final LruCache<HubKey, List<Route>> routes = new LruCache<>(ROUTE_CACHE);
     private final LruCache<ConnectionKey, Integer> levels = new LruCache<>(ROUTE_CACHE);
+    /** Each run's held chunks ({@code highwayRampHolds}), by identity: a route's runs are made once per route. */
+    private final LruCache<Run, int[]> holds = new LruCache<>(ROUTE_CACHE);
     private final LruCache<Long, HighwayInfo> chunks = new LruCache<>(CHUNK_CACHE);
 
     /**
@@ -641,6 +643,61 @@ public final class HighwayPlanner {
         return levels.put(route.key(), level);
     }
 
+    /**
+     * Returns the chunks of a run kept flat for other routes ({@code highwayRampHolds}, KI-5, 0013 section 2): every
+     * corner or end of another route's run, among the routes owned by the cells within the search radius of this
+     * route's owner, that lies on this run strictly between its ends. A ramp there would take the axis's deck from
+     * the other route's bend, T or plaza (the lower deck wins, section 3), so its turn would meet a straight piece's
+     * walls. Reads only the other routes' geometry, not their holds, so it is one bounded step, as level sharing.
+     *
+     * @param route the route
+     * @param run   one of its runs
+     * @return the held indices, sorted
+     */
+    int[] holds(Route route, Run run) {
+        int[] cached = holds.get(run);
+        if (cached != null) {
+            return cached;
+        }
+        List<Integer> indices = new ArrayList<>();
+        HubKey owner = route.key()
+            .owner();
+        int radius = settings.hubSearchRadiusCells();
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                for (Route other : ownedRoutes(owner.offset(dx, dz))) {
+                    if (other.key()
+                        .equals(route.key())) {
+                        continue;
+                    }
+                    for (Run otherRun : other.runs()) {
+                        List<Segment> segments = otherRun.segments();
+                        for (int i = 0; i < segments.size(); i++) {
+                            Segment segment = segments.get(i);
+                            if (i == 0) {
+                                addIndex(indices, run, segment.startX(), segment.startZ());
+                            }
+                            // Each segment's last chunk: a corner, or the run's end.
+                            addIndex(indices, run, segment.endX(), segment.endZ());
+                        }
+                    }
+                }
+            }
+        }
+        int[] candidates = new int[indices.size()];
+        for (int i = 0; i < candidates.length; i++) {
+            candidates[i] = indices.get(i);
+        }
+        return holds.put(run, run.holds(candidates));
+    }
+
+    private static void addIndex(List<Integer> indices, Run run, int chunkX, int chunkZ) {
+        int index = run.indexOf(chunkX, chunkZ);
+        if (index >= 0) {
+            indices.add(index);
+        }
+    }
+
     private static boolean overlap(Route a, Route b) {
         for (Segment sa : a.segments()) {
             for (Segment sb : b.segments()) {
@@ -703,8 +760,9 @@ public final class HighwayPlanner {
                     continue;
                 }
                 boolean end = index == 0 || index == run.length();
-                int entry = run.entryLevel(index, level);
-                int exit = run.exitLevel(index, level);
+                int[] held = settings.rampHolds() ? holds(route, run) : Run.NO_HOLDS;
+                int entry = run.entryLevel(index, level, held);
+                int exit = run.exitLevel(index, level, held);
                 for (Segment segment : run.segments()) {
                     if (!segment.contains(chunkX, chunkZ)) {
                         continue;
