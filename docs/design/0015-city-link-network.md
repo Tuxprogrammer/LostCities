@@ -73,6 +73,9 @@ A node chooses its 3 nearest nodes within 160 chunks whose rasterized path cross
   Four-way crossings remain an east-west straight: a known limit, since one vanilla rail cannot carry both lines.
 - **Lines stop at every city they cross** (D-p4v-2). `LinkRails.route` splits a line at any third city's center its
   staircase passes through, so the line arrives and leaves along X and the center is a station.
+- **Underground landmarks block lines** (D-p4v-4). A core whose landmark reaches underground (a Roguelike Dungeons
+  tower, a LootGames room) blocks a line at any railway level, so the line carries no track at all (D322). The
+  railway check counts boundaries an explosion reaches without judging them (D-p4v-5).
 - **Verified by** `LayoutGoldenTest.rareCitiesLinkNetwork`, `LinkNetworkWalkTest` and the links branches of the
   `network.highway` and `network.railway` scenarios (D-p4v-3).
 
