@@ -33,6 +33,7 @@ import com.tuxprogrammer.lostcities.layout.street.Orientation;
 import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.MultiblockShapes;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
@@ -290,7 +291,8 @@ public final class CityChunkWriter {
             salts,
             FurnishPalettes.bundled(),
             scale,
-            context.knownBlocks());
+            context.knownBlocks(),
+            MultiblockShapes.bundled());
     }
 
     /**

@@ -9,6 +9,7 @@ import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishItem;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalette;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.MultiblockShapes;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
 import com.tuxprogrammer.lostcities.worldgen.overlay.SpawnerMobs;
 
@@ -55,6 +56,22 @@ public final class FurnishCheck implements SelfCheck {
                 .keySet()) {
                 if (booted && !SpawnerMobs.known(mob)) {
                     out.add("furnish " + kind.id() + ": mob " + mob + " is not a registered entity");
+                }
+            }
+        }
+        MultiblockShapes shapes = MultiblockShapes.bundled();
+        out.addAll(shapes.problems());
+        if (shapes.shapes()
+            .isEmpty()) {
+            out.add("furnish: no multiblock shapes");
+        }
+        if (booted && pack) {
+            // Every casing a partial multiblock draws must exist in this pack; a missing one skips that shape.
+            for (String block : shapes.blockNames()) {
+                if (!Block.blockRegistry.containsKey(block)) {
+                    LostCities.LOG.warn(
+                        "Furnish multiblocks: block {} is not registered in this pack; shapes using it are skipped",
+                        block);
                 }
             }
         }

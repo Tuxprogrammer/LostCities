@@ -54,6 +54,7 @@ public final class PopulationPhase {
     private final WorldChunkBuffer reader;
     /** Whether the first completed GT machine has been logged, the real-pack check of design record 0016. */
     private boolean machineLogged;
+    private boolean multiblockLogged;
 
     /**
      * Creates the population phase of one world.
@@ -215,11 +216,12 @@ public final class PopulationPhase {
             .completions(reader::get, job.y(), job.argument(), FurnishPalettes.bundled())) {
             int x = (chunkX << 4) + completion.x();
             int z = (chunkZ << 4) + completion.z();
+            int level = completion.y() >= 0 ? completion.y() : job.y();
             Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-            if (chunk.getTileEntityUnsafe(completion.x(), job.y(), completion.z()) != null) {
+            if (chunk.getTileEntityUnsafe(completion.x(), level, completion.z()) != null) {
                 continue;
             }
-            TileEntity tile = tileAt(x, job.y(), z);
+            TileEntity tile = tileAt(x, level, z);
             if (tile == null) {
                 continue;
             }
@@ -227,14 +229,14 @@ public final class PopulationPhase {
                 fill(
                     tile,
                     completion.loot(),
-                    new Random(SeedMix.mix(world.getSeed(), x * 31L + z * 17L + job.y())),
+                    new Random(SeedMix.mix(world.getSeed(), x * 31L + z * 17L + level)),
                     x,
                     z);
             }
             if (completion.mob() != null && tile instanceof TileEntityMobSpawner spawner) {
                 String mob = SpawnerMobs.resolve(completion.mob());
                 if (mob.isEmpty()) {
-                    world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
+                    world.setBlock(x, level, z, Blocks.air, 0, SEND_TO_CLIENTS);
                     continue;
                 }
                 spawner.func_145881_a()
@@ -244,13 +246,24 @@ public final class PopulationPhase {
             if (!completion.template()
                 .isEmpty() && TemplateNbt.apply(tile, completion.template())) {
                 chunk.setChunkModified();
+                if (completion.y() >= 0 && !multiblockLogged) {
+                    multiblockLogged = true;
+                    LostCities.LOG.info(
+                        "Furnish: partial multiblock controller {} at {} {} {} is {} with {}",
+                        completion.gtId(),
+                        x,
+                        level,
+                        z,
+                        machineName(tile),
+                        completion.template());
+                }
                 if (!machineLogged) {
                     machineLogged = true;
                     LostCities.LOG.info(
                         "Furnish: GT machine {} at {} {} {} is {} with {}",
                         completion.gtId(),
                         x,
-                        job.y(),
+                        level,
                         z,
                         machineName(tile),
                         completion.template());
