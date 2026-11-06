@@ -101,8 +101,17 @@ public class CityDistrictsTest {
                         }
                         assertEquals(
                             2,
-                            plan.lotFootprint().width(),
-                            "center " + c[0] + "," + c[1] + " r=" + p.cityRadius(c[0], c[1]) + " chunk " + dx + "," + dz);
+                            plan.lotFootprint()
+                                .width(),
+                            "center " + c[0]
+                                + ","
+                                + c[1]
+                                + " r="
+                                + p.cityRadius(c[0], c[1])
+                                + " chunk "
+                                + dx
+                                + ","
+                                + dz);
                         assertFalse(plan.hasBuilding());
                         plazas++;
                     }
@@ -188,7 +197,8 @@ public class CityDistrictsTest {
         LayoutPlanner p = planner(SEED, "false");
         for (int x = -90; x <= 90; x++) {
             for (int z = -90; z <= 90; z++) {
-                LotKind lot = p.plan(x, z).lot();
+                LotKind lot = p.plan(x, z)
+                    .lot();
                 assertTrue(lot != LotKind.PLAZA && lot != LotKind.INDUSTRY, x + "," + z);
             }
         }

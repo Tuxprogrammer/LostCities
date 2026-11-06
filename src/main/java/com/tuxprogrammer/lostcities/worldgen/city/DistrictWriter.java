@@ -186,7 +186,8 @@ final class DistrictWriter {
     }
 
     private BlockRef ground(int wx, int wz) {
-        double u = StableHash.unitDouble(StableHash.mix64(seed ^ (long) wx * 341873128712L ^ (long) wz * 132897987541L));
+        double u = StableHash
+            .unitDouble(StableHash.mix64(seed ^ (long) wx * 341873128712L ^ (long) wz * 132897987541L));
         return u < 0.55 ? clay : u < 0.80 ? cobble : gravel;
     }
 
