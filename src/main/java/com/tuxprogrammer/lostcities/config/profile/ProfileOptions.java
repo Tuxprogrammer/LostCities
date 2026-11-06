@@ -491,6 +491,20 @@ public final class ProfileOptions {
                 "03-terrain",
                 false,
                 null));
+        // New worlds get 1.0; worlds pinned before the key existed have no rings (D282, D-p2c-1).
+        add(
+            new ProfileOption(
+                "densityRings",
+                Category.LOSTCITY,
+                Type.FLOAT,
+                "1.0",
+                d(0),
+                d(2),
+                null,
+                Status.LIVE,
+                "04-city-layout",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -541,6 +555,7 @@ public final class ProfileOptions {
         legacyDefault("floorPitch", Integer.toString(WorldLimits.LEGACY_FLOOR_PITCH));
         // Worlds pinned before pack houses existed keep their edge lots as they were (D282).
         legacyDefault("packHouseChance", "0.0");
+        legacyDefault("densityRings", "0.0");
     }
 
     /**

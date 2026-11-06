@@ -95,6 +95,11 @@ public final class LayoutProfile {
      * docs/design/0012-facade-color-feathering.md §3); 200 or more turns feathering off.
      */
     public final float facadeContrast;
+    /**
+     * {@code densityRings}: the strength of the density rings and building classes (D-p2c-1); 0 is off, the layout
+     * of worlds pinned before the option.
+     */
+    public final float densityRings;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -210,6 +215,7 @@ public final class LayoutProfile {
         floorPitch = b.floorPitch;
         edgeLotChance = b.edgeLotChance;
         facadeContrast = b.facadeContrast;
+        densityRings = b.densityRings;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -390,6 +396,7 @@ public final class LayoutProfile {
         private int floorPitch = ChunkPlan.LEGACY_FLOOR_PITCH;
         private float edgeLotChance = .45f;
         private float facadeContrast = 45f;
+        private float densityRings = 0f;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -510,6 +517,12 @@ public final class LayoutProfile {
         /** @param pitch {@code floorPitch}, blocks per building floor (0014) @return this builder */
         public Builder floorPitch(int pitch) {
             floorPitch = pitch;
+            return this;
+        }
+
+        /** @param strength {@code densityRings}, 0 (off) to 2 @return this builder */
+        public Builder densityRings(float strength) {
+            densityRings = strength;
             return this;
         }
 
