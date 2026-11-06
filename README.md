@@ -22,7 +22,7 @@ Explore cities that were here before you, salvage what they left behind, or move
 
 All taken in a GTNH 2.9.0 world on RWG2 Continents with the default settings.
 
-![A city's skyline over RWG terrain: tall towers in the core taper to low buildings at the edge.](docs/images/city-skyline-over-rwg-terrain.jpg)
+![A city's skyline over RWG terrain: tall towers in the core taper to low buildings at the edge.](docs/images/city-skyline-density-rings.jpg)
 *A city's skyline over RWG terrain: tall towers in the core taper to low buildings at the edge.*
 
 ![Where a city meets the overworld: streets and parks end at the forest.](docs/images/city-edge-meets-forest.jpg)
@@ -39,6 +39,15 @@ All taken in a GTNH 2.9.0 world on RWG2 Continents with the default settings.
 
 ![A village sewn into the city's edge, next to a paved plaza and a river.](docs/images/village-beside-city-plaza.jpg)
 *A village sewn into the city's edge, next to a paved plaza and a river.*
+
+![A furnished floor with a pillar, bookshelves and a lantern, under an eight-block ceiling.](docs/images/furnished-interior-floor.jpg)
+*A furnished floor inside a building: wall-side furniture, an eight-block ceiling and windows to the street.*
+
+![An industrial yard among parks and offices, seen from a corner above.](docs/images/industrial-yard-district.jpg)
+*A district: an industrial yard beside parks and offices.*
+
+![A small house from another mod on an empty edge lot, with a garden in front.](docs/images/pack-house-on-an-edge-lot.jpg)
+*A pack house on an empty lot at the city's edge, built by another mod's own generator.*
 
 ## Requirements
 

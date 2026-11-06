@@ -188,7 +188,7 @@
     {
       "name": "net-station",
       "find": {
-        "cmd": "lostcities find station 160",
+        "cmd": "lostcities find station 256",
         "match": "kind=station block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
         "timeout": 300
       },
@@ -198,7 +198,7 @@
     {
       "name": "net-beltway",
       "find": {
-        "cmd": "lostcities find beltway 190",
+        "cmd": "lostcities find beltway 256",
         "match": "kind=beltway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
         "timeout": 300
       },
@@ -208,7 +208,7 @@
     {
       "name": "net-beltway-above",
       "find": {
-        "cmd": "lostcities find beltway 190",
+        "cmd": "lostcities find beltway 256",
         "match": "kind=beltway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
         "timeout": 300
       },

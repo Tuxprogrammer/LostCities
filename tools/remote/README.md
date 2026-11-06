@@ -103,6 +103,8 @@ tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot m0
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot m05s -- --level-type RWG --world shots-rwg
 ```
 
+[shots/realism-batch.json](shots/realism-batch.json) is the city-realism batch: one shot per phase, using the `find` kinds `gtroom`, `furnished`, `packhouse`, `beltway` and `district`. Its non-`net-` shots run on any world. The `net-` shots need the `rarecities` profile, passed as `-- --jvm=-Dlostcitiesnh.dimensionProfiles=0=rarecities` (the `=` form, since the value starts with a dash). `net-station` and `net-beltway*` found nothing within 256 chunks on seeds 4242 and 777, so they need a seed where those exist.
+
 `lc-remote.sh` checks the list on the laptop, sends it to [`realpack/shots-run.py`](server/realpack/shots-run.py) on the build server, and fetches `runs/shots-<id>/` to `reference/remote/shots/<id>/`. Open its `index.html`: one card per shot with its caption, position and status. The folder also holds the PNGs, `results.json`, `runner.log` and the server's and client's script output.
 
 The runner:
