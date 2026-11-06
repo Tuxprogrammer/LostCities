@@ -130,8 +130,9 @@ public final class WorldChunkBuffer implements ChunkBuffer {
         }
         Block written = lastWrittenBlock;
         int writtenMeta = block.meta();
-        if (DEBUG_WOOL && !block.isAir() && !written.getMaterial()
-            .isLiquid()) {
+        if (DEBUG_WOOL && !block.isAir()
+            && !written.getMaterial()
+                .isLiquid()) {
             written = net.minecraft.init.Blocks.wool;
             writtenMeta = DEBUG_WOOL_META;
         }
