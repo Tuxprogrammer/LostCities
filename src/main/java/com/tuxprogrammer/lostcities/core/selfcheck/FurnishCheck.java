@@ -30,6 +30,8 @@ public final class FurnishCheck implements SelfCheck {
         List<String> out = new ArrayList<>();
         FurnishPalettes palettes = FurnishPalettes.bundled();
         out.addAll(palettes.problems());
+        // Unit tests run without a bootstrapped registry; only the palette parse is checked there.
+        boolean booted = Block.blockRegistry.containsKey("minecraft:stone");
         boolean pack = Block.blockRegistry.containsKey(FurnishItem.GT_MACHINES);
         for (RoomKind kind : RoomKind.values()) {
             FurnishPalette palette = palettes.palette(kind);
@@ -39,7 +41,7 @@ public final class FurnishCheck implements SelfCheck {
             }
             for (FurnishItem item : palette.items()) {
                 String block = item.block();
-                if (Block.blockRegistry.containsKey(block)) {
+                if (!booted || Block.blockRegistry.containsKey(block)) {
                     continue;
                 }
                 if (block.startsWith("minecraft:")) {
@@ -50,7 +52,7 @@ public final class FurnishCheck implements SelfCheck {
             }
             for (String mob : palette.mobs()
                 .keySet()) {
-                if (!SpawnerMobs.known(mob)) {
+                if (booted && !SpawnerMobs.known(mob)) {
                     out.add("furnish " + kind.id() + ": mob " + mob + " is not a registered entity");
                 }
             }
