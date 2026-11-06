@@ -323,15 +323,19 @@ public final class PackHouses {
         // Forestry's bee house plants its flower garden and picks its bees from world.rand
         // (ComponentVillageBeeHouse.java
         // 292, 302, 351, 382, 402, 405 at 4.11.40), which is unseeded noise in a village, so a regenerated chunk would
-        // differ. World.rand is reseeded from the piece seed for the build and handed back to noise after it.
-        reseed(world.rand, pieceSeed);
+        // differ. World.rand is swapped for a Random seeded from the piece seed for the build and put back after it.
+        // A private Random is swapped in, not the shared one reseeded, so no other draw can shift the sequence.
+        Random shared = world.rand;
+        Random own = new Random();
+        reseed(own, pieceSeed);
+        world.rand = own;
         try {
             piece.addComponentParts(world, random, chunkBox);
         } catch (RuntimeException e) {
             LostCities.LOG.warn("Pack house {} failed at chunk ({}, {})", use.kind.id, chunkX, chunkZ, e);
             return null;
         } finally {
-            world.rand.setSeed(System.nanoTime() ^ pieceSeed);
+            world.rand = shared;
         }
         return use.kind.id;
     }
