@@ -105,6 +105,7 @@ public final class LayoutProfile {
      * building class (city-realism phase 3); false is the single-chunk lots of worlds pinned before the option.
      */
     public final boolean lotFootprints;
+    /**
      * {@code cityHighwayLayout}: a link-network city's own highway, a beltway or a cut-through (design record 0017);
      * {@link CityHighwayLayout#NONE} in worlds pinned before the option.
      */
