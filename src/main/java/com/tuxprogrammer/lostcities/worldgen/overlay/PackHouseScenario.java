@@ -175,7 +175,8 @@ final class PackHouseScenario implements Scenario {
             || name.contains("grass")
             || name.contains("flower")
             || name.contains("snow")
-            || name.contains("vine");
+            || name.contains("vine")
+            || name.contains("wall");
     }
 
     private static long hash(Chunk chunk, int ground) {
