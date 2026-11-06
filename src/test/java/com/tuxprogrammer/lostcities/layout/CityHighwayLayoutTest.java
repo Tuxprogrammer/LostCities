@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
 import com.tuxprogrammer.lostcities.layout.link.CityHighways;
 import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
+import com.tuxprogrammer.lostcities.layout.link.LinkRaster;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
@@ -28,6 +30,9 @@ public class CityHighwayLayoutTest {
 
     private static final int CELLS = 3;
 
+    /** The city grid's cell edge in chunks, as {@link #planner} sets it. */
+    private static final int CELL = 64;
+
     /** A landmark column no test chunk reaches. */
     private static final int NO_LANDMARK = Integer.MIN_VALUE;
 
@@ -35,7 +40,7 @@ public class CityHighwayLayoutTest {
         LayoutProfile profile = LayoutProfile.builder()
             .cityChance(0.00025)
             .cityRadius(100, 256)
-            .cityGrid(64, 16)
+            .cityGrid(CELL, 16)
             .densityRings(1.5f)
             .cityHighwayLayout(layout)
             .build();
@@ -139,41 +144,122 @@ public class CityHighwayLayoutTest {
     public void everyInterchangeAndCutThroughEndMeetsItsLink() {
         for (CityHighwayLayout layout : new CityHighwayLayout[] { CityHighwayLayout.BELTWAY,
             CityHighwayLayout.CUTTHROUGH }) {
-            LayoutPlanner planner = planner(31337L, layout);
-            LinkHighways view = planner.networks()
-                .linkHighways();
             int joins = 0;
-            for (CityHighways.Plan p : plans(planner).values()) {
-                if (p.kind() == CityHighways.Kind.CUTTHROUGH) {
-                    assertEquals(2, p.joined()
-                        .size(), "a cut-through joins two links");
-                }
-                for (CityLinkGraph.Link link : p.joined()) {
-                    LinkHighways.Profile profile = view.profile(link);
-                    if (!profile.written()) {
-                        continue;
-                    }
-                    boolean atA = link.ax() == p.centerX() && link.az() == p.centerZ();
-                    int index = atA ? profile.start() : profile.end();
-                    int x = link.path()
-                        .get(index)
-                        .chunkX();
-                    int z = link.path()
-                        .get(index)
-                        .chunkZ();
-                    assertNotNull(p.pieces()
-                        .get(CityHighways.key(x, z)), "the link ends on the city highway at " + x + "," + z);
-                    assertEquals(p.level(), atA ? profile.inLevel(index) : profile.outLevel(index));
-                    boolean deck = false;
-                    for (HighwayInfo.Piece piece : view.pieces(x, z)) {
-                        deck |= piece.level() == p.level() && piece.topLevel() == p.level();
-                    }
-                    assertTrue(deck, "one deck at the interchange " + x + "," + z);
-                    joins++;
-                }
+            for (long seed : SEEDS) {
+                joins += meetsItsLinks(seed, layout);
             }
             assertTrue(joins > 0, layout + " joins links");
         }
+    }
+
+    /** Seeds for the checks that walk every interchange, so short links between close cities turn up. */
+    private static final long[] SEEDS = { 31337L, 7919L, 1L, 4242L, 65537L };
+
+    /** Checks every joined link of one world against its city highway; returns how many met it. */
+    private static int meetsItsLinks(long seed, CityHighwayLayout layout) {
+        LayoutPlanner planner = planner(seed, layout);
+        LinkHighways view = planner.networks()
+            .linkHighways();
+        int joins = 0;
+        for (CityHighways.Plan p : plans(planner).values()) {
+            if (p.kind() == CityHighways.Kind.CUTTHROUGH) {
+                assertEquals(2, p.joined()
+                    .size(), "a cut-through joins two links");
+            }
+            for (CityLinkGraph.Link link : p.joined()) {
+                LinkHighways.Profile profile = view.profile(link);
+                if (!profile.written()) {
+                    continue;
+                }
+                boolean atA = link.ax() == p.centerX() && link.az() == p.centerZ();
+                int index = atA ? profile.start() : profile.end();
+                int x = link.path()
+                    .get(index)
+                    .chunkX();
+                int z = link.path()
+                    .get(index)
+                    .chunkZ();
+                assertNotNull(p.pieces()
+                    .get(CityHighways.key(x, z)), "the link ends on the city highway at " + x + "," + z);
+                assertEquals(p.level(), atA ? profile.inLevel(index) : profile.outLevel(index));
+                boolean deck = false;
+                for (HighwayInfo.Piece piece : view.pieces(x, z)) {
+                    deck |= piece.level() == p.level() && piece.topLevel() == p.level();
+                }
+                assertTrue(deck, "one deck at the interchange " + x + "," + z);
+                joins++;
+            }
+            if (p.kind() == CityHighways.Kind.BELTWAY) {
+                // A link the ring does not join (no ramp room, D-p5-9) stops at the city's edge, not on the ring.
+                for (CityLinkGraph.Link link : planner.networks()
+                    .links()
+                    .links(Math.floorDiv(p.centerX(), CELL), Math.floorDiv(p.centerZ(), CELL))) {
+                    LinkHighways.Profile profile = view.profile(link);
+                    if (p.joins(link) || !profile.written()) {
+                        continue;
+                    }
+                    boolean atA = link.ax() == p.centerX() && link.az() == p.centerZ();
+                    LinkRaster.Step step = link.path()
+                        .get(atA ? profile.start() : profile.end());
+                    assertNull(p.pieces()
+                        .get(CityHighways.key(step.chunkX(), step.chunkZ())), "an unjoined link ends off the ring");
+                }
+            }
+        }
+        return joins;
+    }
+
+    @Test
+    public void anInterchangeHasNoOpenEdge() {
+        int checked = 0;
+        for (long seed : SEEDS) {
+            for (CityHighwayLayout layout : new CityHighwayLayout[] { CityHighwayLayout.BELTWAY,
+                CityHighwayLayout.CUTTHROUGH }) {
+                LayoutPlanner planner = planner(seed, layout);
+                LinkHighways view = planner.networks()
+                    .linkHighways();
+                for (CityHighways.Plan p : plans(planner).values()) {
+                    for (long key : p.pieces()
+                        .keySet()) {
+                        int x = (int) (key >> 32);
+                        int z = (int) key;
+                        for (HighwayInfo.Piece piece : view.pieces(x, z)) {
+                            if (piece.level() != p.level() || piece.topLevel() != p.level()) {
+                                continue;
+                            }
+                            int[] o = piece.openings();
+                            // An elevated plaza opens on every side whatever meets it: the open edge this guards.
+                            assertTrue(
+                                piece.shape() != HighwayInfo.Shape.CROSSING || o.length == 12,
+                                "no elevated plaza at " + x + "," + z + " (seed " + seed + ")");
+                            for (int i = 0; i + 2 < o.length; i += 3) {
+                                if (o[i] != 0 && o[i + 1] != 0) {
+                                    continue;
+                                }
+                                assertTrue(
+                                    opensBack(view.pieces(x + o[i], z + o[i + 1]), -o[i], -o[i + 1], o[i + 2]),
+                                    "the deck at " + x + "," + z + " opens toward " + o[i] + "," + o[i + 1]
+                                        + " onto a deck that opens back (seed " + seed + ")");
+                                checked++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(checked > 0);
+    }
+
+    private static boolean opensBack(List<HighwayInfo.Piece> pieces, int dx, int dz, int level) {
+        for (HighwayInfo.Piece piece : pieces) {
+            int[] o = piece.openings();
+            for (int i = 0; i + 2 < o.length; i += 3) {
+                if (o[i] == dx && o[i + 1] == dz && o[i + 2] == level) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Test

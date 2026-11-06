@@ -15,14 +15,16 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * <p>
  * <b>Beltway.</b> A square ring of chunks at Chebyshev distance {@code half} from the center, {@code half} at least
  * {@link #MIN_HALF} (an inner block of at least 9 x 9 chunks), sized so the ring sits about halfway out (ring distance
- * {@link #RING_AT}) and its corners keep {@link #MARGIN} chunks of city outside. Every link of the city stops on the
- * ring instead of at the edge plaza: its path's chunk at index {@code half} from the center becomes a plaza on the ring
- * at the ring's level (an interchange), and the link's own ramps carry it to the other city's level.
+ * {@link #RING_AT}) and its corners keep {@link #MARGIN} chunks of city outside. Every link of the city with the ramp
+ * room ({@link #climbs}) stops on the ring instead of at the edge plaza: its path's first chunk on the ring joins the
+ * ring's piece at the ring's level (an interchange, one deck with no open edge), and the link's own ramps carry it to
+ * the other city's level. A link without the room stops at the city's edge as any other link does.
  *
  * <p>
  * <b>Cut-through.</b> Two of the city's links, the pair whose edge plazas point most apart, are joined by a straight or
  * one-bend highway between their plazas, the bend at the corner nearer the center. A route that would cross a
- * landmark's core or margin tries the other bend, then the next pair; with none left the city has no city highway.
+ * landmark's core or margin, or a pair whose links lack the ramp room, tries the other bend, then the next pair; with
+ * none left the city has no city highway.
  *
  * <p>
  * Both are flat at one level above the highest city level under them (capped at the top city level), so streets pass
@@ -185,6 +187,17 @@ public final class CityHighways {
 
         @Override
         protected boolean removeEldestEntry(Map.Entry<Long, Plan> eldest) {
+            return size() > CACHE;
+        }
+    };
+
+    /** Each city's highest possible city highway level ({@link #peak}). */
+    private final Map<Long, Integer> peaks = new LinkedHashMap<Long, Integer>(256, 0.75f, true) {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Long, Integer> eldest) {
             return size() > CACHE;
         }
     };
@@ -419,8 +432,14 @@ public final class CityHighways {
             }
             pieces.put(key(c[0], c[1]), HighwayInfo.Piece.sides(level, ax, az, bx, bz));
         }
-        List<CityLinkGraph.Link> joined = graph == null ? Collections.<CityLinkGraph.Link>emptyList()
-            : graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()));
+        List<CityLinkGraph.Link> joined = new ArrayList<>();
+        if (graph != null) {
+            for (CityLinkGraph.Link link : graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
+                if (climbs(link, cx, cz, half, level)) {
+                    joined.add(link);
+                }
+            }
+        }
         return new Plan(
             Kind.BELTWAY,
             cx,
@@ -496,6 +515,9 @@ public final class CityHighways {
                     level = Math.max(level, cities.level(c[0], c[1]));
                 }
                 level = Math.min(cities.maxLevel(), level + 1);
+                if (!climbs(usable.get(pair[0]), cx, cz, 0, level) || !climbs(usable.get(pair[1]), cx, cz, 0, level)) {
+                    continue;
+                }
                 Map<Long, HighwayInfo.Piece> pieces = new LinkedHashMap<>();
                 for (int k = 0; k < route.size(); k++) {
                     int[] c = route.get(k);
@@ -508,16 +530,16 @@ public final class CityHighways {
                         steps.add(route.get(k + 1)[0] - c[0]);
                         steps.add(route.get(k + 1)[1] - c[1]);
                     }
-                    if (steps.size() == 2) {
-                        // An end runs straight on out to its link's plaza piece, which merges with it.
-                        steps.add(-steps.get(0));
-                        steps.add(-steps.get(1));
-                    }
                     int[] array = new int[steps.size()];
                     for (int s = 0; s < array.length; s++) {
                         array[s] = steps.get(s);
                     }
-                    pieces.put(key(c[0], c[1]), HighwayInfo.Piece.sides(level, array));
+                    // An end opens only inward; its joined link adds its own opening and LinkHighways.merge makes the
+                    // two one deck with railings on every other edge (a straight, bend or link junction).
+                    pieces.put(
+                        key(c[0], c[1]),
+                        array.length == 2 ? HighwayInfo.Piece.linkJunction(level, array)
+                            : HighwayInfo.Piece.sides(level, array));
                 }
                 List<CityLinkGraph.Link> joined = new ArrayList<>(2);
                 joined.add(usable.get(pair[0]));
@@ -534,6 +556,101 @@ public final class CityHighways {
             }
         }
         return none(cx, cz, fits);
+    }
+
+    /**
+     * Returns whether a link has the ramp room to meet a city highway at {@code level} here, whatever its other end
+     * turns out to be (D-p5-9). The other end is that city's own level, or its city highway's level, which lies between
+     * {@code min(1, top)} and that city's {@link #peak}; the bound takes the worst of these, so it never needs the other
+     * city's plan and two cities never wait on each other. The room counts the straight chunks no other link crosses
+     * strictly between the written ends, which {@link LinkHighways} can always ramp, diagonal or staircase: from the
+     * ring here ({@code half} &gt; 0) or this city's radius, to the other city's radius, which encloses any ring there.
+     *
+     * @param link  the link
+     * @param cx    this city's center chunk X
+     * @param cz    this city's center chunk Z
+     * @param half  the ring's half-size for a beltway, else 0
+     * @param level the city highway's level
+     * @return whether the link's ramps can always reach the city highway
+     */
+    boolean climbs(CityLinkGraph.Link link, int cx, int cz, int half, int level) {
+        boolean fromA = link.ax() == cx && link.az() == cz;
+        int ox = fromA ? link.bx() : link.ax();
+        int oz = fromA ? link.bz() : link.az();
+        int low = Math.min(1, cities.maxLevel());
+        int need = Math.max(Math.abs(level - cities.level(ox, oz)), Math.max(level - low, peak(ox, oz) - level));
+        List<LinkRaster.Step> path = link.path();
+        int n = path.size();
+        int start = 0;
+        int end = n - 1;
+        if (fromA) {
+            while (start < n && enclosedHere(path.get(start), cx, cz, half)) {
+                start++;
+            }
+            while (end >= 0 && LinkHighways.inside(path.get(end), ox, oz, cities.radius(ox, oz))) {
+                end--;
+            }
+        } else {
+            while (start < n && LinkHighways.inside(path.get(start), ox, oz, cities.radius(ox, oz))) {
+                start++;
+            }
+            while (end >= 0 && enclosedHere(path.get(end), cx, cz, half)) {
+                end--;
+            }
+        }
+        if (start > end) {
+            return false;
+        }
+        int room = 0;
+        for (int i = start + 1; i < end && room < need; i++) {
+            LinkRaster.Step step = path.get(i);
+            if (step.kind() == LinkRaster.Kind.STRAIGHT && !crossed(link, step.chunkX(), step.chunkZ())) {
+                room++;
+            }
+        }
+        return room >= need;
+    }
+
+    /**
+     * Returns the highest level a city highway of the city centered on a chunk can take: one above the highest city
+     * level in the square that holds its radius and its edge plazas, capped at the top city level. It reads the city
+     * map only, never a plan.
+     */
+    private int peak(int cx, int cz) {
+        Long key = key(cx, cz);
+        Integer cached = peaks.get(key);
+        if (cached != null) {
+            return cached;
+        }
+        int top = cities.maxLevel();
+        int reach = cities.radius(cx, cz) / 16 + 2;
+        int high = 0;
+        for (int x = cx - reach; x <= cx + reach && high < top; x++) {
+            for (int z = cz - reach; z <= cz + reach && high < top; z++) {
+                high = Math.max(high, cities.level(x, z));
+            }
+        }
+        int peak = Math.min(top, high + 1);
+        peaks.put(key, peak);
+        return peak;
+    }
+
+    private boolean enclosedHere(LinkRaster.Step step, int cx, int cz, int half) {
+        if (half > 0) {
+            return Math.max(Math.abs(step.chunkX() - cx), Math.abs(step.chunkZ() - cz)) < half;
+        }
+        return LinkHighways.inside(step, cx, cz, cities.radius(cx, cz));
+    }
+
+    /** Whether another link's path crosses a chunk, as {@link LinkHighways} decides where a ramp may go. */
+    private boolean crossed(CityLinkGraph.Link link, int x, int z) {
+        for (CityLinkGraph.Hit hit : graph.hits(x, z)) {
+            if (!hit.link()
+                .equals(link)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -321,9 +321,27 @@ public final class LinkHighways {
             for (int i = 0; i < array.length; i++) {
                 array[i] = steps.get(i);
             }
+            // A one-chunk link stays a plaza unless both its ends are interchanges, so a city end still meets streets.
+            boolean joinedA = index == profile.start && joinedEnd(link, true);
+            boolean joinedB = index == profile.end && joinedEnd(link, false);
+            if (profile.start == profile.end ? joinedA && joinedB : joinedA || joinedB) {
+                // An interchange on a city highway (0017): the link only adds its own opening to the city highway's
+                // piece, which merge joins into one deck. An elevated plaza would be open on every side, so its other
+                // edges would drop off into the air.
+                return HighwayInfo.Piece.linkJunction(profile.in[index], array);
+            }
             return HighwayInfo.Piece.plaza(profile.in[index], array);
         }
         return HighwayInfo.Piece.link(prevDx, prevDz, profile.in[index], nextDx, nextDz, profile.out[index]);
+    }
+
+    /** Whether a city highway joins the link at its A end ({@code atA}) or its B end (0017). */
+    private boolean joinedEnd(CityLinkGraph.Link link, boolean atA) {
+        if (cities == null) {
+            return false;
+        }
+        CityHighways.Plan plan = atA ? cities.plan(link.ax(), link.az()) : cities.plan(link.bx(), link.bz());
+        return plan.joins(link);
     }
 
     /**
@@ -409,11 +427,11 @@ public final class LinkHighways {
         CityHighways.Plan pa = cities == null ? null : cities.plan(link.ax(), link.az());
         CityHighways.Plan pb = cities == null ? null : cities.plan(link.bx(), link.bz());
         int start = 0;
-        while (start < n && enclosed(path.get(start), link.ax(), link.az(), ra, pa)) {
+        while (start < n && enclosed(path.get(start), link, link.ax(), link.az(), ra, pa)) {
             start++;
         }
         int end = n - 1;
-        while (end >= 0 && enclosed(path.get(end), link.bx(), link.bz(), rb, pb)) {
+        while (end >= 0 && enclosed(path.get(end), link, link.bx(), link.bz(), rb, pb)) {
             end--;
         }
         if (start > end) {
@@ -425,9 +443,14 @@ public final class LinkHighways {
         return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared, la, lb) : diagonal;
     }
 
-    /** Whether a path chunk is not written at an end: inside a beltway's ring, else inside the city's radius. */
-    private static boolean enclosed(LinkRaster.Step step, int cx, int cz, int radius, CityHighways.Plan plan) {
-        if (plan != null && plan.kind() == CityHighways.Kind.BELTWAY) {
+    /**
+     * Whether a path chunk is not written at an end: inside the ring of a beltway that joins the link, else inside the
+     * city's radius. A link the beltway does not join (it lacks the ramp room, D-p5-9) stops at the city's edge
+     * like any other, outside the ring.
+     */
+    static boolean enclosed(LinkRaster.Step step, CityLinkGraph.Link link, int cx, int cz, int radius,
+        CityHighways.Plan plan) {
+        if (plan != null && plan.kind() == CityHighways.Kind.BELTWAY && plan.joins(link)) {
             return plan.insideRing(step.chunkX(), step.chunkZ());
         }
         return inside(step, cx, cz, radius);
@@ -508,7 +531,7 @@ public final class LinkHighways {
         return new Profile(start, end, in, out, staircase);
     }
 
-    private static boolean inside(LinkRaster.Step step, int cx, int cz, int radius) {
+    static boolean inside(LinkRaster.Step step, int cx, int cz, int radius) {
         if (radius <= 0) {
             return false;
         }
@@ -582,7 +605,9 @@ public final class LinkHighways {
         if (plaza) {
             return HighwayInfo.Piece.plaza(level, array);
         }
-        return corner ? HighwayInfo.Piece.linkJunction(level, array) : HighwayInfo.Piece.sides(level, array);
+        // One opening left (a city highway's end that its link leaves the same way, 0017) is a stub: a junction.
+        return corner || array.length < 4 ? HighwayInfo.Piece.linkJunction(level, array)
+            : HighwayInfo.Piece.sides(level, array);
     }
 
     private static long key(int x, int z) {
