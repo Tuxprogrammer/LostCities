@@ -281,7 +281,12 @@ public class LinkNetworkWalkTest {
             }
         }
         System.out.println(
-            "[link rails] centers " + centers + ", route splits " + splits + ", T " + tees + ", crossings "
+            "[link rails] centers " + centers
+                + ", route splits "
+                + splits
+                + ", T "
+                + tees
+                + ", crossings "
                 + crossings);
         assertTrue(centers > 0);
     }

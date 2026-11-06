@@ -153,7 +153,7 @@ public final class LinkRailGeometry {
         int free = ~sides & LinkRails.SIDES;
         return free == LinkRails.NORTH ? new int[] { TRACK, TRACK - 1 }
             : free == LinkRails.SOUTH ? new int[] { TRACK, TRACK + 1 }
-            : free == LinkRails.WEST ? new int[] { TRACK - 1, TRACK } : new int[] { TRACK + 1, TRACK };
+                : free == LinkRails.WEST ? new int[] { TRACK - 1, TRACK } : new int[] { TRACK + 1, TRACK };
     }
 
     public static boolean powered(int sides, int x, int z) {

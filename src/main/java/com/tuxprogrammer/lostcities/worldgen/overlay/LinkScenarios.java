@@ -40,7 +40,9 @@ final class LinkScenarios {
 
     /** Cells around the spawn's cell whose links are considered. */
     static final int CELLS = 1;
-    /** Blocks the walked lane lies beside the center line on a straight piece; a diagonal uses this less one per axis. */
+    /**
+     * Blocks the walked lane lies beside the center line on a straight piece; a diagonal uses this less one per axis.
+     */
     static final int LANE_OFFSET = 4;
 
     private LinkScenarios() {}

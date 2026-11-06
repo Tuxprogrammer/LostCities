@@ -770,7 +770,8 @@ public final class NetworkWriter {
         }
         int[] lever = LinkRailGeometry.lever(sides);
         if (lever != null) {
-            // A T's switch (D-p4v-1): a floor lever beside the curve, as a player builds one; meta 5 stands on the floor.
+            // A T's switch (D-p4v-1): a floor lever beside the curve, as a player builds one; meta 5 stands on the
+            // floor.
             target.set(lever[0], height + 1, lever[1], BlockRef.of("minecraft:lever", 5));
         }
         BlockRef railMain = railMain(rail);
