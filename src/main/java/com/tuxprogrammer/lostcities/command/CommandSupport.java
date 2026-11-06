@@ -7,7 +7,11 @@ import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.rcon.RConConsoleSource;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 
 import com.tuxprogrammer.lostcities.asset.AssetId;
@@ -26,7 +30,61 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  */
 final class CommandSupport {
 
+    /** The largest block coordinate a query accepts: vanilla's world border limit. */
+    static final int MAX_COORDINATE = 30_000_000;
+
     private CommandSupport() {}
+
+    /**
+     * Resolves the block column a {@code debug} or {@code map} query is about: the two arguments when given, the
+     * sender's own position otherwise. Never loads or generates a chunk.
+     *
+     * @param sender     who typed the command
+     * @param args       the subcommand's arguments: none or {@code <x> <z>}
+     * @param subcommand the subcommand's name, for messages
+     * @return {@code {blockX, blockZ}}
+     * @throws CommandException for a bad argument, or when the console gave no coordinates
+     */
+    static int[] blockTarget(ICommandSender sender, String[] args, String subcommand) {
+        boolean positioned = !(sender instanceof MinecraftServer) && !(sender instanceof RConConsoleSource);
+        return parseTarget(args, positioned ? sender.getPlayerCoordinates() : null, subcommand);
+    }
+
+    /**
+     * Parses the optional {@code <x> <z>} of {@code debug} and {@code map}. Arguments are untrusted: plain integers
+     * only, within {@link #MAX_COORDINATE}.
+     *
+     * @param args       none or two arguments
+     * @param at         the sender's position, or {@code null} for a sender without one (the console)
+     * @param subcommand the subcommand's name, for messages
+     * @return {@code {blockX, blockZ}}
+     * @throws CommandException with a lang key: usage, not an integer, or out of range
+     */
+    static int[] parseTarget(String[] args, ChunkCoordinates at, String subcommand) {
+        if (args.length == 0) {
+            if (at == null) {
+                throw new WrongUsageException(LangKeys.COMMAND_COORDS_USAGE, subcommand);
+            }
+            return new int[] { at.posX, at.posZ };
+        }
+        if (args.length != 2) {
+            throw new WrongUsageException(LangKeys.COMMAND_COORDS_USAGE, subcommand);
+        }
+        return new int[] { parseCoordinate(args[0]), parseCoordinate(args[1]) };
+    }
+
+    private static int parseCoordinate(String arg) {
+        long value;
+        try {
+            value = Long.parseLong(arg);
+        } catch (NumberFormatException e) {
+            throw new CommandException(LangKeys.COMMAND_COORDS_INVALID, arg);
+        }
+        if (value < -MAX_COORDINATE || value > MAX_COORDINATE) {
+            throw new CommandException(LangKeys.COMMAND_COORDS_RANGE, arg, MAX_COORDINATE);
+        }
+        return (int) value;
+    }
 
     /**
      * Returns the overlay of the sender's world, which must generate real cities (upstream's "This dimension doesn't

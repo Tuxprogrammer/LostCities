@@ -8,9 +8,7 @@ import java.util.List;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChunkCoordinates;
 
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.core.LangKeys;
@@ -53,20 +51,28 @@ public final class MapSubcommand implements Subcommand {
 
     @Override
     public void execute(ICommandSender sender, String[] args) throws CommandException {
-        if (args.length != 0) {
-            throw new WrongUsageException(LangKeys.COMMAND_USAGE);
-        }
+        int[] block = CommandSupport.blockTarget(sender, args, name());
         OverlayWorld overlay = CommandSupport.cities(sender);
-        ChunkCoordinates at = sender.getPlayerCoordinates();
-        int chunkX = at.posX >> 4;
-        int chunkZ = at.posZ >> 4;
+        int chunkX = block[0] >> 4;
+        int chunkZ = block[1] >> 4;
         Map map = draw(
             overlay.cities()
                 .planner(),
             chunkX,
             chunkZ,
             RADIUS);
-        LostCities.LOG.info("{}dim {} around chunk {},{}:", TAG, overlay.dimension(), chunkX, chunkZ);
+        LostCities.LOG.info(
+            "{}dim {} around chunk {},{} (block {},{}): {} buildings, {} city, {} highway, {} core",
+            TAG,
+            overlay.dimension(),
+            chunkX,
+            chunkZ,
+            block[0],
+            block[1],
+            map.buildings,
+            map.city,
+            map.highways,
+            map.cores);
         for (String row : map.rows) {
             LostCities.LOG.info("{}|{}|", TAG, row);
         }

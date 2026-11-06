@@ -116,6 +116,12 @@ public final class LangKeys {
 
     /** A subcommand that needs a player was sent from the console; argument: the subcommand. */
     public static final String COMMAND_PLAYER_ONLY = "lostcitiesnh.command.player_only";
+    /** Usage of {@code debug} and {@code map}; argument: the subcommand. */
+    public static final String COMMAND_COORDS_USAGE = "lostcitiesnh.command.coords.usage";
+    /** A coordinate is not an integer; argument: what was typed. */
+    public static final String COMMAND_COORDS_INVALID = "lostcitiesnh.command.coords.invalid";
+    /** A coordinate is beyond the limit; arguments: what was typed, the limit. */
+    public static final String COMMAND_COORDS_RANGE = "lostcitiesnh.command.coords.range";
     /** The sender's dimension has no real cities; argument: the dimension. */
     public static final String COMMAND_NO_CITIES = "lostcitiesnh.command.no_cities";
 

@@ -60,6 +60,9 @@ lostcitiesnh.command.find.found=%s at %s %s %s (%s); view from %s %s %s, yaw %s,
 
 # Commands of M10: debug, map, locate, createbuilding and the part editor
 lostcitiesnh.command.player_only=Only a player can use /lostcities %s.
+lostcitiesnh.command.coords.usage=Usage: /lostcities %s [<x> <z>] with integer block coordinates. Without them the sender's position is used, which the console does not have.
+lostcitiesnh.command.coords.invalid='%s' is not an integer block coordinate.
+lostcitiesnh.command.coords.range=Coordinate %s is beyond the limit of +/-%s.
 lostcitiesnh.command.no_cities=Dimension %s does not support Lost Cities: it has no pinned profile with real cities.
 lostcitiesnh.command.debug.chunk=Chunk %s, %s of dimension %s (profile %s):
 lostcitiesnh.command.debug.city=  City: %s; style %s; city level %s; city ground at Y %s; chunk kind %s.
