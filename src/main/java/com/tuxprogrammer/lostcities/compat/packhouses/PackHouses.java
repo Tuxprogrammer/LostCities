@@ -346,6 +346,24 @@ public final class PackHouses {
     }
 
     /**
+     * Removes the plants Forestry's flower garden put in the house's box. The garden plants a flower only where
+     * {@code Block.canBlockStay} says so, which reads the light there, and that is not the same on every generation of
+     * one chunk (checked: with {@code world.rand} swapped for a seeded Random the flowers still differed between fresh
+     * runs); a bare garden is the same every time.
+     */
+    private static void clearGarden(World world, StructureBoundingBox box, StructureBoundingBox chunkBox) {
+        for (int x = Math.max(box.minX, chunkBox.minX); x <= Math.min(box.maxX, chunkBox.maxX); x++) {
+            for (int z = Math.max(box.minZ, chunkBox.minZ); z <= Math.min(box.maxZ, chunkBox.maxZ); z++) {
+                for (int y = box.minY; y <= box.maxY; y++) {
+                    if (world.getBlock(x, y, z) instanceof BlockBush) {
+                        world.setBlock(x, y, z, Blocks.air, 0, 2);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Seeds a world's shared random for one piece's build so what the piece draws from it is a function of the seed.
      */
     static void reseed(Random worldRandom, long pieceSeed) {
