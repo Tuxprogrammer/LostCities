@@ -38,8 +38,7 @@ public final class ConstructionLots {
      * low-rises and houses are single chunks. The 2 × 1 share stands for the long buildings (highway_restaurant) and
      * for a half-built 2 × 2.
      */
-    private static final float[][] SIZE_WEIGHTS = {
-        { 0.4f, 0.2f, 0.4f }, // tower
+    private static final float[][] SIZE_WEIGHTS = { { 0.4f, 0.2f, 0.4f }, // tower
         { 0.1f, 0.3f, 0.6f }, // high-rise
         { 0.7f, 0.2f, 0.1f }, // mid-rise
         { 0.85f, 0.15f, 0f }, // low-rise
@@ -147,8 +146,7 @@ public final class ConstructionLots {
      * @return the lot, or {@code null} when the cell holds none
      */
     public static Draw draw(long seed, int cellX, int cellZ, float d, float strength, int maxFloors) {
-        QualityRandom r = new QualityRandom(
-            (seed + cellZ * 341873128712L + cellX * 132897987541L) ^ CELL_SALT);
+        QualityRandom r = new QualityRandom((seed + cellZ * 341873128712L + cellX * 132897987541L) ^ CELL_SALT);
         float roll = r.nextFloat();
         float classRoll = r.nextFloat();
         float sizeRoll = r.nextFloat();
@@ -191,7 +189,8 @@ public final class ConstructionLots {
         }
         LotKind kind = kind(kindRoll);
         int[] cellars = CELLARS[cls.ordinal()];
-        int cellarCount = cellars[0] + Math.min(cellars[1] - cellars[0], (int) (cellarRoll * (cellars[1] - cellars[0] + 1)));
+        int cellarCount = cellars[0]
+            + Math.min(cellars[1] - cellars[0], (int) (cellarRoll * (cellars[1] - cellars[0] + 1)));
         int floors = classFloors(cls, maxFloors, floorRoll);
         int frame = 1 + Math.min(floors - 1, (int) (frameRoll * floors));
         return new Draw(cls, x, z, dimX, dimZ, kind, cellarCount, floors, frame);

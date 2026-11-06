@@ -474,12 +474,11 @@ public final class LayoutCityPlan implements CityPlan {
      * street chunk where one is beside it, else a city chunk, else north; -1 when the lot holds none.
      */
     private int packHouseSide(ChunkPlan plan, int chunkX, int chunkZ) {
-        if (plan.lot() != LotKind.BARE
-            || plan.lotFootprint()
-                .width()
-                * plan.lotFootprint()
-                    .height() > 1
-            || !PackHouseSelection.picks(context.worldSeed(), chunkX, chunkZ, settings.packHouseChance())) {
+        if (plan.lot() != LotKind.BARE || plan.lotFootprint()
+            .width()
+            * plan.lotFootprint()
+                .height()
+            > 1 || !PackHouseSelection.picks(context.worldSeed(), chunkX, chunkZ, settings.packHouseChance())) {
             return -1;
         }
         int[][] steps = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };

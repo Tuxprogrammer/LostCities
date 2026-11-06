@@ -197,12 +197,26 @@ public class ProfileSnapshotTest {
         java.util.Map<String, String> old = new java.util.TreeMap<>();
         old.put("groundLevel", "71");
         assertFalse(
-            new ProfileSnapshot("default", ProfileSnapshot.PLAN_LAYOUT, old,
-                java.util.Collections.<String, Boolean>emptyMap(), "none", 1, "RWG", "old").terrainSettings()
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                old,
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "old").terrainSettings()
                     .lotFootprints());
         assertTrue(
-            new ProfileSnapshot("default", ProfileSnapshot.PLAN_LAYOUT, ProfileOptions.defaults(),
-                java.util.Collections.<String, Boolean>emptyMap(), "none", 1, "RWG", "new").terrainSettings()
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                ProfileOptions.defaults(),
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "new").terrainSettings()
                     .lotFootprints());
     }
 

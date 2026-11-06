@@ -481,12 +481,18 @@ public final class ChunkPlan {
         return lot;
     }
 
-    /** Returns how deep a dug lot is, in blocks below city ground: 1, 2 or 4 for an edge lot, cellars × floor pitch for a construction lot at real size (0 for a slab at grade); 0 for any other chunk. */
+    /**
+     * Returns how deep a dug lot is, in blocks below city ground: 1, 2 or 4 for an edge lot, cellars × floor pitch for
+     * a construction lot at real size (0 for a slab at grade); 0 for any other chunk.
+     */
     public int lotDepth() {
         return lotDepth;
     }
 
-    /** Returns how many floors a foundation's frame rises above city ground: 1 to 3 for an edge lot, up to its class's floors for a construction lot at real size; 0 for any other chunk. */
+    /**
+     * Returns how many floors a foundation's frame rises above city ground: 1 to 3 for an edge lot, up to its class's
+     * floors for a construction lot at real size; 0 for any other chunk.
+     */
     public int lotColumnFloors() {
         return lotColumnFloors;
     }

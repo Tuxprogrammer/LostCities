@@ -13,8 +13,8 @@ import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.MultiPos;
-import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
@@ -177,11 +177,23 @@ public class ConstructionLotFootprintTest {
                     }
                     String where = " of the seam after " + x + "," + z + " at " + i;
                     if (alongX) {
-                        assertTrue(near.get(15, ground, i).isAir(), "near side" + where);
-                        assertTrue(far.get(0, ground, i).isAir(), "far side" + where);
+                        assertTrue(
+                            near.get(15, ground, i)
+                                .isAir(),
+                            "near side" + where);
+                        assertTrue(
+                            far.get(0, ground, i)
+                                .isAir(),
+                            "far side" + where);
                     } else {
-                        assertTrue(near.get(i, ground, 15).isAir(), "near side" + where);
-                        assertTrue(far.get(i, ground, 0).isAir(), "far side" + where);
+                        assertTrue(
+                            near.get(i, ground, 15)
+                                .isAir(),
+                            "near side" + where);
+                        assertTrue(
+                            far.get(i, ground, 0)
+                                .isAir(),
+                            "far side" + where);
                     }
                 }
             }

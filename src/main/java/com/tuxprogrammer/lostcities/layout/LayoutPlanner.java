@@ -999,7 +999,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             // corridor runs through it, and a rail dungeon stays only below its cellars.
             b.xRailCorridor = false;
             b.zRailCorridor = false;
-            if (b.railDungeonPart != null && infrastructure.railwayLevel() >= b.characteristics.cityLevel - lot.cellars) {
+            if (b.railDungeonPart != null
+                && infrastructure.railwayLevel() >= b.characteristics.cityLevel - lot.cellars) {
                 b.railDungeonPart = null;
             }
         }
@@ -1027,13 +1028,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     private ConstructionLots.Draw fitConstructionLot(int cellX, int cellZ) {
         int cornerX = cellX * ConstructionLots.CELL;
         int cornerZ = cellZ * ConstructionLots.CELL;
-        ConstructionLots.Draw lot = ConstructionLots.draw(
-            seed,
-            cellX,
-            cellZ,
-            ringDistance(cornerX, cornerZ),
-            profile.densityRings,
-            profile.buildingMaxFloors);
+        ConstructionLots.Draw lot = ConstructionLots
+            .draw(seed, cellX, cellZ, ringDistance(cornerX, cornerZ), profile.densityRings, profile.buildingMaxFloors);
         if (lot == null) {
             return null;
         }
@@ -1108,9 +1104,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             boolean building = b.hasBuilding;
             boolean open = !building && b.hierarchicalOpen && b.parkPart == null && b.streetType == StreetType.PARK;
             boolean eligible = (building || open) && b.highwayXLevel < 0 && b.highwayZLevel < 0;
-            site = eligible
-                ? new LotSite(true, c.cityLevel, maxCellars(b.settings, null, c.cityLevel))
-                : LotSite.NONE;
+            site = eligible ? new LotSite(true, c.cityLevel, maxCellars(b.settings, null, c.cityLevel)) : LotSite.NONE;
         }
         return lotSites.put(x, z, site);
     }

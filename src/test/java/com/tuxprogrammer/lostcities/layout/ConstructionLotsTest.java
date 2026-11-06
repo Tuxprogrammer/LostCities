@@ -66,7 +66,9 @@ public class ConstructionLotsTest {
                     int[] cellars = ConstructionLots.cellarBounds(lot.cls);
                     int[] floors = ConstructionLots.floorBounds(lot.cls, 8);
                     assertTrue(lot.cellars >= cellars[0] && lot.cellars <= cellars[1], "cellars " + lot.cellars);
-                    assertTrue(lot.classFloors >= floors[0] && lot.classFloors <= floors[1], "floors " + lot.classFloors);
+                    assertTrue(
+                        lot.classFloors >= floors[0] && lot.classFloors <= floors[1],
+                        "floors " + lot.classFloors);
                     assertTrue(lot.frameFloors >= 1 && lot.frameFloors <= lot.classFloors, "frame " + lot.frameFloors);
                     // The footprint stays inside its cell, so two lots never overlap.
                     assertEquals(ConstructionLots.cell(lot.x), cx);
@@ -82,8 +84,7 @@ public class ConstructionLotsTest {
     public void cellsCoverAsMuchOfARingAsTheSingleChunkLotsDid() {
         for (float d : RINGS) {
             float area = ConstructionLots.meanArea(Ring.of(d), 1f);
-            float covered = ConstructionLots.cellChance(d, 1f) * area
-                / (ConstructionLots.CELL * ConstructionLots.CELL);
+            float covered = ConstructionLots.cellChance(d, 1f) * area / (ConstructionLots.CELL * ConstructionLots.CELL);
             assertEquals(DensityRings.lotChance(d, 1f), covered, 1e-5f);
         }
         assertEquals(null, ConstructionLots.draw(SEED, 0, 0, 0.3f, 0f, 8), "no lots with the rings off");
