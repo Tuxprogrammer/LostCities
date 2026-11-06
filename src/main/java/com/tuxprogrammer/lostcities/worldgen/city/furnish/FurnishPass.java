@@ -128,8 +128,29 @@ public final class FurnishPass {
      */
     public static List<Placed> run(BlockView view, BlockSink sink, int[] standing, RoomKind[] kinds, long[] salts,
         FurnishPalettes palettes, float scale, Predicate<String> known) {
+        return run(view, sink, standing, kinds, salts, palettes, scale, known, MultiblockShapes.none());
+    }
+
+    /**
+     * Furnishes the floors of one chunk, with partial multiblocks in the room kinds the shapes allow (decision 14).
+     * A multiblock's controller counts against the tile caps, and a chunk holds at most one multiblock.
+     *
+     * @param view        the chunk's blocks, read after the building and its overlays are written
+     * @param sink        where items go
+     * @param standing    the standing level of each floor, one above its slab
+     * @param kinds       each floor's room kind
+     * @param salts       each floor's salt ({@link #floorSalt})
+     * @param palettes    the palettes
+     * @param scale       density multiplier: 1, or 0.5 for a ruined building
+     * @param known       whether a block registry name is registered
+     * @param multiblocks the partial multiblock shapes, or {@link MultiblockShapes#none()}
+     * @return the items placed, in placement order
+     */
+    public static List<Placed> run(BlockView view, BlockSink sink, int[] standing, RoomKind[] kinds, long[] salts,
+        FurnishPalettes palettes, float scale, Predicate<String> known, MultiblockShapes multiblocks) {
         List<Placed> out = new ArrayList<>();
         int chunkTiles = 0;
+        boolean[] multiblockDone = new boolean[1];
         for (int f = 0; f < standing.length; f++) {
             FurnishPalette palette = palettes.palette(kinds[f]);
             if (palette == null || palette.items()
@@ -150,14 +171,115 @@ public final class FurnishPass {
                     known,
                     TILES_PER_CHUNK - chunkTiles,
                     sink,
-                    out);
+                    out,
+                    view,
+                    multiblocks.allows(kinds[f]) ? multiblocks : null,
+                    multiblockDone);
             }
         }
         return out;
     }
 
+    /** Controller candidates tried per room before giving up: bounds the search to a few hundred box tests. */
+    private static final int MULTIBLOCK_TRIES = 48;
+    /** Separates the multiblock draws from every other stream. */
+    private static final long MULTIBLOCK_STREAM = 0x41C64E6DL;
+
+    /**
+     * Tries to stand one partial multiblock in a room: a seeded order of controller cells, the shape at each fixed by
+     * position ({@link MultiblockShapes#pick}), the first facing whose box fits. The box must not touch a kept-clear
+     * cell and must leave the room in one piece. Uses its own random, so the room's item draws do not move.
+     *
+     * @param front receives the cell in front of the controller, which stays clear
+     * @return whether one was placed (its controller is one tile entity)
+     */
+    private static boolean placeMultiblock(BlockView view, RoomScanner.Floor floor, int room, boolean[] free,
+        List<Integer> cells, MultiblockShapes multiblocks, long salt, float scale, Predicate<String> known,
+        BlockSink sink, List<Placed> out, int[] front) {
+        Random random = new Random(SeedMix.mix(salt ^ MULTIBLOCK_STREAM, room));
+        if (random.nextFloat() >= multiblocks.chance() * scale) {
+            return false;
+        }
+        List<Integer> order = new ArrayList<>(cells);
+        Collections.shuffle(order, random);
+        boolean[] inRoom = free.clone();
+        int y = floor.y();
+        int tries = 0;
+        for (int cell : order) {
+            int x = cell & 15;
+            int z = cell >> 4;
+            if (x < 2 || x > 13 || z < 2 || z > 13) {
+                continue;
+            }
+            if (tries++ >= MULTIBLOCK_TRIES) {
+                break;
+            }
+            MultiblockShapes.Shape shape = multiblocks.pick(salt, x, y, z);
+            if (shape == null || !shape.known(known)) {
+                continue;
+            }
+            for (int facing = 0; facing < 4; facing++) {
+                if (!shape.fits(view, free, x, z, y, facing) || touchesOtherAir(view, shape, inRoom, x, z, y, facing)) {
+                    continue;
+                }
+                boolean[] before = free.clone();
+                shape.claim(free, x, z, facing);
+                if (!RoomScanner.connected(free)) {
+                    System.arraycopy(before, 0, free, 0, 256);
+                    continue;
+                }
+                shape.place(sink, known, salt, multiblocks.decay(), x, z, y, facing);
+                front[0] = ((z + (facing < 2 ? (facing == 0 ? -1 : 1) : 0)) << 4)
+                    | (x + (facing >= 2 ? (facing == 2 ? -1 : 1) : 0));
+                int controllerY = y + shape.controllerLayer();
+                out.add(
+                    new Placed(
+                        x,
+                        controllerY,
+                        z,
+                        room,
+                        FurnishItem.machine(shape.controllerId(), MultiblockShapes.CONTROLLER_META, true, 1)));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Whether a box has an open neighbor that is not a cell of its room: a door's clear ring, say. */
+    private static boolean touchesOtherAir(BlockView view, MultiblockShapes.Shape shape, boolean[] inRoom, int cx,
+        int cz, int y, int facing) {
+        boolean[] box = new boolean[256];
+        boolean[] probe = new boolean[256];
+        java.util.Arrays.fill(probe, true);
+        shape.claim(probe, cx, cz, facing);
+        for (int i = 0; i < 256; i++) {
+            box[i] = !probe[i];
+        }
+        for (int i = 0; i < 256; i++) {
+            if (!box[i]) {
+                continue;
+            }
+            int x = i & 15;
+            int z = i >> 4;
+            int[][] around = { { x - 1, z }, { x + 1, z }, { x, z - 1 }, { x, z + 1 } };
+            for (int[] n : around) {
+                if (n[0] < 0 || n[1] < 0 || n[0] > 15 || n[1] > 15) {
+                    continue;
+                }
+                int ni = (n[1] << 4) | n[0];
+                if (!box[ni] && !inRoom[ni]
+                    && view.get(n[0], y, n[1])
+                        .isAir()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private static int furnishRoom(RoomScanner.Floor floor, int room, FurnishPalette palette, Random random, long salt,
-        float scale, Predicate<String> known, int chunkTilesLeft, BlockSink sink, List<Placed> out) {
+        float scale, Predicate<String> known, int chunkTilesLeft, BlockSink sink, List<Placed> out, BlockView view,
+        MultiblockShapes multiblocks, boolean[] multiblockDone) {
         List<Integer> cells = floor.cells(room);
         boolean[] free = new boolean[256];
         List<Integer> slots = new ArrayList<>();
@@ -170,6 +292,15 @@ public final class FurnishPass {
         if (slots.isEmpty()) {
             return 0;
         }
+        int tiles = 0;
+        int[] front = { -1 };
+        if (multiblocks != null && !multiblockDone[0]
+            && Math.min(Math.min(palette.maxTiles(), TILES_PER_ROOM), chunkTilesLeft) >= 1
+            && placeMultiblock(view, floor, room, free, cells, multiblocks, salt, scale, known, sink, out, front)) {
+            multiblockDone[0] = true;
+            tiles = 1;
+            slots.removeIf(c -> !free[c] || c == front[0]);
+        }
         Collections.shuffle(slots, random);
         float wanted = palette.density() * scale * slots.size();
         int count = (int) wanted;
@@ -178,7 +309,6 @@ public final class FurnishPass {
         }
         count = Math.min(count, palette.maxItems());
         int tilesLeft = Math.min(Math.min(palette.maxTiles(), TILES_PER_ROOM), chunkTilesLeft);
-        int tiles = 0;
         int placed = 0;
         int y = floor.y();
         for (int cell : slots) {
@@ -280,6 +410,23 @@ public final class FurnishPass {
      * @return one {@code {x, z}} position and template per tile entity, the template empty for a plain one
      */
     public static List<Completion> completions(BlockView view, int y, String argument, FurnishPalettes palettes) {
+        return completions(view, y, argument, palettes, MultiblockShapes.bundled());
+    }
+
+    /**
+     * As {@link #completions(BlockView, int, String, FurnishPalettes)}, with the multiblock shapes given. A GT machine
+     * block at the floor's level or one above it is first tried as a partial multiblock's controller: the shape its
+     * position picks, and a facing whose casings all match, name the controller and its facing.
+     *
+     * @param view        the populated chunk
+     * @param y           the floor's standing level
+     * @param argument    the job's argument
+     * @param palettes    the palettes
+     * @param multiblocks the multiblock shapes
+     * @return the completions, each with its own Y
+     */
+    public static List<Completion> completions(BlockView view, int y, String argument, FurnishPalettes palettes,
+        MultiblockShapes multiblocks) {
         List<Completion> out = new ArrayList<>();
         int split = argument.indexOf(';');
         RoomKind kind = split < 0 ? null : RoomKind.byId(argument.substring(0, split));
@@ -295,6 +442,13 @@ public final class FurnishPass {
         }
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
+                if (multiblocks.allows(kind)) {
+                    Completion controller = controllerAt(view, y, x, z, salt, multiblocks);
+                    if (controller != null) {
+                        out.add(controller);
+                        continue;
+                    }
+                }
                 BlockRef block = view.get(x, y, z);
                 if (block.isAir()) {
                     continue;
@@ -321,6 +475,26 @@ public final class FurnishPass {
         return out;
     }
 
+    /** Finds a partial multiblock's controller standing over column (x, z) of a floor, or {@code null}. */
+    private static Completion controllerAt(BlockView view, int y, int x, int z, long salt,
+        MultiblockShapes multiblocks) {
+        MultiblockShapes.Shape shape = multiblocks.pick(salt, x, y, z);
+        if (shape == null) {
+            return null;
+        }
+        int controllerY = y + shape.controllerLayer();
+        BlockRef block = view.get(x, controllerY, z);
+        if (!FurnishItem.GT_MACHINES.equals(block.name()) || block.meta() != MultiblockShapes.CONTROLLER_META) {
+            return null;
+        }
+        int facing = shape.facingAt(view, x, z, controllerY);
+        if (facing < 0) {
+            return null;
+        }
+        return new Completion(x, z, shape.controllerId(), machineTemplate(shape.controllerId(), facing), null, null)
+            .at(controllerY);
+    }
+
     /** A tile entity the population phase completes. */
     public static final class Completion {
 
@@ -330,6 +504,7 @@ public final class FurnishPass {
         private final String template;
         private final String loot;
         private final String mob;
+        private int y = -1;
 
         Completion(int x, int z, int gtId, String template, String loot, String mob) {
             this.loot = loot;
@@ -343,6 +518,16 @@ public final class FurnishPass {
         /** Returns local X. */
         public int x() {
             return x;
+        }
+
+        Completion at(int level) {
+            this.y = level;
+            return this;
+        }
+
+        /** Returns the block Y of the tile entity, or -1 for the job's own floor level. */
+        public int y() {
+            return y;
         }
 
         /** Returns local Z. */

@@ -367,3 +367,8 @@ What belongs here: the owner's preferences and overrides, and the choices the bu
 | D359 | 2026-11-06 | Networks | Landmark cores that reach underground (LootGames rooms) block a link line at any railway level; Roguelike towers are handled by D361 instead (0015). | Detail in 0015. |
 | D360 | 2026-11-06 | Testing | The links `network.railway` check does not fail on boundaries an explosion reaches, as the other walks treat upstream damage (0015 §4). | Detail in 0015. |
 | D361 | 2026-11-06 | Networks | Roguelike steering refuses any dungeon site within 122 blocks of link-line track (the pack's level reach), rather than dropping the line; revisit if the pack changes `roguelike.cfg` (0015, 0006 §5). | Detail in 0015. |
+| D362 | 2026-11-06 | Worldgen | Partial GT multiblocks are data (`furnish/multiblocks.json`, eight shapes from GT5-Unofficial 5.09.54.265) (0016 §14). | Detail in 0016. |
+| D363 | 2026-11-06 | Worldgen | A shape is never complete: top layers omitted and 12 % of other cells decay, controller anchors kept (0016 §14). | Detail in 0016. |
+| D364 | 2026-11-06 | Worldgen | Industrial rooms only, chance 0.5 (halved when ruined), one per chunk; the controller counts against the TE caps. Revisit for the industrial-yard district (0016 §14). | Detail in 0016. |
+| D365 | 2026-11-06 | GTNH | The `FURNISH` job recovers shape and facing from position and casings, no stored record (0016 §14). | Detail in 0016. |
+| D366 | 2026-11-06 | Config | No new option: multiblocks ride the `furnish` pass, so pinned worlds and legacy goldens are unchanged (0016 §14). | Detail in 0016. |

@@ -1,0 +1,344 @@
+{
+ "comment": "Partial GT multiblocks as set dressing (design record 0016, decision 14). Layers are listed top first, rows front first (the controller's row), as in the GT structure definitions cited in 'source'. '~' is the controller, '-' air; hatch and muffler characters are drawn as the shape's casing so no tile entity is placed. 'omitTop' drops that many top layers so no shape is ever complete; 'decay' drops that share of the remaining non-anchor cells.",
+ "chance": 0.5,
+ "decay": 0.12,
+ "rooms": [
+  "industrial"
+ ],
+ "shapes": [
+  {
+   "id": "electric_blast_furnace",
+   "controller": 1000,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEElectricBlastFurnace.java:84-110",
+   "legend": {
+    "b": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "f": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "m": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "C": {
+     "block": "gregtech:gt.blockcasings5",
+     "meta": 0
+    }
+   },
+   "layers": [
+    [
+     "fff",
+     "fmf",
+     "fff"
+    ],
+    [
+     "CCC",
+     "C-C",
+     "CCC"
+    ],
+    [
+     "CCC",
+     "C-C",
+     "CCC"
+    ],
+    [
+     "b~b",
+     "bbb",
+     "bbb"
+    ]
+   ],
+   "omitTop": 1
+  },
+  {
+   "id": "multi_smelter",
+   "controller": 1003,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEMultiFurnace.java:70-93",
+   "legend": {
+    "b": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "c": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "m": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 11
+    },
+    "C": {
+     "block": "gregtech:gt.blockcasings5",
+     "meta": 0
+    }
+   },
+   "layers": [
+    [
+     "ccc",
+     "cmc",
+     "ccc"
+    ],
+    [
+     "CCC",
+     "C-C",
+     "CCC"
+    ],
+    [
+     "b~b",
+     "bbb",
+     "bbb"
+    ]
+   ],
+   "omitTop": 1
+  },
+  {
+   "id": "large_bronze_boiler",
+   "controller": 1020,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTELargeBoiler.java:72-98; MTELargeBoilerBronze.java:20-22",
+   "legend": {
+    "c": {
+     "block": "gregtech:gt.blockcasings",
+     "meta": 10
+    },
+    "P": {
+     "block": "gregtech:gt.blockcasings2",
+     "meta": 12
+    },
+    "f": {
+     "block": "gregtech:gt.blockcasings3",
+     "meta": 13
+    }
+   },
+   "layers": [
+    [
+     "ccc",
+     "ccc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "f~f",
+     "fff",
+     "fff"
+    ]
+   ],
+   "omitTop": 2
+  },
+  {
+   "id": "large_steel_boiler",
+   "controller": 1021,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTELargeBoiler.java:72-98; MTELargeBoilerSteel.java:20-22",
+   "legend": {
+    "c": {
+     "block": "gregtech:gt.blockcasings2",
+     "meta": 0
+    },
+    "P": {
+     "block": "gregtech:gt.blockcasings2",
+     "meta": 13
+    },
+    "f": {
+     "block": "gregtech:gt.blockcasings3",
+     "meta": 14
+    }
+   },
+   "layers": [
+    [
+     "ccc",
+     "ccc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "ccc",
+     "cPc",
+     "ccc"
+    ],
+    [
+     "f~f",
+     "fff",
+     "fff"
+    ]
+   ],
+   "omitTop": 2
+  },
+  {
+   "id": "implosion_compressor",
+   "controller": 1001,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEImplosionCompressor.java:86-98",
+   "legend": {
+    "C": {
+     "block": "gregtech:gt.blockcasings2",
+     "meta": 0
+    }
+   },
+   "layers": [
+    [
+     "CCC",
+     "CCC",
+     "CCC"
+    ],
+    [
+     "C~C",
+     "C-C",
+     "CCC"
+    ],
+    [
+     "CCC",
+     "CCC",
+     "CCC"
+    ]
+   ],
+   "omitTop": 1
+  },
+  {
+   "id": "vacuum_freezer",
+   "controller": 1002,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEVacuumFreezer.java:89-101",
+   "legend": {
+    "C": {
+     "block": "gregtech:gt.blockcasings2",
+     "meta": 1
+    }
+   },
+   "layers": [
+    [
+     "CCC",
+     "CCC",
+     "CCC"
+    ],
+    [
+     "C~C",
+     "C-C",
+     "CCC"
+    ],
+    [
+     "CCC",
+     "CCC",
+     "CCC"
+    ]
+   ],
+   "omitTop": 1
+  },
+  {
+   "id": "pyrolyse_oven",
+   "controller": 1159,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEPyrolyseOvenLegacy.java:56-84",
+   "legend": {
+    "c": {
+     "block": "gregtech:gt.blockcasingsNH",
+     "meta": 2
+    },
+    "t": {
+     "block": "gregtech:gt.blockcasingsNH",
+     "meta": 2
+    },
+    "b": {
+     "block": "gregtech:gt.blockcasingsNH",
+     "meta": 2
+    },
+    "C": {
+     "block": "gregtech:gt.blockcasings5",
+     "meta": 0
+    }
+   },
+   "layers": [
+    [
+     "ccccc",
+     "ctttc",
+     "ctttc",
+     "ctttc",
+     "ccccc"
+    ],
+    [
+     "ccccc",
+     "c---c",
+     "c---c",
+     "c---c",
+     "ccccc"
+    ],
+    [
+     "ccccc",
+     "c---c",
+     "c---c",
+     "c---c",
+     "ccccc"
+    ],
+    [
+     "bb~bb",
+     "bCCCb",
+     "bCCCb",
+     "bCCCb",
+     "bbbbb"
+    ]
+   ],
+   "omitTop": 2
+  },
+  {
+   "id": "oil_cracker",
+   "controller": 1160,
+   "source": "GT5-Unofficial@5.09.54.265 gregtech/common/tileentities/machines/multi/MTEOilCracker.java:70-116",
+   "legend": {
+    "l": {
+     "block": "gregtech:gt.blockcasings4",
+     "meta": 1
+    },
+    "m": {
+     "block": "gregtech:gt.blockcasings4",
+     "meta": 1
+    },
+    "r": {
+     "block": "gregtech:gt.blockcasings4",
+     "meta": 1
+    },
+    "c": {
+     "block": "gregtech:gt.blockcasings5",
+     "meta": 0
+    }
+   },
+   "layers": [
+    [
+     "lcmcr",
+     "lcmcr",
+     "lcmcr"
+    ],
+    [
+     "lc~cr",
+     "l---r",
+     "lcmcr"
+    ],
+    [
+     "lcmcr",
+     "lcmcr",
+     "lcmcr"
+    ]
+   ],
+   "omitTop": 1
+  }
+ ]
+}
