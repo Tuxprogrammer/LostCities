@@ -223,9 +223,11 @@ public final class TerrainPhase {
             if (!plan.groundFits()
                 .isEmpty()) {
                 // 0009: a scattered structure's ground, leveled under it and faded into RWG's terrain around it.
+                stage(10);
                 changed |= ScatteredGround.apply(buffer, context, chunkX, chunkZ, plan.groundFits()) > 0;
             }
             if (plan.content() != ChunkContent.NONE) {
+                stage(7);
                 plan.content()
                     .write(
                         buffer,
@@ -241,6 +243,7 @@ public final class TerrainPhase {
             }
             changed |= network(buffer, chunkX, chunkZ, plan);
         }
+        stage(13);
         if (plan.lane() != null) {
             if (!plan.isCity()) {
                 changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
