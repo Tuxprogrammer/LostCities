@@ -191,4 +191,38 @@ public class TerrainBlendTest {
         }
         assertTrue(differences > 0, "two world seeds give different jitter");
     }
+
+    /** The city stands at 90 above a surface near 70; a crater cap well below the natural ground bounds the margin. */
+    private static CityPlan cityEastOfUnderCrater(int cap) {
+        return (cx, cz) -> {
+            int natural = TestTerrain.surface((cx << 4) + 8, (cz << 4) + 8) + 1;
+            if (cx >= 0) {
+                return ChunkPlan.builder(cx, cz, ChunkKind.CITY)
+                    .groundY(90)
+                    .naturalHeight(natural)
+                    .build();
+            }
+            return ChunkPlan.builder(cx, cz, ChunkKind.NONE)
+                .groundY(71)
+                .naturalHeight(natural)
+                .craterCap(cap)
+                .build();
+        };
+    }
+
+    @Test
+    public void aMarginUnderACraterSlopesBelowItsCap() {
+        TerrainContext context = TestTerrain.context(7L);
+        int cap = 66;
+        for (int cx = -2; cx <= -1; cx++) {
+            ArrayChunkBuffer free = TestTerrain.chunk(cx, 0);
+            ArrayChunkBuffer capped = TestTerrain.chunk(cx, 0);
+            new TerrainBlend(context).apply(free, cx, 0, cityEastOf(90));
+            new TerrainBlend(context).apply(capped, cx, 0, cityEastOfUnderCrater(cap));
+            int freeTop = ColumnOps.surface(free, context.classifier(), 0, 8, true);
+            int cappedTop = ColumnOps.surface(capped, context.classifier(), 0, 8, true);
+            assertTrue(cappedTop <= Math.max(cap, freeTop), "cx " + cx + ": " + cappedTop);
+            assertTrue(cappedTop <= freeTop, "the cap never raises ground, cx " + cx);
+        }
+    }
 }

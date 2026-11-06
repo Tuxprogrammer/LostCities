@@ -227,6 +227,10 @@ public final class LayoutCityPlan implements CityPlan {
             .cityLevel(level)
             .groundY(settings.cityGround(level))
             .naturalHeight(natural)
+            .craterCap(
+                plan.zone() == null ? Integer.MAX_VALUE
+                    : plan.zone()
+                        .heightCap())
             .ocean(ocean);
         int[] footprint = null;
         boolean bridge = planner.bridgePart(chunkX, chunkZ, Orientation.X) != null

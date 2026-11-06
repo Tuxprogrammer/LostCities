@@ -323,6 +323,12 @@ public final class TerrainBlend {
     private boolean reshape(ChunkBuffer buffer, int chunkX, int chunkZ, ChunkPlan self) {
         int freeMax = WorldLimits.clampY(self.naturalHeight() + FREE_CORNER_SPAN);
         int freeMin = WorldLimits.clampY(self.naturalHeight() - FREE_CORNER_SPAN);
+        if (self.craterCap() != Integer.MAX_VALUE) {
+            // D284: a crater digs everything above its paraboloid after this phase, so the margin's slope from the
+            // city must already lie under it, or the dig leaves a sheer wall where the city ends.
+            freeMax = Math.min(freeMax, WorldLimits.clampY(self.craterCap()));
+            freeMin = Math.min(freeMin, freeMax);
+        }
         float max00 = l2Fixed[0] ? l2Max[0] : freeMax;
         float max10 = l2Fixed[1] ? l2Max[1] : freeMax;
         float max01 = l2Fixed[2] ? l2Max[2] : freeMax;

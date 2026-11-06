@@ -104,6 +104,10 @@ A plan that puts a city chunk right beside a core, which only the synthetic test
 
 ## Village lanes
 
+*Deviation (D283, fixed after 0.1.0-beta):* two lane chunks that touch pick their border columns from the plan alone, so a lane never rises more than one block across a chunk border, in any generation order. Each lane border column that faces a lane column in a non-city, non-core neighbor is pinned into `[s, s + 1]`, `s` being the floor of the mean of the two chunks' oracle heights, before the lane is relaxed; borders against a city or core keep the city's rules.
+
+*Deviation (D284, fixed after 0.1.0-beta):* a non-city chunk under an AE2 crater's paraboloid carries the cap in its plan, and the blend keeps its free corners at or under it, so the margin slopes from the city down under the crater instead of ending in the pit's wall.
+
 [0006](../../design/0006-build-around-other-worldgen.md#3-streets-buildings-and-the-planner) §3, written in the terrain phase before RWG's `populate` places the village pieces:
 
 1. In the gate chunk, the margin chunk in front of the gate, a 3-block-wide surface path runs from the city's street, through the opening in its border, down or up the margin to the core's edge (E8). Before it is laid its columns are graded: each moves, keeping its top blocks, to a straight ramp from the street's ground on the city side to the core's edge column on the far side (read before the blend), so the lane runs down the slope rather than stopping at its top (AR-7); a column beside the lane more than a block from it then moves halfway to it, so the lane is neither a causeway nor a trench.
