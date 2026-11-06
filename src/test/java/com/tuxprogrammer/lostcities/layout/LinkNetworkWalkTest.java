@@ -3,6 +3,7 @@ package com.tuxprogrammer.lostcities.layout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
@@ -211,5 +212,108 @@ public class LinkNetworkWalkTest {
             RailChunkType.DOUBLE_BEND,
             RailChunk.link(RailChunkType.DOUBLE_BEND, -3, false, bend)
                 .type());
+    }
+
+    /**
+     * D-p4v-2: a line never passes through a third city's center; it runs to it and on, so every center a line
+     * touches is entered and left along X and takes its station, and the route is still one unbroken line.
+     */
+    @Test
+    public void noLinePassesThroughAnotherCityCenterAndEveryCenterIsAStation() {
+        int splits = 0;
+        int centers = 0;
+        int tees = 0;
+        int crossings = 0;
+        for (long seed : new long[] { 7919L, 31337L, 1L, 777L }) {
+            Networks networks = planner(seed, LayoutFixtures.flatTerrain()).networks();
+            CityLinkGraph graph = networks.links();
+            LinkRails rails = networks.railways()
+                .links();
+            Set<Long> nodes = new HashSet<>();
+            for (int cx = -6; cx <= 6; cx++) {
+                for (int cz = -6; cz <= 6; cz++) {
+                    int[] n = graph.node(cx, cz);
+                    if (n != null) {
+                        nodes.add(key(n[0], n[1]));
+                    }
+                }
+            }
+            Set<CityLinkGraph.Link> seen = new HashSet<>();
+            for (int cx = -3; cx <= 3; cx++) {
+                for (int cz = -3; cz <= 3; cz++) {
+                    for (CityLinkGraph.Link link : graph.links(cx, cz)) {
+                        if (!seen.add(link) || !rails.live(link)) {
+                            continue;
+                        }
+                        List<int[]> route = rails.route(link);
+                        assertEquals(link.ax(), route.get(0)[0]);
+                        assertEquals(link.az(), route.get(0)[1]);
+                        assertEquals(link.bx(), route.get(route.size() - 1)[0]);
+                        assertEquals(link.bz(), route.get(route.size() - 1)[1]);
+                        for (int i = 1; i < route.size(); i++) {
+                            int[] c = route.get(i);
+                            int[] p = route.get(i - 1);
+                            assertTrue(LinkRails.side(c[0] - p[0], c[1] - p[1]) != 0, "side neighbors " + link);
+                            if (i < route.size() - 1 && nodes.contains(key(c[0], c[1]))) {
+                                // A center inside the route: reached and left along X.
+                                splits++;
+                                assertEquals(p[1], c[1], "center entered along X " + link);
+                                assertEquals(route.get(i + 1)[1], c[1], "center left along X " + link);
+                            }
+                        }
+                    }
+                }
+            }
+            for (int x = -WINDOW; x <= WINDOW; x++) {
+                for (int z = -WINDOW; z <= WINDOW; z++) {
+                    RailChunk rail = networks.railChunk(x, z);
+                    int sides = rail.openings() & LinkRails.SIDES;
+                    tees += Integer.bitCount(sides) == 3 ? 1 : 0;
+                    crossings += Integer.bitCount(sides) == 4 ? 1 : 0;
+                    if (rail.isPresent() && nodes.contains(key(x, z))) {
+                        centers++;
+                        assertTrue(
+                            rail.type()
+                                .isStation(),
+                            "a city center with track is a station at " + x + "," + z + ": " + rail);
+                    }
+                }
+            }
+        }
+        System.out.println(
+            "[link rails] centers " + centers + ", route splits " + splits + ", T " + tees + ", crossings "
+                + crossings);
+        assertTrue(centers > 0);
+    }
+
+    /** D-p4v-1: a T's center is vanilla's unpowered curve with a lever beside it, off the track, inside the tunnel. */
+    @Test
+    public void aTeeCenterIsAVanillaSwitchWithALever() {
+        int n = LinkRails.NORTH;
+        int e = LinkRails.EAST;
+        int s = LinkRails.SOUTH;
+        int w = LinkRails.WEST;
+        int t = LinkRailGeometry.TRACK;
+        assertEquals(LinkRailGeometry.SOUTH_EAST, LinkRailGeometry.shape(e | s | w, t, t));
+        assertEquals(LinkRailGeometry.SOUTH_EAST, LinkRailGeometry.shape(n | e | s, t, t));
+        assertEquals(LinkRailGeometry.SOUTH_WEST, LinkRailGeometry.shape(n | s | w, t, t));
+        assertEquals(LinkRailGeometry.NORTH_EAST, LinkRailGeometry.shape(n | e | w, t, t));
+        assertEquals(LinkRailGeometry.EAST_WEST, LinkRailGeometry.shape(n | e | s | w, t, t));
+        assertNull(LinkRailGeometry.lever(e | w));
+        assertNull(LinkRailGeometry.lever(n | e | s | w));
+        for (int sides : new int[] { e | s | w, n | e | s, n | s | w, n | e | w }) {
+            int[] lever = LinkRailGeometry.lever(sides);
+            assertNotNull(lever);
+            int dx = lever[0] - t;
+            int dz = lever[1] - t;
+            assertEquals(1, Math.abs(dx) + Math.abs(dz), "beside the center");
+            assertEquals(-1, LinkRailGeometry.shape(sides, lever[0], lever[1]), "off the track");
+            assertEquals(LinkRailGeometry.INSIDE, LinkRailGeometry.role(sides, lever[0], lever[1]));
+            assertEquals(0, sides & LinkRails.side(dx, dz), "on the side no arm leaves by");
+        }
+    }
+
+    private static long key(int x, int z) {
+        return (long) x << 32 | (z & 0xffffffffL);
     }
 }

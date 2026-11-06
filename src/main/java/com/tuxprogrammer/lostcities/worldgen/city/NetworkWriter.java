@@ -730,7 +730,8 @@ public final class NetworkWriter {
      * Writes a link-network line in code (0015 §3): every tunnel column copies the slot's first
      * {@code railshorizontal} part's cross-section (its interior row 4 inside, its wall row 3 for walls), turned to
      * run along Z on north and south arms; then the track, one vanilla rail per column shaped to join its neighbors,
-     * with a powered rail over a redstone block mid-arm. Writes only this chunk.
+     * with a powered rail over a redstone block mid-arm, and at a T a lever that switches the center curve. Writes only
+     * this chunk.
      */
     private void linkRail(RailChunk rail, int height) {
         List<Part> parts = worldStyle.parts("railways", "railshorizontal");
@@ -766,6 +767,11 @@ public final class NetworkWriter {
                     target.set(x, height + 1, z, BlockRef.of("minecraft:rail", shape));
                 }
             }
+        }
+        int[] lever = LinkRailGeometry.lever(sides);
+        if (lever != null) {
+            // A T's switch (D-p4v-1): a floor lever beside the curve, as a player builds one; meta 5 stands on the floor.
+            target.set(lever[0], height + 1, lever[1], BlockRef.of("minecraft:lever", 5));
         }
         BlockRef railMain = railMain(rail);
         if (railMain != null && rail.type() == RailChunkType.HORIZONTAL) {
