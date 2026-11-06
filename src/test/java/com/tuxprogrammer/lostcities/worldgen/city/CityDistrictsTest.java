@@ -96,7 +96,10 @@ public class CityDistrictsTest {
                 for (int dz = 0; dz <= 1; dz++) {
                     ChunkPlan plan = p.plan(c[0] + dx, c[1] + dz);
                     if (plan.lot() == LotKind.PLAZA) {
-                        assertEquals(2, plan.lotFootprint().width());
+                        assertEquals(
+                            2,
+                            plan.lotFootprint().width(),
+                            "center " + c[0] + "," + c[1] + " r=" + p.cityRadius(c[0], c[1]) + " chunk " + dx + "," + dz);
                         assertFalse(plan.hasBuilding());
                         plazas++;
                     }
