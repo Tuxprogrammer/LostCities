@@ -329,16 +329,15 @@ public class NetworkWriterTest {
     @Test
     public void spillFromALinkDiagonalIsInTheFootprintOrGuardBand() {
         LayoutPlanner planner = new LayoutPlanner(
-            LayoutInputs
-                .builder(
-                    7919L,
-                    LayoutProfile.builder()
-                        .cityChance(0.00025)
-                        .cityRadius(100, 256)
-                        .cityGrid(64, 16)
-                        .build(),
-                    LayoutFixtures.standardAssets(),
-                    LayoutFixtures.flatTerrain())
+            LayoutInputs.builder(
+                7919L,
+                LayoutProfile.builder()
+                    .cityChance(0.00025)
+                    .cityRadius(100, 256)
+                    .cityGrid(64, 16)
+                    .build(),
+                LayoutFixtures.standardAssets(),
+                LayoutFixtures.flatTerrain())
                 .networks(NetworkSettings.DEFAULTS.withLinks(true))
                 .build());
         TerrainSettings settings = TerrainSettings.defaults();

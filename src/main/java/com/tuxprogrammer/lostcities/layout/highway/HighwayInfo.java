@@ -420,7 +420,8 @@ public final class HighwayInfo {
     }
 
     /**
-     * Returns the lowest level of a link deck spilling in from a neighbor, so the footprint and the guard band can cover
+     * Returns the lowest level of a link deck spilling in from a neighbor, so the footprint and the guard band can
+     * cover
      * the spilled columns (0015 §3).
      *
      * @return the level, or −1 for no spill
