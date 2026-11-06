@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import com.tuxprogrammer.lostcities.asset.match.BiomeSource;
 import com.tuxprogrammer.lostcities.asset.block.MetalFlags;
+import com.tuxprogrammer.lostcities.asset.match.BiomeSource;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.asset.view.LayoutAssets;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
@@ -28,7 +28,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
- * Golden chunks at the settings a new world gets (D282 onward), not the legacy pin the older goldens use: floor pitch 8,
+ * Golden chunks at the settings a new world gets (D282 onward), not the legacy pin the older goldens use: floor pitch
+ * 8,
  * lot footprints, pack houses, furniture with room rules, open door steps, the ramp surface, railway core ends and ramp
  * holds. The world is the {@link CityFixtures} one with every option at its default.
  */

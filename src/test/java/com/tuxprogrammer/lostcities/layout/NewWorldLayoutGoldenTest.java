@@ -86,7 +86,8 @@ public class NewWorldLayoutGoldenTest {
         LayoutGoldens.assertMatches(
             "newworld_beltway",
             "rarecities with cityHighwayLayout=beltway (seed 7919, flat ground): the first grid city's surroundings,\n"
-                + "highways (H), track (=), stations (S) and both (+), chunks " + (cx - r)
+                + "highways (H), track (=), stations (S) and both (+), chunks "
+                + (cx - r)
                 + ","
                 + (cz - r)
                 + " to "
