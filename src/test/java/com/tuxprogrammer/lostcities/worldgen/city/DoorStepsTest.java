@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.tuxprogrammer.lostcities.asset.block.BlockRef;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.Doorway;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
@@ -19,13 +20,14 @@ public class DoorStepsTest {
     private static final LayoutCityPlan PLAN = CityFixtures.plan();
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final int SEARCH = 90;
+    private static final int NETWORK_SEARCH = 220;
     private static final int LIMIT = 8;
 
     @Test
     public void streetDoorStepsStayOpenInChunksWithAnNetwork() {
         int checked = 0;
-        for (int z = -SEARCH; z <= SEARCH && checked < LIMIT; z++) {
-            for (int x = -SEARCH; x <= SEARCH && checked < LIMIT; x++) {
+        for (int z = -NETWORK_SEARCH; z <= NETWORK_SEARCH && checked < LIMIT; z++) {
+            for (int x = -NETWORK_SEARCH; x <= NETWORK_SEARCH && checked < LIMIT; x++) {
                 if (!NetworkWriter.hasWork(PLANNER, x, z) || CityChunkWriter.doorApproaches(PLANNER, x, z) == null) {
                     continue;
                 }
@@ -42,8 +44,7 @@ public class DoorStepsTest {
                             }
                             for (int y = ground + 1; y <= ground + 2; y++) {
                                 assertTrue(
-                                    buffer.get(c[0], y, c[1])
-                                        .isAir(),
+                                    open(buffer.get(c[0], y, c[1])),
                                     "door step open at " + x + "," + z + " local " + c[0] + "," + y + "," + c[1] + ": "
                                         + buffer.get(c[0], y, c[1]));
                             }
@@ -83,8 +84,7 @@ public class DoorStepsTest {
                             int[] c = CityChunkWriter.vegetationColumn(side, d, along);
                             for (int y = roofY + 1; y <= roofY + 2; y++) {
                                 assertTrue(
-                                    buffer.get(c[0], y, c[1])
-                                        .isAir(),
+                                    open(buffer.get(c[0], y, c[1])),
                                     "roof door step open at " + x + "," + z + " local " + c[0] + "," + y + "," + c[1]
                                         + ": " + buffer.get(c[0], y, c[1]));
                             }
@@ -95,5 +95,11 @@ public class DoorStepsTest {
             }
         }
         assertTrue(checked > 0, "a roof with a neighbor's door opening onto it");
+    }
+
+    /** Air, or a vine, which grows over a doorway's neighbors but does not stop a walker. */
+    private static boolean open(BlockRef block) {
+        return block.isAir() || block.name()
+            .contains("vine");
     }
 }
