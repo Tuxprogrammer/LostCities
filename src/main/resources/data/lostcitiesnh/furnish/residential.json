@@ -1,0 +1,16 @@
+{
+  "room": "residential",
+  "density": 0.3,
+  "maxItems": 5,
+  "maxTiles": 1,
+  "fallback": { "block": "minecraft:bookshelf" },
+  "items": [
+    { "block": "chisel:bookshelf", "meta": 1, "weight": 4 },
+    { "block": "minecraft:bookshelf", "weight": 3 },
+    { "block": "chisel:carpet", "meta": 14, "weight": 3 },
+    { "block": "minecraft:carpet", "meta": 12, "weight": 2 },
+    { "block": "Thaumcraft:blockCandle", "weight": 1 },
+    { "block": "minecraft:crafting_table", "weight": 1 },
+    { "block": "minecraft:flower_pot", "tile": true, "weight": 1 }
+  ]
+}

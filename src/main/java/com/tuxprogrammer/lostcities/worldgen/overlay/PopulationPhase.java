@@ -17,6 +17,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ChestGenHooks;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.PopulationJob;
 import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
@@ -50,6 +52,8 @@ public final class PopulationPhase {
 
     private final World world;
     private final WorldChunkBuffer reader;
+    /** Whether the first completed GT machine has been logged, the real-pack check of design record 0016. */
+    private boolean machineLogged;
 
     /**
      * Creates the population phase of one world.
@@ -88,6 +92,7 @@ public final class PopulationPhase {
                 case SPAWNER -> done += spawner(job, x, z) ? 1 : 0;
                 case COMMAND_BLOCK -> done += commandBlock(job, x, z) ? 1 : 0;
                 case TILE_ENTITY -> done += tileEntity(job, x, z) ? 1 : 0;
+                case FURNISH -> done += furnish(job, chunkX, chunkZ);
                 default -> LostCities.LOG.warn("Unknown population job {}", job);
             }
         }
@@ -189,6 +194,63 @@ public final class PopulationPhase {
                 .setChunkModified();
         }
         return true;
+    }
+
+    /**
+     * Completes one furnished floor (design record 0016): creates the tile entities of the furniture the terrain phase
+     * wrote and gives each GT machine its MetaTileEntity and facing through its NBT, the chunk-load path
+     * ({@code BaseMetaTileEntity.readFromNBT} builds the machine from {@code mID}, research-gt-machines.md §1). A
+     * block that already has a tile entity is left as it is. Reads and writes only this chunk.
+     *
+     * @return the number of tile entities completed
+     */
+    private int furnish(PopulationJob job, int chunkX, int chunkZ) {
+        int done = 0;
+        for (FurnishPass.Completion completion : FurnishPass
+            .completions(reader::get, job.y(), job.argument(), FurnishPalettes.bundled())) {
+            int x = (chunkX << 4) + completion.x();
+            int z = (chunkZ << 4) + completion.z();
+            Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+            if (chunk.getTileEntityUnsafe(completion.x(), job.y(), completion.z()) != null) {
+                continue;
+            }
+            TileEntity tile = tileAt(x, job.y(), z);
+            if (tile == null) {
+                continue;
+            }
+            if (!completion.template()
+                .isEmpty() && TemplateNbt.apply(tile, completion.template())) {
+                chunk.setChunkModified();
+                if (!machineLogged) {
+                    machineLogged = true;
+                    LostCities.LOG.info(
+                        "Furnish: GT machine {} at {} {} {} is {} with {}",
+                        completion.gtId(),
+                        x,
+                        job.y(),
+                        z,
+                        machineName(tile),
+                        completion.template());
+                }
+            }
+            done++;
+        }
+        return done;
+    }
+
+    /** Names a GT tile entity's MetaTileEntity class for the first machine's log line, by reflection (no GT API). */
+    private static String machineName(TileEntity tile) {
+        try {
+            Object mte = tile.getClass()
+                .getMethod("getMetaTileEntity")
+                .invoke(tile);
+            return mte == null ? "no MetaTileEntity"
+                : mte.getClass()
+                    .getSimpleName();
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            return tile.getClass()
+                .getSimpleName();
+        }
     }
 
     /**

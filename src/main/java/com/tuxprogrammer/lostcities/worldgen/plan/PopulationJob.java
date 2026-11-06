@@ -33,7 +33,13 @@ public final class PopulationJob {
          * as JSON with items named by registry name; an empty template only makes sure the tile entity exists (doors in
          * this pack keep their state in one).
          */
-        TILE_ENTITY
+        TILE_ENTITY,
+        /**
+         * Complete the furnish pass's floor at {@link #y()} (its standing level): create the tile entities of the
+         * palette's tile blocks found there and give each GT machine block its MetaTileEntity and facing. The
+         * {@link #argument()} holds the room kind and the floor's salt (design record 0016).
+         */
+        FURNISH
     }
 
     private final Kind kind;

@@ -92,4 +92,13 @@ public interface CityTarget {
      * @param transform the part's transform, which turns facings in the template
      */
     void tileEntity(int x, int y, int z, TileTemplate template, Transform transform);
+
+    /**
+     * Notes a furnished floor, whose tile entities and GT machines the population phase completes (design record
+     * 0016). Only the dry run lists it; a real write does nothing.
+     *
+     * @param y        the floor's standing level
+     * @param argument the floor's room kind and salt, as {@code FurnishJobs.argument} writes them
+     */
+    default void furnish(int y, String argument) {}
 }

@@ -523,6 +523,20 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get furniture; worlds pinned before the key existed keep empty rooms (D282, 0016).
+        add(
+            new ProfileOption(
+                "furnish",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "03-terrain",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -577,6 +591,8 @@ public final class ProfileOptions {
         // Worlds pinned before the link network keep the legacy highways and railways, whatever the default becomes.
         legacyDefault("networkLayout", "legacy");
         legacyDefault("lotFootprints", "false");
+        // Worlds pinned before the furnish pass keep their empty rooms (design record 0016).
+        legacyDefault("furnish", "false");
     }
 
     /**
