@@ -55,6 +55,8 @@ public class OriginalBuildingsTest {
         "stone_bricks",
         "smooth_stone",
         "cobblestone",
+        "light_gray_concrete",
+        "red_wool",
         "glass",
         "glass_pane",
         "ladder");
