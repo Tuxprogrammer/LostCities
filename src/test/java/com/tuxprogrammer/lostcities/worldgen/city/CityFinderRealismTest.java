@@ -34,7 +34,8 @@ public class CityFinderRealismTest {
     private static final long SEED = CityFixtures.SEED;
 
     /** The test world with the options a new world gets that these kinds read. */
-    private static final LayoutCityPlan PLAN = CityFixtures.plan(SEED, realism(), StructureOracle.NONE, LayoutLog.SILENT);
+    private static final LayoutCityPlan PLAN = CityFixtures
+        .plan(SEED, realism(), StructureOracle.NONE, LayoutLog.SILENT);
 
     private static TerrainSettings realism() {
         Map<String, String> values = new HashMap<>();
@@ -73,7 +74,10 @@ public class CityFinderRealismTest {
             FurnishPass.floorSalt(SEED, found.chunkX(), found.chunkZ(), floor),
             true);
         assertTrue(kind == RoomKind.RESIDENTIAL || kind == RoomKind.OFFICE, found.format() + " is " + kind);
-        assertTrue(found.label().startsWith(kind.id() + " floor " + floor), found.format());
+        assertTrue(
+            found.label()
+                .startsWith(kind.id() + " floor " + floor),
+            found.format());
         assertEquals(found.y() + CityFinder.FEET, found.viewY(), 0.001, "the feet are one block above the floor");
     }
 
@@ -90,7 +94,8 @@ public class CityFinderRealismTest {
             floor,
             FurnishPass.floorSalt(SEED, found.chunkX(), found.chunkZ(), floor),
             true);
-        if (found.label().startsWith(CityFinder.INDUSTRIAL_LABEL)) {
+        if (found.label()
+            .startsWith(CityFinder.INDUSTRIAL_LABEL)) {
             assertEquals(RoomKind.INDUSTRIAL, kind, found.format());
         } else {
             assertEquals(RoomKind.BASEMENT, kind, found.format());
@@ -129,7 +134,10 @@ public class CityFinderRealismTest {
             .plan(found.chunkX(), found.chunkZ())
             .lot();
         assertTrue(lot == LotKind.INDUSTRY || lot == LotKind.PLAZA, found.format());
-        assertTrue(found.label().startsWith(lot.label()), found.format());
+        assertTrue(
+            found.label()
+                .startsWith(lot.label()),
+            found.format());
         if (lot == LotKind.PLAZA) {
             assertNull(
                 finder.find(
@@ -137,7 +145,8 @@ public class CityFinderRealismTest {
                     0,
                     0,
                     160,
-                    other -> other.label().startsWith(LotKind.INDUSTRY.label())),
+                    other -> other.label()
+                        .startsWith(LotKind.INDUSTRY.label())),
                 "a plaza only where no yard is in reach");
         }
         assertEquals(found.y() + CityFinder.DISTRICT_HEIGHT, found.viewY(), 0.001);
@@ -152,7 +161,10 @@ public class CityFinderRealismTest {
             found = new CityFinder(planner, null).find(CityFinder.Kind.BELTWAY, 0, 0, 190);
         }
         assertNotNull(found, "a beltway city among the first eight seeds");
-        assertTrue(found.label().startsWith("beltway "), found.format());
+        assertTrue(
+            found.label()
+                .startsWith("beltway "),
+            found.format());
         assertEquals(CityFinder.Kind.BELTWAY, found.kind());
         assertFalse(
             planner.plan(found.chunkX(), found.chunkZ())

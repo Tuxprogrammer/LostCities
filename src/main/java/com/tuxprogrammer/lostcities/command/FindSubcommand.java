@@ -31,7 +31,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * suggested viewpoint, for screenshots and checks (test hooks only, operator level 2). Kinds: {@code center} (city
  * center), {@code street} (primary street), {@code interior} (an enterable building), {@code edge} (where a city meets
  * RWG terrain), {@code gtroom} (a floor the furnish pass fills with GT machines), {@code furnished} (a residential
- * or office floor), {@code packhouse}, {@code beltway} and {@code district} (an industrial yard or plaza), {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
+ * or office floor), {@code packhouse}, {@code beltway} and {@code district} (an industrial yard or plaza),
+ * {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
  * chunk); the last two find something only where a structure oracle knows a landmark. {@code scattered} finds the
  * nearest scattered structure, and {@code scattered:<name>} the nearest of one asset ({@link ScatteredFinder}). The
  * radius is in chunks,

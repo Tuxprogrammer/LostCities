@@ -3,8 +3,8 @@ package com.tuxprogrammer.lostcities.worldgen.city;
 import java.util.Locale;
 import java.util.function.BiPredicate;
 
-import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.asset.AssetId;
+import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.landmark.LaneRole;
@@ -82,7 +82,9 @@ public final class CityFinder {
         FURNISHED,
         /** An empty edge lot that holds a house built by another pack mod's generator, seen from its street (0011). */
         PACKHOUSE,
-        /** A straight piece of a city's beltway, the ring highway around its inner rings, seen along the ring (0017). */
+        /**
+         * A straight piece of a city's beltway, the ring highway around its inner rings, seen along the ring (0017).
+         */
         BELTWAY,
         /** An industrial yard, else the plaza, of a city's districts (city-realism phase 5c), seen from above. */
         DISTRICT;
