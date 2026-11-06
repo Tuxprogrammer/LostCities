@@ -345,8 +345,11 @@ public final class LinkHighways {
         return profile;
     }
 
-    /** Whether another link's path crosses a chunk of this link's path. */
+    /** Whether another link's path crosses a chunk of this link's path; never without a graph (unit fixtures). */
     private boolean shared(CityLinkGraph.Link link, int x, int z) {
+        if (graph == null) {
+            return false;
+        }
         for (CityLinkGraph.Hit hit : graph.hits(x, z)) {
             if (!hit.link()
                 .equals(link)) {
