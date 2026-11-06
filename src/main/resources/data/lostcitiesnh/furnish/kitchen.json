@@ -4,11 +4,16 @@
   "maxItems": 5,
   "maxTiles": 2,
   "fallback": { "block": "minecraft:crafting_table" },
+  "loot": { "lostcitiesnh:city_supplies": 8, "lostcitiesnh:city_lv": 2 },
   "items": [
     { "block": "minecraft:furnace", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 3 },
     { "block": "cookingforblockheads:counter", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 2 },
     { "block": "minecraft:cauldron", "weight": 2 },
     { "block": "minecraft:crafting_table", "weight": 2 },
-    { "block": "cookingforblockheads:cookingoven", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 }
+    { "block": "cookingforblockheads:cookingoven", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "block": "etfuturum:smoker", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "block": "cookingforblockheads:fridge", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 2 },
+    { "block": "cookingforblockheads:sink", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "block": "minecraft:chest", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 }
   ]
 }

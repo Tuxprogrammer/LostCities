@@ -566,6 +566,20 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get room-fitting loot and spawners; pinned worlds keep the parts' placement (D282, 0016).
+        add(
+            new ProfileOption(
+                "roomRules",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "08-loot-mobs-blocks",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -624,6 +638,7 @@ public final class ProfileOptions {
         legacyDefault("furnish", "false");
         legacyDefault("cityHighwayLayout", "none");
         legacyDefault("cityDistricts", "false");
+        legacyDefault("roomRules", "false");
     }
 
     /**

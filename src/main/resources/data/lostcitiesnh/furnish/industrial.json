@@ -4,6 +4,8 @@
   "maxItems": 5,
   "maxTiles": 2,
   "fallback": { "block": "chisel:factoryblock", "meta": 1 },
+  "loot": { "lostcitiesnh:city_lv": 4, "lostcitiesnh:city_mv": 4, "lostcitiesnh:city_hv": 2, "lostcitiesnh:city_ev": 1 },
+  "mobs": { "Zombie": 4, "Skeleton": 3, "Spider": 2, "CaveSpider": 1 },
   "items": [
     { "block": "chisel:factoryblock", "meta": 1, "weight": 3 },
     { "block": "chisel:technical", "meta": 2, "weight": 2 },
@@ -15,6 +17,9 @@
     { "gt": 301, "baseMeta": 1, "weight": 1 },
     { "gt": 241, "baseMeta": 1, "weight": 1 },
     { "gt": 361, "baseMeta": 1, "weight": 1 },
-    { "gt": 212, "baseMeta": 1, "weight": 1 }
+    { "gt": 212, "baseMeta": 1, "weight": 1 },
+    { "block": "etfuturum:blast_furnace", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "block": "minecraft:chest", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
+    { "block": "minecraft:mob_spawner", "tile": true, "weight": 1 }
   ]
 }

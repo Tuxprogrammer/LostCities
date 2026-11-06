@@ -4,12 +4,16 @@
   "maxItems": 6,
   "maxTiles": 1,
   "fallback": { "block": "chisel:bookshelf", "meta": 3 },
+  "loot": { "lostcitiesnh:city_supplies": 5, "lostcitiesnh:city_lv": 3, "lostcitiesnh:city_mv": 2 },
   "items": [
     { "block": "chisel:bookshelf", "meta": 3, "weight": 4 },
     { "block": "Thaumcraft:blockTable", "weight": 3 },
     { "block": "chisel:laboratoryblock", "meta": 2, "weight": 2 },
     { "block": "chisel:carpet", "meta": 8, "weight": 2 },
     { "block": "minecraft:bookshelf", "weight": 2 },
-    { "block": "minecraft:jukebox", "tile": true, "weight": 1 }
+    { "block": "minecraft:jukebox", "tile": true, "weight": 1 },
+    { "block": "minecraft:stained_hardened_clay", "meta": 8, "weight": 2 },
+    { "block": "OpenComputers:case1", "tile": true, "weight": 1 },
+    { "block": "minecraft:chest", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 }
   ]
 }

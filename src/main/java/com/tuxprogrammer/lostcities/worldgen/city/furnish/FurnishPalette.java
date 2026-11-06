@@ -4,7 +4,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -14,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.tuxprogrammer.lostcities.worldgen.city.LootRules;
 import com.tuxprogrammer.lostcities.worldgen.terrain.SeedMix;
 
 /**
@@ -57,9 +60,26 @@ public final class FurnishPalette {
     private final int totalWeight;
     private final int machineWeight;
     private final Set<String> tileBlocks;
+    private final Map<String, Integer> loot;
+    private final Map<String, Integer> mobs;
 
     FurnishPalette(RoomKind room, float density, int maxItems, int maxTiles, FurnishItem fallback,
         List<FurnishItem> items) {
+        this(
+            room,
+            density,
+            maxItems,
+            maxTiles,
+            fallback,
+            items,
+            Collections.<String, Integer>emptyMap(),
+            Collections.<String, Integer>emptyMap());
+    }
+
+    FurnishPalette(RoomKind room, float density, int maxItems, int maxTiles, FurnishItem fallback,
+        List<FurnishItem> items, Map<String, Integer> loot, Map<String, Integer> mobs) {
+        this.loot = Collections.unmodifiableMap(new LinkedHashMap<>(loot));
+        this.mobs = Collections.unmodifiableMap(new LinkedHashMap<>(mobs));
         this.room = room;
         this.density = density;
         this.maxItems = maxItems;
@@ -93,6 +113,49 @@ public final class FurnishPalette {
             }
         }
         return false;
+    }
+
+    /** Block name of the loot chest a palette may place (design record 0016, lane 6d). */
+    public static final String CHEST = "minecraft:chest";
+    /** Block name of the spawner a palette may place (design record 0016, lane 6d). */
+    public static final String SPAWNER = "minecraft:mob_spawner";
+
+    /** Returns the loot categories the room's chests draw from, with weights (empty: no chests here). */
+    public Map<String, Integer> loot() {
+        return loot;
+    }
+
+    /** Returns the mob names the room's spawners draw from, with weights (empty: no spawners here). */
+    public Map<String, Integer> mobs() {
+        return mobs;
+    }
+
+    /** Returns the loot category of the chest at a position, or {@code null} without a loot table. */
+    public String lootAt(long salt, int x, int y, int z) {
+        return weighted(loot, salt ^ 0x6C6F6F74L, x, y, z);
+    }
+
+    /** Returns the mob of the spawner at a position, or {@code null} without a mob table. */
+    public String mobAt(long salt, int x, int y, int z) {
+        return weighted(mobs, salt ^ 0x6D6F62L, x, y, z);
+    }
+
+    private static String weighted(Map<String, Integer> table, long salt, int x, int y, int z) {
+        int total = 0;
+        for (int w : table.values()) {
+            total += w;
+        }
+        if (total <= 0) {
+            return null;
+        }
+        int r = new Random(SeedMix.mix(salt, x * POS_X + z * POS_Z + y * POS_Y)).nextInt(total);
+        for (Map.Entry<String, Integer> e : table.entrySet()) {
+            r -= e.getValue();
+            if (r < 0) {
+                return e.getKey();
+            }
+        }
+        return null;
     }
 
     /** Returns the room kind. */
@@ -235,7 +298,48 @@ public final class FurnishPalette {
                 }
             }
         }
-        return new FurnishPalette(room, density, maxItems, maxTiles, fallback, items);
+        Map<String, Integer> loot = table(where + ".loot", json.get("loot"), problems);
+        Map<String, Integer> mobs = table(where + ".mobs", json.get("mobs"), problems);
+        for (String category : loot.keySet()) {
+            if (!LootRules.CATEGORIES.contains(category)) {
+                problems.add(where + ".loot: " + category + " is not one of this mod's loot categories");
+            }
+        }
+        boolean fits = RoomFit.lootFits(room);
+        boolean spawns = RoomFit.spawnerFits(room);
+        List<FurnishItem> kept = new ArrayList<>();
+        for (FurnishItem item : items) {
+            if (CHEST.equals(item.block()) && !(fits && !loot.isEmpty())) {
+                problems.add(where + ": loot chests do not fit a " + room.id() + " room, or it has no 'loot' table");
+            } else if (SPAWNER.equals(item.block()) && !(spawns && !mobs.isEmpty())) {
+                problems.add(where + ": spawners do not fit a " + room.id() + " room, or it has no 'mobs' table");
+            } else {
+                kept.add(item);
+            }
+        }
+        return new FurnishPalette(room, density, maxItems, maxTiles, fallback, kept, loot, mobs);
+    }
+
+    private static Map<String, Integer> table(String where, JsonElement element, List<String> problems) {
+        Map<String, Integer> out = new LinkedHashMap<>();
+        if (element == null) {
+            return out;
+        }
+        if (!element.isJsonObject()) {
+            problems.add(where + ": not an object of name to weight");
+            return out;
+        }
+        for (Map.Entry<String, JsonElement> e : element.getAsJsonObject()
+            .entrySet()) {
+            int weight = e.getValue()
+                .isJsonPrimitive() ? (int) number(element.getAsJsonObject(), e.getKey(), 0) : 0;
+            if (weight < 1) {
+                problems.add(where + "." + e.getKey() + ": the weight must be at least 1");
+            } else {
+                out.put(e.getKey(), weight);
+            }
+        }
+        return out;
     }
 
     private static FurnishItem item(String where, JsonElement element, List<String> problems) {

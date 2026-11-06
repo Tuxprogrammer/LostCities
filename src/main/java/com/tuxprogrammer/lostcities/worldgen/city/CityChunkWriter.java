@@ -266,7 +266,12 @@ public final class CityChunkWriter {
             int floor = i - cellars;
             standing[i] = lowest + i * plan.floorPitch() + 1;
             salts[i] = FurnishPass.floorSalt(context.worldSeed(), chunkX, chunkZ, floor);
-            kinds[i] = RoomKind.forFloor(name, floor, salts[i]);
+            kinds[i] = RoomKind.forFloor(
+                name,
+                floor,
+                salts[i],
+                context.settings()
+                    .roomRules());
         }
         if (target.dryRun()) {
             for (int i = 0; i < count; i++) {

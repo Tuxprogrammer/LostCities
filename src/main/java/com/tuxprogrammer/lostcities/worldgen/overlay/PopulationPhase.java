@@ -127,11 +127,17 @@ public final class PopulationPhase {
             .isEmpty()) {
             return true;
         }
+        fill(tile, job.argument(), random, x, z);
+        return true;
+    }
+
+    /** Fills a chest with a loot category's contents (see the comment on the scratch inventory). */
+    private void fill(TileEntity tile, String category, Random random, int x, int z) {
         // Filled through a scratch inventory and written as NBT: a container's setInventorySlotContents calls
         // markDirty, whose comparator update reads the neighbors and, on a chunk's edge, would load the next chunk.
         IInventory container = (IInventory) tile;
         InventoryBasic scratch = new InventoryBasic("", false, container.getSizeInventory());
-        ChestGenHooks info = ChestGenHooks.getInfo(job.argument());
+        ChestGenHooks info = ChestGenHooks.getInfo(category);
         WeightedRandomChestContent.generateChestContents(random, info.getItems(random), scratch, info.getCount(random));
         NBTTagList items = new NBTTagList();
         for (int slot = 0; slot < scratch.getSizeInventory(); slot++) {
@@ -149,7 +155,6 @@ public final class PopulationPhase {
         tile.readFromNBT(tag);
         world.getChunkFromChunkCoords(x >> 4, z >> 4)
             .setChunkModified();
-        return true;
     }
 
     /**
@@ -217,6 +222,24 @@ public final class PopulationPhase {
             TileEntity tile = tileAt(x, job.y(), z);
             if (tile == null) {
                 continue;
+            }
+            if (completion.loot() != null && tile instanceof IInventory) {
+                fill(
+                    tile,
+                    completion.loot(),
+                    new Random(SeedMix.mix(world.getSeed(), x * 31L + z * 17L + job.y())),
+                    x,
+                    z);
+            }
+            if (completion.mob() != null && tile instanceof TileEntityMobSpawner spawner) {
+                String mob = SpawnerMobs.resolve(completion.mob());
+                if (mob.isEmpty()) {
+                    world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
+                    continue;
+                }
+                spawner.func_145881_a()
+                    .setEntityName(mob);
+                chunk.setChunkModified();
             }
             if (!completion.template()
                 .isEmpty() && TemplateNbt.apply(tile, completion.template())) {

@@ -3,6 +3,8 @@ package com.tuxprogrammer.lostcities.worldgen.city.furnish;
 import java.util.Locale;
 import java.util.Random;
 
+import com.tuxprogrammer.lostcities.layout.DensityRings;
+
 /**
  * What a floor's rooms are furnished as (design record 0016, decision 4). The kind is a pure function of the building,
  * the floor and a seed, so the terrain phase and the population dry run agree without reading any block.
@@ -24,6 +26,35 @@ public enum RoomKind {
     BASEMENT,
     /** Workshops, oil rigs and towers: GT machines and factory panels. */
     INDUSTRIAL;
+
+    private static final long TABLE_STREAM = 0x7461626CL;
+
+    private static RoomKind byTable(String name, int floor, Random random) {
+        if (name.contains("workshop") || name.contains("oilrig") || name.contains("radiotower")) {
+            return INDUSTRIAL;
+        }
+        if (name.startsWith("highway_restaurant")) {
+            return floor == 0 && random.nextInt(3) != 0 ? KITCHEN : SHOP;
+        }
+        if (name.contains("gas_station")) {
+            return SHOP;
+        }
+        if (name.startsWith("town") || name.startsWith("center") || name.startsWith("library")) {
+            return OFFICE;
+        }
+        if (name.startsWith("shopping") || name.contains("shop")) {
+            return floor == 0 ? (random.nextInt(4) == 0 ? KITCHEN : SHOP) : OFFICE;
+        }
+        boolean tower = DensityRings.classOf(name) == DensityRings.BuildingClass.TOWER;
+        boolean highRise = DensityRings.classOf(name) == DensityRings.BuildingClass.HIGH_RISE;
+        if (tower || highRise) {
+            if (floor == 0) {
+                return random.nextInt(3) == 0 ? KITCHEN : SHOP;
+            }
+            return highRise && random.nextInt(4) == 0 ? RESIDENTIAL : OFFICE;
+        }
+        return null;
+    }
 
     /** Returns the palette file's name and the population job's argument. */
     public String id() {
@@ -65,6 +96,36 @@ public enum RoomKind {
      * @return the kind
      */
     public static RoomKind forFloor(String building, int floor, long seed) {
+        return forFloor(building, floor, seed, false);
+    }
+
+    /**
+     * Returns the kind of one floor, optionally by the room-palette table (lane 6c, {@code roomRules}). The table maps
+     * every building the mod ships:
+     *
+     * <ul>
+     * <li>towers ({@code building1}, {@code building8}, {@code multi1}, {@code huge*}) are offices above the ground
+     * floor;</li>
+     * <li>{@code town*}, {@code townhall}, {@code center*}, {@code library*} are offices throughout;</li>
+     * <li>restaurants are kitchens on the ground floor two times in three, gas stations and shops are shops;</li>
+     * <li>{@code multi2} to {@code multi5} are shops or kitchens on the ground floor and offices above, a quarter of
+     * their upper floors residential;</li>
+     * <li>everything else keeps the name rules above.</li>
+     * </ul>
+     *
+     * @param building the building's asset path, or {@code null}
+     * @param floor    the floor, negative for cellars
+     * @param seed     the floor's seed
+     * @param table    whether to use the table
+     * @return the kind
+     */
+    public static RoomKind forFloor(String building, int floor, long seed, boolean table) {
+        if (table && floor >= 0 && building != null) {
+            RoomKind mapped = byTable(building.toLowerCase(Locale.ROOT), floor, new Random(seed ^ TABLE_STREAM));
+            if (mapped != null) {
+                return mapped;
+            }
+        }
         if (floor < 0) {
             return BASEMENT;
         }
