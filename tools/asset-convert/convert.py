@@ -23,6 +23,9 @@ each match, so a re-pin that moves a patched line fails loudly instead of shippi
     'S' (floors, park borders) become smooth sandstone instead of orange red sandstone, and default_desert's 'B'
     street variant becomes sandstone instead of red nether bricks.
 
+It also writes this mod's original buildings for the low-density rings (city-realism Phase 2d), drawn in
+originals.py: the nh_* buildings and parts and the nh_residential palette.
+
 Block names stay 1.20 names: the block-name map (data/lostcitiesnh/blockmap/mapping.json) turns them into 1.7.10
 blocks at load. The script also writes data/lostcitiesnh/assets.index, the list of bundled files the mod reads
 from the jar.
@@ -32,6 +35,7 @@ Usage, from the repository root:
 """
 
 import argparse
+import importlib.util
 import os
 import re
 import subprocess
@@ -272,6 +276,15 @@ def convert(path, text):
     return text
 
 
+def load_originals():
+    """Loads originals.py beside this script (run with -I, so the script's folder is not on the path)."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "originals.py")
+    spec = importlib.util.spec_from_file_location("lcnh_originals", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--ref", default="1.20")
@@ -290,7 +303,9 @@ def main():
         with open(target, "w", encoding="utf-8", newline="") as out:
             out.write(convert(rel, text))
         written.append(rel)
-    for rel, text in ADDED.items():
+    added = dict(ADDED)
+    added.update(load_originals().original_assets())
+    for rel, text in added.items():
         target = os.path.join(args.out, BUNDLED, rel)
         os.makedirs(os.path.dirname(target), exist_ok=True)
         with open(target, "w", encoding="utf-8", newline="") as out:

@@ -1,0 +1,25 @@
+{
+  "filler": "S",
+  "rubble": "}",
+  "refpalette": "nh_residential",
+  "minfloors": 2,
+  "maxfloors": 2,
+  "mincellars": 0,
+  "maxcellars": 0,
+  "parts": [
+    {
+      "top": false,
+      "part": "nh_workshop_ground",
+      "ground": true
+    },
+    {
+      "top": false,
+      "part": "nh_workshop_office",
+      "ground": false
+    },
+    {
+      "top": true,
+      "part": "nh_workshop_roof"
+    }
+  ]
+}

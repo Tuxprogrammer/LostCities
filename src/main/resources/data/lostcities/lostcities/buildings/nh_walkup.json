@@ -1,0 +1,25 @@
+{
+  "filler": "B",
+  "rubble": "}",
+  "refpalette": "nh_residential",
+  "minfloors": 2,
+  "maxfloors": 3,
+  "mincellars": 0,
+  "maxcellars": 0,
+  "parts": [
+    {
+      "top": false,
+      "part": "nh_walkup_ground",
+      "ground": true
+    },
+    {
+      "top": false,
+      "part": "nh_walkup_upper",
+      "ground": false
+    },
+    {
+      "top": true,
+      "part": "nh_walkup_roof"
+    }
+  ]
+}

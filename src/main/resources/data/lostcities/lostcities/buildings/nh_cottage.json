@@ -1,0 +1,20 @@
+{
+  "filler": "K",
+  "rubble": "}",
+  "refpalette": "nh_residential",
+  "minfloors": 1,
+  "maxfloors": 1,
+  "mincellars": 0,
+  "maxcellars": 0,
+  "allowDoors": false,
+  "parts": [
+    {
+      "top": false,
+      "part": "nh_cottage_ground"
+    },
+    {
+      "top": true,
+      "part": "nh_cottage_roof"
+    }
+  ]
+}

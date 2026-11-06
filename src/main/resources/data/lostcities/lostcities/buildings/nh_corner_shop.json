@@ -1,0 +1,25 @@
+{
+  "filler": "#",
+  "rubble": "}",
+  "refpalette": "nh_residential",
+  "minfloors": 2,
+  "maxfloors": 3,
+  "mincellars": 0,
+  "maxcellars": 0,
+  "parts": [
+    {
+      "top": false,
+      "part": "nh_corner_shop_ground",
+      "ground": true
+    },
+    {
+      "top": false,
+      "part": "nh_corner_shop_flat",
+      "ground": false
+    },
+    {
+      "top": true,
+      "part": "nh_corner_shop_roof"
+    }
+  ]
+}
