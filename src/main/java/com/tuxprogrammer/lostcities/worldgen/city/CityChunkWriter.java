@@ -348,26 +348,69 @@ public final class CityChunkWriter {
         }
     }
 
-    /** Upstream's {@code generateCorridorConnections}: opens the cellar wall where a rail corridor arrives. */
+    /**
+     * Upstream's {@code generateCorridorConnections}: opens the cellar wall where a rail corridor arrives. Deviation
+     * (design record 0014, D-p1b-8): when the cellar floor sits below the corridor floor, as at pitch 8, the opening
+     * becomes a staircase of 1-block steps down to the cellar floor ({@link CorridorSteps}).
+     */
     private void corridorConnections() {
         int groundLevel = context.settings()
             .groundLevel();
+        int drop = CorridorSteps
+            .drop(groundLevel, plan.buildingBottomHeight(), plan.floorPitch(), plan.cellars());
+        int top = groundLevel + CorridorSteps.OPENING_TOP;
         for (Direction side : Direction.values()) {
             int nx = chunkX + side.stepX();
             int nz = chunkZ + side.stepZ();
             if (!planner.hasCorridor(nx, nz, side.orientation())) {
                 continue;
             }
-            int fixed = side == Direction.XMIN || side == Direction.ZMIN ? 0 : 15;
+            boolean low = side == Direction.XMIN || side == Direction.ZMIN;
+            int fixed = low ? 0 : 15;
+            int inwardStep = low ? 1 : -1;
             for (int along = 7; along <= 10; along++) {
-                for (int y = groundLevel - 5; y < groundLevel - 2; y++) {
-                    if (side.orientation() == Orientation.X) {
-                        target.set(fixed, y, along, BlockRef.AIR);
-                    } else {
-                        target.set(along, y, fixed, BlockRef.AIR);
-                    }
+                if (drop == 0) {
+                    corridorColumn(side, fixed, along, groundLevel + CorridorSteps.CORRIDOR_FLOOR, top, null);
+                    continue;
+                }
+                int floor = groundLevel + CorridorSteps.CORRIDOR_FLOOR - drop;
+                for (int inward = 0; inward < drop; inward++) {
+                    int across = fixed + inward * inwardStep;
+                    int stepTop = CorridorSteps.stepTop(groundLevel, inward);
+                    BlockRef step = side.orientation() == Orientation.X ? target.get(across, floor, along)
+                        : target.get(along, floor, across);
+                    corridorColumn(side, across, along, stepTop, top, step);
                 }
             }
+        }
+    }
+
+    /**
+     * Writes one column of a corridor opening: {@code step} from just above the cellar floor up to {@code stepTop}
+     * where it is not already solid, then air up to {@code top}.
+     */
+    private void corridorColumn(Direction side, int across, int along, int stepTop, int top, BlockRef step) {
+        for (int y = stepTop + 1; y <= top; y++) {
+            set(side, across, y, along, BlockRef.AIR);
+        }
+        if (step == null || step.isAir()) {
+            return;
+        }
+        for (int y = stepTop; y > stepTop - 16 && y > WorldLimits.MIN_Y; y--) {
+            BlockRef here = side.orientation() == Orientation.X ? target.get(across, y, along)
+                : target.get(along, y, across);
+            if (!here.isAir()) {
+                break;
+            }
+            set(side, across, y, along, step);
+        }
+    }
+
+    private void set(Direction side, int across, int y, int along, BlockRef block) {
+        if (side.orientation() == Orientation.X) {
+            target.set(across, y, along, block);
+        } else {
+            target.set(along, y, across, block);
         }
     }
 

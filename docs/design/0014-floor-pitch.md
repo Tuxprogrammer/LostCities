@@ -24,7 +24,7 @@ Upstream floors are 6 blocks: a floor slab, 3 clear rows and a 2-thick ceiling. 
 
 - New worlds get 5 clear rows in the measured parts; old worlds are unchanged.
 - Towers lose roughly a quarter of their maximum floors.
-- Corridor openings into cellars (`groundLevel − 5 .. −3`) sit 2 blocks above an 8-pitch first cellar's floor, leaving a 2-block step down. Not fixed here.
+- Corridor openings into cellars (`groundLevel − 5 .. −3`) sit 2 blocks above an 8-pitch first cellar's floor; the opening becomes a staircase of 1-block steps down to it (D-p1b-8).
 - Later options that must be off in old worlds (density rings, pack houses) declare a legacy default the same way.
 
 ## Alternatives considered

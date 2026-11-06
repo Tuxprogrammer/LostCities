@@ -103,9 +103,10 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `facadeContrast` | `lostcity` | 45 | Most lightness and saturation contrast two neighboring facades may have; 200 turns the check off | 05 | [0012](../../design/0012-facade-color-feathering.md), D226 |
 | `vanillaLootCategories` | `lostcity` | off | Lets city chests also draw from the pack's vanilla `ChestGenHooks` categories | 08 | D20, D196 |
 | `enderZooHardMobs` | `lostcity` | off | `hardmobs` spawners take EnderZoo's overworld mobs instead of blazes and witches | 08 | D199 |
+| `floorPitch` | `lostcity` | 8 blocks | Blocks per building floor and cellar, 6 to 10; floor parts are stretched to it, city levels stay 6. A snapshot without the key, from a world pinned before the option, reads its legacy default 6 | 04, 05 | [0014](../../design/0014-floor-pitch.md), D-p1b-7 |
 
 Every new option is in the `lostcity` category (P-PROF-6, D31), and so is `heightSampleSize`, upstream's mod-config key, which is a pinned profile option here (D73). The module flags and the decorative metal flags are mod config, pinned with the profile ([01-core § Mod config](../01-core/index.md#mod-config), [pinned-profile.md](pinned-profile.md)). The catalog of every option, its default, range and status is [docs/config.md § Every profile option](../../config.md#every-profile-option).
 
 ## Count
 
-107 + 12 + 25 + 14 + 5 = 163 upstream options: 133 kept (same or changed), 17 dropped, 13 deferred (`spawnSphere` waits with the spheres); 16 options of this port's own: the 15 in the table above and `heightSampleSize`.
+107 + 12 + 25 + 14 + 5 = 163 upstream options: 133 kept (same or changed), 17 dropped, 13 deferred (`spawnSphere` waits with the spheres); 17 options of this port's own: the 16 in the table above and `heightSampleSize`.

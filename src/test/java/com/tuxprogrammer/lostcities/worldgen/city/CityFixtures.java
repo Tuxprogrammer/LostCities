@@ -74,7 +74,19 @@ public final class CityFixtures {
      * @return the plan source
      */
     public static LayoutCityPlan plan(long seed, StructureOracle oracle, LayoutLog log) {
-        TerrainSettings settings = TerrainSettings.defaults();
+        return plan(seed, TerrainSettings.defaults(), oracle, log);
+    }
+
+    /**
+     * Returns the real plan source of a test world with the given terrain settings, such as another floor pitch.
+     *
+     * @param seed     the world seed
+     * @param settings the terrain settings
+     * @param oracle   the structure oracle
+     * @param log      where problems go
+     * @return the plan source
+     */
+    public static LayoutCityPlan plan(long seed, TerrainSettings settings, StructureOracle oracle, LayoutLog log) {
         WorldStyle worldStyle = ASSETS.worldStyle(CityProfiles.WORLD_STYLE);
         BiomeSource biomes = plains();
         TerrainView terrain = terrain();
@@ -120,6 +132,21 @@ public final class CityFixtures {
                     new LayoutAssets(ASSETS, worldStyle, plains()),
                     terrain())
                 .build());
+    }
+
+    /**
+     * Returns the real plan source of the default test world pinned at another floor pitch (design record 0014); every
+     * other setting is the default.
+     *
+     * @param pitch blocks per building floor and cellar, 6 to 10
+     * @return the plan source
+     */
+    public static LayoutCityPlan planAtPitch(int pitch) {
+        return plan(
+            SEED,
+            TerrainSettings.fromValues(java.util.Collections.singletonMap("floorPitch", Integer.toString(pitch))),
+            StructureOracle.NONE,
+            LayoutLog.SILENT);
     }
 
     /** Returns the real plan source of the default test world. */

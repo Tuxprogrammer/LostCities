@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.city;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
@@ -58,6 +59,23 @@ public class CityGoldenTest {
         golden("city_primary_street", street());
         golden("city_park", park());
         golden("city_ruin", ruin());
+    }
+
+    /**
+     * The first multi-floor building with a cellar in the same world pinned at floor pitch 8 (design record 0014): its
+     * floors and cellars stretched, its roof not.
+     */
+    @Test
+    public void goldenCityBuildingAtPitchEight() throws IOException {
+        LayoutCityPlan plan = CityFixtures.planAtPitch(8);
+        LayoutPlanner planner = plan.planner();
+        int[] at = CityFixtures.first(SEARCH, (x, z) -> {
+            ChunkPlan chunk = planner.plan(x, z);
+            return chunk.hasBuilding() && chunk.floors() >= 3 && chunk.cellars() >= 1 && chunk.ruinHeight() < 0;
+        });
+        assertNotNull(at, "city_building_p8 near the origin");
+        assertEquals(8, planner.plan(at[0], at[1]).floorPitch());
+        GoldenChunks.assertMatches("city_building_p8", CityFixtures.generate(plan, at[0], at[1]));
     }
 
     @Test
