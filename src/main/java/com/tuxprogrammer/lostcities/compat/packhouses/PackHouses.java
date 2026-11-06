@@ -99,6 +99,9 @@ public final class PackHouses {
         new Kind("witchery.bookshop", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageBookShop", null),
         new Kind("witchery.hut", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageWitchHut", null) };
 
+    /** Keeps the world-random seed apart from the piece's own random, which {@code pieceSeed} also seeds. */
+    static final long WORLD_RAND_SALT = 0x5DEECE66DL;
+
     private static List<Usable> usable;
 
     private PackHouses() {}
@@ -317,12 +320,23 @@ public final class PackHouses {
             (chunkX << 4) + 15,
             255,
             (chunkZ << 4) + 15);
+        // Forestry's bee house plants its flower garden and picks its bees from world.rand (ComponentVillageBeeHouse.java
+        // 292, 302, 351, 382, 402, 405 at 4.11.40), which is unseeded noise in a village, so a regenerated chunk would
+        // differ. World.rand is reseeded from the piece seed for the build and handed back to noise after it.
+        reseed(world.rand, pieceSeed);
         try {
             piece.addComponentParts(world, random, chunkBox);
         } catch (RuntimeException e) {
             LostCities.LOG.warn("Pack house {} failed at chunk ({}, {})", use.kind.id, chunkX, chunkZ, e);
             return null;
+        } finally {
+            world.rand.setSeed(System.nanoTime() ^ pieceSeed);
         }
         return use.kind.id;
+    }
+
+    /** Seeds a world's shared random for one piece's build so what the piece draws from it is a function of the seed. */
+    static void reseed(Random worldRandom, long pieceSeed) {
+        worldRandom.setSeed(pieceSeed ^ WORLD_RAND_SALT);
     }
 }
