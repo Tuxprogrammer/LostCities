@@ -419,6 +419,25 @@ public final class HighwayInfo {
         return spillLow >= 0;
     }
 
+    /**
+     * Returns the lowest level of a link deck spilling in from a neighbor, so the footprint and the guard band can cover
+     * the spilled columns (0015 §3).
+     *
+     * @return the level, or −1 for no spill
+     */
+    public int spillLow() {
+        return spillLow;
+    }
+
+    /**
+     * Returns the highest top level of a link deck spilling in from a neighbor.
+     *
+     * @return the level, or −1 for no spill
+     */
+    public int spillHigh() {
+        return spillHigh;
+    }
+
     private int linkLevel(Axis skip) {
         int level = spillHigh;
         for (Piece piece : linkPieces) {

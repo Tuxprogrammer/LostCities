@@ -989,6 +989,14 @@ public final class NetworkWriter {
                         .cityGround(piece.level()));
             }
         }
+        // A neighbor's diagonal deck spills into this chunk's side columns: guard them too (0015 §3), or RWG's trees
+        // and other mods' decoration grow up through the deck.
+        if (info.spill() && !plan.isTunnel(info.spillHigh(), naturalHeight)) {
+            bottom = Math.min(
+                bottom,
+                context.settings()
+                    .cityGround(info.spillLow()));
+        }
         RailChunk rail = networks.railChunk(chunkX, chunkZ);
         if (rail.isPresent() && rail.type()
             .isSurface() && rail.level() + 2 >= plan.cityLevel()) {
@@ -1022,12 +1030,17 @@ public final class NetworkWriter {
         TerrainSettings settings = context.settings();
         int bottom = Integer.MAX_VALUE;
         int top = Integer.MIN_VALUE;
-        for (HighwayInfo.Piece piece : networks.highway(chunkX, chunkZ)
-            .pieces(chunkX, chunkZ)) {
+        HighwayInfo info = networks.highway(chunkX, chunkZ);
+        for (HighwayInfo.Piece piece : info.pieces(chunkX, chunkZ)) {
             if (plan.isTunnel(piece.topLevel(), naturalHeight)) {
                 bottom = Math.min(bottom, settings.cityGround(piece.level()) - 1);
                 top = Math.max(top, settings.cityGround(piece.topLevel()) + PART_LEVEL_HEIGHT);
             }
+        }
+        // A diagonal deck spilling in underground needs its band here as well (0015 §3).
+        if (info.spill() && plan.isTunnel(info.spillHigh(), naturalHeight)) {
+            bottom = Math.min(bottom, settings.cityGround(info.spillLow()) - 1);
+            top = Math.max(top, settings.cityGround(info.spillHigh()) + PART_LEVEL_HEIGHT);
         }
         RailChunk rail = networks.railChunk(chunkX, chunkZ);
         if (rail.isPresent()) {
