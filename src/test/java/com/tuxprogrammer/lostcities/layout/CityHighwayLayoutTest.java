@@ -70,18 +70,26 @@ public class CityHighwayLayoutTest {
 
     @Test
     public void theOptionIsPinnedToNoneInOldWorldsAndParsed() {
-        assertEquals("none", TerrainSettings.defaults()
-            .cityHighwayLayout());
+        assertEquals(
+            "none",
+            TerrainSettings.defaults()
+                .cityHighwayLayout());
         Map<String, String> values = new HashMap<>();
         values.put("cityHighwayLayout", "Beltway");
-        assertEquals("beltway", TerrainSettings.fromValues(values)
-            .cityHighwayLayout());
+        assertEquals(
+            "beltway",
+            TerrainSettings.fromValues(values)
+                .cityHighwayLayout());
         values.put("cityHighwayLayout", "ring");
-        assertEquals("none", TerrainSettings.fromValues(values)
-            .cityHighwayLayout());
+        assertEquals(
+            "none",
+            TerrainSettings.fromValues(values)
+                .cityHighwayLayout());
         assertEquals(CityHighwayLayout.CUTTHROUGH, CityHighwayLayout.parse("cutthrough"));
-        assertEquals(CityHighwayLayout.NONE, LayoutProfile.builder()
-            .build().cityHighwayLayout);
+        assertEquals(
+            CityHighwayLayout.NONE,
+            LayoutProfile.builder()
+                .build().cityHighwayLayout);
     }
 
     @Test
@@ -118,11 +126,13 @@ public class CityHighwayLayoutTest {
             }
             belts++;
             assertTrue(2 * p.half() - 1 >= 8, "inner block at least 8x8");
-            float extent = planner.cityRadius(p.centerX(), p.centerZ()) * (1f - planner.profile().cityThreshold)
-                / 16f;
+            float extent = planner.cityRadius(p.centerX(), p.centerZ()) * (1f - planner.profile().cityThreshold) / 16f;
             assertTrue(p.half() * Math.sqrt(2) + CityHighways.MARGIN <= extent, "city outside the ring's corners");
-            assertEquals(8 * p.half(), p.pieces()
-                .size(), "a closed square ring");
+            assertEquals(
+                8 * p.half(),
+                p.pieces()
+                    .size(),
+                "a closed square ring");
             for (long key : p.pieces()
                 .keySet()) {
                 int x = (int) (key >> 32);
@@ -163,8 +173,11 @@ public class CityHighwayLayoutTest {
         int joins = 0;
         for (CityHighways.Plan p : plans(planner).values()) {
             if (p.kind() == CityHighways.Kind.CUTTHROUGH) {
-                assertEquals(2, p.joined()
-                    .size(), "a cut-through joins two links");
+                assertEquals(
+                    2,
+                    p.joined()
+                        .size(),
+                    "a cut-through joins two links");
             }
             for (CityLinkGraph.Link link : p.joined()) {
                 LinkHighways.Profile profile = view.profile(link);
@@ -179,8 +192,10 @@ public class CityHighwayLayoutTest {
                 int z = link.path()
                     .get(index)
                     .chunkZ();
-                assertNotNull(p.pieces()
-                    .get(CityHighways.key(x, z)), "the link ends on the city highway at " + x + "," + z);
+                assertNotNull(
+                    p.pieces()
+                        .get(CityHighways.key(x, z)),
+                    "the link ends on the city highway at " + x + "," + z);
                 assertEquals(p.level(), atA ? profile.inLevel(index) : profile.outLevel(index));
                 boolean deck = false;
                 for (HighwayInfo.Piece piece : view.pieces(x, z)) {
@@ -201,8 +216,10 @@ public class CityHighwayLayoutTest {
                     boolean atA = link.ax() == p.centerX() && link.az() == p.centerZ();
                     LinkRaster.Step step = link.path()
                         .get(atA ? profile.start() : profile.end());
-                    assertNull(p.pieces()
-                        .get(CityHighways.key(step.chunkX(), step.chunkZ())), "an unjoined link ends off the ring");
+                    assertNull(
+                        p.pieces()
+                            .get(CityHighways.key(step.chunkX(), step.chunkZ())),
+                        "an unjoined link ends off the ring");
                 }
             }
         }
@@ -238,8 +255,16 @@ public class CityHighwayLayoutTest {
                                 }
                                 assertTrue(
                                     opensBack(view.pieces(x + o[i], z + o[i + 1]), -o[i], -o[i + 1], o[i + 2]),
-                                    "the deck at " + x + "," + z + " opens toward " + o[i] + "," + o[i + 1]
-                                        + " onto a deck that opens back (seed " + seed + ")");
+                                    "the deck at " + x
+                                        + ","
+                                        + z
+                                        + " opens toward "
+                                        + o[i]
+                                        + ","
+                                        + o[i + 1]
+                                        + " onto a deck that opens back (seed "
+                                        + seed
+                                        + ")");
                                 checked++;
                             }
                         }
@@ -265,14 +290,18 @@ public class CityHighwayLayoutTest {
     @Test
     public void citiesWithoutTheRoomNeverGetABeltway() {
         CityHighways.Cities full = cities(256, NO_LANDMARK);
-        assertEquals(CityHighways.Kind.BELTWAY, new CityHighways(1L, CityHighwayLayout.BELTWAY, null, full).plan(0, 0)
-            .kind());
+        assertEquals(
+            CityHighways.Kind.BELTWAY,
+            new CityHighways(1L, CityHighwayLayout.BELTWAY, null, full).plan(0, 0)
+                .kind());
         // Small: the ring's corners would leave no city outside.
-        assertNotEquals(CityHighways.Kind.BELTWAY,
+        assertNotEquals(
+            CityHighways.Kind.BELTWAY,
             new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(150, NO_LANDMARK)).plan(0, 0)
                 .kind());
         // Tapered around a landmark (a village core five chunks off the center).
-        assertNotEquals(CityHighways.Kind.BELTWAY,
+        assertNotEquals(
+            CityHighways.Kind.BELTWAY,
             new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, 5)).plan(0, 0)
                 .kind());
         LayoutPlanner planner = planner(7919L, CityHighwayLayout.RANDOM);
@@ -375,9 +404,12 @@ public class CityHighwayLayoutTest {
     /** The ring list helper's size, a sanity check of the closed square. */
     @Test
     public void aRingHasEightTimesHalfChunks() {
-        CityHighways.Plan p = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, NO_LANDMARK)).plan(0, 0);
-        assertEquals(8 * p.half(), p.pieces()
-            .size());
+        CityHighways.Plan p = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, NO_LANDMARK))
+            .plan(0, 0);
+        assertEquals(
+            8 * p.half(),
+            p.pieces()
+                .size());
         assertEquals(3, p.level(), "one level above the highest city level under it");
         List<HighwayInfo.Piece> corner = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, NO_LANDMARK))
             .pieces(p.half(), p.half());

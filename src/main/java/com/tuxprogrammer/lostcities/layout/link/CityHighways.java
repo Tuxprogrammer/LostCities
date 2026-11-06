@@ -171,8 +171,7 @@ public final class CityHighways {
 
         /** Returns whether a chunk lies strictly inside the ring (beltway only). */
         public boolean insideRing(int chunkX, int chunkZ) {
-            return kind == Kind.BELTWAY
-                && Math.max(Math.abs(chunkX - centerX), Math.abs(chunkZ - centerZ)) < half;
+            return kind == Kind.BELTWAY && Math.max(Math.abs(chunkX - centerX), Math.abs(chunkZ - centerZ)) < half;
         }
     }
 
@@ -434,7 +433,8 @@ public final class CityHighways {
         }
         List<CityLinkGraph.Link> joined = new ArrayList<>();
         if (graph != null) {
-            for (CityLinkGraph.Link link : graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
+            for (CityLinkGraph.Link link : graph
+                .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
                 if (climbs(link, cx, cz, half, level)) {
                     joined.add(link);
                 }
@@ -473,7 +473,8 @@ public final class CityHighways {
         if (graph == null) {
             return none(cx, cz, fits);
         }
-        List<CityLinkGraph.Link> links = graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()));
+        List<CityLinkGraph.Link> links = graph
+            .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()));
         List<CityLinkGraph.Link> usable = new ArrayList<>();
         List<int[]> entries = new ArrayList<>();
         for (CityLinkGraph.Link link : links) {
@@ -561,7 +562,8 @@ public final class CityHighways {
     /**
      * Returns whether a link has the ramp room to meet a city highway at {@code level} here, whatever its other end
      * turns out to be (D-p5-9). The other end is that city's own level, or its city highway's level, which lies between
-     * {@code min(1, top)} and that city's {@link #peak}; the bound takes the worst of these, so it never needs the other
+     * {@code min(1, top)} and that city's {@link #peak}; the bound takes the worst of these, so it never needs the
+     * other
      * city's plan and two cities never wait on each other. The room counts the straight chunks no other link crosses
      * strictly between the written ends, which {@link LinkHighways} can always ramp, diagonal or staircase: from the
      * ring here ({@code half} &gt; 0) or this city's radius, to the other city's radius, which encloses any ring there.

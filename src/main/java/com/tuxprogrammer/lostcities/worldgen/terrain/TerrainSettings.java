@@ -738,7 +738,8 @@ public final class TerrainSettings {
                     return value;
                 }
             }
-            warnings.add(key + "='" + text + "' is not one of " + java.util.Arrays.toString(allowed) + "; using " + fallback);
+            warnings.add(
+                key + "='" + text + "' is not one of " + java.util.Arrays.toString(allowed) + "; using " + fallback);
             return fallback;
         }
 
