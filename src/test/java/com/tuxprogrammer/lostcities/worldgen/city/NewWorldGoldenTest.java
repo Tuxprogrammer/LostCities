@@ -22,7 +22,7 @@ import com.tuxprogrammer.lostcities.layout.Networks;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
 import com.tuxprogrammer.lostcities.layout.highway.PlanningGate;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
-import com.tuxprogrammer.lostcities.layout.rail.RailChunkType;
+import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.buffer.GoldenChunks;
 import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
