@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
-import com.tuxprogrammer.lostcities.layout.CityGrid;
 import com.tuxprogrammer.lostcities.layout.DensityRings;
 import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
@@ -39,9 +39,17 @@ public class CityDistrictsTest {
             .planner();
     }
 
-    private static List<CityGrid.Center> centers(LayoutPlanner p) {
-        List<CityGrid.Center> list = p.gridCenters(-R, -R, R, R);
-        assertTrue(list != null && !list.isEmpty(), "the test world has grid cities");
+    /** City centers in the window, as {chunkX, chunkZ}. */
+    private static List<int[]> centers(LayoutPlanner p) {
+        List<int[]> list = new ArrayList<>();
+        for (int x = -R; x <= R; x++) {
+            for (int z = -R; z <= R; z++) {
+                if (p.isCityCenter(x, z)) {
+                    list.add(new int[] { x, z });
+                }
+            }
+        }
+        assertTrue(!list.isEmpty(), "the test world has city centers");
         return list;
     }
 
@@ -54,13 +62,13 @@ public class CityDistrictsTest {
         LayoutPlanner p = planner(SEED, "true");
         int plazas = 0;
         int cities = 0;
-        for (CityGrid.Center c : centers(p)) {
-            if (!p.centerYieldsCity(c.chunkX(), c.chunkZ())) {
+        for (int[] c : centers(p)) {
+            if (!p.centerYieldsCity(c[0], c[1])) {
                 continue;
             }
             cities++;
-            ChunkPlan plan = p.plan(c.chunkX(), c.chunkZ());
-            assertFalse(plan.hasBuilding(), "no building at the center " + c.chunkX() + "," + c.chunkZ());
+            ChunkPlan plan = p.plan(c[0], c[1]);
+            assertFalse(plan.hasBuilding(), "no building at the center " + c[0] + "," + c[1]);
             if (plan.lot() == LotKind.PLAZA) {
                 plazas++;
             }
@@ -74,13 +82,13 @@ public class CityDistrictsTest {
     public void bigCitiesGetATwoByTwoPlaza() {
         LayoutPlanner p = planner(SEED, "true");
         int big = 0;
-        for (CityGrid.Center c : centers(p)) {
-            if (!p.centerYieldsCity(c.chunkX(), c.chunkZ()) || p.cityRadius(c.chunkX(), c.chunkZ()) < 160) {
+        for (int[] c : centers(p)) {
+            if (!p.centerYieldsCity(c[0], c[1]) || p.cityRadius(c[0], c[1]) < 160) {
                 continue;
             }
             for (int dx = 0; dx <= 1; dx++) {
                 for (int dz = 0; dz <= 1; dz++) {
-                    ChunkPlan plan = p.plan(c.chunkX() + dx, c.chunkZ() + dz);
+                    ChunkPlan plan = p.plan(c[0] + dx, c[1] + dz);
                     if (plan.lot() == LotKind.PLAZA) {
                         assertEquals(2, plan.lotFootprint().width());
                         big++;
