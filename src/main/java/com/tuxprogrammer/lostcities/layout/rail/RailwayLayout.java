@@ -215,8 +215,7 @@ public final class RailwayLayout {
     /** Whether upstream's grid has a rail in a chunk that the rules for landmark cores leave out. */
     private boolean leftOut(int chunkX, int chunkZ) {
         // Only a core chunk is ever left out, so the cheap tests go first.
-        return inputs.isCore(chunkX, chunkZ) && grid(chunkX, chunkZ).isPresent()
-            && !cored(chunkX, chunkZ).isPresent();
+        return inputs.isCore(chunkX, chunkZ) && grid(chunkX, chunkZ).isPresent() && !cored(chunkX, chunkZ).isPresent();
     }
 
     /** A chunk of the city link network's lines (class Javadoc). */

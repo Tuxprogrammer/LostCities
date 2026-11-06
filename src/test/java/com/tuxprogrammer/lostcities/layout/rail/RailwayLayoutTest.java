@@ -223,7 +223,11 @@ public class RailwayLayoutTest {
         RailChunk before = layout.rail(2, 9);
         assertEquals(RailChunkType.HORIZONTAL, before.type());
         assertEquals(RailChunk.Direction.EAST, before.buffer(), "its buffer faces the core to the east");
-        assertEquals(null, layout.rail(1, 9).buffer(), "the line further west runs through");
+        assertEquals(
+            null,
+            layout.rail(1, 9)
+                .buffer(),
+            "the line further west runs through");
         assertEquals(
             RailChunkType.THREE_SPLIT,
             layout.rail(4, 9)
@@ -231,7 +235,10 @@ public class RailwayLayoutTest {
             "the junction past the core is unchanged");
         // Off by default: the legacy gap, nothing else changes.
         RailwayLayout legacy = layout(RailwaySettings.DEFAULTS, inputs);
-        assertEquals(null, legacy.rail(2, 9).buffer());
+        assertEquals(
+            null,
+            legacy.rail(2, 9)
+                .buffer());
         for (int x = -12; x < 30; x++) {
             for (int z = -12; z < 30; z++) {
                 RailChunk on = layout.rail(x, z);
@@ -251,9 +258,12 @@ public class RailwayLayoutTest {
         int vz = 0;
         for (int x = 0; x < 20 && vx == Integer.MIN_VALUE; x++) {
             for (int z = 0; z < 20; z++) {
-                if (plain.rail(x, z).type() == RailChunkType.VERTICAL
-                    && plain.rail(x, z + 1).type() == RailChunkType.VERTICAL
-                    && plain.rail(x, z + 2).type() == RailChunkType.VERTICAL) {
+                if (plain.rail(x, z)
+                    .type() == RailChunkType.VERTICAL
+                    && plain.rail(x, z + 1)
+                        .type() == RailChunkType.VERTICAL
+                    && plain.rail(x, z + 2)
+                        .type() == RailChunkType.VERTICAL) {
                     vx = x;
                     vz = z;
                     break;
