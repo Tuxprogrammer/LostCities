@@ -8,13 +8,11 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
+import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.Doorway;
-import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
-import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
-import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 
 /**
  * The blocks in front of a building's doors stay open whatever else writes there: a station's wall in a street, a
@@ -138,8 +136,17 @@ public class DoorStepsTest {
                             for (int y = roofY + 1; y <= roofY + 2; y++) {
                                 assertTrue(
                                     open(buffer.get(c[0], y, c[1])),
-                                    "roof door step open at " + x + "," + z + " local " + c[0] + "," + y + "," + c[1]
-                                        + ": " + buffer.get(c[0], y, c[1]));
+                                    "roof door step open at " + x
+                                        + ","
+                                        + z
+                                        + " local "
+                                        + c[0]
+                                        + ","
+                                        + y
+                                        + ","
+                                        + c[1]
+                                        + ": "
+                                        + buffer.get(c[0], y, c[1]));
                             }
                         }
                     }

@@ -536,7 +536,9 @@ public final class CityScenarios {
         }
 
         private static boolean filled(Part part, int x, int z) {
-            return part != null && x < part.xsize() && z < part.zsize() && part.height() > 0
+            return part != null && x < part.xsize()
+                && z < part.zsize()
+                && part.height() > 0
                 && part.get(x, 0, z) != ' ';
         }
 
@@ -673,21 +675,35 @@ public final class CityScenarios {
         private String describeOutside(int chunkX, int chunkZ) {
             ChunkPlan outside = planner.plan(chunkX, chunkZ);
             return "[city=" + outside.isCity()
-                + ",building=" + (outside.hasBuilding() ? outside.building() : null)
-                + ",street=" + outside.streetType()
-                + ",road=" + outside.plannedRoad()
-                + ",park=" + outside.parkPart()
-                + ",bridge=" + outside.bridgePart()
-                + ",stair=" + outside.stairPart()
-                + ",fountain=" + outside.fountainPart()
-                + ",lot=" + outside.lot()
-                + ",highway=" + outside.maxHighwayLevel()
-                + ",network=" + com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter.hasWork(planner, chunkX, chunkZ)
-                + ",front=" + outsideFronts(chunkX, chunkZ)
-                + ",level=" + outside.cityLevel()
-                + ",roof=" + (outside.buildingBottomHeight()
-                    + outside.floorPitch() * (outside.cellars() + outside.floors()))
-                + ",ruin=" + outside.ruinHeight() + "]";
+                + ",building="
+                + (outside.hasBuilding() ? outside.building() : null)
+                + ",street="
+                + outside.streetType()
+                + ",road="
+                + outside.plannedRoad()
+                + ",park="
+                + outside.parkPart()
+                + ",bridge="
+                + outside.bridgePart()
+                + ",stair="
+                + outside.stairPart()
+                + ",fountain="
+                + outside.fountainPart()
+                + ",lot="
+                + outside.lot()
+                + ",highway="
+                + outside.maxHighwayLevel()
+                + ",network="
+                + com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter.hasWork(planner, chunkX, chunkZ)
+                + ",front="
+                + outsideFronts(chunkX, chunkZ)
+                + ",level="
+                + outside.cityLevel()
+                + ",roof="
+                + (outside.buildingBottomHeight() + outside.floorPitch() * (outside.cellars() + outside.floors()))
+                + ",ruin="
+                + outside.ruinHeight()
+                + "]";
         }
 
         private String outsideFronts(int chunkX, int chunkZ) {
