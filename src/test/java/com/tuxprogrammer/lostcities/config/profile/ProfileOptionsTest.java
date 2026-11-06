@@ -71,7 +71,10 @@ public class ProfileOptionsTest {
             .entrySet()) {
             ProfileOption option = ProfileOptions.get(entry.getKey());
             assertNotNull(option, entry.getKey());
-            if (!"bedrockLayer".equals(entry.getKey())) {
+            if (option.legacyDefault() != null) {
+                // TerrainSettings' defaults are the pre-pin world's: the legacy value (design record 0014).
+                assertEquals(entry.getValue(), option.legacyDefault(), entry.getKey());
+            } else if (!"bedrockLayer".equals(entry.getKey())) {
                 assertEquals(entry.getValue(), option.defaultValue(), entry.getKey());
             }
         }
