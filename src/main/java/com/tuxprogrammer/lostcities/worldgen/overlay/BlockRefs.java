@@ -83,6 +83,17 @@ public final class BlockRefs {
     }
 
     /**
+     * Binds a reference to a block without the registry: a test seam, since unit tests register nothing.
+     *
+     * @param ref   the reference
+     * @param block the block it resolves to
+     */
+    void bind(BlockRef ref, Block block) {
+        byValue.put(ref, block);
+        byRef.put(ref, block);
+    }
+
+    /**
      * Returns whether a reference names a registered block.
      *
      * @param ref the reference
