@@ -48,6 +48,7 @@ public final class ChunkPlan {
     private final int cityLevel;
     private final int groundY;
     private final int naturalHeight;
+    private final int craterCap;
     private final boolean ocean;
     private final boolean building;
     private final int floors;
@@ -81,6 +82,7 @@ public final class ChunkPlan {
         this.cityLevel = b.cityLevel;
         this.groundY = b.groundY;
         this.naturalHeight = b.naturalHeight;
+        this.craterCap = b.craterCap;
         this.ocean = b.ocean;
         this.building = b.building;
         this.floors = b.floors;
@@ -185,6 +187,15 @@ public final class ChunkPlan {
      */
     public int groundY() {
         return groundY;
+    }
+
+    /**
+     * Returns the lowest Y a meteorite crater leaves standing over this chunk (the layout's height cap), or
+     * {@link Integer#MAX_VALUE} when no crater reaches it. The blend keeps a non-city chunk's ground under it so the
+     * crater cuts no wall into the slope from the city (D-kib-2).
+     */
+    public int craterCap() {
+        return craterCap;
     }
 
     /** Returns the chunk's oracle height, block Y: the base terrain height at its sample point. */
@@ -462,6 +473,7 @@ public final class ChunkPlan {
         private int cityLevel;
         private int groundY = 71;
         private int naturalHeight = 71;
+        private int craterCap = Integer.MAX_VALUE;
         private boolean ocean;
         private boolean building;
         private int floors;
@@ -508,6 +520,12 @@ public final class ChunkPlan {
         /** Sets the oracle height. */
         public Builder naturalHeight(int value) {
             this.naturalHeight = WorldLimits.clampY(value);
+            return this;
+        }
+
+        /** Sets the lowest Y a crater leaves standing over the chunk; {@link Integer#MAX_VALUE} for none. */
+        public Builder craterCap(int value) {
+            this.craterCap = value;
             return this;
         }
 

@@ -248,7 +248,7 @@ public final class TerrainPhase {
             if (!plan.isCity()) {
                 changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
                 // M12 (0011 §5): no two lane columns differ by two blocks or more, so every rise gets its step.
-                changed |= VillageLanes.relax(buffer, context, plan.lane()) > 0;
+                changed |= VillageLanes.relax(buffer, context, plan.lane(), VillageLanes.seamWindows(plan, sides)) > 0;
             }
             paved = VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
             changed |= paved > 0;

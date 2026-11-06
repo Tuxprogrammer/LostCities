@@ -182,6 +182,21 @@ public final class VillageLanes {
      * @return the number of columns moved
      */
     public static int relax(ChunkBuffer buffer, TerrainContext context, LanePath lane) {
+        return relax(buffer, context, lane, null);
+    }
+
+    /**
+     * Relaxes a lane as {@link #relax(ChunkBuffer, TerrainContext, LanePath)} does, with the chunk's border columns
+     * first pinned into the window {@link #seamWindows} gives for each seam, so the lane's heights on both sides of a
+     * chunk border differ by at most one block whatever order the chunks generate in (D-kib-1).
+     *
+     * @param buffer  the chunk, before the lane is laid
+     * @param context the world's terrain context
+     * @param lane    the lane
+     * @param windows {@link #seamWindows} output (low and high per column), or {@code null} for none
+     * @return the number of columns moved
+     */
+    public static int relax(ChunkBuffer buffer, TerrainContext context, LanePath lane, int[][] windows) {
         BlockClassifier classes = context.classifier();
         int waterLevel = context.settings()
             .waterLevel();
@@ -206,7 +221,8 @@ public final class VillageLanes {
         if (!any) {
             return 0;
         }
-        int[] targets = relaxedTargets(heights, mask);
+        int[] pinned = windows == null ? heights : pin(heights, mask, windows);
+        int[] targets = relaxedTargets(pinned, mask);
         int moved = 0;
         int[] laneTargets = new int[256];
         Arrays.fill(laneTargets, NO_TARGET);
@@ -223,6 +239,66 @@ public final class VillageLanes {
             moved += shoulders(buffer, classes, lane, laneTargets, waterLevel);
         }
         return moved;
+    }
+
+    /**
+     * The window a lane's border column must lie in so that a lane meeting it from the neighboring chunk, which
+     * computes the same window from the same two chunk heights, ends within one block of it: {@code [s, s + 1]} with
+     * {@code s} the floor of the mean of the two chunks' oracle heights. Both chunks read only the plan, never each
+     * other's blocks, so the result does not depend on generation order. A side whose neighbor is a city or a core, or
+     * has no lane in the facing column, gets no window (its seam is shaped by the city's own rules).
+     *
+     * @param self  this chunk's plan, with its lane
+     * @param sides the four neighbors' plans, in {@link ChunkPlan.Side} order
+     * @return per column index, {@code {low, high}} arrays of 256; {@code null} when no seam applies
+     */
+    public static int[][] seamWindows(ChunkPlan self, ChunkPlan[] sides) {
+        LanePath lane = self.lane();
+        if (lane == null) {
+            return null;
+        }
+        int[] low = new int[256];
+        int[] high = new int[256];
+        Arrays.fill(low, Integer.MIN_VALUE);
+        Arrays.fill(high, Integer.MAX_VALUE);
+        boolean any = false;
+        for (ChunkPlan.Side side : ChunkPlan.Side.values()) {
+            ChunkPlan other = sides[side.ordinal()];
+            LanePath otherLane = other.lane();
+            if (otherLane == null || other.isCity() || other.isCore() || self.isCore()) {
+                continue;
+            }
+            int base = Math.floorDiv(self.naturalHeight() + other.naturalHeight(), 2);
+            for (int along = 0; along < 16; along++) {
+                int x = side == ChunkPlan.Side.WEST ? 0 : side == ChunkPlan.Side.EAST ? 15 : along;
+                int z = side == ChunkPlan.Side.NORTH ? 0 : side == ChunkPlan.Side.SOUTH ? 15 : along;
+                int ox = side == ChunkPlan.Side.WEST ? 15 : side == ChunkPlan.Side.EAST ? 0 : along;
+                int oz = side == ChunkPlan.Side.NORTH ? 15 : side == ChunkPlan.Side.SOUTH ? 0 : along;
+                if (!lane.contains(x, z) || !otherLane.contains(ox, oz)) {
+                    continue;
+                }
+                int index = (z << 4) | x;
+                // A corner column on two seams keeps the tighter of the two windows only when they overlap.
+                int lo = Math.max(low[index], base);
+                int hi = Math.min(high[index], base + 1);
+                if (lo <= hi) {
+                    low[index] = lo;
+                    high[index] = hi;
+                    any = true;
+                }
+            }
+        }
+        return any ? new int[][] { low, high } : null;
+    }
+
+    private static int[] pin(int[] heights, boolean[] mask, int[][] windows) {
+        int[] out = heights.clone();
+        for (int index = 0; index < 256; index++) {
+            if (mask[index] && windows[0][index] != Integer.MIN_VALUE) {
+                out[index] = Math.max(windows[0][index], Math.min(windows[1][index], heights[index]));
+            }
+        }
+        return out;
     }
 
     /**

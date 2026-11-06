@@ -76,8 +76,6 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 - **No world-preset screen.** Profiles are chosen in the config, as above.
 - **World generation cost.** On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region (about 10 to 12 % on RWG2 Continents); a performance pass is under way.
 - **Visual rough edges:**
-  - a village lane can rise two blocks where it crosses a chunk border, so you jump there;
-  - where an AE2 meteorite's crater cuts into a city, the city ends at the pit's edge with no slope down;
   - other mods' trees standing beside a cabin can lean over it;
   - a GregTech boulder can cut into a building;
   - highway ramps' slab half-steps contrast with the road, so ramps look striped;
