@@ -640,8 +640,7 @@ public final class CityScenarios {
                 + ",fountain=" + outside.fountainPart()
                 + ",lot=" + outside.lot()
                 + ",highway=" + outside.maxHighwayLevel()
-                + ",network=" + (outside.network() != com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent.NONE)
-                + ",finish=" + (outside.finish() != com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent.NONE)
+                + ",network=" + com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter.hasWork(planner, chunkX, chunkZ)
                 + ",front=" + outsideFronts(chunkX, chunkZ)
                 + ",level=" + outside.cityLevel() + "]";
         }
