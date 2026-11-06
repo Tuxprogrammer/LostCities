@@ -28,7 +28,9 @@ public class CommandTargetTest {
         assertArrayEquals(
             new int[] { 100, -200 },
             CommandSupport.parseTarget(new String[] { "100", "-200" }, PLAYER, "map"));
-        assertArrayEquals(new int[] { 100, -200 }, CommandSupport.parseTarget(new String[] { "100", "-200" }, null, "map"));
+        assertArrayEquals(
+            new int[] { 100, -200 },
+            CommandSupport.parseTarget(new String[] { "100", "-200" }, null, "map"));
         assertArrayEquals(
             new int[] { 30_000_000, -30_000_000 },
             CommandSupport.parseTarget(new String[] { "30000000", "-30000000" }, null, "map"));
