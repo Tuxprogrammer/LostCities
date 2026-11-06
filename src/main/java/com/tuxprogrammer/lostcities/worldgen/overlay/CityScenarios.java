@@ -642,7 +642,10 @@ public final class CityScenarios {
                 + ",highway=" + outside.maxHighwayLevel()
                 + ",network=" + com.tuxprogrammer.lostcities.worldgen.city.NetworkWriter.hasWork(planner, chunkX, chunkZ)
                 + ",front=" + outsideFronts(chunkX, chunkZ)
-                + ",level=" + outside.cityLevel() + "]";
+                + ",level=" + outside.cityLevel()
+                + ",roof=" + (outside.buildingBottomHeight()
+                    + outside.floorPitch() * (outside.cellars() + outside.floors()))
+                + ",ruin=" + outside.ruinHeight() + "]";
         }
 
         private String outsideFronts(int chunkX, int chunkZ) {
