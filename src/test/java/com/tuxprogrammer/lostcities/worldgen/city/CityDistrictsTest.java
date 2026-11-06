@@ -29,8 +29,11 @@ public class CityDistrictsTest {
     private static final long SEED = 7L;
     private static final int R = 220;
 
-    private static LayoutPlanner planner(long seed, String districts) {
+    private static LayoutPlanner planner(long seed, String districts, String... extra) {
         Map<String, String> map = new HashMap<>();
+        for (int i = 0; i + 1 < extra.length; i += 2) {
+            map.put(extra[i], extra[i + 1]);
+        }
         map.put("cityPlacement", "grid");
         map.put("networkLayout", "links");
         map.put("densityRings", "1");
@@ -80,23 +83,28 @@ public class CityDistrictsTest {
 
     @Test
     public void bigCitiesGetATwoByTwoPlaza() {
-        LayoutPlanner p = planner(SEED, "true");
-        int big = 0;
+        LayoutPlanner p = planner(SEED, "true", "cityMinRadius", "170", "cityMaxRadius", "220");
+        int cities = 0;
+        int full = 0;
         for (int[] c : centers(p)) {
-            if (!p.centerYieldsCity(c[0], c[1]) || p.cityRadius(c[0], c[1]) < 160) {
+            if (!p.centerYieldsCity(c[0], c[1])) {
                 continue;
             }
+            cities++;
+            int plazas = 0;
             for (int dx = 0; dx <= 1; dx++) {
                 for (int dz = 0; dz <= 1; dz++) {
                     ChunkPlan plan = p.plan(c[0] + dx, c[1] + dz);
                     if (plan.lot() == LotKind.PLAZA) {
                         assertEquals(2, plan.lotFootprint().width());
-                        big++;
+                        assertFalse(plan.hasBuilding());
+                        plazas++;
                     }
                 }
             }
+            full += plazas == 4 ? 1 : 0;
         }
-        System.out.println("districts: big plaza chunks=" + big);
+        assertTrue(cities > 0 && full * 2 >= cities, "2 x 2 plazas: " + full + " of " + cities);
     }
 
     @Test
