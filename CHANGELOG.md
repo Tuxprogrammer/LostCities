@@ -2,7 +2,9 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
-## Unreleased
+## 0.2.0-beta (2026-11-06)
+
+City realism. New worlds only for the new layout; existing worlds keep their generation.
 
 ### Added
 
@@ -11,6 +13,7 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 - **Pack houses:** the village houses of other pack mods (Forestry bee houses among them) are built on lots at the city edge, alongside five original houses and low-rises.
 - **Furnished buildings:** rooms get palettes by building type, loot and spawner rules per room, and sparse set dressing, including GregTech machines and partial multiblocks in industrial rooms.
 - **A city link network:** rarecities centers sit on a jittered grid and each city links to its three nearest neighbors. Highways and railways follow the links, with an optional beltway ring, interchanges and cut-throughs (`cityHighwayLayout`).
+- **`/lostcities find`** locates `gtroom`, `furnished`, `packhouse`, `beltway` and `district` targets, for checking the new content in a world.
 - **Smoother roads and rails:** ramps have a smooth surface, railways end at buffer stops where a landmark gaps the track, and a highway stays flat where another route turns off it.
 
 ### Changed
@@ -22,9 +25,20 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 
 ### Fixed
 
+- Clearing a chest the room rules did not keep no longer loads the neighboring chunk during population (cascading worldgen).
 - Boot crashes: a farmland border no longer redefines city-style palette characters in `nh_residential` (StackOverflow at boot), and world-reading GregTech machines are terrain stand-ins swapped back at population (skylight StackOverflow).
 - Blocked street doors: snow from RWG's snow pass and tree crowns from the park beside a building no longer land in the two blocks in front of a door. Doors were 94 % open on RWG2 Continents seed 1 and 6 % open on a snowy classic RWG seed; both are 100 % now.
 - Other mods' trees beside a cabin or building, and GregTech's stone boulders, no longer write into the footprint. The boulder generator runs after every other generator, so a late mixin on it (when GregTech is loaded) now brackets it with the footprint guard.
+
+### Known issues
+
+- The link network, beltways and districts need grid-placed cities, so they appear in `rarecities` worlds; the default profile scatters cities and keeps the older highway and railway layout.
+- Partial GT multiblocks have no hatches. The Forestry bee house is built without its flowers.
+- A GT machine in a room whose furnishing never ran (a chunk saved mid-generation) stays a silverfish-stone stand-in.
+
+## 0.1.1-beta (2026-11-05)
+
+City shape and ocean fixes; see `.changelogs/0.1.1-beta.md`.
 
 ## 0.1.0-beta (2026-11-02)
 
