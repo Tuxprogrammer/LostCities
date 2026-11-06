@@ -227,6 +227,10 @@ final class CityMap {
             if (height < profile.cityMinHeight || height > profile.cityMaxHeight) {
                 return 0;
             }
+            if (profile.cityAvoidOcean && terrain.isOcean(chunkX, chunkZ)) {
+                // Deviation (cityAvoidOcean): no city on the sea floor, where only borders and walls would stand.
+                return 0;
+            }
             if (risesTooHigh(chunkX, chunkZ, height)) {
                 return 0;
             }

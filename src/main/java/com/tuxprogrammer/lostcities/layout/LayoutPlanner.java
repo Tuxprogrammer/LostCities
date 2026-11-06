@@ -139,6 +139,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     final Sewing sewing;
     final Urbanity urbanity;
     final FacadePlanner facades;
+    private final ChunkCache<boolean[]> components;
     private final ChunkCache<MultiChunk> multiChunks;
     private final ChunkCache<ChunkCharacteristics> characteristicsCache;
     private final ChunkCache<ChunkPlan> plans;
@@ -178,6 +179,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         this.facades = new FacadePlanner(this, cache);
         this.multiChunks = new ChunkCache<>(Math.max(64, cache / 64));
         this.characteristicsCache = new ChunkCache<>(cache);
+        this.components = new ChunkCache<>(Math.max(16, Math.min(cache, 256)));
         this.plans = new ChunkCache<>(cache);
         this.derived = new ChunkCache<>(cache);
     }
@@ -397,8 +399,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         ZoneInfo zone = zones.zone(x, z);
         LaneCell lane = sewing.cell(x, z);
         // Deviation (0006 §1): a core or avoid-ring chunk is never city; this replaces upstream's avoidance.
-        boolean isCity = cities.isCityRaw(x, z) && !zone.zone()
-            .forcesNonCity() && !underCrater(x, z, zone);
+        boolean isCity = isCityBase(x, z, zone) && connectedToCenter(x, z);
         MultiPos pos = MultiPos.SINGLE;
         String multi = null;
         if (isCity) {
@@ -459,6 +460,96 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             style,
             building,
             random.drawCount());
+    }
+
+    /** Whether a chunk is city before the connection rule: raw city, outside every core and avoid-ring, not cratered. */
+    private boolean isCityBase(int x, int z, ZoneInfo zone) {
+        return cities.isCityRaw(x, z) && !zone.forcesNonCity() && !underCrater(x, z, zone);
+    }
+
+    /**
+     * Deviation (cityConnected): whether a city chunk joins the center of a city that reaches it, edge to edge
+     * through other city chunks. A chunk that terrain, water or a landmark cut off stands alone otherwise, a stray
+     * street or building with nothing around it. Applies in center mode only; a chunk no center in range reaches (a
+     * distant predefined city's) and predefined content always pass. Pure in the seed, the terrain and the zones, so
+     * every chunk agrees, and bounded to the search square of each center.
+     */
+    private boolean connectedToCenter(int x, int z) {
+        if (!profile.cityConnected || cities.perlinMode() || predefined.occupant(x, z) != null) {
+            return true;
+        }
+        int r = cities.searchRadius();
+        boolean reached = false;
+        for (int cz = z - r; cz <= z + r; cz++) {
+            for (int cx = x - r; cx <= x + r; cx++) {
+                if (!cities.isCityCenter(cx, cz)) {
+                    continue;
+                }
+                reached = true;
+                boolean[] member = component(cx, cz);
+                int side = 2 * r + 1;
+                int ix = x - cx + r;
+                int iz = z - cz + r;
+                if (ix >= 0 && iz >= 0 && ix < side && iz < side && member[iz * side + ix]) {
+                    return true;
+                }
+            }
+        }
+        return !reached;
+    }
+
+    /**
+     * The chunks of the square around a city center that join the center through base city chunks, 4-connected. When
+     * the center chunk itself is not city (water, a landmark), the walk starts from the nearest base city chunk.
+     */
+    private boolean[] component(int cx, int cz) {
+        boolean[] cached = components.get(cx, cz);
+        if (cached != null) {
+            return cached;
+        }
+        int r = cities.searchRadius();
+        int side = 2 * r + 1;
+        boolean[] seen = new boolean[side * side];
+        int startX = cx;
+        int startZ = cz;
+        if (!isCityBase(cx, cz, zones.zone(cx, cz))) {
+            int best = Integer.MAX_VALUE;
+            startX = Integer.MIN_VALUE;
+            for (int dz = -r; dz <= r; dz++) {
+                for (int dx = -r; dx <= r; dx++) {
+                    int d = dx * dx + dz * dz;
+                    if (d < best && isCityBase(cx + dx, cz + dz, zones.zone(cx + dx, cz + dz))) {
+                        best = d;
+                        startX = cx + dx;
+                        startZ = cz + dz;
+                    }
+                }
+            }
+            if (startX == Integer.MIN_VALUE) {
+                return components.put(cx, cz, seen);
+            }
+        }
+        java.util.ArrayDeque<int[]> queue = new java.util.ArrayDeque<>();
+        seen[(startZ - cz + r) * side + (startX - cx + r)] = true;
+        queue.add(new int[] { startX, startZ });
+        int[][] steps = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        while (!queue.isEmpty()) {
+            int[] at = queue.poll();
+            for (int[] step : steps) {
+                int nx = at[0] + step[0];
+                int nz = at[1] + step[1];
+                int ix = nx - cx + r;
+                int iz = nz - cz + r;
+                if (ix < 0 || iz < 0 || ix >= side || iz >= side || seen[iz * side + ix]) {
+                    continue;
+                }
+                if (predefined.occupant(nx, nz) != null || isCityBase(nx, nz, zones.zone(nx, nz))) {
+                    seen[iz * side + ix] = true;
+                    queue.add(new int[] { nx, nz });
+                }
+            }
+        }
+        return components.put(cx, cz, seen);
     }
 
     /** Whether a chunk's 3 × 3 window holds a landmark's margin (an edge ring). */

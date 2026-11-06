@@ -121,7 +121,19 @@ public final class BuiltinProfiles {
             "0",
             "rubbleLayer",
             "false");
-        profile(out, "rarecities", "cityChance", "0.001", "ruinChance", "0", "railwaysCanEnd", "true");
+        profile(
+            out,
+            "rarecities",
+            "cityChance",
+            "0.00025",
+            "cityMinRadius",
+            "100",
+            "cityMaxRadius",
+            "256",
+            "ruinChance",
+            "0",
+            "railwaysCanEnd",
+            "true");
         profile(out, "onlycities", "cityChance", "0.2", "cityMaxRadius", "256");
         profile(
             out,

@@ -105,7 +105,7 @@ Ten profiles ship in the jar. Each is the defaults (`default`) with a few option
 |---|---|---|
 | `default` | Common cities, explosions | Nothing |
 | `nodamage` | No explosion damage, no ruins, no rubble | `explosionChance` 0, `miniExplosionChance` 0, `ruinChance` 0, `rubbleLayer` false |
-| `rarecities` | Cities are rare | `cityChance` 0.001, `ruinChance` 0, `railwaysCanEnd` true |
+| `rarecities` | Cities are rare and large | `cityChance` 0.00025 (about twice the distance between cities), `cityMinRadius` 100, `cityMaxRadius` 256 (about four times the area), `ruinChance` 0, `railwaysCanEnd` true |
 | `onlycities` | The world is nearly all city | `cityChance` 0.2, `cityMaxRadius` 256 |
 | `tallbuildings` | Very tall buildings, heavier damage | `buildingMinFloors` 4, `buildingMaxFloors` 19, `buildingMinFloorsChance` 8, `buildingMaxFloorsChance` 15, `explosionChance` 0.006, `explosionMinHeight` 130, `explosionMaxHeight` 255, `explosionMaxRadius` 60, `miniExplosionChance` 0.09, `miniExplosionMinRadius` 3, `miniExplosionMaxRadius` 14, `miniExplosionMaxHeight` 255, `debrisToNearbyChunkFactor` 175, `ruinChance` 0.01 |
 | `safe` | No spawners, lighting, no loot | `generateSpawners` false, `generateLighting` true, `generateLoot` false |
@@ -350,6 +350,10 @@ They go in the `lostcity` category of a profile file, with upstream's options.
 | `landmarkMargin` | `2` | 0 to 16 | live | Blocks a landmark's footprint grows by before it becomes core chunks |
 | `softEdgeWidth` | `6` | 2 to 12 | live | Columns of the strip in a landmark core's margin that meets the blended ground to the core's own edge |
 | `cityMaxRise` | `2` | 0 to 8 | live | City levels a city chunk may rise above its city's base level; one more is cut down to it, higher ground is left out of the city; 8 is no cap |
+| `cityGrade` | `1` | 0 to 8 | live | City levels a city chunk may sit above or below its city's base level: hills are cut and hollows filled to within this many levels (8 blocks each), so neighboring streets and buildings stay close in height; 8 is no limit |
+| `cityGradeRadius` | `1` | 0 to 4 | live | Chunks around a city chunk whose mean terrain height sets its level, so neighbors change level gradually; 0 uses the chunk's own height |
+| `cityAvoidOcean` | `true` | | live | Chunks in an ocean biome are never city |
+| `cityConnected` | `true` | | live | A city chunk must join its city's center through other city chunks, edge to edge; a chunk that terrain, water or a landmark cut off leaves the city instead of standing alone (center mode only) |
 | `cityTaper` | `1.0` | 0 to 1 | live | How strongly building heights follow the urban intensity: low at a city's edge, a high-rise core at its center, varied by noise ([0011](design/0011-city-edges-and-character.md)); 0 is upstream's floor count |
 | `edgeLotChance` | `0.45` | 0 to 1 | live | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation instead; it falls to 0 at intensity 0.4, and open lots take half of it |
 | `damageRepairChance` | `0.5` | 0 to 1 | live | Chance that an explosion's damage in a city was partly filled back in with a similar but not identical material, and its windows boarded; 0 leaves all damage |
