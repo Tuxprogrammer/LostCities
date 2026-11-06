@@ -4,8 +4,25 @@ All notable changes to Lost Cities: New Horizons. The format follows [Keep a Cha
 
 ## Unreleased
 
+### Added
+
+- **Taller, denser cities:** floors stretch to an 8-block pitch for roomier interiors, and building density now falls off in rings from the city center.
+- **Real lot sizes:** construction lots, foundations and plazas take multi-chunk footprints instead of one chunk, and cities get districts: a central plaza, industrial yards and a park belt.
+- **Pack houses:** the village houses of other pack mods (Forestry bee houses among them) are built on lots at the city edge, alongside five original houses and low-rises.
+- **Furnished buildings:** rooms get palettes by building type, loot and spawner rules per room, and sparse set dressing, including GregTech machines and partial multiblocks in industrial rooms.
+- **A city link network:** rarecities centers sit on a jittered grid and each city links to its three nearest neighbors. Highways and railways follow the links, with an optional beltway ring, interchanges and cut-throughs (`cityHighwayLayout`).
+- **Smoother roads and rails:** ramps have a smooth surface, railways end at buffer stops where a landmark gaps the track, and a highway stays flat where another route turns off it.
+
+### Changed
+
+- **Existing worlds keep their old generation.** Every new option declares a legacy value that worlds pinned before it applies, so new chunks match old ones and no seams appear. To get the new layout, start a new world, or run `/lostcities profile pin <profile> confirm` on the existing one (chunks already generated will not match).
+- Door steps stay open past station walls and on lower roofs, and roof doors need a roof at their floor.
+- Unkept part chests are cleared under the room rules, and pack houses build deterministically.
+- World generation cost with all of this on is measured and within budget: about 11.5 % over RWG's own time on RWG2 Continents and about 8 % on classic RWG; see the README known limits.
+
 ### Fixed
 
+- Boot crashes: a farmland border no longer redefines city-style palette characters in `nh_residential` (StackOverflow at boot), and world-reading GregTech machines are terrain stand-ins swapped back at population (skylight StackOverflow).
 - Blocked street doors: snow from RWG's snow pass and tree crowns from the park beside a building no longer land in the two blocks in front of a door. Doors were 94 % open on RWG2 Continents seed 1 and 6 % open on a snowy classic RWG seed; both are 100 % now.
 - Other mods' trees beside a cabin or building, and GregTech's stone boulders, no longer write into the footprint. The boulder generator runs after every other generator, so a late mixin on it (when GregTech is loaded) now brackets it with the footprint guard.
 

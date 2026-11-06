@@ -97,8 +97,7 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 - **Overworld only, on RWG or flat.** Upstream's floating, space, cavern and sphere landscapes and their profiles, and the separate Lost City dimension, are not included, nor the monorails only the space landscape builds (D12).
 - **No world-preset screen.** Profiles are chosen in the config, as above.
 - **World generation cost.** With every city-realism default on, city generation adds about 11.5 % to RWG's own generation time over a large region on RWG2 Continents (seed 4242) and about 8 % on classic RWG (seed 777). All five time budgets hold on both, with no chunk's overlay work above 10 ms at p99.9 (measured in [0005 §8](docs/design/0005-rwg-overlay.md#8-time-budget-and-how-it-is-measured-q10)).
-- **Visual rough edges:**
-  - in worlds made before `highwayRampHolds`, a highway that turns where a neighboring route ramps can be cut by a tunnel wall. Ramp stripes, the rail gap under a shallow landmark and that cut are fixed for new worlds (`rampSurface`, `railwayCoreEnds`, `highwayRampHolds`; KI-5).
+- **Older worlds look older.** Worlds pinned before the city-realism options keep the old generation (6-block floors, single-chunk lots, no pack houses or furniture). In such a world a highway that turns where a neighboring route ramps can still be cut by a tunnel wall; new worlds have the fixes (`rampSurface`, `railwayCoreEnds`, `highwayRampHolds`). Re-pin with `/lostcities profile pin <profile> confirm` to opt in, accepting seams at the edge of explored land.
 - **No achievements or in-game guide yet.**
 
 Report what you find to the mod's issue tracker with the seed, world type, profile and coordinates (`/lostcities debug` at the spot helps).
