@@ -1,0 +1,12 @@
+{
+  "title": "Chunk query example: log the layout of a chunk by block coordinates",
+  "world": {"name": "shots-chunk-query", "level_type": "RWG2_CONTINENTS", "seed": "4242", "fresh": true},
+  "setup": [
+    "lostcities debug 100 -200",
+    "lostcities map 100 -200"
+  ],
+  "shots": [
+    {"name": "queried-chunk", "x": 100, "z": -200, "y": "top+40", "yaw": 135, "pitch": 40, "wait": 3,
+     "caption": "The chunk the setup commands logged ([LCNH-DEBUG] and [LCNH-MAP] lines in the server log)."}
+  ]
+}
