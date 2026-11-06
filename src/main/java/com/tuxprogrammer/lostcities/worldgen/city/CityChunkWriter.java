@@ -472,6 +472,11 @@ public final class CityChunkWriter {
             return;
         }
         int height = plan.cityGroundLevel();
+        if (plan.lot() == LotKind.PLAZA || plan.lot() == LotKind.INDUSTRY) {
+            // Phase 5c districts (D350): the plaza and the industrial yard.
+            new DistrictWriter(target, plan, assets, context.worldSeed()).write(height);
+            return;
+        }
         if (plan.lot() != LotKind.NONE) {
             // Deviation (AR-6, docs/design/0011-city-edges-and-character.md §3): an edge lot, where nothing grows.
             new EdgeLots(target, plan, assets, context.worldSeed()).write(height);

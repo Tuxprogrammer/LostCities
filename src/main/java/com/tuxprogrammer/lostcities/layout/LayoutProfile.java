@@ -110,6 +110,8 @@ public final class LayoutProfile {
      * {@link CityHighwayLayout#NONE} in worlds pinned before the option.
      */
     public final CityHighwayLayout cityHighwayLayout;
+    /** {@code cityDistricts}: central plaza, industrial yards and park belt (phase 5c, D350); false is off. */
+    public final boolean cityDistricts;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -228,6 +230,7 @@ public final class LayoutProfile {
         densityRings = b.densityRings;
         lotFootprints = b.lotFootprints;
         cityHighwayLayout = b.cityHighwayLayout;
+        cityDistricts = b.cityDistricts;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -411,6 +414,7 @@ public final class LayoutProfile {
         private float densityRings = 0f;
         private boolean lotFootprints = false;
         private CityHighwayLayout cityHighwayLayout = CityHighwayLayout.NONE;
+        private boolean cityDistricts = false;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -537,6 +541,12 @@ public final class LayoutProfile {
         /** @param strength {@code densityRings}, 0 (off) to 2 @return this builder */
         public Builder densityRings(float strength) {
             densityRings = strength;
+            return this;
+        }
+
+        /** @param on {@code cityDistricts}: plaza, industrial yards, park belt @return this builder */
+        public Builder cityDistricts(boolean on) {
+            cityDistricts = on;
             return this;
         }
 
