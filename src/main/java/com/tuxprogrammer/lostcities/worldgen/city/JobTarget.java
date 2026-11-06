@@ -61,6 +61,7 @@ public final class JobTarget implements CityTarget {
         final float chestWithoutLootChance;
         final boolean vanillaLoot;
         final boolean enderZooHardMobs;
+        final int floorPitch;
 
         /**
          * Collects the facts.
@@ -92,9 +93,10 @@ public final class JobTarget implements CityTarget {
             this.chestWithoutLootChance = chestWithoutLootChance;
             this.vanillaLoot = false;
             this.enderZooHardMobs = false;
+            this.floorPitch = ConditionContext.FLOOR_HEIGHT;
         }
 
-        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs) {
+        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs, int floorPitch) {
             this.worldSeed = base.worldSeed;
             this.chunkX = base.chunkX;
             this.chunkZ = base.chunkZ;
@@ -108,6 +110,7 @@ public final class JobTarget implements CityTarget {
             this.chestWithoutLootChance = base.chestWithoutLootChance;
             this.vanillaLoot = vanillaLoot;
             this.enderZooHardMobs = enderZooHardMobs;
+            this.floorPitch = floorPitch;
         }
 
         /**
@@ -120,7 +123,18 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the options
          */
         public Facts withOptions(boolean vanillaLoot, boolean enderZooHardMobs) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch);
+        }
+
+        /**
+         * Returns these facts with the world's floor pitch, which the {@code floor} condition counts in (0014); 6, the
+         * legacy pitch, unless set.
+         *
+         * @param pitch blocks per building floor
+         * @return the facts with the pitch
+         */
+        public Facts withFloorPitch(int pitch) {
+            return new Facts(this, vanillaLoot, enderZooHardMobs, pitch);
         }
     }
 
@@ -219,8 +233,8 @@ public final class JobTarget implements CityTarget {
 
     private ConditionContext context(int y, PartWriter.Placement placement) {
         return ConditionContext.builder()
-            .level(Math.floorDiv(y - facts.groundLevel, ConditionContext.FLOOR_HEIGHT))
-            .floor(ConditionContext.floorOf(y, facts.cityGround))
+            .level(Math.floorDiv(y - facts.groundLevel, ConditionContext.LEVEL_HEIGHT))
+            .floor(ConditionContext.floorOf(y, facts.cityGround, facts.floorPitch))
             .floors(facts.cellars, facts.floors)
             .part(
                 placement.part()

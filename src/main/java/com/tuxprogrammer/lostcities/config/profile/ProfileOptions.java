@@ -14,6 +14,7 @@ import com.tuxprogrammer.lostcities.config.profile.ProfileOption.Type;
 import com.tuxprogrammer.lostcities.layout.MultiBuildingStreetConflict;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
+import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
  * Every profile option: upstream's 163 in their five categories (docs/original-spec/02-profiles-dimensions/
@@ -49,6 +50,8 @@ public final class ProfileOptions {
     private static final Map<String, ProfileOption> BY_ALIAS = new TreeMap<>();
     private static final Map<String, String> TERRAIN = TerrainSettings.defaults()
         .toValues();
+    /** Legacy defaults by key: what a pinned snapshot without the key resolves to. */
+    private static final Map<String, String> LEGACY = new TreeMap<>();
 
     static {
         declareLostcity();
@@ -507,6 +510,64 @@ public final class ProfileOptions {
         newTerrain("enderZooHardMobs", Type.BOOLEAN, null, null);
         // Upstream's mod-config key, pinned with the profile so it cannot change an existing world (CORE-10, D73).
         newTerrain("heightSampleSize", Type.INT, d(1), d(100));
+        // New worlds get 8; worlds pinned before the key existed keep upstream's 6 (design record 0014).
+        add(
+            new ProfileOption(
+                "floorPitch",
+                Category.LOSTCITY,
+                Type.INT,
+                Integer.toString(WorldLimits.FLOOR_PITCH),
+                d(WorldLimits.LEGACY_FLOOR_PITCH),
+                d(WorldLimits.MAX_FLOOR_PITCH),
+                null,
+                Status.LIVE,
+                "03-terrain",
+                false,
+                null));
+        legacyDefault("floorPitch", Integer.toString(WorldLimits.LEGACY_FLOOR_PITCH));
+    }
+
+    /**
+     * Declares an option's legacy default: the value a pinned snapshot that lacks the key resolves to, for options
+     * that must keep old worlds as they were while new pins take {@link ProfileOption#defaultValue()} (design record
+     * 0014). Call it right after the option's {@code add}.
+     *
+     * @param key   a declared option
+     * @param value the legacy value
+     */
+    private static void legacyDefault(String key, String value) {
+        if (!BY_KEY.containsKey(key)) {
+            throw new IllegalStateException("legacy default for undeclared option " + key);
+        }
+        LEGACY.put(key, value);
+    }
+
+    /**
+     * Returns an option's legacy default.
+     *
+     * @param key the option key
+     * @return the value a pinned snapshot without the key resolves to, or null when the option has none
+     */
+    public static String legacyDefault(String key) {
+        return LEGACY.get(key);
+    }
+
+    /**
+     * Fills in the legacy default of every option that declares one and is missing from pinned values. Every
+     * {@link ProfileSnapshot} passes its values through this, so a world pinned before an option existed keeps the
+     * old behavior while new pins, which write every option, keep the new default.
+     *
+     * @param pinned the values a snapshot was pinned with
+     * @return a new sorted map: {@code pinned} plus the missing legacy defaults
+     */
+    public static Map<String, String> withLegacyDefaults(Map<String, String> pinned) {
+        Map<String, String> out = new TreeMap<>(pinned);
+        for (Map.Entry<String, String> entry : LEGACY.entrySet()) {
+            if (!out.containsKey(entry.getKey())) {
+                out.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return out;
     }
 
     private static void newTerrain(String key, Type type, Double min, Double max) {

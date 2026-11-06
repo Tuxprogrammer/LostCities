@@ -36,7 +36,7 @@ public class CityChunkWriterTest {
         ChunkPlan plan = PLANNER.plan(at[0], at[1]);
         ArrayChunkBuffer buffer = CityFixtures.generate(PLAN, at[0], at[1]);
         for (int f = 0; f < plan.floors(); f++) {
-            int y = plan.cityGroundLevel() + ChunkPlan.FLOOR_HEIGHT * f;
+            int y = plan.cityGroundLevel() + ChunkPlan.LEVEL_HEIGHT * f;
             int solid = 0;
             for (int x = 1; x < 15; x++) {
                 for (int z = 1; z < 15; z++) {

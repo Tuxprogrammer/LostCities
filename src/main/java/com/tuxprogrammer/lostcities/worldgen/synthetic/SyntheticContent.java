@@ -101,7 +101,7 @@ final class SyntheticContent {
         int bottom = plan.buildingBottom();
         int top = plan.maxHeight();
         // Levels from the lowest cellar to the top floor, each FLOOR_HEIGHT tall.
-        for (int level = bottom; level < top; level += WorldLimits.FLOOR_HEIGHT) {
+        for (int level = bottom; level < top; level += WorldLimits.LEVEL_HEIGHT) {
             boolean aboveGround = level >= ground;
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -109,7 +109,7 @@ final class SyntheticContent {
                         continue;
                     }
                     buffer.set(x, level, z, isEdge(x, z) ? WALL : FLOOR);
-                    for (int dy = 1; dy < WorldLimits.FLOOR_HEIGHT; dy++) {
+                    for (int dy = 1; dy < WorldLimits.LEVEL_HEIGHT; dy++) {
                         int y = level + dy;
                         if (y > WorldLimits.MAX_Y) {
                             break;
@@ -118,7 +118,7 @@ final class SyntheticContent {
                     }
                 }
             }
-            int lightY = level + WorldLimits.FLOOR_HEIGHT - 1;
+            int lightY = level + WorldLimits.LEVEL_HEIGHT - 1;
             if (lightY <= WorldLimits.MAX_Y) {
                 buffer.set(7, lightY, 7, LIGHT);
                 buffer.set(8, lightY, 8, LIGHT);

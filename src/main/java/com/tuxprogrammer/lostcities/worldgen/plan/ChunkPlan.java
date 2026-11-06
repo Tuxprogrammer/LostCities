@@ -53,6 +53,7 @@ public final class ChunkPlan {
     private final boolean building;
     private final int floors;
     private final int cellars;
+    private final int floorPitch;
     private final float ruinHeight;
     private final float explosionChance;
     private final StyleBlocks style;
@@ -87,6 +88,7 @@ public final class ChunkPlan {
         this.building = b.building;
         this.floors = b.floors;
         this.cellars = b.cellars;
+        this.floorPitch = b.floorPitch;
         this.ruinHeight = b.ruinHeight;
         this.explosionChance = b.explosionChance;
         this.style = b.style;
@@ -218,22 +220,31 @@ public final class ChunkPlan {
         return floors;
     }
 
+    /** Returns the world's floor pitch: blocks per building floor and cellar (design record 0014). */
+    public int floorPitch() {
+        return floorPitch;
+    }
+
     /** Returns the building's cellars; 0 without a building. */
     public int cellars() {
         return cellars;
     }
 
     /**
-     * Returns the Y of the building's lowest level: {@code groundY − 6 × cellars}. The layout keeps it at or above
+     * Returns the Y of the building's lowest level: {@code groundY − floorPitch × cellars}. The layout keeps it at or
+     * above
      * {@link WorldLimits#BUILDING_BOTTOM_MIN}, dropping cellars one at a time (TERR-31).
      */
     public int buildingBottom() {
-        return groundY - WorldLimits.FLOOR_HEIGHT * cellars;
+        return groundY - floorPitch * cellars;
     }
 
-    /** Returns upstream's {@code getMaxHeight}: the building's top, {@code groundY + 6 × floors}, or the ground. */
+    /**
+     * Returns upstream's {@code getMaxHeight}: the building's top, {@code groundY + floorPitch × floors}, or the
+     * ground.
+     */
     public int maxHeight() {
-        return building ? groundY + WorldLimits.FLOOR_HEIGHT * floors : groundY;
+        return building ? groundY + floorPitch * floors : groundY;
     }
 
     /** Returns the fraction of floors a ruined building keeps, or {@link #NOT_RUINED}. */
@@ -478,6 +489,7 @@ public final class ChunkPlan {
         private boolean building;
         private int floors;
         private int cellars;
+        private int floorPitch = WorldLimits.LEGACY_FLOOR_PITCH;
         private float ruinHeight = NOT_RUINED;
         private float explosionChance = Float.NaN;
         private StyleBlocks style = StyleBlocks.defaults();
@@ -549,6 +561,17 @@ public final class ChunkPlan {
             this.building = true;
             this.floors = floorCount;
             this.cellars = cellarCount;
+            return this;
+        }
+
+        /**
+         * Sets the floor pitch, blocks per building floor; {@link WorldLimits#LEGACY_FLOOR_PITCH} unless set (0014).
+         *
+         * @param pitch the pitch, 6 to {@link WorldLimits#MAX_FLOOR_PITCH}
+         * @return this builder
+         */
+        public Builder floorPitch(int pitch) {
+            this.floorPitch = pitch;
             return this;
         }
 
@@ -744,10 +767,10 @@ public final class ChunkPlan {
                 // 0006 §1: the city writes nothing in a core but a village lane's surface path.
                 throw new IllegalStateException("a landmark core has no content: " + chunkX + "," + chunkZ);
             }
-            if (building && groundY - WorldLimits.FLOOR_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
+            if (building && groundY - floorPitch * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
                 // TERR-31: a building that cannot fit is the layout's problem, settled before generation.
                 throw new IllegalStateException(
-                    "building bottom " + (groundY - WorldLimits.FLOOR_HEIGHT * cellars)
+                    "building bottom " + (groundY - floorPitch * cellars)
                         + " is below Y "
                         + WorldLimits.BUILDING_BOTTOM_MIN
                         + " at "

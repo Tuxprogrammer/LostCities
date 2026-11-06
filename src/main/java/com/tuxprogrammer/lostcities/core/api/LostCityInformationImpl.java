@@ -50,7 +50,7 @@ public final class LostCityInformationImpl implements ILostCityInformation {
 
     @Override
     public int getRealHeight(int level) {
-        return source.groundLevel() + ChunkPlan.FLOOR_HEIGHT * level;
+        return source.groundLevel() + ChunkPlan.LEVEL_HEIGHT * level;
     }
 
     @Override

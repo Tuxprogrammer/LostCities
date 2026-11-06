@@ -133,18 +133,18 @@ public final class SyntheticCityPlan implements CityPlan {
         } else {
             int floors = 1 + lot.nextInt(MAX_FLOORS);
             int cellars = lot.nextInt(MAX_CELLARS + 1);
-            while (cellars > 0 && ground - WorldLimits.FLOOR_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
+            while (cellars > 0 && ground - WorldLimits.LEVEL_HEIGHT * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
                 cellars--;
             }
-            while (floors > 1 && ground + WorldLimits.FLOOR_HEIGHT * floors >= WorldLimits.BUILDING_TOP_CAP) {
+            while (floors > 1 && ground + WorldLimits.LEVEL_HEIGHT * floors >= WorldLimits.BUILDING_TOP_CAP) {
                 floors--;
             }
             builder.building(floors, cellars)
                 .content(SyntheticContent.building());
-            Arrays.fill(footprint, ground - WorldLimits.FLOOR_HEIGHT * cellars - 1);
+            Arrays.fill(footprint, ground - WorldLimits.LEVEL_HEIGHT * cellars - 1);
             builder.job(PopulationJob.of(PopulationJob.Kind.CHEST, 2, ground + 1, 2, ""));
             for (int floor = 0; floor < floors; floor++) {
-                int y = ground + WorldLimits.FLOOR_HEIGHT * floor + SyntheticContent.TORCH_HEIGHT;
+                int y = ground + WorldLimits.LEVEL_HEIGHT * floor + SyntheticContent.TORCH_HEIGHT;
                 builder.job(PopulationJob.of(PopulationJob.Kind.TORCH, 1, y, 7, ""));
             }
         }

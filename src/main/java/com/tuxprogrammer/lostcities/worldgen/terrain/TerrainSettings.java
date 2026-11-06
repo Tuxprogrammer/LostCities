@@ -74,6 +74,7 @@ public final class TerrainSettings {
     private final int cityMaxHeight;
     private final int cityMaxRise;
     private final int cityGrade;
+    private final int floorPitch;
     private final int cityGradeRadius;
     private final boolean cityAvoidOcean;
     private final boolean cityConnected;
@@ -134,6 +135,12 @@ public final class TerrainSettings {
         cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxRise = r.intValue("cityMaxRise", DEFAULT_MAX_RISE, 0, CITY_LEVEL_THRESHOLDS);
         cityGrade = r.intValue("cityGrade", DEFAULT_GRADE, 0, CITY_LEVEL_THRESHOLDS);
+        // Missing means a world pinned before the pitch was: upstream's 6 (design record 0014).
+        floorPitch = r.intValue(
+            "floorPitch",
+            WorldLimits.LEGACY_FLOOR_PITCH,
+            WorldLimits.LEGACY_FLOOR_PITCH,
+            WorldLimits.MAX_FLOOR_PITCH);
         cityGradeRadius = r.intValue("cityGradeRadius", DEFAULT_GRADE_RADIUS, 0, 4);
         cityAvoidOcean = r.booleanValue("cityAvoidOcean", true);
         cityConnected = r.booleanValue("cityConnected", true);
@@ -260,6 +267,7 @@ public final class TerrainSettings {
         out.put("cityMaxHeight", Integer.toString(cityMaxHeight));
         out.put("cityMaxRise", Integer.toString(cityMaxRise));
         out.put("cityGrade", Integer.toString(cityGrade));
+        out.put("floorPitch", Integer.toString(floorPitch));
         out.put("cityGradeRadius", Integer.toString(cityGradeRadius));
         out.put("cityAvoidOcean", Boolean.toString(cityAvoidOcean));
         out.put("cityConnected", Boolean.toString(cityConnected));
@@ -334,7 +342,7 @@ public final class TerrainSettings {
      * @return block Y
      */
     public int cityGround(int cityLevel) {
-        return groundLevel + WorldLimits.FLOOR_HEIGHT * cityLevel;
+        return groundLevel + WorldLimits.LEVEL_HEIGHT * cityLevel;
     }
 
     /**
@@ -369,6 +377,14 @@ public final class TerrainSettings {
      */
     public int cityMaxRise() {
         return cityMaxRise;
+    }
+
+    /**
+     * Returns {@code floorPitch}: blocks per building floor and cellar, 6 to 10 (design record 0014). The defaults here
+     * stay at upstream's 6; new worlds pin the option's default of 8.
+     */
+    public int floorPitch() {
+        return floorPitch;
     }
 
     /** Returns {@code cityGrade}: the levels a city chunk may sit above or below its city's base level. */

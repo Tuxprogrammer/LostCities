@@ -126,7 +126,7 @@ public final class DamageArea {
         }
         int radius = between(random, settings.explosionMinRadius(), settings.explosionMaxRadius());
         int x = (origin.chunkX() << 4) + random.nextInt(16);
-        int y = origin.cityLevel() * WorldLimits.FLOOR_HEIGHT
+        int y = origin.cityLevel() * WorldLimits.LEVEL_HEIGHT
             + between(random, settings.explosionMinHeight(), settings.explosionMaxHeight());
         int z = (origin.chunkZ() << 4) + random.nextInt(16);
         return new Explosion(x, y, z, radius);
@@ -147,7 +147,7 @@ public final class DamageArea {
         }
         int radius = between(random, settings.miniExplosionMinRadius(), settings.miniExplosionMaxRadius());
         int x = (origin.chunkX() << 4) + random.nextInt(16);
-        int y = origin.cityLevel() * WorldLimits.FLOOR_HEIGHT
+        int y = origin.cityLevel() * WorldLimits.LEVEL_HEIGHT
             + between(random, settings.miniExplosionMinHeight(), settings.miniExplosionMaxHeight());
         int z = (origin.chunkZ() << 4) + random.nextInt(16);
         return new Explosion(x, y, z, radius);

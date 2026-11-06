@@ -115,7 +115,7 @@ public final class CreateBuildingSubcommand implements Subcommand {
     static int floorsThatFit(int bottom, int cellars) {
         // Levels -cellars .. floors, each FLOOR_HEIGHT high: the top level ends at bottom + (cellars + floors + 1) * 6
         // - 1.
-        return (TOP_Y + 1 - bottom) / ChunkPlan.FLOOR_HEIGHT - cellars - 1;
+        return (TOP_Y + 1 - bottom) / ChunkPlan.LEVEL_HEIGHT - cellars - 1;
     }
 
     @Override

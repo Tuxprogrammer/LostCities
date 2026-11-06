@@ -22,6 +22,7 @@ Status: *Accepted* where [0005](../../design/0005-rwg-overlay.md) §7, [0006](..
 |---|---|---|
 | Profile name | Shown by the profile command and the log | [0005](../../design/0005-rwg-overlay.md) §7 |
 | Every resolved profile value | Generation reads only these; editing a profile file or a built-in changes new worlds only | [0005](../../design/0005-rwg-overlay.md) §7 |
+| `floorPitch` among those values. An option may declare a legacy default (`ProfileOptions.legacyDefault`), which a snapshot written before the option existed reads instead of the current default, so a world pinned before 0014 keeps 6-block floors and new worlds get 8 | Old worlds keep their buildings byte-identical; new worlds get taller rooms | [0014](../../design/0014-floor-pitch.md), D295 |
 | Asset-set hash | Detects that the loaded buildings, parts, palettes and styles differ from those the world was created with | [0005](../../design/0005-rwg-overlay.md) §7 |
 | Layout version | Detects a deliberate layout change in a mod update ([CONTRIBUTING § World generation rules](../../../CONTRIBUTING.md#world-generation-rules)) | [0005](../../design/0005-rwg-overlay.md) §7 |
 | World type name | The oracle the world was pinned for | [0005](../../design/0005-rwg-overlay.md) §7 |

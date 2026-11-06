@@ -191,8 +191,8 @@ class MeteoriteOracleTest {
                     "a street's headroom under the crater: " + where);
                 if (plan.hasBuilding()) {
                     buildings++;
-                    int top = plan.cityGroundLevel() + plan.floors() * ChunkPlan.FLOOR_HEIGHT
-                        + ChunkPlan.FLOOR_HEIGHT
+                    int top = plan.cityGroundLevel() + plan.floors() * ChunkPlan.LEVEL_HEIGHT
+                        + ChunkPlan.LEVEL_HEIGHT
                         - 1;
                     assertTrue(top <= zone.heightCap(), "a roof under the crater: " + where + " top " + top);
                     assertFalse(

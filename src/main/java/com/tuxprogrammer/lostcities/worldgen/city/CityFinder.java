@@ -751,7 +751,7 @@ public final class CityFinder {
                 ground,
                 z,
                 viewX,
-                ground + Math.max(layout.floors(), other.floors()) * ChunkPlan.FLOOR_HEIGHT + FEATHER_HEIGHT,
+                ground + Math.max(layout.floors(), other.floors()) * layout.floorPitch() + FEATHER_HEIGHT,
                 viewZ,
                 yawToward(viewX, viewZ, x, z),
                 FEATHER_PITCH,
@@ -778,7 +778,7 @@ public final class CityFinder {
                 return null;
             }
         }
-        int deck = planner.profile().groundLevel + piece.level() * ChunkPlan.FLOOR_HEIGHT;
+        int deck = planner.profile().groundLevel + piece.level() * ChunkPlan.LEVEL_HEIGHT;
         int x = (chunkX << 4) + 8;
         int z = (chunkZ << 4) + 8;
         // Look east or south along the highway, from behind the chunk's middle.
@@ -806,7 +806,7 @@ public final class CityFinder {
             return null;
         }
         boolean alongX = piece.axis() == com.tuxprogrammer.lostcities.layout.highway.Axis.X;
-        int top = planner.profile().groundLevel + piece.topLevel() * ChunkPlan.FLOOR_HEIGHT;
+        int top = planner.profile().groundLevel + piece.topLevel() * ChunkPlan.LEVEL_HEIGHT;
         int x = (chunkX << 4) + 8;
         int z = (chunkZ << 4) + 8;
         // Stand to the south of an east-west ramp looking north, or to the west of a north-south one looking east.
@@ -834,7 +834,7 @@ public final class CityFinder {
         if (rail.type() != com.tuxprogrammer.lostcities.layout.view.RailChunkType.STATION_SURFACE) {
             return null;
         }
-        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.FLOOR_HEIGHT;
+        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.LEVEL_HEIGHT;
         int x = (chunkX << 4) + 8;
         int z = (chunkZ << 4) + 8;
         return new Result(
@@ -861,7 +861,7 @@ public final class CityFinder {
         if (rail.type() != com.tuxprogrammer.lostcities.layout.view.RailChunkType.HORIZONTAL) {
             return null;
         }
-        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.FLOOR_HEIGHT;
+        int floor = planner.profile().groundLevel + rail.level() * ChunkPlan.LEVEL_HEIGHT;
         int x = (chunkX << 4) + 1;
         int z = (chunkZ << 4) + 7;
         // Inside the tunnel at its west edge, beside the middle track, looking east along the line.

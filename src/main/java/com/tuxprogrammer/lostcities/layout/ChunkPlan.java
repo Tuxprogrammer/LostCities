@@ -27,8 +27,11 @@ import com.tuxprogrammer.lostcities.layout.street.PlannedRoadType;
  */
 public final class ChunkPlan {
 
-    /** Blocks per city level and per building floor (upstream's {@code FLOORHEIGHT}). */
-    public static final int FLOOR_HEIGHT = 6;
+    /** Blocks per city level (upstream's {@code FLOORHEIGHT}); building floors use {@link #floorPitch()}. */
+    public static final int LEVEL_HEIGHT = 6;
+
+    /** Upstream's floor pitch, which a plan built without one keeps (0014). */
+    public static final int LEGACY_FLOOR_PITCH = 6;
 
     final ChunkCharacteristics characteristics;
     final boolean isCity;
@@ -37,6 +40,7 @@ public final class ChunkPlan {
     final boolean hierarchicalOpen;
     final boolean predefinedStreet;
     final int groundLevel;
+    final int floorPitch;
     final int waterLevel;
     final EffectiveCitySettings settings;
     final int highwayXLevel;
@@ -76,6 +80,7 @@ public final class ChunkPlan {
         hierarchicalOpen = b.hierarchicalOpen;
         predefinedStreet = b.predefinedStreet;
         groundLevel = b.groundLevel;
+        floorPitch = b.floorPitch;
         waterLevel = b.waterLevel;
         settings = b.settings;
         highwayXLevel = b.highwayXLevel;
@@ -178,6 +183,11 @@ public final class ChunkPlan {
         return groundLevel;
     }
 
+    /** Returns the world's floor pitch: blocks per building floor and cellar (design record 0014). */
+    public int floorPitch() {
+        return floorPitch;
+    }
+
     /** Returns the water level, block Y. */
     public int waterLevel() {
         return waterLevel;
@@ -185,7 +195,7 @@ public final class ChunkPlan {
 
     /** Returns the block Y of this chunk's street or ground floor: {@code groundLevel + cityLevel * 6}. */
     public int cityGroundLevel() {
-        return groundLevel + characteristics.cityLevel * FLOOR_HEIGHT;
+        return groundLevel + characteristics.cityLevel * LEVEL_HEIGHT;
     }
 
     /** Returns {@link #cityGroundLevel()}, minus 1 for non-city chunks (upstream's terrain reference). */
@@ -268,14 +278,29 @@ public final class ChunkPlan {
         return cellars;
     }
 
-    /** Returns the block Y of the lowest cellar's floor: {@code cityGroundLevel - cellars * 6}. */
+    /** Returns the block Y of the lowest cellar's floor: {@code cityGroundLevel - cellars * floorPitch}. */
     public int buildingBottomHeight() {
-        return cityGroundLevel() - cellars * FLOOR_HEIGHT;
+        return cityGroundLevel() - cellars * floorPitch;
     }
 
-    /** Returns the city level of the lowest cellar ({@code cityLevel - cellars}), for railway collision tests. */
+    /**
+     * Returns the city level the lowest cellar reaches, for railway collision tests: {@code cityLevel - cellars} at
+     * pitch 6, and the city levels the cellars' depth covers, rounded up, at a taller pitch (0014).
+     */
     public int lowestCityLevel() {
-        return characteristics.cityLevel - cellars;
+        return characteristics.cityLevel - cellarLevels(cellars, floorPitch);
+    }
+
+    /**
+     * Returns the city levels a building's cellars reach down through: {@code cellars} at pitch 6, else their depth
+     * in blocks over {@link #LEVEL_HEIGHT}, rounded up.
+     *
+     * @param cellars the cellars
+     * @param pitch   the floor pitch
+     * @return city levels
+     */
+    public static int cellarLevels(int cellars, int pitch) {
+        return (cellars * pitch + LEVEL_HEIGHT - 1) / LEVEL_HEIGHT;
     }
 
     /**
@@ -284,10 +309,10 @@ public final class ChunkPlan {
      */
     public int maxHeight() {
         if (hasBuilding) {
-            return cityGroundLevel() + floors * FLOOR_HEIGHT;
+            return cityGroundLevel() + floors * floorPitch;
         }
         if (maxHighwayLevel() >= 0) {
-            return groundLevel + maxHighwayLevel() * FLOOR_HEIGHT;
+            return groundLevel + maxHighwayLevel() * LEVEL_HEIGHT;
         }
         return cityGroundLevel();
     }
@@ -342,7 +367,7 @@ public final class ChunkPlan {
         if (ruinChance <= 0 || ruinHeight < 0) {
             return -1;
         }
-        return (int) (cityGroundLevel() + 1 + ruinHeight * floors * FLOOR_HEIGHT);
+        return (int) (cityGroundLevel() + 1 + ruinHeight * floors * floorPitch);
     }
 
     /**
@@ -357,7 +382,7 @@ public final class ChunkPlan {
         if (isCity) {
             return characteristics.cityLevel > level;
         }
-        return terrainHeight > groundLevel + level * FLOOR_HEIGHT + 3;
+        return terrainHeight > groundLevel + level * LEVEL_HEIGHT + 3;
     }
 
     /** Returns the number of levels a building's part arrays hold: {@code cellars + floors + 1}. */
@@ -484,6 +509,7 @@ public final class ChunkPlan {
         boolean hierarchicalOpen;
         boolean predefinedStreet;
         int groundLevel;
+        int floorPitch = LEGACY_FLOOR_PITCH;
         int waterLevel;
         EffectiveCitySettings settings;
         int highwayXLevel = -1;

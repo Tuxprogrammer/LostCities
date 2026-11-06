@@ -639,7 +639,7 @@ public final class ScatteredPlanner {
             if (highway.isTunnel(level, planner.terrain.height(hx, hz))) {
                 return null;
             }
-            int height = highway.groundLevel() + level * ChunkPlan.FLOOR_HEIGHT;
+            int height = highway.groundLevel() + level * ChunkPlan.LEVEL_HEIGHT;
             if (common != null && common != height) {
                 return null;
             }
@@ -830,7 +830,7 @@ public final class ScatteredPlanner {
         int floors = min >= max ? min : min + random.nextInt(max - min + 1);
         String[] parts = new String[floors];
         String[] parts2 = new String[floors];
-        int baseLevel = Math.floorDiv(lowest - planner.profile.groundLevel, ChunkPlan.FLOOR_HEIGHT);
+        int baseLevel = Math.floorDiv(lowest - planner.profile.groundLevel, ChunkPlan.LEVEL_HEIGHT);
         String below = PartContext.NONE;
         for (int f = 0; f < floors; f++) {
             // Avoids SCAT-10: the last floor is the top (floors − 1 above ground), and the level is a city level.

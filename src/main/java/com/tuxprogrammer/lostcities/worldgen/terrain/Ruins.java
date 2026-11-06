@@ -129,7 +129,7 @@ public final class Ruins {
         if (doLeaves) {
             leavesNoise.region(leavesBuffer, chunkX << 6, chunkZ << 6, LEAVES_SCALE, LEAVES_FACTOR);
         }
-        int base = (int) (plan.groundY() + 1 + plan.ruinHeight() * plan.floors() * WorldLimits.FLOOR_HEIGHT);
+        int base = (int) (plan.groundY() + 1 + plan.ruinHeight() * plan.floors() * plan.floorPitch());
         BlockRef bars = style.ironBars();
         BlockRef rubble = style.ruinRubble();
         List<BlockRef> leaves = style.leaves();
