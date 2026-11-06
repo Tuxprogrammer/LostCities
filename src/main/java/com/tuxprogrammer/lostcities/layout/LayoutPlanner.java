@@ -464,7 +464,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
 
     /** Whether a chunk is city before the connection rule: raw city, outside every core and avoid-ring, not cratered. */
     private boolean isCityBase(int x, int z, ZoneInfo zone) {
-        return cities.isCityRaw(x, z) && !zone.forcesNonCity() && !underCrater(x, z, zone);
+        return cities.isCityRaw(x, z) && !zone.zone().forcesNonCity() && !underCrater(x, z, zone);
     }
 
     /**
