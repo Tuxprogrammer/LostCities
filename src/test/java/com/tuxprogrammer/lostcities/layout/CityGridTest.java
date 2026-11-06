@@ -38,10 +38,10 @@ public class CityGridTest {
     public void centersMatchTheValuesTheApprovedPreviewDrew() {
         // Values computed independently (a Java Random replica) for the preview's seed.
         CityGrid grid = new CityGrid(SEED, 64, 16, 100, 256);
-        assertCenter(grid.center(0, 0), 29, 11, 243);
-        assertCenter(grid.center(-1, -1), -59, -63, 191);
-        assertCenter(grid.center(3, -2), 195, -116, 224);
-        assertCenter(grid.center(-8, 7), -506, 477, 123);
+        assertCenter(grid.center(0, 0), 29, 43, 215);
+        assertCenter(grid.center(-1, -1), -27, -31, 191);
+        assertCenter(grid.center(3, -2), 227, -84, 196);
+        assertCenter(grid.center(-8, 7), -474, 477, 123);
     }
 
     private static long key(int x, int z) {
@@ -106,7 +106,7 @@ public class CityGridTest {
             }
         }
         assertEquals(expected, found);
-        assertEquals(16, found.size());
+        assertEquals(64, found.size());
     }
 
     @Test

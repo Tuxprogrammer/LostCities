@@ -366,7 +366,7 @@ public final class LayoutProfile {
 
         private double cityChance = .01;
         private int cityGridCell;
-        private int cityGridJitter;
+        private int cityGridJitter = 16;
         private int cityMinRadius = 50;
         private int cityMaxRadius = 128;
         private float cityThreshold = .2f;

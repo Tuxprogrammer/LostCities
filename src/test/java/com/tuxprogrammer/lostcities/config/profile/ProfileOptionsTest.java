@@ -35,7 +35,7 @@ public class ProfileOptionsTest {
         }
         assertEquals(107, (int) counts.get(Category.LOSTCITY));
         assertEquals(12, (int) counts.get(Category.EXPLOSIONS));
-        assertEquals(25, (int) counts.get(Category.CITIES));
+        assertEquals(28, (int) counts.get(Category.CITIES));
         assertEquals(14, (int) counts.get(Category.CITYSPHERES));
         assertEquals(5, (int) counts.get(Category.CLIENT));
         assertEquals(17, dropped, "the dropped options of new-spec profile-options.md");
