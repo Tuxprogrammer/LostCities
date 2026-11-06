@@ -124,6 +124,8 @@ public final class BuiltinProfiles {
         profile(
             out,
             "rarecities",
+            "cityPlacement",
+            "grid",
             "cityChance",
             "0.00025",
             "cityMinRadius",

@@ -28,6 +28,10 @@ public final class LayoutProfile {
 
     /** {@code cityChance}: chance a chunk is a city center; negative selects Perlin rarity. */
     public final double cityChance;
+    /** {@code cityGridCell}: jittered-grid cell edge in chunks; 0 places centers by {@code cityChance}. */
+    public final int cityGridCell;
+    /** {@code cityGridJitter}: chunks kept clear inside every grid cell edge. */
+    public final int cityGridJitter;
     /** {@code cityMinRadius}, blocks. */
     public final int cityMinRadius;
     /** {@code cityMaxRadius}, blocks. */
@@ -182,6 +186,8 @@ public final class LayoutProfile {
 
     private LayoutProfile(Builder b) {
         cityChance = b.cityChance;
+        cityGridCell = b.cityGridCell;
+        cityGridJitter = b.cityGridJitter;
         cityMinRadius = b.cityMinRadius;
         cityMaxRadius = b.cityMaxRadius;
         cityThreshold = b.cityThreshold;
@@ -359,6 +365,8 @@ public final class LayoutProfile {
     public static final class Builder {
 
         private double cityChance = .01;
+        private int cityGridCell;
+        private int cityGridJitter;
         private int cityMinRadius = 50;
         private int cityMaxRadius = 128;
         private float cityThreshold = .2f;
@@ -427,6 +435,13 @@ public final class LayoutProfile {
         /** @param v {@code cityChance} @return this builder */
         public Builder cityChance(double v) {
             cityChance = v;
+            return this;
+        }
+
+        /** @param cell {@code cityGridCell}, 0 for chance mode @param jitter {@code cityGridJitter} @return this builder */
+        public Builder cityGrid(int cell, int jitter) {
+            cityGridCell = cell;
+            cityGridJitter = jitter;
             return this;
         }
 

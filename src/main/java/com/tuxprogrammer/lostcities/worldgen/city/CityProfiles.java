@@ -70,6 +70,9 @@ public final class CityProfiles {
                 values.getInt("villageTransitionRings"),
                 values.getInt("villageLinkDistance"))
             .cityChance(values.getDouble("cityChance"))
+            .cityGrid(
+                "grid".equals(values.getString("cityPlacement")) ? values.getInt("cityGridCell") : 0,
+                values.getInt("cityGridJitter"))
             .cityRadius(values.getInt("cityMinRadius"), values.getInt("cityMaxRadius"))
             .cityThreshold(values.getFloat("cityThreshold"))
             .cityPerlin(

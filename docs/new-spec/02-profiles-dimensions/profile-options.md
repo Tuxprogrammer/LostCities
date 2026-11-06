@@ -52,11 +52,12 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `explosionChance`, `miniExplosionChance` | changed | Defaults 0.0004 and 0.005 instead of 0.002 and 0.03: craters are an occasional accent, not the look of a city ([03-terrain](../03-terrain/index.md#explosions-damage-debris-ruins-rubble-damage-ruins-rubblemd)). A profile can still ask for upstream's numbers. | 03 | AR-8 ([alpha review](../../reviews/2026-11-02-alpha.md)) | |
 | `explosionMinRadius`, `explosionMaxRadius`, `explosionMinHeight`, `explosionMaxHeight`, `miniExplosionMinRadius`, `miniExplosionMaxRadius`, `miniExplosionMinHeight`, `miniExplosionMaxHeight` | changed | Heights clamped to 0 to 255. Each minimum must be below its maximum, checked at load. Default radii 12 to 24 and 4 to 9 instead of 15 to 35 and 5 to 12 (AR-8). | 03 | [0005](../../design/0005-rwg-overlay.md) §6; bug register; AR-8 | PROF-06 |
 
-## Category `cities` (25 options)
+## Category `cities` (28 options)
 
 | Options | Here | What changes | Owner | Decision | Avoids |
 |---|---|---|---|---|---|
 | `cityChance`, `cityMinRadius`, `cityMaxRadius`, `cityPerlinScale`, `cityPerlinOffset`, `cityPerlinInnerScale`, `cityThreshold`, `oceanCorrectionBorder` | same | City placement and city-center styles mix in the world seed; each chunk takes its city center's style. The radius pair is checked at load. | 04 | D10 | PROF-06, PROF-10, PROF-11 |
+| `cityPlacement`, `cityGridCell`, `cityGridJitter` | new | Deviation: `rarecities` places one city center per 64 x 64 chunk cell, jittered 16 chunks in from the cell edge, radius 100 to 255 blocks, instead of a per-chunk 0.00025 chance (which clumps and leaves large gaps). Cell centers depend on the world seed and the cell alone. Every other profile keeps `chance`, and so does any world pinned before these options existed (a snapshot without the key reads the default). `cityConnected`, `cityAvoidOcean` and the city mask still apply, so a grid center on water yields no city. | 04 | D-p4a-1 | none |
 | `citySpawnDistance1`, `citySpawnDistance2`, `citySpawnMultiplier1`, `citySpawnMultiplier2` | same | Upstream's semantics: they only scale cities that already exist, so they cannot place one near spawn. M03's measurement showed no near-spawn option is needed (D30, D53). | 04 | D21, D30 | |
 | `cityStyleThreshold` | changed | Accepted range is −1 (off) or 0 to 1, so the default is inside it. | 04 | Bug register | PROF-16 |
 | `cityStyleAlternative` | changed | Must name an existing city style whenever `cityStyleThreshold` is on; checked at load. | 04 | Bug register | PROF-12 |

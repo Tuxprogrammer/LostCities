@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
@@ -30,13 +29,8 @@ public class JitteredGridPreviewDump {
     static final int WINDOW_MAX = 512;
     static final int CELL = 64;
     static final int JITTER_INSET = 16;
-    static final int JITTER_SPAN = 32;
     static final int MIN_RADIUS = 100;
     static final int MAX_RADIUS = 256;
-
-    /** Per-cell seed multipliers: large odd numbers, unrelated to CityMap's. */
-    private static final long CELL_Z = 25214903917L * 2L + 1L;
-    private static final long CELL_X = 2685821657736338717L;
 
     /** One generated city center: chunk coordinates and radius in blocks. */
     static final class Center {
@@ -53,11 +47,8 @@ public class JitteredGridPreviewDump {
     }
 
     /**
-     * Returns the jittered-grid city centers whose 64 x 64 chunk cells lie in {@code [min, max)} on both axes. Each
-     * cell holds one center at {@code cellOrigin + 16 + r}, {@code r} uniform in {@code [0, 32)} on each axis (the
-     * middle half of the cell, so neighbors are at least 32 chunks apart), with a radius drawn as CityMap does:
-     * {@code minRadius + nextInt(maxRadius - minRadius)}. Each cell's {@link Random} is seeded from the world seed and
-     * the cell coordinates alone, so the result is deterministic and independent of the window.
+     * Returns the jittered-grid city centers whose 64 x 64 chunk cells lie in {@code [min, max)} on both axes: the
+     * main {@link CityGrid} with the preview's cell and jitter, so the preview and the game cannot drift.
      *
      * @param worldSeed the world seed
      * @param min       first chunk of the window, a multiple of 64
@@ -67,14 +58,9 @@ public class JitteredGridPreviewDump {
      */
     static List<Center> jitteredGrid(long worldSeed, int min, int max, int minRadius, int maxRadius) {
         List<Center> out = new ArrayList<>();
-        for (int cellX = Math.floorDiv(min, CELL); cellX < Math.floorDiv(max, CELL); cellX++) {
-            for (int cellZ = Math.floorDiv(min, CELL); cellZ < Math.floorDiv(max, CELL); cellZ++) {
-                Random random = new Random(worldSeed + cellZ * CELL_Z + cellX * CELL_X);
-                int x = cellX * CELL + JITTER_INSET + random.nextInt(JITTER_SPAN);
-                int z = cellZ * CELL + JITTER_INSET + random.nextInt(JITTER_SPAN);
-                int radius = minRadius + random.nextInt(Math.max(1, maxRadius - minRadius));
-                out.add(new Center(x, z, radius));
-            }
+        for (CityGrid.Center c : new CityGrid(worldSeed, CELL, JITTER_INSET, minRadius, maxRadius)
+            .centersInWindow(min, max)) {
+            out.add(new Center(c.chunkX(), c.chunkZ(), c.radius()));
         }
         return out;
     }

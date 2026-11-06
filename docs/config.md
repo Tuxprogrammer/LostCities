@@ -105,7 +105,7 @@ Ten profiles ship in the jar. Each is the defaults (`default`) with a few option
 |---|---|---|
 | `default` | Common cities, explosions | Nothing |
 | `nodamage` | No explosion damage, no ruins, no rubble | `explosionChance` 0, `miniExplosionChance` 0, `ruinChance` 0, `rubbleLayer` false |
-| `rarecities` | Cities are rare and large | `cityChance` 0.00025 (about twice the distance between cities), `cityMinRadius` 100, `cityMaxRadius` 256 (about four times the area), `ruinChance` 0, `railwaysCanEnd` true |
+| `rarecities` | Cities are rare and large | `cityPlacement` grid (64-chunk cells, jitter 16), `cityChance` 0.00025 (about twice the distance between cities), `cityMinRadius` 100, `cityMaxRadius` 256 (about four times the area), `ruinChance` 0, `railwaysCanEnd` true |
 | `onlycities` | The world is nearly all city | `cityChance` 0.2, `cityMaxRadius` 256 |
 | `tallbuildings` | Very tall buildings, heavier damage | `buildingMinFloors` 4, `buildingMaxFloors` 19, `buildingMinFloorsChance` 8, `buildingMaxFloorsChance` 15, `explosionChance` 0.006, `explosionMinHeight` 130, `explosionMaxHeight` 255, `explosionMaxRadius` 60, `miniExplosionChance` 0.09, `miniExplosionMinRadius` 3, `miniExplosionMaxRadius` 14, `miniExplosionMaxHeight` 255, `debrisToNearbyChunkFactor` 175, `ruinChance` 0.01 |
 | `safe` | No spawners, lighting, no loot | `generateSpawners` false, `generateLighting` true, `generateLoot` false |
@@ -283,6 +283,9 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | Key | Default | Range | Status | What it does |
 |---|---|---|---|---|
 | `cityChance` | `0.01` | -1 to 1 | live | Chance a chunk is a city center; negative switches to the Perlin rarity map |
+| `cityPlacement` | `chance` | chance, grid | live | How city centers are placed. `chance`: each chunk is a center with probability `cityChance` (upstream). `grid`: one center per `cityGridCell` x `cityGridCell` chunk cell, jittered, with radius drawn in `cityMinRadius` to `cityMaxRadius`; `cityChance` then only has to be 0 or above. A world pinned without this key reads `chance` |
+| `cityGridCell` | `64` | 8 to 1024 | live | Grid placement: cell edge in chunks |
+| `cityGridJitter` | `16` | 0 to 511 | live | Grid placement: chunks kept clear inside every cell edge, so centers are at least `cityGridCell` minus twice this apart; below half of `cityGridCell`, or the profile is rejected |
 | `citySpawnDistance1` | `0` | 0 to 10000000 | live | Distance from (0, 0) at which the city factor is multiplied by multiplier 1 |
 | `citySpawnDistance2` | `0` | 0 to 10000000 | live | Distance at which multiplier 2 applies; 0 disables the distance scaling. Linear in between |
 | `citySpawnMultiplier1` | `1.0` | 0 to 1 | live | City factor multiplier at and inside distance 1 |
