@@ -2,7 +2,9 @@
 
 Branch `lane/p4b-links`, based on `gtnh` at `71c54a50` (4a merged). Do not merge `gtnh` into it. Slot `p4b`, real-pack `--instance 4`.
 
-Why handed off: the session began at about 156k of a 200k context budget, so this lane landed the pure core and stopped.
+Session 2 (2026-11-06) also began near 160k context, so it landed only step 1 and handed off again; the next session should start fresh.
+
+Why handed off (session 1): the session began at about 156k of a 200k context budget, so this lane landed the pure core and stopped.
 
 ## Design
 
@@ -18,7 +20,7 @@ Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-netwo
 
 ## Left, in order
 
-1. **Wire the oracle.** In `Networks`, when the profile reads `networkLayout=links` (add it to `LayoutProfile`/`CityProfiles` the way 4a added `cityGrid`; do not touch `ProfileSnapshot`, which belongs to the floor-pitch lane), build `CityLinkGraph` with `Nodes.cityCenter(cx, cz)` returning `grid.center(cx, cz)` when `planner.centerYieldsCity(...)`. Check that `characteristics(...).isCity` never reads `infrastructure`; it did not at `71c54a50`, which avoids a cycle.
+1. ~~Wire the oracle.~~ **Done (session 2, D-p4b-4):** `NetworkSettings.links()`/`withLinks`, read from `networkLayout` in `CityProfiles`; `Networks.links()` holds the graph (nodes via `centerYieldsCity`; `characteristics` confirmed not to read `infrastructure`). Test `layout/NetworksLinkGraphTest` (real planner, flat terrain and sea). The planner-level network-walk test for "Done means" still has to be written once generation reads the graph: walk `planner.networks().highway(x, z)` chunks back to `links().hits(x, z)`.
 2. **Link highway view.** Add a `LinkHighways` class that implements the `HighwayInfo` source for links mode: STRAIGHT chunks map to the existing `Deck` on their axis; END chunks inside the city radius are skipped, and the first chunk outside gets a plaza at the city level (0013 §2). Add `Shape.DIAGONAL` and `Shape.TRANSITION` to `HighwayInfo.Piece`, with the quarter turn taken from the step directions. `xLevel`/`zLevel` must report the level on diagonals too, so buildings keep clear.
 3. **Writer.** In `worldgen/city/NetworkWriter` (981 lines; read by range), write the diagonal and transition pieces in code. Reuse the column-by-column ramp writer, which already writes per column. Fill the corner spill in the side neighbors (0015 §3).
 4. **Rails.** In `RailwayLayout`, links mode lays rail along the link paths instead of the grid. Diagonal chunks get the zig-zag. Stations hook on `bothEndsCities()`.

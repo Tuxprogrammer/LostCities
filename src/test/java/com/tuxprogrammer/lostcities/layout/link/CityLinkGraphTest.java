@@ -72,14 +72,16 @@ class CityLinkGraphTest {
                         if (o == null || ox == 0 && oz == 0) {
                             continue;
                         }
-                        long d = (long) (o[0] - self[0]) * (o[0] - self[0]) + (long) (o[1] - self[1]) * (o[1] - self[1]);
+                        long d = (long) (o[0] - self[0]) * (o[0] - self[0])
+                            + (long) (o[1] - self[1]) * (o[1] - self[1]);
                         if (d <= 160L * 160L) {
                             all.add(new long[] { d, o[0], o[1] });
                         }
                     }
                 }
-                all.sort((p, q) -> p[0] != q[0] ? Long.compare(p[0], q[0])
-                    : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
+                all.sort(
+                    (p, q) -> p[0] != q[0] ? Long.compare(p[0], q[0])
+                        : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
                 assertEquals(Math.min(3, all.size()), chosen.size());
                 for (int i = 0; i < chosen.size(); i++) {
                     CityLinkGraph.Link l = chosen.get(i);
@@ -108,7 +110,10 @@ class CityLinkGraphTest {
                         ocx = Math.floorDiv(link.bx(), 64);
                         ocz = Math.floorDiv(link.bz(), 64);
                     }
-                    assertTrue(graph.links(ocx, ocz).contains(link), link + " not seen from its far end");
+                    assertTrue(
+                        graph.links(ocx, ocz)
+                            .contains(link),
+                        link + " not seen from its far end");
                 }
             }
         }
@@ -121,10 +126,17 @@ class CityLinkGraphTest {
         List<String> a = new ArrayList<>();
         List<String> b = new ArrayList<>();
         for (int i = 0; i < 400; i++) {
-            a.add(i + ":" + forward.hits(i * 3 - 600, i * 2 - 400).size());
+            a.add(
+                i + ":"
+                    + forward.hits(i * 3 - 600, i * 2 - 400)
+                        .size());
         }
         for (int i = 399; i >= 0; i--) {
-            b.add(0, i + ":" + backward.hits(i * 3 - 600, i * 2 - 400).size());
+            b.add(
+                0,
+                i + ":"
+                    + backward.hits(i * 3 - 600, i * 2 - 400)
+                        .size());
         }
         assertEquals(a, b);
     }
@@ -143,8 +155,14 @@ class CityLinkGraphTest {
                         networkChunks++;
                     }
                     for (CityLinkGraph.Hit hit : hits) {
-                        assertEquals(x, hit.step().chunkX());
-                        assertEquals(z, hit.step().chunkZ());
+                        assertEquals(
+                            x,
+                            hit.step()
+                                .chunkX());
+                        assertEquals(
+                            z,
+                            hit.step()
+                                .chunkZ());
                         links.add(hit.link());
                     }
                 }
@@ -157,10 +175,22 @@ class CityLinkGraphTest {
                 assertTrue(link.bothEndsCities());
                 // Walking the link from any chunk reaches both ends through chunks that report the link.
                 List<LinkRaster.Step> path = link.path();
-                assertEquals(link.ax(), path.get(0).chunkX());
-                assertEquals(link.az(), path.get(0).chunkZ());
-                assertEquals(link.bx(), path.get(path.size() - 1).chunkX());
-                assertEquals(link.bz(), path.get(path.size() - 1).chunkZ());
+                assertEquals(
+                    link.ax(),
+                    path.get(0)
+                        .chunkX());
+                assertEquals(
+                    link.az(),
+                    path.get(0)
+                        .chunkZ());
+                assertEquals(
+                    link.bx(),
+                    path.get(path.size() - 1)
+                        .chunkX());
+                assertEquals(
+                    link.bz(),
+                    path.get(path.size() - 1)
+                        .chunkZ());
                 for (int i = 0; i < path.size(); i++) {
                     LinkRaster.Step s = path.get(i);
                     boolean found = false;

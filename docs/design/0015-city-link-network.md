@@ -14,6 +14,7 @@ In 0.1.1 a `rarecities` highway or railway may stop in the open: the M06 planner
 ### 1. Graph
 
 - **Nodes.** The grid centers that yield a city: `LayoutPlanner.centerYieldsCity` (the filtered mask; fixes the 0.1.1 known issue). Predefined cities are not nodes yet.
+- **Wiring.** `Networks` builds the graph when `NetworkSettings.links()` is on (the profile reads `networkLayout=links`) and cities are grid-placed; otherwise `Networks.links()` is `null`. Its `Nodes.cityCenter` is `CityGrid.center` filtered by `centerYieldsCity`, whose `characteristics(...).isCity` never reads the infrastructure view, so the graph does not depend on the networks it drives (D-p4b-4).
 - **Edges.** Each node chooses its 3 nearest nodes within 160 chunks (Euclidean, ties to the lower chunk X, then Z). A link exists when either end chose the other (symmetric union). Ends are stored lower end first.
 - **Queries** (`layout/link/CityLinkGraph`). A link through a chunk has both ends within 160 chunks of it, so they lie within `reach = ceil(160 / cell) + 1` cells (4 for `rarecities`). Per-cell LRU caches hold each cell's node, each node's chosen links and each cell's chunk index (chunk to link pieces). A cell index is built from the chosen links of the (2·reach+1)² cells around it; no per-chunk hash scan. The node oracle reads terrain oracles only, so the graph never loads a chunk and answers the same in any order.
 

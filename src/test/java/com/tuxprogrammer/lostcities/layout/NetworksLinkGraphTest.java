@@ -32,14 +32,20 @@ public class NetworksLinkGraphTest {
 
     @Test
     public void legacyLayoutBuildsNoGraph() {
-        assertNull(planner(true, false, LayoutFixtures.flatTerrain()).networks().links());
-        assertNull(planner(false, true, LayoutFixtures.flatTerrain()).networks().links(), "chance placement");
+        assertNull(
+            planner(true, false, LayoutFixtures.flatTerrain()).networks()
+                .links());
+        assertNull(
+            planner(false, true, LayoutFixtures.flatTerrain()).networks()
+                .links(),
+            "chance placement");
     }
 
     @Test
     public void linkEndsAreCentersThatYieldCities() {
         LayoutPlanner planner = planner(true, true, LayoutFixtures.flatTerrain());
-        CityLinkGraph graph = planner.networks().links();
+        CityLinkGraph graph = planner.networks()
+            .links();
         assertNotNull(graph);
         int links = 0;
         for (int cx = -3; cx <= 3; cx++) {
@@ -57,8 +63,13 @@ public class NetworksLinkGraphTest {
     @Test
     public void seaYieldsNoNodes() {
         LayoutPlanner sea = planner(true, true, new LayoutFixtures.FakeTerrain((x, z) -> 40));
-        CityLinkGraph graph = sea.networks().links();
+        CityLinkGraph graph = sea.networks()
+            .links();
         assertNotNull(graph);
-        assertFalse(graph.links(0, 0).iterator().hasNext(), "no city, no link");
+        assertFalse(
+            graph.links(0, 0)
+                .iterator()
+                .hasNext(),
+            "no city, no link");
     }
 }

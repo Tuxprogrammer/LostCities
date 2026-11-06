@@ -61,9 +61,18 @@ public class CityGridTest {
         assertEquals(256, preview.size());
         assertEquals(main.size(), preview.size());
         for (int i = 0; i < main.size(); i++) {
-            assertEquals(main.get(i).chunkX(), preview.get(i).chunkX);
-            assertEquals(main.get(i).chunkZ(), preview.get(i).chunkZ);
-            assertEquals(main.get(i).radius(), preview.get(i).radius);
+            assertEquals(
+                main.get(i)
+                    .chunkX(),
+                preview.get(i).chunkX);
+            assertEquals(
+                main.get(i)
+                    .chunkZ(),
+                preview.get(i).chunkZ);
+            assertEquals(
+                main.get(i)
+                    .radius(),
+                preview.get(i).radius);
         }
     }
 
@@ -145,11 +154,8 @@ public class CityGridTest {
             .cityGrid(64, 16)
             .cityShape(true, true)
             .build();
-        LayoutPlanner sea = LayoutFixtures.planner(
-            SEED,
-            ocean,
-            new LayoutFixtures.FakeTerrain((x, z) -> 40),
-            StructureOracle.NONE);
+        LayoutPlanner sea = LayoutFixtures
+            .planner(SEED, ocean, new LayoutFixtures.FakeTerrain((x, z) -> 40), StructureOracle.NONE);
         assertFalse(sea.centerYieldsCity(c.chunkX(), c.chunkZ()), "below the height window");
     }
 
@@ -182,10 +188,11 @@ public class CityGridTest {
                 .getString("cityPlacement");
             assertEquals("rarecities".equals(name) ? "grid" : "chance", placement, name);
         }
-        LayoutProfile rare = CityProfiles
-            .layoutProfile(TerrainSettings.defaults(), BuiltinProfiles.get("rarecities").values());
+        LayoutProfile rare = CityProfiles.layoutProfile(
+            TerrainSettings.defaults(),
+            BuiltinProfiles.get("rarecities")
+                .values());
         assertEquals(64, rare.cityGridCell);
         assertEquals(16, rare.cityGridJitter);
     }
 }
-

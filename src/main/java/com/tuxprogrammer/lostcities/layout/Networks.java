@@ -1,6 +1,5 @@
 package com.tuxprogrammer.lostcities.layout;
 
-import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.highway.CityPotential;
@@ -9,6 +8,7 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayObstacles;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
+import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayInputs;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayLayout;

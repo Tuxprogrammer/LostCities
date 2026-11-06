@@ -92,10 +92,12 @@ final class CityMap {
             ? new CityRarityMap(seed, profile.cityPerlinScale, profile.cityPerlinOffset, profile.cityPerlinInnerScale)
             : null;
         this.searchRadius = (profile.cityMaxRadius + 15) / CHUNK;
-        this.grid = profile.cityGridCell > 0 && profile.cityChance >= 0
-            ? new CityGrid(seed, profile.cityGridCell, profile.cityGridJitter, profile.cityMinRadius,
-                profile.cityMaxRadius)
-            : null;
+        this.grid = profile.cityGridCell > 0 && profile.cityChance >= 0 ? new CityGrid(
+            seed,
+            profile.cityGridCell,
+            profile.cityGridJitter,
+            profile.cityMinRadius,
+            profile.cityMaxRadius) : null;
         this.factors = new ChunkCache<>(cacheSize);
         this.styles = new ChunkCache<>(cacheSize);
         this.bases = new ChunkCache<>(Math.min(cacheSize, BASE_CACHE));

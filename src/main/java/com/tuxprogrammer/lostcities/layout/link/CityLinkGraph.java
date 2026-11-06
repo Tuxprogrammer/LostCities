@@ -273,8 +273,10 @@ public final class CityLinkGraph {
                 }
             }
         }
-        out.sort((p, q) -> p.ax != q.ax ? Integer.compare(p.ax, q.ax) : p.az != q.az ? Integer.compare(p.az, q.az)
-            : p.bx != q.bx ? Integer.compare(p.bx, q.bx) : Integer.compare(p.bz, q.bz));
+        out.sort(
+            (p, q) -> p.ax != q.ax ? Integer.compare(p.ax, q.ax)
+                : p.az != q.az ? Integer.compare(p.az, q.az)
+                    : p.bx != q.bx ? Integer.compare(p.bx, q.bx) : Integer.compare(p.bz, q.bz));
         return out;
     }
 
@@ -313,8 +315,10 @@ public final class CityLinkGraph {
                 }
             }
         }
-        all.sort((p, q) -> p.ax != q.ax ? Integer.compare(p.ax, q.ax) : p.az != q.az ? Integer.compare(p.az, q.az)
-            : p.bx != q.bx ? Integer.compare(p.bx, q.bx) : Integer.compare(p.bz, q.bz));
+        all.sort(
+            (p, q) -> p.ax != q.ax ? Integer.compare(p.ax, q.ax)
+                : p.az != q.az ? Integer.compare(p.az, q.az)
+                    : p.bx != q.bx ? Integer.compare(p.bx, q.bx) : Integer.compare(p.bz, q.bz));
         Map<Long, List<Hit>> index = new LinkedHashMap<>();
         for (Link link : all) {
             List<LinkRaster.Step> path = link.path();

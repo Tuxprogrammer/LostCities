@@ -87,9 +87,21 @@ class LinkRasterTest {
     void transitionsSitBetweenStraightAndDiagonal() {
         List<LinkRaster.Step> path = LinkRaster.rasterize(0, 0, 40, 10);
         // 30 straight moves split 15 and 15 around 10 diagonal moves.
-        assertEquals(LinkRaster.Kind.TRANSITION, path.get(15).kind());
-        assertEquals(LinkRaster.Kind.DIAGONAL, path.get(16).kind());
-        assertEquals(LinkRaster.Kind.TRANSITION, path.get(25).kind());
-        assertEquals(LinkRaster.Kind.STRAIGHT, path.get(26).kind());
+        assertEquals(
+            LinkRaster.Kind.TRANSITION,
+            path.get(15)
+                .kind());
+        assertEquals(
+            LinkRaster.Kind.DIAGONAL,
+            path.get(16)
+                .kind());
+        assertEquals(
+            LinkRaster.Kind.TRANSITION,
+            path.get(25)
+                .kind());
+        assertEquals(
+            LinkRaster.Kind.STRAIGHT,
+            path.get(26)
+                .kind());
     }
 }
