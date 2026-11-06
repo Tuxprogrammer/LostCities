@@ -42,6 +42,23 @@ public class CityShapeTest {
     }
 
     @Test
+    public void shallowSeaFloorInANonOceanBiomeIsNotCityWhenAvoidingOcean() {
+        // Y 58 passes the min-height window but is under RWG's sea level (63); the biome oracle says land.
+        LayoutFixtures.FakeTerrain shelf = new LayoutFixtures.FakeTerrain((x, z) -> x >= 3 ? 58 : 70);
+        LayoutProfile avoiding = LayoutProfile.builder()
+            .cityChance(0)
+            .cityShape(true, false)
+            .build();
+        LayoutProfile ignoring = LayoutProfile.builder()
+            .cityChance(0)
+            .cityShape(false, false)
+            .build();
+        assertTrue(planner(avoiding, shelf).characteristics(2, 0).isCity);
+        assertFalse(planner(avoiding, shelf).characteristics(4, 0).isCity, "under water");
+        assertTrue(planner(ignoring, shelf).characteristics(4, 0).isCity);
+    }
+
+    @Test
     public void withoutTheRuleTheCutOffChunkStaysCity() {
         LayoutProfile profile = LayoutProfile.builder()
             .cityChance(0)

@@ -227,8 +227,11 @@ final class CityMap {
             if (height < profile.cityMinHeight || height > profile.cityMaxHeight) {
                 return 0;
             }
-            if (profile.cityAvoidOcean && terrain.isOcean(chunkX, chunkZ)) {
+            if (profile.cityAvoidOcean && (terrain.isOcean(chunkX, chunkZ)
+                || profile.seaLevel == -1 && height < LayoutProfile.RWG_SEA_LEVEL)) {
                 // Deviation (cityAvoidOcean): no city on the sea floor, where only borders and walls would stand.
+                // The height test also catches shallow water in biomes the oracle does not tag as ocean; a profile
+                // with its own seaLevel (a drowned city) is left alone.
                 return 0;
             }
             if (risesTooHigh(chunkX, chunkZ, height)) {
