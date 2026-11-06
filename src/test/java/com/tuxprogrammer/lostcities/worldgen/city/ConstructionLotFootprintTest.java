@@ -111,26 +111,44 @@ public class ConstructionLotFootprintTest {
     public void aMultiChunkPitIsDugAcrossItsInnerBorders() {
         LayoutCityPlan source = real();
         LayoutPlanner planner = source.planner();
+        int span = 64;
         int checked = 0;
-        for (int x = -R; x <= R && checked < 3; x++) {
-            for (int z = -R; z <= R && checked < 3; z++) {
+        for (int x = -span; x <= span && checked < 3; x++) {
+            for (int z = -span; z <= span && checked < 3; z++) {
                 ChunkPlan p = planner.plan(x, z);
                 MultiPos pos = p.lotFootprint();
-                if (!p.lot()
-                    .isDug() || pos.isSingle() || pos.width() < 2 || pos.x() != 0 || p.lotDepth() == 0) {
+                if (p.lot() != LotKind.PIT || pos.isSingle() || p.lotDepth() == 0) {
+                    continue;
+                }
+                boolean alongX = pos.width() >= 2 && pos.x() == 0;
+                boolean alongZ = pos.height() >= 2 && pos.z() == 0;
+                if (!alongX && !alongZ) {
                     continue;
                 }
                 checked++;
                 int ground = p.cityGroundLevel();
-                ArrayChunkBuffer left = CityFixtures.generate(source, x, z);
-                ArrayChunkBuffer right = CityFixtures.generate(source, x + 1, z);
-                for (int lz = EdgeLots.RIM + (pos.z() == 0 ? 0 : -EdgeLots.RIM); lz < 16 - EdgeLots.RIM; lz++) {
-                    assertTrue(left.get(15, ground, lz).isAir(), "seam west of " + (x + 1) + "," + z + " at " + lz);
-                    assertTrue(right.get(0, ground, lz).isAir(), "seam east of " + x + "," + z + " at " + lz);
+                ArrayChunkBuffer near = CityFixtures.generate(source, x, z);
+                ArrayChunkBuffer far = CityFixtures.generate(source, alongX ? x + 1 : x, alongX ? z : z + 1);
+                // The seam's columns inside the pit, in the footprint's other axis.
+                int otherOffset = (alongX ? pos.z() : pos.x()) * 16;
+                int otherSize = (alongX ? pos.height() : pos.width()) * 16;
+                for (int i = 0; i < 16; i++) {
+                    int f = otherOffset + i;
+                    if (f < EdgeLots.RIM || f >= otherSize - EdgeLots.RIM) {
+                        continue;
+                    }
+                    String where = " of the seam after " + x + "," + z + " at " + i;
+                    if (alongX) {
+                        assertTrue(near.get(15, ground, i).isAir(), "near side" + where);
+                        assertTrue(far.get(0, ground, i).isAir(), "far side" + where);
+                    } else {
+                        assertTrue(near.get(i, ground, 15).isAir(), "near side" + where);
+                        assertTrue(far.get(i, ground, 0).isAir(), "far side" + where);
+                    }
                 }
             }
         }
-        assertTrue(checked > 0, "the test world has a lot two chunks wide");
+        assertTrue(checked > 0, "the test world has a pit of more than one chunk");
     }
 
     @Test
