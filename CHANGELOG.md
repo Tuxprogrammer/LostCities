@@ -2,6 +2,13 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
+## Unreleased
+
+### Fixed
+
+- Blocked street doors: snow from RWG's snow pass and tree crowns from the park beside a building no longer land in the two blocks in front of a door. Doors were 94 % open on RWG2 Continents seed 1 and 6 % open on a snowy classic RWG seed; both are 100 % now.
+- Other mods' trees beside a cabin or building, and GregTech's stone boulders, no longer write into the footprint. The boulder generator runs after every other generator, so a late mixin on it (when GregTech is loaded) now brackets it with the footprint guard.
+
 ## 0.1.0-beta (2026-11-02)
 
 The first build for playtesting: the whole mod, unpolished, for GT New Horizons 2.9.0. Install the same jar on the server and every client, and use a new world ([README](README.md#installing)).
@@ -48,7 +55,7 @@ Upstream bugs this port does not have are listed with their tests in [docs/origi
 
 - No monorails yet (deferred, D12). Highway ramps' slab half-steps contrast with the road surface, so ramps look striped; a rail can have a gap where a junction sits under a shallow landmark.
 - A village lane can rise two blocks where it crosses a chunk border.
-- On some seeds a highway has steps taller than half a block or without ground, a railway has a broken track, or a few doors are blocked (found by the three-seed checks on seeds 1 and 777; seed 4242 passes every scenario).
+- On some seeds a highway has steps taller than half a block or without ground, or a railway has a broken track (found by the three-seed checks on seeds 1 and 777; seed 4242 passes every scenario).
 - Where an AE2 meteorite's crater cuts city ground, the city ends at the pit's edge with no slope.
 - Other mods' trees beside a cabin can lean over it; a GregTech boulder can cut into a building.
 - On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region.
