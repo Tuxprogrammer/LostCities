@@ -98,6 +98,11 @@ public final class CityStyle {
         public String path() {
             return group.isEmpty() ? key : group + "." + key;
         }
+
+        /** Returns whether the setting names a palette character, read with {@link CityStyle#character}. */
+        public boolean isCharacter() {
+            return kind == Kind.CHARACTER;
+        }
     }
 
     /** The nine selector lists of a city style, with the asset type each names. */

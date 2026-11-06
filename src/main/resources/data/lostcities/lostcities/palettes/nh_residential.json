@@ -5,7 +5,7 @@
       "block": "minecraft:air"
     },
     {
-      "char": "B",
+      "char": "d",
       "block": "minecraft:bricks",
       "damaged": "minecraft:iron_bars"
     },
@@ -31,7 +31,7 @@
       "damaged": "minecraft:iron_bars"
     },
     {
-      "char": "S",
+      "char": "s",
       "block": "minecraft:stone_bricks",
       "damaged": "minecraft:iron_bars"
     },
@@ -48,7 +48,7 @@
       "block": "minecraft:glass_pane"
     },
     {
-      "char": "+",
+      "char": "t",
       "block": "minecraft:glass"
     },
     {
@@ -89,11 +89,11 @@
       "block": "minecraft:water"
     },
     {
-      "char": "y",
+      "char": "u",
       "block": "minecraft:farmland:7"
     },
     {
-      "char": "w",
+      "char": "A",
       "block": "minecraft:wheat:7"
     },
     {
@@ -137,7 +137,7 @@
       "block": "minecraft:spruce_stairs[facing=east,half=bottom]"
     },
     {
-      "char": "x",
+      "char": "D",
       "block": "minecraft:spruce_stairs[facing=west,half=bottom]"
     },
     {
@@ -145,7 +145,7 @@
       "block": "minecraft:brick_stairs[facing=north,half=bottom]"
     },
     {
-      "char": "Z",
+      "char": "E",
       "block": "minecraft:brick_stairs[facing=south,half=bottom]"
     },
     {
@@ -214,7 +214,7 @@
       "block": "minecraft:carpet:12"
     },
     {
-      "char": "9",
+      "char": "I",
       "block": "minecraft:carpet:15"
     },
     {
