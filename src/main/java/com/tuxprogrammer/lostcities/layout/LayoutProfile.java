@@ -105,6 +105,10 @@ public final class LayoutProfile {
      * building class (city-realism phase 3); false is the single-chunk lots of worlds pinned before the option.
      */
     public final boolean lotFootprints;
+     * {@code cityHighwayLayout}: a link-network city's own highway, a beltway or a cut-through (design record 0017);
+     * {@link CityHighwayLayout#NONE} in worlds pinned before the option.
+     */
+    public final CityHighwayLayout cityHighwayLayout;
     /** {@code citySpawnDistance1}, blocks from (0, 0). */
     public final int citySpawnDistance1;
     /** {@code citySpawnDistance2}, blocks from (0, 0); 0 disables the spawn multipliers. */
@@ -222,6 +226,7 @@ public final class LayoutProfile {
         facadeContrast = b.facadeContrast;
         densityRings = b.densityRings;
         lotFootprints = b.lotFootprints;
+        cityHighwayLayout = b.cityHighwayLayout;
         citySpawnDistance1 = b.citySpawnDistance1;
         citySpawnDistance2 = b.citySpawnDistance2;
         citySpawnMultiplier1 = b.citySpawnMultiplier1;
@@ -404,6 +409,7 @@ public final class LayoutProfile {
         private float facadeContrast = 45f;
         private float densityRings = 0f;
         private boolean lotFootprints = false;
+        private CityHighwayLayout cityHighwayLayout = CityHighwayLayout.NONE;
         private int citySpawnDistance1 = 0;
         private int citySpawnDistance2 = 0;
         private double citySpawnMultiplier1 = 1.0;
@@ -536,6 +542,12 @@ public final class LayoutProfile {
         /** @param real {@code lotFootprints}: construction lots at real sizes @return this builder */
         public Builder lotFootprints(boolean real) {
             lotFootprints = real;
+            return this;
+        }
+
+        /** @param layout {@code cityHighwayLayout} (0017) @return this builder */
+        public Builder cityHighwayLayout(CityHighwayLayout layout) {
+            cityHighwayLayout = layout == null ? CityHighwayLayout.NONE : layout;
             return this;
         }
 

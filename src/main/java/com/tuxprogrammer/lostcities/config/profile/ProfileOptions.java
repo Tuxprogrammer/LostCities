@@ -537,6 +537,21 @@ public final class ProfileOptions {
                 "03-terrain",
                 false,
                 null));
+        // New worlds get "random"; worlds pinned before the key existed have no city highway (D282, 0017). Only
+        // networkLayout=links reads it.
+        add(
+            new ProfileOption(
+                "cityHighwayLayout",
+                Category.LOSTCITY,
+                Type.STRING,
+                "random",
+                null,
+                null,
+                java.util.Arrays.asList("none", "beltway", "cutthrough", "random"),
+                Status.LIVE,
+                "06-highways-railways",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -593,6 +608,7 @@ public final class ProfileOptions {
         legacyDefault("lotFootprints", "false");
         // Worlds pinned before the furnish pass keep their empty rooms (design record 0016).
         legacyDefault("furnish", "false");
+        legacyDefault("cityHighwayLayout", "none");
     }
 
     /**

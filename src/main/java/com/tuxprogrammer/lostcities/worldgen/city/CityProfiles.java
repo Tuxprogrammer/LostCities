@@ -7,6 +7,7 @@ import com.tuxprogrammer.lostcities.config.profile.ProfileValidator;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
 import com.tuxprogrammer.lostcities.core.Module;
 import com.tuxprogrammer.lostcities.core.ModuleState;
+import com.tuxprogrammer.lostcities.layout.CityHighwayLayout;
 import com.tuxprogrammer.lostcities.layout.LayoutProfile;
 import com.tuxprogrammer.lostcities.layout.MultiBuildingStreetConflict;
 import com.tuxprogrammer.lostcities.layout.NetworkSettings;
@@ -63,6 +64,7 @@ public final class CityProfiles {
             .floorPitch(settings.floorPitch())
             .densityRings(settings.densityRings())
             .lotFootprints(settings.lotFootprints())
+            .cityHighwayLayout(CityHighwayLayout.parse(settings.cityHighwayLayout()))
             .cityShape(settings.cityAvoidOcean(), settings.cityConnected())
             .character(settings.cityTaper(), settings.edgeLotChance(), settings.facadeContrast())
             .averageHeightmap(values.getBoolean("useAvgHeightmap"), settings.heightSampleSize())
