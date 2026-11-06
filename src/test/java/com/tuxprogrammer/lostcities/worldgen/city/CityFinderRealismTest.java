@@ -114,7 +114,7 @@ public class CityFinderRealismTest {
         double dz = found.viewZ() - (found.z() + 0.5);
         assertEquals(CityFinder.HOUSE_BACK, Math.abs(dx) + Math.abs(dz), 0.001, "one chunk out on the door side");
         assertEquals(
-            Math.round(CityFinder.yawToward(found.viewX(), found.viewZ(), found.x(), found.z())),
+            CityFinder.yawToward(found.viewX(), found.viewZ(), found.x(), found.z()),
             found.yaw(),
             0.01f,
             "looks at the house");
