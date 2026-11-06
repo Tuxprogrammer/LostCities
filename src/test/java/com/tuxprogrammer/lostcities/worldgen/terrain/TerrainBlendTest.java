@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.TestTerrain;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBufferDigest;
@@ -76,7 +77,7 @@ public class TerrainBlendTest {
         // plan (a shore chunk) says 70 and the city's corners would pull it up.
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                ColumnOps.clearRange(buffer, x, z, 56, 120, false, 0, com.tuxprogrammer.lostcities.worldgen.buffer.BlockRef.AIR);
+                ColumnOps.clearRange(buffer, x, z, 56, 120, false, 0, BlockRef.AIR);
             }
         }
         String before = ChunkBufferDigest.text(buffer);
