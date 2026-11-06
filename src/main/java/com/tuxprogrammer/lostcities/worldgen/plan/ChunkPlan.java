@@ -220,14 +220,18 @@ public final class ChunkPlan {
     }
 
     /**
-     * Returns the Y of the building's lowest level: {@code groundY − floorPitch × cellars}. The layout keeps it at or above
+     * Returns the Y of the building's lowest level: {@code groundY − floorPitch × cellars}. The layout keeps it at or
+     * above
      * {@link WorldLimits#BUILDING_BOTTOM_MIN}, dropping cellars one at a time (TERR-31).
      */
     public int buildingBottom() {
         return groundY - floorPitch * cellars;
     }
 
-    /** Returns upstream's {@code getMaxHeight}: the building's top, {@code groundY + floorPitch × floors}, or the ground. */
+    /**
+     * Returns upstream's {@code getMaxHeight}: the building's top, {@code groundY + floorPitch × floors}, or the
+     * ground.
+     */
     public int maxHeight() {
         return building ? groundY + floorPitch * floors : groundY;
     }

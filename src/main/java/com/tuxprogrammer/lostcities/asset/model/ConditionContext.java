@@ -77,7 +77,8 @@ public final class ConditionContext {
     }
 
     /**
-     * Returns the floor a block is on at a floor pitch (0014): 0 for the {@code pitch} blocks from the ground up, −1 for
+     * Returns the floor a block is on at a floor pitch (0014): 0 for the {@code pitch} blocks from the ground up, −1
+     * for
      * the {@code pitch} below, and so on.
      *
      * @param y           the block's Y

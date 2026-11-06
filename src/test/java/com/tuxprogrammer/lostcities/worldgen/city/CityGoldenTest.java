@@ -74,7 +74,10 @@ public class CityGoldenTest {
             return chunk.hasBuilding() && chunk.floors() >= 3 && chunk.cellars() >= 1 && chunk.ruinHeight() < 0;
         });
         assertNotNull(at, "city_building_p8 near the origin");
-        assertEquals(8, planner.plan(at[0], at[1]).floorPitch());
+        assertEquals(
+            8,
+            planner.plan(at[0], at[1])
+                .floorPitch());
         GoldenChunks.assertMatches("city_building_p8", CityFixtures.generate(plan, at[0], at[1]));
     }
 

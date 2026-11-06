@@ -356,8 +356,7 @@ public final class CityChunkWriter {
     private void corridorConnections() {
         int groundLevel = context.settings()
             .groundLevel();
-        int drop = CorridorSteps
-            .drop(groundLevel, plan.buildingBottomHeight(), plan.floorPitch(), plan.cellars());
+        int drop = CorridorSteps.drop(groundLevel, plan.buildingBottomHeight(), plan.floorPitch(), plan.cellars());
         int top = groundLevel + CorridorSteps.OPENING_TOP;
         for (Direction side : Direction.values()) {
             int nx = chunkX + side.stepX();
