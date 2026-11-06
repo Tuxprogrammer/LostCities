@@ -1992,7 +1992,22 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         }
         int adjacent = localFloor + plan.cityLevel() - other.cityLevel();
         return other.isCity && !other.hasBuilding && localFloor == 0 && adjacent == 0
-            || other.hasBuilding && adjacent == other.floors;
+            || other.hasBuilding && adjacent == other.floors && roofMeetsFloor(plan, other, localFloor);
+    }
+
+    /**
+     * Whether a neighbor's roof stands at the door's floor. At the legacy pitch the city levels give that by
+     * construction; at a taller pitch the floors stretch and the roof does not, so a roof {@code floors * (pitch - 6)}
+     * above the level the layout counts would leave the door opening onto the neighbor's wall (walkability lane,
+     * decision log D375).
+     */
+    private static boolean roofMeetsFloor(ChunkPlan plan, ChunkPlan other, int localFloor) {
+        if (plan.floorPitch() == ChunkPlan.LEGACY_FLOOR_PITCH && other.floorPitch() == ChunkPlan.LEGACY_FLOOR_PITCH) {
+            return true;
+        }
+        int floorY = plan.cityGroundLevel() + localFloor * plan.floorPitch();
+        int roofY = other.cityGroundLevel() + other.floors * other.floorPitch();
+        return floorY == roofY;
     }
 
     private boolean dontConnect(String part) {

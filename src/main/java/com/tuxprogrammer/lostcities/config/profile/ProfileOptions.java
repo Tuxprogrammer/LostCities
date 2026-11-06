@@ -566,6 +566,21 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds keep door steps open past a station's walls and on a lower roof; pinned worlds do not (D282,
+        // D376).
+        add(
+            new ProfileOption(
+                "doorStepsOpen",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "04-city-layout",
+                false,
+                null));
         // New worlds get room-fitting loot and spawners; pinned worlds keep the parts' placement (D282, 0016).
         add(
             new ProfileOption(
@@ -682,6 +697,7 @@ public final class ProfileOptions {
         legacyDefault("furnish", "false");
         legacyDefault("cityHighwayLayout", "none");
         legacyDefault("cityDistricts", "false");
+        legacyDefault("doorStepsOpen", "false");
         legacyDefault("roomRules", "false");
         legacyDefault("railwayCoreEnds", "false");
         legacyDefault("highwayRampHolds", "false");

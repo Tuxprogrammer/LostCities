@@ -178,11 +178,54 @@ public final class CityChunkWriter {
      * doorway (deviation, decision log M05J rows: upstream let them, so a door into a raised park opened onto a block).
      */
     private void clearDoorSteps() {
+        clearDoorSteps(planner, chunkX, chunkZ, plan.cityGroundLevel(), target);
+    }
+
+    /**
+     * Keeps the {@value #DOOR_STEP} blocks in front of a neighbor's door open on this building's roof, where that door
+     * opens onto it (a lower building beside a taller one): the roof's parapet or rooftop part would stand in the
+     * doorway otherwise (walkability lane, decision log D376).
+     *
+     * @param roofY the height of the roof part's floor row
+     */
+    private void clearRoofDoorSteps(int roofY) {
+        for (Direction side : Direction.values()) {
+            ChunkPlan other = planner.plan(chunkX + side.stepX(), chunkZ + side.stepZ());
+            if (!other.hasBuilding()) {
+                continue;
+            }
+            int floor = plan.floors() - other.cityLevel() + plan.cityLevel();
+            if (floor < 0 || floor >= other.floors()
+                || planner.doorway(other.chunkX(), other.chunkZ(), floor, side.opposite()) != Doorway.DOOR) {
+                continue;
+            }
+            for (int d = 0; d < DOOR_STEP; d++) {
+                for (int along = 7; along <= 8; along++) {
+                    int[] column = vegetationColumn(side, d, along);
+                    for (int y = roofY + 1; y <= roofY + 2; y++) {
+                        target.set(column[0], y, column[1], BlockRef.AIR);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Opens the {@value #DOOR_STEP} blocks in front of every street door of the buildings around a chunk, at the
+     * door's height. The street writer runs it last of its own steps and the network writer after its parts, since a
+     * station's wall or platform edge stood in a doorway (walkability lane, decision log D376).
+     *
+     * @param planner the layout planner
+     * @param chunkX  the street chunk's X
+     * @param chunkZ  the street chunk's Z
+     * @param ground  the street's ground level
+     * @param target  where the blocks go
+     */
+    static void clearDoorSteps(LayoutPlanner planner, int chunkX, int chunkZ, int ground, CityTarget target) {
         boolean[] approach = doorApproaches(planner, chunkX, chunkZ);
         if (approach == null) {
             return;
         }
-        int ground = plan.cityGroundLevel();
         for (Direction side : Direction.values()) {
             for (int d = 0; d < DOOR_STEP; d++) {
                 for (int along = 7; along <= 8; along++) {
@@ -244,6 +287,10 @@ public final class CityChunkWriter {
         // Upstream commits the chunk before the overlays; writes here are direct, so they simply come last.
         for (PartWriter.Placement overlay : overlays) {
             writer.place(overlay);
+        }
+        if (context.settings()
+            .doorStepsOpen()) {
+            clearRoofDoorSteps(lowest + plan.floorPitch() * (cellars + floors));
         }
         if (context.settings()
             .furnish()) {
