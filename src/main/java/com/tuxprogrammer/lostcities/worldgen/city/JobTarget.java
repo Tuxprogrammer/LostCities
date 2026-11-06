@@ -204,7 +204,12 @@ public final class JobTarget implements CityTarget {
         }
         String category = "";
         boolean stays = !facts.roomRules || roomAllows(x, y, z, placement, true);
-        if (stays && !facts.noLoot && facts.generateLoot) {
+        if (!stays) {
+            // The terrain phase wrote the chest block; the population phase takes it out again (0016, decision 11).
+            jobs.add(PopulationJob.of(PopulationJob.Kind.CLEAR_CHEST, x, y, z, ""));
+            return;
+        }
+        if (!facts.noLoot && facts.generateLoot) {
             Random random = positionRandom(x, y, z);
             if (random.nextFloat() >= facts.chestWithoutLootChance) {
                 String value = info.loot()

@@ -90,6 +90,7 @@ public final class PopulationPhase {
             switch (job.kind()) {
                 case TORCH -> done += torch(job, x, z) ? 1 : 0;
                 case CHEST -> done += chest(job, x, z, random) ? 1 : 0;
+                case CLEAR_CHEST -> done += clearChest(job, x, z) ? 1 : 0;
                 case SPAWNER -> done += spawner(job, x, z) ? 1 : 0;
                 case COMMAND_BLOCK -> done += commandBlock(job, x, z) ? 1 : 0;
                 case TILE_ENTITY -> done += tileEntity(job, x, z) ? 1 : 0;
@@ -130,6 +131,14 @@ public final class PopulationPhase {
         }
         fill(tile, job.argument(), random, x, z);
         return true;
+    }
+
+    /** Removes a chest the room rules did not keep; a block that is no container any more (a ruin) is left alone. */
+    private boolean clearChest(PopulationJob job, int x, int z) {
+        if (world.isAirBlock(x, job.y(), z) || !(tileAt(x, job.y(), z) instanceof IInventory)) {
+            return false;
+        }
+        return world.setBlock(x, job.y(), z, Blocks.air, 0, SEND_TO_CLIENTS);
     }
 
     /** Fills a chest with a loot category's contents (see the comment on the scratch inventory). */

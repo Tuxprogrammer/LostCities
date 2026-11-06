@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.BlockBush;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
@@ -98,6 +100,9 @@ public final class PackHouses {
         new Kind("witchery.apothecary", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageApothecary", null),
         new Kind("witchery.bookshop", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageBookShop", null),
         new Kind("witchery.hut", "witchery", "com.emoniph.witchery.worldgen.ComponentVillageWitchHut", null) };
+
+    /** Keeps the world-random seed apart from the piece's own random, which {@code pieceSeed} also seeds. */
+    static final long WORLD_RAND_SALT = 0x5DEECE66DL;
 
     private static List<Usable> usable;
 
@@ -317,12 +322,51 @@ public final class PackHouses {
             (chunkX << 4) + 15,
             255,
             (chunkZ << 4) + 15);
+        // Forestry's bee house plants its flower garden and picks its bees from world.rand
+        // (ComponentVillageBeeHouse.java
+        // 292, 302, 351, 382, 402, 405 at 4.11.40), which is unseeded noise in a village, so a regenerated chunk would
+        // differ. World.rand is swapped for a Random seeded from the piece seed for the build and put back after it.
+        // A private Random is swapped in, not the shared one reseeded, so no other draw can shift the sequence.
+        Random shared = world.rand;
+        Random own = new Random();
+        reseed(own, pieceSeed);
+        world.rand = own;
         try {
             piece.addComponentParts(world, random, chunkBox);
         } catch (RuntimeException e) {
             LostCities.LOG.warn("Pack house {} failed at chunk ({}, {})", use.kind.id, chunkX, chunkZ, e);
             return null;
+        } finally {
+            world.rand = shared;
+        }
+        if (use.kind.id.equals("forestry.beehouse")) {
+            clearGarden(world, piece.getBoundingBox(), chunkBox);
         }
         return use.kind.id;
+    }
+
+    /**
+     * Removes the plants Forestry's flower garden put in the house's box. The garden plants a flower only where
+     * {@code Block.canBlockStay} says so, which reads the light there, and that is not the same on every generation of
+     * one chunk (checked: with {@code world.rand} swapped for a seeded Random the flowers still differed between fresh
+     * runs); a bare garden is the same every time.
+     */
+    private static void clearGarden(World world, StructureBoundingBox box, StructureBoundingBox chunkBox) {
+        for (int x = Math.max(box.minX, chunkBox.minX); x <= Math.min(box.maxX, chunkBox.maxX); x++) {
+            for (int z = Math.max(box.minZ, chunkBox.minZ); z <= Math.min(box.maxZ, chunkBox.maxZ); z++) {
+                for (int y = box.minY; y <= box.maxY; y++) {
+                    if (world.getBlock(x, y, z) instanceof BlockBush) {
+                        world.setBlock(x, y, z, Blocks.air, 0, 2);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Seeds a world's shared random for one piece's build so what the piece draws from it is a function of the seed.
+     */
+    static void reseed(Random worldRandom, long pieceSeed) {
+        worldRandom.setSeed(pieceSeed ^ WORLD_RAND_SALT);
     }
 }

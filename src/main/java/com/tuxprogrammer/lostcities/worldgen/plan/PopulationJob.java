@@ -24,6 +24,12 @@ public final class PopulationJob {
          * ruin or an explosion took it), as upstream checks the block before filling.
          */
         CHEST,
+        /**
+         * Replace the chest the terrain phase wrote there with air, when the block still holds a container: a part
+         * chest the room rules (0016, decision 11) did not keep, so the player never finds an empty one. Only listed
+         * with {@code roomRules} on.
+         */
+        CLEAR_CHEST,
         /** Set the entity of the vanilla spawner already written there to the name in {@link #argument()}. */
         SPAWNER,
         /** Schedule a 1-tick update on the command block already written there. */

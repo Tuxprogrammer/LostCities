@@ -117,6 +117,31 @@ public class RoomRulesTest {
     }
 
     @Test
+    public void unkeptChestsAreClearedAndKeptOnesFilledAndLegacyNeverClears() {
+        int clears = 0;
+        int chests = 0;
+        for (int x = 0; x < 400; x++) {
+            PopulationJob job = job("chest", x, 65, "nh_walkup", true);
+            if (job.kind() == PopulationJob.Kind.CLEAR_CHEST) {
+                clears++;
+                assertTrue(
+                    job.argument()
+                        .isEmpty());
+            } else {
+                chests++;
+                assertEquals(PopulationJob.Kind.CHEST, job.kind());
+            }
+            assertEquals(PopulationJob.Kind.CHEST, job("chest", x, 65, "nh_walkup", false).kind());
+        }
+        assertEquals(400, clears + chests);
+        assertTrue(clears > 100 && chests > 100);
+        // A home floor fits no chest: every one is cleared.
+        for (int x = 0; x < 50; x++) {
+            assertEquals(PopulationJob.Kind.CLEAR_CHEST, job("chest", x, 75, "nh_walkup", true).kind());
+        }
+    }
+
+    @Test
     public void theRarityRollIsDeterministic() {
         for (int x = 0; x < 50; x++) {
             assertEquals(
