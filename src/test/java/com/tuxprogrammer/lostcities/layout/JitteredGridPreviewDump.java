@@ -60,8 +60,8 @@ public class JitteredGridPreviewDump {
      * the cell coordinates alone, so the result is deterministic and independent of the window.
      *
      * @param worldSeed the world seed
-     * @param min first chunk of the window, a multiple of 64
-     * @param max end of the window (exclusive), a multiple of 64
+     * @param min       first chunk of the window, a multiple of 64
+     * @param max       end of the window (exclusive), a multiple of 64
      * @param minRadius smallest radius in blocks
      * @param maxRadius end of the radius range (exclusive), blocks
      */
