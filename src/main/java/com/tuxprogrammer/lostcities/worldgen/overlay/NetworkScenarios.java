@@ -492,7 +492,18 @@ public final class NetworkScenarios {
             if (block instanceof BlockSlab && !block.isOpaqueCube() && (world.getBlockMetadata(x, y, z) & 8) == 0) {
                 return y + 0.5;
             }
-            return y + 1.0;
+            AxisAlignedBB box = block.getCollisionBoundingBoxFromPool(world, x, y, z);
+            return standingTop(y, box == null ? y + 1.0 : box.maxY);
+        }
+
+        /**
+         * The standing height on a block at Y whose collision box reaches {@code collisionTop}: its box's top, never
+         * above the block's own top (a fence's tall box is not something the deck walk stands on). A thin snow layer,
+         * whose box has no height, stands at its floor's level, as a player does: on a cold biome's bridge the
+         * weather's snow is not a step (KI-5, 0013 section 2 "Verification").
+         */
+        static double standingTop(int y, double collisionTop) {
+            return Math.max(y, Math.min(y + 1.0, collisionTop));
         }
 
         private boolean solidFloor(Block block, int x, int y, int z) {
@@ -509,7 +520,8 @@ public final class NetworkScenarios {
             if (block instanceof BlockWall || block instanceof BlockFence) {
                 return true;
             }
-            return solidFloor(block, x, y, z) && !(block instanceof BlockSlab);
+            // A slab or a thin snow layer leaves headroom: what blocks a player is a box over half a block tall.
+            return solidFloor(block, x, y, z) && !(block instanceof BlockSlab) && top(x, y, z) - y > 0.5;
         }
     }
 
