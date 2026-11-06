@@ -221,6 +221,34 @@ public class ProfileSnapshotTest {
     }
 
     @Test
+    public void aSnapshotWithoutCityDistrictsGetsNoDistricts() {
+        java.util.Map<String, String> old = new java.util.TreeMap<>();
+        old.put("groundLevel", "71");
+        assertFalse(
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                old,
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "old").terrainSettings()
+                    .cityDistricts());
+        assertTrue(
+            new ProfileSnapshot(
+                "default",
+                ProfileSnapshot.PLAN_LAYOUT,
+                ProfileOptions.defaults(),
+                java.util.Collections.<String, Boolean>emptyMap(),
+                "none",
+                1,
+                "RWG",
+                "new").terrainSettings()
+                    .cityDistricts());
+    }
+
+    @Test
     public void aSnapshotWithoutDensityRingsGetsNoRings() {
         java.util.Map<String, String> old = new java.util.TreeMap<>();
         old.put("groundLevel", "71");

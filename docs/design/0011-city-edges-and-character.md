@@ -71,6 +71,16 @@ After the plan's draws, a separate lot random turns some low-intensity chunks in
 - **Lane rises.** Before a lane is laid, its columns are relaxed so that no two lane neighbors differ by more than one block: each column moves to the floor of the mean of the lowest and highest heights its neighbors allow, columns on the chunk's border keep their height, except against a neighboring lane chunk, where they are pinned into a one-block window both chunks derive from the plan (D283), so the lane is continuous across the chunk border. A non-city chunk under an AE2 crater's cap keeps its blend corners at or under the cap (D284). The gate ramp is clamped to one block per column from the city side. Every remaining one-block rise gets its stair or slab (D152).
 - **Wide roads at a village.** A detour is a tertiary road, not a primary one, and a primary road chunk touching a village's margin (its 3 × 3 window) becomes tertiary: the primary narrows to a small road around the old town and widens again past it (AR-7, AR-10).
 
+### 6. Districts (D-p5c-1 to D-p5c-3)
+
+With `cityDistricts` (default on; worlds pinned before it keep it off) a grid-placed city with density rings gets three districts, each a pure function of the seed and chunk, so nothing cascades:
+
+- **Plaza.** The city's center chunk (the 2 x 2 chunks from it in cities of 112 blocks radius or more) is a paved plaza: stone brick and clay checker, a water basin in a brick wall, and a pillar of GT casings (ULV to EV) with a quartz cap. No tile entities. No multibuilding may cover it.
+- **Industrial yard.** A site at ring distance 0.62 on the cardinal side of the city with the most links (hash on ties), standing in for a station; the 3 x 3 chunks around it that lie in the outer or edge ring are yards with chance 0.7: fenced ground, a casing shed, tank, smokestack, pipes and drums. GT casings only, because placing machine tile entities from generation code is not reliable (D-p5c-3).
+- **Park belt.** Chunks with ring distance within 0.07 of the inner/outer boundary become parks with chance 0.5.
+
+Highways, lanes, transitions, predefined buildings and multibuilding chunks are left alone, so a district may be thinner than its footprint. Perlin-placed cities have no center and get none.
+
 ## Consequences
 
 - Five profile options, pinned with the world: `cityTaper`, `edgeLotChance`, `damageRepairChance`, `facadeContrast` (0012), and their rows in [config.md](../config.md).
