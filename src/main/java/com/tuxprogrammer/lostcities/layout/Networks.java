@@ -9,6 +9,7 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
+import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayInputs;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayLayout;
@@ -39,6 +40,7 @@ public final class Networks implements InfrastructureView {
     private final boolean subways;
     /** The city link graph ({@code networkLayout=links} with grid-placed cities), or {@code null}. */
     private final CityLinkGraph links;
+    private final LinkHighways linkHighways;
 
     /**
      * Builds the networks of a planner's world.
@@ -119,13 +121,13 @@ public final class Networks implements InfrastructureView {
 
             @Override
             public int highwayXLevel(int chunkX, int chunkZ) {
-                return highways.info(chunkX, chunkZ)
+                return highway(chunkX, chunkZ)
                     .xLevel();
             }
 
             @Override
             public int highwayZLevel(int chunkX, int chunkZ) {
-                return highways.info(chunkX, chunkZ)
+                return highway(chunkX, chunkZ)
                     .zLevel();
             }
 
@@ -178,8 +180,23 @@ public final class Networks implements InfrastructureView {
                     return new int[] { c.chunkX(), c.chunkZ() };
                 }
             }, LINK_CACHE_CELLS);
+            // Highways follow the links (0015 §3, §5): each end's city level and radius come from the terrain-only
+            // level oracle and the grid.
+            this.linkHighways = new LinkHighways(links, new LinkHighways.Ends() {
+
+                @Override
+                public int level(int chunkX, int chunkZ) {
+                    return levels.cityLevel(chunkX, chunkZ);
+                }
+
+                @Override
+                public int radius(int chunkX, int chunkZ) {
+                    return Math.max(0, grid.radiusAt(chunkX, chunkZ));
+                }
+            });
         } else {
             this.links = null;
+            this.linkHighways = null;
         }
     }
 
@@ -191,6 +208,14 @@ public final class Networks implements InfrastructureView {
      */
     public CityLinkGraph links() {
         return links;
+    }
+
+    /**
+     * Returns the highways along the link graph, or {@code null} outside {@code networkLayout=links}. When present,
+     * {@link #highway} answers from it instead of the legacy planner (0015 §3).
+     */
+    public LinkHighways linkHighways() {
+        return linkHighways;
     }
 
     /**
@@ -225,7 +250,7 @@ public final class Networks implements InfrastructureView {
      * @return the highway info
      */
     public HighwayInfo highway(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ);
+        return linkHighways != null ? linkHighways.info(chunkX, chunkZ) : highways.info(chunkX, chunkZ);
     }
 
     /**
@@ -241,13 +266,13 @@ public final class Networks implements InfrastructureView {
 
     @Override
     public int highwayXLevel(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ)
+        return highway(chunkX, chunkZ)
             .xLevel();
     }
 
     @Override
     public int highwayZLevel(int chunkX, int chunkZ) {
-        return highways.info(chunkX, chunkZ)
+        return highway(chunkX, chunkZ)
             .zLevel();
     }
 

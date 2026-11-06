@@ -4,6 +4,8 @@ Branch `lane/p4b-links`, based on `gtnh` at `71c54a50` (4a merged). Do not merge
 
 Session 2 (2026-11-06) also began near 160k context, so it landed only step 1 and handed off again; the next session should start fresh.
 
+Session 3 (2026-11-06) landed steps 2 and 3 (highways along the links) and verified them with one remote build; rails (step 4) onward are left.
+
 Why handed off (session 1): the session began at about 156k of a 200k context budget, so this lane landed the pure core and stopped.
 
 ## Design
@@ -21,11 +23,11 @@ Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-netwo
 ## Left, in order
 
 1. ~~Wire the oracle.~~ **Done (session 2, D-p4b-4):** `NetworkSettings.links()`/`withLinks`, read from `networkLayout` in `CityProfiles`; `Networks.links()` holds the graph (nodes via `centerYieldsCity`; `characteristics` confirmed not to read `infrastructure`). Test `layout/NetworksLinkGraphTest` (real planner, flat terrain and sea). The planner-level network-walk test for "Done means" still has to be written once generation reads the graph: walk `planner.networks().highway(x, z)` chunks back to `links().hits(x, z)`.
-2. **Link highway view.** Add a `LinkHighways` class that implements the `HighwayInfo` source for links mode: STRAIGHT chunks map to the existing `Deck` on their axis; END chunks inside the city radius are skipped, and the first chunk outside gets a plaza at the city level (0013 §2). Add `Shape.DIAGONAL` and `Shape.TRANSITION` to `HighwayInfo.Piece`, with the quarter turn taken from the step directions. `xLevel`/`zLevel` must report the level on diagonals too, so buildings keep clear.
-3. **Writer.** In `worldgen/city/NetworkWriter` (981 lines; read by range), write the diagonal and transition pieces in code. Reuse the column-by-column ramp writer, which already writes per column. Fill the corner spill in the side neighbors (0015 §3).
+2. ~~Link highway view.~~ **Done (session 3, D-p4b-5 to D-p4b-7):** `layout/link/LinkHighways` answers `Networks.highway` in links mode; `HighwayInfo.Piece.link`/`plaza`, shapes `DIAGONAL`/`TRANSITION`, `levelAt`, spill reporting. `centerYieldsCity` no longer computes full characteristics (recursion found by the walk test).
+3. ~~Writer.~~ **Done (session 3, D-p4b-8):** `layout/link/LinkGeometry` + `NetworkWriter.linkColumns` + `PartWriter.placeColumn`. Tests: `LinkHighwaysTest` (shapes, profiles, geometry, spill) and `LinkHighwayWalkTest` (planner walk, flat two seeds and terraces). Not built: staircase fallback at bridges/tunnels, bends/T where links meet at one level (written as overlapping pieces), 0015 §6 landmark drops.
 4. **Rails.** In `RailwayLayout`, links mode lays rail along the link paths instead of the grid. Diagonal chunks get the zig-zag. Stations hook on `bothEndsCities()`.
 5. **Switch on.** Make `networkLayout` LIVE, set `rarecities` to `links` and `railwaysCanEnd` to `false`, and update the config and spec rows and 0015's status. Leave the "legacy default" pin for pinned worlds to the orchestrator.
-6. **Verify (one round):** a remote `spotlessApply build`, then the `network.highway` and `network.railway` headless scenarios on `--instance 4` with a fresh `rarecities` world (`tools/remote/README.md` "Real-pack arguments"). Add a layout-level walk test through `LayoutPlanner` with a flat terrain oracle.
+6. **Verify (one round):** a remote `spotlessApply build`, then the `network.highway` and `network.railway` headless scenarios on `--instance 4` with a fresh `rarecities` world (`tools/remote/README.md` "Real-pack arguments"). The layout-level walk test exists (`LinkHighwayWalkTest`); extend it to rails.
 
 ## Notes
 

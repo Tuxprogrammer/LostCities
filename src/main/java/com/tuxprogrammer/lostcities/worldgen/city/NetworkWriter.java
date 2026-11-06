@@ -19,6 +19,7 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.Networks;
 import com.tuxprogrammer.lostcities.layout.highway.Axis;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
+import com.tuxprogrammer.lostcities.layout.link.LinkGeometry;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
@@ -206,7 +207,121 @@ public final class NetworkWriter {
     private void writeHighways() {
         HighwayInfo info = networks.highway(chunkX, chunkZ);
         for (HighwayInfo.Piece piece : info.pieces(chunkX, chunkZ)) {
-            highwayPiece(piece);
+            if (!piece.coded()) {
+                highwayPiece(piece);
+            }
+        }
+        if (info.linked()) {
+            linkColumns();
+        }
+    }
+
+    /**
+     * Writes the link pieces made in code (0015 §3): every column of this chunk that a diagonal, a transition or a
+     * plaza's corner opening in this chunk or one of its eight neighbors covers gets the straight part's cross-section
+     * at that column's deck height, with the ramp slab, the clearing above and supports as for a straight piece. Reads
+     * only the planner; writes only this chunk, so no cascade. The part is the slot's first, so neighbors that write the
+     * same strip agree.
+     */
+    private void linkColumns() {
+        int[] xs = new int[16];
+        int[] zs = new int[16];
+        HighwayInfo.Piece[] pieces = new HighwayInfo.Piece[16];
+        int count = 0;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                for (HighwayInfo.Piece piece : networks.highway(chunkX + dx, chunkZ + dz)
+                    .pieces(chunkX + dx, chunkZ + dz)) {
+                    if (!LinkGeometry.coded(piece)) {
+                        continue;
+                    }
+                    if (count == pieces.length) {
+                        xs = java.util.Arrays.copyOf(xs, count * 2);
+                        zs = java.util.Arrays.copyOf(zs, count * 2);
+                        pieces = java.util.Arrays.copyOf(pieces, count * 2);
+                    }
+                    xs[count] = chunkX + dx;
+                    zs[count] = chunkZ + dz;
+                    pieces[count++] = piece;
+                }
+            }
+        }
+        if (count == 0) {
+            return;
+        }
+        boolean supports = networks.highways()
+            .settings()
+            .supports();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                LinkGeometry.Column c = LinkGeometry
+                    .highest(xs, zs, pieces, count, chunkX * 16 + x, chunkZ * 16 + z);
+                if (c != null) {
+                    linkColumn(c, x, z, supports);
+                }
+            }
+        }
+    }
+
+    private void linkColumn(LinkGeometry.Column c, int x, int z, boolean supports) {
+        int deckY = context.settings()
+            .cityGround(c.level());
+        int shift = c.half() / 2;
+        boolean tunnel = plan.isTunnel(c.level() + (c.half() > 0 ? 1 : 0), naturalHeight);
+        List<Part> parts = worldStyle.parts("highways", tunnel ? "tunnel" : "bridge");
+        if (parts == null || parts.isEmpty()) {
+            return;
+        }
+        Part part = parts.get(0);
+        int px = Math.floorMod((int) Math.floor(c.along()), part.xsize());
+        int pz = Math.min(part.zsize() - 1, c.row());
+        PartWriter.Placement placement = placement(part, Transform.ROTATE_NONE, deckY, HardAir.WATERLEVEL);
+        writer.placeColumn(placement, px, pz, x, z, shift);
+        if (target.dryRun()) {
+            return;
+        }
+        int y = deckY + shift;
+        if ((c.half() & 1) == 1 && y + 1 <= WorldLimits.MAX_Y
+            && !context.isEmpty(target.get(x, y, z))
+            && target.get(x, y + 1, z)
+                .isAir()) {
+            target.set(x, y + 1, z, RAMP_SLAB);
+        }
+        if (!tunnel) {
+            clearColumn(x, z, deckY + part.height() + shift);
+        }
+        if (supports && (pz == 0 || pz == part.zsize() - 1) && Math.floorMod((int) Math.floor(c.along()), 8) == 0) {
+            Character support = part.metaCharacter(Part.MetaKey.SUPPORT);
+            if (support == null) {
+                support = worldStyle.highwaySupport();
+            }
+            BlockRef block = support == null ? null
+                : supportBlock(
+                    context,
+                    context.palettes()
+                        .forPart(chunkPalette, part),
+                    support,
+                    part);
+            if (block != null) {
+                column(Transform.ROTATE_NONE, y, x, z, block, null);
+            }
+        }
+    }
+
+    private void clearColumn(int x, int z, int from) {
+        boolean drowned = context.settings()
+            .waterLevel()
+            > context.settings()
+                .groundLevel();
+        int waterLevel = context.settings()
+            .waterLevel();
+        int to = Math.min(WorldLimits.MAX_Y, from + CLEAR_HEIGHT - 1);
+        for (int y = from; y <= to; y++) {
+            BlockRef here = target.get(x, y, z);
+            if (here.isAir() || context.isFoliage(here)) {
+                continue;
+            }
+            target.set(x, y, z, drowned && y <= waterLevel ? liquid : BlockRef.AIR);
         }
     }
 

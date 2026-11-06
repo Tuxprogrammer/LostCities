@@ -301,7 +301,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      * @return whether the center is a center and its chunk is city
      */
     public boolean centerYieldsCity(int chunkX, int chunkZ) {
-        return cities.isCityCenter(chunkX, chunkZ) && characteristics(chunkX, chunkZ).isCity;
+        if (!cities.isCityCenter(chunkX, chunkZ)) {
+            return false;
+        }
+        ChunkCharacteristics cached = characteristicsCache.get(chunkX, chunkZ);
+        if (cached != null) {
+            return cached.isCity;
+        }
+        // The same test as computeCharacteristics's isCity, without the multibuilding placement, which reads the
+        // highways and so the link graph that calls this (0015 §1, D-p4b-5).
+        return isCityBase(chunkX, chunkZ, zones.zone(chunkX, chunkZ)) && connectedToCenter(chunkX, chunkZ);
     }
 
     /**
