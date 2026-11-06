@@ -1,0 +1,34 @@
+{
+  "comment": "Phase 2d original houses and low-rises (decision log D274 to D278): each placed with createbuilding at its max floors and no cellar on a superflat world, one every two chunks along z=0. Not run by the lane; for the batched review.",
+  "title": "Phase 2d: original houses and low-rises",
+  "world": {
+    "name": "shots-p2d-houses",
+    "level_type": "FLAT",
+    "seed": "2026",
+    "fresh": true
+  },
+  "time": 6000,
+  "render_distance": 8,
+  "fov": 70,
+  "setup": [
+    "effect {user} 16 999999 0",
+    "lostcities createbuilding nh_house_garden 2 0 0 4 0",
+    "lostcities createbuilding nh_cottage 1 0 32 4 0",
+    "lostcities createbuilding nh_corner_shop 3 0 64 4 0",
+    "lostcities createbuilding nh_workshop 2 0 96 4 0",
+    "lostcities createbuilding nh_walkup 3 0 128 4 0"
+  ],
+  "shots": [
+    {"name": "nh_house_garden-se", "x": 27, "y": 16, "z": 27, "yaw": 135, "pitch": 25, "wait": 3, "caption": "nh_house_garden, 2 floors, from the south-east: brick and spruce house, gable roof, fenced garden."},
+    {"name": "nh_house_garden-nw", "x": -11, "y": 16, "z": -11, "yaw": -45, "pitch": 25, "wait": 3, "caption": "nh_house_garden from the north-west: back door, gates and chimney."},
+    {"name": "nh_cottage-se", "x": 59, "y": 16, "z": 27, "yaw": 135, "pitch": 25, "wait": 3, "caption": "nh_cottage, 1 floor, from the south-east: whitewash and spruce frame, brick-tile roof, vegetable plot."},
+    {"name": "nh_cottage-nw", "x": 21, "y": 16, "z": -11, "yaw": -45, "pitch": 25, "wait": 3, "caption": "nh_cottage from the north-west: front flower garden and door."},
+    {"name": "nh_corner_shop-se", "x": 91, "y": 18, "z": 27, "yaw": 135, "pitch": 25, "wait": 3, "caption": "nh_corner_shop, 3 floors, from the south-east: storefronts in the style wall, red fascia, flats above, parapet."},
+    {"name": "nh_corner_shop-nw", "x": 53, "y": 18, "z": -11, "yaw": -45, "pitch": 25, "wait": 3, "caption": "nh_corner_shop from the north-west: the other two storefronts and the roof chimney."},
+    {"name": "nh_workshop-se", "x": 123, "y": 16, "z": 27, "yaw": 135, "pitch": 25, "wait": 3, "caption": "nh_workshop, 2 floors, from the south-east: stone brick, roller door, strip windows, sawtooth roof."},
+    {"name": "nh_workshop-nw", "x": 85, "y": 16, "z": -11, "yaw": -45, "pitch": 25, "wait": 3, "caption": "nh_workshop from the north-west: office ribbon windows and the sawtooth glazing."},
+    {"name": "nh_walkup-se", "x": 155, "y": 18, "z": 27, "yaw": 135, "pitch": 25, "wait": 3, "caption": "nh_walkup, 3 floors, from the south-east: brick flats, stone quoins and sills, water tank."},
+    {"name": "nh_walkup-nw", "x": 117, "y": 18, "z": -11, "yaw": -45, "pitch": 25, "wait": 3, "caption": "nh_walkup from the north-west: rear wall and the cornice."},
+    {"name": "overview", "x": 72, "y": 60, "z": 60, "yaw": 180, "pitch": 50, "wait": 5, "caption": "All five original buildings in a row, west to east, seen from the south and above."}
+  ]
+}

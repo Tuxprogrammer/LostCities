@@ -350,7 +350,7 @@ public final class ProfileOptions {
         Category c = Category.CITIES;
         live(c, "cityChance", Type.DOUBLE, "0.01", d(-1), d(1), "04-city-layout");
         // Deviation: the jittered-grid placement; "chance" is upstream's per-chunk chance and the default, so a world
-        // pinned before these options existed reads "chance" (D-p4a-1).
+        // pinned before these options existed reads "chance" (D270).
         choice(c, "cityPlacement", "chance", Status.LIVE, "04-city-layout", "chance", "grid");
         live(c, "cityGridCell", Type.INT, "64", d(8), d(1024), "04-city-layout");
         live(c, "cityGridJitter", Type.INT, "16", d(0), d(511), "04-city-layout");

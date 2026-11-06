@@ -20,7 +20,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.city.CityProfiles;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
-/** The jittered-grid city centers ({@link CityGrid}) and their use by {@link CityMap}: decisions D-p4a-1 to 4. */
+/** The jittered-grid city centers ({@link CityGrid}) and their use by {@link CityMap}: decisions D270 to 4. */
 public class CityGridTest {
 
     private static final long SEED = JitteredGridPreviewDump.WORLD_SEED;

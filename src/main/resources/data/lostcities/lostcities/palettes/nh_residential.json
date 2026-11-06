@@ -1,0 +1,229 @@
+{
+  "palette": [
+    {
+      "char": " ",
+      "block": "minecraft:air"
+    },
+    {
+      "char": "B",
+      "block": "minecraft:bricks",
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "P",
+      "block": "minecraft:oak_planks"
+    },
+    {
+      "char": "Q",
+      "block": "minecraft:spruce_planks"
+    },
+    {
+      "char": "O",
+      "block": "minecraft:log:0"
+    },
+    {
+      "char": "U",
+      "block": "minecraft:log:1"
+    },
+    {
+      "char": "V",
+      "block": "minecraft:white_terracotta",
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "S",
+      "block": "minecraft:stone_bricks",
+      "damaged": "minecraft:iron_bars"
+    },
+    {
+      "char": "m",
+      "block": "minecraft:smooth_stone"
+    },
+    {
+      "char": "K",
+      "block": "minecraft:cobblestone"
+    },
+    {
+      "char": "g",
+      "block": "minecraft:glass_pane"
+    },
+    {
+      "char": "+",
+      "block": "minecraft:glass"
+    },
+    {
+      "char": "G",
+      "block": "minecraft:grass_block"
+    },
+    {
+      "char": "r",
+      "block": "minecraft:smooth_stone_slab[type=double]"
+    },
+    {
+      "char": "f",
+      "block": "minecraft:oak_fence"
+    },
+    {
+      "char": "v",
+      "block": "minecraft:oak_leaves[persistent=true]"
+    },
+    {
+      "char": "p",
+      "blocks": [
+        {
+          "random": 40,
+          "block": "minecraft:poppy"
+        },
+        {
+          "random": 40,
+          "block": "minecraft:dandelion"
+        },
+        {
+          "random": 48,
+          "block": "minecraft:tallgrass:1"
+        }
+      ]
+    },
+    {
+      "char": "~",
+      "block": "minecraft:water"
+    },
+    {
+      "char": "y",
+      "block": "minecraft:farmland:7"
+    },
+    {
+      "char": "w",
+      "block": "minecraft:wheat:7"
+    },
+    {
+      "char": "H",
+      "block": "minecraft:hay_block:0"
+    },
+    {
+      "char": "l",
+      "block": "minecraft:ladder[facing=north]"
+    },
+    {
+      "char": "j",
+      "block": "minecraft:ladder[facing=south]"
+    },
+    {
+      "char": "k",
+      "block": "minecraft:ladder[facing=east]"
+    },
+    {
+      "char": "i",
+      "block": "minecraft:ladder[facing=west]"
+    },
+    {
+      "char": "1",
+      "block": "minecraft:oak_door[facing=north,half=lower]"
+    },
+    {
+      "char": "2",
+      "block": "minecraft:oak_door[facing=north,half=upper,hinge=left]"
+    },
+    {
+      "char": "3",
+      "block": "minecraft:oak_door[facing=south,half=lower]"
+    },
+    {
+      "char": "4",
+      "block": "minecraft:oak_door[facing=south,half=upper,hinge=left]"
+    },
+    {
+      "char": "e",
+      "block": "minecraft:spruce_stairs[facing=east,half=bottom]"
+    },
+    {
+      "char": "x",
+      "block": "minecraft:spruce_stairs[facing=west,half=bottom]"
+    },
+    {
+      "char": "N",
+      "block": "minecraft:brick_stairs[facing=north,half=bottom]"
+    },
+    {
+      "char": "Z",
+      "block": "minecraft:brick_stairs[facing=south,half=bottom]"
+    },
+    {
+      "char": "n",
+      "block": "minecraft:stone_brick_stairs[facing=north,half=bottom]"
+    },
+    {
+      "char": "q",
+      "block": "minecraft:wooden_slab:1"
+    },
+    {
+      "char": "z",
+      "block": "minecraft:brick_slab[type=bottom]"
+    },
+    {
+      "char": "=",
+      "block": "minecraft:stone_brick_slab[type=bottom]"
+    },
+    {
+      "char": "_",
+      "block": "minecraft:smooth_stone_slab[type=bottom]"
+    },
+    {
+      "char": "C",
+      "block": "minecraft:chest[facing=south]",
+      "loot": "chestloot"
+    },
+    {
+      "char": "F",
+      "block": "minecraft:furnace[facing=south]"
+    },
+    {
+      "char": "c",
+      "block": "minecraft:crafting_table"
+    },
+    {
+      "char": "L",
+      "block": "minecraft:bookshelf"
+    },
+    {
+      "char": "o",
+      "block": "minecraft:cauldron"
+    },
+    {
+      "char": "a",
+      "block": "minecraft:anvil[facing=north]"
+    },
+    {
+      "char": "h",
+      "block": "minecraft:glowstone"
+    },
+    {
+      "char": "R",
+      "block": "minecraft:red_wool"
+    },
+    {
+      "char": "X",
+      "block": "minecraft:light_gray_concrete"
+    },
+    {
+      "char": "5",
+      "block": "minecraft:carpet:14"
+    },
+    {
+      "char": "6",
+      "block": "minecraft:carpet:12"
+    },
+    {
+      "char": "9",
+      "block": "minecraft:carpet:15"
+    },
+    {
+      "char": "7",
+      "block": "minecraft:bed:2"
+    },
+    {
+      "char": "8",
+      "block": "minecraft:bed:10"
+    }
+  ]
+}

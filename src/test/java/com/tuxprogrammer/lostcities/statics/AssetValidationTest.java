@@ -74,10 +74,10 @@ public class AssetValidationTest {
         AssetSet set = TestAssets.bundled(TestAssets.vanilla());
         // docs/original-spec/05-assets/loading-and-lookup.md, "Registries and folders", plus the two rubble variants
         // and the three muted desert palettes (AR-16).
-        assertEquals(37, set.count(AssetType.BUILDINGS));
+        assertEquals(42, set.count(AssetType.BUILDINGS));
         assertEquals(14, set.count(AssetType.MULTIBUILDINGS));
-        assertEquals(207, set.count(AssetType.PARTS));
-        assertEquals(33, set.count(AssetType.PALETTES));
+        assertEquals(221, set.count(AssetType.PARTS));
+        assertEquals(34, set.count(AssetType.PALETTES));
         assertEquals(14, set.count(AssetType.VARIANTS));
         assertEquals(4, set.count(AssetType.STYLES));
         assertEquals(5, set.count(AssetType.CITYSTYLES));
