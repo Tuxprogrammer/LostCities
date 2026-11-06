@@ -300,6 +300,10 @@ public final class ProfileOptions {
         // Railways: the layout reads the dungeon chance, the railway grid the rest (M06).
         chance(c, "railwayDungeonChance", "0.01", "04-city-layout");
         flag(c, "railwaysCanEnd", false, Status.LIVE, "06-highways-railways");
+        // Deviation: the city link network (0015). "legacy" is the M06 network and the default, so a world pinned
+        // before this option existed reads "legacy"; "links" needs cityPlacement=grid. Deferred until the network
+        // writer reads it (D-p4b-1).
+        choice(c, "networkLayout", "legacy", Status.DEFERRED, "06-highways-railways", "legacy", "links");
         flag(c, "railwaysEnabled", true, Status.LIVE, "06-highways-railways");
         flag(c, "railwayStationsEnabled", true, Status.LIVE, "06-highways-railways");
         flag(c, "railwaySurfaceStationsEnabled", true, Status.LIVE, "06-highways-railways");

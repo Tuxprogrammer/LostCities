@@ -234,6 +234,7 @@ Status: **live** options change generation (or, for the texts, what commands sho
 | `multiBuildingStreetConflict` | `OVERRIDE_MINOR` | BLOCK_ALL, OVERRIDE_MINOR, OVERRIDE_ALL | live | How random multibuildings meet planned roads: `BLOCK_ALL` lets any planned road block them, `OVERRIDE_MINOR` only primary roads, `OVERRIDE_ALL` none. Ignored by legacy streets |
 | `railwayDungeonChance` | `0.01` | 0 to 1 | live | Chance a chunk next to a railway holds a railway dungeon |
 | `railwaysCanEnd` | `false` |  | live | A station spot without a city above gets an end part when one side has no connection |
+| `networkLayout` | `legacy` | legacy, links | deferred | The highway and railway network. `legacy`: the M06 network. `links`: needs `cityPlacement` grid; each city links to its 3 nearest within 160 chunks and every network chunk lies on a link between two cities ([0015](design/0015-city-link-network.md)). The graph and routing exist; the writer does not read it yet |
 | `railwaysEnabled` | `true` |  | live | Railways on or off (stations still generate when off) |
 | `railwayStationsEnabled` | `true` |  | live | Railway stations on or off |
 | `railwaySurfaceStationsEnabled` | `true` |  | live | Surface stations allowed; otherwise underground only |
