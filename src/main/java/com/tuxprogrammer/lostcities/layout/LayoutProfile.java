@@ -52,6 +52,25 @@ public final class LayoutProfile {
      */
     public final int cityMaxRise;
     /**
+     * {@code cityGrade}, city levels: how far a city chunk's level may sit above or below its city's base level. Where
+     * the ground is steeper, the city cuts into it or fills it, so neighboring streets and buildings stay close in
+     * height instead of following every bump of the terrain. At {@link #cityLevelThresholds()} or more there is no
+     * limit.
+     */
+    public final int cityGrade;
+    /**
+     * {@code cityGradeRadius}, chunks: a city chunk's level follows the mean terrain height of the
+     * {@code (2r + 1) × (2r + 1)} chunks around it, so neighbors change level gradually. 0 uses the chunk's own height.
+     */
+    public final int cityGradeRadius;
+    /** {@code cityAvoidOcean}: whether a chunk in an ocean biome is never city. */
+    public final boolean cityAvoidOcean;
+    /**
+     * {@code cityConnected}: whether a city chunk must join its city's center through other city chunks (edge to
+     * edge); a chunk cut off by terrain, water or a landmark leaves the city instead of standing alone.
+     */
+    public final boolean cityConnected;
+    /**
      * {@code cityTaper}, 0 to 1: how strongly building heights follow the urban intensity, low at the city's edge and
      * high in its core (alpha review AR-5, docs/design/0011-city-edges-and-character.md §1 and §2); 0 is upstream's
      * floor count.
@@ -172,6 +191,10 @@ public final class LayoutProfile {
         cityMinHeight = b.cityMinHeight;
         cityMaxHeight = b.cityMaxHeight;
         cityMaxRise = b.cityMaxRise;
+        cityGrade = b.cityGrade;
+        cityGradeRadius = b.cityGradeRadius;
+        cityAvoidOcean = b.cityAvoidOcean;
+        cityConnected = b.cityConnected;
         cityTaper = b.cityTaper;
         edgeLotChance = b.edgeLotChance;
         facadeContrast = b.facadeContrast;
@@ -323,6 +346,9 @@ public final class LayoutProfile {
         if (cityMaxRise < 0) {
             out.add("cityMaxRise must be 0 or more");
         }
+        if (cityGrade < 0 || cityGradeRadius < 0) {
+            out.add("cityGrade and cityGradeRadius must be 0 or more");
+        }
         if (villageTransitionRings < 0 || villageLinkDistance < 0 || landmarkMargin < 0) {
             out.add("villageTransitionRings, villageLinkDistance and landmarkMargin must be 0 or more");
         }
@@ -342,6 +368,10 @@ public final class LayoutProfile {
         private int cityMinHeight = 50;
         private int cityMaxHeight = 150;
         private int cityMaxRise = 2;
+        private int cityGrade = Integer.MAX_VALUE;
+        private int cityGradeRadius;
+        private boolean cityAvoidOcean;
+        private boolean cityConnected;
         private float cityTaper = 1f;
         private float edgeLotChance = .45f;
         private float facadeContrast = 45f;
@@ -430,6 +460,20 @@ public final class LayoutProfile {
         public Builder cityHeightWindow(int min, int max) {
             cityMinHeight = min;
             cityMaxHeight = max;
+            return this;
+        }
+
+        /** @param grade {@code cityGrade} @param radius {@code cityGradeRadius} @return this builder */
+        public Builder cityGrading(int grade, int radius) {
+            cityGrade = grade;
+            cityGradeRadius = radius;
+            return this;
+        }
+
+        /** @param avoidOcean {@code cityAvoidOcean} @param connected {@code cityConnected} @return this builder */
+        public Builder cityShape(boolean avoidOcean, boolean connected) {
+            cityAvoidOcean = avoidOcean;
+            cityConnected = connected;
             return this;
         }
 

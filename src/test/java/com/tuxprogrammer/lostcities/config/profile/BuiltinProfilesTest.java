@@ -42,7 +42,7 @@ public class BuiltinProfilesTest {
             BuiltinProfiles.values("nodamage")
                 .get("rubbleLayer"));
         assertEquals(
-            "0.001",
+            "0.00025",
             BuiltinProfiles.values("rarecities")
                 .get("cityChance"));
         assertEquals(

@@ -55,12 +55,32 @@ final class CityLevels {
         // Deviation (AR-4, height-mapping.md "Rise cap"): a city chunk rises at most cityMaxRise levels above its
         // city's base; CityMap has already left out terrain more than one level higher.
         int base = cities.riseBase(chunkX, chunkZ);
-        return base == CityMap.NO_BASE ? level : Math.min(level, base + profile.cityMaxRise);
+        if (base == CityMap.NO_BASE) {
+            return level;
+        }
+        // Deviation (cityGrade): and sinks at most cityGrade levels below it, so the city is cut into the hills
+        // and raised over the hollows instead of stepping with every bump.
+        int high = base + Math.min(profile.cityMaxRise, profile.cityGrade);
+        int low = (int) Math.max(0L, (long) base - profile.cityGrade);
+        return Math.max(low, Math.min(high, level));
     }
 
     /** Returns a chunk's level from the terrain alone, averaged as upstream averages it. */
     private int natural(int chunkX, int chunkZ) {
         int height = terrain.height(chunkX, chunkZ);
+        int radius = profile.cityGradeRadius;
+        if (radius > 0) {
+            // Deviation (cityGradeRadius): the mean of the window, so neighbors change level gradually.
+            long sum = 0;
+            int count = 0;
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    sum += terrain.height(chunkX + dx, chunkZ + dz);
+                    count++;
+                }
+            }
+            return levelForHeight((int) (sum / count));
+        }
         int sample = profile.heightSampleSize;
         if (!profile.useAvgHeightmap || sample <= MIN_AVERAGING_SAMPLE) {
             return levelForHeight(height);

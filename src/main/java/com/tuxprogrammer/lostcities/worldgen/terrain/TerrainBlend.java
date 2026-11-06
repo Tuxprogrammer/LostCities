@@ -69,6 +69,8 @@ public final class TerrainBlend {
 
     /** How far around a chunk the plans are read: L0 of the corners two corners out needs chunks three out. */
     static final int REACH = 3;
+    /** A chunk whose oracle height is below this (RWG's sea level) is sea floor and is not blended. */
+    static final int SEA_FLOOR_BELOW = 63;
 
     private static final long OFFSET_X = 899809363L;
     private static final long OFFSET_Z = 256203221L;
@@ -116,6 +118,11 @@ public final class TerrainBlend {
         ChunkPlan self = cityPlan.chunk(chunkX, chunkZ);
         if (self.kind() != ChunkKind.NONE) {
             // City chunks are leveled outright; landmark cores are never reshaped (E1).
+            return false;
+        }
+        if (self.naturalHeight() < SEA_FLOOR_BELOW) {
+            // Deviation: sea floor is left alone. Raising it toward a city's height walls an enclosed pool of sea
+            // into the water, a thin sand rim around chunks nobody builds on.
             return false;
         }
         if (!computeCorners(chunkX, chunkZ, cityPlan)) {
@@ -358,6 +365,10 @@ public final class TerrainBlend {
                         + BANK_WOBBLE * context.transitionNoise(worldX * 3 + 7, worldZ * 3 + 7));
                 maxHeight = Math.min(maxHeight + offset + rough, WorldLimits.BUILD_HEIGHT);
                 minHeight = Math.max(minHeight + offset + rough, WorldLimits.MIN_Y);
+                if (ColumnOps.surface(buffer, classes, x, z, false) < SEA_FLOOR_BELOW) {
+                    // Sea floor in a shore chunk: raising it would wall a pool of sea into the water.
+                    continue;
+                }
                 int touched = ColumnOps
                     .moveDown(buffer, classes, x, z, (int) Math.floor(maxHeight), WorldLimits.BUILD_HEIGHT, waterLevel);
                 if (touched == ColumnOps.NOT_TOUCHED) {

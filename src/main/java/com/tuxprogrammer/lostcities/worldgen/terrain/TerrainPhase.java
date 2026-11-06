@@ -173,6 +173,7 @@ public final class TerrainPhase {
      * @return what was done
      */
     public Result run(ChunkBuffer buffer, int chunkX, int chunkZ) {
+        stage(6);
         ChunkPlan plan = cityPlan.chunk(chunkX, chunkZ);
         if (plan.isCore()) {
             int paved = plan.lane() == null ? 0 : VillageLanes.lay(buffer, context, chunkX, chunkZ, plan.lane());
@@ -222,9 +223,11 @@ public final class TerrainPhase {
             if (!plan.groundFits()
                 .isEmpty()) {
                 // 0009: a scattered structure's ground, leveled under it and faded into RWG's terrain around it.
+                stage(10);
                 changed |= ScatteredGround.apply(buffer, context, chunkX, chunkZ, plan.groundFits()) > 0;
             }
             if (plan.content() != ChunkContent.NONE) {
+                stage(7);
                 plan.content()
                     .write(
                         buffer,
@@ -240,6 +243,7 @@ public final class TerrainPhase {
             }
             changed |= network(buffer, chunkX, chunkZ, plan);
         }
+        stage(13);
         if (plan.lane() != null) {
             if (!plan.isCity()) {
                 changed |= VillageLanes.grade(buffer, context, plan.lane(), coreEdges) > 0;
@@ -273,7 +277,13 @@ public final class TerrainPhase {
         return new Result(plan.isCity() ? ChunkClass.CITY : ChunkClass.BLEND, damaged, moved, debris, vines, paved);
     }
 
+    /** Debug wool color for the stage about to write (orange 1, red 14, yellow 4, lime 5, magenta 2, cyan 9). */
+    private static void stage(int woolMeta) {
+        com.tuxprogrammer.lostcities.worldgen.overlay.WorldChunkBuffer.debugWoolMeta = woolMeta;
+    }
+
     private void cityChunk(ChunkBuffer buffer, int chunkX, int chunkZ, ChunkPlan plan, ChunkPlan[] sides) {
+        stage(1);
         CityTerrain.highWater(buffer, context, plan);
         boolean strips = SoftEdges.anyCoreSide(sides[0], sides[1], sides[2], sides[3]);
         if (strips) {
@@ -284,15 +294,19 @@ public final class TerrainPhase {
         } else {
             Arrays.fill(targets, plan.groundY());
         }
+        stage(9);
         CityTerrain.level(buffer, context, targets);
         boolean[] skipMask = strips ? skip : null;
+        stage(14);
         if (plan.hasBuilding()) {
             CityTerrain.makeRoomForBuilding(buffer, context, plan, sides, skipMask);
         }
+        stage(4);
         if (plan.isLot()) {
             // An edge lot digs below city ground, so its base is filled first and its pit stays open (0011 §3).
             CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
         }
+        stage(5);
         if (events.preCity(buffer, chunkX, chunkZ)) {
             plan.content()
                 .write(
@@ -306,10 +320,12 @@ public final class TerrainPhase {
                         contentRandom(chunkX, chunkZ),
                         skipMask));
             if (!plan.hasBuilding() && !plan.isLot()) {
+                stage(4);
                 CityTerrain.streetBaseAndBorders(buffer, context, plan, sides, true, skipMask);
             }
         }
         events.postCity(buffer, chunkX, chunkZ);
+        stage(2);
         Random ruinRandom = ruins.random(chunkX, chunkZ);
         ruins.ruin(buffer, chunkX, chunkZ, plan, ruinRandom, skipMask);
         if (!plan.isLot() && (!plan.hasBuilding() || plan.ruinHeight() >= 0)) {
@@ -342,6 +358,7 @@ public final class TerrainPhase {
      * @return whether anything was written
      */
     private boolean network(ChunkBuffer buffer, int chunkX, int chunkZ, ChunkPlan plan) {
+        stage(0);
         if (plan.network() == ChunkContent.NONE) {
             return false;
         }

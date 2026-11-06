@@ -463,6 +463,10 @@ public final class ProfileOptions {
         newTerrain("landmarkMargin", Type.INT, d(0), d(16));
         newTerrain("softEdgeWidth", Type.INT, d(2), d(12));
         newTerrain("cityMaxRise", Type.INT, d(0), d(TerrainSettings.CITY_LEVEL_THRESHOLDS));
+        newTerrain("cityGrade", Type.INT, d(0), d(TerrainSettings.CITY_LEVEL_THRESHOLDS));
+        newTerrain("cityGradeRadius", Type.INT, d(0), d(4));
+        newTerrain("cityAvoidOcean", Type.BOOLEAN, null, null);
+        newTerrain("cityConnected", Type.BOOLEAN, null, null);
         newTerrain("cityTaper", Type.FLOAT, d(0), d(1));
         newTerrain("edgeLotChance", Type.FLOAT, d(0), d(1));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));

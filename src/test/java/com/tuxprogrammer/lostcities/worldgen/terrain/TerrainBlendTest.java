@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.worldgen.TestTerrain;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ChunkBufferDigest;
@@ -44,6 +45,53 @@ public class TerrainBlendTest {
             }
             return ChunkPlan.none(cx, cz, 0, 71, natural, false);
         };
+    }
+
+    /**
+     * A city east of X = 0 at ground 90; west of it the oracle says {@code natural} (a shore at 70, sea floor at 55).
+     */
+    private static CityPlan cityEastOfWithNatural(int natural) {
+        return (cx, cz) -> {
+            if (cx >= 0) {
+                return ChunkPlan.builder(cx, cz, ChunkKind.CITY)
+                    .groundY(90)
+                    .naturalHeight(natural)
+                    .build();
+            }
+            return ChunkPlan.none(cx, cz, 0, 71, natural, false);
+        };
+    }
+
+    @Test
+    public void aSeaFloorChunkIsNotBlendedTowardTheCity() {
+        TerrainContext context = TestTerrain.context(7L);
+        ArrayChunkBuffer buffer = TestTerrain.chunk(-1, 0);
+        String before = ChunkBufferDigest.text(buffer);
+        assertFalse(new TerrainBlend(context).apply(buffer, -1, 0, cityEastOfWithNatural(55)), "oracle height 55");
+        assertEquals(before, ChunkBufferDigest.text(buffer), "no column was raised into a wall");
+    }
+
+    @Test
+    public void seaFloorColumnsOfAShoreChunkAreNotRaised() {
+        TerrainContext context = TestTerrain.context(7L);
+        ArrayChunkBuffer buffer = TestTerrain.chunk(-1, 0);
+        // Drown the whole chunk: the terrain is cut to Y 55, so every column's surface is under sea level, though the
+        // plan (a shore chunk) says 70 and the city's corners would pull it up.
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                ColumnOps.clearRange(buffer, x, z, 56, 120, false, 0, BlockRef.AIR);
+            }
+        }
+        String before = ChunkBufferDigest.text(buffer);
+        assertFalse(new TerrainBlend(context).apply(buffer, -1, 0, cityEastOfWithNatural(70)));
+        assertEquals(before, ChunkBufferDigest.text(buffer));
+    }
+
+    @Test
+    public void aLandChunkIsStillBlendedTowardTheCity() {
+        TerrainContext context = TestTerrain.context(7L);
+        ArrayChunkBuffer buffer = TestTerrain.chunk(-1, 0);
+        assertTrue(new TerrainBlend(context).apply(buffer, -1, 0, cityEastOf(90)), "the control: the rule is narrow");
     }
 
     @Test

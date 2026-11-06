@@ -40,6 +40,10 @@ public final class TerrainSettings {
      * "happy medium" between leveling a mountain and building up it (AR-4, decision log D-RW rows).
      */
     public static final int DEFAULT_MAX_RISE = 2;
+    /** {@code cityGrade}'s default: a city chunk sits within one level (8 blocks) of its city's base. */
+    public static final int DEFAULT_GRADE = 1;
+    /** {@code cityGradeRadius}'s default: the 3 × 3 chunks around a chunk set its level. */
+    public static final int DEFAULT_GRADE_RADIUS = 1;
 
     /** Upstream's default city level thresholds, Y 75 to 131 in steps of 8. */
     private static final int[] DEFAULT_LEVEL_HEIGHTS = { 75, 83, 91, 99, 107, 115, 123, 131 };
@@ -69,6 +73,10 @@ public final class TerrainSettings {
     private final int cityMinHeight;
     private final int cityMaxHeight;
     private final int cityMaxRise;
+    private final int cityGrade;
+    private final int cityGradeRadius;
+    private final boolean cityAvoidOcean;
+    private final boolean cityConnected;
     private final float cityTaper;
     private final float edgeLotChance;
     private final float damageRepairChance;
@@ -125,6 +133,10 @@ public final class TerrainSettings {
         cityMinHeight = r.intValue("cityMinHeight", 50, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxHeight = r.intValue("cityMaxHeight", 150, WorldLimits.MIN_Y, WorldLimits.MAX_Y);
         cityMaxRise = r.intValue("cityMaxRise", DEFAULT_MAX_RISE, 0, CITY_LEVEL_THRESHOLDS);
+        cityGrade = r.intValue("cityGrade", DEFAULT_GRADE, 0, CITY_LEVEL_THRESHOLDS);
+        cityGradeRadius = r.intValue("cityGradeRadius", DEFAULT_GRADE_RADIUS, 0, 4);
+        cityAvoidOcean = r.booleanValue("cityAvoidOcean", true);
+        cityConnected = r.booleanValue("cityConnected", true);
         cityTaper = r.floatValue("cityTaper", 1.0f, 0f, 1f);
         edgeLotChance = r.floatValue("edgeLotChance", 0.45f, 0f, 1f);
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
@@ -247,6 +259,10 @@ public final class TerrainSettings {
         out.put("cityMinHeight", Integer.toString(cityMinHeight));
         out.put("cityMaxHeight", Integer.toString(cityMaxHeight));
         out.put("cityMaxRise", Integer.toString(cityMaxRise));
+        out.put("cityGrade", Integer.toString(cityGrade));
+        out.put("cityGradeRadius", Integer.toString(cityGradeRadius));
+        out.put("cityAvoidOcean", Boolean.toString(cityAvoidOcean));
+        out.put("cityConnected", Boolean.toString(cityConnected));
         out.put("cityTaper", text(cityTaper));
         out.put("edgeLotChance", text(edgeLotChance));
         out.put("damageRepairChance", text(damageRepairChance));
@@ -353,6 +369,26 @@ public final class TerrainSettings {
      */
     public int cityMaxRise() {
         return cityMaxRise;
+    }
+
+    /** Returns {@code cityGrade}: the levels a city chunk may sit above or below its city's base level. */
+    public int cityGrade() {
+        return cityGrade;
+    }
+
+    /** Returns {@code cityGradeRadius}: the chunks around a chunk whose mean height sets its level. */
+    public int cityGradeRadius() {
+        return cityGradeRadius;
+    }
+
+    /** Returns {@code cityAvoidOcean}: whether ocean-biome chunks are never city. */
+    public boolean cityAvoidOcean() {
+        return cityAvoidOcean;
+    }
+
+    /** Returns {@code cityConnected}: whether city chunks must join their city's center. */
+    public boolean cityConnected() {
+        return cityConnected;
     }
 
     /**
