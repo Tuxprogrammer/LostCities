@@ -30,7 +30,7 @@ import com.tuxprogrammer.lostcities.asset.model.Palette;
  * {@code streetblocks.border}, to farmland and {@code w} ({@code streetblocks.wall}) to wheat, so a residential lot
  * raised over low ground filled its foundation with a solid cube of farmland. Farmland under a solid block turns to
  * dirt on any neighbor update, and each conversion notifies the next, so the first update recursed through the cube
- * until the stack overflowed (decision log D-farm-1).
+ * until the stack overflowed (decision log D380).
  */
 public class BuildingPaletteStyleCharsTest {
 
