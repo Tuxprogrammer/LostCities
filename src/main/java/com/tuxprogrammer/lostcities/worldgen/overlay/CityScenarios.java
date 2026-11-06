@@ -640,7 +640,20 @@ public final class CityScenarios {
                 + ",fountain=" + outside.fountainPart()
                 + ",lot=" + outside.lot()
                 + ",highway=" + outside.maxHighwayLevel()
+                + ",network=" + (outside.network() != com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent.NONE)
+                + ",finish=" + (outside.finish() != com.tuxprogrammer.lostcities.worldgen.plan.ChunkContent.NONE)
+                + ",front=" + outsideFronts(chunkX, chunkZ)
                 + ",level=" + outside.cityLevel() + "]";
+        }
+
+        private String outsideFronts(int chunkX, int chunkZ) {
+            StringBuilder out = new StringBuilder();
+            for (Direction side : Direction.values()) {
+                if (planner.hasFrontPartFrom(chunkX, chunkZ, side)) {
+                    out.append(side);
+                }
+            }
+            return out.toString();
         }
 
         /** The blocks of one column around a floor height, bottom to top, for the failure line. */
