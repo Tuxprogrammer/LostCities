@@ -30,7 +30,8 @@ import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
  * {@code /lostcities find <kind> [radius]}: prints where the nearest thing of a kind is in the sender's world, with a
  * suggested viewpoint, for screenshots and checks (test hooks only, operator level 2). Kinds: {@code center} (city
  * center), {@code street} (primary street), {@code interior} (an enterable building), {@code edge} (where a city meets
- * RWG terrain), {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
+ * RWG terrain), {@code gtroom} (a floor the furnish pass fills with GT machines), {@code furnished} (a residential
+ * or office floor), {@code packhouse}, {@code beltway} and {@code district} (an industrial yard or plaza), {@code reserved} (a landmark core or its edge ring) and {@code village} (a village's gate, lane or link
  * chunk); the last two find something only where a structure oracle knows a landmark. {@code scattered} finds the
  * nearest scattered structure, and {@code scattered:<name>} the nearest of one asset ({@link ScatteredFinder}). The
  * radius is in chunks,
@@ -101,6 +102,13 @@ public final class FindSubcommand implements Subcommand {
             overlay.plan(),
             overlay.cities()
                 .structures()).withRepairs((cx, cz) -> repaired(overlay, cx, cz));
+        if (overlay.settings()
+            .furnish()) {
+            finder.withFurnish(
+                world.getSeed(),
+                overlay.settings()
+                    .roomRules());
+        }
         CityFinder.Result result = best ? finder.findBest(kind, at.posX, at.posZ, radius)
             : finder.nearest(kind, at.posX, at.posZ, radius);
         if (result == null) {
@@ -108,7 +116,7 @@ public final class FindSubcommand implements Subcommand {
             sender.addChatMessage(new ChatComponentTranslation(LangKeys.FIND_NONE, kind.key(), radius));
             return;
         }
-        if (kind == CityFinder.Kind.INTERIOR) {
+        if (kind == CityFinder.Kind.INTERIOR || kind == CityFinder.Kind.GTROOM || kind == CityFinder.Kind.FURNISHED) {
             result = insideRoom(world, result);
         } else if (kind == CityFinder.Kind.STREET) {
             result = standingRoom(world, result, false);

@@ -1,0 +1,242 @@
+{
+  "comment": "City-realism batch: one shot per phase with the realism options at their defaults. Run on RWG2_CONTINENTS seed 4242 (default profile) for the shots that do not start with net-, on classic RWG seed 777 (default profile) for a second view of them, and the net- shots with the rarecities profile, which is the one that places cities on the jittered grid and links them (lc-remote.sh shots ... -- --jvm '-Dlostcitiesnh.dimensionProfiles=0=rarecities' --only net-...).",
+  "title": "City-realism batch",
+  "world": {
+    "name": "realism-rwg2c",
+    "level_type": "RWG2_CONTINENTS",
+    "seed": "4242",
+    "fresh": true
+  },
+  "time": 6000,
+  "render_distance": 10,
+  "fov": 70,
+  "setup": [
+    "effect {user} 16 999999 0"
+  ],
+  "shots": [
+    {
+      "name": "pitch-interior",
+      "find": {
+        "cmd": "lostcities find interior 80",
+        "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 1, 8-high floors (floorPitch 8, D289, D295): a ground-floor room of the building nearest the spawn; the ceiling stands 8 blocks above the floor, so a player is not cramped."
+    },
+    {
+      "name": "pitch-street",
+      "find": {
+        "cmd": "lostcities find street 80",
+        "match": "kind=street block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 1, 8-high floors (D289): a primary street between buildings whose floors and windows follow the 8-block pitch; city levels (streets, highways) stay 6 high."
+    },
+    {
+      "name": "rings-above",
+      "find": {
+        "cmd": "lostcities find center 80",
+        "match": "kind=center block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 2, density rings (D306): the city nearest the spawn from south of its center, tall towers in the inner ring, lower buildings and parks outward."
+    },
+    {
+      "name": "rings-taper",
+      "find": {
+        "cmd": "lostcities find taper 96",
+        "match": "kind=taper block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 2, core taper (D219, D306, D307): the skyline from outside the city, a high-rise core falling to low buildings and lots at the edge."
+    },
+    {
+      "name": "lots-footprint",
+      "find": {
+        "cmd": "lostcities find lot 160",
+        "match": "kind=lot block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 3, lot footprints (D325): an edge lot, an excavation or foundation at its real size (more than one chunk where the lot covers several), with the intensity of its chunk."
+    },
+    {
+      "name": "district-yard",
+      "find": {
+        "cmd": "lostcities find district 160",
+        "match": "kind=district block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 5c, districts (D350): an industrial yard (a plaza only where no yard is in reach) seen from a corner above, against the buildings around it."
+    },
+    {
+      "name": "district-plaza",
+      "find": {
+        "cmd": "lostcities find center 80",
+        "match": "kind=center block=(?P<x>-?\\d+),(?P<y>-?\\d+),(?P<z>-?\\d+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 5c, districts (D350): the paved central plaza at the city's center, seen close from above and south, with the park belt and towers farther out.",
+      "offset": [
+        0,
+        38,
+        30
+      ],
+      "yaw": 180,
+      "pitch": 40
+    },
+    {
+      "name": "rooms-interior",
+      "find": {
+        "cmd": "lostcities find interior 80",
+        "match": "kind=interior block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 6, room rules (roomRules, D353): the ground floor of the building nearest the spawn, a shop or kitchen room by the building table, with loot and spawners kept to rooms that fit.",
+      "offset": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "furnished-room",
+      "find": {
+        "cmd": "lostcities find furnished 120",
+        "match": "kind=furnished block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 6, furnished interiors (D330, 0016): a residential or office floor furnished with several wall-side pieces, every room kept in one piece. Plain blocks first, few tile entities."
+    },
+    {
+      "name": "gt-room",
+      "find": {
+        "cmd": "lostcities find gtroom 160",
+        "match": "kind=gtroom block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 6, GT machines and partial multiblocks (D339, D362): an industrial floor (workshop, oil rig, radio tower), else a cellar workshop, with low-tier GT machines and loose multiblock controllers."
+    },
+    {
+      "name": "packhouse",
+      "find": {
+        "cmd": "lostcities find packhouse 160",
+        "match": "kind=packhouse block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 6/edges, pack houses (D297, D369): an empty edge lot with a house built by another pack mod's own generator, seen from the street its door faces."
+    },
+    {
+      "name": "door-steps",
+      "find": {
+        "cmd": "lostcities find street 80",
+        "match": "kind=street block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Walkable door steps (D376): street level looking across the street at building doors, which open onto steps up to the floor.",
+      "yaw": 90,
+      "pitch": 10
+    },
+    {
+      "name": "net-overview",
+      "find": {
+        "cmd": "lostcities find center 160",
+        "match": "kind=center block=(?P<x>-?\\d+),(?P<y>-?\\d+),(?P<z>-?\\d+) ",
+        "timeout": 240
+      },
+      "wait": 3,
+      "caption": "Phase 4, jittered network (D270, D310, D320; rarecities profile): the city nearest the spawn from 160 blocks up, links leaving it to its 3 nearest cities.",
+      "offset": [
+        0,
+        170,
+        40
+      ],
+      "yaw": 180,
+      "pitch": 65
+    },
+    {
+      "name": "net-highway",
+      "find": {
+        "cmd": "lostcities find highway 160",
+        "match": "kind=highway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 4, link network (D310, D311; rarecities): a straight highway piece of a city-to-city link with highway ahead, from 15 blocks above the deck."
+    },
+    {
+      "name": "net-ramp",
+      "find": {
+        "cmd": "lostcities find ramp 192",
+        "match": "kind=ramp block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 4, link network (D316, D319; rarecities): where a link climbs or falls to a city, seen from above the ramp's edge."
+    },
+    {
+      "name": "net-station",
+      "find": {
+        "cmd": "lostcities find station 160",
+        "match": "kind=station block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 4, rail on links (D321; rarecities): the station nearest the spawn on a link between two cities."
+    },
+    {
+      "name": "net-beltway",
+      "find": {
+        "cmd": "lostcities find beltway 190",
+        "match": "kind=beltway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 5, beltway (D340, D343, D346; rarecities): a straight piece of a city's ring highway, seen along the ring from 15 blocks above its deck; towers stay inside the ring."
+    },
+    {
+      "name": "net-beltway-above",
+      "find": {
+        "cmd": "lostcities find beltway 190",
+        "match": "kind=beltway block=\\S+ chunk=\\S+ view=(?P<x>-?[\\d.]+),(?P<y>-?[\\d.]+),(?P<z>-?[\\d.]+),(?P<yaw>-?[\\d.]+),(?P<pitch>-?[\\d.]+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 5, beltway (D340, D343; rarecities): the same ring from 70 blocks up, looking along it at the city inside and the interchanges where links meet it.",
+      "offset": [
+        0,
+        70,
+        0
+      ],
+      "pitch": 50
+    },
+    {
+      "name": "net-diagonal",
+      "find": {
+        "cmd": "lostcities find ramp 192",
+        "match": "kind=ramp block=(?P<x>-?\\d+),(?P<y>-?\\d+),(?P<z>-?\\d+) ",
+        "timeout": 300
+      },
+      "wait": 3,
+      "caption": "Phase 4, diagonal routes (D311, D316; rarecities): the same link from 100 blocks above the ramp's middle, where its 45-degree run shows against the grid of streets.",
+      "offset": [
+        0,
+        100,
+        0
+      ],
+      "yaw": -45,
+      "pitch": 55
+    }
+  ]
+}
