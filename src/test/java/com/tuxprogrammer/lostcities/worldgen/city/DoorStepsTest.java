@@ -22,7 +22,7 @@ import com.tuxprogrammer.lostcities.layout.ChunkPlan;
  */
 public class DoorStepsTest {
 
-    private static final LayoutCityPlan PLAN = CityFixtures.plan();
+    private static final LayoutCityPlan PLAN = CityFixtures.planAtPitch(8);
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final int SEARCH = 90;
     private static final int NETWORK_SEARCH = 60;
