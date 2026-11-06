@@ -8,11 +8,13 @@ Session 3 (2026-11-06) landed steps 2 and 3 (highways along the links) and verif
 
 Session 4 (2026-11-06, "close the gaps") again began at about 161k of the 200k context budget, so it landed only gap 3 below (spill guard, D-p4b-9) and handed off. **Start the next session fresh**; the gaps below come before rails.
 
+Session 5 (2026-11-06) closed the remaining 3a gaps (junctions D-p4b-10, staircase D-p4b-11, landmark drops D-p4b-12), verified with one green remote `spotlessApply build` (1184 tests, 0 failures). **Next: step 4 (rails), then 5 and 6.** Start fresh.
+
 Why handed off (session 1): the session began at about 156k of a 200k context budget, so this lane landed the pure core and stopped.
 
 ## Design
 
-Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-network.md). §1 (graph), §2 (octilinear routing) and §4 (walk test) are landed and accepted; §3 (pieces), §5 (junctions, city entry), §6 (obstacles) and §7 (station hook) are proposals for you to implement. Change them if implementing them shows a better way, and log the change.
+Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-network.md). §1 to §6 are landed and accepted, except rails in §3; §7 (station hook) is a proposal for you to implement. Change them if implementing them shows a better way, and log the change.
 
 ## Done
 
@@ -29,14 +31,16 @@ Read [docs/design/0015-city-link-network.md](../docs/design/0015-city-link-netwo
 3. ~~Writer.~~ **Done (session 3, D-p4b-8):** `layout/link/LinkGeometry` + `NetworkWriter.linkColumns` + `PartWriter.placeColumn`. Tests: `LinkHighwaysTest` (shapes, profiles, geometry, spill) and `LinkHighwayWalkTest` (planner walk, flat two seeds and terraces). Not built: staircase fallback at bridges/tunnels, bends/T where links meet at one level (written as overlapping pieces), 0015 §6 landmark drops.
 3a. **Close the highway gaps** (session-4 brief; done means per item: code + test):
    - ~~Spill guard.~~ **Done (session 4, D-p4b-9):** `NetworkWriter.footprintBottom`/`guardBand` read `HighwayInfo.spill`/`spillLow`/`spillHigh`; test `NetworkWriterTest.spillFromALinkDiagonalIsInTheFootprintOrGuardBand`.
-   - **Junctions:** where links meet at one level other than straight × straight (`LinkHighways.pieces` merge, D-p4b-7), write one bend or T/X piece, no doubled or clipped decks; shape tests in `LinkHighwaysTest`.
-   - **Bridge/tunnel fallback** (owner decision 8: 45° pieces, staircase only as fallback): where a diagonal or transition is a bridge or tunnel, replace it with a corner staircase of straight + bend parts so the deck stays continuous; test in `LinkHighwayWalkTest` with a `FakeTerrain` that has a river and a hill.
-   - **Landmark drops** (0015 §6): drop a link crossing a core or margin (0013 §1) when the node keeps another choice, as the legacy network avoids landmarks; test.
-4. **Rails.** In `RailwayLayout`, links mode lays rail along the link paths instead of the grid. Diagonal chunks get the zig-zag. Stations hook on `bothEndsCities()`.
+   - ~~Junctions.~~ **Done (session 5, D-p4b-10):** `LinkHighways.merge` joins flat pieces at one level (`Piece.sides`, `Piece.linkJunction`, shape `LINK_JUNCTION` in `LinkGeometry`).
+   - ~~Bridge/tunnel fallback.~~ **Done (session 5, D-p4b-11):** per-link staircase in `LinkHighways.compute` via `Ends.bridgeOrTunnel` (answered in `Networks`); walk test `linksTakeTheStaircaseOverARiverAndThroughAHill`.
+   - ~~Landmark drops.~~ **Done (session 5, D-p4b-12):** `CityLinkGraph.Nodes.blocked` (landmark zones in `Networks`); test `CityLinkGraphTest.linksPassOverLandmarksWhenTheNodeHasAnotherChoice`.
+4. **Rails (next).** Scope: `RailwayLayout` only, plus its tests. In links mode lay rail along `CityLinkGraph` link paths (reuse `LinkRaster` chunks and the per-link levels idea from `LinkHighways`) instead of the grid; diagonal chunks get the zig-zag; rails keep the 0013 §5 landmark dips (do not apply `Nodes.blocked` to rails); stations hook on `Link.bothEndsCities()` (0015 §7). Extend `LinkHighwayWalkTest`'s approach to a rail walk. Legacy goldens must stay byte-identical. Do not switch the layout on in this step.
 5. **Switch on.** Make `networkLayout` LIVE, set `rarecities` to `links` and `railwaysCanEnd` to `false`, and update the config and spec rows and 0015's status. Leave the "legacy default" pin for pinned worlds to the orchestrator.
 6. **Verify (one round):** a remote `spotlessApply build`, then the `network.highway` and `network.railway` headless scenarios on `--instance 4` with a fresh `rarecities` world (`tools/remote/README.md` "Real-pack arguments"). The layout-level walk test exists (`LinkHighwayWalkTest`); extend it to rails.
 
 ## Notes
 
-- The remote build ran `spotlessApply` on the server only, so run `spotlessApply` locally or remotely before your next commit if formatting differs.
+- Open gaps from session 5: (a) a ramp sharing a chunk with a flat piece at a level inside the ramp's range still overlaps it (only same-level flat pieces merge); (b) the staircase is decided from the 45° profile's levels, so a staircase link whose re-planned levels differ could in rare cases still meet a bridge on a straight chunk, which is fine (straight parts bridge as legacy); (c) none of this is seen in-game yet: generation only reads the graph with `networkLayout=links`, still DEFERRED.
+
+- Bring the server's spotless diff back after each remote build (`ssh host "cd <root>/wt/p4b && git diff"`, `git apply`), as session 5 did.
 - The headless network scenarios were not run: generation does not read the graph yet, so they would only show the legacy network.

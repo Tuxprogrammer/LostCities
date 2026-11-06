@@ -209,7 +209,8 @@ public final class CityLinkGraph {
 
     /**
      * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} whose path
-     * crosses no {@link Nodes#blocked} chunk, nearest first, ties to the lower end; when every such path is blocked, the
+     * crosses no {@link Nodes#blocked} chunk, nearest first, ties to the lower end; when every such path is blocked,
+     * the
      * nearest alone. Empty when the cell has no node. Not symmetric; see {@link #links}.
      *
      * @param cellX cell X

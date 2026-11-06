@@ -277,8 +277,9 @@ class CityLinkGraphTest {
                         }
                     }
                 }
-                all.sort((p, q) -> p[0] != q[0] ? Long.compare(p[0], q[0])
-                    : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
+                all.sort(
+                    (p, q) -> p[0] != q[0] ? Long.compare(p[0], q[0])
+                        : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
                 List<long[]> open = new ArrayList<>();
                 for (int i = 0; i < all.size(); i++) {
                     boolean blocked = blocked(nodes, self, all.get(i));

@@ -95,7 +95,11 @@ public class LinkHighwaysTest {
             "east side");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, -1, 1, 0), "near corner");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 1, 1, 1), "transitions stay flat");
-        assertEquals(Shape.BEND, Piece.link(-1, 0, 0, 0, 1, 0).shape(), "a quarter bend is the staircase's bend");
+        assertEquals(
+            Shape.BEND,
+            Piece.link(-1, 0, 0, 0, 1, 0)
+                .shape(),
+            "a quarter bend is the staircase's bend");
         assertThrows(IllegalArgumentException.class, () -> Piece.link(-1, 0, 0, 0, 1, 1), "bends stay flat");
     }
 
@@ -347,9 +351,21 @@ public class LinkHighwaysTest {
         Piece bend = Piece.sides(0, -1, 0, 0, 1);
         assertEquals(Shape.BEND, bend.shape());
         assertEquals(0, bend.quarterTurns(), "west and south");
-        assertEquals(1, Piece.sides(0, 0, -1, -1, 0).quarterTurns(), "north and west");
-        assertEquals(2, Piece.sides(0, 0, -1, 1, 0).quarterTurns(), "north and east");
-        assertEquals(3, Piece.sides(0, 0, 1, 1, 0).quarterTurns(), "south and east");
+        assertEquals(
+            1,
+            Piece.sides(0, 0, -1, -1, 0)
+                .quarterTurns(),
+            "north and west");
+        assertEquals(
+            2,
+            Piece.sides(0, 0, -1, 1, 0)
+                .quarterTurns(),
+            "north and east");
+        assertEquals(
+            3,
+            Piece.sides(0, 0, 1, 1, 0)
+                .quarterTurns(),
+            "south and east");
         Piece t = one(bend, Piece.link(-1, 0, 0, 1, 0, 0));
         assertEquals(Shape.T_JUNCTION, t.shape());
         assertEquals(0, t.quarterTurns(), "no north side");
@@ -387,7 +403,9 @@ public class LinkHighwaysTest {
                     }
                     LinkGeometry.Column c = LinkGeometry.column(0, 0, pair[0], x, z);
                     assertNotNull(c, pair[0] + " covers " + x + "," + z);
-                    assertTrue(c.row() >= 1 && c.row() <= 14, pair[0] + " has no railing inside a road at " + x + "," + z);
+                    assertTrue(
+                        c.row() >= 1 && c.row() <= 14,
+                        pair[0] + " has no railing inside a road at " + x + "," + z);
                 }
             }
         }
@@ -413,7 +431,10 @@ public class LinkHighwaysTest {
                 return chunkX == 15;
             }
         };
-        assertFalse(new LinkHighways(null, ends(0, 1, 3, 0, 0)).profile(link).staircase(), "no fallback on open land");
+        assertFalse(
+            new LinkHighways(null, ends(0, 1, 3, 0, 0)).profile(link)
+                .staircase(),
+            "no fallback on open land");
         LinkHighways view = new LinkHighways(null, river);
         LinkHighways.Profile p = view.profile(link);
         assertTrue(p.staircase());

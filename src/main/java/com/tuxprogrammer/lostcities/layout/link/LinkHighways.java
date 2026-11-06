@@ -270,7 +270,8 @@ public final class LinkHighways {
         LinkRaster.Step step = link.path()
             .get(index);
         // Openings toward the previous and the next chunk. On the staircase a corner toward the next chunk becomes the
-        // side along X (the bend chunk between lies along X first), and a corner toward the previous one the side along Z.
+        // side along X (the bend chunk between lies along X first), and a corner toward the previous one the side along
+        // Z.
         int prevDx = -step.inDx();
         int prevDz = -step.inDz();
         int nextDx = step.outDx();
@@ -446,7 +447,8 @@ public final class LinkHighways {
     }
 
     /**
-     * Merges the pieces several links write in one chunk (0015 §5). Identical pieces merge. All flat pieces at one level
+     * Merges the pieces several links write in one chunk (0015 §5). Identical pieces merge. All flat pieces at one
+     * level
      * become one: a plaza when one is a plaza (it opens on all of their openings), else a straight piece, bend, T or
      * crossing when they open only on sides, else a {@link HighwayInfo.Shape#LINK_JUNCTION}. Ramps and pieces at other
      * levels stay, lowest first, so the lower passes under.
