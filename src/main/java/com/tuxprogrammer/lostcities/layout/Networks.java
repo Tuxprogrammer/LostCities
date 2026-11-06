@@ -137,6 +137,11 @@ public final class Networks implements InfrastructureView {
             }
 
             @Override
+            public boolean isUndergroundCore(int chunkX, int chunkZ) {
+                return zones.undergroundCore(chunkX, chunkZ);
+            }
+
+            @Override
             public boolean isMargin(int chunkX, int chunkZ) {
                 Zone zone = zones.zone(chunkX, chunkZ)
                     .zone();

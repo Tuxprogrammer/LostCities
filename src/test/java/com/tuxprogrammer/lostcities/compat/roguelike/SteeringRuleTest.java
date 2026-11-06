@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-/** The steering rule over a fake layout (0006 §5, D31). */
+/** The steering rule over a fake layout (0006 §5, D31, D361). */
 class SteeringRuleTest {
 
     /** A layout of named city, edge-ring and scattered chunks and predicted sites. */
@@ -19,6 +22,7 @@ class SteeringRuleTest {
         final Set<Long> edge = new HashSet<>();
         final Set<Long> scattered = new HashSet<>();
         final Set<Long> predicted = new HashSet<>();
+        final Set<Long> track = new HashSet<>();
 
         static long key(int a, int b) {
             return (long) a << 32 | b & 0xFFFFFFFFL;
@@ -42,6 +46,11 @@ class SteeringRuleTest {
         @Override
         public boolean isPredictedSite(int blockX, int blockZ) {
             return predicted.contains(key(blockX, blockZ));
+        }
+
+        @Override
+        public boolean hasLinkTrack(int chunkX, int chunkZ) {
+            return track.contains(key(chunkX, chunkZ));
         }
     }
 
@@ -103,5 +112,69 @@ class SteeringRuleTest {
         layout.city.add(FakeLayout.key(2, 2));
         layout.predicted.add(FakeLayout.key(40, 40));
         assertEquals(SteeringRule.Outcome.CITY, SteeringRule.decide(40, 40, layout));
+    }
+
+    @Test
+    void linkTrackWithinTheLevelsReachIsRefusedEvenAtAPredictedSite() {
+        FakeLayout layout = new FakeLayout();
+        // Point (8, 8): 122 blocks east is block 130, in chunk 8.
+        layout.track.add(FakeLayout.key(8, 0));
+        assertEquals(SteeringRule.Outcome.RAIL, SteeringRule.decide(8, 8, layout));
+        assertTrue(SteeringRule.Outcome.RAIL.refuses());
+        layout.predicted.add(FakeLayout.key(8, 8));
+        layout.edge.add(FakeLayout.key(0, 0));
+        assertEquals(
+            SteeringRule.Outcome.RAIL,
+            SteeringRule.decide(8, 8, layout),
+            "the reserved lot does not excuse it");
+        // Chunk 9 starts at block 144, 136 blocks away; and a diagonal chunk past the circle is out of reach too.
+        FakeLayout beyond = new FakeLayout();
+        beyond.track.add(FakeLayout.key(9, 0));
+        beyond.track.add(FakeLayout.key(7, 7));
+        assertEquals(SteeringRule.Outcome.CLEAR, SteeringRule.decide(8, 8, beyond));
+    }
+
+    /**
+     * Seed 4242, rarecities on RWG2 Continents (real-pack {@code network.railway}, rounds 1 and 2): a Roguelike tower's
+     * top level, spawner at (-713, 50, -30), cut the Y 54 tunnel of the line from chunk (-46, -17) to (-40, 27) at
+     * x = -45, z -4..1, though D359 blocked lines under the 21 × 21 lot. Every candidate site of the pack's grid
+     * from which a room could reach that spawner is now refused while the line has track there.
+     */
+    @Test
+    void seed4242TowerIsSteeredOffTheLinkLine() {
+        RoguelikeGrid grid = new RoguelikeGrid(4242L, RoguelikeSettings.pack(), new Random());
+        int spawnerX = -713;
+        int spawnerZ = -30;
+        long reach = RoguelikeOracle.LEVEL_REACH;
+        List<int[]> sites = new ArrayList<>();
+        for (int cellX = grid.cellOf(-45) - 1; cellX <= grid.cellOf(-45) + 1; cellX++) {
+            for (int cellZ = grid.cellOf(-2) - 1; cellZ <= grid.cellOf(-2) + 1; cellZ++) {
+                int[] chunk = grid.dungeonChunk(cellX, cellZ);
+                for (int[] c : grid.candidates(chunk[0], chunk[1])) {
+                    long dx = c[0] - spawnerX;
+                    long dz = c[1] - spawnerZ;
+                    if (dx * dx + dz * dz < reach * reach) {
+                        sites.add(c);
+                    }
+                }
+            }
+        }
+        assertFalse(sites.isEmpty(), "the pack's grid has candidate sites within reach of the spawner");
+        FakeLayout layout = new FakeLayout();
+        for (int z = -4; z <= 1; z++) {
+            layout.track.add(FakeLayout.key(-45, z));
+        }
+        for (int[] site : sites) {
+            assertEquals(
+                SteeringRule.Outcome.RAIL,
+                SteeringRule.decide(site[0], site[1], layout),
+                "site " + site[0] + "," + site[1]);
+        }
+        // Without the line the same sites are Roguelike's to decide.
+        for (int[] site : sites) {
+            assertFalse(
+                SteeringRule.decide(site[0], site[1], new FakeLayout())
+                    .refuses());
+        }
     }
 }

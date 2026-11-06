@@ -77,7 +77,7 @@ Start a **new world** for the beta. Alpha-era worlds keep their profile, but thi
 - **World generation cost.** On classic RWG, city generation adds about 15 % to RWG's own generation time over a large region (about 10 to 12 % on RWG2 Continents); a performance pass is under way.
 - **Visual rough edges:**
   - highway ramps' slab half-steps contrast with the road, so ramps look striped;
-  - a rail can have a gap where a junction sits under a shallow landmark.
+  - on the legacy network (`default` and other chance-placed profiles), a rail can have a gap where a junction or station sits under a shallow landmark; the link network (`rarecities`) leaves such a line out instead;
   - on some seeds a highway has steps taller than half a block or a step without ground under it, or a railway has a broken track (seen on seeds 1 and 777; seed 4242 is clean).
 - **No achievements or in-game guide yet.**
 

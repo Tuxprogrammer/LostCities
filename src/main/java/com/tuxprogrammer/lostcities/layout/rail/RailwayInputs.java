@@ -65,6 +65,18 @@ public interface RailwayInputs {
     boolean isMargin(int chunkX, int chunkZ);
 
     /**
+     * Returns whether a chunk is the core of a landmark that reaches underground (a LootGames room): no link-network
+     * line passes under it at any railway level (D359).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return whether it is an underground core
+     */
+    default boolean isUndergroundCore(int chunkX, int chunkZ) {
+        return false;
+    }
+
+    /**
      * Returns the lowest oracle ground around a core chunk, block Y: what a railway must stay 8 blocks under.
      *
      * @param chunkX chunk X

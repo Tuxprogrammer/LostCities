@@ -152,6 +152,7 @@ public final class NetworkScenarios {
 
         private Route route;
         private Run run;
+        private LinkScenarios.HighwayLeg leg;
         private PathGenerator generator;
         private boolean done;
 
@@ -178,6 +179,15 @@ public final class NetworkScenarios {
         @Override
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireNetworks(context);
+            Networks links = overlay.cities()
+                .planner()
+                .networks();
+            if (links.links() != null) {
+                leg = LinkScenarios.HighwayLeg.find(context, links);
+                context.check(leg != null, "expected a written highway link near the spawn, found none");
+                generator = new PathGenerator(context.world(), leg.chunks());
+                return;
+            }
             HighwayPlanner planner = overlay.cities()
                 .planner()
                 .networks()
@@ -218,6 +228,10 @@ public final class NetworkScenarios {
         public void verify(ScenarioContext context) {
             context.check(done, "expected the highway's chunks generated");
             OverlayWorld overlay = requireNetworks(context);
+            if (leg != null) {
+                leg.verify(context, overlay);
+                return;
+            }
             LayoutPlanner planner = overlay.cities()
                 .planner();
             Networks networks = planner.networks();
@@ -482,6 +496,7 @@ public final class NetworkScenarios {
 
         private int stationX;
         private int stationZ;
+        private LinkScenarios.RailLeg leg;
         private int length;
         private PathGenerator generator;
         private boolean done;
@@ -512,6 +527,12 @@ public final class NetworkScenarios {
             Networks networks = overlay.cities()
                 .planner()
                 .networks();
+            if (networks.links() != null) {
+                leg = LinkScenarios.RailLeg.find(context, networks);
+                context.check(leg != null, "expected a railway line near the spawn, found none");
+                generator = new PathGenerator(context.world(), leg.chunks());
+                return;
+            }
             int sx = networks.railways()
                 .settings()
                 .spacingEastWest();
@@ -566,6 +587,10 @@ public final class NetworkScenarios {
             Networks networks = overlay.cities()
                 .planner()
                 .networks();
+            if (leg != null) {
+                leg.verify(context, overlay);
+                return;
+            }
             WorldServer world = context.world();
             int boundaries = 0;
             int broken = 0;
@@ -629,7 +654,7 @@ public final class NetworkScenarios {
         }
 
         /** Whether every rail of one side has one on the other side at its Z, at most a block higher or lower. */
-        private static boolean matches(List<int[]> from, List<int[]> to) {
+        static boolean matches(List<int[]> from, List<int[]> to) {
             for (int[] a : from) {
                 boolean found = false;
                 for (int[] b : to) {
@@ -645,7 +670,7 @@ public final class NetworkScenarios {
             return true;
         }
 
-        private static String describe(List<int[]> rails) {
+        static String describe(List<int[]> rails) {
             StringBuilder out = new StringBuilder();
             for (int[] r : rails) {
                 out.append(out.length() == 0 ? "" : " ")

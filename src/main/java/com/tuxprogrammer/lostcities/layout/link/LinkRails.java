@@ -16,7 +16,8 @@ import java.util.Map;
  * center is entered along X, where its station stands. Between, it follows the link's octilinear path
  * ({@link LinkRaster}) with each 45° step split into a step along X, then one along Z: a chunk-scale staircase, so
  * every chunk opens only on sides and its track is a straight, a bend, a T or a crossing (0015 §3, D321). Where
- * lines share a chunk their openings join; a line never stops between its two cities.
+ * lines share a chunk their openings join; a line never stops between its two cities. A line whose path would pass
+ * through a third city's center runs to that center and on from it ({@link #route}), so every center is a station.
  *
  * <p>
  * Landmark cores keep the railways out (0013 §5): a line any of whose chunks is {@link Blocked} carries no track at
@@ -57,11 +58,14 @@ public final class LinkRails {
 
     private static final int CELLS = 64;
     private static final int LINKS = 4096;
+    /** Most times one line splits at centers it passes; past this it runs straight through (never reached in tests). */
+    private static final int MAX_SPLITS = 8;
 
     private final CityLinkGraph graph;
     private final Blocked blocked;
     private final Map<Long, Map<Long, Integer>> cells = lru(CELLS);
     private final Map<CityLinkGraph.Link, Boolean> live = lru(LINKS);
+    private final Map<CityLinkGraph.Link, List<int[]>> routes = lru(LINKS);
 
     /**
      * Builds the railways of a link graph.
@@ -87,10 +91,25 @@ public final class LinkRails {
      * @return the chunks as {x, z} pairs, both ends included
      */
     public static List<int[]> path(CityLinkGraph.Link link) {
-        int ax = link.ax();
-        int az = link.az();
-        int bx = link.bx();
-        int bz = link.bz();
+        return path(link.ax(), link.az(), link.bx(), link.bz());
+    }
+
+    /**
+     * Returns the chunks of the line between two centers, from the lower end (lower X, then Z) to the upper, as
+     * {@link #path(CityLinkGraph.Link)} does for a link.
+     *
+     * @param x1 one end's chunk X
+     * @param z1 one end's chunk Z
+     * @param x2 the other end's chunk X
+     * @param z2 the other end's chunk Z
+     * @return the chunks as {x, z} pairs, both ends included, lower end first
+     */
+    public static List<int[]> path(int x1, int z1, int x2, int z2) {
+        boolean lower = LinkRaster.lower(x1, z1, x2, z2);
+        int ax = lower ? x1 : x2;
+        int az = lower ? z1 : z2;
+        int bx = lower ? x2 : x1;
+        int bz = lower ? z2 : z1;
         // The lower end has the lower X (or the same X): it leaves east; the upper end is entered from the side
         // facing the lower end along X, or from the east when both share an X.
         int px = ax + 1;
@@ -162,6 +181,65 @@ public final class LinkRails {
     }
 
     /**
+     * Returns the chunks a link's line actually runs through, from its lower end to its upper end: its
+     * {@link #path(CityLinkGraph.Link) path}, except that where the path would pass through another city's center
+     * chunk the line runs to that center and on from it, as two lines would (D357). Every center is then entered
+     * and left along X only, so it always takes its station, and no line makes a station-less junction in another
+     * city's center. Cached.
+     *
+     * @param link the link
+     * @return the chunks as {x, z} pairs, both ends included, each a side neighbor of the one before
+     */
+    public synchronized List<int[]> route(CityLinkGraph.Link link) {
+        List<int[]> cached = routes.get(link);
+        if (cached == null) {
+            List<int[]> out = new ArrayList<>();
+            out.add(new int[] { link.ax(), link.az() });
+            via(link.ax(), link.az(), link.bx(), link.bz(), out, 0);
+            cached = Collections.unmodifiableList(out);
+            routes.put(link, cached);
+        }
+        return cached;
+    }
+
+    /** Appends the line from {@code (fx, fz)} (already in {@code out}) to {@code (tx, tz)}, splitting at centers. */
+    private void via(int fx, int fz, int tx, int tz, List<int[]> out, int depth) {
+        List<int[]> path = path(fx, fz, tx, tz);
+        if (path.get(0)[0] != fx || path.get(0)[1] != fz) {
+            List<int[]> reversed = new ArrayList<>(path);
+            Collections.reverse(reversed);
+            path = reversed;
+        }
+        if (depth < MAX_SPLITS) {
+            for (int i = 1; i < path.size() - 1; i++) {
+                int[] c = path.get(i);
+                if (isCenter(c[0], c[1])) {
+                    via(fx, fz, c[0], c[1], out, depth + 1);
+                    via(c[0], c[1], tx, tz, out, depth + 1);
+                    return;
+                }
+            }
+        }
+        out.addAll(path.subList(1, path.size()));
+    }
+
+    /** Whether a chunk is some cell's city center (a node of the graph). */
+    private boolean isCenter(int chunkX, int chunkZ) {
+        int cell = graph.cell();
+        int cellX = Math.floorDiv(chunkX, cell);
+        int cellZ = Math.floorDiv(chunkZ, cell);
+        for (int ox = -1; ox <= 1; ox++) {
+            for (int oz = -1; oz <= 1; oz++) {
+                int[] node = graph.node(cellX + ox, cellZ + oz);
+                if (node != null && node[0] == chunkX && node[1] == chunkZ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns whether a link carries a line: no chunk of its path is {@link Blocked} and both its ends are cities
      * (the station hook, 0015 §7).
      *
@@ -174,7 +252,7 @@ public final class LinkRails {
             return cached;
         }
         boolean value = link.bothEndsCities();
-        for (int[] c : value ? path(link) : Collections.<int[]>emptyList()) {
+        for (int[] c : value ? route(link) : Collections.<int[]>emptyList()) {
             if (blocked.blocked(c[0], c[1])) {
                 value = false;
                 break;
@@ -234,7 +312,7 @@ public final class LinkRails {
             if (!live(link)) {
                 continue;
             }
-            List<int[]> path = path(link);
+            List<int[]> path = route(link);
             for (int i = 0; i < path.size(); i++) {
                 int[] c = path.get(i);
                 if (c[0] < x0 || c[0] >= x0 + cell || c[1] < z0 || c[1] >= z0 + cell) {

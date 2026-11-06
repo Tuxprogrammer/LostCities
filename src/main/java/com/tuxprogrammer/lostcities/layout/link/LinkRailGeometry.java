@@ -88,9 +88,13 @@ public final class LinkRailGeometry {
     }
 
     /**
-     * Returns the rail shape at a column, or -1 where no track lies. Arms are straight; the center joins east and
-     * west when both are open, else north and south, else the first two open sides in the order north, east, south,
-     * west (a vanilla rail joins two neighbors; the third arm of a T meets it from the side).
+     * Returns the rail shape at a column, or -1 where no track lies. Arms are straight. The center of a T is a switch
+     * (D356): the curve vanilla's own rail picks for those three neighbors when unpowered (south-east before
+     * south-west before north-east before north-west, {@code BlockRailBase.Rail}), so the {@link #lever} beside it
+     * flips it to the other curve exactly as a player-built T switch does. With the curve every arm has a way out and
+     * a way in (a cart meeting a curve from its outside is turned onto one of its ends), and the lever reaches every
+     * pair. A crossing keeps east-west straight through (a vanilla crossing cannot carry both lines); a straight or
+     * bend joins its two sides.
      *
      * @param sides the chunk's side bits
      * @param x     local X
@@ -111,6 +115,10 @@ public final class LinkRailGeometry {
         boolean e = (sides & LinkRails.EAST) != 0;
         boolean s = (sides & LinkRails.SOUTH) != 0;
         boolean w = (sides & LinkRails.WEST) != 0;
+        if (Integer.bitCount(sides & LinkRails.SIDES) == 3) {
+            // Vanilla's unpowered choice for a T: the last match in NW, NE, SW, SE order wins.
+            return s && e ? SOUTH_EAST : s && w ? SOUTH_WEST : NORTH_EAST;
+        }
         if (e && w || !n && !s) {
             return EAST_WEST;
         }
@@ -131,6 +139,23 @@ public final class LinkRailGeometry {
      * @param z     local Z
      * @return whether it is powered
      */
+    /**
+     * Returns where a T's switch lever stands: on the floor in the column beside the center, on the side no arm
+     * leaves by (inside the tunnel's center square, off the track); {@code null} for any other chunk.
+     *
+     * @param sides the chunk's side bits
+     * @return {local X, local Z}, or {@code null}
+     */
+    public static int[] lever(int sides) {
+        if (Integer.bitCount(sides & LinkRails.SIDES) != 3) {
+            return null;
+        }
+        int free = ~sides & LinkRails.SIDES;
+        return free == LinkRails.NORTH ? new int[] { TRACK, TRACK - 1 }
+            : free == LinkRails.SOUTH ? new int[] { TRACK, TRACK + 1 }
+                : free == LinkRails.WEST ? new int[] { TRACK - 1, TRACK } : new int[] { TRACK + 1, TRACK };
+    }
+
     public static boolean powered(int sides, int x, int z) {
         int s = shape(sides, x, z);
         if (s < 0) {

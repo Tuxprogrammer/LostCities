@@ -202,4 +202,86 @@ public class LayoutGoldenTest {
             16,
             16);
     }
+
+    /**
+     * {@code networkLayout=links} with the {@code rarecities} builtin's settings (D358): the link graph's lines and
+     * the per-chunk highway and railway map they make. The city maps of this window are mostly wilderness, so the
+     * maps section draws the networks: {@code H} a highway piece, {@code =} track, {@code S} a station, {@code +}
+     * both a highway piece and track, {@code .} neither.
+     */
+    @Test
+    public void rareCitiesLinkNetwork() throws Exception {
+        com.tuxprogrammer.lostcities.config.profile.ProfileValues values = com.tuxprogrammer.lostcities.config.profile.ProfileValues
+            .of(com.tuxprogrammer.lostcities.config.profile.BuiltinProfiles.values("rarecities"));
+        LayoutProfile profile = com.tuxprogrammer.lostcities.worldgen.city.CityProfiles.layoutProfile(
+            com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings.fromValues(values.asMap()),
+            values);
+        NetworkSettings networks = com.tuxprogrammer.lostcities.worldgen.city.CityProfiles.networkSettings(
+            values,
+            com.tuxprogrammer.lostcities.core.ModuleState.allActive(),
+            com.tuxprogrammer.lostcities.layout.highway.PlanningGate.NONE);
+        LayoutPlanner p = new LayoutPlanner(
+            LayoutInputs.builder(7919L, profile, LayoutFixtures.standardAssets(), LayoutFixtures.flatTerrain())
+                .networks(networks)
+                .build());
+        Networks n = p.networks();
+        com.tuxprogrammer.lostcities.layout.link.CityLinkGraph graph = n.links();
+        int min = -96;
+        int max = 95;
+        StringBuilder map = new StringBuilder();
+        for (int z = min; z <= max; z++) {
+            for (int x = min; x <= max; x++) {
+                boolean highway = n.highway(x, z)
+                    .hasHighway();
+                com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = n.railChunk(x, z);
+                char c = rail.type()
+                    .isStation() ? 'S' : rail.isPresent() ? (highway ? '+' : '=') : highway ? 'H' : '.';
+                map.append(c);
+            }
+            map.append('\n');
+        }
+        StringBuilder details = new StringBuilder();
+        java.util.Set<com.tuxprogrammer.lostcities.layout.link.CityLinkGraph.Link> seen = new java.util.LinkedHashSet<>();
+        int cells = Math.floorDiv(max, graph.cell()) + 1;
+        for (int cz = -cells; cz <= cells; cz++) {
+            for (int cx = -cells; cx <= cells; cx++) {
+                int[] node = graph.node(cx, cz);
+                if (node != null) {
+                    details.append("node cell ")
+                        .append(cx)
+                        .append(',')
+                        .append(cz)
+                        .append(" center ")
+                        .append(node[0])
+                        .append(',')
+                        .append(node[1])
+                        .append('\n');
+                }
+                for (com.tuxprogrammer.lostcities.layout.link.CityLinkGraph.Link link : graph.links(cx, cz)) {
+                    seen.add(link);
+                }
+            }
+        }
+        for (com.tuxprogrammer.lostcities.layout.link.CityLinkGraph.Link link : seen) {
+            details.append("link ")
+                .append(link)
+                .append(" highway ")
+                .append(
+                    n.linkHighways()
+                        .profile(link)
+                        .written())
+                .append(" rail ")
+                .append(
+                    n.railways()
+                        .links()
+                        .live(link))
+                .append('\n');
+        }
+        LayoutGoldens.assertMatches(
+            "rarecities_link_network",
+            "networkLayout=links with the rarecities builtin (seed 7919, flat ground, chunks -96..95): link-graph\n"
+                + "highways (H) and railways (= track, S stations, + both) between grid-placed rare cities.",
+            map.toString(),
+            details.toString());
+    }
 }

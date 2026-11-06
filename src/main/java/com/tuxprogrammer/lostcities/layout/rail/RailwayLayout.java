@@ -107,9 +107,13 @@ public final class RailwayLayout {
         this.inputs = inputs;
         this.groundLevel = groundLevel;
         this.partHeight6 = Math.max(1, partHeight6);
-        // A core the railway level does not fit under keeps the whole line out (0013 §5, D322).
+        // A core the railway level does not fit under keeps the whole line out (0013 §5, D322), as does a core that
+        // reaches underground at any level (D359).
         this.links = graph == null ? null
-            : new LinkRails(graph, (x, z) -> inputs.isCore(x, z) && deepestFit(x, z) < settings.railwayLevel());
+            : new LinkRails(
+                graph,
+                (x, z) -> inputs.isCore(x, z)
+                    && (inputs.isUndergroundCore(x, z) || deepestFit(x, z) < settings.railwayLevel()));
     }
 
     /** Returns the lines of the city link network, or {@code null} on upstream's grid. */

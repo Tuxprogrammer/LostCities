@@ -11,24 +11,36 @@ package com.tuxprogrammer.lostcities.layout.landmark;
 public enum LandmarkKind {
 
     /** A VillageNames village. */
-    VILLAGE(true),
+    VILLAGE(true, false),
     /** A VillageNames ocean monument (D32). */
-    OCEAN_MONUMENT(false),
+    OCEAN_MONUMENT(false, false),
     /** A Roguelike Dungeons tower (a predicted candidate). */
-    ROGUELIKE(false),
+    ROGUELIKE(false, false),
     /** A Witchery structure (the union of its possible footprints). */
-    WITCHERY(false),
+    WITCHERY(false, false),
     /** A LootGames room and its entrance tunnel. */
-    LOOTGAMES(false),
+    LOOTGAMES(false, true),
     /** An AE2 meteorite, with a crater height cap. */
-    METEORITE(false),
+    METEORITE(false, false),
     /** An RWG2 terrain landmark: a volcano, a lava-cave opening or a river junction. */
-    TERRAIN(false);
+    TERRAIN(false, false);
 
     private final boolean sewn;
+    private final boolean underground;
 
-    LandmarkKind(boolean sewn) {
+    LandmarkKind(boolean sewn, boolean underground) {
         this.sewn = sewn;
+        this.underground = underground;
+    }
+
+    /**
+     * Returns whether this kind's structure reaches deep underground inside its footprint, whatever the ground: a
+     * LootGames room. No link-network line passes under such a core (D359). Roguelike Dungeons towers are not
+     * counted: their levels spread far past the lot, so the steering rule keeps the dungeon off link lines instead
+     * ({@code SteeringRule}, D361).
+     */
+    public boolean reachesUnderground() {
+        return underground;
     }
 
     /** Returns whether this kind gets transition rings, gates and lanes (villages only). */

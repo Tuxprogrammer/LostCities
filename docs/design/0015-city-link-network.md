@@ -66,6 +66,24 @@ A node chooses its 3 nearest nodes within 160 chunks whose rasterized path cross
 | Diagonal parts as assets | Parts rotate in quarter turns; a 45° deck needs per-column geometry, which the ramp writer already does in code |
 | Region cache of hashed centers (plan option A) | The jittered grid (4a) makes the node query O(cells) |
 
+## Junctions and through-lines (lane 4b verify)
+
+- **T junctions are switches** (D356). A chunk with track on three sides lays vanilla's unpowered curve at its
+  center with a lever beside it on the free side; the lever re-shapes the curve, so every arm reaches every other.
+  Four-way crossings remain an east-west straight: a known limit, since one vanilla rail cannot carry both lines.
+- **Lines stop at every city they cross** (D357). `LinkRails.route` splits a line at any third city's center its
+  staircase passes through, so the line arrives and leaves along X and the center is a station.
+- **Underground landmarks block lines** (D359). A core whose landmark reaches underground inside its footprint
+  (a LootGames room) blocks a line at any railway level, so the line carries no track at all (D322). The railway
+  check counts boundaries an explosion reaches without judging them (D360).
+- **Roguelike dungeons keep off lines** (D361). A Roguelike Dungeons tower's top level lies at Y 50 and spreads up
+  to 122 blocks from its site (`RoguelikeOracle.LEVEL_REACH`, from the mod's 1.6.6-GTNH source), far past the 21 × 21
+  lot, so blocking the lot did not save the line on seed 4242. The steering mixin refuses any candidate site, predicted
+  or not, with link track within that reach (`SteeringRule.Outcome.RAIL`); the line keeps its track and the dungeon
+  takes another candidate or none.
+- **Verified by** `LayoutGoldenTest.rareCitiesLinkNetwork`, `LinkNetworkWalkTest` and the links branches of the
+  `network.highway` and `network.railway` scenarios (D358).
+
 ## Still open
 
 Diagonal piece looks after the first shots (the owner expects to adjust them); whether predefined cities become nodes.
