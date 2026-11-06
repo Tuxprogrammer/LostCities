@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.Doorway;
+import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 
@@ -20,20 +22,24 @@ public class DoorStepsTest {
     private static final LayoutCityPlan PLAN = CityFixtures.plan();
     private static final LayoutPlanner PLANNER = PLAN.planner();
     private static final int SEARCH = 90;
-    private static final int NETWORK_SEARCH = 220;
+    private static final int NETWORK_SEARCH = 140;
+    private static final long[] SEEDS = { CityFixtures.SEED, 1L, 2L, 3L, 777L, 31337L };
     private static final int LIMIT = 8;
 
     @Test
     public void streetDoorStepsStayOpenInChunksWithAnNetwork() {
         int checked = 0;
-        for (int z = -NETWORK_SEARCH; z <= NETWORK_SEARCH && checked < LIMIT; z++) {
+        for (long seed : SEEDS) {
+            LayoutCityPlan plan0 = CityFixtures.plan(seed, StructureOracle.NONE, LayoutLog.SILENT);
+            LayoutPlanner planner0 = plan0.planner();
+            for (int z = -NETWORK_SEARCH; z <= NETWORK_SEARCH && checked < LIMIT; z++) {
             for (int x = -NETWORK_SEARCH; x <= NETWORK_SEARCH && checked < LIMIT; x++) {
-                if (!NetworkWriter.hasWork(PLANNER, x, z) || CityChunkWriter.doorApproaches(PLANNER, x, z) == null) {
+                if (!NetworkWriter.hasWork(planner0, x, z) || CityChunkWriter.doorApproaches(planner0, x, z) == null) {
                     continue;
                 }
-                ArrayChunkBuffer buffer = CityFixtures.generate(PLAN, x, z);
-                boolean[] approach = CityChunkWriter.doorApproaches(PLANNER, x, z);
-                int ground = PLANNER.plan(x, z)
+                ArrayChunkBuffer buffer = CityFixtures.generate(plan0, x, z);
+                boolean[] approach = CityChunkWriter.doorApproaches(planner0, x, z);
+                int ground = planner0.plan(x, z)
                     .cityGroundLevel();
                 for (Direction side : Direction.values()) {
                     for (int d = 0; d < CityChunkWriter.DOOR_STEP; d++) {
@@ -53,6 +59,7 @@ public class DoorStepsTest {
                 }
                 checked++;
             }
+        }
         }
         assertTrue(checked > 0, "a street chunk with a network and a building door facing it");
     }
