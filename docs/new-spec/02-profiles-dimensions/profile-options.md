@@ -101,6 +101,7 @@ Status: rows that cite a decision are *Accepted*. The former proposals on this p
 | `cityTaper` | `lostcity` | 1.0 | How strongly building heights follow the urban intensity, low at a city's edge and high at its core; 0 is upstream's floor count | 04 | [0011](../../design/0011-city-edges-and-character.md), D219, D226 |
 | `edgeLotChance` | `lostcity` | 0.45 | Chance that a building chunk at a city's very edge is an empty lot, an excavation or a foundation | 04 | [0011](../../design/0011-city-edges-and-character.md), D220, D226 |
 | `packHouseChance` | `lostcity` | 0.25 | Chance that an empty edge lot holds a pack mod's village house; a snapshot without the key (a world pinned before it) reads 0 | 04 | [0011](../../design/0011-city-edges-and-character.md), D297, D282 |
+| `densityRings` | `lostcity` | 1.0 | Strength of the density rings, building classes and ring construction lots; 0 is off; `rarecities` 1.5; a snapshot without the key (a world pinned before it) reads 0 | 04 | D-p2c-1, D282 |
 | `damageRepairChance` | `lostcity` | 0.5 | Chance that an explosion in a city was partly repaired with similar blocks and its windows boarded | 03 | [0011](../../design/0011-city-edges-and-character.md), D222, D226 |
 | `facadeContrast` | `lostcity` | 45 | Most lightness and saturation contrast two neighboring facades may have; 200 turns the check off | 05 | [0012](../../design/0012-facade-color-feathering.md), D226 |
 | `vanillaLootCategories` | `lostcity` | off | Lets city chests also draw from the pack's vanilla `ChestGenHooks` categories | 08 | D20, D196 |

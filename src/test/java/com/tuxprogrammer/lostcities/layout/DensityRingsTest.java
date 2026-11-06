@@ -112,4 +112,14 @@ public class DensityRingsTest {
             }
         }
     }
+
+    @Test
+    public void aCityWithRingsOnMatchesItsGolden() throws Exception {
+        LayoutPlanner p = CharacterFixtures.planner(SEED, LayoutInputs.DEFAULT_CACHE_SIZE, "densityRings", "1");
+        LayoutGoldens.assertMatches(
+            "density_rings",
+            "The character fixture world (seed 4242) with densityRings 1: floors, building classes and lots by ring.",
+            LayoutText.maps(p, -30, -30, 30, 30),
+            LayoutText.details(p, -30, -30, 30, 30));
+    }
 }
