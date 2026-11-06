@@ -173,7 +173,42 @@ public final class Run {
 
     /** Returns the number of chunks that may hold a ramp: neither an end nor a corner. */
     int rampChunks() {
-        return Math.max(0, length - 1 - corners.length);
+        return rampChunks(NO_HOLDS);
+    }
+
+    /** No held chunks: the profile as before {@code highwayRampHolds}. */
+    static final int[] NO_HOLDS = new int[0];
+
+    /**
+     * Returns the number of chunks that may hold a ramp: neither an end, a corner nor a held chunk.
+     *
+     * @param holds indices kept flat for other routes (see {@link #holds}), each strictly between the ends and no
+     *              corner of this run
+     */
+    int rampChunks(int[] holds) {
+        return Math.max(0, length - 1 - corners.length - holds.length);
+    }
+
+    /**
+     * Returns the indices of this run, sorted and distinct, among the given ones that it may keep flat for another
+     * route: strictly between its ends and not its own corner ({@code highwayRampHolds}, 0013 section 2).
+     *
+     * @param indices candidate indices, in any order, out-of-range ones allowed
+     * @return the held indices
+     */
+    public int[] holds(int[] indices) {
+        java.util.TreeSet<Integer> out = new java.util.TreeSet<>();
+        for (int index : indices) {
+            if (index > 0 && index < length && !isCorner(index)) {
+                out.add(index);
+            }
+        }
+        int[] held = new int[out.size()];
+        int i = 0;
+        for (int index : out) {
+            held[i++] = index;
+        }
+        return held;
     }
 
     /** Returns the number of corners with an index of at most {@code index}. */
@@ -192,7 +227,11 @@ public final class Run {
      * from the start's level when the run is too short to make up the difference.
      */
     int reachableEndLevel() {
-        int ramps = rampChunks();
+        return reachableEndLevel(NO_HOLDS);
+    }
+
+    private int reachableEndLevel(int[] holds) {
+        int ramps = rampChunks(holds);
         int difference = end.level - start.level;
         if (Math.abs(difference) <= ramps) {
             return end.level;
@@ -209,10 +248,22 @@ public final class Run {
      * @return the level
      */
     public int boundaryLevel(int boundary, int cruise) {
-        int fromStart = (boundary - 1) - cornersUpTo(boundary - 1);
-        int toEnd = rampChunks() - fromStart;
+        return boundaryLevel(boundary, cruise, NO_HOLDS);
+    }
+
+    /**
+     * Returns the deck's city level at a boundary, with some chunks held flat: a held chunk takes no ramp, as a corner.
+     *
+     * @param boundary the boundary, 1 to {@link #length()}
+     * @param cruise   the route's level
+     * @param holds    held indices, from {@link #holds}
+     * @return the level
+     */
+    public int boundaryLevel(int boundary, int cruise, int[] holds) {
+        int fromStart = (boundary - 1) - cornersUpTo(boundary - 1) - heldUpTo(holds, boundary - 1);
+        int toEnd = rampChunks(holds) - fromStart;
         int startLevel = start.level;
-        int endLevel = reachableEndLevel();
+        int endLevel = reachableEndLevel(holds);
         int low = Math.max(startLevel - fromStart, endLevel - toEnd);
         int high = Math.min(startLevel + fromStart, endLevel + toEnd);
         return Math.max(low, Math.min(high, cruise));
@@ -226,10 +277,25 @@ public final class Run {
      * @return the level
      */
     public int entryLevel(int index, int cruise) {
+        return entryLevel(index, cruise, NO_HOLDS);
+    }
+
+    /** As {@link #entryLevel(int, int)}, with held chunks ({@link #holds}). */
+    public int entryLevel(int index, int cruise, int[] holds) {
         if (length == 0) {
             return start.level;
         }
-        return boundaryLevel(Math.max(1, index), cruise);
+        return boundaryLevel(Math.max(1, index), cruise, holds);
+    }
+
+    private static int heldUpTo(int[] holds, int index) {
+        int count = 0;
+        for (int held : holds) {
+            if (held <= index) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -240,10 +306,15 @@ public final class Run {
      * @return the level
      */
     public int exitLevel(int index, int cruise) {
+        return exitLevel(index, cruise, NO_HOLDS);
+    }
+
+    /** As {@link #exitLevel(int, int)}, with held chunks ({@link #holds}). */
+    public int exitLevel(int index, int cruise, int[] holds) {
         if (length == 0) {
             return start.level;
         }
-        return boundaryLevel(Math.min(length, index + 1), cruise);
+        return boundaryLevel(Math.min(length, index + 1), cruise, holds);
     }
 
     @Override

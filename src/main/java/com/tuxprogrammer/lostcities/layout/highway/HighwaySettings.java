@@ -32,6 +32,42 @@ public final class HighwaySettings {
     private final int networkLevel;
     private final int railwaySpacingNorthSouth;
     private final int railwaySpacingEastWest;
+    private final boolean rampHolds;
+
+    private HighwaySettings(HighwaySettings base, boolean rampHolds) {
+        enabled = base.enabled;
+        supports = base.supports;
+        planningCellSize = base.planningCellSize;
+        hubSampleSpacing = base.hubSampleSpacing;
+        hubMinimumPotential = base.hubMinimumPotential;
+        hubSearchRadiusCells = base.hubSearchRadiusCells;
+        minimumHubDistance = base.minimumHubDistance;
+        maximumHubDistance = base.maximumHubDistance;
+        maximumConnectionsPerHub = base.maximumConnectionsPerHub;
+        minimumRouteLength = base.minimumRouteLength;
+        routeCityPenalty = base.routeCityPenalty;
+        levelFromCities = base.levelFromCities;
+        networkLevel = base.networkLevel;
+        railwaySpacingNorthSouth = base.railwaySpacingNorthSouth;
+        railwaySpacingEastWest = base.railwaySpacingEastWest;
+        this.rampHolds = rampHolds;
+    }
+
+    /**
+     * Returns these settings with {@code highwayRampHolds} (design record 0013 section 2, KI-5): a run keeps flat, as
+     * its own corners, the chunks on it where another route turns or ends.
+     *
+     * @param on whether runs hold those chunks flat
+     * @return the copy
+     */
+    public HighwaySettings withRampHolds(boolean on) {
+        return on == rampHolds ? this : new HighwaySettings(this, on);
+    }
+
+    /** Returns {@code highwayRampHolds}: whether a run keeps flat the chunks where another route turns or ends. */
+    public boolean rampHolds() {
+        return rampHolds;
+    }
 
     private HighwaySettings(Builder b) {
         require(b.planningCellSize >= 32 && b.planningCellSize <= 512, "highwayPlanningCellSize 32 to 512");
@@ -67,6 +103,7 @@ public final class HighwaySettings {
         networkLevel = b.networkLevel;
         railwaySpacingNorthSouth = b.railwaySpacingNorthSouth;
         railwaySpacingEastWest = b.railwaySpacingEastWest;
+        rampHolds = false;
     }
 
     private static boolean evenSpacing(int spacing) {

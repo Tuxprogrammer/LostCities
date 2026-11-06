@@ -56,4 +56,29 @@ public class RunTest {
         assertEquals(2, run.reachableEndLevel());
         assertEquals(2, run.exitLevel(3, 9));
     }
+
+    /**
+     * KI-5 (RWG2 seed 1): two routes leave one hub at level 7 eastward; one turns south at index 3, inside the other's
+     * descent. The other run holds index 3 flat, so both reach it at the same level and the turn gets its junction.
+     */
+    @Test
+    public void aHeldChunkStaysFlatAndTheRampMovesPastIt() {
+        Run run = run(7, 0, new Segment(0, 0, 10, 0, Axis.X));
+        int cruise = 3;
+        int[] held = run.holds(new int[] { 3, 0, 10, 42, 3 });
+        assertTrue(Arrays.equals(new int[] { 3 }, held), "only an inner index, once");
+        assertEquals(5, run.entryLevel(3, cruise, held));
+        assertEquals(5, run.exitLevel(3, cruise, held), "the held chunk is flat");
+        assertEquals(4, run.exitLevel(4, cruise, held), "the descent goes on after it");
+        assertEquals(4, run.exitLevel(3, cruise), "without holds it ramps there");
+        for (int i = 1; i <= run.length(); i++) {
+            assertEquals(run.exitLevel(i - 1, cruise, held), run.entryLevel(i, cruise, held), "continuous at " + i);
+        }
+    }
+
+    @Test
+    public void aRunsOwnCornerIsNeverHeldTwice() {
+        Run run = run(0, 0, new Segment(0, 0, 4, 0, Axis.X), new Segment(4, 0, 4, 4, Axis.Z));
+        assertEquals(0, run.holds(new int[] { 4 }).length);
+    }
 }
