@@ -166,12 +166,13 @@ final class PackHouseScenario implements Scenario {
                 + " then "
                 + Long.toHexString(second));
         LostCities.LOG.info(
-            "[LCNH-PACKHOUSE] chunk ({}, {}) kind {} blocks {} hash {}",
+            "[LCNH-PACKHOUSE] chunk ({}, {}) kind {} blocks {} hash {} withoutFlowers {}",
             lotX,
             lotZ,
             kind,
             blocks,
-            Long.toHexString(full));
+            Long.toHexString(full),
+            Long.toHexString(first));
     }
 
     /** Trees, plants and snow that the terrain's own population puts at the chunk edge; not part of any house. */
