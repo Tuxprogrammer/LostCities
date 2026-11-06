@@ -138,9 +138,9 @@ final class DistrictWriter {
         } else if (m == 3) {
             put(x, height + 1, z, brick);
             put(x, height + 2, z, brick);
-        } else if (m <= 9) {
+        } else if (m <= 7) {
             put(x, height + 1, z, water);
-        } else if (m == 11) {
+        } else if (m == 9) {
             put(x, height + 1, z, brick);
             put(x, height + 2, z, brick);
         }
