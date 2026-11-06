@@ -580,6 +580,35 @@ public final class ProfileOptions {
                 "08-loot-mobs-blocks",
                 false,
                 null));
+        // New worlds stop a legacy rail line on a buffer before a core chunk it cannot pass; pinned worlds keep the gap
+        // (KI-3, 0013 §5, D366).
+        add(
+            new ProfileOption(
+                "railwayCoreEnds",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "06-highways-railways",
+                false,
+                null));
+        // New worlds give highway ramps one surface; pinned worlds keep the slab stripes (KI-2, 0013 §2, D367).
+        add(
+            new ProfileOption(
+                "rampSurface",
+                Category.LOSTCITY,
+                Type.BOOLEAN,
+                "true",
+                null,
+                null,
+                null,
+                Status.LIVE,
+                "06-highways-railways",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -639,6 +668,8 @@ public final class ProfileOptions {
         legacyDefault("cityHighwayLayout", "none");
         legacyDefault("cityDistricts", "false");
         legacyDefault("roomRules", "false");
+        legacyDefault("railwayCoreEnds", "false");
+        legacyDefault("rampSurface", "false");
     }
 
     /**

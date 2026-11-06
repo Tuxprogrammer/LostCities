@@ -180,6 +180,11 @@ public final class CityProfiles {
         } catch (IllegalArgumentException e) {
             railwaySettings = new RailwaySettings(railways, railways, true, false, 0, 10, 10);
         }
+        try {
+            railwaySettings = railwaySettings.withCoreEnds(values.getBoolean("railwayCoreEnds"));
+        } catch (IllegalArgumentException e) {
+            // A profile without the key keeps the gap (KI-3), as worlds made before it.
+        }
         boolean links;
         try {
             links = "links".equals(values.getString("networkLayout"));

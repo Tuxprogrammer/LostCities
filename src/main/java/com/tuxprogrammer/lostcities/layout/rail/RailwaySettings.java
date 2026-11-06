@@ -22,6 +22,7 @@ public final class RailwaySettings {
     private final int levelOffset;
     private final int spacingNorthSouth;
     private final int spacingEastWest;
+    private final boolean coreEnds;
 
     /**
      * Creates the settings.
@@ -47,6 +48,34 @@ public final class RailwaySettings {
         this.levelOffset = levelOffset;
         this.spacingNorthSouth = spacingNorthSouth;
         this.spacingEastWest = spacingEastWest;
+        this.coreEnds = false;
+    }
+
+    private RailwaySettings(RailwaySettings base, boolean coreEnds) {
+        this.enabled = base.enabled;
+        this.stations = base.stations;
+        this.surfaceStations = base.surfaceStations;
+        this.canEnd = base.canEnd;
+        this.levelOffset = base.levelOffset;
+        this.spacingNorthSouth = base.spacingNorthSouth;
+        this.spacingEastWest = base.spacingEastWest;
+        this.coreEnds = coreEnds;
+    }
+
+    /**
+     * Returns these settings with {@code railwayCoreEnds} (design record 0013 §5): where a landmark core leaves a
+     * line's chunk out, the line's chunks beside it stop on buffers instead of running into the gap.
+     *
+     * @param on whether lines stop on buffers before such a gap
+     * @return the copy
+     */
+    public RailwaySettings withCoreEnds(boolean on) {
+        return on == coreEnds ? this : new RailwaySettings(this, on);
+    }
+
+    /** Returns {@code railwayCoreEnds}: whether a line stops on a buffer before a core chunk left out. */
+    public boolean coreEnds() {
+        return coreEnds;
     }
 
     private static boolean even(int spacing) {

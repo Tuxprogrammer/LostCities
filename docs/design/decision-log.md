@@ -372,3 +372,5 @@ What belongs here: the owner's preferences and overrides, and the choices the bu
 | D364 | 2026-11-06 | Worldgen | Industrial rooms only, chance 0.5 (halved when ruined), one per chunk; the controller counts against the TE caps. Revisit for the industrial-yard district (0016 §14). | Detail in 0016. |
 | D365 | 2026-11-06 | GTNH | The `FURNISH` job recovers shape and facing from position and casings, no stored record (0016 §14). | Detail in 0016. |
 | D366 | 2026-11-06 | Config | No new option: multiblocks ride the `furnish` pass, so pinned worlds and legacy goldens are unchanged (0016 §14). | Detail in 0016. |
+| D366 | 2026-11-06 | Worldgen | KI-3: on the legacy network a straight rail line stops on a buffer before a shallow landmark core's no-room gap, rather than dipping or rerouting; `railwayCoreEnds`, new worlds only (0013 §5). | Detail in 0013. |
+| D367 | 2026-11-06 | Worldgen | KI-2: ramp whole-step columns are topped with smooth double stone slab to match the half-steps; `rampSurface`, new worlds only (0013 §2). | Detail in 0013. |
