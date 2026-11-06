@@ -82,6 +82,7 @@ public final class TerrainSettings {
     private final float edgeLotChance;
     private final float packHouseChance;
     private final float densityRings;
+    private final String cityHighwayLayout;
     private final float damageRepairChance;
     private final float facadeContrast;
     private final int heightSampleSize;
@@ -152,6 +153,8 @@ public final class TerrainSettings {
         packHouseChance = r.floatValue("packHouseChance", 0f, 0f, 1f);
         // 0 is the pre-pin world's value (rings off); new pins take the option's 1.0 (D282, D306).
         densityRings = r.floatValue("densityRings", 0f, 0f, 2f);
+        // "none" is the pre-pin world's value; new pins take the option's "random" (D282, 0017).
+        cityHighwayLayout = r.choiceValue("cityHighwayLayout", "none", "none", "beltway", "cutthrough", "random");
         damageRepairChance = r.floatValue("damageRepairChance", 0.5f, 0f, 1f);
         facadeContrast = r.floatValue("facadeContrast", 45f, 10f, 200f);
         heightSampleSize = r.intValue("heightSampleSize", 3, 1, 100);
@@ -281,6 +284,7 @@ public final class TerrainSettings {
         out.put("edgeLotChance", text(edgeLotChance));
         out.put("packHouseChance", text(packHouseChance));
         out.put("densityRings", text(densityRings));
+        out.put("cityHighwayLayout", cityHighwayLayout);
         out.put("damageRepairChance", text(damageRepairChance));
         out.put("facadeContrast", text(facadeContrast));
         out.put("heightSampleSize", Integer.toString(heightSampleSize));
@@ -426,6 +430,14 @@ public final class TerrainSettings {
     /** Returns the strength of the density rings and building classes ({@code densityRings}); 0 is off. */
     public float densityRings() {
         return densityRings;
+    }
+
+    /**
+     * Returns {@code cityHighwayLayout}: {@code none}, {@code beltway}, {@code cutthrough} or {@code random}, a
+     * link-network city's own highway (design record 0017).
+     */
+    public String cityHighwayLayout() {
+        return cityHighwayLayout;
     }
 
     /** Returns the share of empty edge lots that hold a pack mod's village house ({@code packHouseChance}). */
@@ -712,6 +724,22 @@ public final class TerrainSettings {
                 return clamped;
             }
             return value;
+        }
+
+        String choiceValue(String key, String fallback, String... allowed) {
+            String text = values.get(key);
+            if (text == null) {
+                return fallback;
+            }
+            String trimmed = text.trim()
+                .toLowerCase(java.util.Locale.ROOT);
+            for (String value : allowed) {
+                if (value.equals(trimmed)) {
+                    return value;
+                }
+            }
+            warnings.add(key + "='" + text + "' is not one of " + java.util.Arrays.toString(allowed) + "; using " + fallback);
+            return fallback;
         }
 
         boolean booleanValue(String key, boolean fallback) {

@@ -8,6 +8,7 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayObstacles;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
+import com.tuxprogrammer.lostcities.layout.link.CityHighways;
 import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
@@ -179,6 +180,67 @@ public final class Networks implements InfrastructureView {
                     return zone == Zone.CORE || zone == Zone.EDGE_RING || zone == Zone.AVOID_RING;
                 }
             }, LINK_CACHE_CELLS);
+            // Each city's beltway or cut-through (0017), from terrain, zones and the city map only.
+            final CityLinkGraph graph = links;
+            CityHighways cityHighways = new CityHighways(
+                planner.seed,
+                planner.profile.cityHighwayLayout,
+                graph,
+                new CityHighways.Cities() {
+
+                    @Override
+                    public int cell() {
+                        return grid.cell();
+                    }
+
+                    @Override
+                    public int[] center(int cellX, int cellZ) {
+                        return graph.node(cellX, cellZ);
+                    }
+
+                    @Override
+                    public int radius(int centerX, int centerZ) {
+                        return Math.max(0, grid.radiusAt(centerX, centerZ));
+                    }
+
+                    @Override
+                    public int maxRadius() {
+                        return planner.profile.cityMaxRadius;
+                    }
+
+                    @Override
+                    public float threshold() {
+                        return planner.profile.cityThreshold;
+                    }
+
+                    @Override
+                    public boolean city(int chunkX, int chunkZ) {
+                        return planner.cityBase(chunkX, chunkZ);
+                    }
+
+                    @Override
+                    public boolean landmark(int chunkX, int chunkZ) {
+                        return zones.zone(chunkX, chunkZ)
+                            .zone() != Zone.NONE;
+                    }
+
+                    @Override
+                    public boolean blocked(int chunkX, int chunkZ) {
+                        return zones.zone(chunkX, chunkZ)
+                            .zone()
+                            .forcesNonCity();
+                    }
+
+                    @Override
+                    public int level(int chunkX, int chunkZ) {
+                        return levels.cityLevel(chunkX, chunkZ);
+                    }
+
+                    @Override
+                    public int maxLevel() {
+                        return planner.profile.cityLevelThresholds();
+                    }
+                });
             // Highways follow the links (0015 §3, §5): each end's city level and radius come from the terrain-only
             // level oracle and the grid.
             this.linkHighways = new LinkHighways(links, new LinkHighways.Ends() {
@@ -203,7 +265,7 @@ public final class Networks implements InfrastructureView {
                         || height < ground + (lowLevel - 1) * ChunkPlan.LEVEL_HEIGHT
                         || planner.terrain.isWaterBiome(chunkX, chunkZ);
                 }
-            });
+            }, cityHighways);
         } else {
             this.links = null;
             this.linkHighways = null;

@@ -148,6 +148,8 @@ public final class LinkHighways {
 
     private final CityLinkGraph graph;
     private final Ends ends;
+    /** Each city's beltway or cut-through (0017), or {@code null}. */
+    private final CityHighways cities;
     private final Map<CityLinkGraph.Link, Profile> profiles = lru(CACHE);
     private final Map<Long, List<HighwayInfo.Piece>> own = lru(CACHE * 2);
     private final Map<Long, HighwayInfo> infos = lru(CACHE);
@@ -159,8 +161,26 @@ public final class LinkHighways {
      * @param ends  the city facts at link ends
      */
     public LinkHighways(CityLinkGraph graph, Ends ends) {
+        this(graph, ends, null);
+    }
+
+    /**
+     * Creates the view with the cities' own highways (design record 0017): a link of a beltway city stops on the
+     * ring, a link a cut-through joins leaves at the cut-through's level, and their pieces join the network.
+     *
+     * @param graph  the link graph
+     * @param ends   the city facts at link ends
+     * @param cities the city highways, or {@code null} for none
+     */
+    public LinkHighways(CityLinkGraph graph, Ends ends, CityHighways cities) {
         this.graph = graph;
         this.ends = ends;
+        this.cities = cities;
+    }
+
+    /** Returns the cities' own highways (0017), or {@code null}. */
+    public CityHighways cities() {
+        return cities;
     }
 
     /** Returns the city and terrain facts the view reads. */
@@ -250,6 +270,9 @@ public final class LinkHighways {
             }
         }
         out.addAll(staircaseBends(chunkX, chunkZ));
+        if (cities != null) {
+            out.addAll(cities.pieces(chunkX, chunkZ));
+        }
         List<HighwayInfo.Piece> merged = merge(out);
         own.put(key, merged);
         return merged;
@@ -340,7 +363,7 @@ public final class LinkHighways {
         }
         // A ramp never shares its chunk with another link (0015 §5, D323): decided from the paths alone, so it
         // does not depend on the other links' levels.
-        Profile profile = compute(link, ends, (x, z) -> shared(link, x, z));
+        Profile profile = compute(link, ends, (x, z) -> shared(link, x, z), cities);
         profiles.put(link, profile);
         return profile;
     }
@@ -370,23 +393,44 @@ public final class LinkHighways {
     }
 
     static Profile compute(CityLinkGraph.Link link, Ends ends, Shared shared) {
+        return compute(link, ends, shared, null);
+    }
+
+    /**
+     * Computes a link's profile. With city highways (0017), a link of a beltway city starts or ends on the ring (the
+     * path chunk at Chebyshev distance {@code half} from the center) and every link a city highway joins leaves that
+     * city at the city highway's level.
+     */
+    static Profile compute(CityLinkGraph.Link link, Ends ends, Shared shared, CityHighways cities) {
         List<LinkRaster.Step> path = link.path();
         int n = path.size();
         int ra = ends.radius(link.ax(), link.az());
         int rb = ends.radius(link.bx(), link.bz());
+        CityHighways.Plan pa = cities == null ? null : cities.plan(link.ax(), link.az());
+        CityHighways.Plan pb = cities == null ? null : cities.plan(link.bx(), link.bz());
         int start = 0;
-        while (start < n && inside(path.get(start), link.ax(), link.az(), ra)) {
+        while (start < n && enclosed(path.get(start), link.ax(), link.az(), ra, pa)) {
             start++;
         }
         int end = n - 1;
-        while (end >= 0 && inside(path.get(end), link.bx(), link.bz(), rb)) {
+        while (end >= 0 && enclosed(path.get(end), link.bx(), link.bz(), rb, pb)) {
             end--;
         }
         if (start > end) {
             return new Profile(start, end, new int[n], new int[n], false);
         }
-        Profile diagonal = levels(link, ends, start, end, false, shared);
-        return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared) : diagonal;
+        int la = pa != null && pa.joins(link) ? pa.level() : ends.level(link.ax(), link.az());
+        int lb = pb != null && pb.joins(link) ? pb.level() : ends.level(link.bx(), link.bz());
+        Profile diagonal = levels(link, ends, start, end, false, shared, la, lb);
+        return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared, la, lb) : diagonal;
+    }
+
+    /** Whether a path chunk is not written at an end: inside a beltway's ring, else inside the city's radius. */
+    private static boolean enclosed(LinkRaster.Step step, int cx, int cz, int radius, CityHighways.Plan plan) {
+        if (plan != null && plan.kind() == CityHighways.Kind.BELTWAY) {
+            return plan.insideRing(step.chunkX(), step.chunkZ());
+        }
+        return inside(step, cx, cz, radius);
     }
 
     /**
@@ -420,13 +464,11 @@ public final class LinkHighways {
      * ramp.
      */
     private static Profile levels(CityLinkGraph.Link link, Ends ends, int start, int end, boolean staircase,
-        Shared shared) {
+        Shared shared, int la, int lb) {
         List<LinkRaster.Step> path = link.path();
         int n = path.size();
         int[] in = new int[n];
         int[] out = new int[n];
-        int la = ends.level(link.ax(), link.az());
-        int lb = ends.level(link.bx(), link.bz());
         int need = Math.abs(lb - la);
         List<Integer> candidates = new ArrayList<>();
         for (int i = start + 1; i < end; i++) {

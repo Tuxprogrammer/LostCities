@@ -795,9 +795,34 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         return name;
     }
 
-    /** The chunk's ring distance (D306): 0 at a city's center, 1 where the city ends. */
+    /**
+     * The chunk's ring distance (D306): 0 at a city's center, 1 where the city ends. In a beltway city (0017) a chunk
+     * next to the ring or outside it is at least in the outer ring, so towers stay inside the beltway and lower
+     * buildings and parks line it.
+     */
     float ringDistance(int x, int z) {
-        return DensityRings.distance(cities.cityFactor(x, z), profile.cityThreshold);
+        float d = DensityRings.distance(cities.cityFactor(x, z), profile.cityThreshold);
+        if (networks != null && networks.linkHighways() != null
+            && networks.linkHighways()
+                .cities() != null
+            && networks.linkHighways()
+                .cities()
+                .beltwayAtOrBeyondRing(x, z) != null) {
+            d = Math.max(d, DensityRings.INNER_END);
+        }
+        return d;
+    }
+
+    /**
+     * Returns whether a chunk is city by the terrain and zones alone (raw city, outside every core and avoid ring, not
+     * cratered), without the connection rule or a plan: what the city highways read (0017).
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return whether the chunk is city before the connection rule
+     */
+    boolean cityBase(int x, int z) {
+        return isCityBase(x, z, zones.zone(x, z));
     }
 
     /**

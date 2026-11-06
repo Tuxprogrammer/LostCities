@@ -509,6 +509,21 @@ public final class ProfileOptions {
                 "04-city-layout",
                 false,
                 null));
+        // New worlds get "random"; worlds pinned before the key existed have no city highway (D282, 0017). Only
+        // networkLayout=links reads it.
+        add(
+            new ProfileOption(
+                "cityHighwayLayout",
+                Category.LOSTCITY,
+                Type.STRING,
+                "random",
+                null,
+                null,
+                java.util.Arrays.asList("none", "beltway", "cutthrough", "random"),
+                Status.LIVE,
+                "06-highways-railways",
+                false,
+                null));
         newTerrain("damageRepairChance", Type.FLOAT, d(0), d(1));
         newTerrain("facadeContrast", Type.FLOAT, d(10), d(200));
         add(
@@ -562,6 +577,7 @@ public final class ProfileOptions {
         legacyDefault("densityRings", "0.0");
         // Worlds pinned before the link network keep the legacy highways and railways, whatever the default becomes.
         legacyDefault("networkLayout", "legacy");
+        legacyDefault("cityHighwayLayout", "none");
     }
 
     /**
