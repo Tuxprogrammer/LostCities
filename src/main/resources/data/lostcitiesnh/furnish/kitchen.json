@@ -17,7 +17,12 @@
     { "block": "cookingforblockheads:fridge", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 2 },
     { "block": "cookingforblockheads:sink", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
     { "block": "minecraft:chest", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
-    { "block": "gregtech:gt.blockcasings", "meta": 0, "weight": 2 },
-    { "block": "gregtech:gt.blockcasings", "meta": 1, "weight": 2 }
+    { "gt": 103, "baseMeta": 0, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings3", "meta": 13, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 1, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 10, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 2, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings2", "meta": 2, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 3, "weight": 1 }
   ]
 }

@@ -16,7 +16,12 @@
     { "block": "minecraft:glass", "weight": 1 },
     { "block": "minecraft:stained_glass", "meta": 0, "weight": 1 },
     { "block": "etfuturum:lantern", "weight": 1 },
-    { "block": "gregtech:gt.blockcasings", "meta": 0, "weight": 2 },
-    { "block": "gregtech:gt.blockcasings", "meta": 1, "weight": 2 }
+    { "gt": 110, "baseMeta": 0, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings3", "meta": 13, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 1, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 10, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 2, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings2", "meta": 2, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 3, "weight": 1 }
   ]
 }

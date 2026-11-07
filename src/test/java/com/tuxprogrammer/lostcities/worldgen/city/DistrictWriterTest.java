@@ -47,9 +47,11 @@ public class DistrictWriterTest {
                     for (int bz = 0; bz < 16; bz++) {
                         for (int dy = 1; dy <= 9; dy++) {
                             BlockRef b = buffer.get(bx, HEIGHT + dy, bz);
-                            if (b == null || !"gregtech:gt.blockcasings".equals(b.name()) || b.meta() == 10) {
+                            if (b == null || !b.name()
+                                .startsWith("gregtech:gt.blockcasings") || b.meta() == 10 && "gregtech:gt.blockcasings".equals(b.name())) {
                                 continue;
                             }
+                            assertTrue(!"gregtech:gt.blockcasings".equals(b.name()) || b.meta() != 0, "no ULV casing");
                             casings++;
                             assertTrue(dy <= 2, "casing above the machine row at dy " + dy);
                         }

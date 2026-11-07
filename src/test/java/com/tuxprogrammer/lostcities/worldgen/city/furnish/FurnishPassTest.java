@@ -111,24 +111,78 @@ public class FurnishPassTest {
         }
     }
 
+    /**
+     * Tier of each MetaTileEntity ID the palettes use (names from MetaTileEntityIDs at GT5-Unofficial 5.09.54.265):
+     * 0 Steam, 1 LV, 2 MV, 3 HV, 4 EV.
+     */
+    private static final Map<Integer, Integer> MACHINE_TIER = new HashMap<>();
+
+    static {
+        int[][] table = { { 103, 0 }, { 106, 0 }, { 110, 0 }, { 112, 0 }, { 115, 0 }, { 118, 0 }, { 12, 2 },
+            { 13, 3 }, { 14, 4 }, { 151, 1 }, { 152, 2 }, { 161, 1 }, { 162, 2 }, { 182, 2 }, { 201, 1 }, { 212, 2 },
+            { 241, 1 }, { 291, 1 }, { 301, 1 }, { 312, 2 }, { 361, 1 }, { 671, 1 } };
+        for (int[] row : table) {
+            MACHINE_TIER.put(row[0], row[1]);
+        }
+    }
+
+    /** Casing blocks the stand-ins may use, with their tier (0 Steam to 4 EV); anything else is rejected. */
+    private static int casingTier(String block, int meta) {
+        if ("gregtech:gt.blockcasings".equals(block)) {
+            return meta >= 1 && meta <= 4 ? meta : meta == 10 ? 0 : -1;
+        }
+        if ("gregtech:gt.blockcasings3".equals(block) && (meta == 13 || meta == 14)) {
+            return 0; // bronze and steel firebox
+        }
+        if ("gregtech:gt.blockcasings2".equals(block) && (meta == 0 || meta == 2 || meta == 3)) {
+            return 0; // solid steel, bronze and steel gearbox
+        }
+        return -1;
+    }
+
     @Test
-    public void machineBearingPalettesCarryPlainCasingsAtTwiceTheMachineWeightUpToEv() {
+    public void machineBearingPalettesCarryPlainCasingsAtTwiceTheMachineWeightFromSteamToEv() {
         FurnishPalettes palettes = FurnishPalettes.bundled();
         for (RoomKind kind : RoomKind.values()) {
             int machines = 0;
             int casings = 0;
             for (FurnishItem item : palettes.palette(kind)
                 .items()) {
-                machines += item.isMachine() ? item.weight() : 0;
-                if ("gregtech:gt.blockcasings".equals(item.block())) {
+                if (item.isMachine()) {
+                    machines += item.weight();
+                    Integer tier = MACHINE_TIER.get(item.gtId());
+                    assertNotNull(tier, kind.id() + " machine " + item.gtId() + " has no known tier (ULV?)");
+                    assertTrue(tier >= 0 && tier <= 4, kind.id() + " machine tier");
+                } else if (item.block()
+                    .startsWith("gregtech:gt.blockcasings")) {
                     assertFalse(item.tile(), kind.id() + " casing is a plain block");
-                    assertTrue(item.meta() >= 0 && item.meta() <= 4, kind.id() + " casing tier above EV");
+                    assertTrue(casingTier(item.block(), item.meta()) >= 0, kind.id() + " casing " + item);
                     casings += item.weight();
                 }
             }
             if (machines > 0) {
                 assertEquals(2 * machines, casings, kind.id() + " casing weight");
             }
+        }
+    }
+
+    @Test
+    public void noBundledFurnishDataPlacesAUlvCasing() throws Exception {
+        for (String file : new String[] { "multiblocks", "basement", "industrial", "kitchen", "office", "residential",
+            "shop" }) {
+            String text;
+            try (java.io.InputStream in = FurnishPassTest.class
+                .getResourceAsStream("/data/lostcitiesnh/furnish/" + file + ".json")) {
+                try (java.util.Scanner scanner = new java.util.Scanner(in, "UTF-8")) {
+                    text = scanner.useDelimiter("\\A")
+                        .next();
+                }
+            }
+            assertFalse(
+                java.util.regex.Pattern.compile("\"gregtech:gt\\.blockcasings\"\\s*,\\s*\"meta\"\\s*:\\s*0\\b")
+                    .matcher(text)
+                    .find(),
+                file + " places a ULV casing");
         }
     }
 
