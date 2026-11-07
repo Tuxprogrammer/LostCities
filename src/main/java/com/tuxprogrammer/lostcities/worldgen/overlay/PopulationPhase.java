@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -18,6 +19,8 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.ChestGenHooks;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishItem;
+import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalette;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPalettes;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.MultiblockShapes;
@@ -52,8 +55,13 @@ public final class PopulationPhase {
     private static final long POPULATION_X = 341873128712L;
     private static final long POPULATION_Z = 104729L;
 
+    /** The mob a spawner's tile entity starts with, vanilla's {@code MobSpawnerBaseLogic} default. */
+    static final String DEFAULT_MOB = "Pig";
+
     private final World world;
     private final WorldChunkBuffer reader;
+    /** Positions of the chunk being populated that a job completed this run, by {@link OrphanTiles#index}. */
+    private final boolean[] handled = new boolean[16 * 16 * 256];
     /** Whether the first completed GT machine has been logged, the real-pack check of design record 0016. */
     private boolean machineLogged;
     private boolean multiblockLogged;
@@ -85,10 +93,13 @@ public final class PopulationPhase {
         Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
         reader.attach(chunk);
         Random random = new Random(SeedMix.chunk(world.getSeed(), chunkX, chunkZ, POPULATION_X, POPULATION_Z));
+        Arrays.fill(handled, false);
         int done = 0;
+        int top = -1;
         for (PopulationJob job : plan.jobs()) {
             int x = (chunkX << 4) + job.x();
             int z = (chunkZ << 4) + job.z();
+            top = Math.max(top, job.y());
             switch (job.kind()) {
                 case TORCH -> done += torch(job, x, z) ? 1 : 0;
                 case CHEST -> done += chest(job, x, z, random) ? 1 : 0;
@@ -100,7 +111,103 @@ public final class PopulationPhase {
                 default -> LostCities.LOG.warn("Unknown population job {}", job);
             }
         }
+        if (OrphanTiles.worthSweeping(plan.jobs())) {
+            done += orphans(plan, chunkX, chunkZ, random, top + MultiblockShapes.MAX_PLACED_LAYERS);
+        }
         return done;
+    }
+
+    /** Marks a position of the chunk being populated as completed by a job of this run. */
+    private void handle(int x, int y, int z) {
+        if (y >= 0 && y <= 255) {
+            handled[OrphanTiles.index(x & 15, y, z & 15)] = true;
+        }
+    }
+
+    /**
+     * Sends a block and its tile entity to the players watching the chunk (bug 2 of D-popsync-1). A tile entity
+     * changed through its NBT, as a GT machine is given its MetaTileEntity, tells no client; GT's
+     * {@code CommonBaseMetaTileEntity.getDescriptionPacket} (GT5-Unofficial 5.09.54.265) carries the machine's ID
+     * and state, and {@code readDescriptionBuffer} builds the MetaTileEntity on the client from it, so one resend is
+     * enough. {@code World.markBlockForUpdate} goes to the player manager's watcher of this chunk only, which it
+     * looks up without creating ({@code getOrCreateChunkWatcher(..., false)}): it reads and loads no other chunk.
+     */
+    private void sendToClients(int x, int y, int z) {
+        world.markBlockForUpdate(x, y, z);
+    }
+
+    /**
+     * Completes the spawners, chests and GT machines of the chunk that no job found at its position, or clears them
+     * (decision log D-popsync-1, {@link OrphanTiles}).
+     *
+     * @return the number of blocks completed or cleared
+     */
+    private int orphans(ChunkPlan plan, int chunkX, int chunkZ, Random random, int maxY) {
+        Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+        int done = 0;
+        for (OrphanTiles.Orphan orphan : OrphanTiles
+            .find(reader::get, plan.jobs(), i -> handled[i], FurnishPalettes.bundled(), 0, maxY)) {
+            int x = (chunkX << 4) + orphan.x();
+            int y = orphan.y();
+            int z = (chunkZ << 4) + orphan.z();
+            TileEntity existing = chunk.getTileEntityUnsafe(orphan.x(), y, orphan.z());
+            if (existing != null && !isDefault(existing)) {
+                continue; // a dungeon's spawner or chest, or a machine something else completed
+            }
+            if (FurnishItem.GT_MACHINES.equals(orphan.block())) {
+                reader.restoreStandIn(orphan.x(), y, orphan.z());
+            }
+            String mob = FurnishPalette.SPAWNER.equals(orphan.block()) ? SpawnerMobs.resolve(orphan.mob()) : null;
+            if (orphan.action() == OrphanTiles.Action.CLEAR || mob != null && mob.isEmpty()) {
+                done += clearQuietly(x, y, z) ? 1 : 0;
+                continue;
+            }
+            TileEntity tile = tileAt(x, y, z);
+            if (tile == null) {
+                continue;
+            }
+            if (!orphan.template()
+                .isEmpty()) {
+                TemplateNbt.apply(tile, orphan.template());
+            }
+            if (mob != null && tile instanceof TileEntityMobSpawner spawner) {
+                spawner.func_145881_a()
+                    .setEntityName(mob);
+            }
+            if (orphan.loot() != null && !orphan.loot()
+                .isEmpty() && tile instanceof IInventory) {
+                fill(tile, orphan.loot(), random, x, z);
+            }
+            chunk.setChunkModified();
+            sendToClients(x, y, z);
+            done++;
+        }
+        if (done > 0) {
+            LostCities.LOG
+                .debug("Population: {} moved spawners, chests or machines completed in {} {}", done, chunkX, chunkZ);
+        }
+        return done;
+    }
+
+    /**
+     * Whether a tile entity is still as its block made it: a spawner with vanilla's default mob, a container with no
+     * items, a GT machine with no MetaTileEntity. Only such a one is completed by a job or the orphan sweep.
+     */
+    private static boolean isDefault(TileEntity tile) {
+        if (tile instanceof TileEntityMobSpawner spawner) {
+            return DEFAULT_MOB.equals(
+                spawner.func_145881_a()
+                    .getEntityNameToSpawn());
+        }
+        if (tile instanceof IInventory inventory) {
+            for (int slot = 0; slot < inventory.getSizeInventory(); slot++) {
+                if (inventory.getStackInSlot(slot) != null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return "no MetaTileEntity".equals(machineName(tile));
     }
 
     private boolean torch(PopulationJob job, int x, int z) {
@@ -126,12 +233,16 @@ public final class PopulationPhase {
         if (!(tile instanceof IInventory)) {
             return false;
         }
-        TemplateNbt.apply(tile, job.template());
-        if (job.argument()
-            .isEmpty()) {
-            return true;
+        handle(x, job.y(), z);
+        if (!isDefault(tile)) {
+            return false;
         }
-        fill(tile, job.argument(), random, x, z);
+        TemplateNbt.apply(tile, job.template());
+        if (!job.argument()
+            .isEmpty()) {
+            fill(tile, job.argument(), random, x, z);
+        }
+        sendToClients(x, job.y(), z);
         return true;
     }
 
@@ -158,6 +269,7 @@ public final class PopulationPhase {
         if (section == null) {
             return false;
         }
+        handle(x, y, z);
         world.removeTileEntity(x, y, z);
         section.func_150818_a(x & 15, y & 15, z & 15, Blocks.air);
         section.setExtBlockMetadata(x & 15, y & 15, z & 15, 0);
@@ -202,6 +314,7 @@ public final class PopulationPhase {
         if (world.getBlock(x, job.y(), z) != Blocks.mob_spawner) {
             return false;
         }
+        handle(x, job.y(), z);
         String mob = SpawnerMobs.resolve(job.argument());
         if (mob.isEmpty()) {
             return clearQuietly(x, job.y(), z);
@@ -212,9 +325,11 @@ public final class PopulationPhase {
                 .setEntityName(mob);
             world.getChunkFromChunkCoords(x >> 4, z >> 4)
                 .setChunkModified();
+            sendToClients(x, job.y(), z);
             return true;
         }
-        return false;
+        // A spawner that cannot take a mob is air, never a pig spawner.
+        return clearQuietly(x, job.y(), z);
     }
 
     /**
@@ -229,10 +344,12 @@ public final class PopulationPhase {
         if (tile == null) {
             return false;
         }
+        handle(x, job.y(), z);
         if (TemplateNbt.apply(tile, job.template())) {
             world.getChunkFromChunkCoords(x >> 4, z >> 4)
                 .setChunkModified();
         }
+        sendToClients(x, job.y(), z);
         return true;
     }
 
@@ -240,7 +357,8 @@ public final class PopulationPhase {
      * Completes one furnished floor (design record 0016): creates the tile entities of the furniture the terrain phase
      * wrote and gives each GT machine its MetaTileEntity and facing through its NBT, the chunk-load path
      * ({@code BaseMetaTileEntity.readFromNBT} builds the machine from {@code mID}, research-gt-machines.md §1). A
-     * block that already has a tile entity is left as it is. Reads and writes only this chunk.
+     * block whose tile entity already holds anything but its defaults is left as it is; a spawner no mob can be given
+     * becomes air. Each completed tile entity is sent to watching clients. Reads and writes only this chunk.
      *
      * @return the number of tile entities completed
      */
@@ -255,22 +373,20 @@ public final class PopulationPhase {
             int z = (chunkZ << 4) + completion.z();
             int level = completion.y() >= 0 ? completion.y() : job.y();
             Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-            if (chunk.getTileEntityUnsafe(completion.x(), level, completion.z()) != null) {
+            TileEntity existing = chunk.getTileEntityUnsafe(completion.x(), level, completion.z());
+            // A tile entity made before population (anything that asked the world for it) still has its block's
+            // defaults, a pig spawner among them; one that holds anything else is left as it is.
+            if (existing != null && !isDefault(existing)) {
+                handle(x, level, z);
                 continue;
             }
             TileEntity tile = tileAt(x, level, z);
             if (tile == null) {
                 continue;
             }
-            if (completion.loot() != null && tile instanceof IInventory) {
-                fill(
-                    tile,
-                    completion.loot(),
-                    new Random(SeedMix.mix(world.getSeed(), x * 31L + z * 17L + level)),
-                    x,
-                    z);
-            }
-            if (completion.mob() != null && tile instanceof TileEntityMobSpawner spawner) {
+            handle(x, level, z);
+            if (tile instanceof TileEntityMobSpawner spawner) {
+                // A spawner the palette names no mob for, or one the pack lacks, is air (SpawnerMobs).
                 String mob = SpawnerMobs.resolve(completion.mob());
                 if (mob.isEmpty()) {
                     clearQuietly(x, level, z);
@@ -279,6 +395,14 @@ public final class PopulationPhase {
                 spawner.func_145881_a()
                     .setEntityName(mob);
                 chunk.setChunkModified();
+            }
+            if (completion.loot() != null && tile instanceof IInventory) {
+                fill(
+                    tile,
+                    completion.loot(),
+                    new Random(SeedMix.mix(world.getSeed(), x * 31L + z * 17L + level)),
+                    x,
+                    z);
             }
             if (!completion.template()
                 .isEmpty() && TemplateNbt.apply(tile, completion.template())) {
@@ -306,6 +430,7 @@ public final class PopulationPhase {
                         completion.template());
                 }
             }
+            sendToClients(x, level, z);
             done++;
         }
         return done;

@@ -6,6 +6,7 @@
 - Furnishing: GT machines now turn up in shops, offices, residential and kitchen rooms as well as industrial floors, with fewer in basements (same per-chunk tile-entity cap); the district plaza monument is a pillar of stone brick instead of GT casings.
 
 ## Fixed
+- No more pig spawners in cities: a spawner, chest or GT machine that explosion debris knocked off its floor is still given its mob, loot or machine, or becomes air; and furnished GT machines show their proper name and model at once instead of a nameless ".name" block until the world is reloaded.
 - City link network: a link blocked by a landmark now detours around it instead of being dropped, so cities are no longer leaves with one highway; a highway whose end plaza missed the city runs on as a spur to the first city chunk; a landmark inside a city moves its beltway ring instead of ruling the beltway out (D390 to D392).
 
 ## Upgrade notes
