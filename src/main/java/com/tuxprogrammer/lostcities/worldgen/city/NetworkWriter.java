@@ -695,7 +695,7 @@ public final class NetworkWriter {
                 clearUpper = true;
                 break;
             case STATION_UNDERGROUND:
-                staircase = rail.staircase();
+                staircase = stationStairs(rail, plan);
                 slot = staircase ? "stationundergroundstairs" : "stationunderground";
                 break;
             case STATION_EXTENSION_UNDERGROUND:
@@ -1049,6 +1049,20 @@ public final class NetworkWriter {
 
     private static boolean isRail(BlockRef block) {
         return "minecraft:rail".equals(block.name()) || "minecraft:golden_rail".equals(block.name());
+    }
+
+    /**
+     * Whether an underground station climbs to the city by its staircase: as the layout says, except on a district
+     * plaza (D-plaza-station-1). Every link-network city center is a station and the plaza is drawn at the center,
+     * so the staircase's surface part (11 x 6 at the chunk's west and south edges) broke a one-chunk plaza's basin and
+     * paved over a 2 x 2 plaza's corner; the station stays under the plaza without its entrance instead.
+     *
+     * @param rail the chunk's railway
+     * @param plan the chunk's plan
+     * @return whether the staircase is written
+     */
+    static boolean stationStairs(RailChunk rail, ChunkPlan plan) {
+        return rail.staircase() && plan.lot() != com.tuxprogrammer.lostcities.layout.LotKind.PLAZA;
     }
 
     /** The staircase from an underground station up to the city: a staircase part per level, then its top. */

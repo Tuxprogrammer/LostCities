@@ -18,6 +18,8 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
+import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
@@ -190,6 +192,90 @@ public class CityDistrictsTest {
                     x + "," + z);
             }
         }
+    }
+
+    /**
+     * D-plaza-road-1, the owner's report on seed 5253073417701929942: a highway along the center row of a big city
+     * left only the south half of its 2 x 2 plaza, so the monument (centered on the footprint's middle corner) was cut
+     * in half by the highway row's street and border wall a city level higher. A plaza is now whole or one chunk: all
+     * four chunks of a 2 x 2 are plaza at one city level, never a highway chunk; otherwise at most one chunk of the
+     * footprint is a one-chunk plaza.
+     */
+    @Test
+    public void everyPlazaIsWholeAndOffTheHighways() {
+        int[] seen = new int[3];
+        for (long seed : new long[] { SEED, 11L, 12345L, 5253073417701929942L }) {
+            LayoutPlanner p = planner(seed, "true");
+            for (int[] c : centers(p)) {
+                if (!p.centerYieldsCity(c[0], c[1])) {
+                    continue;
+                }
+                boolean big = p.cityRadius(c[0], c[1]) >= 112;
+                int span = big ? 1 : 0;
+                int whole = 0;
+                int single = 0;
+                int level = p.plan(c[0], c[1])
+                    .cityLevel();
+                boolean blocked = false;
+                for (int dx = 0; dx <= span; dx++) {
+                    for (int dz = 0; dz <= span; dz++) {
+                        int x = c[0] + dx;
+                        int z = c[1] + dz;
+                        if ((dx != 0 || dz != 0) && p.isCityCenter(x, z)) {
+                            continue; // an adjacent city's own plaza
+                        }
+                        ChunkPlan plan = p.plan(x, z);
+                        blocked |= p.hasHighway(x, z) || plan.cityLevel() != level;
+                        if (plan.lot() != LotKind.PLAZA) {
+                            continue;
+                        }
+                        String at = "seed " + seed + " center " + c[0] + "," + c[1] + " chunk " + dx + "," + dz;
+                        assertFalse(p.hasHighway(x, z), "plaza on a highway: " + at);
+                        if (plan.lotFootprint()
+                            .isMulti()) {
+                            assertEquals(level, plan.cityLevel(), "2 x 2 plaza across a level step: " + at);
+                            whole++;
+                        } else {
+                            single++;
+                        }
+                    }
+                }
+                if (big) {
+                    String at = "seed " + seed + " center " + c[0] + "," + c[1];
+                    assertTrue(whole == 0 || whole >= 3 && single == 0, "a cut 2 x 2 plaza: " + at);
+                    assertTrue(single <= 1, "two one-chunk plazas for one city: " + at);
+                    if (blocked && whole == 0) {
+                        seen[single]++;
+                    }
+                }
+            }
+        }
+        System.out.println("districts: blocked 2x2 -> none=" + seen[0] + " single=" + seen[1]);
+        assertTrue(seen[0] + seen[1] > 0, "the test worlds hold a big city whose 2 x 2 a highway or level step cuts");
+    }
+
+    /**
+     * D-plaza-station-1: every link-network city center is a station, and the plaza is drawn at the center. On a plaza
+     * chunk the station stays under the plaza without its staircase, whose surface part would break the basin.
+     */
+    @Test
+    public void aStationUnderAPlazaHasNoStaircase() {
+        int stations = 0;
+        for (long seed : new long[] { SEED, 11L }) {
+            LayoutPlanner p = planner(seed, "true");
+            for (int[] c : centers(p)) {
+                ChunkPlan plan = p.plan(c[0], c[1]);
+                RailChunk rail = p.networks()
+                    .railChunk(c[0], c[1]);
+                if (plan.lot() != LotKind.PLAZA || rail.type() != RailChunkType.STATION_UNDERGROUND) {
+                    continue;
+                }
+                stations++;
+                assertFalse(NetworkWriter.stationStairs(rail, plan), "stairs on the plaza at " + c[0] + "," + c[1]);
+            }
+        }
+        System.out.println("districts: plaza stations=" + stations);
+        assertTrue(stations > 0, "some plaza sits over its city's station");
     }
 
     @Test

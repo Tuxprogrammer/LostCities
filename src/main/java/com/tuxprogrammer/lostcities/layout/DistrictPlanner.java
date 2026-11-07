@@ -56,6 +56,8 @@ final class DistrictPlanner {
     private static final int CACHE = 128;
     /** The cardinal sides as steps: east, west, south, north. */
     private static final int[][] SIDES = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+    /** The chunks of a 2 x 2 plaza tried, in order, for a one-chunk plaza when the 2 x 2 does not fit. */
+    private static final int[][] FALLBACK = { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } };
 
     private final LayoutPlanner planner;
     private final Map<Long, int[]> sites = new LinkedHashMap<Long, int[]>(CACHE, 0.75f, true) {
@@ -101,6 +103,62 @@ final class DistrictPlanner {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the plaza footprint a chunk is actually written with, or {@code null}: the 2 x 2 of {@link #plazaAt} only
+     * when all four chunks can carry it at one city level, else a one-chunk plaza on the first chunk of the footprint
+     * that can, in the order center, east, south, south-east (D-plaza-road-1). Upstream has no districts; before this,
+     * each chunk of a 2 x 2 declined on its own, so a highway or a level step across the footprint cut the plaza and
+     * its monument (centered on the footprint's middle corner) in half, with the neighbor's street and border wall
+     * standing at another level across the basin.
+     *
+     * <p>
+     * Pure: reads only the chunks' characteristics and the highway view, never a neighbor's plan, so nothing cascades.
+     */
+    MultiPos plazaFootprint(int x, int z) {
+        MultiPos raw = plazaAt(x, z);
+        if (raw == null) {
+            return null;
+        }
+        if (!raw.isMulti()) {
+            return canHold(x, z, -1) ? raw : null;
+        }
+        int ox = x - raw.x();
+        int oz = z - raw.z();
+        int level = planner.cityLevel(ox, oz);
+        boolean whole = true;
+        for (int dz = 0; dz <= 1 && whole; dz++) {
+            for (int dx = 0; dx <= 1 && whole; dx++) {
+                whole = canHold(ox + dx, oz + dz, level);
+            }
+        }
+        if (whole) {
+            return raw;
+        }
+        for (int[] d : FALLBACK) {
+            if (canHold(ox + d[0], oz + d[1], -1)) {
+                return d[0] == raw.x() && d[1] == raw.z() ? MultiPos.SINGLE : null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Whether a chunk can carry plaza paving: the conditions {@link #apply} tests on its own chunk, read from the
+     * characteristics and the highway view so any chunk of the footprint can ask them of the others.
+     *
+     * @param level the city level the chunk must stand at, or -1 for any
+     */
+    private boolean canHold(int x, int z, int level) {
+        ChunkCharacteristics c = planner.characteristics(x, z);
+        return c.isCity && !c.multiPos.isMulti()
+            && (level < 0 || c.cityLevel == level)
+            && planner.predefined.occupant(x, z) == null
+            && !planner.hasHighway(x, z)
+            && c.lane.role() == LaneRole.NONE
+            && !c.zone.zone()
+                .isTransition();
     }
 
     /** Whether a chunk is part of a plaza, so no multibuilding may cover it. */
@@ -206,7 +264,7 @@ final class DistrictPlanner {
                 .isTransition()) {
             return;
         }
-        MultiPos plaza = plazaAt(x, z);
+        MultiPos plaza = plazaFootprint(x, z);
         if (plaza != null) {
             open(b);
             clear(b);
