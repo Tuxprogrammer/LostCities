@@ -466,7 +466,7 @@ public final class FurnishPass {
                                 null));
                     }
                 } else if (palette.isTileBlock(block.name())) {
-                    String loot = FurnishPalette.CHEST.equals(block.name()) ? palette.lootAt(salt, x, y, z) : null;
+                    String loot = FurnishPalette.isContainer(block.name()) ? palette.lootAt(salt, x, y, z) : null;
                     String mob = FurnishPalette.SPAWNER.equals(block.name()) ? palette.mobAt(salt, x, y, z) : null;
                     out.add(new Completion(x, z, 0, "", loot, mob));
                 }

@@ -37,6 +37,7 @@ public class RoomRulesTest {
     private static final AssetSet SET = TestAssets.loadFiles(
         "lostcities/palettes/p.json",
         "{\"palette\": [{\"char\": \"C\", \"block\": \"minecraft:chest[facing=north]\", \"loot\": \"loot\"},"
+            + " {\"char\": \"B\", \"block\": \"minecraft:barrel[facing=north]\", \"loot\": \"loot\"},"
             + " {\"char\": \"1\", \"block\": \"minecraft:spawner\", \"mob\": \"mobs\"}]}",
         "lostcities/conditions/loot.json",
         "{\"values\": [{\"factor\": 1, \"value\": \"lostcities:chests/lostcitychest\"}]}",
@@ -44,6 +45,8 @@ public class RoomRulesTest {
         "{\"values\": [{\"factor\": 1, \"value\": \"minecraft:cave_spider\"}]}",
         "lostcities/parts/chest.json",
         "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"C\"]]}",
+        "lostcities/parts/barrel.json",
+        "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"B\"]]}",
         "lostcities/parts/spawner.json",
         "{\"xsize\": 1, \"zsize\": 1, \"slices\": [[\"1\"]]}");
 
@@ -114,6 +117,23 @@ public class RoomRulesTest {
         assertEquals(0, kept("chest", 75, "nh_cottage", true));
         assertEquals(RoomFit.CHEST_KEEP * 400, kept("chest", 65, "nh_cottage", true), 45.0);
         assertEquals(RoomFit.CHEST_KEEP * 400, kept("chest", 75, "library00", true), 45.0);
+    }
+
+    @Test
+    public void everyBarrelGetsALootJobAndRoomRulesNeverClearThem() {
+        int filled = 0;
+        for (int x = 0; x < 100; x++) {
+            // A home floor fits no chest, and an unbuilt spot has no room: barrels stay and roll loot anyway.
+            for (String building : new String[] { "nh_walkup", null }) {
+                PopulationJob job = job("barrel", x, 75, building, true);
+                assertEquals(PopulationJob.Kind.CHEST, job.kind());
+                if (!job.argument()
+                    .isEmpty()) {
+                    filled++;
+                }
+            }
+        }
+        assertTrue(filled > 0);
     }
 
     @Test

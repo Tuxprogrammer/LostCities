@@ -17,7 +17,8 @@
       },
       {
         "char": "B",
-        "block": "minecraft:barrel[facing=north]"
+        "block": "minecraft:barrel[facing=north]",
+        "loot": "chestloot"
       },
       {
         "char": "c",
