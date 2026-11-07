@@ -76,7 +76,7 @@ public class AssetValidationTest {
         // and the three muted desert palettes (AR-16).
         assertEquals(42, set.count(AssetType.BUILDINGS));
         assertEquals(14, set.count(AssetType.MULTIBUILDINGS));
-        assertEquals(221, set.count(AssetType.PARTS));
+        assertEquals(225, set.count(AssetType.PARTS));
         assertEquals(34, set.count(AssetType.PALETTES));
         assertEquals(14, set.count(AssetType.VARIANTS));
         assertEquals(4, set.count(AssetType.STYLES));

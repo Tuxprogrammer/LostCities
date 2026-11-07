@@ -53,7 +53,7 @@ public class WorldStyleTest {
         assertEquals(Character.valueOf('v'), standard.bridgeSupport());
         assertEquals(WorldStyle.RailwayAvoidance.IGNORE, standard.railwayAvoidance());
         assertEquals(
-            "highway_tunnel_bi",
+            "nh_highway_tunnel_bi",
             standard.parts("highways", "tunnel_bi")
                 .get(0)
                 .id()
