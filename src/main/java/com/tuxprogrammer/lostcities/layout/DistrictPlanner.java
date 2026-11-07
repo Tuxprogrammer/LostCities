@@ -130,18 +130,24 @@ final class DistrictPlanner {
         boolean whole = true;
         for (int dz = 0; dz <= 1 && whole; dz++) {
             for (int dx = 0; dx <= 1 && whole; dx++) {
-                whole = canHold(ox + dx, oz + dz, level);
+                whole = owned(ox + dx, oz + dz, ox, oz) && canHold(ox + dx, oz + dz, level);
             }
         }
         if (whole) {
             return raw;
         }
         for (int[] d : FALLBACK) {
-            if (canHold(ox + d[0], oz + d[1], -1)) {
+            if (owned(ox + d[0], oz + d[1], ox, oz) && canHold(ox + d[0], oz + d[1], -1)) {
                 return d[0] == raw.x() && d[1] == raw.z() ? MultiPos.SINGLE : null;
             }
         }
         return null;
+    }
+
+    /** Whether {@link #plazaAt} gives a chunk the 2 x 2 footprint that starts at (ox, oz), not a neighbor city's. */
+    private boolean owned(int x, int z, int ox, int oz) {
+        MultiPos pos = plazaAt(x, z);
+        return pos != null && pos.isMulti() && x - pos.x() == ox && z - pos.z() == oz;
     }
 
     /**

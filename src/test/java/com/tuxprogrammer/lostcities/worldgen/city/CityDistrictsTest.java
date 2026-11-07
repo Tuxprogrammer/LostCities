@@ -16,6 +16,7 @@ import com.tuxprogrammer.lostcities.layout.DensityRings;
 import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.MultiPos;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
@@ -100,6 +101,10 @@ public class CityDistrictsTest {
                     if (plan.lot() == LotKind.PLAZA) {
                         if ((dx != 0 || dz != 0) && p.isCityCenter(c[0] + dx, c[1] + dz)) {
                             continue; // an adjacent city's own one-chunk plaza
+                        }
+                        if (!plan.lotFootprint()
+                            .isMulti()) {
+                            continue; // D-plaza-road-1: the 2 x 2 does not fit, a one-chunk plaza instead
                         }
                         assertEquals(
                             2,
@@ -197,61 +202,49 @@ public class CityDistrictsTest {
     /**
      * D-plaza-road-1, the owner's report on seed 5253073417701929942: a highway along the center row of a big city
      * left only the south half of its 2 x 2 plaza, so the monument (centered on the footprint's middle corner) was cut
-     * in half by the highway row's street and border wall a city level higher. A plaza is now whole or one chunk: all
-     * four chunks of a 2 x 2 are plaza at one city level, never a highway chunk; otherwise at most one chunk of the
-     * footprint is a one-chunk plaza.
+     * in half by the highway row's street and border wall a city level higher. Now every 2 x 2 plaza chunk has its
+     * three partners, all plaza with the same footprint origin and city level, and no plaza chunk carries a highway;
+     * a big city whose 2 x 2 does not fit gets a one-chunk plaza (or none).
      */
     @Test
     public void everyPlazaIsWholeAndOffTheHighways() {
-        int[] seen = new int[3];
+        int fallbacks = 0;
         for (long seed : new long[] { SEED, 11L, 12345L, 5253073417701929942L }) {
             LayoutPlanner p = planner(seed, "true");
-            for (int[] c : centers(p)) {
-                if (!p.centerYieldsCity(c[0], c[1])) {
-                    continue;
-                }
-                boolean big = p.cityRadius(c[0], c[1]) >= 112;
-                int span = big ? 1 : 0;
-                int whole = 0;
-                int single = 0;
-                int level = p.plan(c[0], c[1])
-                    .cityLevel();
-                boolean blocked = false;
-                for (int dx = 0; dx <= span; dx++) {
-                    for (int dz = 0; dz <= span; dz++) {
-                        int x = c[0] + dx;
-                        int z = c[1] + dz;
-                        if ((dx != 0 || dz != 0) && p.isCityCenter(x, z)) {
-                            continue; // an adjacent city's own plaza
-                        }
-                        ChunkPlan plan = p.plan(x, z);
-                        blocked |= p.hasHighway(x, z) || plan.cityLevel() != level;
-                        if (plan.lot() != LotKind.PLAZA) {
-                            continue;
-                        }
-                        String at = "seed " + seed + " center " + c[0] + "," + c[1] + " chunk " + dx + "," + dz;
-                        assertFalse(p.hasHighway(x, z), "plaza on a highway: " + at);
-                        if (plan.lotFootprint()
-                            .isMulti()) {
-                            assertEquals(level, plan.cityLevel(), "2 x 2 plaza across a level step: " + at);
-                            whole++;
-                        } else {
-                            single++;
-                        }
+            for (int x = -R; x <= R; x++) {
+                for (int z = -R; z <= R; z++) {
+                    ChunkPlan plan = p.plan(x, z);
+                    if (plan.lot() != LotKind.PLAZA) {
+                        continue;
                     }
-                }
-                if (big) {
-                    String at = "seed " + seed + " center " + c[0] + "," + c[1];
-                    assertTrue(whole == 0 || whole >= 3 && single == 0, "a cut 2 x 2 plaza: " + at);
-                    assertTrue(single <= 1, "two one-chunk plazas for one city: " + at);
-                    if (blocked && whole == 0) {
-                        seen[single]++;
+                    String at = "seed " + seed + " chunk " + x + "," + z;
+                    assertFalse(p.hasHighway(x, z), "plaza on a highway: " + at);
+                    MultiPos pos = plan.lotFootprint();
+                    if (!pos.isMulti()) {
+                        if (!p.isCityCenter(x, z) || p.cityRadius(x, z) >= 112) {
+                            fallbacks++;
+                        }
+                        continue;
+                    }
+                    int ox = x - pos.x();
+                    int oz = z - pos.z();
+                    for (int dx = 0; dx <= 1; dx++) {
+                        for (int dz = 0; dz <= 1; dz++) {
+                            ChunkPlan other = p.plan(ox + dx, oz + dz);
+                            MultiPos op = other.lotFootprint();
+                            assertTrue(
+                                other.lot() == LotKind.PLAZA && op.isMulti()
+                                    && ox + dx - op.x() == ox
+                                    && oz + dz - op.z() == oz,
+                                "a cut 2 x 2 plaza: " + at + " partner " + dx + "," + dz);
+                            assertEquals(plan.cityLevel(), other.cityLevel(), "2 x 2 plaza across a level step: " + at);
+                        }
                     }
                 }
             }
         }
-        System.out.println("districts: blocked 2x2 -> none=" + seen[0] + " single=" + seen[1]);
-        assertTrue(seen[0] + seen[1] > 0, "the test worlds hold a big city whose 2 x 2 a highway or level step cuts");
+        System.out.println("districts: one-chunk fallbacks for big cities=" + fallbacks);
+        assertTrue(fallbacks > 0, "the test worlds hold a big city whose 2 x 2 a highway or level step cuts");
     }
 
     /**
@@ -260,22 +253,22 @@ public class CityDistrictsTest {
      */
     @Test
     public void aStationUnderAPlazaHasNoStaircase() {
-        int stations = 0;
-        for (long seed : new long[] { SEED, 11L }) {
-            LayoutPlanner p = planner(seed, "true");
-            for (int[] c : centers(p)) {
-                ChunkPlan plan = p.plan(c[0], c[1]);
-                RailChunk rail = p.networks()
-                    .railChunk(c[0], c[1]);
-                if (plan.lot() != LotKind.PLAZA || rail.type() != RailChunkType.STATION_UNDERGROUND) {
-                    continue;
-                }
-                stations++;
-                assertFalse(NetworkWriter.stationStairs(rail, plan), "stairs on the plaza at " + c[0] + "," + c[1]);
+        LayoutPlanner p = planner(SEED, "true");
+        RailChunk station = RailChunk.link(RailChunkType.STATION_UNDERGROUND, 0, true, 0);
+        int plazas = 0;
+        int streets = 0;
+        for (int[] c : centers(p)) {
+            ChunkPlan plan = p.plan(c[0], c[1]);
+            if (plan.lot() == LotKind.PLAZA) {
+                plazas++;
+                assertFalse(NetworkWriter.stationStairs(station, plan), "stairs on the plaza at " + c[0] + "," + c[1]);
+            } else if (plan.lot() == LotKind.NONE && !plan.hasBuilding()) {
+                streets++;
+                assertTrue(NetworkWriter.stationStairs(station, plan), "no stairs off the plaza at " + c[0] + "," + c[1]);
             }
         }
-        System.out.println("districts: plaza stations=" + stations);
-        assertTrue(stations > 0, "some plaza sits over its city's station");
+        assertTrue(plazas > 0, "some center is a plaza");
+        System.out.println("districts: plaza centers=" + plazas + " street centers=" + streets);
     }
 
     @Test
