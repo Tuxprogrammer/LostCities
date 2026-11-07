@@ -2,6 +2,7 @@ package com.tuxprogrammer.lostcities.worldgen.city.furnish;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -117,6 +118,18 @@ public final class FurnishPalette {
 
     /** Block name of the loot chest a palette may place (design record 0016, lane 6d). */
     public static final String CHEST = "minecraft:chest";
+    /** Block name of the Et Futurum Requiem barrel, a tile entity that is an {@code IInventory} (EFR 2.6.65-GTNH). */
+    public static final String BARREL = "etfuturum:barrel";
+
+    /** Blocks whose tile entity is a container the palette's {@code loot} table fills. */
+    private static final Set<String> CONTAINERS = Collections
+        .unmodifiableSet(new HashSet<>(Arrays.asList(CHEST, BARREL)));
+
+    /** Returns whether a block is a container that rolls the palette's loot table (D-barrel-loot-1). */
+    public static boolean isContainer(String blockName) {
+        return CONTAINERS.contains(blockName);
+    }
+
     /** Block name of the spawner a palette may place (design record 0016, lane 6d). */
     public static final String SPAWNER = "minecraft:mob_spawner";
 

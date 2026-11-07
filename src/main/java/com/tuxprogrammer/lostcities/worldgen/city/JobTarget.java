@@ -216,7 +216,8 @@ public final class JobTarget implements CityTarget {
             return;
         }
         String category = "";
-        boolean stays = !facts.roomRules || roomAllows(x, y, z, placement, true);
+        // A barrel is storage clutter, not a room's loot chest: the room rules thin chests only (D-barrel-loot-1).
+        boolean stays = isBarrel(info) || !facts.roomRules || roomAllows(x, y, z, placement, true);
         if (!stays) {
             // The terrain phase wrote the chest block; the population phase takes it out again (0016, decision 11).
             jobs.add(PopulationJob.of(PopulationJob.Kind.CLEAR_CHEST, x, y, z, ""));
@@ -233,6 +234,13 @@ public final class JobTarget implements CityTarget {
         jobs.add(
             PopulationJob.of(PopulationJob.Kind.CHEST, x, y, z, category)
                 .withTemplate(TileTemplates.rotated(template, transform)));
+    }
+
+    /** Whether a palette entry is upstream's barrel, which keeps its loot but is not thinned by the room rules. */
+    private static boolean isBarrel(PaletteEntry info) {
+        return info.block() != null && info.block()
+            .source()
+            .startsWith("minecraft:barrel");
     }
 
     @Override

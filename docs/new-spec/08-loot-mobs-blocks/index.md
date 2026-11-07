@@ -90,6 +90,7 @@ Upstream's six tags are data-pack files. 1.7.10 has no block tags, so each becom
 | Never-placed blocks | New | Unbreakable, explosive and painfully hard blocks (hardness above 50; vanilla spawners are exempt, at upstream's density, with GT's hardness on the [beta balance list](../beta-balance-list.md)), valuable storage outside loot, metals above EV, GT ore hosts, infested blocks, casings and machines, and the pack's gameplay hazards: the [never-place list](../05-assets/block-catalog/index.md#never-placed), enforced at load for every palette, override and generated part | D28 rule 7, D29; [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §5 | |
 | Metal storage blocks | Changed | Metals at or below EV come back as capped accents behind one flag each; treasure (`!`) and chest loot ignore the flags; metals above EV never appear ([decorative metals](../05-assets/block-catalog/index.md#decorative-metals-d29)) | D29 | |
 | Bedrock and protected blocks | Changed | Never placed; RWG's own bedrock is left alone; nothing claims land | [0004](../../design/0004-gtnh-layer-and-tier-ceiling.md) §5; D19 | |
+| Barrels | Changed | Upstream barrels (oilrig, cabin) held nothing; here they draw from the same loot condition as chests, and furnished `etfuturum:barrel`s draw from the room palette's `loot` table. Barrels are not thinned by the room rules | D-barrel-loot-1 | |
 
 ## Related areas
 

@@ -3,6 +3,7 @@
   "density": 0.35,
   "maxItems": 6,
   "maxTiles": 2,
+  "loot": { "lostcitiesnh:city_supplies": 4, "lostcitiesnh:city_lv": 2 },
   "fallback": { "block": "minecraft:planks", "meta": 1 },
   "items": [
     { "gt": 151, "baseMeta": 1, "weight": 1 },

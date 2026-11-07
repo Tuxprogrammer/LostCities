@@ -317,6 +317,47 @@ public class FurnishPassTest {
     }
 
     @Test
+    public void aFurnishedBarrelCarriesALootCategoryAsAChestDoes() {
+        Map<RoomKind, FurnishPalette> map = new EnumMap<>(RoomKind.class);
+        Map<String, Integer> loot = new HashMap<>();
+        loot.put("lostcitiesnh:city_supplies", 1);
+        for (RoomKind kind : RoomKind.values()) {
+            map.put(
+                kind,
+                new FurnishPalette(
+                    kind,
+                    1f,
+                    100,
+                    FurnishPass.TILES_PER_ROOM,
+                    FurnishItem.block("minecraft:bookshelf", 0, false, null, 1),
+                    Arrays.asList(FurnishItem.block("etfuturum:barrel", 0, true, new int[] { 2, 3, 4, 5 }, 1)),
+                    loot,
+                    new HashMap<>()));
+        }
+        FurnishPalettes palettes = new FurnishPalettes(map, new ArrayList<>());
+        ArrayChunkBuffer buffer = room(false);
+        long salt = 7L;
+        FurnishPass.run(
+            buffer::get,
+            buffer::set,
+            new int[] { Y },
+            new RoomKind[] { RoomKind.INDUSTRIAL },
+            new long[] { salt },
+            palettes,
+            1f,
+            name -> true);
+        List<FurnishPass.Completion> done = FurnishPass
+            .completions(buffer::get, Y, FurnishPass.jobArgument(RoomKind.INDUSTRIAL, salt), palettes);
+        assertFalse(done.isEmpty());
+        for (FurnishPass.Completion completion : done) {
+            assertEquals("lostcitiesnh:city_supplies", completion.loot());
+        }
+        assertTrue(FurnishPalette.isContainer("etfuturum:barrel"));
+        assertTrue(FurnishPalette.isContainer("minecraft:chest"));
+        assertFalse(FurnishPalette.isContainer("minecraft:furnace"));
+    }
+
+    @Test
     public void aMachineFacesAwayFromItsWall() {
         ArrayChunkBuffer buffer = room(false);
         // Against the north wall (z 0) at x 10, z 1: the front points south.

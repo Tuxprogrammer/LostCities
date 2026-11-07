@@ -38,15 +38,18 @@
     },
     {
       "char": "s",
-      "block": "minecraft:barrel[facing=east,open=false]"
+      "block": "minecraft:barrel[facing=east,open=false]",
+      "loot": "chestloot"
     },
     {
       "char": "N",
-      "block": "minecraft:barrel[facing=west,open=false]"
+      "block": "minecraft:barrel[facing=west,open=false]",
+      "loot": "chestloot"
     },
     {
       "char": "U",
-      "block": "minecraft:barrel[facing=south,open=false]"
+      "block": "minecraft:barrel[facing=south,open=false]",
+      "loot": "chestloot"
     },
     {
       "char": "&",
