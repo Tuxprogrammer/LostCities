@@ -383,6 +383,37 @@ public final class LinkHighways {
         // does not depend on the other links' levels.
         Profile profile = compute(link, ends, (x, z) -> shared(link, x, z), cities);
         profiles.put(link, profile);
+        if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
+            List<LinkRaster.Step> path = link.path();
+            int n = path.size();
+            String first = profile.start < n ? path.get(profile.start)
+                .chunkX() + ","
+                + path.get(profile.start)
+                    .chunkZ()
+                : "-";
+            String last = profile.end >= 0 && profile.end < n ? path.get(profile.end)
+                .chunkX() + ","
+                + path.get(profile.end)
+                    .chunkZ()
+                : "-";
+            com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+                "link a=%d,%d b=%d,%d pathChunks=%d written=%d..%d firstWritten=%s lastWritten=%s radiusA=%d radiusB=%d"
+                    + " levelA=%d levelB=%d staircase=%b",
+                link.ax(),
+                link.az(),
+                link.bx(),
+                link.bz(),
+                n,
+                profile.start,
+                profile.end,
+                first,
+                last,
+                ends.radius(link.ax(), link.az()),
+                ends.radius(link.bx(), link.bz()),
+                ends.level(link.ax(), link.az()),
+                ends.level(link.bx(), link.bz()),
+                profile.staircase);
+        }
         return profile;
     }
 

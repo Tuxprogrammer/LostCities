@@ -69,6 +69,7 @@ public class CommonProxy {
             Loader.instance()
                 .getConfigDir());
         LostCitiesNetwork.init();
+        com.tuxprogrammer.lostcities.worldgen.overlay.CityTraceLog.install();
         LostCities.LOG.info("{} {}: modules {}", LostCities.NAME, Tags.VERSION, ModuleState.configured());
     }
 

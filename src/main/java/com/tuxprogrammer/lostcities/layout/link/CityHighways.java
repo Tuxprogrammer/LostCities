@@ -328,7 +328,87 @@ public final class CityHighways {
                 beltway = false;
                 break;
         }
-        return beltway ? beltway(cx, cz, half) : cutThrough(cx, cz, radius, fits);
+        Plan plan = beltway ? beltway(cx, cz, half) : cutThrough(cx, cz, radius, fits);
+        if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
+            trace(cx, cz, radius, extent, half, fits, plan);
+        }
+        return plan;
+    }
+
+    /**
+     * Trace (diagnostic): why a city got the highway it got: its size, the beltway eligibility tests one by one, the
+     * random roll, its links and which of them reach its edge, and the result.
+     */
+    private void trace(int cx, int cz, int radius, float extent, int half, boolean fits, Plan plan) {
+        boolean landmark = false;
+        int e = (int) Math.ceil(extent);
+        for (int dx = -e; dx <= e && !landmark; dx++) {
+            for (int dz = -e; dz <= e; dz++) {
+                if (dx * dx + dz * dz <= extent * extent && cities.landmark(cx + dx, cz + dz)) {
+                    landmark = true;
+                    break;
+                }
+            }
+        }
+        List<int[]> ring = ring(cx, cz, half);
+        int city = 0;
+        for (int[] c : ring) {
+            if (cities.city(c[0], c[1])) {
+                city++;
+            }
+        }
+        float full = fullness(cx, cz, extent);
+        StringBuilder links = new StringBuilder();
+        int usable = 0;
+        if (graph != null) {
+            for (CityLinkGraph.Link link : graph
+                .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
+                int[] entry = entry(link, cx, cz, radius);
+                if (entry != null) {
+                    usable++;
+                }
+                links.append(' ')
+                    .append(link.ax())
+                    .append(',')
+                    .append(link.az())
+                    .append("->")
+                    .append(link.bx())
+                    .append(',')
+                    .append(link.bz())
+                    .append(entry == null ? "(no-entry)" : "(entry " + entry[0] + "," + entry[1] + ")");
+            }
+        }
+        com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+            "cityHighway center=%d,%d layout=%s radius=%d extent=%.2f half=%d fits=%b roomFits=%b landmarkInExtent=%b"
+                + " ringCity=%d/%d (need %.0f%%) fullness=%.3f roll=%.3f chance=%.3f links=%d usable=%d result=%s"
+                + " level=%d joined=%d pieces=%d linkList=[%s]",
+            cx,
+            cz,
+            layout,
+            radius,
+            extent,
+            half,
+            fits,
+            half * Math.sqrt(2) + MARGIN <= extent,
+            landmark,
+            city,
+            ring.size(),
+            MIN_RING_CITY * 100,
+            full,
+            roll(cx, cz),
+            beltwayChance(full),
+            graph == null ? -1
+                : graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))
+                    .size(),
+            usable,
+            plan.kind(),
+            plan.level(),
+            plan.joined()
+                .size(),
+            plan.pieces()
+                .size(),
+            links.toString()
+                .trim());
     }
 
     /**
@@ -509,6 +589,11 @@ public final class CityHighways {
             for (int[] bend : bends) {
                 List<int[]> route = route(a, bend, b);
                 if (route == null) {
+                    if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
+                        com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+                            "cutThrough center=%d,%d pair=%d,%d a=%d,%d b=%d,%d bend=%d,%d rejected=route-blocked",
+                            cx, cz, pair[0], pair[1], a[0], a[1], b[0], b[1], bend[0], bend[1]);
+                    }
                     continue;
                 }
                 int level = 0;
@@ -517,6 +602,13 @@ public final class CityHighways {
                 }
                 level = Math.min(cities.maxLevel(), level + 1);
                 if (!climbs(usable.get(pair[0]), cx, cz, 0, level) || !climbs(usable.get(pair[1]), cx, cz, 0, level)) {
+                    if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
+                        com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+                            "cutThrough center=%d,%d pair=%d,%d a=%d,%d b=%d,%d bend=%d,%d level=%d rejected=no-ramp-room"
+                                + " climbA=%b climbB=%b",
+                            cx, cz, pair[0], pair[1], a[0], a[1], b[0], b[1], bend[0], bend[1], level,
+                            climbs(usable.get(pair[0]), cx, cz, 0, level), climbs(usable.get(pair[1]), cx, cz, 0, level));
+                    }
                     continue;
                 }
                 Map<Long, HighwayInfo.Piece> pieces = new LinkedHashMap<>();
