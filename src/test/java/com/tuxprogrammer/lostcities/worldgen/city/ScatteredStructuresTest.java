@@ -178,9 +178,19 @@ public class ScatteredStructuresTest {
     }
 
     @Test
-    public void scatteredContainersGetALootCategory() {
-        ScatteredPlan cabin = WORLD.nearest("cabin");
-        assertNotNull(cabin);
+    public void everyScatteredContainerGetsALootCategory() {
+        assertTrue(containersFilled("cabin") > 0, "the cabin has a barrel");
+        for (String name : new String[] { "highway_gas_station", "highway_restaurant", "oilrig", "radiotower" }) {
+            containersFilled(name);
+        }
+    }
+
+    /** Checks every container a structure writes has a chest job with a category; returns how many it has. */
+    private static int containersFilled(String name) {
+        ScatteredPlan cabin = WORLD.nearest(name);
+        if (cabin == null) {
+            return 0;
+        }
         int barrels = 0;
         for (ScatteredPlan.Share share : cabin.shares()) {
             ChunkPlan chunk = WORLD.plan.chunk(share.chunkX(), share.chunkZ());
@@ -192,7 +202,7 @@ public class ScatteredStructuresTest {
                     for (int y = 0; y < 256; y++) {
                         if (!buffer.get(x, y, z)
                             .name()
-                            .endsWith("barrel")) {
+                            .matches(".*(barrel|chest)")) {
                             continue;
                         }
                         barrels++;
@@ -204,12 +214,15 @@ public class ScatteredStructuresTest {
                             }
                         }
                         assertNotNull(found, "no chest job at the barrel " + x + "," + y + "," + z);
-                        assertFalse(found.argument().isEmpty(), "empty category: " + found);
+                        assertFalse(
+                            found.argument()
+                                .isEmpty(),
+                            "empty category: " + found);
                     }
                 }
             }
         }
-        assertTrue(barrels > 0, "the cabin has a barrel");
+        return barrels;
     }
 
     @Test
