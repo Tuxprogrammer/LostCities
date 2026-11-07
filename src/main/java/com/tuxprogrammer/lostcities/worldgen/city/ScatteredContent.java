@@ -131,11 +131,13 @@ final class ScatteredContent {
                 share.floors(),
                 context.biomes()
                     .biomeOfChunk(chunkX, chunkZ),
-                layout.noLoot(),
+                // D-cabin-loot-1: a scattered structure has one or two containers, so neither the footprint chunk's
+                // noLoot roll nor chestWithoutLootChance may empty them (upstream's rolls left a lone barrel empty
+                // about one time in three). generateLoot still applies.
+                false,
                 context.settings()
                     .generateLoot(),
-                context.settings()
-                    .chestWithoutLootChance()));
+                0f));
         new ScatteredWriter(context, plan, share, target, new PaletteSequence(context.worldSeed(), chunkX, chunkZ))
             .write();
         return target.jobs();
