@@ -17,7 +17,7 @@ The option is `cityHighwayLayout`, with the values `none`, `beltway`, `cutthroug
 |---|---|
 | Extent | The city's extent in chunks is `radius · (1 − cityThreshold) / 16`. |
 | Ring size | `half = max(5, round(0.5 · extent))`. The ring is the square at Chebyshev distance `half` from the center, 8·`half` chunks long, and the inner block is at least 9 x 9. |
-| Beltway fits | All of the following hold: `half·√2 + 2 ≤ extent`, so there is city beyond the ring's corners; no landmark zone lies within the extent; and at least 60% of ring chunks are city base. |
+| Beltway fits | All of the following hold: `half·√2 + 2 ≤ extent`, so there is city beyond the ring's corners; no ring chunk lies in a landmark's core or margin; and at least 60% of ring chunks are city base. The preferred half-size is tried first, then each smaller one down to 5, then each larger one, so a landmark inside the city moves the ring until it clears (D392, replacing the old rule that any landmark zone in the extent ruled the beltway out). |
 | `random` | Picks a beltway with chance `clamp(0.15 + 0.8·(fullness − 0.5)/0.5, 0.15, 0.95)`, where fullness is the city-base share of the extent disc. The roll is a seeded hash of the center. It only applies when the beltway fits; otherwise the city gets a cut-through. |
 | `beltway` | A beltway where it fits, otherwise a cut-through. |
 | Level | One above the highest city level under the route, capped at the top city level. The highway is elevated, so the planner leaves no building under it and a street runs beneath. |
