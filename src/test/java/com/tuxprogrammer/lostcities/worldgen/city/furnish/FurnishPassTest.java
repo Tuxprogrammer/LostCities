@@ -118,7 +118,8 @@ public class FurnishPassTest {
     private static final Map<Integer, Integer> MACHINE_TIER = new HashMap<>();
 
     static {
-        int[][] table = { { 103, 0 }, { 106, 0 }, { 110, 0 }, { 112, 0 }, { 115, 0 }, { 118, 0 }, { 12, 2 },
+        int[][] table = { { 100, 0 }, { 101, 0 }, { 103, 0 }, { 104, 0 }, { 106, 0 }, { 107, 0 }, { 109, 0 }, { 110, 0 },
+            { 112, 0 }, { 113, 0 }, { 115, 0 }, { 116, 0 }, { 118, 0 }, { 119, 0 }, { 12, 2 },
             { 13, 3 }, { 14, 4 }, { 151, 1 }, { 152, 2 }, { 161, 1 }, { 162, 2 }, { 182, 2 }, { 201, 1 }, { 212, 2 },
             { 241, 1 }, { 291, 1 }, { 301, 1 }, { 312, 2 }, { 361, 1 }, { 671, 1 } };
         for (int[] row : table) {
@@ -153,6 +154,9 @@ public class FurnishPassTest {
                     Integer tier = MACHINE_TIER.get(item.gtId());
                     assertNotNull(tier, kind.id() + " machine " + item.gtId() + " has no known tier (ULV?)");
                     assertTrue(tier >= 0 && tier <= 4, kind.id() + " machine tier");
+                    // Boilers (MTEBoiler.java:78, tier 0) are base type 0; steam machines and LV to HV are 1, EV is 2.
+                    int expectedBase = item.gtId() == 100 || item.gtId() == 101 ? 0 : tier == 4 ? 2 : 1;
+                    assertEquals(expectedBase, item.meta(), kind.id() + " base type of " + item.gtId());
                 } else if (item.block()
                     .startsWith("gregtech:gt.blockcasings")) {
                     assertFalse(item.tile(), kind.id() + " casing is a plain block");
