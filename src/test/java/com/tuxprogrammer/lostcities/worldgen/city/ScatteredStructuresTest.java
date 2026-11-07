@@ -178,6 +178,41 @@ public class ScatteredStructuresTest {
     }
 
     @Test
+    public void scatteredContainersGetALootCategory() {
+        ScatteredPlan cabin = WORLD.nearest("cabin");
+        assertNotNull(cabin);
+        int barrels = 0;
+        for (ScatteredPlan.Share share : cabin.shares()) {
+            ChunkPlan chunk = WORLD.plan.chunk(share.chunkX(), share.chunkZ());
+            ArrayChunkBuffer buffer = new ArrayChunkBuffer();
+            chunk.content()
+                .write(buffer, null);
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 256; y++) {
+                        if (!buffer.get(x, y, z)
+                            .name()
+                            .endsWith("barrel")) {
+                            continue;
+                        }
+                        barrels++;
+                        PopulationJob found = null;
+                        for (PopulationJob job : chunk.jobs()) {
+                            if (job.kind() == PopulationJob.Kind.CHEST && job.x() == x && job.y() == y
+                                && job.z() == z) {
+                                found = job;
+                            }
+                        }
+                        assertNotNull(found, "no chest job at the barrel " + x + "," + y + "," + z);
+                        assertFalse(found.argument().isEmpty(), "empty category: " + found);
+                    }
+                }
+            }
+        }
+        assertTrue(barrels > 0, "the cabin has a barrel");
+    }
+
+    @Test
     public void structuresKeepClearOfCitiesByTheBlendsReach() {
         ScatteredPlanner planner = WORLD.scattered;
         int structures = 0;
