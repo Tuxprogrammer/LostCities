@@ -271,6 +271,56 @@ public class CityDistrictsTest {
         System.out.println("districts: plaza centers=" + plazas + " street centers=" + streets);
     }
 
+    private static NetworkWriter.StairSite site(RailChunk rail, boolean plaza, boolean building, boolean highway,
+        int level) {
+        return new NetworkWriter.StairSite(rail, plaza, building, highway, true, level);
+    }
+
+    /** D-plaza-station-1: the staircase of a plaza station moves to exactly one qualifying neighbor, else none. */
+    @Test
+    public void aPlazaStationsStaircaseMovesToOneQualifyingNeighbor() {
+        int both = com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
+            | com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST;
+        RailChunk station = RailChunk.link(RailChunkType.STATION_UNDERGROUND, 0, true, both);
+        NetworkWriter.StairSite self = site(station, true, false, false, 2);
+        RailChunk tunnel = RailChunk.link(RailChunkType.HORIZONTAL, 0, false, both);
+        RailChunk bend = RailChunk.link(
+            RailChunkType.DOUBLE_BEND,
+            0,
+            false,
+            com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST
+                | com.tuxprogrammer.lostcities.layout.link.LinkRails.SOUTH);
+        NetworkWriter.StairSite good = site(tunnel, false, false, false, 2);
+        // A qualifying neighbor on both sides: exactly one carries it (east first).
+        assertEquals(1, NetworkWriter.stairCarrier(station, self, dx -> good));
+        // East has a building, west qualifies.
+        assertEquals(
+            -1,
+            NetworkWriter.stairCarrier(station, self, dx -> dx > 0 ? site(tunnel, false, true, false, 2) : good));
+        // Neither qualifies: a building, a highway, a plaza, another city level, a bend, other rail level.
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, true, false, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, false, true, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, true, false, false, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, false, false, 3)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(bend, false, false, false, 2)));
+        assertEquals(
+            0,
+            NetworkWriter.stairCarrier(
+                station,
+                self,
+                dx -> site(RailChunk.link(RailChunkType.HORIZONTAL, 1, false, both), false, false, false, 2)));
+        // A station off the plaza never moves its staircase.
+        assertEquals(0, NetworkWriter.stairCarrier(station, site(station, false, false, false, 2), dx -> good));
+        // An underground extension is preferred to a tunnel, on either side.
+        RailChunk extension = new RailChunk(RailChunkType.STATION_EXTENSION_UNDERGROUND, RailChunk.Direction.BI, 0, 1);
+        RailChunk legacy = new RailChunk(RailChunkType.STATION_UNDERGROUND, RailChunk.Direction.BI, 0, 1);
+        NetworkWriter.StairSite ext = site(extension, false, false, false, 2);
+        assertEquals(
+            -1,
+            NetworkWriter.stairCarrier(legacy, site(legacy, true, false, false, 2), dx -> dx > 0 ? good : ext));
+        assertEquals(-1, NetworkWriter.stairCarrier(station, self, dx -> dx > 0 ? good : ext));
+    }
+
     @Test
     public void withTheOptionOffNothingIsADistrict() {
         LayoutPlanner p = planner(SEED, "false");
