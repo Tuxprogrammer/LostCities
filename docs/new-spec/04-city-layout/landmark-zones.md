@@ -11,8 +11,10 @@ Status: *Accepted* from 0006, D26, D30 (deep railways under a core) and D31 (mul
 | **Core** | Every chunk a landmark's footprint, grown by `landmarkMargin` (2 blocks), touches | 0006 §1 |
 | **Edge ring (the margin)** | A core's eight neighbors; never city | 0006 §1 |
 | **Transition ring 1, 2** | Villages only: the next `villageTransitionRings` (2) rings of city chunks outside the margin | 0006 §1 |
-| **Crater basin** | City chunks an AE2 meteorite's height cap reaches | 0006 §1, [coexistence.md § AE2](../00-pack-integration/coexistence.md#ae2-meteorites) |
+| **Crater basin** | City chunks an AE2 meteorite's height cap reaches; unused since D-landmark-policy-1, which stops wiring meteorites as landmarks | 0006 §1, [coexistence.md § AE2](../00-pack-integration/coexistence.md#ae2-meteorites) |
 | **Village link** | Non-city land between a city's edge and a village within `villageLinkDistance` (4 chunks) of it | 0006 §3 |
+
+**Which structures are landmarks** (D-landmark-policy-1 to -3, superseding 0006 §6 for these kinds): villages, ocean monuments and RWG2 terrain landmarks keep their zones. The city builds over the others. LootGames rooms and AE2 meteorites are not landmarks at all: their oracles are not wired into the layout. Roguelike Dungeons towers and Witchery structures are still predicted, but their default treatment is `IGNORE`, so they get no core and no margin; the Roguelike steering refuses a tower whose lot touches a city chunk, and the Witchery veto skips a structure whose lot does. A profile can opt a kind back in with an explicit entry (`witchery=BUILD_AROUND`).
 
 Every kind of landmark, terrain landmarks (RWG2 volcanoes, lava-cave openings, river junctions) included, has a core and a margin. Landmarks come from the pure `StructureOracle` the glue builds from the enabled per-mod oracles ([0006](../../design/0006-build-around-other-worldgen.md#2-how-the-layout-learns-about-landmarks-structure-oracles) §2). Zones are derived per chunk, before the characteristics stage, and are part of the immutable plan.
 
@@ -70,7 +72,7 @@ Upstream's avoidance keys are replaced ([0006](../../design/0006-build-around-ot
 | Upstream key | Here |
 |---|---|
 | `avoidVillages` (true) | `villageTreatment`: `BUILD_AROUND` (default), `AVOID` (core and a non-city ring, no sewing: upstream's behavior), `IGNORE` |
-| `avoidStructures` (vanilla structure IDs) | `landmarkTreatment` per kind: `BUILD_AROUND` (default), `AVOID`, `IGNORE` |
+| `avoidStructures` (vanilla structure IDs) | `landmarkTreatment` per kind: `BUILD_AROUND` (default for ocean monuments and terrain landmarks), `AVOID`, `IGNORE` (default for Roguelike, Witchery, LootGames and meteorites, which a bare value does not reach; D-landmark-policy-2) |
 | `avoidVillagesAdjacent`, `avoidStructuresAdjacent` | Replaced by the margin (edge ring), which always exists for `BUILD_AROUND` |
 | `avoidFlattening` (true) | Always true for cores |
 | none | `landmarkMargin` 2 blocks, `softEdgeWidth` 6, `villageTransitionRings` 2, `villageLinkDistance` 4 chunks |
