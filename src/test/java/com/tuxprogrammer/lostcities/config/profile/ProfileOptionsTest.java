@@ -93,7 +93,12 @@ public class ProfileOptionsTest {
         compareFields(LayoutProfile.class, fromValues, upstream, "", differences);
         for (com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind kind : com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind
             .values()) {
-            if (fromValues.treatment(kind) != upstream.treatment(kind)) {
+            // D-landmark-policy-2: the profile's parsing gives overwritten kinds IGNORE; the layout's builder keeps
+            // BUILD_AROUND for every kind so the layout tests exercise the zone rules on any kind.
+            com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment expected = kind.overwritten()
+                ? kind.defaultTreatment()
+                : upstream.treatment(kind);
+            if (fromValues.treatment(kind) != expected) {
                 differences.add("treatment of " + kind);
             }
         }
