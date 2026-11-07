@@ -10,6 +10,8 @@
 ## Fixed
 - District plazas are no longer cut in half by a highway or a change of street level across them: a big city's 2 x 2 plaza is drawn only where all four chunks fit, otherwise a one-chunk plaza with its own monument; and a subway station under a plaza puts its entrance in a neighboring chunk instead of breaking into the plaza (the station stays underneath; no entrance if no neighbor is free) (D-plaza-road-1, D-plaza-station-1).
 - Buildings: escalators and other stair runs that climb from one floor into the next (such as the quartz escalator in the shopping mall) no longer break at the upper floor's slab at the default 8-block floor pitch (D-stair-xfloor-1).
+- Buildings near explosion damage no longer get holes in their floors, and their spawners no longer end up as pig spawners: the floating-fragment cleanup leaves a building's floors, walls and furniture where they were built.
+- No more pig spawners in cities: a spawner, chest or GT machine that explosion debris knocked off its floor is still given its mob, loot or machine, or becomes air; and furnished GT machines show their proper name and model at once instead of a nameless ".name" block until the world is reloaded.
 - City link network: a link blocked by a landmark now detours around it instead of being dropped, so cities are no longer leaves with one highway; a highway whose end plaza missed the city runs on as a spur to the first city chunk; a landmark inside a city moves its beltway ring instead of ruling the beltway out (D390 to D392).
 
 ## Upgrade notes

@@ -260,6 +260,34 @@ public final class WorldChunkBuffer implements ChunkBuffer {
         return swapped;
     }
 
+    /**
+     * Swaps one GT machine stand-in back to the machine, as {@link #restoreStandIns} does for whole levels: for a
+     * machine a later terrain pass moved off its floor (decision log D-popsync-1).
+     *
+     * @param x local X
+     * @param y block Y
+     * @param z local Z
+     * @return whether a stand-in was swapped
+     */
+    public boolean restoreStandIn(int x, int y, int z) {
+        Block marker = standIn();
+        Block machine = refs.block(BlockRef.of(FurnishItem.GT_MACHINES, 0));
+        if (y < 0 || y > 255 || !isStandIn(marker) || machine == null || machine == Blocks.air) {
+            return false;
+        }
+        ExtendedBlockStorage section = sections[y >> 4];
+        if (section == null || section.getBlockByExtId(x, y & 15, z) != marker) {
+            return false;
+        }
+        int meta = section.getExtBlockMetadata(x, y & 15, z);
+        section.func_150818_a(x, y & 15, z, machine);
+        section.setExtBlockMetadata(x, y & 15, z, meta);
+        lastReadBlock = null;
+        lastReadMeta = -1;
+        chunk.setChunkModified();
+        return true;
+    }
+
     /** Whether a block met in the chunk is the GT machine stand-in; never air, should the stand-in not resolve. */
     private boolean isStandIn(Block block) {
         return block != null && block != Blocks.air && block == standIn();

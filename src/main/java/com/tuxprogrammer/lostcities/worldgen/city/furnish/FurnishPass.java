@@ -449,30 +449,78 @@ public final class FurnishPass {
                         continue;
                     }
                 }
-                BlockRef block = view.get(x, y, z);
-                if (block.isAir()) {
-                    continue;
-                }
-                if (FurnishItem.GT_MACHINES.equals(block.name())) {
-                    FurnishItem machine = palette.machineAt(salt, x, y, z);
-                    if (machine != null && machine.meta() == block.meta()) {
-                        out.add(
-                            new Completion(
-                                x,
-                                z,
-                                machine.gtId(),
-                                machineTemplate(machine.gtId(), machineFacing(view, x, y, z)),
-                                null,
-                                null));
-                    }
-                } else if (palette.isTileBlock(block.name())) {
-                    String loot = FurnishPalette.CHEST.equals(block.name()) ? palette.lootAt(salt, x, y, z) : null;
-                    String mob = FurnishPalette.SPAWNER.equals(block.name()) ? palette.mobAt(salt, x, y, z) : null;
-                    out.add(new Completion(x, z, 0, "", loot, mob));
+                Completion loose = loose(view, palette, salt, x, y, z, y);
+                if (loose != null) {
+                    out.add(loose);
                 }
             }
         }
         return out;
+    }
+
+    /**
+     * Completes one loose furniture block that is no longer on the floor the furnish pass put it on: a later pass of
+     * the terrain phase (the floating-fragment pass after explosion damage drops whole blobs, furniture with them)
+     * moved it straight down. The draws that picked it (machine, loot, mob) are made at the standing level it was
+     * placed on and its column, which a fall keeps; a GT machine's facing is read where it stands now. Partial
+     * multiblock controllers are not matched: a fallen multiblock is broken anyway.
+     *
+     * @param view     the populated chunk
+     * @param x        local X
+     * @param y        the block's Y now
+     * @param z        local Z
+     * @param standing the standing level of the floor it may have come from
+     * @param argument that floor's job argument ({@link #jobArgument})
+     * @param palettes the palettes
+     * @return the completion, positioned at {@code y}, or {@code null} when the block is nothing that floor's palette
+     *         would have placed there
+     */
+    public static Completion completionAt(BlockView view, int x, int y, int z, int standing, String argument,
+        FurnishPalettes palettes) {
+        int split = argument.indexOf(';');
+        RoomKind kind = split < 0 ? null : RoomKind.byId(argument.substring(0, split));
+        FurnishPalette palette = kind == null ? null : palettes.palette(kind);
+        if (palette == null) {
+            return null;
+        }
+        long salt;
+        try {
+            salt = Long.parseLong(argument.substring(split + 1));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        Completion loose = loose(view, palette, salt, x, y, z, standing);
+        return loose == null ? null : loose.at(y);
+    }
+
+    /**
+     * The completion of a loose item at (x, y, z), its draws made at level {@code drawY}; {@code null} for a block
+     * the palette does not place there.
+     */
+    private static Completion loose(BlockView view, FurnishPalette palette, long salt, int x, int y, int z, int drawY) {
+        BlockRef block = view.get(x, y, z);
+        if (block.isAir()) {
+            return null;
+        }
+        if (FurnishItem.GT_MACHINES.equals(block.name())) {
+            FurnishItem machine = palette.machineAt(salt, x, drawY, z);
+            if (machine != null && machine.meta() == block.meta()) {
+                return new Completion(
+                    x,
+                    z,
+                    machine.gtId(),
+                    machineTemplate(machine.gtId(), machineFacing(view, x, y, z)),
+                    null,
+                    null);
+            }
+            return null;
+        }
+        if (palette.isTileBlock(block.name())) {
+            String loot = FurnishPalette.CHEST.equals(block.name()) ? palette.lootAt(salt, x, drawY, z) : null;
+            String mob = FurnishPalette.SPAWNER.equals(block.name()) ? palette.mobAt(salt, x, drawY, z) : null;
+            return new Completion(x, z, 0, "", loot, mob);
+        }
+        return null;
     }
 
     /** Finds a partial multiblock's controller standing over column (x, z) of a floor, or {@code null}. */
@@ -540,7 +588,6 @@ public final class FurnishPass {
             return gtId;
         }
 
-        /** Returns the template as JSON text, empty for a plain tile entity. */
         /** Returns the loot category to fill a chest with, or {@code null} for anything else. */
         public String loot() {
             return loot;
@@ -551,6 +598,7 @@ public final class FurnishPass {
             return mob;
         }
 
+        /** Returns the template as JSON text, empty for a plain tile entity. */
         public String template() {
             return template;
         }
