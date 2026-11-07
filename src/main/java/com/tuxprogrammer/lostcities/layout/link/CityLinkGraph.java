@@ -9,12 +9,12 @@ import java.util.Map;
 /**
  * The city link graph of a grid-placed world ({@code networkLayout=links}, docs/design/0015-city-link-network.md §1).
  * Nodes are the grid's city centers that actually yield a city (the filtered mask). Each node links to its
- * {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} chunks; a link exists when either end chose the other,
+ * {@link #NEAREST} nearest nodes within {@link #maxDistance()} chunks; a link exists when either end chose the other,
  * so links are symmetric. Every link is rasterized by {@link LinkRaster} into chunks; every highway and railway chunk
  * of the network lies on one, so following it either way reaches a city.
  *
  * <p>
- * Queries are per grid cell. A link through a chunk has both ends within {@link #MAX_DISTANCE} of it, so its ends lie
+ * Queries are per grid cell. A link through a chunk has both ends within {@link #maxDistance()} of it, so its ends lie
  * within {@link #reach()} cells of the chunk's cell; a cell's chunk index is built once from those cells' links and
  * kept in an LRU cache, as are each node's neighbor list and each cell's node. Everything is a function of the seed
  * and the {@link Nodes} oracle, so the answer does not depend on generation order. The oracle reads terrain oracles
@@ -27,8 +27,13 @@ public final class CityLinkGraph {
 
     /** Links per node before the symmetric union (owner decision 8). */
     public static final int NEAREST = 3;
-    /** Longest link, in chunks (owner decision 8). */
+    /** Longest link, in chunks, on a grid of {@link #REFERENCE_CELL}-chunk cells (owner decision 8). */
     public static final int MAX_DISTANCE = 160;
+    /**
+     * The cell size {@link #MAX_DISTANCE} was set for. A grid with larger cells stretches the cap with them (D-city-scale-1),
+     * so the same neighbors stay in reach; a smaller one keeps the cap.
+     */
+    public static final int REFERENCE_CELL = 64;
 
     /** Where the nodes are: the grid's centers and whether each yields a city. */
     public interface Nodes {
@@ -198,6 +203,7 @@ public final class CityLinkGraph {
     private final Nodes nodes;
     private final int cell;
     private final int reach;
+    private final int maxDistance;
     private final Lru<int[]> centers;
     private final Lru<List<Link>> neighbors;
     private final Lru<Map<Long, List<Hit>>> cellIndex;
@@ -211,17 +217,38 @@ public final class CityLinkGraph {
     public CityLinkGraph(Nodes nodes, int cacheSize) {
         this.nodes = nodes;
         this.cell = nodes.cell();
-        // A center lies anywhere in its cell, so two centers MAX_DISTANCE apart are at most this many cells apart.
-        this.reach = (MAX_DISTANCE + cell - 1) / cell + 1;
+        this.maxDistance = maxDistanceFor(cell);
+        // A center lies anywhere in its cell, so two centers maxDistance apart are at most this many cells apart.
+        this.reach = (maxDistance + cell - 1) / cell + 1;
         int size = Math.max(64, cacheSize);
         this.centers = new Lru<>(size * 4);
         this.neighbors = new Lru<>(size * 2);
-        this.cellIndex = new Lru<>(Math.max(16, size / 8));
+        // A cell's chunk index grows with the cell's area; keep about the same chunk area cached at every cell size.
+        long scale = (long) cell * cell / ((long) REFERENCE_CELL * REFERENCE_CELL);
+        this.cellIndex = new Lru<>((int) Math.max(16, size / 8 / Math.max(1, scale)));
     }
 
     /** Returns the grid cell size, in chunks. */
     public int cell() {
         return cell;
+    }
+
+    /**
+     * Returns the longest link on a grid of a given cell size, in chunks: {@link #MAX_DISTANCE} scaled by the cell over
+     * {@link #REFERENCE_CELL}, never below {@link #MAX_DISTANCE}. Neighbors on a jittered grid sit about one cell
+     * apart, so a fixed cap would leave a grid of 256-chunk cells (the {@code rarecities} profile) without a single
+     * link; scaling it keeps the same number of candidates per node at every cell size (D-city-scale-1).
+     *
+     * @param cell the cell edge in chunks
+     * @return the cap in chunks
+     */
+    public static int maxDistanceFor(int cell) {
+        return Math.max(MAX_DISTANCE, (int) ((long) MAX_DISTANCE * cell / REFERENCE_CELL));
+    }
+
+    /** Returns this graph's longest link, in chunks ({@link #maxDistanceFor}). */
+    public int maxDistance() {
+        return maxDistance;
     }
 
     /** Returns how many cells around a cell its links' ends may lie in. */
@@ -246,7 +273,7 @@ public final class CityLinkGraph {
     }
 
     /**
-     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} to which a
+     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #maxDistance()} to which a
      * path, straight or detoured ({@link #route}), crosses no {@link Nodes#blocked} chunk, nearest first, ties to the
      * lower end; when every such path is blocked, the nearest alone. Empty when the cell has no node. Not symmetric;
      * see {@link #links}.
@@ -263,7 +290,7 @@ public final class CityLinkGraph {
         int[] self = node(cellX, cellZ);
         List<long[]> found = new ArrayList<>();
         if (self != null) {
-            long max = (long) MAX_DISTANCE * MAX_DISTANCE;
+            long max = (long) maxDistance * maxDistance;
             for (int ox = -reach; ox <= reach; ox++) {
                 for (int oz = -reach; oz <= reach; oz++) {
                     if (ox == 0 && oz == 0) {
@@ -323,7 +350,7 @@ public final class CityLinkGraph {
      * Returns the link between two centers along a path that crosses no {@link Nodes#blocked} chunk, or {@code null}:
      * the straight raster if it is clear, else the first clear detour ({@link LinkRaster#rasterizeVia}) through a
      * waypoint offset across the link (each of {@link #DETOUR_OFFSETS}, at each of {@link #DETOUR_ALONG}, left before
-     * right), whose waypoint lies within {@link #MAX_DISTANCE} of both ends, so {@link #reach} still bounds every
+     * right), whose waypoint lies within {@link #maxDistance()} of both ends, so {@link #reach} still bounds every
      * chunk of the path. A function of the two ends (taken lower first) and the oracle only, so whichever end asks
      * gets the same path.
      *
@@ -351,7 +378,7 @@ public final class CityLinkGraph {
         // The unit normal, left of the lower-to-upper direction.
         double nx = -dz / length;
         double nz = dx / length;
-        long max = (long) MAX_DISTANCE * MAX_DISTANCE;
+        long max = (long) maxDistance * maxDistance;
         for (int offset : DETOUR_OFFSETS) {
             for (double along : DETOUR_ALONG) {
                 for (int side = 1; side >= -1; side -= 2) {

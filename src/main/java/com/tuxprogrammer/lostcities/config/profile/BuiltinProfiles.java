@@ -19,7 +19,10 @@ import java.util.TreeSet;
  * <li>the texts are lang keys whose words promise only what the options do (PROF-18): {@code nodamage} no longer
  * promises disabled ravines, {@code wasteland} drops its advice about mods the pack lacks, {@code atlantis} its Lost
  * Worlds warning, and {@code largecities} gets its own description;</li>
- * <li>{@code rarecities}' {@code highwayRequiresTwoCities} is dropped with legacy highways (D11).</li>
+ * <li>{@code rarecities}' {@code highwayRequiresTwoCities} is dropped with legacy highways (D11);</li>
+ * <li>{@code rarecities} places its cities on a jittered grid of 256-chunk cells (jitter 64) with radii 200 to 512
+ * blocks: four times upstream's area per city and four times the grid spacing of this port's first grid (D-city-scale-1).
+ * A world pins its values when it is created, so worlds made before keep 64-chunk cells and 100 to 256 blocks.</li>
  * </ul>
  * {@code cavern}, {@code floating}, {@code space}, {@code biosphere}, {@code biosphere_caves}, {@code bio_wasteland}
  * and {@code void_outside} wait for PersonalSpace, after beta (D12). Built-ins are never written into the config
@@ -128,10 +131,14 @@ public final class BuiltinProfiles {
             "grid",
             "cityChance",
             "0.00025",
-            "cityMinRadius",
-            "100",
-            "cityMaxRadius",
+            "cityGridCell",
             "256",
+            "cityGridJitter",
+            "64",
+            "cityMinRadius",
+            "200",
+            "cityMaxRadius",
+            "512",
             "ruinChance",
             "0",
             "railwaysCanEnd",

@@ -53,6 +53,36 @@ class CityLinkGraphTest {
     }
 
     @Test
+    void theCapStretchesWithTheCell() {
+        assertEquals(160, CityLinkGraph.maxDistanceFor(64));
+        assertEquals(160, CityLinkGraph.maxDistanceFor(16), "a smaller cell keeps the cap");
+        assertEquals(640, CityLinkGraph.maxDistanceFor(256));
+        CityLinkGraph graph = new CityLinkGraph(new Nodes(new CityGrid(5L, 256, 64, 200, 512), 5L), 512);
+        assertEquals(640, graph.maxDistance());
+        assertEquals(graph.reach(), new CityLinkGraph(grid(5L), 512).reach(), "the same reach in cells");
+    }
+
+    /** At the scaled {@code rarecities} grid (256-chunk cells, jitter 64) every node keeps at least two links. */
+    @Test
+    void everyNodeKeepsTwoLinksOnTheScaledGrid() {
+        for (long seed : new long[] { 1L, 1234L, -4242424242L }) {
+            CityLinkGraph graph = new CityLinkGraph(new Nodes(new CityGrid(seed, 256, 64, 200, 512), seed), 512);
+            int nodes = 0;
+            for (int cx = -6; cx <= 6; cx++) {
+                for (int cz = -6; cz <= 6; cz++) {
+                    if (graph.node(cx, cz) == null) {
+                        continue;
+                    }
+                    nodes++;
+                    assertTrue(graph.links(cx, cz)
+                        .size() >= 2, "seed " + seed + " cell " + cx + "," + cz);
+                }
+            }
+            assertTrue(nodes > 100, "nodes " + nodes);
+        }
+    }
+
+    @Test
     void choosesThreeNearestWithinCap() {
         Nodes nodes = grid(1234L);
         CityLinkGraph graph = new CityLinkGraph(nodes, 512);

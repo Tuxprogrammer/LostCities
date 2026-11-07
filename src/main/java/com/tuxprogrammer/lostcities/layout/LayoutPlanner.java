@@ -319,8 +319,10 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             return cached.isCity;
         }
         // The same test as computeCharacteristics's isCity, without the multibuilding placement, which reads the
-        // highways and so the link graph that calls this (0015 §1, D313).
-        return isCityBase(chunkX, chunkZ, zones.zone(chunkX, chunkZ)) && connectedToCenter(chunkX, chunkZ);
+        // highways and so the link graph that calls this (0015 §1, D313). A base center chunk is the start of its own
+        // city's component, so connectedToCenter would answer true; skipping it spares the link graph one component
+        // flood per node it asks about, which grows with the radius squared (D-city-scale-1).
+        return isCityBase(chunkX, chunkZ, zones.zone(chunkX, chunkZ));
     }
 
     /**

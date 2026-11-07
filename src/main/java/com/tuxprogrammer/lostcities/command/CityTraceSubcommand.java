@@ -34,8 +34,12 @@ public final class CityTraceSubcommand implements Subcommand {
 
     /** Default radius, chunks. */
     static final int DEFAULT_RADIUS = 40;
-    /** Largest radius, chunks. */
-    static final int MAX_RADIUS = 96;
+    /**
+     * Largest radius, chunks: one {@code rarecities} grid cell (256 chunks) plus its largest city's radius (32 chunks),
+     * so a square around a city reaches its neighbors' edges and shows the links between them whole (D-city-scale-1).
+     * Its per-chunk lines and, with {@code gen}, its generation grow with the square: ask for what the question needs.
+     */
+    static final int MAX_RADIUS = 288;
     /** Prefix of the log lines. */
     static final String TAG = "[LCNH-CITYTRACE] ";
     /** Characters of the level map, one per city level. */
