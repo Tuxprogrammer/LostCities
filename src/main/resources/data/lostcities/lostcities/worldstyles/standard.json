@@ -2,6 +2,14 @@
   "outsidestyle": "outside",
   "bridgesupport": "v",
   "highwaysupport": "v",
+  "parts": {
+    "highways": {
+      "tunnel": "nh_highway_tunnel",
+      "tunnel_bi": "nh_highway_tunnel_bi",
+      "tunnel_bend": "nh_highway_tunnel_bend",
+      "tunnel_t": "nh_highway_tunnel_t"
+    }
+  },
   "settings": {
     "railwayavoidance": "ignore",
     "railpartheight6": 1
