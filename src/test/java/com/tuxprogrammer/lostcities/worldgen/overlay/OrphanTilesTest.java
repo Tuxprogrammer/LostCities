@@ -98,15 +98,17 @@ public class OrphanTilesTest {
         assertEquals(SPAWNER, buffer.get(x, UPPER - 1, z));
 
         // The bug: the floor's job scans its standing level and misses the spawner, which kept vanilla's pig.
+        boolean[] handled = new boolean[16 * 16 * 256];
         for (FurnishPass.Completion c : FurnishPass.completions(buffer::get, UPPER, argument, FurnishPalettes.bundled())) {
             assertFalse(c.x() == x && c.z() == z, "the floor's job sees no spawner at its level");
+            handled[OrphanTiles.index(c.x(), c.y() >= 0 ? c.y() : UPPER, c.z())] = true;
         }
 
         // The fix: the sweep finds it and gives it the mob its floor drew for that column.
         List<PopulationJob> jobs = Collections
             .singletonList(PopulationJob.of(PopulationJob.Kind.FURNISH, 0, UPPER, 0, argument));
         List<OrphanTiles.Orphan> orphans = OrphanTiles
-            .find(buffer::get, jobs, i -> false, FurnishPalettes.bundled(), 0, 255);
+            .find(buffer::get, jobs, i -> handled[i], FurnishPalettes.bundled(), 0, 255);
         assertEquals(1, orphans.size(), orphans.toString());
         OrphanTiles.Orphan orphan = orphans.get(0);
         assertEquals(OrphanTiles.Action.COMPLETE, orphan.action());
