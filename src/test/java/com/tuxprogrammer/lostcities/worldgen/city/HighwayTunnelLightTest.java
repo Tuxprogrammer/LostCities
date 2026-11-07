@@ -159,7 +159,8 @@ public class HighwayTunnelLightTest {
 
     @Test
     public void theUpstreamPartsStayUnlitSoTheLampsAreOurOverrideOnly() {
-        for (String name : Arrays.asList("highway_tunnel", "highway_tunnel_bi", "highway_tunnel_bend", "highway_tunnel_t")) {
+        for (String name : Arrays
+            .asList("highway_tunnel", "highway_tunnel_bi", "highway_tunnel_bend", "highway_tunnel_t")) {
             ArrayChunkBuffer b = place(ASSETS.part(AssetId.parse(name)));
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
