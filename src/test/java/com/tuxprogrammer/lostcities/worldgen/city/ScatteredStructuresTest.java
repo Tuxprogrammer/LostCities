@@ -208,7 +208,8 @@ public class ScatteredStructuresTest {
                         barrels++;
                         PopulationJob found = null;
                         for (PopulationJob job : chunk.jobs()) {
-                            if (job.kind() == PopulationJob.Kind.CHEST && job.x() == x && job.y() == y
+                            if (job.kind() == PopulationJob.Kind.CHEST && job.x() == x
+                                && job.y() == y
                                 && job.z() == z) {
                                 found = job;
                             }
