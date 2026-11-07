@@ -41,6 +41,7 @@ public final class ChunkPlan {
     final boolean predefinedStreet;
     final int groundLevel;
     final int floorPitch;
+    final FloorHeights floorHeights;
     final int waterLevel;
     final EffectiveCitySettings settings;
     final int highwayXLevel;
@@ -82,6 +83,7 @@ public final class ChunkPlan {
         predefinedStreet = b.predefinedStreet;
         groundLevel = b.groundLevel;
         floorPitch = b.floorPitch;
+        floorHeights = b.floorHeights == null ? FloorHeights.uniform(b.floorPitch) : b.floorHeights;
         waterLevel = b.waterLevel;
         settings = b.settings;
         highwayXLevel = b.highwayXLevel;
@@ -190,6 +192,25 @@ public final class ChunkPlan {
         return floorPitch;
     }
 
+    /**
+     * Returns the building's floor heights: the world's pitch unless the building sets its own (decision log
+     * D-floor-heights-1). Every building position below follows them.
+     */
+    public FloorHeights floorHeights() {
+        return floorHeights;
+    }
+
+    /**
+     * Returns the block Y of local floor {@code f}'s slab: the city ground for the ground floor, below it for cellars,
+     * the building's top for {@code f == floors()}.
+     *
+     * @param f the local floor, {@code -cellars()} to {@code floors()}
+     * @return block Y
+     */
+    public int floorY(int f) {
+        return cityGroundLevel() + floorHeights.offset(f);
+    }
+
     /** Returns the water level, block Y. */
     public int waterLevel() {
         return waterLevel;
@@ -280,9 +301,9 @@ public final class ChunkPlan {
         return cellars;
     }
 
-    /** Returns the block Y of the lowest cellar's floor: {@code cityGroundLevel - cellars * floorPitch}. */
+    /** Returns the block Y of the lowest cellar's floor: {@code cityGroundLevel - cellars * cellar height}. */
     public int buildingBottomHeight() {
-        return cityGroundLevel() - cellars * floorPitch;
+        return floorY(-cellars);
     }
 
     /**
@@ -290,7 +311,7 @@ public final class ChunkPlan {
      * pitch 6, and the city levels the cellars' depth covers, rounded up, at a taller pitch (0014).
      */
     public int lowestCityLevel() {
-        return characteristics.cityLevel - cellarLevels(cellars, floorPitch);
+        return characteristics.cityLevel - cellarLevels(cellars, floorHeights.cellar);
     }
 
     /**
@@ -311,7 +332,7 @@ public final class ChunkPlan {
      */
     public int maxHeight() {
         if (hasBuilding) {
-            return cityGroundLevel() + floors * floorPitch;
+            return floorY(floors);
         }
         if (maxHighwayLevel() >= 0) {
             return groundLevel + maxHighwayLevel() * LEVEL_HEIGHT;
@@ -369,7 +390,11 @@ public final class ChunkPlan {
         if (ruinChance <= 0 || ruinHeight < 0) {
             return -1;
         }
-        return (int) (cityGroundLevel() + 1 + ruinHeight * floors * floorPitch);
+        if (floorHeights.isUniform()) {
+            // The single pitch keeps its float product order, so ruins stay where they were.
+            return (int) (cityGroundLevel() + 1 + ruinHeight * floors * floorHeights.upper);
+        }
+        return (int) (cityGroundLevel() + 1 + ruinHeight * floorHeights.offset(floors));
     }
 
     /**
@@ -527,6 +552,7 @@ public final class ChunkPlan {
         boolean predefinedStreet;
         int groundLevel;
         int floorPitch = LEGACY_FLOOR_PITCH;
+        FloorHeights floorHeights;
         int waterLevel;
         EffectiveCitySettings settings;
         int highwayXLevel = -1;

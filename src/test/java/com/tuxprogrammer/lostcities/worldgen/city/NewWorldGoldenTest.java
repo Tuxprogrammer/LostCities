@@ -118,6 +118,36 @@ public class NewWorldGoldenTest {
                         .startsWith("nh_")));
     }
 
+    /**
+     * The pack's own buildings at their own floor heights (decision log D-floor-heights-1): a walk-up with 5-block
+     * floors (3 clear) and the workshop, a 7-block high bay under 5-block floors.
+     */
+    @Test
+    public void goldenNewWorldOwnFloorHeights() throws IOException {
+        int[] walkup = CityFixtures.first(SEARCH * 2, (x, z) -> isBuilding(x, z, "nh_walkup"));
+        assertNotNull(walkup, "a walk-up near the origin");
+        assertEquals(
+            "5",
+            PLANNER.plan(walkup[0], walkup[1])
+                .floorHeights()
+                .toString());
+        golden("newworld_nh_walkup", walkup);
+        int[] workshop = CityFixtures.first(SEARCH * 2, (x, z) -> isBuilding(x, z, "nh_workshop"));
+        assertNotNull(workshop, "a workshop near the origin");
+        ChunkPlan plan = PLANNER.plan(workshop[0], workshop[1]);
+        assertEquals(
+            "7/5",
+            plan.floorHeights()
+                .toString());
+        assertEquals(plan.cityGroundLevel() + 7 + 5 * (plan.floors() - 1), plan.maxHeight());
+        golden("newworld_nh_workshop", workshop);
+    }
+
+    private static boolean isBuilding(int x, int z, String name) {
+        ChunkPlan plan = PLANNER.plan(x, z);
+        return plan.hasBuilding() && name.equals(String.valueOf(plan.building())) && plan.ruinHeight() < 0;
+    }
+
     @Test
     public void goldenNewWorldLots() throws IOException {
         golden(

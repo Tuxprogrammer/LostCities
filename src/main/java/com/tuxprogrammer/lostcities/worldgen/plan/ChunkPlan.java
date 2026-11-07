@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
 
 /**
@@ -54,6 +55,7 @@ public final class ChunkPlan {
     private final int floors;
     private final int cellars;
     private final int floorPitch;
+    private final FloorHeights floorHeights;
     private final float ruinHeight;
     private final float explosionChance;
     private final StyleBlocks style;
@@ -90,6 +92,7 @@ public final class ChunkPlan {
         this.floors = b.floors;
         this.cellars = b.cellars;
         this.floorPitch = b.floorPitch;
+        this.floorHeights = b.floorHeights == null ? FloorHeights.uniform(b.floorPitch) : b.floorHeights;
         this.ruinHeight = b.ruinHeight;
         this.explosionChance = b.explosionChance;
         this.style = b.style;
@@ -235,6 +238,22 @@ public final class ChunkPlan {
         return floorPitch;
     }
 
+    /** Returns the building's floor heights: the pitch unless the building sets its own (D-floor-heights-1). */
+    public FloorHeights floorHeights() {
+        return floorHeights;
+    }
+
+    /**
+     * Returns the Y of the ruin layer's base: {@code groundY + 1 + ruinHeight × building height}, the single pitch
+     * keeping upstream's float product order.
+     */
+    public int ruinBase() {
+        if (floorHeights.isUniform()) {
+            return (int) (groundY + 1 + ruinHeight * floors * floorHeights.upper);
+        }
+        return (int) (groundY + 1 + ruinHeight * floorHeights.offset(floors));
+    }
+
     /** Returns the building's cellars; 0 without a building. */
     public int cellars() {
         return cellars;
@@ -246,7 +265,7 @@ public final class ChunkPlan {
      * {@link WorldLimits#BUILDING_BOTTOM_MIN}, dropping cellars one at a time (TERR-31).
      */
     public int buildingBottom() {
-        return groundY - floorPitch * cellars;
+        return groundY + floorHeights.offset(-cellars);
     }
 
     /**
@@ -254,7 +273,7 @@ public final class ChunkPlan {
      * ground.
      */
     public int maxHeight() {
-        return building ? groundY + floorPitch * floors : groundY;
+        return building ? groundY + floorHeights.offset(floors) : groundY;
     }
 
     /** Returns the fraction of floors a ruined building keeps, or {@link #NOT_RUINED}. */
@@ -501,6 +520,7 @@ public final class ChunkPlan {
         private int floors;
         private int cellars;
         private int floorPitch = WorldLimits.LEGACY_FLOOR_PITCH;
+        private FloorHeights floorHeights;
         private float ruinHeight = NOT_RUINED;
         private float explosionChance = Float.NaN;
         private StyleBlocks style = StyleBlocks.defaults();
@@ -584,6 +604,17 @@ public final class ChunkPlan {
          */
         public Builder floorPitch(int pitch) {
             this.floorPitch = pitch;
+            return this;
+        }
+
+        /**
+         * Sets the building's own floor heights (D-floor-heights-1); the pitch, uniform, unless set.
+         *
+         * @param heights the heights, or {@code null} for the pitch
+         * @return this builder
+         */
+        public Builder floorHeights(FloorHeights heights) {
+            this.floorHeights = heights;
             return this;
         }
 
@@ -785,10 +816,11 @@ public final class ChunkPlan {
                 // 0006 §1: the city writes nothing in a core but a village lane's surface path.
                 throw new IllegalStateException("a landmark core has no content: " + chunkX + "," + chunkZ);
             }
-            if (building && groundY - floorPitch * cellars < WorldLimits.BUILDING_BOTTOM_MIN) {
+            int bottom = groundY + (floorHeights == null ? -floorPitch * cellars : floorHeights.offset(-cellars));
+            if (building && bottom < WorldLimits.BUILDING_BOTTOM_MIN) {
                 // TERR-31: a building that cannot fit is the layout's problem, settled before generation.
                 throw new IllegalStateException(
-                    "building bottom " + (groundY - floorPitch * cellars)
+                    "building bottom " + bottom
                         + " is below Y "
                         + WorldLimits.BUILDING_BOTTOM_MIN
                         + " at "

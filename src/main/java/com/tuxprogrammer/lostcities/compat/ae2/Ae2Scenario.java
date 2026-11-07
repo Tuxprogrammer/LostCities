@@ -328,7 +328,7 @@ public final class Ae2Scenario implements Scenario {
                         + " cap "
                         + lowest);
                 if (plan.hasBuilding()) {
-                    int top = plan.cityGroundLevel() + plan.floors() * plan.floorPitch() + ChunkPlan.LEVEL_HEIGHT - 1;
+                    int top = plan.floorY(plan.floors()) + ChunkPlan.LEVEL_HEIGHT - 1;
                     context.check(
                         top <= lowest,
                         "expected the roof under the crater at " + where + ", top " + top + " cap " + lowest);

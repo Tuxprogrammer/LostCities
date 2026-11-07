@@ -8,6 +8,7 @@ package com.tuxprogrammer.lostcities.worldgen.city;
 // Avoids: TERR-07, TERR-08, TERR-09, ASSET-32, CITY-36
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -26,6 +27,7 @@ import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.DoorKind;
 import com.tuxprogrammer.lostcities.layout.Doorway;
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.StreetType;
@@ -251,19 +253,24 @@ public final class CityChunkWriter {
         Building building = buildingId == null ? null : assets.building(buildingId);
         List<PartWriter.Placement> overlays = new ArrayList<>();
         int height = lowest;
-        int extra = plan.floorPitch() - ChunkPlan.LEVEL_HEIGHT;
+        FloorHeights heights = plan.floorHeights();
+        List<Part> sources = new ArrayList<>();
+        for (int f = -cellars; f <= floors; f++) {
+            sources.add(part(plan.floorPart(f)));
+        }
+        List<Part> placed = stackedParts(sources, cellars, floors, heights);
         for (int f = -cellars; f <= floors; f++) {
             if (f == floors) {
                 target.clearToMax(height);
             }
-            Part part = part(plan.floorPart(f));
+            Part part = placed.get(f + cellars);
             Part overlay = part(plan.floorPart2(f));
-            if (f < floors && extra > 0 && part != null && part.height() == ChunkPlan.LEVEL_HEIGHT) {
-                // Floors and cellars stretch to the world's pitch; the roof does not (design record 0014). The
-                // overlay repeats the main part's row so the two stay aligned.
-                int row = FloorStretch.repeatRow(part);
-                part = part.stretched(extra, row);
-                overlay = overlay == null ? null : overlay.stretched(extra, row);
+            Part source = sources.get(f + cellars);
+            int extra = heights.height(f) - ChunkPlan.LEVEL_HEIGHT;
+            if (overlay != null && stretches(f, floors, extra, source)) {
+                // The overlay repeats or drops the main part's rows so the two stay aligned.
+                overlay = extra > 0 ? overlay.stretched(extra, FloorStretch.repeatRow(source))
+                    : overlay.squeezed(FloorStretch.dropRows(source, -extra));
             }
             if (part != null) {
                 // Floors below the roof take the interior characters of the palette variety (AR-3, D25).
@@ -276,7 +283,7 @@ public final class CityChunkWriter {
             if (f < floors && (building == null || building.allowDoors())) {
                 doors(height + 1, f, building);
             }
-            height += plan.floorPitch();
+            height += heights.height(f);
         }
         if (cellars > 0 && building != null && building.allowFillers()) {
             cellarFillers(lowest, building.filler());
@@ -290,12 +297,67 @@ public final class CityChunkWriter {
         }
         if (context.settings()
             .doorStepsOpen()) {
-            clearRoofDoorSteps(lowest + plan.floorPitch() * (cellars + floors));
+            clearRoofDoorSteps(plan.floorY(floors));
         }
         if (context.settings()
             .furnish()) {
             furnish(cellars, floors, lowest, buildingId);
         }
+    }
+
+    /** Whether floor {@code f}'s main part changes height: a floor or cellar of the legacy pitch, not the roof. */
+    private static boolean stretches(int f, int floors, int extra, Part part) {
+        return f < floors && extra != 0 && part != null && part.height() == ChunkPlan.LEVEL_HEIGHT;
+    }
+
+    /**
+     * Returns the main part of every floor, cellars first and the roof last, at the height it is placed. Floors and
+     * cellars stretch to the world's pitch or the building's own height, the roof does not (design record 0014); a
+     * building with lower floors than the legacy pitch drops their emptiest rows (D-floor-heights-1). The parts are
+     * laid out as one stack, so a stair run that climbs from one floor into the next stays one run
+     * (D-stair-xfloor-1); a stack with a missing part or parts of different sizes lays each part out on its own.
+     *
+     * @param sources the main part of every floor, cellars first and the roof last; null where a part is missing
+     */
+    private static List<Part> stackedParts(List<Part> sources, int cellars, int floors, FloorHeights heights) {
+        List<Part> parts = new ArrayList<>();
+        List<int[]> copies = new ArrayList<>();
+        boolean whole = true;
+        for (int f = -cellars; f <= floors; f++) {
+            Part part = sources.get(f + cellars);
+            int extra = heights.height(f) - ChunkPlan.LEVEL_HEIGHT;
+            int[] rows;
+            if (part == null) {
+                rows = new int[0];
+                whole = false;
+            } else if (!stretches(f, floors, extra, part)) {
+                rows = FloorStretch.copies(part.height(), 0, -1);
+            } else if (extra > 0) {
+                rows = FloorStretch.copies(part.height(), extra, FloorStretch.repeatRow(part));
+            } else {
+                rows = FloorStretch.copies(part.height(), FloorStretch.dropRows(part, -extra));
+            }
+            whole &= part == null || parts.isEmpty()
+                || parts.get(0) == null
+                || (part.xsize() == parts.get(0)
+                    .xsize() && part.zsize()
+                        == parts.get(0)
+                            .zsize());
+            parts.add(part);
+            copies.add(rows);
+        }
+        if (whole) {
+            return Part.stacked(parts, copies);
+        }
+        List<Part> out = new ArrayList<>(parts.size());
+        for (int i = 0; i < parts.size(); i++) {
+            Part part = parts.get(i);
+            out.add(
+                part == null ? null
+                    : Part.stacked(Collections.singletonList(part), Collections.singletonList(copies.get(i)))
+                        .get(0));
+        }
+        return out;
     }
 
     /**
@@ -312,7 +374,7 @@ public final class CityChunkWriter {
         String name = buildingId == null ? null : buildingId.path();
         for (int i = 0; i < count; i++) {
             int floor = i - cellars;
-            standing[i] = lowest + i * plan.floorPitch() + 1;
+            standing[i] = plan.floorY(floor) + 1;
             salts[i] = FurnishPass.floorSalt(context.worldSeed(), chunkX, chunkZ, floor);
             kinds[i] = RoomKind.forFloor(
                 name,
@@ -499,7 +561,8 @@ public final class CityChunkWriter {
     private void corridorConnections() {
         int groundLevel = context.settings()
             .groundLevel();
-        int drop = CorridorSteps.drop(groundLevel, plan.buildingBottomHeight(), plan.floorPitch(), plan.cellars());
+        int drop = CorridorSteps
+            .drop(groundLevel, plan.buildingBottomHeight(), plan.floorHeights().cellar, plan.cellars());
         int top = groundLevel + CorridorSteps.OPENING_TOP;
         for (Direction side : Direction.values()) {
             int nx = chunkX + side.stepX();
