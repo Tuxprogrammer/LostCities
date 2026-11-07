@@ -17,7 +17,8 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * <ul>
  * <li><b>Plaza:</b> paved with a pattern of stone brick and light gray clay; at the center of its footprint (one
  * chunk, or the 2 x 2) a square basin of still water inside a stone-brick wall, and in the middle of the basin a
- * pillar of GT machine casings, tiers ULV to EV, with a quartz cap. No tile entities.</li>
+ * pillar of stone brick, alternating chiseled and plain courses, with a quartz cap (gt-spread: the casings moved
+ * out of the plaza so GT machines read as furnishings, not as the monument). No tile entities.</li>
  * <li><b>Industrial yard:</b> concrete, cobblestone and gravel ground inside a fence with a gap in the middle of each
  * side; a casing-walled shed with window slits, a door and a row of casing "machines" along its back wall; a tank of
  * bronze-plated bricks, a brick smokestack, iron-bar pipes and cauldron drums. The layout is rotated by a hash. GT
@@ -54,6 +55,8 @@ final class DistrictWriter {
     private final BlockRef stack;
     private final BlockRef tank;
     private final BlockRef[] casings = new BlockRef[5];
+    /** The monument pillar's drums: chiseled stone brick between plain courses. */
+    private final BlockRef chiseled;
 
     DistrictWriter(CityTarget target, ChunkPlan plan, AssetSet assets, long worldSeed) {
         this.target = target;
@@ -63,6 +66,7 @@ final class DistrictWriter {
         this.originZ = plan.chunkZ() << 4;
         this.clay = code(assets, "lot.concrete", BlockRef.of("minecraft:stained_hardened_clay", 8));
         this.brick = code(assets, "district.stone_brick", BlockRef.of("minecraft:stonebrick", 0));
+        this.chiseled = code(assets, "district.chiseled_stone_brick", BlockRef.of("minecraft:stonebrick", 3));
         this.cobble = code(assets, "district.cobblestone", BlockRef.of("minecraft:cobblestone", 0));
         this.gravel = code(assets, "lot.gravel", BlockRef.of("minecraft:gravel", 0));
         this.water = code(assets, "district.water", BlockRef.of("minecraft:water", 0));
@@ -132,7 +136,7 @@ final class DistrictWriter {
     private void monument(int x, int z, int height, int m) {
         if (m <= 1) {
             for (int dy = 1; dy <= PILLAR; dy++) {
-                BlockRef block = dy == PILLAR ? quartz : casings[(dy - 1) % casings.length];
+                BlockRef block = dy == PILLAR ? quartz : (dy & 1) == 1 ? chiseled : brick;
                 put(x, height + dy, z, block);
             }
         } else if (m == 3) {

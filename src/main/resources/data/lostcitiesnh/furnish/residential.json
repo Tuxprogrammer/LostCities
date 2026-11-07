@@ -5,6 +5,8 @@
   "maxTiles": 1,
   "fallback": { "block": "minecraft:bookshelf" },
   "items": [
+    { "gt": 152, "baseMeta": 1, "weight": 1 },
+    { "gt": 311, "baseMeta": 1, "weight": 1 },
     { "block": "chisel:bookshelf", "meta": 1, "weight": 4 },
     { "block": "minecraft:bookshelf", "weight": 3 },
     { "block": "chisel:carpet", "meta": 14, "weight": 3 },

@@ -6,6 +6,8 @@
   "fallback": { "block": "minecraft:crafting_table" },
   "loot": { "lostcitiesnh:city_supplies": 8, "lostcitiesnh:city_lv": 2 },
   "items": [
+    { "gt": 312, "baseMeta": 1, "weight": 1 },
+    { "gt": 671, "baseMeta": 1, "weight": 1 },
     { "block": "minecraft:furnace", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 3 },
     { "block": "cookingforblockheads:counter", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 2 },
     { "block": "minecraft:cauldron", "weight": 2 },

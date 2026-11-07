@@ -112,6 +112,22 @@ public class FurnishPassTest {
     }
 
     @Test
+    public void everyRoomKindCarriesAModestShareOfGtMachinesAndBasementsDoNotDominate() {
+        FurnishPalettes palettes = FurnishPalettes.bundled();
+        for (RoomKind kind : RoomKind.values()) {
+            int gt = 0;
+            int total = 0;
+            for (FurnishItem item : palettes.palette(kind)
+                .items()) {
+                total += item.weight();
+                gt += item.isMachine() ? item.weight() : 0;
+            }
+            assertTrue(gt > 0, kind.id() + " has no GT machine");
+            assertTrue(gt * 100 <= total * 40, kind.id() + " is more than 40% GT machines");
+        }
+    }
+
+    @Test
     public void aDeniedOrMalformedMachineIsRejected() {
         List<String> problems = new ArrayList<>();
         FurnishPalette palette = FurnishPalette.read(
