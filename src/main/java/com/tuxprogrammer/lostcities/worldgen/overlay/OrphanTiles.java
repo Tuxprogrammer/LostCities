@@ -110,8 +110,17 @@ public final class OrphanTiles {
 
         @Override
         public String toString() {
-            return block + "@" + x + "," + y + "," + z + " " + action + (mob == null ? "" : " mob=" + mob)
-                + (loot == null ? "" : " loot=" + loot) + (template.isEmpty() ? "" : " " + template);
+            return block + "@"
+                + x
+                + ","
+                + y
+                + ","
+                + z
+                + " "
+                + action
+                + (mob == null ? "" : " mob=" + mob)
+                + (loot == null ? "" : " loot=" + loot)
+                + (template.isEmpty() ? "" : " " + template);
         }
     }
 

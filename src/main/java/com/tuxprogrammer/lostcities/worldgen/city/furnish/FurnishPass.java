@@ -497,8 +497,7 @@ public final class FurnishPass {
      * The completion of a loose item at (x, y, z), its draws made at level {@code drawY}; {@code null} for a block
      * the palette does not place there.
      */
-    private static Completion loose(BlockView view, FurnishPalette palette, long salt, int x, int y, int z,
-        int drawY) {
+    private static Completion loose(BlockView view, FurnishPalette palette, long salt, int x, int y, int z, int drawY) {
         BlockRef block = view.get(x, y, z);
         if (block.isAir()) {
             return null;

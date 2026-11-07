@@ -99,7 +99,8 @@ public class OrphanTilesTest {
 
         // The bug: the floor's job scans its standing level and misses the spawner, which kept vanilla's pig.
         boolean[] handled = new boolean[16 * 16 * 256];
-        for (FurnishPass.Completion c : FurnishPass.completions(buffer::get, UPPER, argument, FurnishPalettes.bundled())) {
+        for (FurnishPass.Completion c : FurnishPass
+            .completions(buffer::get, UPPER, argument, FurnishPalettes.bundled())) {
             assertFalse(c.x() == x && c.z() == z, "the floor's job sees no spawner at its level");
             handled[OrphanTiles.index(c.x(), c.y() >= 0 ? c.y() : UPPER, c.z())] = true;
         }
@@ -127,8 +128,10 @@ public class OrphanTilesTest {
         List<OrphanTiles.Orphan> orphans = OrphanTiles
             .find(buffer::get, Arrays.asList(job), i -> false, FurnishPalettes.bundled(), 0, 255);
         assertEquals(1, orphans.size(), orphans.toString());
-        assertEquals("Skeleton", orphans.get(0)
-            .mob());
+        assertEquals(
+            "Skeleton",
+            orphans.get(0)
+                .mob());
     }
 
     @Test
@@ -144,10 +147,14 @@ public class OrphanTilesTest {
             0,
             255);
         assertEquals(1, orphans.size(), orphans.toString());
-        assertEquals(OrphanTiles.Action.CLEAR, orphans.get(0)
-            .action());
-        assertEquals(3, orphans.get(0)
-            .x());
+        assertEquals(
+            OrphanTiles.Action.CLEAR,
+            orphans.get(0)
+                .action());
+        assertEquals(
+            3,
+            orphans.get(0)
+                .x());
     }
 
     @Test
