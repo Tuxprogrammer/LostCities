@@ -7,7 +7,7 @@
 - The mod's own houses now have 3-block-high rooms (5-block floors), and the workshop a 5-block-high bay under 3-block-high upper floors; towers and upstream buildings keep the world's floor pitch.
 
 ## Fixed
-- Buildings: escalators and other stair runs that climb from one floor into the next (such as the quartz escalator in the shopping mall) no longer break at the upper floor's slab when floors are taller than 6 blocks (D-stair-xfloor-1).
+- Buildings: escalators and other stair runs that climb from one floor into the next (such as the quartz escalator in the shopping mall) no longer break at the upper floor's slab at the default 8-block floor pitch (D-stair-xfloor-1).
 - City link network: a link blocked by a landmark now detours around it instead of being dropped, so cities are no longer leaves with one highway; a highway whose end plaza missed the city runs on as a spur to the first city chunk; a landmark inside a city moves its beltway ring instead of ruling the beltway out (D390 to D392).
 
 ## Upgrade notes

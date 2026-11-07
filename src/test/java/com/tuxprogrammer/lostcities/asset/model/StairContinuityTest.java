@@ -21,6 +21,7 @@ import com.tuxprogrammer.lostcities.asset.AssetId;
 import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.AssetType;
 import com.tuxprogrammer.lostcities.asset.TestAssets;
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 
 /**
  * Stairs stay walkable when a floor part changes height (design record 0014, decision log D-floor-heights-1): every
@@ -236,17 +237,28 @@ public class StairContinuityTest {
         return null;
     }
 
-    /** The extra rows a floor of this building may take: every pitch a world may pin, and the building's own. */
-    private static Set<Integer> extras(Building building) {
-        Set<Integer> out = new TreeSet<>();
-        for (int extra = 0; extra <= MAX_EXTRA; extra++) {
-            out.add(extra);
-        }
-        for (int height : new int[] { building.floorHeight(), building.groundFloorHeight() }) {
-            if (height != Building.UNSET) {
-                out.add(height - 6);
-            }
-        }
+    /** The pitches a world may pin. */
+    private static final int MIN_PITCH = 6;
+
+    private static final int MAX_PITCH = 6 + MAX_EXTRA;
+
+    /** The highest pitch at which every cross-floor run fits; the profile default is 8. */
+    private static final int FITS_TO_PITCH = 8;
+
+    /**
+     * The pairs of extra rows two stacked floors of this building take at a pitch: cellar under cellar, cellar under
+     * the ground floor, ground floor under the first floor, and floor under floor.
+     */
+    private static Set<List<Integer>> extraPairs(Building building, int pitch) {
+        FloorHeights heights = FloorHeights.of(pitch, building.floorHeight(), building.groundFloorHeight());
+        int cellar = heights.height(-1) - 6;
+        int ground = heights.height(0) - 6;
+        int upper = heights.height(1) - 6;
+        Set<List<Integer>> out = new LinkedHashSet<>();
+        out.add(Arrays.asList(cellar, cellar));
+        out.add(Arrays.asList(cellar, ground));
+        out.add(Arrays.asList(ground, upper));
+        out.add(Arrays.asList(upper, upper));
         return out;
     }
 
@@ -271,7 +283,6 @@ public class StairContinuityTest {
         Set<String> failures = new TreeSet<>();
         for (AssetId id : set.ids(AssetType.BUILDINGS)) {
             Building building = set.building(id);
-            Set<Integer> extras = extras(building);
             List<Part> uppers = new ArrayList<>(floorParts(building));
             uppers.addAll(topParts(building));
             for (Part lower : floorParts(building)) {
@@ -280,8 +291,10 @@ public class StairContinuityTest {
                         continue;
                     }
                     boolean roof = !floorParts(building).contains(upper);
-                    for (int lowerExtra : extras) {
-                        for (int upperExtra : roof ? Collections.singleton(0) : extras) {
+                    for (int pitch = MIN_PITCH; pitch <= MAX_PITCH; pitch++) {
+                        for (List<Integer> pair : extraPairs(building, pitch)) {
+                            int lowerExtra = pair.get(0);
+                            int upperExtra = roof ? 0 : pair.get(1);
                             List<Part> parts = Arrays.asList(lower, upper);
                             List<int[]> copies = Arrays.asList(copies(lower, lowerExtra), copies(upper, upperExtra));
                             List<Part> after = joined ? Part.stacked(parts, copies) : perPart(parts, copies);
@@ -297,6 +310,8 @@ public class StairContinuityTest {
                                             .path()
                                         + " +"
                                         + upperExtra
+                                        + " pitch "
+                                        + pitch
                                         + ": "
                                         + why);
                             }
@@ -310,8 +325,20 @@ public class StairContinuityTest {
 
     @Test
     public void everyRunAcrossFloorsStaysContinuous() {
-        Set<String> failures = crossFailures(true);
+        Set<String> failures = new TreeSet<>();
+        Set<String> unfit = new TreeSet<>();
+        for (String failure : crossFailures(true)) {
+            int pitch = Integer.parseInt(failure.replaceAll(".* pitch (\\d+):.*", "$1"));
+            if (pitch <= FITS_TO_PITCH) {
+                failures.add(failure);
+            } else {
+                unfit.add(failure.substring(0, failure.indexOf(' ')));
+            }
+        }
         assertTrue(failures.isEmpty(), failures.size() + " split cross-floor runs:\n" + String.join("\n", failures));
+        // Above pitch 8 the mall escalators climb 17 or more rows over 15 columns: no straight run fits, so they keep
+        // the plain copy (D-stair-xfloor-1). Any other building that stops fitting fails here.
+        assertEquals(new TreeSet<>(Arrays.asList("shopping00", "shopping_open00")), unfit);
     }
 
     /**
@@ -335,13 +362,15 @@ public class StairContinuityTest {
         }
         assertTrue(
             failures.stream()
-                .anyMatch(f -> f.startsWith("shopping00 shopping00_0 +2 / shopping00_1 +2")),
+                .anyMatch(f -> f.startsWith("shopping00 shopping00_0 +2 / shopping00_1 +2 pitch 8")),
             "the per-part stretch splits shopping00 at pitch 8:\n" + text);
     }
 
     /**
      * The owner's report: the quartz escalator of {@code shopping00} climbs from floor 0 through floor 1 to the
-     * mezzanine of floor 2 in one run at pitch 8, as at every other pitch.
+     * mezzanine of floor 2 in one run at pitch 8 and below. Pitch 8 is the highest at which the run still fits the
+     * chunk: it climbs 11 rows over floor 0 and floor 1, plus the rows both floors add (4 at pitch 8, 6 at pitch 9),
+     * and has 15 columns.
      */
     @Test
     public void shopping00EscalatorClimbsThroughStretchedFloors() {
@@ -351,7 +380,7 @@ public class StairContinuityTest {
         for (String name : new String[] { "shopping00_0", "shopping00_1", "shopping00_2" }) {
             parts.add(set.part(AssetId.of("lostcities", name)));
         }
-        for (int extra = 0; extra <= MAX_EXTRA; extra++) {
+        for (int extra = 0; extra <= FITS_TO_PITCH - 6; extra++) {
             List<int[]> copies = new ArrayList<>();
             for (Part part : parts) {
                 copies.add(copies(part, extra));
