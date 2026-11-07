@@ -1,6 +1,6 @@
 # 0006 · Building cities around other world generation
 
-- Status: Accepted (decision log D26); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin); §1, §3 and §4 amended by the alpha review round M05R (decision log D149 to D153): the edge ring is the city's margin, never city, and the soft edge, the lanes and the detours move with it; §3 and §4 amended by M12 ([0011](0011-city-edges-and-character.md) §5): detours and primaries beside a margin are tertiary, the margin's bank and strip are dithered, lanes are relaxed
+- Status: Accepted (decision log D26); §1 and §6 amended by D-landmark-policy-1 to -3 (cities build over LootGames, meteorites, Witchery and Roguelike); §1 amended by D30 (deep railways under a core) and D31 (shallow railways dip under a core); §3 and §5 amended by D31 (the lane's path blocks; scattered footprints in the steering mixin); §1, §3 and §4 amended by the alpha review round M05R (decision log D149 to D153): the edge ring is the city's margin, never city, and the soft edge, the lanes and the detours move with it; §3 and §4 amended by M12 ([0011](0011-city-edges-and-character.md) §5): detours and primaries beside a margin are tertiary, the margin's bank and strip are dithered, lanes are relaxed
 - Gate: M03 and M04 exit (the layout and terrain rules below); M08 (the compat oracles and the Roguelike mixin)
 - Amends: D21 in the [decision log](decision-log.md) (treatments T1 and T4 for villages, Roguelike Dungeons, Witchery, LootGames, AE2 meteorites and RWG2 landmarks); [0005](0005-rwg-overlay.md) §3a and §5 (cores excluded from the footprint guard and the blend)
 - Date: 2026-11-01
@@ -108,16 +108,18 @@ The rules E1 to E8 of [coexistence.md § Soft edges](../new-spec/00-pack-integra
 
 ### 6. Treatments by generator
 
+*Amended by D-landmark-policy-1 to -3 (2026-11-06): the city builds over every kind but villages, ocean monuments and RWG2 terrain landmarks. The rows below state the current truth; §1's core, margin and crater basin now apply only to the kept kinds and to a kind a profile opts back in.*
+
 In the terms of [other-worldgen.md](../new-spec/00-pack-integration/other-worldgen.md), building around replaces avoidance (T1) and the guard (T4) for these generators, and coexistence (T3) for AE2 meteorites. T2 and the other T3 features are unchanged.
 
 | Generator | Treatment |
 |---|---|
 | VillageNames villages | Built around and sewn in (§1 to §4); inside a city's radius, the city's old town |
-| LootGames | Built around as a lot |
+| LootGames | Not a landmark: the city builds over the room (D-landmark-policy-1) |
 | RWG2 landmarks | Terrain landmarks |
-| Roguelike Dungeons | Built around a predicted lot, with the steering mixin built in M08, not deferred to the alpha screenshots |
-| Witchery | Built around the union lot; no mixin needed |
-| AE2 meteorites | A crater basin (§1, §3) |
+| Roguelike Dungeons | Predicted, `IGNORE` by default: no lot; the steering mixin refuses a tower whose lot touches a city chunk (D-landmark-policy-2) |
+| Witchery | Predicted, `IGNORE` by default: no lot; a late mixin skips a structure whose union lot touches a city chunk or scattered footprint (D-landmark-policy-3) |
+| AE2 meteorites | Not a landmark: no crater basin (D-landmark-policy-1) |
 | Dungeons, lakes, oil, quarries (T2) | Denied in city chunks; not denied in cores |
 | Underground structures, small decoration, Thaumcraft (T3) | Unchanged; Thaumcraft watched at alpha |
 

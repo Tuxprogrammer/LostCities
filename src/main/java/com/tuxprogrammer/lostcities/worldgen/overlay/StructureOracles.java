@@ -7,8 +7,8 @@ import java.util.List;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.LostCities;
-import com.tuxprogrammer.lostcities.compat.ae2.Ae2Oracles;
 import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesOracles;
+import com.tuxprogrammer.lostcities.compat.ae2.Ae2Oracles;
 import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
 import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
@@ -60,12 +60,12 @@ public final class StructureOracles {
         List<Factory> factories = new ArrayList<>();
         // One line per mod (0006 §2). VillageNames villages and ocean monuments (M05, D27, D32, D84 to D92); the
         // overload with the height oracle, since the one without builds a second classic RWG generator. Roguelike
-        // Dungeons, Witchery, LootGames, AE2 and RWG2's terrain landmarks (M08).
+        // Dungeons, Witchery and RWG2's terrain landmarks (M08). Roguelike and Witchery stay wired although the city
+        // builds over them by default: the steering and the Witchery veto read their predicted sites. LootGames and
+        // AE2 meteorites are not landmarks (D-landmark-policy-1): their oracles serve only their scenarios.
         factories.add(VillageNamesOracles::forWorld);
         factories.add(RoguelikeOracles::forWorld);
         factories.add(WitcheryOracles::forWorld);
-        factories.add(LootGamesOracles::forWorld);
-        factories.add(Ae2Oracles::forWorld);
         factories.add(Rwg2Landmarks::forWorld);
         return factories;
     }
@@ -76,7 +76,7 @@ public final class StructureOracles {
      * @return the names
      */
     public static List<String> factoryNames() {
-        return java.util.Arrays.asList("villagenames", "roguelike", "witchery", "lootgames", "ae2", "rwg2");
+        return java.util.Arrays.asList("villagenames", "roguelike", "witchery", "rwg2");
     }
 
     /**

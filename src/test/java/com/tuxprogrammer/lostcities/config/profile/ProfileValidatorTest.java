@@ -167,9 +167,36 @@ public class ProfileValidatorTest {
         Map<LandmarkKind, LandmarkTreatment> treatments = ProfileValidator
             .parseLandmarkTreatments("AVOID, ocean_monument=IGNORE");
         assertEquals(LandmarkTreatment.IGNORE, treatments.get(LandmarkKind.OCEAN_MONUMENT));
-        assertEquals(LandmarkTreatment.AVOID, treatments.get(LandmarkKind.ROGUELIKE));
+        assertEquals(LandmarkTreatment.AVOID, treatments.get(LandmarkKind.TERRAIN));
+        assertEquals(
+            LandmarkTreatment.IGNORE,
+            treatments.get(LandmarkKind.ROGUELIKE),
+            "a bare value does not reach an overwritten kind (D-landmark-policy-2)");
         assertFalse(treatments.containsKey(LandmarkKind.VILLAGE), "villageTreatment owns villages");
         assertThrows(IllegalArgumentException.class, () -> ProfileValidator.parseLandmarkTreatments("village=AVOID"));
         assertFalse(validate("landmarkTreatment", "castle=AVOID").ok());
+    }
+
+    @Test
+    public void overwrittenKindsDefaultToIgnoreAndChangeOnlyByEntry() {
+        // D-landmark-policy-1 and -2: the city builds over Roguelike, Witchery, LootGames and meteorites; a world
+        // pinned with the old default BUILD_AROUND does too; the kept kinds follow the bare value.
+        for (String pinned : new String[] { "", "BUILD_AROUND", "AVOID" }) {
+            Map<LandmarkKind, LandmarkTreatment> treatments = ProfileValidator.parseLandmarkTreatments(pinned);
+            for (LandmarkKind kind : new LandmarkKind[] { LandmarkKind.ROGUELIKE, LandmarkKind.WITCHERY,
+                LandmarkKind.LOOTGAMES, LandmarkKind.METEORITE }) {
+                assertTrue(kind.overwritten(), kind.name());
+                assertEquals(LandmarkTreatment.IGNORE, treatments.get(kind), pinned + " " + kind);
+            }
+            LandmarkTreatment kept = pinned.isEmpty() ? LandmarkTreatment.BUILD_AROUND
+                : LandmarkTreatment.valueOf(pinned);
+            assertEquals(kept, treatments.get(LandmarkKind.TERRAIN), pinned);
+            assertEquals(kept, treatments.get(LandmarkKind.OCEAN_MONUMENT), pinned);
+        }
+        assertFalse(LandmarkKind.VILLAGE.overwritten());
+        Map<LandmarkKind, LandmarkTreatment> optedBack = ProfileValidator
+            .parseLandmarkTreatments("BUILD_AROUND, witchery=BUILD_AROUND, roguelike=AVOID");
+        assertEquals(LandmarkTreatment.BUILD_AROUND, optedBack.get(LandmarkKind.WITCHERY));
+        assertEquals(LandmarkTreatment.AVOID, optedBack.get(LandmarkKind.ROGUELIKE));
     }
 }

@@ -19,7 +19,6 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
-import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.scenario.RegionJob;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
@@ -147,17 +146,19 @@ public final class LootGamesScenario implements Scenario {
                 for (int chunkX = rect.minChunkX(); chunkX <= rect.maxChunkX(); chunkX++) {
                     for (int chunkZ = rect.minChunkZ(); chunkZ <= rect.maxChunkZ(); chunkZ++) {
                         ChunkPlan plan = planner.plan(chunkX, chunkZ);
+                        // D-landmark-policy-1: a LootGames room is not a landmark; the city builds over it.
                         context.check(
-                            plan.zone()
-                                .zone() == Zone.CORE && !plan.isCity(),
+                            !site.id()
+                                .equals(
+                                    plan.zone()
+                                        .landmarkId()),
                             "expected " + site.id()
                                 + "'s chunk "
                                 + chunkX
                                 + ","
                                 + chunkZ
-                                + " a core, never city, found "
-                                + plan.zone()
-                                + (plan.isCity() ? " city" : ""));
+                                + " no LootGames zone, found "
+                                + plan.zone());
                         touchesCity |= planner.isCityRaw(chunkX, chunkZ);
                         coreChunks++;
                     }
