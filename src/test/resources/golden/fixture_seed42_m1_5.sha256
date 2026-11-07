@@ -1,3 +1,3 @@
-# Golden chunk: GoldenFixtureTerrain, seed 42, chunk (-1, 5). SHA-256 of the ChunkBufferDigest v1 text.
-# Computed outside Java by an independent re-implementation (M01). Change only in a commit that says why.
+# Golden chunk fixture_seed42_m1_5: SHA-256 of the ChunkBufferDigest v1 text.
+# Rewritten by -PupdateGoldens; say why in the commit.
 60ab0cb46cb4671a45fa2eef3fa05bef8ae69dda592ace5c0cd21f6691a96a82

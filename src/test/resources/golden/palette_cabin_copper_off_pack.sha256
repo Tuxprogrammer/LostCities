@@ -1,3 +1,3 @@
 # Golden palette palette_cabin_copper_off_pack: SHA-256 of CompiledPalette.describe().
-# Barrel entries gained the chestloot loot condition (D-barrel-loot-1); nothing else changed.
+# Rewritten by -PupdateGoldens; say why in the commit.
 fa28e8ddb21ef7b42e10a76e777124cfd9e997851b7d9fdc4fdebbd5184e94c7

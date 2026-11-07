@@ -1,3 +1,3 @@
 # Golden chunk newworld_nh_walkup: SHA-256 of the ChunkBufferDigest v1 text.
-# Pack walk-up (D-floor-heights-1): the first unruined nh_walkup near the CityFixtures origin at new-world settings, 5-block floors. Change only in a commit that says why.
-019849534b4429edc698f1524a5e6a12ff5690aa3b1ae7590d12c8c4cc451bb6
+# Rewritten by -PupdateGoldens; say why in the commit.
+0c8ddfa1ba0a041752439716f0a87e0c2dce9bb71f20363c84f059cc8f5b0868

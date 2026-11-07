@@ -1,3 +1,3 @@
 # Golden palette palette_oilrig_pack: SHA-256 of CompiledPalette.describe().
-# Barrel entries gained the chestloot loot condition (D-barrel-loot-1); nothing else changed.
+# Rewritten by -PupdateGoldens; say why in the commit.
 5905bdf9e2a963e963e8a7d733bc269ff78eec0cba5bebc3f23702ebe0d3d8a5

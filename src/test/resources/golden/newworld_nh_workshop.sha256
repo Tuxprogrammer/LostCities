@@ -1,3 +1,3 @@
 # Golden chunk newworld_nh_workshop: SHA-256 of the ChunkBufferDigest v1 text.
-# Pack workshop (D-floor-heights-1): the first unruined nh_workshop near the CityFixtures origin at new-world settings, a 7-block high bay under 5-block floors. Change only in a commit that says why.
-1fef7515f4c6172e187b95103b610cf87e84ce2263c838076feb3b707c2c992d
+# Rewritten by -PupdateGoldens; say why in the commit.
+70945f8073bc9f9e12e6cf8bf792b9c3b684fc91aeed5258fae9b763a63f2812
