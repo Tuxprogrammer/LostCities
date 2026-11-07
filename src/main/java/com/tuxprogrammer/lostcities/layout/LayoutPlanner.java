@@ -537,7 +537,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             cities.traceReason(x, z),
             terrain.columnHeight((x << 4) + 8, (z << 4) + 8),
             terrain.isWaterBiome(x, z),
-            zone.zone(),
+            zone.toString()
+                .replace(' ', ':'),
             base,
             connected,
             plan.isCity(),
