@@ -20,6 +20,11 @@
     { "gt": 212, "baseMeta": 1, "weight": 1 },
     { "block": "etfuturum:blast_furnace", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
     { "block": "minecraft:chest", "tile": true, "facingMeta": [2, 3, 4, 5], "weight": 1 },
-    { "block": "minecraft:mob_spawner", "tile": true, "weight": 1 }
+    { "block": "minecraft:mob_spawner", "tile": true, "weight": 1 },
+    { "block": "gregtech:gt.blockcasings", "meta": 0, "weight": 7 },
+    { "block": "gregtech:gt.blockcasings", "meta": 1, "weight": 5 },
+    { "block": "gregtech:gt.blockcasings", "meta": 2, "weight": 3 },
+    { "block": "gregtech:gt.blockcasings", "meta": 3, "weight": 2 },
+    { "block": "gregtech:gt.blockcasings", "meta": 4, "weight": 1 }
   ]
 }

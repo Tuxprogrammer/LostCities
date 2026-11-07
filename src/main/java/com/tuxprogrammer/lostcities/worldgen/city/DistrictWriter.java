@@ -20,10 +20,10 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * pillar of stone brick, alternating chiseled and plain courses, with a quartz cap (gt-spread: the casings moved
  * out of the plaza so GT machines read as furnishings, not as the monument). No tile entities.</li>
  * <li><b>Industrial yard:</b> concrete, cobblestone and gravel ground inside a fence with a gap in the middle of each
- * side; a casing-walled shed with window slits, a door and a row of casing "machines" along its back wall; a tank of
+ * side; a shed of chisel factory blocks (lookup key {@code district.shed_wall}) under an iron roof ({@code district.shed_roof}), with window slits, a door and a row of GT casing "machines" (ULV to EV, the stand-ins for real machines) along its back wall; a tank of
  * bronze-plated bricks, a brick smokestack, iron-bar pipes and cauldron drums. The layout is rotated by a hash. GT
  * casings are plain blocks: placing real GT machine tile entities from generation code is not reliable, so the yard
- * has none (D352).</li>
+ * has none (D352). Casings are never building material: only the machine row uses them (D-casing-standin-1).</li>
  * </ul>
  * Side: both (plain Java).
  */
@@ -51,6 +51,8 @@ final class DistrictWriter {
     private final BlockRef fence;
     private final BlockRef bars;
     private final BlockRef pane;
+    private final BlockRef shedWall;
+    private final BlockRef shedRoof;
     private final BlockRef cauldron;
     private final BlockRef stack;
     private final BlockRef tank;
@@ -74,6 +76,8 @@ final class DistrictWriter {
         this.fence = code(assets, "lot.fence", BlockRef.of("minecraft:fence", 0));
         this.bars = code(assets, "iron_bars", BlockRef.of("minecraft:iron_bars", 0));
         this.pane = code(assets, "district.pane", BlockRef.of("minecraft:glass_pane", 0));
+        this.shedWall = code(assets, "district.shed_wall", BlockRef.of("chisel:factoryblock", 1));
+        this.shedRoof = code(assets, "district.shed_roof", BlockRef.of("minecraft:iron_block", 0));
         this.cauldron = code(assets, "district.cauldron", BlockRef.of("minecraft:cauldron", 0));
         this.stack = code(assets, "district.smokestack", BlockRef.of("minecraft:brick_block", 0));
         this.tank = code(assets, "district.tank", BlockRef.of("gregtech:gt.blockcasings", 10));
@@ -214,7 +218,7 @@ final class DistrictWriter {
         if (sx >= 3 && sx <= 10 && sz >= 3 && sz <= 8 && dy <= 5) {
             boolean wall = sx == 3 || sx == 10 || sz == 3 || sz == 8;
             if (dy == 5) {
-                return casings[0];
+                return shedRoof;
             }
             if (wall) {
                 if (sz == 8 && (sx == 6 || sx == 7) && dy <= 2) {
@@ -223,7 +227,7 @@ final class DistrictWriter {
                 if (dy == 3 && (sx == 5 || sx == 8 || sz == 5 && (sx == 3 || sx == 10))) {
                     return pane;
                 }
-                return casings[1];
+                return shedWall;
             }
             // Machines along the back wall.
             if (sz == 4 && dy <= 1 + (sx & 1)) {

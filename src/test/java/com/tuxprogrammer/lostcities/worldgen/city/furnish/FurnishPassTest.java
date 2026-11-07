@@ -112,6 +112,27 @@ public class FurnishPassTest {
     }
 
     @Test
+    public void machineBearingPalettesCarryPlainCasingsAtTwiceTheMachineWeightUpToEv() {
+        FurnishPalettes palettes = FurnishPalettes.bundled();
+        for (RoomKind kind : RoomKind.values()) {
+            int machines = 0;
+            int casings = 0;
+            for (FurnishItem item : palettes.palette(kind)
+                .items()) {
+                machines += item.isMachine() ? item.weight() : 0;
+                if ("gregtech:gt.blockcasings".equals(item.block())) {
+                    assertFalse(item.tile(), kind.id() + " casing is a plain block");
+                    assertTrue(item.meta() >= 0 && item.meta() <= 4, kind.id() + " casing tier above EV");
+                    casings += item.weight();
+                }
+            }
+            if (machines > 0) {
+                assertEquals(2 * machines, casings, kind.id() + " casing weight");
+            }
+        }
+    }
+
+    @Test
     public void everyRoomKindCarriesAModestShareOfGtMachinesAndBasementsDoNotDominate() {
         FurnishPalettes palettes = FurnishPalettes.bundled();
         for (RoomKind kind : RoomKind.values()) {

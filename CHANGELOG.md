@@ -24,6 +24,7 @@ City realism. New worlds only for the new layout; existing worlds keep their gen
 
 ### Changed
 
+- GT machine casings are no longer building material: yard sheds are factory block under an iron roof, and casings appear scattered in rooms as stand-ins for full machines, making real machines rarer to find.
 - **Existing worlds keep their old generation.** Every new option declares a legacy value that worlds pinned before it applies, so new chunks match old ones and no seams appear. To get the new layout, start a new world, or run `/lostcities profile pin <profile> confirm` on the existing one (chunks already generated will not match).
 - Door steps stay open past station walls and on lower roofs, and roof doors need a roof at their floor.
 - Unkept part chests are cleared under the room rules, and pack houses build deterministically.
