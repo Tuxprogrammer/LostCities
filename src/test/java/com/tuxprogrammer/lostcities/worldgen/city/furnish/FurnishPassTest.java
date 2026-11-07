@@ -123,7 +123,9 @@ public class FurnishPassTest {
                 gt += item.isMachine() ? item.weight() : 0;
             }
             assertTrue(gt > 0, kind.id() + " has no GT machine");
-            assertTrue(kind == RoomKind.INDUSTRIAL || gt * 100 <= total * 40, kind.id() + " is more than 40% GT machines");
+            assertTrue(
+                kind == RoomKind.INDUSTRIAL || gt * 100 <= total * 40,
+                kind.id() + " is more than 40% GT machines");
         }
     }
 
