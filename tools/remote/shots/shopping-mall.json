@@ -1,0 +1,40 @@
+{
+  "comment": "Shopping mall after D-mall-1: upstream's 12-block atrium (_0 and _1 at 6 rows each) with the escalator and its cobblestone-wall supports as upstream lays them, and the pitch from the mezzanine (_2) up, every quarter repeating its window row (y3). Positions are offsets from `locate shopping00`, which gives the center (local 8, 8) of the mall's north-west quarter at the city ground. Local x 0-31 runs east over shopping00/10, local z 0-31 south over shopping00/01. The escalator is at local x 8-11, climbing south from z 5 (y 1) to the mezzanine slab at z 16 (y 12); the mezzanine stair is at local x 27, z 24-28, climbing south into the first upper floor (slab y 20 at pitch 8).",
+  "title": "Shopping mall: upstream atrium, pitch from the mezzanine up",
+  "world": {
+    "name": "shots-mall",
+    "level_type": "RWG2_CONTINENTS",
+    "seed": "4242",
+    "fresh": true
+  },
+  "time": 6000,
+  "render_distance": 8,
+  "fov": 70,
+  "setup": [
+    "effect {user} 16 999999 0"
+  ],
+  "shots": [
+    {"name": "ext-se", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [36, 18, 36], "yaw": 135, "pitch": 20, "caption": "Outside, from the south-east: the whole mall, both east-side window bands."},
+    {"name": "ext-nw", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [-22, 18, -22], "yaw": -45, "pitch": 20, "caption": "Outside, from the north-west: the atrium's glass front."},
+    {"name": "ext-east", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [38, 14, 8], "yaw": 90, "pitch": -10, "caption": "The east wall, straight on: the mezzanine and upper-floor windows should line up across both quarters."},
+    {"name": "atrium-side", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [14, 4, 2], "yaw": 90, "pitch": 5, "caption": "The atrium from the east: the escalator climbing south with its cobblestone-wall supports standing on the floor."},
+    {"name": "escalator-foot", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [2, 1, -7], "yaw": 0, "pitch": -15, "caption": "At the foot of the escalator, looking up it to the mezzanine."},
+    {"name": "escalator-top", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [2, 15, 10], "yaw": 180, "pitch": 50, "caption": "From the mezzanine, looking back down the escalator: it should land on the slab edge, not run into a wall or door."},
+    {"name": "mezzanine", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [12, 15, 18], "yaw": 160, "pitch": 15, "caption": "The mezzanine (floor 2), 2 blocks taller than upstream, looking north over the atrium void and the escalator."},
+    {"name": "mezzanine-windows", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [18, 15, -4], "yaw": -90, "pitch": 5, "caption": "The mezzanine's east windows from inside: one 3-block band across both quarters."},
+    {"name": "stair-up", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [12, 14, 18], "yaw": -90, "pitch": -10, "caption": "The mezzanine stair from the west: one run through the ceiling into floor 3."},
+    {"name": "stair-arrival", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [16, 21, 14], "yaw": -30, "pitch": 30, "caption": "Floor 3, looking down at where the mezzanine stair arrives."},
+    {"name": "floor3-windows", "find": {"cmd": "lostcities locate shopping00", "match": "Found lostcities:shopping00 at (?P<x>-?\\d+), (?P<y>-?\\d+), (?P<z>-?\\d+)"},
+     "offset": [14, 21, 8], "yaw": -90, "pitch": 0, "caption": "Floor 3's east windows from inside: one band, level across both quarters."}
+  ]
+}

@@ -273,8 +273,8 @@ public final class Building {
     }
 
     /**
-     * Returns {@code groundFloors}: how many floors, from the ground floor up, rise {@link #groundFloorHeight()}; 1 when
-     * unset (decision log D-mall-1).
+     * Returns {@code groundFloors}: how many floors, from the ground floor up, rise {@link #groundFloorHeight()}; 1
+     * when unset (decision log D-mall-1).
      */
     public int groundFloors() {
         return groundFloors;
