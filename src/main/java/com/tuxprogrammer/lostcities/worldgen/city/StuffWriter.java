@@ -156,9 +156,9 @@ public final class StuffWriter {
             .groundLevel();
         int cityGround = plan.cityGroundLevel();
         int min = stuff.minHeight() != null ? stuff.minHeight()
-            : building ? cityGround - plan.cellars() * plan.floorPitch() : groundLevel;
+            : building ? plan.buildingBottomHeight() : groundLevel;
         int max = stuff.maxHeight() != null ? stuff.maxHeight()
-            : building ? cityGround + plan.floors() * plan.floorPitch() + ROOF_MARGIN : min + DEFAULT_RANGE;
+            : building ? plan.floorY(plan.floors()) + ROOF_MARGIN : min + DEFAULT_RANGE;
         if (max <= min) {
             // Avoids SCAT-18: an empty range skips the stuff, with no draw.
             return 0;

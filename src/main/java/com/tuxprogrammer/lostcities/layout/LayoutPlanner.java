@@ -1095,6 +1095,7 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         b.hierarchicalOpen = c.isCity && !has && b.plannedRoad == PlannedRoadType.NONE && !b.predefinedStreet;
         b.groundLevel = profile.groundLevel;
         b.floorPitch = profile.floorPitch;
+        b.floorHeights = floorHeights(building);
         b.waterLevel = profile.waterLevel();
         CityStyleView style = cityStyle(c.cityStyle);
         b.settings = EffectiveCitySettings.resolve(profile, style);
@@ -1369,6 +1370,16 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         b.palettes = top.palettes;
         b.noLoot = top.noLoot;
         b.ruinHeight = top.ruinHeight;
+        // A multibuilding's floors line up across its chunks: every chunk takes the top-left's heights.
+        b.floorHeights = top.floorHeights;
+    }
+
+    /** A building's floor heights: the profile's pitch unless its JSON sets its own (D-floor-heights-1). */
+    private FloorHeights floorHeights(BuildingView building) {
+        if (building == null) {
+            return FloorHeights.uniform(profile.floorPitch);
+        }
+        return FloorHeights.of(profile.floorPitch, building.floorHeight(), building.groundFloorHeight());
     }
 
     /** Steps 12.1 to 12.15 of building-info.md, for single and top-left chunks, in upstream's draw order. */
@@ -1457,14 +1468,14 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         // Avoids CITY-15: the cap loop stops at 0, and a chunk it empties holds no building.
         boolean capped = false;
         // At a taller pitch fewer floors fit under the cap: towers stay under Y 248 (0014).
-        int fitFloors = capFloors(f, cityGround, profile.floorPitch);
+        int fitFloors = capFloors(f, cityGround, b.floorHeights);
         if (fitFloors < f) {
             f = fitFloors;
             capped = true;
         }
         b.drawnFloors = f;
         // Deviation (0006 §1 and §3): zone caps after the draw; a multibuilding takes its strictest chunk's (P04-5).
-        int zoneCap = zoneFloorCap(c, cityGround, x, z);
+        int zoneCap = zoneFloorCap(c, cityGround, x, z, b.floorHeights);
         if (f > zoneCap) {
             f = Math.max(0, zoneCap);
             capped = true;
@@ -1494,12 +1505,12 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
             int under = checkRail ? (highway >= 0 ? Math.max(highway, rail.level()) : rail.level()) : highway;
             // The room is in city levels; at a taller pitch fewer cellars fill it (0014). Pitch 6 is upstream's cap.
             int room = c.cityLevel - under - worldStyle.railPartHeight6();
-            int fit = room <= 0 ? 0 : room * ChunkPlan.LEVEL_HEIGHT / profile.floorPitch;
+            int fit = room <= 0 ? 0 : room * ChunkPlan.LEVEL_HEIGHT / b.floorHeights.cellar;
             cellars = Math.max(0, Math.min(fit, cellars));
         }
         cellars = Math.max(0, Math.min(cellars, Math.max(0, maxCellars)));
         // Avoids CITY-18: fitted once here; the lowest cellar's floor stays above Y 2.
-        while (cellars > 0 && cityGround - cellars * profile.floorPitch <= MIN_BOTTOM_Y) {
+        while (cellars > 0 && cityGround + b.floorHeights.offset(-cellars) <= MIN_BOTTOM_Y) {
             cellars--;
         }
         b.cellars = cellars;
@@ -1530,24 +1541,24 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /** The most floors a zone allows at this chunk (all of a multibuilding's chunks, for its top-left). */
-    private int zoneFloorCap(ChunkCharacteristics c, int cityGround, int x, int z) {
+    private int zoneFloorCap(ChunkCharacteristics c, int cityGround, int x, int z, FloorHeights heights) {
         if (c.multiPos.isSingle()) {
-            return chunkFloorCap(c.zone, cityGround, profile.floorPitch);
+            return chunkFloorCap(c.zone, cityGround, heights);
         }
         int cap = Integer.MAX_VALUE;
         for (int dx = 0; dx < c.multiPos.width(); dx++) {
             for (int dz = 0; dz < c.multiPos.height(); dz++) {
-                cap = Math.min(cap, chunkFloorCap(zones.zone(x + dx, z + dz), cityGround, profile.floorPitch));
+                cap = Math.min(cap, chunkFloorCap(zones.zone(x + dx, z + dz), cityGround, heights));
             }
         }
         return cap;
     }
 
     /** One chunk's floor cap: 2 or 4 in transition rings, and the crater cap: the roof part's top under the cap. */
-    private static int chunkFloorCap(ZoneInfo zone, int cityGround, int pitch) {
+    private static int chunkFloorCap(ZoneInfo zone, int cityGround, FloorHeights heights) {
         int cap = LandmarkZones.transitionFloorCap(zone.zone());
         if (zone.inCraterBasin()) {
-            cap = Math.min(cap, Math.floorDiv(zone.heightCap() - cityGround, pitch) - 1);
+            cap = Math.min(cap, heights.floorOf(zone.heightCap() - cityGround) - 1);
         }
         return cap;
     }
@@ -1562,8 +1573,20 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      * @return the most floors, from 0 to {@code floors}, with {@code cityGround + floors * pitch < 248}
      */
     static int capFloors(int floors, int cityGround, int pitch) {
+        return capFloors(floors, cityGround, FloorHeights.uniform(pitch));
+    }
+
+    /**
+     * As {@link #capFloors(int, int, int)}, for a building with its own floor heights (D-floor-heights-1).
+     *
+     * @param floors     the floors wanted
+     * @param cityGround the building's ground Y
+     * @param heights    the building's floor heights
+     * @return the most floors, from 0 to {@code floors}, with the roof part's base under Y 248
+     */
+    static int capFloors(int floors, int cityGround, FloorHeights heights) {
         int f = floors;
-        while (f > 0 && cityGround + f * pitch >= MAX_ROOF_FLOOR_Y) {
+        while (f > 0 && cityGround + heights.offset(f) >= MAX_ROOF_FLOOR_Y) {
             f--;
         }
         return f;
@@ -2167,12 +2190,13 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
      * decision log D375).
      */
     private static boolean roofMeetsFloor(ChunkPlan plan, ChunkPlan other, int localFloor) {
-        if (plan.floorPitch() == ChunkPlan.LEGACY_FLOOR_PITCH && other.floorPitch() == ChunkPlan.LEGACY_FLOOR_PITCH) {
+        if (plan.floorHeights()
+            .equals(FloorHeights.uniform(ChunkPlan.LEGACY_FLOOR_PITCH))
+            && other.floorHeights()
+                .equals(FloorHeights.uniform(ChunkPlan.LEGACY_FLOOR_PITCH))) {
             return true;
         }
-        int floorY = plan.cityGroundLevel() + localFloor * plan.floorPitch();
-        int roofY = other.cityGroundLevel() + other.floors * other.floorPitch();
-        return floorY == roofY;
+        return plan.floorY(localFloor) == other.floorY(other.floors);
     }
 
     private boolean dontConnect(String part) {

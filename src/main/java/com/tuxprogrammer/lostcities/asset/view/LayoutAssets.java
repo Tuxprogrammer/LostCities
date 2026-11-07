@@ -382,6 +382,16 @@ public final class LayoutAssets implements AssetView {
         }
 
         @Override
+        public int floorHeight() {
+            return building.floorHeight();
+        }
+
+        @Override
+        public int groundFloorHeight() {
+            return building.groundFloorHeight();
+        }
+
+        @Override
         public String pickPart(Random random, PartContext context) {
             return name(building.randomPart(random, context(context)));
         }

@@ -15,6 +15,7 @@ import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
 import com.tuxprogrammer.lostcities.asset.model.ConditionContext;
 import com.tuxprogrammer.lostcities.asset.model.PaletteEntry;
 import com.tuxprogrammer.lostcities.asset.transform.Transform;
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.FurnishPass;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomFit;
 import com.tuxprogrammer.lostcities.worldgen.city.furnish.RoomKind;
@@ -65,7 +66,7 @@ public final class JobTarget implements CityTarget {
         final float chestWithoutLootChance;
         final boolean vanillaLoot;
         final boolean enderZooHardMobs;
-        final int floorPitch;
+        final FloorHeights floorHeights;
         final boolean roomRules;
 
         /**
@@ -98,11 +99,12 @@ public final class JobTarget implements CityTarget {
             this.chestWithoutLootChance = chestWithoutLootChance;
             this.vanillaLoot = false;
             this.enderZooHardMobs = false;
-            this.floorPitch = ConditionContext.FLOOR_HEIGHT;
+            this.floorHeights = FloorHeights.uniform(ConditionContext.FLOOR_HEIGHT);
             this.roomRules = false;
         }
 
-        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs, int floorPitch, boolean roomRules) {
+        private Facts(Facts base, boolean vanillaLoot, boolean enderZooHardMobs, FloorHeights floorHeights,
+            boolean roomRules) {
             this.worldSeed = base.worldSeed;
             this.chunkX = base.chunkX;
             this.chunkZ = base.chunkZ;
@@ -116,7 +118,7 @@ public final class JobTarget implements CityTarget {
             this.chestWithoutLootChance = base.chestWithoutLootChance;
             this.vanillaLoot = vanillaLoot;
             this.enderZooHardMobs = enderZooHardMobs;
-            this.floorPitch = floorPitch;
+            this.floorHeights = floorHeights;
             this.roomRules = roomRules;
         }
 
@@ -130,7 +132,7 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the options
          */
         public Facts withOptions(boolean vanillaLoot, boolean enderZooHardMobs) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch, roomRules);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, floorHeights, roomRules);
         }
 
         /**
@@ -141,7 +143,18 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the pitch
          */
         public Facts withFloorPitch(int pitch) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs, pitch, roomRules);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, FloorHeights.uniform(pitch), roomRules);
+        }
+
+        /**
+         * Returns these facts with the building's floor heights (D-floor-heights-1), which the {@code floor}
+         * condition and the room rules count in.
+         *
+         * @param heights the building's floor heights
+         * @return the facts with the heights
+         */
+        public Facts withFloorHeights(FloorHeights heights) {
+            return new Facts(this, vanillaLoot, enderZooHardMobs, heights, roomRules);
         }
 
         /**
@@ -152,7 +165,7 @@ public final class JobTarget implements CityTarget {
          * @return the facts with the rules
          */
         public Facts withRoomRules(boolean on) {
-            return new Facts(this, vanillaLoot, enderZooHardMobs, floorPitch, on);
+            return new Facts(this, vanillaLoot, enderZooHardMobs, floorHeights, on);
         }
     }
 
@@ -271,7 +284,7 @@ public final class JobTarget implements CityTarget {
         if (!RoomFit.survives(facts.worldSeed, worldX, y, worldZ, keep)) {
             return false;
         }
-        int floor = ConditionContext.floorOf(y, facts.cityGround, facts.floorPitch);
+        int floor = facts.floorHeights.floorOf(y - facts.cityGround);
         AssetId building = placement.building();
         RoomKind kind;
         if (building == null || facts.floors + facts.cellars == 0) {
@@ -299,7 +312,7 @@ public final class JobTarget implements CityTarget {
     private ConditionContext context(int y, PartWriter.Placement placement) {
         return ConditionContext.builder()
             .level(Math.floorDiv(y - facts.groundLevel, ConditionContext.LEVEL_HEIGHT))
-            .floor(ConditionContext.floorOf(y, facts.cityGround, facts.floorPitch))
+            .floor(facts.floorHeights.floorOf(y - facts.cityGround))
             .floors(facts.cellars, facts.floors)
             .part(
                 placement.part()

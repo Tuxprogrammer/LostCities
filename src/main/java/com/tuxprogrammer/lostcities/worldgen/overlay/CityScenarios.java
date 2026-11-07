@@ -500,7 +500,7 @@ public final class CityScenarios {
             int baseX = chunkX << 4;
             int baseZ = chunkZ << 4;
             for (int f = -plan.cellars(); f < plan.floors(); f++) {
-                int y = bottom + plan.floorPitch() * (f + plan.cellars());
+                int y = plan.floorY(f);
                 String where = plan.building() + "@" + (baseX + 8) + "," + y + "," + (baseZ + 8) + "/f" + f;
                 floors.add(designedOpen(plan, f) || floorShare(baseX, y, baseZ) >= FLOOR_SOLID_SHARE, where);
                 walls.add(wallShare(plan, chunkX, chunkZ, f, y) >= WALL_CLOSED_SHARE, where);
@@ -700,7 +700,7 @@ public final class CityScenarios {
                 + ",level="
                 + outside.cityLevel()
                 + ",roof="
-                + (outside.buildingBottomHeight() + outside.floorPitch() * (outside.cellars() + outside.floors()))
+                + outside.floorY(outside.floors())
                 + ",ruin="
                 + outside.ruinHeight()
                 + "]";

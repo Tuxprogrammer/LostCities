@@ -101,7 +101,7 @@ public final class CityTerrain {
         ChunkPlan[] sides, boolean[] skip) {
         TerrainSettings settings = context.settings();
         int lowest = plan.buildingBottom();
-        int top = plan.groundY() + plan.floorPitch() * plan.floors();
+        int top = plan.maxHeight();
         boolean withWater = settings.waterLevel() > settings.groundLevel();
         BlockRef border = plan.style()
             .border();

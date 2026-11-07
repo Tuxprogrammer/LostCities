@@ -25,6 +25,7 @@ import com.tuxprogrammer.lostcities.layout.ChunkLayout;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.DoorKind;
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.layout.Doorway;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
@@ -251,19 +252,26 @@ public final class CityChunkWriter {
         Building building = buildingId == null ? null : assets.building(buildingId);
         List<PartWriter.Placement> overlays = new ArrayList<>();
         int height = lowest;
-        int extra = plan.floorPitch() - ChunkPlan.LEVEL_HEIGHT;
+        FloorHeights heights = plan.floorHeights();
         for (int f = -cellars; f <= floors; f++) {
             if (f == floors) {
                 target.clearToMax(height);
             }
             Part part = part(plan.floorPart(f));
             Part overlay = part(plan.floorPart2(f));
+            int extra = heights.height(f) - ChunkPlan.LEVEL_HEIGHT;
             if (f < floors && extra > 0 && part != null && part.height() == ChunkPlan.LEVEL_HEIGHT) {
-                // Floors and cellars stretch to the world's pitch; the roof does not (design record 0014). The
-                // overlay repeats the main part's row so the two stay aligned.
+                // Floors and cellars stretch to the world's pitch, or the building's own height; the roof does not
+                // (design record 0014). The overlay repeats the main part's row so the two stay aligned.
                 int row = FloorStretch.repeatRow(part);
                 part = part.stretched(extra, row);
                 overlay = overlay == null ? null : overlay.stretched(extra, row);
+            } else if (f < floors && extra < 0 && part != null && part.height() == ChunkPlan.LEVEL_HEIGHT) {
+                // A building with lower floors than the legacy pitch drops its emptiest rows (D-floor-heights-1); the
+                // overlay drops the same rows.
+                int[] drop = FloorStretch.dropRows(part, -extra);
+                part = part.squeezed(drop);
+                overlay = overlay == null ? null : overlay.squeezed(drop);
             }
             if (part != null) {
                 // Floors below the roof take the interior characters of the palette variety (AR-3, D25).
@@ -276,7 +284,7 @@ public final class CityChunkWriter {
             if (f < floors && (building == null || building.allowDoors())) {
                 doors(height + 1, f, building);
             }
-            height += plan.floorPitch();
+            height += heights.height(f);
         }
         if (cellars > 0 && building != null && building.allowFillers()) {
             cellarFillers(lowest, building.filler());
@@ -290,7 +298,7 @@ public final class CityChunkWriter {
         }
         if (context.settings()
             .doorStepsOpen()) {
-            clearRoofDoorSteps(lowest + plan.floorPitch() * (cellars + floors));
+            clearRoofDoorSteps(plan.floorY(floors));
         }
         if (context.settings()
             .furnish()) {
@@ -312,7 +320,7 @@ public final class CityChunkWriter {
         String name = buildingId == null ? null : buildingId.path();
         for (int i = 0; i < count; i++) {
             int floor = i - cellars;
-            standing[i] = lowest + i * plan.floorPitch() + 1;
+            standing[i] = plan.floorY(floor) + 1;
             salts[i] = FurnishPass.floorSalt(context.worldSeed(), chunkX, chunkZ, floor);
             kinds[i] = RoomKind.forFloor(
                 name,
@@ -499,7 +507,11 @@ public final class CityChunkWriter {
     private void corridorConnections() {
         int groundLevel = context.settings()
             .groundLevel();
-        int drop = CorridorSteps.drop(groundLevel, plan.buildingBottomHeight(), plan.floorPitch(), plan.cellars());
+        int drop = CorridorSteps.drop(
+            groundLevel,
+            plan.buildingBottomHeight(),
+            plan.floorHeights().cellar,
+            plan.cellars());
         int top = groundLevel + CorridorSteps.OPENING_TOP;
         for (Direction side : Direction.values()) {
             int nx = chunkX + side.stepX();

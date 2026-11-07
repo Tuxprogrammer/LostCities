@@ -27,6 +27,12 @@ public final class Building {
     /** "No building-specific value" for the floor and cellar limits, as upstream. */
     public static final int UNSET = -1;
 
+    /** The lowest {@code floorHeight} a building may set: a slab, two clear rows and a ceiling (D-floor-heights-1). */
+    public static final int MIN_FLOOR_HEIGHT = 4;
+
+    /** The highest {@code floorHeight} a building may set. */
+    public static final int MAX_FLOOR_HEIGHT = 16;
+
     /** A part reference: a part and the conditions under which a floor may use it. */
     public static final class PartRef {
 
@@ -57,6 +63,8 @@ public final class Building {
     private final int maxFloors;
     private final int minCellars;
     private final int maxCellars;
+    private final int floorHeight;
+    private final int groundFloorHeight;
     private final boolean allowDoors;
     private final boolean allowFillers;
     private final boolean overrideFloors;
@@ -74,6 +82,8 @@ public final class Building {
         this.maxFloors = limits[1];
         this.minCellars = limits[2];
         this.maxCellars = limits[3];
+        this.floorHeight = limits[4];
+        this.groundFloorHeight = limits[5];
         this.allowDoors = flags[0];
         this.allowFillers = flags[1];
         this.overrideFloors = flags[2];
@@ -103,7 +113,18 @@ public final class Building {
             ok &= palette != null;
         }
         int[] limits = { root.integer("minfloors", UNSET), root.integer("maxfloors", UNSET),
-            root.integer("mincellars", UNSET), root.integer("maxcellars", UNSET) };
+            root.integer("mincellars", UNSET), root.integer("maxcellars", UNSET), root.integer("floorHeight", UNSET),
+            root.integer("groundFloorHeight", UNSET) };
+        // D-floor-heights-1: a building's own floor heights, slab to slab; unset takes the world's pitch.
+        for (int i = 4; i <= 5; i++) {
+            if (limits[i] != UNSET && (limits[i] < MIN_FLOOR_HEIGHT || limits[i] > MAX_FLOOR_HEIGHT)) {
+                root.error(
+                    i == 4 ? "floorHeight" : "groundFloorHeight",
+                    Integer.toString(limits[i]),
+                    "must be between " + MIN_FLOOR_HEIGHT + " and " + MAX_FLOOR_HEIGHT);
+                ok = false;
+            }
+        }
         boolean[] flags = { root.flag("allowDoors", true), root.flag("allowFillers", true),
             root.flag("overrideFloors", false) };
         float prefersLonely = root.number("preferslonely", 0f);
@@ -224,6 +245,19 @@ public final class Building {
     /** Returns whether filler may be generated around cellars. */
     public boolean allowFillers() {
         return allowFillers;
+    }
+
+    /**
+     * Returns {@code floorHeight}: blocks each floor above the ground floor and each cellar rises, slab to slab, or
+     * {@link #UNSET} for the world's floor pitch (decision log D-floor-heights-1).
+     */
+    public int floorHeight() {
+        return floorHeight;
+    }
+
+    /** Returns {@code groundFloorHeight}: blocks the ground floor rises, or {@link #UNSET} for {@link #floorHeight()}. */
+    public int groundFloorHeight() {
+        return groundFloorHeight;
     }
 
     /** Returns whether only this building's floor and cellar limits apply. */

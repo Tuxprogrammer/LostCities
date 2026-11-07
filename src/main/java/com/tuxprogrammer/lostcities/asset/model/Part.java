@@ -200,6 +200,29 @@ public final class Part {
             key -> new Part(id, xsize, zsize, FloorStretch.stretch(slices, xsize, zsize, extra, row), palette, meta));
     }
 
+    /**
+     * Returns this part at a lower floor height: the given rows left out (decision log D-floor-heights-1). Copies are
+     * memoized like {@link #stretched(int, int)}.
+     *
+     * @param drop the rows to leave out, usually {@link FloorStretch#dropRows(Part, int)} of the floor's main part;
+     *             empty returns this part
+     * @return the lower part, with the same id, palette and metadata
+     */
+    public Part squeezed(int[] drop) {
+        int mask = 0;
+        for (int d : drop) {
+            if (d >= 0 && d < height() && d < 30) {
+                mask |= 1 << d;
+            }
+        }
+        if (mask == 0) {
+            return this;
+        }
+        return stretched.computeIfAbsent(
+            -mask,
+            key -> new Part(id, xsize, zsize, FloorStretch.squeeze(slices, drop), palette, meta));
+    }
+
     /** Returns the id. */
     public AssetId id() {
         return id;

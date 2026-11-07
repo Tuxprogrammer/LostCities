@@ -91,6 +91,89 @@ public final class FloorStretch {
         return out;
     }
 
+    /**
+     * Returns the rows a part drops to stand at a lower floor height (decision log D-floor-heights-1), chosen one at a
+     * time like {@link #repeatRow(Part)}: the remaining row from 1 to {@code height − 2} with the most spaces, the
+     * highest on a tie. A row that holds a step of a diagonal stair run is skipped while any other row is left, so a
+     * run keeps one rise per step.
+     *
+     * @param part  the floor part
+     * @param fewer how many rows to drop, at least 1
+     * @return the dropped rows, ascending; empty when the part is too short to drop that many
+     */
+    public static int[] dropRows(Part part, int fewer) {
+        int h = part.height();
+        if (fewer <= 0 || h - fewer < 3) {
+            return new int[0];
+        }
+        List<String> slices = new ArrayList<>(h);
+        int[] spaces = new int[h];
+        for (int y = 0; y < h; y++) {
+            StringBuilder row = new StringBuilder(part.xsize() * part.zsize());
+            for (int z = 0; z < part.zsize(); z++) {
+                for (int x = 0; x < part.xsize(); x++) {
+                    char c = part.get(x, y, z);
+                    row.append(c);
+                    if (c == ' ') {
+                        spaces[y]++;
+                    }
+                }
+            }
+            slices.add(row.toString());
+        }
+        boolean[] stairRow = new boolean[h];
+        for (Chain chain : chains(slices, part.xsize(), part.zsize(), 2)) {
+            for (int k = 0; k < chain.steps; k++) {
+                stairRow[chain.firstY + k] = true;
+            }
+        }
+        List<Integer> left = new ArrayList<>();
+        for (int y = 0; y < h; y++) {
+            left.add(y);
+        }
+        int[] out = new int[fewer];
+        for (int i = 0; i < fewer; i++) {
+            int best = -1;
+            for (boolean allowStairs : new boolean[] { false, true }) {
+                int bestSpaces = -1;
+                for (int j = 1; j <= left.size() - 2; j++) {
+                    int y = left.get(j);
+                    if ((allowStairs || !stairRow[y]) && spaces[y] >= bestSpaces) {
+                        best = j;
+                        bestSpaces = spaces[y];
+                    }
+                }
+                if (best >= 0) {
+                    break;
+                }
+            }
+            out[i] = left.remove(best);
+        }
+        java.util.Arrays.sort(out);
+        return out;
+    }
+
+    /**
+     * Returns the slices of a part without the given rows.
+     *
+     * @param slices the part's slices, bottom first
+     * @param drop   the rows to leave out; rows past the top are ignored
+     * @return new slices
+     */
+    public static List<String> squeeze(List<String> slices, int[] drop) {
+        List<String> out = new ArrayList<>(slices.size());
+        for (int y = 0; y < slices.size(); y++) {
+            boolean dropped = false;
+            for (int d : drop) {
+                dropped |= d == y;
+            }
+            if (!dropped) {
+                out.add(slices.get(y));
+            }
+        }
+        return out;
+    }
+
     /** Returns the original row a stretched row comes from. */
     static int source(int newY, int row, int extra) {
         if (newY <= row) {
@@ -127,6 +210,11 @@ public final class FloorStretch {
 
     /** Finds every diagonal stair run of a part. */
     static List<Chain> chains(List<String> slices, int xsize, int zsize) {
+        return chains(slices, xsize, zsize, MIN_STAIR_STEPS);
+    }
+
+    /** Finds every diagonal run of at least {@code minSteps} steps. */
+    static List<Chain> chains(List<String> slices, int xsize, int zsize, int minSteps) {
         int h = slices.size();
         List<Chain> out = new ArrayList<>();
         for (int y = 0; y < h; y++) {
@@ -145,7 +233,7 @@ public final class FloorStretch {
                             && open(slices, xsize, zsize, x + n * d[0], y + n + 1, z + n * d[1])) {
                             n++;
                         }
-                        if (n >= MIN_STAIR_STEPS) {
+                        if (n >= minSteps) {
                             out.add(new Chain(c, y, x, z, d[0], d[1], n));
                         }
                     }

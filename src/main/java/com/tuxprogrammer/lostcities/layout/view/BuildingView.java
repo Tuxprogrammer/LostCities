@@ -36,6 +36,22 @@ public interface BuildingView {
     float prefersLonely();
 
     /**
+     * Returns {@code floorHeight}: blocks each floor above the ground floor and each cellar rises, slab to slab, or
+     * {@link #UNSET} for the world's floor pitch (decision log D-floor-heights-1).
+     */
+    default int floorHeight() {
+        return UNSET;
+    }
+
+    /**
+     * Returns {@code groundFloorHeight}: blocks the ground floor rises, or {@link #UNSET} for {@link #floorHeight()}
+     * (decision log D-floor-heights-1).
+     */
+    default int groundFloorHeight() {
+        return UNSET;
+    }
+
+    /**
      * Picks the part for one level among the parts whose condition matches.
      *
      * <p>

@@ -6,6 +6,8 @@
   "maxfloors": 2,
   "mincellars": 0,
   "maxcellars": 0,
+  "floorHeight": 5,
+  "groundFloorHeight": 7,
   "parts": [
     {
       "top": false,

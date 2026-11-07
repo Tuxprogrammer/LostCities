@@ -807,7 +807,12 @@ public final class CityFinder {
                 ground,
                 z,
                 viewX,
-                ground + Math.max(layout.floors(), other.floors()) * layout.floorPitch() + FEATHER_HEIGHT,
+                ground + Math.max(
+                    layout.floorHeights()
+                        .offset(layout.floors()),
+                    other.floorHeights()
+                        .offset(other.floors()))
+                    + FEATHER_HEIGHT,
                 viewZ,
                 yawToward(viewX, viewZ, x, z),
                 FEATHER_PITCH,
@@ -1304,7 +1309,7 @@ public final class CityFinder {
             if (side == null) {
                 return null;
             }
-            int y = layout.cityGroundLevel() + level * layout.floorPitch();
+            int y = layout.floorY(level);
             int x = (chunkX << 4) + 8;
             int z = (chunkZ << 4) + 8;
             String what = level < 0 ? "basement " + -level
