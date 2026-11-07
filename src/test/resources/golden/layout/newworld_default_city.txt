@@ -46,14 +46,14 @@ pMMppppPB..............MMppSBBpPSS....................ppMMMpp
 BMMBTppPBxp........BBSBTBppSBppPMMS...................ppMMMSS
 pppBTppPSSSSS...SSSSSSSSSSSSSSSPMMS...pPopppp.........ppMMMBp
 ppBpKppPopBBMMBBppBopSppppBSpxBPppSTTTBPppBMMp........pMMTpKK
-ppppBppPppopMMpppppBoSppoppSpKKPppSpBppPpppMMop.......oMMTpKK
+ppppBppPppopMMpppppBoSppoppSpKKPppSpBppPpppMMop.......oMMTpBp
 PPPPPKPPPPPPPPPPPPPPPPPKPPPPPKKPPPPPPPPPPPPKPPP.......PPPPPPP
 ppBpSBpPppKoppoppoSKBooppppppBBPBoSBBppPpBpppoK......xppppppo
-pBpBSppKKopBoBpBBpSBppBBppoppppPopSopMMPpKKpppK.....xBpBBBppp
-pppKSpBKKBpBpMMpBMMppBBpBMMSpppPpBSpoMMPoKKppKK....BpoopBppBB
+pBpBSppKBopBoBpBBpSBppBBppoppppPopSopMMPpKKpppK.....xBpBBBppp
+pppKSpBPpBpBpMMpBMMppBBpBMMSpppPpBSpoMMPoKKppKK....BpoopBppBB
 ooBpSpBPpoBBpMMppMMopBpBpMMSppBPoBSpBKBPppppBBp..pppppBMMpppp
 pppBSBpPppBoop..xpSopBop.pp.ppp.poSTTTpPppBppBopxBpppppMMopBK
-pBppSpoPKpppp......K.............pSBBopPppBBpB.BppppppBBppopK
+pBppSpoPKpppp......K.............pSBBopPppBBpB.BppppppBBppopo
 .ppKSpKPppp.......................SpMMpPpppBp..xBoKppopKKBBpp
 ...BSooP...........................xMMpPpp.....ppBpppppKKpBpp
 ................................................ppppppoBppppB
@@ -170,10 +170,10 @@ floors
 5336....4..........22.2.6...6...33......................444..
 ...7............................33......................4446.
 ..8.......642221..5.......8...6.......2...455..........44....
-....6.......22.....6................2......55..........44....
+....6.......22.....6................2......55..........44..8.
 .............................................................
 ..8..7..............6........56.2..46....6...................
-.7.6.......6.4.22..7..86.............66..............1.687...
+.7.6....7..6.4.22..7..86.............66..............1.687...
 ......8..8.7.33.233..66.644......4...66............1....7..66
 ..8...6...66.33..33..5.3.44...1..2..6.7.....31........366....
 ...6.6....5..........2....................4..1...2.....66..6.
@@ -193,4 +193,4 @@ floors
 ..1......244....66........44..3.33......1..1....25.686.66...2
 ..13......266...66............2.......1....2.......7...66....
 ...4......6........5.2......................2.....6....86....
-details-sha256: 55e9520cbbe8f7635bb5310aceb21db4e1d05c6a0d142806db85db6e7e665eea
+details-sha256: 8f874fd24627b2b73a028d84d954cddb3e3746e89ee32361c1e612c6c4df5cb5
