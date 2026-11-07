@@ -253,10 +253,10 @@ class CityLinkGraphTest {
     }
 
     @Test
-    void linksPassOverLandmarksWhenTheNodeHasAnotherChoice() {
+    void linksDetourAroundLandmarksOrPassToTheNextChoice() {
         Landmarks nodes = new Landmarks(grid(4242L));
         CityLinkGraph graph = new CityLinkGraph(nodes, 512);
-        int dropped = 0;
+        int detoured = 0;
         for (int cx = -5; cx <= 5; cx++) {
             for (int cz = -5; cz <= 5; cz++) {
                 int[] self = graph.node(cx, cz);
@@ -282,11 +282,12 @@ class CityLinkGraphTest {
                         : p[1] != q[1] ? Long.compare(p[1], q[1]) : Long.compare(p[2], q[2]));
                 List<long[]> open = new ArrayList<>();
                 for (int i = 0; i < all.size(); i++) {
+                    // A blocked straight path detours (D390); only a node no detour reaches is passed over.
                     boolean blocked = blocked(nodes, self, all.get(i));
-                    if (!blocked) {
+                    boolean routed = graph.route(self[0], self[1], (int) all.get(i)[1], (int) all.get(i)[2]) != null;
+                    if (routed) {
                         open.add(all.get(i));
-                    } else if (i < CityLinkGraph.NEAREST) {
-                        dropped++;
+                        detoured += blocked && i < CityLinkGraph.NEAREST ? 1 : 0;
                     }
                 }
                 List<CityLinkGraph.Link> chosen = graph.chosen(cx, cz);
@@ -307,7 +308,7 @@ class CityLinkGraphTest {
                 }
             }
         }
-        assertTrue(dropped > 0, "some nearest link crosses a landmark, so the test has teeth");
+        assertTrue(detoured > 0, "some nearest link detours around a landmark, so the test has teeth");
     }
 
     private static boolean blocked(CityLinkGraph.Nodes nodes, int[] self, long[] other) {
