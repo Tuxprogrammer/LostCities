@@ -518,13 +518,17 @@ public final class LinkHighways {
         final Profile profile;
         /** Whether another link's path hits each path index (D323): never a ramp. */
         final boolean[] shared;
-        /** {@code room[i]}: the rampable chunks at path indices below {@code i}, for the base's piece kinds. */
-        final int[] room;
+        /**
+         * Whether no other link writes a step at each path index of the written range. Filled by {@link #open} before
+         * crossing planning reads it.
+         */
+        boolean[] open;
+        /** {@code room[i]}: the open rampable chunks at path indices below {@code i}, for the base's piece kinds. */
+        int[] room;
 
-        Base(Profile profile, boolean[] shared, int[] room) {
+        Base(Profile profile, boolean[] shared) {
             this.profile = profile;
             this.shared = shared;
-            this.room = room;
         }
 
         /** Returns the rampable chunks strictly between two path indices. */
@@ -584,15 +588,57 @@ public final class LinkHighways {
         List<LinkRaster.Step> path = link.path();
         int n = path.size();
         boolean[] shared = new boolean[n];
-        int[] room = new int[n + 1];
         for (int i = 0; i < n; i++) {
             LinkRaster.Step at = path.get(i);
             shared[i] = shared(link, at.chunkX(), at.chunkZ());
-            room[i + 1] = room[i] + (rampable(at, profile.staircase) && !shared[i] ? 1 : 0);
         }
-        Base base = new Base(profile, shared, room);
+        Base base = new Base(profile, shared);
         bases.put(link, base);
         return base;
+    }
+
+    /**
+     * Returns a link's base with its open chunks filled in: the chunks of its written range where no other link writes
+     * a step, so a re-placed ramp never shares its chunk with another link's piece (D323 for written pieces). Unlike the base's
+     * own ramp rule, a chunk where another link's path runs unwritten (inside a city) is open: links that converge on
+     * one city from the same side otherwise never have room to meet. Reads the neighbors' base profiles only.
+     */
+    private Base open(CityLinkGraph.Link link) {
+        Base base = base(link);
+        if (base.open != null) {
+            return base;
+        }
+        List<LinkRaster.Step> path = link.path();
+        int n = path.size();
+        Profile p = base.profile;
+        boolean[] open = new boolean[n];
+        int[] room = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            LinkRaster.Step at = path.get(i);
+            open[i] = i >= p.start && i <= p.end && !occupied(link, at.chunkX(), at.chunkZ());
+            room[i + 1] = room[i] + (open[i] && rampable(at, p.staircase) ? 1 : 0);
+        }
+        base.open = open;
+        base.room = room;
+        return base;
+    }
+
+    /**
+     * Whether another link writes a step in a chunk, by base profiles. City highways and staircase bends are not
+     * counted, as for the base's own ramps, so every chunk the base ramps on stays open.
+     */
+    private boolean occupied(CityLinkGraph.Link link, int chunkX, int chunkZ) {
+        for (CityLinkGraph.Hit hit : hits.hits(chunkX, chunkZ)) {
+            if (hit.link()
+                .equals(link)) {
+                continue;
+            }
+            Profile p = base(hit.link()).profile;
+            if (hit.index() >= p.start && hit.index() <= p.end) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Whether a path chunk may hold a ramp: straight, or diagonal off the staircase (class Javadoc, Levels). */
@@ -642,7 +688,7 @@ public final class LinkHighways {
             for (int level = low; level <= high; level++) {
                 int cost = 0;
                 for (int k = 0; k < links.size() && cost != Integer.MAX_VALUE; k++) {
-                    Base b = base(links.get(k));
+                    Base b = open(links.get(k));
                     cost = b.reaches(indices.get(k), level) ? cost + b.cost(level) : Integer.MAX_VALUE;
                 }
                 if (cost < bestCost) {
@@ -668,7 +714,7 @@ public final class LinkHighways {
         if (cached != null) {
             return cached;
         }
-        Base base = base(link);
+        Base base = open(link);
         Profile p = base.profile;
         List<LinkRaster.Step> path = link.path();
         boolean[] keep = new boolean[path.size()];
@@ -750,12 +796,13 @@ public final class LinkHighways {
         if (!moves) {
             return p;
         }
-        Profile diagonal = replan(link, base, waypoints, p.staircase);
+        Base ready = open(link);
+        Profile diagonal = replan(link, ready, waypoints, p.staircase);
         if (diagonal == null) {
             return p;
         }
         if (!p.staircase && staircase(link, ends, diagonal)) {
-            Profile stairs = replan(link, base, waypoints, true);
+            Profile stairs = replan(link, ready, waypoints, true);
             if (stairs != null) {
                 return stairs;
             }
@@ -785,7 +832,7 @@ public final class LinkHighways {
             int delta = fixed.get(k + 1)[1] - fixed.get(k)[1];
             List<Integer> candidates = new ArrayList<>();
             for (int i = from + 1; i < to; i++) {
-                if (rampable(path.get(i), staircase) && !base.shared[i]) {
+                if (rampable(path.get(i), staircase) && base.open[i]) {
                     candidates.add(i);
                 }
             }
