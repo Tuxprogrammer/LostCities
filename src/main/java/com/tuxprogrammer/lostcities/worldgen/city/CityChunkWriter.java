@@ -26,8 +26,8 @@ import com.tuxprogrammer.lostcities.layout.ChunkLayout;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
 import com.tuxprogrammer.lostcities.layout.Direction;
 import com.tuxprogrammer.lostcities.layout.DoorKind;
-import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.layout.Doorway;
+import com.tuxprogrammer.lostcities.layout.FloorHeights;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
 import com.tuxprogrammer.lostcities.layout.StreetType;
@@ -337,10 +337,10 @@ public final class CityChunkWriter {
             } else {
                 rows = FloorStretch.copies(part.height(), FloorStretch.dropRows(part, -extra));
             }
-            whole &= part == null || parts.isEmpty() || parts.get(0) == null
+            whole &= part == null || parts.isEmpty()
+                || parts.get(0) == null
                 || (part.xsize() == parts.get(0)
-                    .xsize()
-                    && part.zsize()
+                    .xsize() && part.zsize()
                         == parts.get(0)
                             .zsize());
             parts.add(part);
@@ -561,11 +561,8 @@ public final class CityChunkWriter {
     private void corridorConnections() {
         int groundLevel = context.settings()
             .groundLevel();
-        int drop = CorridorSteps.drop(
-            groundLevel,
-            plan.buildingBottomHeight(),
-            plan.floorHeights().cellar,
-            plan.cellars());
+        int drop = CorridorSteps
+            .drop(groundLevel, plan.buildingBottomHeight(), plan.floorHeights().cellar, plan.cellars());
         int top = groundLevel + CorridorSteps.OPENING_TOP;
         for (Direction side : Direction.values()) {
             int nx = chunkX + side.stepX();

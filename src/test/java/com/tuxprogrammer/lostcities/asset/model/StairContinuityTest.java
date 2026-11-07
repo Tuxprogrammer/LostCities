@@ -301,8 +301,9 @@ public class StairContinuityTest {
                             String why = brokenAcross(parts, copies, after);
                             if (why != null) {
                                 failures.add(
-                                    id.path() + " " + lower.id()
-                                        .path()
+                                    id.path() + " "
+                                        + lower.id()
+                                            .path()
                                         + " +"
                                         + lowerExtra
                                         + " / "
@@ -356,7 +357,10 @@ public class StairContinuityTest {
         try {
             java.nio.file.Path out = java.nio.file.Paths.get("build", "reports", "stair-xfloor-before.txt");
             java.nio.file.Files.createDirectories(out.getParent());
-            java.nio.file.Files.write(out, text.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            java.nio.file.Files.write(
+                out,
+                text.toString()
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8));
         } catch (java.io.IOException e) {
             // The record is a convenience; the assertion below is the test.
         }

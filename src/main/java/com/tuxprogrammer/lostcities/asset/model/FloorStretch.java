@@ -480,6 +480,7 @@ public final class FloorStretch {
             }
         }
     }
+
     private static char at(List<String> slices, int xsize, int zsize, int x, int y, int z) {
         if (x < 0 || x >= xsize || z < 0 || z >= zsize || y < 0 || y >= slices.size()) {
             return '\0';
