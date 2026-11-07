@@ -154,8 +154,9 @@ public class FurnishPassTest {
                     Integer tier = MACHINE_TIER.get(item.gtId());
                     assertNotNull(tier, kind.id() + " machine " + item.gtId() + " has no known tier (ULV?)");
                     assertTrue(tier >= 0 && tier <= 4, kind.id() + " machine tier");
-                    // Boilers (MTEBoiler.java:78, tier 0) are base type 0; steam machines and LV to HV are 1, EV is 2.
-                    int expectedBase = item.gtId() == 100 || item.gtId() == 101 ? 0 : tier == 4 ? 2 : 1;
+                    // Boilers (MTEBoiler.java:78, tier 0) are base type 0; steam machines and LV to EV are 1
+                    // (MTETieredMachineBlock.getTileEntityBaseType: WrenchLevel1 for tiers 1 to 4).
+                    int expectedBase = item.gtId() == 100 || item.gtId() == 101 ? 0 : 1;
                     assertEquals(expectedBase, item.meta(), kind.id() + " base type of " + item.gtId());
                 } else if (item.block()
                     .startsWith("gregtech:gt.blockcasings")) {
