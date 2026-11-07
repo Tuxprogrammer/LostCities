@@ -192,7 +192,9 @@ public class CityGridTest {
             TerrainSettings.defaults(),
             BuiltinProfiles.get("rarecities")
                 .values());
-        assertEquals(64, rare.cityGridCell);
-        assertEquals(16, rare.cityGridJitter);
+        assertEquals(256, rare.cityGridCell, "D-city-scale-1");
+        assertEquals(64, rare.cityGridJitter);
+        assertEquals(200, rare.cityMinRadius);
+        assertEquals(512, rare.cityMaxRadius);
     }
 }

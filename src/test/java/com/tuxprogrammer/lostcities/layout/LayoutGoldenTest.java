@@ -226,17 +226,27 @@ public class LayoutGoldenTest {
                 .build());
         Networks n = p.networks();
         com.tuxprogrammer.lostcities.layout.link.CityLinkGraph graph = n.links();
-        int min = -96;
-        int max = 95;
+        // One grid cell each way from the origin (D-city-scale-1: 256-chunk cells), one character per STEP x STEP
+        // chunks showing the block's strongest piece (S over + over = over H over .), so the map stays 128 wide.
+        final int step = 4;
+        int min = -graph.cell();
+        int max = graph.cell() - 1;
+        String rank = ".H=+S";
         StringBuilder map = new StringBuilder();
-        for (int z = min; z <= max; z++) {
-            for (int x = min; x <= max; x++) {
-                boolean highway = n.highway(x, z)
-                    .hasHighway();
-                com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = n.railChunk(x, z);
-                char c = rail.type()
-                    .isStation() ? 'S' : rail.isPresent() ? (highway ? '+' : '=') : highway ? 'H' : '.';
-                map.append(c);
+        for (int z = min; z <= max; z += step) {
+            for (int x = min; x <= max; x += step) {
+                int best = 0;
+                for (int bz = z; bz < z + step; bz++) {
+                    for (int bx = x; bx < x + step; bx++) {
+                        boolean highway = n.highway(bx, bz)
+                            .hasHighway();
+                        com.tuxprogrammer.lostcities.layout.rail.RailChunk rail = n.railChunk(bx, bz);
+                        char c = rail.type()
+                            .isStation() ? 'S' : rail.isPresent() ? (highway ? '+' : '=') : highway ? 'H' : '.';
+                        best = Math.max(best, rank.indexOf(c));
+                    }
+                }
+                map.append(rank.charAt(best));
             }
             map.append('\n');
         }
@@ -279,8 +289,9 @@ public class LayoutGoldenTest {
         }
         LayoutGoldens.assertMatches(
             "rarecities_link_network",
-            "networkLayout=links with the rarecities builtin (seed 7919, flat ground, chunks -96..95): link-graph\n"
-                + "highways (H) and railways (= track, S stations, + both) between grid-placed rare cities.",
+            "networkLayout=links with the rarecities builtin (seed 7919, flat ground, chunks -256..255, one character\n"
+                + "per 4 x 4 chunks): link-graph highways (H) and railways (= track, S stations, + both) between\n"
+                + "grid-placed rare cities.",
             map.toString(),
             details.toString());
     }

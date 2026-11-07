@@ -2,6 +2,12 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
+## Unreleased
+
+### Changed
+
+- `rarecities`: cities cover four times the area (radius 200 to 511 blocks) and stand four times as far apart (one per 256 x 256 chunk cell, jitter 64); links reach up to 640 chunks so every city keeps its neighbors. New worlds only: a world pins its profile values when it is created, so existing `rarecities` worlds keep 64-chunk cells and radii 100 to 255.
+
 ## 0.2.1-beta (2026-11-06)
 
 ### Fixed

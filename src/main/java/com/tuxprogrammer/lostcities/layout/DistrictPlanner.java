@@ -26,7 +26,8 @@ import com.tuxprogrammer.lostcities.layout.view.Selection;
  * <li><b>Plaza:</b> the city's center chunk, and in cities of at least {@value #BIG_CITY_RADIUS} blocks radius the
  * 2 x 2 chunks that start at it (east and south). It becomes {@link LotKind#PLAZA}.</li>
  * <li><b>Industry:</b> a site at ring distance {@value #SITE_DISTANCE} on the cardinal side with the most links
- * (ties and link-less worlds by hash); the 3 x 3 chunks around it each become {@link LotKind#INDUSTRY} with chance
+ * (ties and link-less worlds by hash); the square of chunks around it ({@link #yardHalf}: 3 x 3, and 5 x 5 in cities
+ * of at least 384 blocks radius) each become {@link LotKind#INDUSTRY} with chance
  * {@value #YARD_CHANCE}, if they lie in the outer or edge ring.</li>
  * <li><b>Park belt:</b> chunks with ring distance in {@code [BELT_FROM, BELT_TO]} become parks with chance
  * {@value #BELT_CHANCE}.</li>
@@ -41,6 +42,8 @@ final class DistrictPlanner {
     static final float SITE_DISTANCE = 0.62f;
     /** Chance that a chunk around the site is a yard. */
     static final float YARD_CHANCE = 0.7f;
+    /** City radius in blocks per chunk of yard half-width: the yard grows with the city (D-city-scale-1). */
+    static final int YARD_GROWTH_RADIUS = 192;
     /** Ring distance band of the park belt: either side of the inner to outer boundary. */
     static final float BELT_FROM = DensityRings.INNER_END - 0.07f;
     static final float BELT_TO = DensityRings.INNER_END + 0.07f;
@@ -130,9 +133,24 @@ final class DistrictPlanner {
             return false;
         }
         int[] site = site(center[0], center[1]);
-        return site != null && Math.abs(site[0] - x) <= 1
-            && Math.abs(site[1] - z) <= 1
-            && roll(YARD_SALT, x, z) < YARD_CHANCE;
+        if (site == null) {
+            return false;
+        }
+        int half = yardHalf(planner.cities.cityRadius(center[0], center[1]));
+        return Math.abs(site[0] - x) <= half && Math.abs(site[1] - z) <= half && roll(YARD_SALT, x, z) < YARD_CHANCE;
+    }
+
+    /**
+     * Returns the industrial yard's half-width in chunks for a city radius: 1 (a 3 x 3 yard) below twice
+     * {@link #YARD_GROWTH_RADIUS} blocks, then one more per {@link #YARD_GROWTH_RADIUS}. Every radius the default and
+     * pre-scale {@code rarecities} profiles draw (under 384 blocks) keeps the 3 x 3 yard; the scaled {@code rarecities}
+     * cities, twice as wide, get a yard about as large a share of the city (D-city-scale-1).
+     *
+     * @param radius the city radius in blocks
+     * @return the half-width in chunks, at least 1
+     */
+    static int yardHalf(float radius) {
+        return Math.max(1, (int) (radius / YARD_GROWTH_RADIUS));
     }
 
     /** The industrial site of a city (chunk X and Z), or {@code null} when the city is too small. */
