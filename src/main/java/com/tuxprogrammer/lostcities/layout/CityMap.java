@@ -308,6 +308,55 @@ final class CityMap {
     }
 
     /**
+     * Trace (diagnostic): the first test of {@link #computeCityFactor} a chunk fails, in the same order: {@code pre}
+     * (forced by predefined content), {@code raw0} (no city reaches it), {@code height} (outside the height window),
+     * {@code ocean} (an ocean biome), {@code shallow} (below RWG's sea level), {@code rise} (the rise cap), {@code thr}
+     * (passes every test but its factor is at or under the threshold) or {@code ok}. Mirrors the real tests and changes
+     * nothing; keep it beside them.
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return the reason code, then the raw factor, sampled height, ocean flag, base and chunk city levels
+     */
+    String traceReason(int chunkX, int chunkZ) {
+        float raw = rawCityFactor(chunkX, chunkZ);
+        int height = terrain.height(chunkX, chunkZ);
+        boolean ocean = terrain.isOcean(chunkX, chunkZ);
+        int base = riseBase(chunkX, chunkZ);
+        int level = profile.levelForHeight(height);
+        String reason;
+        if (predefined.occupant(chunkX, chunkZ) != null) {
+            reason = "pre";
+        } else if (raw <= FACTOR_EPSILON) {
+            reason = "raw0";
+        } else if (height < profile.cityMinHeight || height > profile.cityMaxHeight) {
+            reason = "height";
+        } else if (profile.cityAvoidOcean && ocean) {
+            reason = "ocean";
+        } else if (profile.cityAvoidOcean && profile.seaLevel == -1 && height < LayoutProfile.RWG_SEA_LEVEL) {
+            reason = "shallow";
+        } else if (risesTooHigh(chunkX, chunkZ, height)) {
+            reason = "rise";
+        } else if (!isCityRaw(chunkX, chunkZ)) {
+            reason = "thr";
+        } else {
+            reason = "ok";
+        }
+        int[] center = strongestCenter(chunkX, chunkZ);
+        return String.format(
+            java.util.Locale.ROOT,
+            "%s raw=%.3f factor=%.3f h=%d ocean=%b base=%d level=%d center=%s",
+            reason,
+            raw,
+            cityFactor(chunkX, chunkZ),
+            height,
+            ocean,
+            base,
+            level,
+            center == null ? "-" : center[0] + "," + center[1]);
+    }
+
+    /**
      * Deviation (alpha review AR-4): whether a chunk's terrain rises more than {@code cityMaxRise} +
      * {@link #RISE_TOLERANCE} city levels above its city's base level. Upstream lets a city climb any slope up to
      * {@code cityMaxHeight}, so parks and buildings sat 40 to 60 blocks above the rest of their city; here the city

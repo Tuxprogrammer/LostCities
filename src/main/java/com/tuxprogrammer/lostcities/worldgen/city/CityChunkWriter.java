@@ -330,7 +330,7 @@ public final class CityChunkWriter {
         // A ruined building is furnished at half density (0016, decision 8); the ruin and damage passes that follow
         // take furniture with the blocks they remove.
         float scale = plan.ruinHeight() < 0 ? 1f : 0.5f;
-        FurnishPass.run(
+        java.util.List<FurnishPass.Placed> placed = FurnishPass.run(
             target::get,
             target::set,
             standing,
@@ -340,6 +340,49 @@ public final class CityChunkWriter {
             scale,
             context.knownBlocks(),
             MultiblockShapes.bundled());
+        if (com.tuxprogrammer.lostcities.worldgen.overlay.CityTraceLog.ENABLED) {
+            traceFurnish(name, cellars, kinds, standing, placed);
+        }
+    }
+
+    /** Trace (diagnostic): the room kind of each floor and what the furnish pass placed, GT machines named. */
+    private void traceFurnish(String building, int cellars, RoomKind[] kinds, int[] standing,
+        java.util.List<FurnishPass.Placed> placed) {
+        StringBuilder floors = new StringBuilder();
+        for (int i = 0; i < kinds.length; i++) {
+            floors.append(i == 0 ? "" : " ")
+                .append(i - cellars)
+                .append(':')
+                .append(kinds[i])
+                .append('@')
+                .append(standing[i]);
+        }
+        int machines = 0;
+        StringBuilder gt = new StringBuilder();
+        for (FurnishPass.Placed p : placed) {
+            if (p.item()
+                .isMachine()) {
+                machines++;
+                gt.append(' ')
+                    .append(p.item()
+                        .gtId())
+                    .append('@')
+                    .append((chunkX << 4) + p.x())
+                    .append(',')
+                    .append(p.y())
+                    .append(',')
+                    .append((chunkZ << 4) + p.z());
+            }
+        }
+        com.tuxprogrammer.lostcities.worldgen.overlay.CityTraceLog.log(
+            "furnish chunk=%d,%d building=%s floors=[%s] placed=%d gt=%d%s",
+            chunkX,
+            chunkZ,
+            building,
+            floors,
+            placed.size(),
+            machines,
+            gt);
     }
 
     /**
@@ -529,6 +572,14 @@ public final class CityChunkWriter {
         if (plan.lot() == LotKind.PLAZA || plan.lot() == LotKind.INDUSTRY) {
             // Phase 5c districts (D350): the plaza and the industrial yard.
             new DistrictWriter(target, plan, assets, context.worldSeed()).write(height);
+            com.tuxprogrammer.lostcities.worldgen.overlay.CityTraceLog.log(
+                "district chunk=%d,%d lot=%s footprint=%s height=%d dryRun=%b",
+                chunkX,
+                chunkZ,
+                plan.lot(),
+                plan.lotFootprint(),
+                height,
+                target.dryRun());
             return;
         }
         if (plan.lot() != LotKind.NONE) {

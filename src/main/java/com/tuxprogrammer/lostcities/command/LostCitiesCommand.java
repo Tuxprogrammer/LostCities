@@ -50,6 +50,7 @@ public final class LostCitiesCommand extends CommandBase {
         add(new FindSubcommand());
         add(new DebugSubcommand());
         add(new MapSubcommand());
+        add(new CityTraceSubcommand());
         add(new LocateSubcommand());
         add(new CreateBuildingSubcommand());
         add(new CreatePartSubcommand());

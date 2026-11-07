@@ -514,6 +514,139 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
     }
 
     /**
+     * Trace (diagnostic, {@code /lostcities citytrace}): one line describing every input of a chunk's city membership:
+     * the city map's reason ({@link CityMap#traceReason}), the exact height at the chunk's center column against the
+     * group sample the layout uses, the water-biome flag, the zone, the base and connection tests, and the plan's
+     * result. Reads only pure, cached state; changes nothing.
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the line, without a prefix
+     */
+    public String traceChunk(int x, int z) {
+        ZoneInfo zone = zones.zone(x, z);
+        boolean base = isCityBase(x, z, zone);
+        boolean connected = connectedToCenter(x, z);
+        ChunkPlan plan = plan(x, z);
+        return String.format(
+            java.util.Locale.ROOT,
+            "chunk=%d,%d %s exact=%d water=%b zone=%s isBase=%b connected=%b city=%b building=%b cityLevel=%d"
+                + " highway=%d",
+            x,
+            z,
+            cities.traceReason(x, z),
+            terrain.columnHeight((x << 4) + 8, (z << 4) + 8),
+            terrain.isWaterBiome(x, z),
+            zone.zone(),
+            base,
+            connected,
+            plan.isCity(),
+            plan.hasBuilding(),
+            plan.cityLevel(),
+            plan.maxHighwayLevel());
+    }
+
+    /**
+     * Trace (diagnostic): one character for a chunk's membership, for the maps of {@code /lostcities citytrace}:
+     * {@code B} building, {@code +} other city, {@code #} landmark core, {@code d} base city cut off from its center,
+     * {@code z} base city removed by a zone or crater, and for a chunk that is not raw city the first test it fails:
+     * {@code h} height window, {@code o} ocean, {@code s} shallow (below sea level), {@code r} rise cap, {@code t}
+     * threshold, {@code .} no city reaches it.
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the character
+     */
+    public char traceSymbol(int x, int z) {
+        ChunkPlan plan = plan(x, z);
+        ZoneInfo zone = zones.zone(x, z);
+        if (zone.zone() == Zone.CORE) {
+            return '#';
+        }
+        if (plan.isCity()) {
+            return plan.hasBuilding() ? 'B' : '+';
+        }
+        if (isCityBase(x, z, zone)) {
+            return 'd';
+        }
+        if (cities.isCityRaw(x, z)) {
+            return 'z';
+        }
+        String reason = cities.traceReason(x, z);
+        switch (reason.substring(0, reason.indexOf(' '))) {
+            case "height":
+                return 'h';
+            case "ocean":
+                return 'o';
+            case "shallow":
+                return 's';
+            case "rise":
+                return 'r';
+            case "thr":
+                return 't';
+            default:
+                return '.';
+        }
+    }
+
+    /**
+     * Trace (diagnostic): the city centers whose city reaches a chunk, each as {@code {x, z}}; empty in Perlin mode.
+     *
+     * @param x chunk X
+     * @param z chunk Z
+     * @return the centers
+     */
+    public List<int[]> traceCenters(int x, int z) {
+        List<int[]> out = new ArrayList<>();
+        if (cities.perlinMode()) {
+            return out;
+        }
+        List<int[]> near = cities.gridCentersNear(x, z);
+        if (near != null) {
+            out.addAll(near);
+            return out;
+        }
+        int r = cities.searchRadius();
+        for (int cz = z - r; cz <= z + r; cz++) {
+            for (int cx = x - r; cx <= x + r; cx++) {
+                if (cities.isCityCenter(cx, cz)) {
+                    out.add(new int[] { cx, cz });
+                }
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Trace (diagnostic): a city center's radius, style, rise base, and its connected component (computing it traces
+     * the component line when the trace is on), as one line.
+     *
+     * @param cx center chunk X
+     * @param cz center chunk Z
+     * @return the line, without a prefix
+     */
+    public String traceCenter(int cx, int cz) {
+        boolean[] member = component(cx, cz);
+        int members = 0;
+        for (boolean m : member) {
+            if (m) {
+                members++;
+            }
+        }
+        return String.format(
+            java.util.Locale.ROOT,
+            "center=%d,%d radius=%.0f style=%s riseBase=%d centerBase=%b componentMembers=%d searchRadius=%d",
+            cx,
+            cz,
+            cities.cityRadius(cx, cz),
+            cities.cityStyleForCenter(cx, cz),
+            cities.riseBase(cx, cz),
+            isCityBase(cx, cz, zones.zone(cx, cz)),
+            members,
+            cities.searchRadius());
+    }
+
+    /**
      * Whether a chunk is city before the connection rule: raw city, outside every core and avoid-ring, not cratered.
      */
     private boolean isCityBase(int x, int z, ZoneInfo zone) {
@@ -616,7 +749,40 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
                 }
             }
         }
+        if (LayoutTrace.on()) {
+            traceComponent(cx, cz, startX, startZ, seen, r);
+        }
         return components.put(cx, cz, seen);
+    }
+
+    /**
+     * Trace (diagnostic): a city's connected component, where its walk started, how many chunks it holds against how
+     * many base city chunks the search square has, so a component that started on an island shows.
+     */
+    private void traceComponent(int cx, int cz, int startX, int startZ, boolean[] seen, int r) {
+        int side = 2 * r + 1;
+        int members = 0;
+        int base = 0;
+        for (int dz = -r; dz <= r; dz++) {
+            for (int dx = -r; dx <= r; dx++) {
+                if (seen[(dz + r) * side + dx + r]) {
+                    members++;
+                }
+                if (isCityBase(cx + dx, cz + dz, zones.zone(cx + dx, cz + dz))) {
+                    base++;
+                }
+            }
+        }
+        LayoutTrace.log(
+            "component center=%d,%d centerBase=%b start=%d,%d members=%d baseInSquare=%d searchRadius=%d",
+            cx,
+            cz,
+            startX == cx && startZ == cz,
+            startX,
+            startZ,
+            members,
+            base,
+            r);
     }
 
     /** Whether a chunk's 3 × 3 window holds a landmark's margin (an edge ring). */

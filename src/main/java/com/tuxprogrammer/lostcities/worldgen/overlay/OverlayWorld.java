@@ -272,6 +272,9 @@ public final class OverlayWorld {
         try {
             TerrainPhase.Result result = terrainPhase.run(buffer, chunk.xPosition, chunk.zPosition);
             buffer.finish();
+            if (CityTraceLog.ENABLED) {
+                traceTerrain(chunk.xPosition, chunk.zPosition, result.chunkClass());
+            }
             return result.chunkClass();
         } catch (RuntimeException e) {
             timers.countFailure();
@@ -284,6 +287,30 @@ public final class OverlayWorld {
             buffer.finish();
             return TerrainPhase.ChunkClass.UNTOUCHED;
         }
+    }
+
+    /** One trace line per generated chunk: what the plan made of it and how the terrain phase treated it. */
+    private void traceTerrain(int chunkX, int chunkZ, TerrainPhase.ChunkClass chunkClass) {
+        ChunkPlan p = plan.chunk(chunkX, chunkZ);
+        CityTraceLog.log(
+            "terrain chunk=%d,%d class=%s kind=%s city=%b core=%b level=%d groundY=%d natural=%d ocean=%b building=%b"
+                + " floors=%d cellars=%d highway=%b lot=%b label=%s",
+            chunkX,
+            chunkZ,
+            chunkClass,
+            p.kind(),
+            p.isCity(),
+            p.isCore(),
+            p.cityLevel(),
+            p.groundY(),
+            p.naturalHeight(),
+            p.ocean(),
+            p.hasBuilding(),
+            p.floors(),
+            p.cellars(),
+            p.hasHighway(),
+            p.isLot(),
+            p.label());
     }
 
     /**
