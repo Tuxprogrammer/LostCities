@@ -500,7 +500,7 @@ public class LinkHighwaysTest {
                 return 0;
             }
         };
-        return new LinkHighways(
+        return LinkHighways.over(
             (x, z) -> hits.getOrDefault(chunk(x, z), java.util.Collections.emptyList()),
             ends);
     }

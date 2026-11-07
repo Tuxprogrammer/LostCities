@@ -231,9 +231,14 @@ public final class LinkHighways {
      *
      * @param hits the link steps in each chunk
      * @param ends the city facts at link ends
+     * @return the view
      */
-    LinkHighways(Hits hits, Ends ends) {
-        this.graph = null;
+    static LinkHighways over(Hits hits, Ends ends) {
+        return new LinkHighways(null, hits, ends);
+    }
+
+    private LinkHighways(CityLinkGraph graph, Hits hits, Ends ends) {
+        this.graph = graph;
         this.hits = hits;
         this.ends = ends;
         this.cities = null;
