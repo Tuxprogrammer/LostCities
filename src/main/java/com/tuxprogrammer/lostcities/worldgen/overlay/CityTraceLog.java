@@ -27,6 +27,8 @@ public final class CityTraceLog {
     public static void install() {
         if (ENABLED) {
             LayoutTrace.install(line -> LostCities.LOG.info("{}{}", TAG, line));
+            com.tuxprogrammer.lostcities.worldgen.damage.FloatingFragments
+                .traceTo(line -> LostCities.LOG.info("{}{}", TAG, line));
             LostCities.LOG.info("{}city trace on ({})", TAG, PROPERTY);
         }
     }

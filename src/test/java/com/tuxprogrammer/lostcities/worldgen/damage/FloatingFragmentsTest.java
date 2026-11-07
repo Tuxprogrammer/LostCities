@@ -125,4 +125,59 @@ public class FloatingFragmentsTest {
         new FloatingFragments(TestTerrain.context(3L)).apply(second, area, plan(), lowSides(), new Random(9));
         assertEquals(ChunkBufferDigest.sha256(first), ChunkBufferDigest.sha256(second));
     }
+
+    /**
+     * D-fragment-1, the playtest's pig spawner: in a building chunk (nh_workshop, chunk -47,-154) a strip of the
+     * upper floor along the west wall was judged a poorly supported blob and dropped one block, its spawner with it,
+     * off the level its population job reads. A building's floor stays where the writer put it; the same blob in a
+     * chunk with no building still falls or goes, so the pass is really exercised.
+     */
+    @Test
+    public void aBuildingFloorJudgedUnsupportedStaysPut() {
+        BlockRef smooth = BlockRef.of("minecraft:stone_slab", 8);
+        BlockRef planks = BlockRef.of("minecraft:planks", 0);
+        BlockRef spawner = BlockRef.of("minecraft:mob_spawner", 0);
+        ChunkPlan building = ChunkPlan.builder(0, 0, ChunkKind.CITY)
+            .groundY(71)
+            .floorPitch(8)
+            .building(2, 0)
+            .build();
+        ChunkPlan street = plan();
+        // The west neighbor is a building as tall as this one, so the floor's few blocks against it count as support.
+        ChunkPlan[] sides = lowSides();
+        sides[0] = ChunkPlan.builder(-1, 0, ChunkKind.CITY)
+            .groundY(71)
+            .floorPitch(8)
+            .building(2, 0)
+            .build();
+        ArrayChunkBuffer[] buffers = new ArrayChunkBuffer[2];
+        String before = null;
+        for (int i = 0; i < 2; i++) {
+            ArrayChunkBuffer buffer = groundTo(70);
+            for (int x = 1; x <= 14; x++) {
+                for (int z = 1; z <= 14; z++) {
+                    buffer.set(x, 78, z, smooth);
+                    buffer.set(x, 79, z, planks);
+                }
+            }
+            // Five blocks of the floor reach the chunk side: five connections for some 400 blocks.
+            for (int z = 1; z <= 5; z++) {
+                buffer.set(0, 78, z, smooth);
+            }
+            buffer.set(1, 80, 7, spawner);
+            before = ChunkBufferDigest.sha256(buffer);
+            buffers[i] = buffer;
+        }
+        DamageArea area = DamageArea.withExplosions(0, 0, Collections.singletonList(new Explosion(8, 88, 8, 12)));
+        assertTrue(area.lowestExplosionY() <= 78, "the floor is inside the damaged band");
+        int kept = new FloatingFragments(TestTerrain.context(3L))
+            .apply(buffers[0], area, building, sides, new Random(1));
+        int handled = new FloatingFragments(TestTerrain.context(3L))
+            .apply(buffers[1], area, street, sides, new Random(1));
+        assertTrue(handled > 0, "with no building the same floor is a floating fragment");
+        assertEquals(0, kept, "nothing of the building moved");
+        assertEquals(before, ChunkBufferDigest.sha256(buffers[0]));
+        assertEquals(spawner, buffers[0].get(1, 80, 7), "the spawner stays on the level its job reads");
+        assertEquals(planks, buffers[0].get(1, 79, 1), "no hole in the floor slab");
+    }
 }

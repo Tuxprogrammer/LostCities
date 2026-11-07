@@ -38,6 +38,14 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * liquid, without 1.12's check against the set's old positions, which bottom-first order makes empty already.
  *
  * <p>
+ * A building is never moved (decision log D-fragment-1): in a chunk with a building, a blob with any block at or above
+ * the building's lowest level is left as the writer and the damage pass made it, floors, walls and furniture alike.
+ * Falling blocks land per column on the first block below, so a floor strip judged unsupported fell one level, or one
+ * block onto whatever stood under it, and its furniture went with it, off the level its population job reads. The pass
+ * still clears terrain and debris: blobs wholly under a building's lowest level, and every blob outside building
+ * chunks.
+ *
+ * <p>
  * One instance per world; reuses its buffers. Not thread-safe. Side: both (plain Java).
  */
 public final class FloatingFragments {
@@ -58,6 +66,10 @@ public final class FloatingFragments {
     static final int FALL_FLOOR = 2;
 
     private static final int VOLUME = 16 * 16 * WorldLimits.BUILD_HEIGHT;
+    /** Whether the city trace is on; the pass is plain Java, so it reads the property itself. */
+    private static final boolean TRACE = Boolean.getBoolean("lostcitiesnh.cityTrace");
+    /** Where trace lines go; {@code CityTraceLog.install} points it at the mod log. */
+    private static volatile java.util.function.Consumer<String> traceSink = line -> {};
 
     private final TerrainContext context;
     /** Blob label per block, valid where {@link #stamp} equals {@link #epoch}. */
@@ -71,6 +83,18 @@ public final class FloatingFragments {
     private int[] blobConnections = new int[64];
     private int[] blobLowest = new int[64];
     private boolean[] blobTouched = new boolean[64];
+    private int[] blobHighest = new int[64];
+    /** Per blob, its box: min X, max X, min Z, max Z, for the trace. */
+    private int[] blobBox = new int[64 * 4];
+
+    /**
+     * Sends the pass's trace lines somewhere; they are written only with the city trace on.
+     *
+     * @param sink the line consumer
+     */
+    public static void traceTo(java.util.function.Consumer<String> sink) {
+        traceSink = sink;
+    }
 
     /**
      * Creates the pass of one world.
@@ -125,6 +149,7 @@ public final class FloatingFragments {
         boolean[] remove = new boolean[blobs];
         boolean[] fall = new boolean[blobs];
         boolean anyFall = false;
+        int buildingBottom = plan.hasBuilding() ? plan.buildingBottom() : Integer.MAX_VALUE;
         for (Integer blob : order) {
             if (!blobTouched[blob]) {
                 // AR-1: no explosion came near this blob, so how it is held up is the assets' design, not damage.
@@ -137,12 +162,19 @@ public final class FloatingFragments {
             if (!unsupported) {
                 continue;
             }
+            if (blobHighest[blob] >= buildingBottom) {
+                // D-fragment-1: part of a building; only the damage pass changes a building.
+                trace(area, start, end, blob, "kept (building)");
+                continue;
+            }
             if (random.nextFloat() < DESTROY_OR_MOVE_CHANCE || size < DESTROY_SMALL_SECTIONS_SIZE
                 || connections < MIN_CONNECTIONS) {
                 remove[blob] = true;
+                trace(area, start, end, blob, "removed");
             } else {
                 fall[blob] = true;
                 anyFall = true;
+                trace(area, start, end, blob, "fell");
             }
         }
         int waterLevel = context.settings()
@@ -187,6 +219,11 @@ public final class FloatingFragments {
         int connections = 0;
         boolean touched = false;
         int lowest = WorldLimits.BUILD_HEIGHT;
+        int highest = -1;
+        int minX = 15;
+        int maxX = 0;
+        int minZ = 15;
+        int maxZ = 0;
         int first = index(startX, startY, startZ);
         stamp[first] = epoch;
         label[first] = blob;
@@ -198,6 +235,11 @@ public final class FloatingFragments {
             int y = index >> 8;
             size++;
             lowest = Math.min(lowest, y);
+            highest = Math.max(highest, y);
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minZ = Math.min(minZ, z);
+            maxZ = Math.max(maxZ, z);
             touched = touched || area.mayHaveDamaged(x, y, z);
             for (int direction = 0; direction < 6; direction++) {
                 int nx = x + (direction == 0 ? 1 : direction == 1 ? -1 : 0);
@@ -230,6 +272,34 @@ public final class FloatingFragments {
         blobConnections[blob] = connections;
         blobLowest[blob] = lowest;
         blobTouched[blob] = touched;
+        blobHighest[blob] = highest;
+        blobBox[blob * 4] = minX;
+        blobBox[blob * 4 + 1] = maxX;
+        blobBox[blob * 4 + 2] = minZ;
+        blobBox[blob * 4 + 3] = maxZ;
+    }
+
+    /** Trace (diagnostic, {@code -Dlostcitiesnh.cityTrace=true}): one line per unsupported blob and what it became. */
+    private void trace(DamageArea area, int start, int end, int blob, String outcome) {
+        if (TRACE) {
+            traceSink.accept(
+                String.format(
+                    java.util.Locale.ROOT,
+                    "fragments chunk=%d,%d band=%d..%d blob size=%d connections=%d y=%d..%d x=%d..%d z=%d..%d %s",
+                    area.chunkX(),
+                    area.chunkZ(),
+                    start,
+                    end,
+                    blobSize[blob],
+                    blobConnections[blob],
+                    blobLowest[blob],
+                    blobHighest[blob],
+                    blobBox[blob * 4],
+                    blobBox[blob * 4 + 1],
+                    blobBox[blob * 4 + 2],
+                    blobBox[blob * 4 + 3],
+                    outcome));
+        }
     }
 
     private static boolean isEmpty(BlockClassifier classes, BlockRef block) {
@@ -243,6 +313,8 @@ public final class FloatingFragments {
             blobConnections = Arrays.copyOf(blobConnections, capacity);
             blobLowest = Arrays.copyOf(blobLowest, capacity);
             blobTouched = Arrays.copyOf(blobTouched, capacity);
+            blobHighest = Arrays.copyOf(blobHighest, capacity);
+            blobBox = Arrays.copyOf(blobBox, capacity * 4);
         }
     }
 

@@ -151,6 +151,15 @@ public final class PopulationPhase {
             int y = orphan.y();
             int z = (chunkZ << 4) + orphan.z();
             TileEntity existing = chunk.getTileEntityUnsafe(orphan.x(), y, orphan.z());
+            // Trace: every orphan the sweep finds and whether its tile entity was still default, so a miss shows why.
+            CityTraceLog.log(
+                "orphan chunk=%d,%d %s tile=%s default=%s",
+                chunkX,
+                chunkZ,
+                orphan,
+                existing == null ? "none" : existing.getClass()
+                    .getSimpleName(),
+                existing == null || isDefault(existing));
             if (existing != null && !isDefault(existing)) {
                 continue; // a dungeon's spawner or chest, or a machine something else completed
             }
@@ -182,6 +191,7 @@ public final class PopulationPhase {
             sendToClients(x, y, z);
             done++;
         }
+        CityTraceLog.log("orphans chunk=%d,%d swept=0..%d done=%d", chunkX, chunkZ, maxY, done);
         if (done > 0) {
             LostCities.LOG
                 .debug("Population: {} moved spawners, chests or machines completed in {} {}", done, chunkX, chunkZ);
