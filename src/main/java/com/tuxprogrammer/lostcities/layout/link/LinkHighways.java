@@ -17,7 +17,8 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * inside each end's city radius are not written; the first chunk outside is a plaza (a crossing, 0013 §2) at that
  * city's level, so traffic meets the city's streets. When the chunk inward of that plaza is not city (the city's rim
  * failed the threshold), the link runs on as a spur and its plaza is the first city chunk on the path ({@link #spur},
- * D391), so no highway ends in open ground. Between the two plazas each chunk is a straight piece, a ramp, a diagonal or a transition
+ * D391), so no highway ends in open ground. Between the two plazas each chunk is a straight piece, a ramp, a diagonal
+ * or a transition
  * ({@link HighwayInfo.Piece#link}).
  *
  * <p>
@@ -499,12 +500,17 @@ public final class LinkHighways {
         // to the first city chunk on its path (D391). A beltway end stops on the ring, which lies in the city; a link
         // the beltway does not join never runs on to the ring.
         if (!(pa != null && pa.kind() == CityHighways.Kind.BELTWAY && pa.joins(link))) {
-            start = spur(path, start, -1, ends::city, (x, z) -> ends.blocked(x, z) || pa != null && pa.withinRing(x, z));
+            start = spur(
+                path,
+                start,
+                -1,
+                ends::city,
+                (x, z) -> ends.blocked(x, z) || pa != null && pa.withinRing(x, z));
         }
         if (!(pb != null && pb.kind() == CityHighways.Kind.BELTWAY && pb.joins(link))) {
             end = spur(path, end, 1, ends::city, (x, z) -> ends.blocked(x, z) || pb != null && pb.withinRing(x, z));
         }
-        int la =pa != null && pa.joins(link) ? pa.level() : ends.level(link.ax(), link.az());
+        int la = pa != null && pa.joins(link) ? pa.level() : ends.level(link.ax(), link.az());
         int lb = pb != null && pb.joins(link) ? pb.level() : ends.level(link.bx(), link.bz());
         Profile diagonal = levels(link, ends, start, end, false, shared, la, lb);
         return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared, la, lb) : diagonal;

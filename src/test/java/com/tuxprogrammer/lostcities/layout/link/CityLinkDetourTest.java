@@ -119,10 +119,14 @@ class CityLinkDetourTest {
 
     private static void checkPath(Nodes oracle, CityLinkGraph.Link link) {
         List<LinkRaster.Step> path = link.path();
-        assertEquals(link.ax(), path.get(0)
-            .chunkX());
-        assertEquals(link.az(), path.get(0)
-            .chunkZ());
+        assertEquals(
+            link.ax(),
+            path.get(0)
+                .chunkX());
+        assertEquals(
+            link.az(),
+            path.get(0)
+                .chunkZ());
         LinkRaster.Step last = path.get(path.size() - 1);
         assertEquals(link.bx(), last.chunkX());
         assertEquals(link.bz(), last.chunkZ());
@@ -238,8 +242,10 @@ class CityLinkDetourTest {
             40,
             path.get(path.size() - 1)
                 .chunkX());
-        assertEquals(LinkRaster.Kind.END, path.get(0)
-            .kind());
+        assertEquals(
+            LinkRaster.Kind.END,
+            path.get(0)
+                .kind());
         // Doubling back cancels out: the path is the straight one.
         assertEquals(
             LinkRaster.rasterize(0, 0, 10, 0)

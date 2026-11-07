@@ -364,8 +364,9 @@ public final class CityChunkWriter {
                 .isMachine()) {
                 machines++;
                 gt.append(' ')
-                    .append(p.item()
-                        .gtId())
+                    .append(
+                        p.item()
+                            .gtId())
                     .append('@')
                     .append((chunkX << 4) + p.x())
                     .append(',')

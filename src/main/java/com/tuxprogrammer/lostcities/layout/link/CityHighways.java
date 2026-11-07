@@ -615,7 +615,16 @@ public final class CityHighways {
                     if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
                         com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
                             "cutThrough center=%d,%d pair=%d,%d a=%d,%d b=%d,%d bend=%d,%d rejected=route-blocked",
-                            cx, cz, pair[0], pair[1], a[0], a[1], b[0], b[1], bend[0], bend[1]);
+                            cx,
+                            cz,
+                            pair[0],
+                            pair[1],
+                            a[0],
+                            a[1],
+                            b[0],
+                            b[1],
+                            bend[0],
+                            bend[1]);
                     }
                     continue;
                 }
@@ -629,8 +638,19 @@ public final class CityHighways {
                         com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
                             "cutThrough center=%d,%d pair=%d,%d a=%d,%d b=%d,%d bend=%d,%d level=%d rejected=no-ramp-room"
                                 + " climbA=%b climbB=%b",
-                            cx, cz, pair[0], pair[1], a[0], a[1], b[0], b[1], bend[0], bend[1], level,
-                            climbs(usable.get(pair[0]), cx, cz, 0, level), climbs(usable.get(pair[1]), cx, cz, 0, level));
+                            cx,
+                            cz,
+                            pair[0],
+                            pair[1],
+                            a[0],
+                            a[1],
+                            b[0],
+                            b[1],
+                            bend[0],
+                            bend[1],
+                            level,
+                            climbs(usable.get(pair[0]), cx, cz, 0, level),
+                            climbs(usable.get(pair[1]), cx, cz, 0, level));
                     }
                     continue;
                 }

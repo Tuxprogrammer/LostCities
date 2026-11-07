@@ -146,8 +146,10 @@ public final class CityTraceSubcommand implements Subcommand {
             levels.add(l.toString());
             highways.add(h.toString());
         }
-        map("membership (B building, + city, # core, d cut off, z zone, h height, o ocean, s shallow, r rise,"
-            + " t threshold, . none)", symbols);
+        map(
+            "membership (B building, + city, # core, d cut off, z zone, h height, o ocean, s shallow, r rise,"
+                + " t threshold, . none)",
+            symbols);
         map("city level per chunk", levels);
         map("highway level per chunk (. none)", highways);
         for (int z = cz - radius; z <= cz + radius; z++) {
