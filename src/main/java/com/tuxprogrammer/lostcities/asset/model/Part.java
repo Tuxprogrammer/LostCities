@@ -223,6 +223,73 @@ public final class Part {
             key -> new Part(id, xsize, zsize, FloorStretch.squeeze(slices, drop), palette, meta));
     }
 
+    /** Stacks already laid out, by their parts (compared by identity) and row counts; cleared when it grows large. */
+    private static final java.util.concurrent.ConcurrentHashMap<List<Object>, List<Part>> STACKS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** The most stacks {@link #STACKS} holds before it starts over. */
+    private static final int MAX_STACKS = 4096;
+
+    /**
+     * Returns a building's parts, bottom first, each written at its own height, with diagonal stair runs that cross
+     * from one part into the next re-laid whole ({@link FloorStretch#stack}, decision log D-stair-xfloor-1). A part no
+     * such run touches comes out as {@link #stretched(int, int)} or {@link #squeezed(int[])} would give it.
+     *
+     * @param parts  the parts, bottom first, all the same width and depth
+     * @param copies per part, how many times each row is written ({@link FloorStretch#copies})
+     * @return the parts as placed, with the same ids, palettes and metadata
+     */
+    public static List<Part> stacked(List<Part> parts, List<int[]> copies) {
+        List<Object> key = new ArrayList<>(parts.size() * 2);
+        for (int i = 0; i < parts.size(); i++) {
+            key.add(new Identity(parts.get(i)));
+            key.add(java.util.Arrays.toString(copies.get(i)));
+        }
+        List<Part> hit = STACKS.get(key);
+        if (hit != null) {
+            return hit;
+        }
+        List<List<String>> slices = new ArrayList<>(parts.size());
+        for (Part part : parts) {
+            slices.add(part.slices);
+        }
+        Part first = parts.get(0);
+        List<List<String>> laid = FloorStretch.stack(slices, first.xsize, first.zsize, copies);
+        List<Part> out = new ArrayList<>(parts.size());
+        for (int i = 0; i < parts.size(); i++) {
+            Part part = parts.get(i);
+            out.add(
+                laid.get(i)
+                    .equals(part.slices) ? part
+                        : new Part(part.id, part.xsize, part.zsize, laid.get(i), part.palette, part.meta));
+        }
+        out = Collections.unmodifiableList(out);
+        if (STACKS.size() >= MAX_STACKS) {
+            STACKS.clear();
+        }
+        STACKS.put(key, out);
+        return out;
+    }
+
+    /** A part compared by identity, so a stack key never mixes up parts of two asset sets. */
+    private static final class Identity {
+
+        private final Part part;
+
+        Identity(Part part) {
+            this.part = part;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Identity && ((Identity) o).part == part;
+        }
+
+        @Override
+        public int hashCode() {
+            return System.identityHashCode(part);
+        }
+    }
+
     /** Returns the id. */
     public AssetId id() {
         return id;

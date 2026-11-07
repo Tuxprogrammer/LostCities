@@ -1,6 +1,8 @@
 package com.tuxprogrammer.lostcities.asset.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,13 @@ import java.util.Map;
  * overwrite a block) the part keeps the plain stretch.
  *
  * <p>
+ * A run that leaves the top of one floor part and goes on at the bottom of the part above (upstream's escalators, such
+ * as {@code shopping00}) is re-laid whole across the stack ({@link #stack}, decision log D-stair-xfloor-1): the
+ * stretched rows of every part it crosses push its start further back, so the lower half still meets the upper half.
+ *
+ * <p>
  * Plain Java, side: both. Pure functions on slice strings; {@link Part#stretched(int, int)} memoizes the result per
- * part.
+ * part and {@link Part#stacked(List, List)} per stack.
  */
 public final class FloorStretch {
 
@@ -74,19 +81,124 @@ public final class FloorStretch {
         if (extra <= 0 || row < 0 || row >= h) {
             return new ArrayList<>(slices);
         }
-        char[][] grid = new char[h + extra][];
-        for (int ny = 0; ny < h + extra; ny++) {
-            grid[ny] = slices.get(source(ny, row, extra))
-                .toCharArray();
+        return stack(Collections.singletonList(slices), xsize, zsize, Collections.singletonList(copies(h, extra, row)))
+            .get(0);
+    }
+
+    /**
+     * Returns how many times each row of a part is written when it is stretched.
+     *
+     * @param height the part's height
+     * @param extra  how many more times row {@code row} is written; 0 or less writes every row once
+     * @param row    the repeat row
+     * @return one count per row, bottom first
+     */
+    public static int[] copies(int height, int extra, int row) {
+        int[] out = new int[height];
+        Arrays.fill(out, 1);
+        if (extra > 0 && row >= 0 && row < height) {
+            out[row] += extra;
         }
-        for (Chain chain : chains(slices, xsize, zsize)) {
-            if (chain.firstY <= row && row <= chain.lastY()) {
-                relay(grid, slices, xsize, zsize, extra, row, chain);
+        return out;
+    }
+
+    /**
+     * Returns how many times each row of a part is written when it is lowered.
+     *
+     * @param height the part's height
+     * @param drop   the rows left out, as {@link #dropRows(Part, int)} gives them
+     * @return one count per row, bottom first: 0 for a dropped row, 1 otherwise
+     */
+    public static int[] copies(int height, int[] drop) {
+        int[] out = new int[height];
+        Arrays.fill(out, 1);
+        for (int d : drop) {
+            if (d >= 0 && d < height) {
+                out[d] = 0;
             }
         }
-        List<String> out = new ArrayList<>(h + extra);
-        for (char[] slice : grid) {
-            out.add(new String(slice));
+        return out;
+    }
+
+    /**
+     * Returns a stack of floor parts, bottom first, each written at its own height (decision log D-stair-xfloor-1).
+     * Every row of part {@code i} is written {@code copies.get(i)[y]} times: 0 drops it, more than 1 stretches it. A
+     * diagonal stair run that leaves the top of one part and goes on at the bottom of the part above is one run here,
+     * so it is re-laid whole, as a run inside one part is: it ends at its stretched top step and starts on its first
+     * row as many blocks further back as the stack added rows across it. A run with a dropped row keeps the plain
+     * copy, and so does a run whose longer form would leave the stack or overwrite a block. A one-part stack is
+     * {@link #stretch(List, int, int, int, int)}.
+     *
+     * @param parts  each part's slices, bottom first, each {@code z * xsize + x}; every part has the same size
+     * @param xsize  the width
+     * @param zsize  the depth
+     * @param copies per part, how many times each row is written
+     * @return per part, its new slices
+     */
+    public static List<List<String>> stack(List<List<String>> parts, int xsize, int zsize, List<int[]> copies) {
+        int n = parts.size();
+        List<String> all = new ArrayList<>();
+        List<Integer> partOf = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            all.addAll(parts.get(i));
+            for (int y = 0; y < parts.get(i)
+                .size(); y++) {
+                partOf.add(i);
+            }
+        }
+        int h = all.size();
+        int[] cp = new int[h];
+        boolean[] bottom = new boolean[h];
+        boolean[] top = new boolean[h];
+        int[] lo = new int[h];
+        int[] newBase = new int[n + 1];
+        int ny = 0;
+        for (int y = 0, i = 0; i < n; i++) {
+            newBase[i] = ny;
+            int[] c = copies.get(i);
+            for (int r = 0; r < parts.get(i)
+                .size(); r++, y++) {
+                cp[y] = r < c.length ? Math.max(0, c[r]) : 1;
+                bottom[y] = r == 0;
+                top[y] = r == parts.get(i)
+                    .size() - 1;
+                lo[y] = ny;
+                ny += cp[y];
+            }
+        }
+        newBase[n] = ny;
+        boolean[] newBottom = new boolean[ny];
+        for (int i = 0; i < n; i++) {
+            if (newBase[i] < newBase[i + 1]) {
+                newBottom[newBase[i]] = true;
+            }
+        }
+        char[][] grid = new char[ny][];
+        for (int y = 0; y < h; y++) {
+            for (int k = 0; k < cp[y]; k++) {
+                grid[lo[y] + k] = all.get(y)
+                    .toCharArray();
+            }
+        }
+        Layout stack = new Layout(all, xsize, zsize, cp, lo, bottom, newBottom);
+        for (Chain chain : chains(all, xsize, zsize, MIN_STAIR_STEPS, top)) {
+            int added = 0;
+            boolean dropped = false;
+            for (int y = chain.firstY; y <= chain.lastY(); y++) {
+                added += cp[y] - 1;
+                dropped |= cp[y] == 0;
+            }
+            if (!dropped && added > 0) {
+                relay(grid, stack, added, chain);
+            }
+        }
+        List<List<String>> out = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            List<String> slices = new ArrayList<>(newBase[i + 1] - newBase[i]);
+            for (int y = newBase[i]; y < newBase[i + 1]; y++) {
+                slices.add(new String(grid[y]));
+            }
+            out.add(slices);
         }
         return out;
     }
@@ -149,7 +261,7 @@ public final class FloorStretch {
             }
             out[i] = left.remove(best);
         }
-        java.util.Arrays.sort(out);
+        Arrays.sort(out);
         return out;
     }
 
@@ -215,6 +327,21 @@ public final class FloorStretch {
 
     /** Finds every diagonal run of at least {@code minSteps} steps. */
     static List<Chain> chains(List<String> slices, int xsize, int zsize, int minSteps) {
+        boolean[] top = new boolean[slices.size()];
+        if (top.length > 0) {
+            top[top.length - 1] = true;
+        }
+        return chains(slices, xsize, zsize, minSteps, top);
+    }
+
+    /**
+     * Finds every diagonal run of at least {@code minSteps} steps in a stack of parts. A step on a part's top row
+     * counts as open above, as it does in the part on its own, and a run goes on into the part above when the next
+     * step is there.
+     *
+     * @param top the rows that are a part's top row
+     */
+    static List<Chain> chains(List<String> slices, int xsize, int zsize, int minSteps, boolean[] top) {
         int h = slices.size();
         List<Chain> out = new ArrayList<>();
         for (int y = 0; y < h; y++) {
@@ -230,7 +357,7 @@ public final class FloorStretch {
                         }
                         int n = 0;
                         while (at(slices, xsize, zsize, x + n * d[0], y + n, z + n * d[1]) == c
-                            && open(slices, xsize, zsize, x + n * d[0], y + n + 1, z + n * d[1])) {
+                            && (top[y + n] || open(slices, xsize, zsize, x + n * d[0], y + n + 1, z + n * d[1]))) {
                             n++;
                         }
                         if (n >= minSteps) {
@@ -243,10 +370,43 @@ public final class FloorStretch {
         return out;
     }
 
+    /** A stack of parts as {@link #relay} sees it: the original rows and where each one is written. */
+    private static final class Layout {
+
+        final List<String> slices;
+        final int xsize;
+        final int zsize;
+        /** Per original row, how many times it is written. */
+        final int[] copies;
+        /** Per original row, the first new row it is written to. */
+        final int[] lo;
+        /** Per original row, whether it is a part's floor row. */
+        final boolean[] bottom;
+        /** Per new row, whether it is a part's floor row. */
+        final boolean[] newBottom;
+
+        Layout(List<String> slices, int xsize, int zsize, int[] copies, int[] lo, boolean[] bottom,
+            boolean[] newBottom) {
+            this.slices = slices;
+            this.xsize = xsize;
+            this.zsize = zsize;
+            this.copies = copies;
+            this.lo = lo;
+            this.bottom = bottom;
+            this.newBottom = newBottom;
+        }
+
+        /** The new row an original row's last copy is written to. */
+        int hi(int y) {
+            return lo[y] + copies[y] - 1;
+        }
+    }
+
     /** Re-lays a run as one longer run; leaves the grid untouched when the longer run does not fit. */
-    private static void relay(char[][] grid, List<String> slices, int xsize, int zsize, int extra, int row,
-        Chain chain) {
-        char support = support(slices, xsize, zsize, chain);
+    private static void relay(char[][] grid, Layout stack, int added, Chain chain) {
+        int xsize = stack.xsize;
+        int zsize = stack.zsize;
+        char support = support(stack, chain);
         char[][] work = new char[grid.length][];
         for (int y = 0; y < grid.length; y++) {
             work[y] = grid[y].clone();
@@ -256,13 +416,13 @@ public final class FloorStretch {
             int x = chain.x + k * chain.dx;
             int z = chain.z + k * chain.dz;
             int y = chain.firstY + k;
-            erase(work, xsize, x, z, rows(y, row, extra), chain.c);
-            if (support != ' ' && y - 1 >= 1) {
-                erase(work, xsize, x, z, rows(y - 1, row, extra), support);
+            erase(work, xsize, x, z, stack.lo[y], stack.hi(y), chain.c);
+            if (support != ' ' && y - 1 >= 0 && !stack.bottom[y - 1]) {
+                erase(work, xsize, x, z, stack.lo[y - 1], stack.hi(y - 1), support);
             }
         }
-        int count = chain.steps + extra;
-        int topY = chain.lastY() + extra;
+        int count = chain.steps + added;
+        int topY = stack.hi(chain.lastY());
         int lastX = chain.x + (chain.steps - 1) * chain.dx;
         int lastZ = chain.z + (chain.steps - 1) * chain.dz;
         for (int j = 0; j < count; j++) {
@@ -279,7 +439,7 @@ public final class FloorStretch {
                 int x = lastX - j * chain.dx;
                 int z = lastZ - j * chain.dz;
                 int below = topY - j - 1;
-                if (below >= 1 && work[below][z * xsize + x] == ' ') {
+                if (below >= 0 && !stack.newBottom[below] && work[below][z * xsize + x] == ' ') {
                     work[below][z * xsize + x] = support;
                 }
             }
@@ -289,15 +449,15 @@ public final class FloorStretch {
         }
     }
 
-    /** The most common character under the run's steps above the floor row, besides space and the run's own. */
-    private static char support(List<String> slices, int xsize, int zsize, Chain chain) {
+    /** The most common character under the run's steps above a floor row, besides space and the run's own. */
+    private static char support(Layout stack, Chain chain) {
         Map<Character, Integer> counts = new HashMap<>();
         for (int k = 1; k < chain.steps; k++) {
             int y = chain.firstY + k - 1;
-            if (y < 1) {
+            if (stack.bottom[y]) {
                 continue;
             }
-            char c = at(slices, xsize, zsize, chain.x + k * chain.dx, y, chain.z + k * chain.dz);
+            char c = at(stack.slices, stack.xsize, stack.zsize, chain.x + k * chain.dx, y, chain.z + k * chain.dz);
             if (c != ' ' && c != chain.c) {
                 counts.merge(c, 1, Integer::sum);
             }
@@ -313,29 +473,13 @@ public final class FloorStretch {
         return best;
     }
 
-    /** The stretched rows an original row was written to. */
-    private static int[] rows(int y, int row, int extra) {
-        if (y < row) {
-            return new int[] { y };
-        }
-        if (y > row) {
-            return new int[] { y + extra };
-        }
-        int[] out = new int[extra + 1];
-        for (int i = 0; i <= extra; i++) {
-            out[i] = row + i;
-        }
-        return out;
-    }
-
-    private static void erase(char[][] work, int xsize, int x, int z, int[] rows, char c) {
-        for (int y : rows) {
+    private static void erase(char[][] work, int xsize, int x, int z, int from, int to, char c) {
+        for (int y = from; y <= to; y++) {
             if (work[y][z * xsize + x] == c) {
                 work[y][z * xsize + x] = ' ';
             }
         }
     }
-
     private static char at(List<String> slices, int xsize, int zsize, int x, int y, int z) {
         if (x < 0 || x >= xsize || z < 0 || z >= zsize || y < 0 || y >= slices.size()) {
             return '\0';
