@@ -12,6 +12,10 @@ each match, so a re-pin that moves a patched line fails loudly instead of shippi
     multiplier also lists name:Kelp Forest and name:Coral Reef; the cabin's and radio tower's land filters exclude
     those two as well; the desert city style takes type:SANDY excluding type:OCEAN, plus rwg:canyon,
     rwg:canyon_forest, rwg:oasis and rwg:red_oasis;
+  * highway tunnels are always lit (D-tunnel-light-1): the four upstream tunnel parts are copied unchanged, and this
+    mod adds nh_highway_tunnel, nh_highway_tunnel_bi, nh_highway_tunnel_bend and nh_highway_tunnel_t, the same
+    parts with the ceiling blocks at x and z in {2, 6, 9, 13} (slice 5) turned into 'h', common's glowstone, which
+    places whatever generateLighting says; both bundled world styles name them in a 'parts' block;
   * #forge:stone in block matchers becomes ore:stone (D19);
   * bricks_desert_redsand's 1.12 'minecraft:red_sandstone@2' becomes its 1.20 name, minecraft:cut_red_sandstone
     (ASSET-03);
@@ -36,6 +40,7 @@ Usage, from the repository root:
 
 import argparse
 import importlib.util
+import json
 import os
 import re
 import subprocess
@@ -221,6 +226,28 @@ ADDED = {
 }
 
 
+TUNNEL_PARTS = ("highway_tunnel", "highway_tunnel_bi", "highway_tunnel_bend", "highway_tunnel_t")
+TUNNEL_LAMP_CHAR = "h"
+TUNNEL_LAMP_AXIS = (2, 6, 9, 13)
+TUNNEL_CEILING_SLICE = 5
+TUNNEL_SLOTS = ("tunnel", "tunnel_bi", "tunnel_bend", "tunnel_t")
+WORLDSTYLE_PARTS_ANCHOR = '  "highwaysupport": "v",\n'
+WORLDSTYLE_PARTS = WORLDSTYLE_PARTS_ANCHOR + '  "parts": {\n    "highways": {\n' + ",\n".join(
+    f'      "{slot}": "nh_highway_{slot}"' for slot in TUNNEL_SLOTS) + "\n    }\n  },\n"
+
+
+def lit_tunnel(text, path):
+    """Returns an upstream tunnel part with a ceiling lamp at every (x, z) of the 4 x 4 lamp lattice."""
+    data = json.loads(text)
+    for z in TUNNEL_LAMP_AXIS:
+        for x in TUNNEL_LAMP_AXIS:
+            row = data["slices"][TUNNEL_CEILING_SLICE][z]
+            if row[x] != "v":
+                continue  # not ceiling here
+            data["slices"][TUNNEL_CEILING_SLICE][z] = row[:x] + TUNNEL_LAMP_CHAR + row[x + 1:]
+    return json.dumps(data, indent=2) + "\n"
+
+
 def git(repo, *args):
     return subprocess.run(["git", "-C", repo] + list(args), check=True, capture_output=True).stdout
 
@@ -264,6 +291,7 @@ def convert(path, text):
         text = replace(text, DESERT_BIOMES_OLD, DESERT_BIOMES_NEW, path, 1)
         if path == "worldstyles/standard.json":
             text = replace(text, OCEAN_MULTIPLIER_OLD, OCEAN_MULTIPLIER_NEW, path, 1)
+        text = replace(text, WORLDSTYLE_PARTS_ANCHOR, WORLDSTYLE_PARTS, path, 1)
         for name in ("radiotower", "cabin"):
             text = land_only(text, name, path)
     if path.startswith("worldstyles/") or path.startswith("stuff/"):
@@ -303,6 +331,11 @@ def main():
         with open(target, "w", encoding="utf-8", newline="") as out:
             out.write(convert(rel, text))
         written.append(rel)
+        if rel.startswith("parts/") and rel[len("parts/"):-len(".json")] in TUNNEL_PARTS:
+            lit = os.path.join(args.out, BUNDLED, "parts", "nh_" + rel[len("parts/"):])
+            with open(lit, "w", encoding="utf-8", newline="") as out:
+                out.write(lit_tunnel(text, rel))
+            written.append("parts/nh_" + rel[len("parts/"):])
     added = dict(ADDED)
     added.update(load_originals().original_assets())
     for rel, text in added.items():

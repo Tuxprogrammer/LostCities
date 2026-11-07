@@ -176,6 +176,10 @@ lostcities/lostcities/parts/nh_corner_shop_ground.json
 lostcities/lostcities/parts/nh_corner_shop_roof.json
 lostcities/lostcities/parts/nh_cottage_ground.json
 lostcities/lostcities/parts/nh_cottage_roof.json
+lostcities/lostcities/parts/nh_highway_tunnel.json
+lostcities/lostcities/parts/nh_highway_tunnel_bend.json
+lostcities/lostcities/parts/nh_highway_tunnel_bi.json
+lostcities/lostcities/parts/nh_highway_tunnel_t.json
 lostcities/lostcities/parts/nh_house_garden_ground.json
 lostcities/lostcities/parts/nh_house_garden_roof.json
 lostcities/lostcities/parts/nh_house_garden_upper.json
