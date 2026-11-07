@@ -13,11 +13,11 @@ import net.minecraft.world.World;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import sun.misc.Unsafe;
-
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkKind;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.CityPlan;
+
+import sun.misc.Unsafe;
 
 /** The footprint write guard's frames (0005 §3a). The world is left null: only identity matters. */
 public class FootprintGuardTest {

@@ -2,6 +2,12 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
+## 0.2.1-beta (2026-11-06)
+
+### Fixed
+
+- Single-player crash (`ArrayIndexOutOfBoundsException` in `FootprintGuard.drops`) when the client applied a block update while the integrated server was populating a chunk. The worldgen guard now never runs for the client's world.
+
 ## 0.2.0-beta (2026-11-06)
 
 City realism. New worlds only for the new layout; existing worlds keep their generation.
