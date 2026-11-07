@@ -58,11 +58,6 @@ final class CityMap {
     private static final int CHUNK = 16;
     /** {@link #riseBase} when no rise cap applies: Perlin mode, no city reaches the chunk, or no cap is set. */
     static final int NO_BASE = Integer.MIN_VALUE;
-    /**
-     * City levels above the rise cap a chunk's terrain may reach and still be city, cut down to the cap: the foot of a
-     * slope is leveled a little, steeper ground is left to RWG (AR-4).
-     */
-    static final int RISE_TOLERANCE = 1;
     /** Distance, in chunks, from a city center of the four extra samples its base level takes the median with. */
     static final int BASE_SPREAD = 3;
     /** Entries of the base-level cache: one per city center, so far fewer than chunks. */
@@ -296,9 +291,8 @@ final class CityMap {
                 // with its own seaLevel (a drowned city) is left alone.
                 return 0;
             }
-            if (risesTooHigh(chunkX, chunkZ, height)) {
-                return 0;
-            }
+            // Deviation (D-rise-rim-1): no rise cutoff. A hill inside a city is cut down to the capped city level by
+            // the terrain phase (CityLevels clamps the level, CityTerrain.level lowers every column).
             factor *= worldStyle.cityChanceMultiplier(chunkX, chunkZ);
         }
         if (profile.citySpawnDistance2 > 0) {
@@ -310,7 +304,7 @@ final class CityMap {
     /**
      * Trace (diagnostic): the first test of {@link #computeCityFactor} a chunk fails, in the same order: {@code pre}
      * (forced by predefined content), {@code raw0} (no city reaches it), {@code height} (outside the height window),
-     * {@code ocean} (an ocean biome), {@code shallow} (below RWG's sea level), {@code rise} (the rise cap), {@code thr}
+     * {@code ocean} (an ocean biome), {@code shallow} (below RWG's sea level), {@code thr}
      * (passes every test but its factor is at or under the threshold) or {@code ok}. Mirrors the real tests and changes
      * nothing; keep it beside them.
      *
@@ -335,8 +329,6 @@ final class CityMap {
             reason = "ocean";
         } else if (profile.cityAvoidOcean && profile.seaLevel == -1 && height < LayoutProfile.RWG_SEA_LEVEL) {
             reason = "shallow";
-        } else if (risesTooHigh(chunkX, chunkZ, height)) {
-            reason = "rise";
         } else if (!isCityRaw(chunkX, chunkZ)) {
             reason = "thr";
         } else {
@@ -354,20 +346,6 @@ final class CityMap {
             base,
             level,
             center == null ? "-" : center[0] + "," + center[1]);
-    }
-
-    /**
-     * Deviation (alpha review AR-4): whether a chunk's terrain rises more than {@code cityMaxRise} +
-     * {@link #RISE_TOLERANCE} city levels above its city's base level. Upstream lets a city climb any slope up to
-     * {@code cityMaxHeight}, so parks and buildings sat 40 to 60 blocks above the rest of their city; here the city
-     * stops before such ground and the blend shapes the slope between.
-     */
-    private boolean risesTooHigh(int chunkX, int chunkZ, int height) {
-        if (!profile.capsRise()) {
-            return false;
-        }
-        int base = riseBase(chunkX, chunkZ);
-        return base != NO_BASE && profile.levelForHeight(height) > base + profile.cityMaxRise + RISE_TOLERANCE;
     }
 
     /**

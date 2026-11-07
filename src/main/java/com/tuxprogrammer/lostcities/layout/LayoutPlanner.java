@@ -581,8 +581,6 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
                 return 'o';
             case "shallow":
                 return 's';
-            case "rise":
-                return 'r';
             case "thr":
                 return 't';
             default:

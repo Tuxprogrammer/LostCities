@@ -46,8 +46,7 @@ Upstream lets a city climb any slope up to `cityMaxHeight`: each chunk takes the
 |---|---|
 | Base level | The city level of the median of five oracle heights, at the strongest city center reaching the chunk and 3 chunks from it on each axis, so one hill or hollow at the center does not move the whole city. Cached per center |
 | Cap | A city chunk's level is at most base + `cityMaxRise`: two levels, 12 blocks of city ground |
-| Tolerance | Terrain one level over the cap stays city and is cut down to the cap (the foot of a slope is leveled a little) |
-| Stop | Terrain two or more levels over the cap is not city. The city stops before it, and the blend shapes the slope between; such a chunk keeps its own level |
+| No rise cutoff | Superseded (D-rise-rim-1): terrain more than a level over the cap is still city, never dropped. Its level is cut to the cap and the terrain phase lowers every column to the city ground, so the city has no holes. Where the city meets the uncut hill outside it, the hill is left as a clean vertical cut face |
 | Lower ground | Uncapped: a city on a hill steps down its sides as upstream's does |
 | No cap | Perlin mode (no centers), and `cityMaxRise` 8 or more |
 

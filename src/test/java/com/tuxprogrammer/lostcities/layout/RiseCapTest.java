@@ -29,21 +29,19 @@ public class RiseCapTest {
     }
 
     @Test
-    public void aCityClimbsTwoLevelsCutsTheThirdAndStopsBeforeTheRest() {
+    public void aCityClimbsTwoLevelsAndCutsEverythingAbove() {
         LayoutPlanner p = planner(LayoutFixtures.predefinedOnly(), slope());
         assertEquals(0, p.cities.riseBase(5, 0), "the base is the ground around the center");
         assertTrue(p.isCityRaw(11, 0));
         assertEquals(1, p.cityLevel(11, 0));
         assertTrue(p.isCityRaw(12, 0));
         assertEquals(2, p.cityLevel(12, 0), "two levels up: the cap");
-        assertTrue(p.isCityRaw(13, 0), "one level over the cap is still city");
+        assertTrue(p.isCityRaw(13, 0), "above the cap is still city");
         assertEquals(2, p.cityLevel(13, 0), "and is cut down to the cap");
-        assertFalse(p.isCityRaw(14, 0), "two levels over the cap is left to the terrain");
-        assertFalse(p.isCityRaw(18, 0));
-        assertEquals(
-            4,
-            p.cityLevel(14, 0),
-            "a chunk the city left out keeps its own level, so the blend shapes the slope from it");
+        assertTrue(p.isCityRaw(14, 0), "D-rise-rim-1: a hill inside the city is never dropped");
+        assertEquals(2, p.cityLevel(14, 0), "it is cut down to the cap");
+        assertTrue(p.isCityRaw(18, 0));
+        assertEquals(2, p.cityLevel(18, 0));
     }
 
     @Test
