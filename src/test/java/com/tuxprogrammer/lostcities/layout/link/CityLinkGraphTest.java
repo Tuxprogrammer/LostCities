@@ -74,8 +74,10 @@ class CityLinkGraphTest {
                         continue;
                     }
                     nodes++;
-                    assertTrue(graph.links(cx, cz)
-                        .size() >= 2, "seed " + seed + " cell " + cx + "," + cz);
+                    assertTrue(
+                        graph.links(cx, cz)
+                            .size() >= 2,
+                        "seed " + seed + " cell " + cx + "," + cz);
                 }
             }
             assertTrue(nodes > 100, "nodes " + nodes);

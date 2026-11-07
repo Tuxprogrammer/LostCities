@@ -30,7 +30,8 @@ public final class CityLinkGraph {
     /** Longest link, in chunks, on a grid of {@link #REFERENCE_CELL}-chunk cells (owner decision 8). */
     public static final int MAX_DISTANCE = 160;
     /**
-     * The cell size {@link #MAX_DISTANCE} was set for. A grid with larger cells stretches the cap with them (D-city-scale-1),
+     * The cell size {@link #MAX_DISTANCE} was set for. A grid with larger cells stretches the cap with them
+     * (D-city-scale-1),
      * so the same neighbors stay in reach; a smaller one keeps the cap.
      */
     public static final int REFERENCE_CELL = 64;
@@ -273,7 +274,8 @@ public final class CityLinkGraph {
     }
 
     /**
-     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #maxDistance()} to which a
+     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #maxDistance()} to which
+     * a
      * path, straight or detoured ({@link #route}), crosses no {@link Nodes#blocked} chunk, nearest first, ties to the
      * lower end; when every such path is blocked, the nearest alone. Empty when the cell has no node. Not symmetric;
      * see {@link #links}.

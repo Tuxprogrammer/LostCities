@@ -21,7 +21,8 @@ import java.util.TreeSet;
  * Worlds warning, and {@code largecities} gets its own description;</li>
  * <li>{@code rarecities}' {@code highwayRequiresTwoCities} is dropped with legacy highways (D11);</li>
  * <li>{@code rarecities} places its cities on a jittered grid of 256-chunk cells (jitter 64) with radii 200 to 512
- * blocks: four times upstream's area per city and four times the grid spacing of this port's first grid (D-city-scale-1).
+ * blocks: four times upstream's area per city and four times the grid spacing of this port's first grid
+ * (D-city-scale-1).
  * A world pins its values when it is created, so worlds made before keep 64-chunk cells and 100 to 256 blocks.</li>
  * </ul>
  * {@code cavern}, {@code floating}, {@code space}, {@code biosphere}, {@code biosphere_caves}, {@code bio_wasteland}
