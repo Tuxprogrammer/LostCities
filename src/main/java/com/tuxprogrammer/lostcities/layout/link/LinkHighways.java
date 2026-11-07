@@ -599,7 +599,8 @@ public final class LinkHighways {
 
     /**
      * Returns a link's base with its open chunks filled in: the chunks of its written range where no other link writes
-     * a step, so a re-placed ramp never shares its chunk with another link's piece (D323 for written pieces). Unlike the base's
+     * a step, so a re-placed ramp never shares its chunk with another link's piece (D323 for written pieces). Unlike
+     * the base's
      * own ramp rule, a chunk where another link's path runs unwritten (inside a city) is open: links that converge on
      * one city from the same side otherwise never have room to meet. Reads the neighbors' base profiles only.
      */
