@@ -13,9 +13,11 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * link of a {@link CityLinkGraph}, as the {@link HighwayInfo} of each chunk.
  *
  * <p>
- * A link's path ({@link LinkRaster}) starts and ends at city centers. The chunks inside each end's city radius are not
- * written; the first chunk outside is a plaza (a crossing, 0013 §2) at that city's level, so traffic meets the city's
- * streets. Between the two plazas each chunk is a straight piece, a ramp, a diagonal or a transition
+ * A link's path ({@link LinkRaster}, or a detour around a landmark, D390) starts and ends at city centers. The chunks
+ * inside each end's city radius are not written; the first chunk outside is a plaza (a crossing, 0013 §2) at that
+ * city's level, so traffic meets the city's streets. When the chunk inward of that plaza is not city (the city's rim
+ * failed the threshold), the link runs on as a spur and its plaza is the first city chunk on the path ({@link #spur},
+ * D391), so no highway ends in open ground. Between the two plazas each chunk is a straight piece, a ramp, a diagonal or a transition
  * ({@link HighwayInfo.Piece#link}).
  *
  * <p>
@@ -75,6 +77,31 @@ public final class LinkHighways {
          * @return whether the link takes the staircase instead
          */
         default boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
+            return false;
+        }
+
+        /**
+         * Returns whether a chunk is city by terrain and zones (before the plan), as {@link CityHighways.Cities#city}
+         * answers. A link whose edge plaza does not touch a city chunk runs on as a spur to the first city chunk on
+         * its path ({@link #spur}, D391). The default treats every chunk as city, so no spur.
+         *
+         * @param chunkX chunk X
+         * @param chunkZ chunk Z
+         * @return whether the chunk is city
+         */
+        default boolean city(int chunkX, int chunkZ) {
+            return true;
+        }
+
+        /**
+         * Returns whether a highway must not cross a chunk: a landmark's core or margin. A spur stops short of one.
+         * The default blocks nothing.
+         *
+         * @param chunkX chunk X
+         * @param chunkZ chunk Z
+         * @return whether the chunk is blocked
+         */
+        default boolean blocked(int chunkX, int chunkZ) {
             return false;
         }
     }
@@ -468,10 +495,61 @@ public final class LinkHighways {
         if (start > end) {
             return new Profile(start, end, new int[n], new int[n], false);
         }
-        int la = pa != null && pa.joins(link) ? pa.level() : ends.level(link.ax(), link.az());
+        // A city whose rim chunks fail the threshold leaves the edge plaza in open ground: the link runs on as a spur
+        // to the first city chunk on its path (D391). A beltway end stops on the ring, which lies in the city; a link
+        // the beltway does not join never runs on to the ring.
+        if (!(pa != null && pa.kind() == CityHighways.Kind.BELTWAY && pa.joins(link))) {
+            start = spur(path, start, -1, ends::city, (x, z) -> ends.blocked(x, z) || pa != null && pa.withinRing(x, z));
+        }
+        if (!(pb != null && pb.kind() == CityHighways.Kind.BELTWAY && pb.joins(link))) {
+            end = spur(path, end, 1, ends::city, (x, z) -> ends.blocked(x, z) || pb != null && pb.withinRing(x, z));
+        }
+        int la =pa != null && pa.joins(link) ? pa.level() : ends.level(link.ax(), link.az());
         int lb = pb != null && pb.joins(link) ? pb.level() : ends.level(link.bx(), link.bz());
         Profile diagonal = levels(link, ends, start, end, false, shared, la, lb);
         return staircase(link, ends, diagonal) ? levels(link, ends, start, end, true, shared, la, lb) : diagonal;
+    }
+
+    /** A yes-or-no question about a chunk. */
+    interface ChunkTest {
+
+        boolean test(int chunkX, int chunkZ);
+    }
+
+    /**
+     * Returns where a link's written range ends at a city (D391). {@code edge} is the path index of the first chunk
+     * outside the city's radius, {@code inward} the index step toward the center (−1 at the lower end, +1 at the
+     * upper). When the chunk inward of the edge is city, or there is none, the edge stays: its plaza touches the city.
+     * Otherwise the range runs inward to the first city chunk on the path, which becomes the plaza, so the highway
+     * reaches the city's streets instead of ending in open ground. A blocked chunk before any city chunk, or no city
+     * chunk at all, keeps the edge.
+     *
+     * @param path    the link's path
+     * @param edge    the first written index at this end, by radius
+     * @param inward  −1 or +1
+     * @param city    whether a chunk is city
+     * @param blocked whether a chunk must not be written
+     * @return the written range's index at this end
+     */
+    static int spur(List<LinkRaster.Step> path, int edge, int inward, ChunkTest city, ChunkTest blocked) {
+        int k = edge + inward;
+        if (k < 0 || k >= path.size()) {
+            return edge;
+        }
+        LinkRaster.Step next = path.get(k);
+        if (city.test(next.chunkX(), next.chunkZ())) {
+            return edge;
+        }
+        for (; k >= 0 && k < path.size(); k += inward) {
+            LinkRaster.Step step = path.get(k);
+            if (blocked.test(step.chunkX(), step.chunkZ())) {
+                return edge;
+            }
+            if (city.test(step.chunkX(), step.chunkZ())) {
+                return k;
+            }
+        }
+        return edge;
     }
 
     /**

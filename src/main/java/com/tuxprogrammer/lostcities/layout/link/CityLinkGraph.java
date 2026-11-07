@@ -66,6 +66,10 @@ public final class CityLinkGraph {
         private final int bx;
         private final int bz;
         private List<LinkRaster.Step> path;
+        private int minX;
+        private int minZ;
+        private int maxX;
+        private int maxZ;
 
         Link(int ax, int az, int bx, int bz) {
             boolean lower = LinkRaster.lower(ax, az, bx, bz);
@@ -73,6 +77,26 @@ public final class CityLinkGraph {
             this.az = lower ? az : bz;
             this.bx = lower ? bx : ax;
             this.bz = lower ? bz : az;
+        }
+
+        /** A link along a given path (a detour, D390); the path runs from the lower end. */
+        Link(int ax, int az, int bx, int bz, List<LinkRaster.Step> path) {
+            this(ax, az, bx, bz);
+            setPath(path);
+        }
+
+        private void setPath(List<LinkRaster.Step> steps) {
+            path = steps;
+            minX = Integer.MAX_VALUE;
+            minZ = Integer.MAX_VALUE;
+            maxX = Integer.MIN_VALUE;
+            maxZ = Integer.MIN_VALUE;
+            for (LinkRaster.Step step : steps) {
+                minX = Math.min(minX, step.chunkX());
+                minZ = Math.min(minZ, step.chunkZ());
+                maxX = Math.max(maxX, step.chunkX());
+                maxZ = Math.max(maxZ, step.chunkZ());
+            }
         }
 
         /** Returns the lower end's chunk X. */
@@ -103,12 +127,21 @@ public final class CityLinkGraph {
             return true;
         }
 
-        /** Returns the link's chunks, lower end first. */
+        /**
+         * Returns the link's chunks, lower end first: the straight raster, or the detour the graph chose around a
+         * landmark (D390). Equal links carry the same path, since the graph derives it from the ends alone.
+         */
         public List<LinkRaster.Step> path() {
             if (path == null) {
-                path = LinkRaster.rasterize(ax, az, bx, bz);
+                setPath(LinkRaster.rasterize(ax, az, bx, bz));
             }
             return path;
+        }
+
+        /** Returns whether the path's bounding box overlaps a chunk rectangle. */
+        boolean overlaps(int x0, int z0, int x1, int z1) {
+            path();
+            return maxX >= x0 && minX <= x1 && maxZ >= z0 && minZ <= z1;
         }
 
         @Override
@@ -213,10 +246,9 @@ public final class CityLinkGraph {
     }
 
     /**
-     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} whose path
-     * crosses no {@link Nodes#blocked} chunk, nearest first, ties to the lower end; when every such path is blocked,
-     * the
-     * nearest alone. Empty when the cell has no node. Not symmetric; see {@link #links}.
+     * Returns the links a cell's node chose: its {@link #NEAREST} nearest nodes within {@link #MAX_DISTANCE} to which a
+     * path, straight or detoured ({@link #route}), crosses no {@link Nodes#blocked} chunk, nearest first, ties to the
+     * lower end; when every such path is blocked, the nearest alone. Empty when the cell has no node. Not symmetric; see {@link #links}.
      *
      * @param cellX cell X
      * @param cellZ cell Z
@@ -257,23 +289,90 @@ public final class CityLinkGraph {
                 return c != 0 ? c : Long.compare(p[2], q[2]);
             });
         }
-        // Landmarks (0015 §6): a link whose path crosses a blocked chunk is passed over for the next nearest, unless
-        // every candidate is blocked; then the node keeps its nearest, so no node is cut off.
+        // Landmarks (0015 §6, D390): a link whose straight path crosses a blocked chunk detours around it through a
+        // waypoint; only when no detour clears is it passed over for the next nearest. When every candidate is
+        // blocked the node keeps its nearest, so no node is cut off.
         List<Link> out = new ArrayList<>();
         for (int i = 0; i < found.size() && out.size() < NEAREST; i++) {
-            Link link = new Link(self[0], self[1], (int) found.get(i)[1], (int) found.get(i)[2]);
-            if (!crossesBlocked(link)) {
+            Link link = route(self[0], self[1], (int) found.get(i)[1], (int) found.get(i)[2]);
+            if (link != null) {
                 out.add(link);
             }
         }
         if (out.isEmpty() && !found.isEmpty()) {
             out.add(new Link(self[0], self[1], (int) found.get(0)[1], (int) found.get(0)[2]));
         }
+        if (self != null && out.size() < 2 && com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
+            com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+                "linkGraph node=%d,%d candidates=%d chosen=%d (every other path blocked, detours included)",
+                self[0],
+                self[1],
+                found.size(),
+                out.size());
+        }
         return neighbors.put(cellX, cellZ, Collections.unmodifiableList(out));
     }
 
-    private boolean crossesBlocked(Link link) {
-        for (LinkRaster.Step step : link.path()) {
+    /** Waypoint offsets across the link, in chunks, nearest first (D390). */
+    private static final int[] DETOUR_OFFSETS = { 12, 24, 36, 48, 64 };
+    /** Waypoint positions along the link, as a share of its length (D390). */
+    private static final double[] DETOUR_ALONG = { 0.5, 0.3, 0.7 };
+
+    /**
+     * Returns the link between two centers along a path that crosses no {@link Nodes#blocked} chunk, or {@code null}:
+     * the straight raster if it is clear, else the first clear detour ({@link LinkRaster#rasterizeVia}) through a
+     * waypoint offset across the link (each of {@link #DETOUR_OFFSETS}, at each of {@link #DETOUR_ALONG}, left before
+     * right), whose waypoint lies within {@link #MAX_DISTANCE} of both ends, so {@link #reach} still bounds every
+     * chunk of the path. A function of the two ends (taken lower first) and the oracle only, so whichever end asks
+     * gets the same path.
+     *
+     * @param x1 one end's chunk X
+     * @param z1 one end's chunk Z
+     * @param x2 the other end's chunk X
+     * @param z2 the other end's chunk Z
+     * @return the link, or null when no path clears
+     */
+    Link route(int x1, int z1, int x2, int z2) {
+        Link straight = new Link(x1, z1, x2, z2);
+        if (!crossesBlocked(straight.path())) {
+            return straight;
+        }
+        int ax = straight.ax;
+        int az = straight.az;
+        int bx = straight.bx;
+        int bz = straight.bz;
+        double dx = bx - ax;
+        double dz = bz - az;
+        double length = Math.sqrt(dx * dx + dz * dz);
+        if (length == 0) {
+            return null;
+        }
+        // The unit normal, left of the lower-to-upper direction.
+        double nx = -dz / length;
+        double nz = dx / length;
+        long max = (long) MAX_DISTANCE * MAX_DISTANCE;
+        for (int offset : DETOUR_OFFSETS) {
+            for (double along : DETOUR_ALONG) {
+                for (int side = 1; side >= -1; side -= 2) {
+                    int wx = (int) Math.round(ax + along * dx + side * offset * nx);
+                    int wz = (int) Math.round(az + along * dz + side * offset * nz);
+                    long da = (long) (wx - ax) * (wx - ax) + (long) (wz - az) * (wz - az);
+                    long db = (long) (wx - bx) * (wx - bx) + (long) (wz - bz) * (wz - bz);
+                    if (da > max || db > max) {
+                        continue;
+                    }
+                    List<LinkRaster.Step> path = LinkRaster.rasterizeVia(ax, az, wx, wz, bx, bz);
+                    if (path != null && !crossesBlocked(path)) {
+                        return new Link(ax, az, bx, bz, path);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean crossesBlocked(List<LinkRaster.Step> path) {
+        for (LinkRaster.Step step : path) {
             if (nodes.blocked(step.chunkX(), step.chunkZ())) {
                 return true;
             }
@@ -343,9 +442,7 @@ public final class CityLinkGraph {
         for (int ox = -reach; ox <= reach; ox++) {
             for (int oz = -reach; oz <= reach; oz++) {
                 for (Link link : chosen(cellX + ox, cellZ + oz)) {
-                    if (Math.max(link.ax, link.bx) >= minX && Math.min(link.ax, link.bx) <= maxX
-                        && Math.max(link.az, link.bz) >= minZ
-                        && Math.min(link.az, link.bz) <= maxZ) {
+                    if (link.overlaps(minX, minZ, maxX, maxZ)) {
                         addOnce(all, link);
                     }
                 }

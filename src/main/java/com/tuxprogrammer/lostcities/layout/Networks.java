@@ -261,6 +261,19 @@ public final class Networks implements InfrastructureView {
                 }
 
                 @Override
+                public boolean city(int chunkX, int chunkZ) {
+                    // As CityHighways.Cities#city, so a spur ends where a cut-through's entry does (D391).
+                    return planner.cityBase(chunkX, chunkZ);
+                }
+
+                @Override
+                public boolean blocked(int chunkX, int chunkZ) {
+                    return zones.zone(chunkX, chunkZ)
+                        .zone()
+                        .forcesNonCity();
+                }
+
+                @Override
                 public boolean bridgeOrTunnel(int chunkX, int chunkZ, int lowLevel, int highLevel) {
                     // The staircase fallback (0015 §3): the tunnel test is ChunkPlan.isTunnel's outside a city; a
                     // bridge stands over water or over ground more than one level below the deck.

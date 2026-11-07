@@ -299,11 +299,18 @@ public class CityHighwayLayoutTest {
             CityHighways.Kind.BELTWAY,
             new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(150, NO_LANDMARK)).plan(0, 0)
                 .kind());
-        // Tapered around a landmark (a village core five chunks off the center).
-        assertNotEquals(
-            CityHighways.Kind.BELTWAY,
-            new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, 5)).plan(0, 0)
-                .kind());
+        // A landmark inside the ring no longer rules the beltway out (D392): the ring keeps its preferred size.
+        CityHighways.Plan inside = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, 5)).plan(0, 0);
+        assertEquals(CityHighways.Kind.BELTWAY, inside.kind());
+        assertEquals(6, inside.half());
+        // A landmark on the preferred ring moves the ring until it clears; no ring chunk is the landmark.
+        CityHighways.Plan moved = new CityHighways(1L, CityHighwayLayout.BELTWAY, null, cities(256, 6)).plan(0, 0);
+        assertEquals(CityHighways.Kind.BELTWAY, moved.kind());
+        assertNotEquals(6, moved.half());
+        assertTrue(
+            moved.pieces()
+                .get(CityHighways.key(6, 0)) == null,
+            "the ring never covers the landmark");
         LayoutPlanner planner = planner(7919L, CityHighwayLayout.RANDOM);
         for (CityHighways.Plan p : plans(planner).values()) {
             if (!p.beltwayFits()) {

@@ -169,6 +169,11 @@ public final class CityHighways {
             return joined.contains(link);
         }
 
+        /** Returns whether a chunk lies on the ring or inside it (beltway only). */
+        public boolean withinRing(int chunkX, int chunkZ) {
+            return kind == Kind.BELTWAY && Math.max(Math.abs(chunkX - centerX), Math.abs(chunkZ - centerZ)) <= half;
+        }
+
         /** Returns whether a chunk lies strictly inside the ring (beltway only). */
         public boolean insideRing(int chunkX, int chunkZ) {
             return kind == Kind.BELTWAY && Math.max(Math.abs(chunkX - centerX), Math.abs(chunkZ - centerZ)) < half;
@@ -314,8 +319,10 @@ public final class CityHighways {
         }
         int radius = cities.radius(cx, cz);
         float extent = radius * (1f - cities.threshold()) / 16f;
-        int half = Math.max(MIN_HALF, Math.round(extent * RING_AT));
-        boolean fits = beltwayFits(cx, cz, half, extent);
+        int preferred = Math.max(MIN_HALF, Math.round(extent * RING_AT));
+        int fitted = beltwayHalf(cx, cz, preferred, extent);
+        boolean fits = fitted > 0;
+        int half = fits ? fitted : preferred;
         boolean beltway;
         switch (layout) {
             case BELTWAY:
@@ -412,24 +419,40 @@ public final class CityHighways {
     }
 
     /**
-     * Returns whether a city has the room for a beltway: the ring's corners keep {@link #MARGIN} chunks inside the
-     * city's extent, no landmark zone lies in the extent, and enough ring chunks are city.
+     * Returns the ring half-size a city's beltway takes, or 0 when none fits (D392). The preferred size comes first,
+     * then each smaller one down to {@link #MIN_HALF}, then each larger one; the first that {@link #beltwayFits} wins.
+     * So a landmark in the city moves the ring in or out until it clears the landmark's core and margin, instead of
+     * ruling the beltway out.
+     */
+    private int beltwayHalf(int cx, int cz, int preferred, float extent) {
+        for (int half = preferred; half >= MIN_HALF; half--) {
+            if (beltwayFits(cx, cz, half, extent)) {
+                return half;
+            }
+        }
+        for (int half = preferred + 1; half * Math.sqrt(2) + MARGIN <= extent; half++) {
+            if (beltwayFits(cx, cz, half, extent)) {
+                return half;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Returns whether a ring of a given half-size fits a city: its corners keep {@link #MARGIN} chunks inside the
+     * city's extent, none of its chunks is {@link Cities#blocked} (a landmark's core or margin; a landmark inside or
+     * outside the ring is fine, D392), and enough of its chunks are city.
      */
     private boolean beltwayFits(int cx, int cz, int half, float extent) {
         if (half * Math.sqrt(2) + MARGIN > extent) {
             return false;
         }
-        int e = (int) Math.ceil(extent);
-        for (int dx = -e; dx <= e; dx++) {
-            for (int dz = -e; dz <= e; dz++) {
-                if (dx * dx + dz * dz <= extent * extent && cities.landmark(cx + dx, cz + dz)) {
-                    return false;
-                }
-            }
-        }
         int ring = 0;
         int city = 0;
         for (int[] c : ring(cx, cz, half)) {
+            if (cities.blocked(c[0], c[1])) {
+                return false;
+            }
             ring++;
             if (cities.city(c[0], c[1])) {
                 city++;
@@ -751,16 +774,20 @@ public final class CityHighways {
      * Returns a link's edge plaza at this city: the first chunk of its path outside the city's radius, counted from
      * this end, or {@code null} when the whole path lies inside (as {@link LinkHighways} decides).
      */
-    static int[] entry(CityLinkGraph.Link link, int cx, int cz, int radius) {
+    int[] entry(CityLinkGraph.Link link, int cx, int cz, int radius) {
         List<LinkRaster.Step> path = link.path();
         boolean fromA = link.ax() == cx && link.az() == cz;
         int n = path.size();
         for (int k = 0; k < n; k++) {
-            LinkRaster.Step step = path.get(fromA ? k : n - 1 - k);
+            int index = fromA ? k : n - 1 - k;
+            LinkRaster.Step step = path.get(index);
             long dx = step.chunkX() - cx;
             long dz = step.chunkZ() - cz;
             if (radius <= 0 || 256L * (dx * dx + dz * dz) > (long) radius * radius) {
-                return new int[] { step.chunkX(), step.chunkZ() };
+                // The spur into the city (D391), exactly as LinkHighways writes the link's end.
+                LinkRaster.Step plaza = path
+                    .get(LinkHighways.spur(path, index, fromA ? -1 : 1, cities::city, cities::blocked));
+                return new int[] { plaza.chunkX(), plaza.chunkZ() };
             }
         }
         return null;
