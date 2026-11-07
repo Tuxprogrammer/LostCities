@@ -500,9 +500,7 @@ public class LinkHighwaysTest {
                 return 0;
             }
         };
-        return LinkHighways.over(
-            (x, z) -> hits.getOrDefault(chunk(x, z), java.util.Collections.emptyList()),
-            ends);
+        return LinkHighways.over((x, z) -> hits.getOrDefault(chunk(x, z), java.util.Collections.emptyList()), ends);
     }
 
     private static long chunk(int x, int z) {
@@ -581,10 +579,14 @@ public class LinkHighwaysTest {
         // One chunk of ramp room before the crossing on each link: a reaches level 1 at most, b falls to 2 at most.
         List<Piece> pieces = view.pieces(20, 0);
         assertEquals(2, pieces.size(), "grade-separated: " + pieces);
-        assertEquals(0, pieces.get(0)
-            .level());
-        assertEquals(3, pieces.get(1)
-            .level());
+        assertEquals(
+            0,
+            pieces.get(0)
+                .level());
+        assertEquals(
+            3,
+            pieces.get(1)
+                .level());
         assertSeamless(view, a, 0, 0);
         assertSeamless(view, b, 3, 3);
     }

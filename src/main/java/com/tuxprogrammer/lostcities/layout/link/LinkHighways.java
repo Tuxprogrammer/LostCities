@@ -41,9 +41,9 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  *
  * <p>
  * Where links share a chunk, identical pieces merge and all flat pieces at one level become one: a plaza, a straight
- * piece, bend, T or crossing, or a coded link junction ({@link #merge}); ramps and other levels (a crossing
- * that could not be matched) are written lowest first. A diagonal deck spills into the two side neighbors at each corner it opens on; those chunks report the spill
- * so buildings keep clear.
+ * piece, bend, T or crossing, or a coded link junction ({@link #merge}); ramps and other levels (a crossing that could
+ * not be matched) are written lowest first. A diagonal deck spills into the two side neighbors at each corner it opens
+ * on; those chunks report the spill so buildings keep clear.
  *
  * <p>
  * Staircase fallback (0015 §3). A link whose 45° deck would cover a bridge or a tunnel chunk
@@ -548,8 +548,7 @@ public final class LinkHighways {
 
         /** The ramps it costs to pass {@code level} at {@code i}, beyond the base's own. */
         int cost(int level) {
-            return Math.abs(level - startLevel()) + Math.abs(endLevel() - level)
-                - Math.abs(endLevel() - startLevel());
+            return Math.abs(level - startLevel()) + Math.abs(endLevel() - level) - Math.abs(endLevel() - startLevel());
         }
     }
 
@@ -568,7 +567,9 @@ public final class LinkHighways {
         }
     }
 
-    private static final Crossing NO_CROSSING = new Crossing(Collections.emptyList(), Collections.emptyList(),
+    private static final Crossing NO_CROSSING = new Crossing(
+        Collections.emptyList(),
+        Collections.emptyList(),
         NO_LEVEL);
 
     /** Returns a link's profile planned alone (class Javadoc, Levels), cached. */
@@ -656,7 +657,8 @@ public final class LinkHighways {
     }
 
     /**
-     * Returns the crossings a link can meet, by path index. Walking from its lower plaza, it keeps every crossing at its
+     * Returns the crossings a link can meet, by path index. Walking from its lower plaza, it keeps every crossing at
+     * its
      * own base level (the base meets those together), and another crossing when the ramp room reaches its level from
      * the last kept one and, from there, the next crossing at a base level or the far plaza. So the kept crossings can
      * always be met together, and so can any subset of them.
