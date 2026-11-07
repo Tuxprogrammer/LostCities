@@ -674,6 +674,11 @@ public final class NetworkWriter {
         if (blockedByBuilding(rail)) {
             return;
         }
+        boolean carrier = carriesPlazaStairs(rail);
+        if (carrier && rail.coded()) {
+            // A straight link tunnel that carries a plaza station's staircase is written as a station extension.
+            rail = RailChunk.link(RailChunkType.STATION_EXTENSION_UNDERGROUND, rail.level(), true, rail.openings());
+        }
         int height = context.settings()
             .cityGround(rail.level());
         if (rail.coded()) {
@@ -695,11 +700,12 @@ public final class NetworkWriter {
                 clearUpper = true;
                 break;
             case STATION_UNDERGROUND:
-                staircase = rail.staircase();
+                staircase = stationStairs(rail, plan);
                 slot = staircase ? "stationundergroundstairs" : "stationunderground";
                 break;
             case STATION_EXTENSION_UNDERGROUND:
-                slot = "stationunderground";
+                staircase = carrier;
+                slot = staircase ? "stationundergroundstairs" : "stationunderground";
                 break;
             case RAILS_END_HERE:
                 slot = "railshorizontalend";
@@ -1049,6 +1055,140 @@ public final class NetworkWriter {
 
     private static boolean isRail(BlockRef block) {
         return "minecraft:rail".equals(block.name()) || "minecraft:golden_rail".equals(block.name());
+    }
+
+    /**
+     * Whether an underground station climbs to the city by its staircase: as the layout says, except on a district
+     * plaza (D-plaza-station-1). Every link-network city center is a station and the plaza is drawn at the center,
+     * so the staircase's surface part (11 x 6 at the chunk's west and south edges) broke a one-chunk plaza's basin and
+     * paved over a 2 x 2 plaza's corner; the station stays under the plaza without its entrance instead.
+     *
+     * @param rail the chunk's railway
+     * @param plan the chunk's plan
+     * @return whether the staircase is written
+     */
+    static boolean stationStairs(RailChunk rail, ChunkPlan plan) {
+        return rail.staircase() && plan.lot() != com.tuxprogrammer.lostcities.layout.LotKind.PLAZA;
+    }
+
+    /**
+     * A chunk that may carry the staircase of a plaza station (D-plaza-station-1): the facts about it that
+     * {@link #stairCarrier} reads, taken from its plan and its railway so the choice needs no chunk load.
+     */
+    static final class StairSite {
+
+        final RailChunk rail;
+        final boolean plaza;
+        final boolean building;
+        final boolean highway;
+        final boolean city;
+        final int cityLevel;
+
+        StairSite(RailChunk rail, boolean plaza, boolean building, boolean highway, boolean city, int cityLevel) {
+            this.rail = rail;
+            this.plaza = plaza;
+            this.building = building;
+            this.highway = highway;
+            this.city = city;
+            this.cityLevel = cityLevel;
+        }
+
+        static StairSite of(RailChunk rail, ChunkPlan plan) {
+            return new StairSite(
+                rail,
+                plan.lot() == com.tuxprogrammer.lostcities.layout.LotKind.PLAZA,
+                plan.hasBuilding(),
+                plan.maxHighwayLevel() >= 0,
+                plan.isCity(),
+                plan.cityLevel());
+        }
+    }
+
+    /** Looks up the site {@code dx} chunks east of a station (the line runs east-west). */
+    @FunctionalInterface
+    interface StairSites {
+
+        /**
+         * @param dx chunks east of the station, -1 or 1
+         * @return the site there
+         */
+        StairSite at(int dx);
+    }
+
+    /**
+     * Picks the chunk that carries the staircase of a station whose own chunk is a district plaza
+     * (D-plaza-station-1), or 0 when none can. Upstream gives every underground station its staircase
+     * ({@code Railways}: {@code STATION_UNDERGROUND} sets {@code needsStaircase}); the plaza keeps its basin, so the
+     * staircase moves to an adjacent chunk along the line. An underground station extension is preferred because it is
+     * already a station part; on the link network, which has no extensions, a straight east-west tunnel at the same
+     * level is written as one. The carrier is no plaza, has no building and no highway (the staircase's surface part
+     * covers 11 x 6 blocks at its west and south edges), is city, and is at the station's city level. East is tried
+     * before west at each preference, so the choice is deterministic and needs only the chunk plans.
+     *
+     * @param station the station's railway
+     * @param self    the station's site
+     * @param sites   the neighbors' sites
+     * @return 1 for the east neighbor, -1 for the west one, 0 for none
+     */
+    static int stairCarrier(RailChunk station, StairSite self, StairSites sites) {
+        if (!self.plaza || station.type() != RailChunkType.STATION_UNDERGROUND || !station.staircase()) {
+            return 0;
+        }
+        for (int pass = 0; pass < 2; pass++) {
+            for (int dx = 1; dx >= -1; dx -= 2) {
+                int toward = dx > 0 ? com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
+                    : com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST;
+                if (station.openings() != 0 && (station.openings() & toward) == 0) {
+                    continue;
+                }
+                StairSite site = sites.at(dx);
+                if (site == null || site.plaza
+                    || site.building
+                    || site.highway
+                    || !site.city
+                    || site.cityLevel != self.cityLevel
+                    || site.rail.level() != station.level()) {
+                    continue;
+                }
+                RailChunkType type = site.rail.type();
+                boolean extension = type == RailChunkType.STATION_EXTENSION_UNDERGROUND;
+                boolean tunnel = type == RailChunkType.HORIZONTAL && site.rail.buffer() == null
+                    && (site.rail.openings() == 0 || site.rail.openings()
+                        == (com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
+                            | com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST));
+                if (pass == 0 ? extension : tunnel && site.rail.openings() != 0) {
+                    return dx;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /** Whether this chunk carries the staircase of a plaza station to its east or west. */
+    private boolean carriesPlazaStairs(RailChunk rail) {
+        if (!rail.isPresent() || rail.type() != RailChunkType.STATION_EXTENSION_UNDERGROUND
+            && rail.type() != RailChunkType.HORIZONTAL) {
+            return false;
+        }
+        for (int d = -1; d <= 1; d += 2) {
+            int sx = chunkX + d;
+            RailChunk station = networks.railChunk(sx, chunkZ);
+            if (station.type() != RailChunkType.STATION_UNDERGROUND || !station.staircase()) {
+                continue;
+            }
+            ChunkPlan stationPlan = planner.plan(sx, chunkZ);
+            if (stationPlan.lot() != com.tuxprogrammer.lostcities.layout.LotKind.PLAZA) {
+                continue;
+            }
+            int found = stairCarrier(
+                station,
+                StairSite.of(station, stationPlan),
+                dx -> StairSite.of(networks.railChunk(sx + dx, chunkZ), planner.plan(sx + dx, chunkZ)));
+            if (found == -d) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The staircase from an underground station up to the city: a staircase part per level, then its top. */

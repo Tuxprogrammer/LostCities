@@ -16,8 +16,11 @@ import com.tuxprogrammer.lostcities.layout.DensityRings;
 import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.MultiPos;
 import com.tuxprogrammer.lostcities.layout.StreetType;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
+import com.tuxprogrammer.lostcities.layout.view.RailChunkType;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
 
 /**
@@ -98,6 +101,10 @@ public class CityDistrictsTest {
                     if (plan.lot() == LotKind.PLAZA) {
                         if ((dx != 0 || dz != 0) && p.isCityCenter(c[0] + dx, c[1] + dz)) {
                             continue; // an adjacent city's own one-chunk plaza
+                        }
+                        if (!plan.lotFootprint()
+                            .isMulti()) {
+                            continue; // D-plaza-road-1: the 2 x 2 does not fit, a one-chunk plaza instead
                         }
                         assertEquals(
                             2,
@@ -190,6 +197,128 @@ public class CityDistrictsTest {
                     x + "," + z);
             }
         }
+    }
+
+    /**
+     * D-plaza-road-1, the owner's report on seed 5253073417701929942: a highway along the center row of a big city
+     * left only the south half of its 2 x 2 plaza, so the monument (centered on the footprint's middle corner) was cut
+     * in half by the highway row's street and border wall a city level higher. Now every 2 x 2 plaza chunk has its
+     * three partners, all plaza with the same footprint origin and city level, and no plaza chunk carries a highway;
+     * a big city whose 2 x 2 does not fit gets a one-chunk plaza (or none).
+     */
+    @Test
+    public void everyPlazaIsWholeAndOffTheHighways() {
+        int fallbacks = 0;
+        for (long seed : new long[] { SEED, 11L, 12345L, 5253073417701929942L }) {
+            LayoutPlanner p = planner(seed, "true");
+            for (int x = -R; x <= R; x++) {
+                for (int z = -R; z <= R; z++) {
+                    ChunkPlan plan = p.plan(x, z);
+                    if (plan.lot() != LotKind.PLAZA) {
+                        continue;
+                    }
+                    String at = "seed " + seed + " chunk " + x + "," + z;
+                    assertFalse(p.hasHighway(x, z), "plaza on a highway: " + at);
+                    MultiPos pos = plan.lotFootprint();
+                    if (!pos.isMulti()) {
+                        if (!p.isCityCenter(x, z) || p.cityRadius(x, z) >= 112) {
+                            fallbacks++;
+                        }
+                        continue;
+                    }
+                    int ox = x - pos.x();
+                    int oz = z - pos.z();
+                    for (int dx = 0; dx <= 1; dx++) {
+                        for (int dz = 0; dz <= 1; dz++) {
+                            ChunkPlan other = p.plan(ox + dx, oz + dz);
+                            MultiPos op = other.lotFootprint();
+                            assertTrue(
+                                other.lot() == LotKind.PLAZA && op.isMulti()
+                                    && ox + dx - op.x() == ox
+                                    && oz + dz - op.z() == oz,
+                                "a cut 2 x 2 plaza: " + at + " partner " + dx + "," + dz);
+                            assertEquals(plan.cityLevel(), other.cityLevel(), "2 x 2 plaza across a level step: " + at);
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("districts: one-chunk fallbacks for big cities=" + fallbacks);
+        assertTrue(fallbacks > 0, "the test worlds hold a big city whose 2 x 2 a highway or level step cuts");
+    }
+
+    /**
+     * D-plaza-station-1: every link-network city center is a station, and the plaza is drawn at the center. On a plaza
+     * chunk the station stays under the plaza without its staircase, whose surface part would break the basin.
+     */
+    @Test
+    public void aStationUnderAPlazaHasNoStaircase() {
+        LayoutPlanner p = planner(SEED, "true");
+        RailChunk station = RailChunk.link(RailChunkType.STATION_UNDERGROUND, 0, true, 0);
+        int plazas = 0;
+        int streets = 0;
+        for (int[] c : centers(p)) {
+            ChunkPlan plan = p.plan(c[0], c[1]);
+            if (plan.lot() == LotKind.PLAZA) {
+                plazas++;
+                assertFalse(NetworkWriter.stationStairs(station, plan), "stairs on the plaza at " + c[0] + "," + c[1]);
+            } else if (plan.lot() == LotKind.NONE && !plan.hasBuilding()) {
+                streets++;
+                assertTrue(NetworkWriter.stationStairs(station, plan), "no stairs off the plaza at " + c[0] + "," + c[1]);
+            }
+        }
+        assertTrue(plazas > 0, "some center is a plaza");
+        System.out.println("districts: plaza centers=" + plazas + " street centers=" + streets);
+    }
+
+    private static NetworkWriter.StairSite site(RailChunk rail, boolean plaza, boolean building, boolean highway,
+        int level) {
+        return new NetworkWriter.StairSite(rail, plaza, building, highway, true, level);
+    }
+
+    /** D-plaza-station-1: the staircase of a plaza station moves to exactly one qualifying neighbor, else none. */
+    @Test
+    public void aPlazaStationsStaircaseMovesToOneQualifyingNeighbor() {
+        int both = com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
+            | com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST;
+        RailChunk station = RailChunk.link(RailChunkType.STATION_UNDERGROUND, 0, true, both);
+        NetworkWriter.StairSite self = site(station, true, false, false, 2);
+        RailChunk tunnel = RailChunk.link(RailChunkType.HORIZONTAL, 0, false, both);
+        RailChunk bend = RailChunk.link(
+            RailChunkType.DOUBLE_BEND,
+            0,
+            false,
+            com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST
+                | com.tuxprogrammer.lostcities.layout.link.LinkRails.SOUTH);
+        NetworkWriter.StairSite good = site(tunnel, false, false, false, 2);
+        // A qualifying neighbor on both sides: exactly one carries it (east first).
+        assertEquals(1, NetworkWriter.stairCarrier(station, self, dx -> good));
+        // East has a building, west qualifies.
+        assertEquals(
+            -1,
+            NetworkWriter.stairCarrier(station, self, dx -> dx > 0 ? site(tunnel, false, true, false, 2) : good));
+        // Neither qualifies: a building, a highway, a plaza, another city level, a bend, other rail level.
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, true, false, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, false, true, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, true, false, false, 2)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(tunnel, false, false, false, 3)));
+        assertEquals(0, NetworkWriter.stairCarrier(station, self, dx -> site(bend, false, false, false, 2)));
+        assertEquals(
+            0,
+            NetworkWriter.stairCarrier(
+                station,
+                self,
+                dx -> site(RailChunk.link(RailChunkType.HORIZONTAL, 1, false, both), false, false, false, 2)));
+        // A station off the plaza never moves its staircase.
+        assertEquals(0, NetworkWriter.stairCarrier(station, site(station, false, false, false, 2), dx -> good));
+        // An underground extension is preferred to a tunnel, on either side.
+        RailChunk extension = new RailChunk(RailChunkType.STATION_EXTENSION_UNDERGROUND, RailChunk.Direction.BI, 0, 1);
+        RailChunk legacy = new RailChunk(RailChunkType.STATION_UNDERGROUND, RailChunk.Direction.BI, 0, 1);
+        NetworkWriter.StairSite ext = site(extension, false, false, false, 2);
+        assertEquals(
+            -1,
+            NetworkWriter.stairCarrier(legacy, site(legacy, true, false, false, 2), dx -> dx > 0 ? good : ext));
+        assertEquals(-1, NetworkWriter.stairCarrier(station, self, dx -> dx > 0 ? good : ext));
     }
 
     @Test
