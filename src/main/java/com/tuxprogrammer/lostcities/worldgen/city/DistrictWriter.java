@@ -20,7 +20,9 @@ import com.tuxprogrammer.lostcities.worldgen.terrain.WorldLimits;
  * pillar of stone brick, alternating chiseled and plain courses, with a quartz cap (gt-spread: the casings moved
  * out of the plaza so GT machines read as furnishings, not as the monument). No tile entities.</li>
  * <li><b>Industrial yard:</b> concrete, cobblestone and gravel ground inside a fence with a gap in the middle of each
- * side; a shed of chisel factory blocks (lookup key {@code district.shed_wall}) under an iron roof ({@code district.shed_roof}), with window slits, a door and a row of GT casing "machines" (Steam to EV, the stand-ins for real machines) along its back wall; a tank of
+ * side; a shed of chisel factory blocks (lookup key {@code district.shed_wall}) under an iron roof
+ * ({@code district.shed_roof}), with window slits, a door and a row of GT casing "machines" (Steam to EV, the stand-ins
+ * for real machines) along its back wall; a tank of
  * bronze-plated bricks, a brick smokestack, iron-bar pipes and cauldron drums. The layout is rotated by a hash. GT
  * casings are plain blocks: placing real GT machine tile entities from generation code is not reliable, so the yard
  * has none (D352). Casings are never building material: only the machine row uses them (D-casing-standin-1).</li>

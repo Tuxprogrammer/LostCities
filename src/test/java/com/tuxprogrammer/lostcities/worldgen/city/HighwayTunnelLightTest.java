@@ -82,9 +82,11 @@ public class HighwayTunnelLightTest {
             Part part = ASSETS.worldStyle(AssetId.parse("standard"))
                 .parts("highways", slot)
                 .get(0);
-            assertTrue(part.id()
-                .path()
-                .startsWith("nh_highway_"), slot + " uses the lit variant");
+            assertTrue(
+                part.id()
+                    .path()
+                    .startsWith("nh_highway_"),
+                slot + " uses the lit variant");
             ArrayChunkBuffer b = place(part);
             TreeSet<String> lamps = new TreeSet<>();
             for (int y = DECK_Y; y < DECK_Y + 12; y++) {
@@ -132,8 +134,12 @@ public class HighwayTunnelLightTest {
                     int x = p[0] + d[0];
                     int y = p[1] + d[1];
                     int z = p[2] + d[2];
-                    if (x < 0 || x > 15 || z < 0 || z > 15 || !b.get(x, y, z)
-                        .isAir() || light.getOrDefault(key(x, y, z), 0) >= level - 1) {
+                    if (x < 0 || x > 15
+                        || z < 0
+                        || z > 15
+                        || !b.get(x, y, z)
+                            .isAir()
+                        || light.getOrDefault(key(x, y, z), 0) >= level - 1) {
                         continue;
                     }
                     light.put(key(x, y, z), level - 1);
@@ -145,7 +151,8 @@ public class HighwayTunnelLightTest {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     if (b.get(x, DECK_Y, z)
-                        .equals(lane) && b.get(x, DECK_Y + 1, z)
+                        .equals(lane)
+                        && b.get(x, DECK_Y + 1, z)
                             .isAir()) {
                         lanes++;
                         int level = light.getOrDefault(key(x, DECK_Y + 1, z), 0);

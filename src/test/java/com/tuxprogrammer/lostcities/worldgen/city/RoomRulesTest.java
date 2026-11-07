@@ -245,7 +245,8 @@ public class RoomRulesTest {
                     palette.loot()
                         .keySet()),
                 kind.id());
-            // Barrels are not room-thinned chests: a room that fits no chest may still fill its barrels (D-barrel-loot-1).
+            // Barrels are not room-thinned chests: a room that fits no chest may still fill its barrels
+            // (D-barrel-loot-1).
             boolean barrels = palette.items()
                 .stream()
                 .anyMatch(item -> FurnishPalette.BARREL.equals(item.block()));

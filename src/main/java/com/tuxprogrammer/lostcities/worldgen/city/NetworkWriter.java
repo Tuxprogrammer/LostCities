@@ -1153,8 +1153,8 @@ public final class NetworkWriter {
                 RailChunkType type = site.rail.type();
                 boolean extension = type == RailChunkType.STATION_EXTENSION_UNDERGROUND;
                 boolean tunnel = type == RailChunkType.HORIZONTAL && site.rail.buffer() == null
-                    && (site.rail.openings() == 0 || site.rail.openings()
-                        == (com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
+                    && (site.rail.openings() == 0
+                        || site.rail.openings() == (com.tuxprogrammer.lostcities.layout.link.LinkRails.EAST
                             | com.tuxprogrammer.lostcities.layout.link.LinkRails.WEST));
                 if (pass == 0 ? extension : tunnel && site.rail.openings() != 0) {
                     return dx;
@@ -1166,8 +1166,8 @@ public final class NetworkWriter {
 
     /** Whether this chunk carries the staircase of a plaza station to its east or west. */
     private boolean carriesPlazaStairs(RailChunk rail) {
-        if (!rail.isPresent() || rail.type() != RailChunkType.STATION_EXTENSION_UNDERGROUND
-            && rail.type() != RailChunkType.HORIZONTAL) {
+        if (!rail.isPresent()
+            || rail.type() != RailChunkType.STATION_EXTENSION_UNDERGROUND && rail.type() != RailChunkType.HORIZONTAL) {
             return false;
         }
         for (int d = -1; d <= 1; d += 2) {

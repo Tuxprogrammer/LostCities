@@ -255,7 +255,9 @@ public final class Building {
         return floorHeight;
     }
 
-    /** Returns {@code groundFloorHeight}: blocks the ground floor rises, or {@link #UNSET} for {@link #floorHeight()}. */
+    /**
+     * Returns {@code groundFloorHeight}: blocks the ground floor rises, or {@link #UNSET} for {@link #floorHeight()}.
+     */
     public int groundFloorHeight() {
         return groundFloorHeight;
     }

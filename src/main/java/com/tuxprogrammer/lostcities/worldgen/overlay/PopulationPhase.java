@@ -157,8 +157,9 @@ public final class PopulationPhase {
                 chunkX,
                 chunkZ,
                 orphan,
-                existing == null ? "none" : existing.getClass()
-                    .getSimpleName(),
+                existing == null ? "none"
+                    : existing.getClass()
+                        .getSimpleName(),
                 existing == null || isDefault(existing));
             if (existing != null && !isDefault(existing)) {
                 continue; // a dungeon's spawner or chest, or a machine something else completed

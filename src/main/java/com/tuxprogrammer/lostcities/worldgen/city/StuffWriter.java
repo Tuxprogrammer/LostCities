@@ -155,8 +155,7 @@ public final class StuffWriter {
         int groundLevel = context.settings()
             .groundLevel();
         int cityGround = plan.cityGroundLevel();
-        int min = stuff.minHeight() != null ? stuff.minHeight()
-            : building ? plan.buildingBottomHeight() : groundLevel;
+        int min = stuff.minHeight() != null ? stuff.minHeight() : building ? plan.buildingBottomHeight() : groundLevel;
         int max = stuff.maxHeight() != null ? stuff.maxHeight()
             : building ? plan.floorY(plan.floors()) + ROOF_MARGIN : min + DEFAULT_RANGE;
         if (max <= min) {

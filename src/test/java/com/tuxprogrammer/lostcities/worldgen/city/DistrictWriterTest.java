@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.layout.ChunkPlan;
-import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.LayoutLog;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LotKind;
+import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.buffer.ArrayChunkBuffer;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
-import com.tuxprogrammer.lostcities.layout.LayoutLog;
-import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 
 /** The industrial yard shed is built from pack blocks; casings are only its machine stand-ins (D-casing-standin-1). */
 public class DistrictWriterTest {
@@ -48,7 +48,8 @@ public class DistrictWriterTest {
                         for (int dy = 1; dy <= 9; dy++) {
                             BlockRef b = buffer.get(bx, HEIGHT + dy, bz);
                             if (b == null || !b.name()
-                                .startsWith("gregtech:gt.blockcasings") || b.meta() == 10 && "gregtech:gt.blockcasings".equals(b.name())) {
+                                .startsWith("gregtech:gt.blockcasings")
+                                || b.meta() == 10 && "gregtech:gt.blockcasings".equals(b.name())) {
                                 continue;
                             }
                             assertTrue(!"gregtech:gt.blockcasings".equals(b.name()) || b.meta() != 0, "no ULV casing");

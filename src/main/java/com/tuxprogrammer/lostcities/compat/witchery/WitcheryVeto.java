@@ -113,11 +113,8 @@ public final class WitcheryVeto {
             if (HeightProbe.isProbe(e)) {
                 throw e;
             }
-            LostCities.LOG.error(
-                "[LCNH-WITCHERY] veto failed at chunk ({}, {}); Witchery decides alone",
-                chunkX,
-                chunkZ,
-                e);
+            LostCities.LOG
+                .error("[LCNH-WITCHERY] veto failed at chunk ({}, {}); Witchery decides alone", chunkX, chunkZ, e);
             return false;
         }
     }

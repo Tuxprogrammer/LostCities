@@ -118,10 +118,10 @@ public class FurnishPassTest {
     private static final Map<Integer, Integer> MACHINE_TIER = new HashMap<>();
 
     static {
-        int[][] table = { { 100, 0 }, { 101, 0 }, { 103, 0 }, { 104, 0 }, { 106, 0 }, { 107, 0 }, { 109, 0 }, { 110, 0 },
-            { 112, 0 }, { 113, 0 }, { 115, 0 }, { 116, 0 }, { 118, 0 }, { 119, 0 }, { 12, 2 },
-            { 13, 3 }, { 14, 4 }, { 151, 1 }, { 152, 2 }, { 161, 1 }, { 162, 2 }, { 182, 2 }, { 201, 1 }, { 212, 2 },
-            { 241, 1 }, { 291, 1 }, { 301, 1 }, { 312, 2 }, { 361, 1 }, { 671, 1 } };
+        int[][] table = { { 100, 0 }, { 101, 0 }, { 103, 0 }, { 104, 0 }, { 106, 0 }, { 107, 0 }, { 109, 0 },
+            { 110, 0 }, { 112, 0 }, { 113, 0 }, { 115, 0 }, { 116, 0 }, { 118, 0 }, { 119, 0 }, { 12, 2 }, { 13, 3 },
+            { 14, 4 }, { 151, 1 }, { 152, 2 }, { 161, 1 }, { 162, 2 }, { 182, 2 }, { 201, 1 }, { 212, 2 }, { 241, 1 },
+            { 291, 1 }, { 301, 1 }, { 312, 2 }, { 361, 1 }, { 671, 1 } };
         for (int[] row : table) {
             MACHINE_TIER.put(row[0], row[1]);
         }
@@ -160,10 +160,10 @@ public class FurnishPassTest {
                     assertEquals(expectedBase, item.meta(), kind.id() + " base type of " + item.gtId());
                 } else if (item.block()
                     .startsWith("gregtech:gt.blockcasings")) {
-                    assertFalse(item.tile(), kind.id() + " casing is a plain block");
-                    assertTrue(casingTier(item.block(), item.meta()) >= 0, kind.id() + " casing " + item);
-                    casings += item.weight();
-                }
+                        assertFalse(item.tile(), kind.id() + " casing is a plain block");
+                        assertTrue(casingTier(item.block(), item.meta()) >= 0, kind.id() + " casing " + item);
+                        casings += item.weight();
+                    }
             }
             if (machines > 0) {
                 assertEquals(2 * machines, casings, kind.id() + " casing weight");

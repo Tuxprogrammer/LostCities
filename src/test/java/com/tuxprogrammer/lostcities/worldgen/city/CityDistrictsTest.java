@@ -264,7 +264,9 @@ public class CityDistrictsTest {
                 assertFalse(NetworkWriter.stationStairs(station, plan), "stairs on the plaza at " + c[0] + "," + c[1]);
             } else if (plan.lot() == LotKind.NONE && !plan.hasBuilding()) {
                 streets++;
-                assertTrue(NetworkWriter.stationStairs(station, plan), "no stairs off the plaza at " + c[0] + "," + c[1]);
+                assertTrue(
+                    NetworkWriter.stationStairs(station, plan),
+                    "no stairs off the plaza at " + c[0] + "," + c[1]);
             }
         }
         assertTrue(plazas > 0, "some center is a plaza");

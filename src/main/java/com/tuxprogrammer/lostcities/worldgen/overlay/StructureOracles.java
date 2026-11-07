@@ -7,8 +7,8 @@ import java.util.List;
 import net.minecraft.world.World;
 
 import com.tuxprogrammer.lostcities.LostCities;
-import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesOracles;
 import com.tuxprogrammer.lostcities.compat.ae2.Ae2Oracles;
+import com.tuxprogrammer.lostcities.compat.lootgames.LootGamesOracles;
 import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
 import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
