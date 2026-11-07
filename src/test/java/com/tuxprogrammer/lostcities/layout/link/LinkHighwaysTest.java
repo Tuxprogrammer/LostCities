@@ -474,4 +474,118 @@ public class LinkHighwaysTest {
     private static long sq(long v) {
         return v * v;
     }
+
+    // ------------------------------------------------------------------ crossings (D-link-crossing-1)
+
+    /** A view over fixed links, each city at its own level, written from the center chunk on (radius 0). */
+    private static LinkHighways crossingView(java.util.Map<Long, Integer> levels, CityLinkGraph.Link... links) {
+        java.util.Map<Long, List<CityLinkGraph.Hit>> hits = new java.util.HashMap<>();
+        for (CityLinkGraph.Link link : links) {
+            List<LinkRaster.Step> path = link.path();
+            for (int i = 0; i < path.size(); i++) {
+                LinkRaster.Step s = path.get(i);
+                hits.computeIfAbsent(chunk(s.chunkX(), s.chunkZ()), k -> new java.util.ArrayList<>())
+                    .add(new CityLinkGraph.Hit(link, s, i));
+            }
+        }
+        LinkHighways.Ends ends = new LinkHighways.Ends() {
+
+            @Override
+            public int level(int chunkX, int chunkZ) {
+                return levels.get(chunk(chunkX, chunkZ));
+            }
+
+            @Override
+            public int radius(int chunkX, int chunkZ) {
+                return 0;
+            }
+        };
+        return new LinkHighways(
+            (x, z) -> hits.getOrDefault(chunk(x, z), java.util.Collections.emptyList()),
+            ends);
+    }
+
+    private static long chunk(int x, int z) {
+        return (long) x << 32 | (z & 0xffffffffL);
+    }
+
+    private static void assertSeamless(LinkHighways view, CityLinkGraph.Link link, int startLevel, int endLevel) {
+        LinkHighways.Profile p = view.profile(link);
+        assertEquals(startLevel, p.inLevel(p.start()));
+        assertEquals(endLevel, p.outLevel(p.end()));
+        for (int i = p.start(); i < p.end(); i++) {
+            assertEquals(p.outLevel(i), p.inLevel(i + 1), "seam at " + i);
+            assertTrue(Math.abs(p.outLevel(i) - p.inLevel(i)) <= 1, "one level per chunk at " + i);
+        }
+    }
+
+    @Test
+    public void linksCrossingAtDifferentCityLevelsMeetInOneJunction() {
+        java.util.Map<Long, Integer> levels = new java.util.HashMap<>();
+        levels.put(chunk(0, 0), 1);
+        levels.put(chunk(40, 0), 1);
+        levels.put(chunk(20, -20), 3);
+        levels.put(chunk(20, 20), 3);
+        CityLinkGraph.Link a = new CityLinkGraph.Link(0, 0, 40, 0);
+        CityLinkGraph.Link b = new CityLinkGraph.Link(20, -20, 20, 20);
+        LinkHighways view = crossingView(levels, a, b);
+        List<Piece> pieces = view.pieces(20, 0);
+        assertEquals(1, pieces.size(), "one junction, not a bridge over a road: " + pieces);
+        Piece junction = pieces.get(0);
+        assertEquals(junction.level(), junction.topLevel());
+        // Both links pay the same extra ramps at any level between 1 and 3; the tie takes the lower.
+        assertEquals(1, junction.level());
+        assertEquals(4, junction.openings().length / 3, "a four-way crossing");
+        assertSeamless(view, a, 1, 1);
+        assertSeamless(view, b, 3, 3);
+        // No ramp shares a chunk with the other link (D323): the crossing is flat in both profiles.
+        for (CityLinkGraph.Link link : new CityLinkGraph.Link[] { a, b }) {
+            LinkHighways.Profile p = view.profile(link);
+            for (int i = p.start(); i <= p.end(); i++) {
+                LinkRaster.Step s = link.path()
+                    .get(i);
+                if (s.chunkX() == 20 && s.chunkZ() == 0) {
+                    assertEquals(1, p.inLevel(i));
+                    assertEquals(1, p.outLevel(i));
+                }
+            }
+        }
+        // Order-independent: asking for the other link first gives the same profiles.
+        LinkHighways other = crossingView(levels, a, b);
+        LinkHighways.Profile pb = other.profile(b);
+        LinkHighways.Profile pa = other.profile(a);
+        for (int i = pb.start(); i <= pb.end(); i++) {
+            assertEquals(
+                view.profile(b)
+                    .outLevel(i),
+                pb.outLevel(i));
+        }
+        for (int i = pa.start(); i <= pa.end(); i++) {
+            assertEquals(
+                view.profile(a)
+                    .outLevel(i),
+                pa.outLevel(i));
+        }
+    }
+
+    @Test
+    public void aCrossingTooNearBothPlazasKeepsItsGradeSeparation() {
+        java.util.Map<Long, Integer> levels = new java.util.HashMap<>();
+        levels.put(chunk(18, 0), 0);
+        levels.put(chunk(60, 0), 0);
+        levels.put(chunk(20, -2), 3);
+        levels.put(chunk(20, 40), 3);
+        CityLinkGraph.Link a = new CityLinkGraph.Link(18, 0, 60, 0);
+        CityLinkGraph.Link b = new CityLinkGraph.Link(20, -2, 20, 40);
+        LinkHighways view = crossingView(levels, a, b);
+        // One chunk of ramp room before the crossing on each link: a reaches level 1 at most, b falls to 2 at most.
+        List<Piece> pieces = view.pieces(20, 0);
+        assertEquals(2, pieces.size(), "grade-separated: " + pieces);
+        assertEquals(0, pieces.get(0)
+            .level());
+        assertEquals(3, pieces.get(1)
+            .level());
+        assertSeamless(view, a, 0, 0);
+        assertSeamless(view, b, 3, 3);
+    }
 }

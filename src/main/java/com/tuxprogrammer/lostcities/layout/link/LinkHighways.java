@@ -29,9 +29,20 @@ import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
  * steps at a seam.
  *
  * <p>
+ * Crossings (0015 §5, D-link-crossing-1). Where links cross, they meet at one level and merge into a junction. Each
+ * link is first planned alone as above (its base). A chunk written by several links takes one level: their base level
+ * when they agree, else the level between their base levels that each reaches from both of its plazas with the fewest
+ * extra ramps, the lower on a tie. A link keeps a crossing when its ramp room between its plazas and the crossings it
+ * already keeps reaches that level ({@link #keeps}); a crossing every link there keeps is matched, and each link
+ * re-places its ramps so it passes every matched crossing at its level, one level per ramp chunk, never on a shared
+ * chunk. A crossing that cannot be matched keeps its grade separation. A link with no crossing to move keeps its base
+ * profile unchanged. Every step reads only base profiles (its own and its neighbors', and theirs to two hops), so the
+ * answer is the same in any order.
+ *
+ * <p>
  * Where links share a chunk, identical pieces merge and all flat pieces at one level become one: a plaza, a straight
- * piece, bend, T or crossing, or a coded link junction ({@link #merge}); ramps and other levels are written lowest
- * first. A diagonal deck spills into the two side neighbors at each corner it opens on; those chunks report the spill
+ * piece, bend, T or crossing, or a coded link junction ({@link #merge}); ramps and other levels (a crossing
+ * that could not be matched) are written lowest first. A diagonal deck spills into the two side neighbors at each corner it opens on; those chunks report the spill
  * so buildings keep clear.
  *
  * <p>
@@ -175,10 +186,18 @@ public final class LinkHighways {
     private static final int CACHE = 4096;
 
     private final CityLinkGraph graph;
+    /** The link steps in a chunk: the graph's, or a fixture's in unit tests. */
+    private final Hits hits;
     private final Ends ends;
     /** Each city's beltway or cut-through (0017), or {@code null}. */
     private final CityHighways cities;
     private final Map<CityLinkGraph.Link, Profile> profiles = lru(CACHE);
+    /** Each link's profile planned alone, before crossings (§ Crossings in the class Javadoc). */
+    private final Map<CityLinkGraph.Link, Base> bases = lru(CACHE);
+    /** Each link's crossings it can meet, by path index (§ Crossings). */
+    private final Map<CityLinkGraph.Link, boolean[]> keeps = lru(CACHE);
+    /** Each shared chunk's crossing, or {@link #NO_CROSSING}. */
+    private final Map<Long, Crossing> crossings = lru(CACHE * 2);
     private final Map<Long, List<HighwayInfo.Piece>> own = lru(CACHE * 2);
     private final Map<Long, HighwayInfo> infos = lru(CACHE);
 
@@ -202,8 +221,28 @@ public final class LinkHighways {
      */
     public LinkHighways(CityLinkGraph graph, Ends ends, CityHighways cities) {
         this.graph = graph;
+        this.hits = graph == null ? null : graph::hits;
         this.ends = ends;
         this.cities = cities;
+    }
+
+    /**
+     * Creates the view over a fixture's links instead of a graph (unit tests).
+     *
+     * @param hits the link steps in each chunk
+     * @param ends the city facts at link ends
+     */
+    LinkHighways(Hits hits, Ends ends) {
+        this.graph = null;
+        this.hits = hits;
+        this.ends = ends;
+        this.cities = null;
+    }
+
+    /** The link steps in a chunk, as {@link CityLinkGraph#hits} answers. */
+    interface Hits {
+
+        List<CityLinkGraph.Hit> hits(int chunkX, int chunkZ);
     }
 
     /** Returns the cities' own highways (0017), or {@code null}. */
@@ -291,7 +330,7 @@ public final class LinkHighways {
             return cached;
         }
         List<HighwayInfo.Piece> out = new ArrayList<>();
-        for (CityLinkGraph.Hit hit : graph.hits(chunkX, chunkZ)) {
+        for (CityLinkGraph.Hit hit : hits.hits(chunkX, chunkZ)) {
             HighwayInfo.Piece piece = piece(hit.link(), hit.index());
             if (piece != null) {
                 out.add(piece);
@@ -379,7 +418,7 @@ public final class LinkHighways {
     private List<HighwayInfo.Piece> staircaseBends(int chunkX, int chunkZ) {
         List<HighwayInfo.Piece> out = new ArrayList<>();
         for (int sx = -1; sx <= 1; sx += 2) {
-            for (CityLinkGraph.Hit hit : graph.hits(chunkX - sx, chunkZ)) {
+            for (CityLinkGraph.Hit hit : hits.hits(chunkX - sx, chunkZ)) {
                 Profile profile = profile(hit.link());
                 int i = hit.index();
                 if (!profile.staircase || i < profile.start || i >= profile.end) {
@@ -407,9 +446,8 @@ public final class LinkHighways {
         if (cached != null) {
             return cached;
         }
-        // A ramp never shares its chunk with another link (0015 §5, D323): decided from the paths alone, so it
-        // does not depend on the other links' levels.
-        Profile profile = compute(link, ends, (x, z) -> shared(link, x, z), cities);
+        Base base = base(link);
+        Profile profile = crossed(link, base);
         profiles.put(link, profile);
         if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
             List<LinkRaster.Step> path = link.path();
@@ -426,7 +464,7 @@ public final class LinkHighways {
                 : "-";
             com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
                 "link a=%d,%d b=%d,%d pathChunks=%d written=%d..%d firstWritten=%s lastWritten=%s radiusA=%d radiusB=%d"
-                    + " levelA=%d levelB=%d staircase=%b",
+                    + " levelA=%d levelB=%d staircase=%b replanned=%b",
                 link.ax(),
                 link.az(),
                 link.bx(),
@@ -440,17 +478,353 @@ public final class LinkHighways {
                 ends.radius(link.bx(), link.bz()),
                 ends.level(link.ax(), link.az()),
                 ends.level(link.bx(), link.bz()),
-                profile.staircase);
+                profile.staircase,
+                profile != base.profile);
+            for (int i = profile.start; i <= profile.end; i++) {
+                if (!base.shared[i]) {
+                    continue;
+                }
+                LinkRaster.Step at = path.get(i);
+                Crossing c = crossing(at.chunkX(), at.chunkZ());
+                if (c == NO_CROSSING) {
+                    continue;
+                }
+                // One line per link at each crossing; a chunk's lines agree, so callers count unique chunks.
+                com.tuxprogrammer.lostcities.layout.LayoutTrace.log(
+                    "linkCrossing chunk=%d,%d links=%d level=%s matched=%b",
+                    at.chunkX(),
+                    at.chunkZ(),
+                    c.links.size(),
+                    c.level == NO_LEVEL ? "none" : Integer.toString(c.level),
+                    matched(c));
+            }
         }
         return profile;
     }
 
-    /** Whether another link's path crosses a chunk of this link's path; never without a graph (unit fixtures). */
-    private boolean shared(CityLinkGraph.Link link, int x, int z) {
-        if (graph == null) {
+    // ------------------------------------------------------------------ crossings (0015 §5, D-link-crossing-1)
+
+    /** No level suits every link at a crossing. */
+    private static final int NO_LEVEL = Integer.MIN_VALUE;
+
+    /** A link's profile planned alone, with the facts crossing planning reads. */
+    private static final class Base {
+
+        final Profile profile;
+        /** Whether another link's path hits each path index (D323): never a ramp. */
+        final boolean[] shared;
+        /** {@code room[i]}: the rampable chunks at path indices below {@code i}, for the base's piece kinds. */
+        final int[] room;
+
+        Base(Profile profile, boolean[] shared, int[] room) {
+            this.profile = profile;
+            this.shared = shared;
+            this.room = room;
+        }
+
+        /** Returns the rampable chunks strictly between two path indices. */
+        int room(int from, int to) {
+            return to <= from + 1 ? 0 : room[to] - room[from + 1];
+        }
+
+        int startLevel() {
+            return profile.in[profile.start];
+        }
+
+        int endLevel() {
+            return profile.out[profile.end];
+        }
+
+        /** Whether the base reaches {@code level} at path index {@code i} from both of its ends. */
+        boolean reaches(int i, int level) {
+            return Math.abs(level - startLevel()) <= room(profile.start, i)
+                && Math.abs(endLevel() - level) <= room(i, profile.end);
+        }
+
+        /** The ramps it costs to pass {@code level} at {@code i}, beyond the base's own. */
+        int cost(int level) {
+            return Math.abs(level - startLevel()) + Math.abs(endLevel() - level)
+                - Math.abs(endLevel() - startLevel());
+        }
+    }
+
+    /** The links written in one chunk, at their path indices, and the level they meet at. */
+    private static final class Crossing {
+
+        final List<CityLinkGraph.Link> links;
+        final List<Integer> indices;
+        /** The meeting level, or {@link #NO_LEVEL}. */
+        final int level;
+
+        Crossing(List<CityLinkGraph.Link> links, List<Integer> indices, int level) {
+            this.links = links;
+            this.indices = indices;
+            this.level = level;
+        }
+    }
+
+    private static final Crossing NO_CROSSING = new Crossing(Collections.emptyList(), Collections.emptyList(),
+        NO_LEVEL);
+
+    /** Returns a link's profile planned alone (class Javadoc, Levels), cached. */
+    private Base base(CityLinkGraph.Link link) {
+        Base cached = bases.get(link);
+        if (cached != null) {
+            return cached;
+        }
+        // A ramp never shares its chunk with another link (0015 §5, D323): decided from the paths alone, so it
+        // does not depend on the other links' levels.
+        Profile profile = compute(link, ends, (x, z) -> shared(link, x, z), cities);
+        List<LinkRaster.Step> path = link.path();
+        int n = path.size();
+        boolean[] shared = new boolean[n];
+        int[] room = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            LinkRaster.Step at = path.get(i);
+            shared[i] = shared(link, at.chunkX(), at.chunkZ());
+            room[i + 1] = room[i] + (rampable(at, profile.staircase) && !shared[i] ? 1 : 0);
+        }
+        Base base = new Base(profile, shared, room);
+        bases.put(link, base);
+        return base;
+    }
+
+    /** Whether a path chunk may hold a ramp: straight, or diagonal off the staircase (class Javadoc, Levels). */
+    private static boolean rampable(LinkRaster.Step at, boolean staircase) {
+        LinkRaster.Kind kind = at.kind();
+        return kind == LinkRaster.Kind.STRAIGHT || kind == LinkRaster.Kind.DIAGONAL && !staircase;
+    }
+
+    /**
+     * Returns the crossing in a chunk: every link written here, at its path index, and the level they meet at. That is
+     * their shared base level when they agree; else the level between their base levels that every one reaches from
+     * both of its ends on its own, at the fewest extra ramps, the lower on a tie; else {@link #NO_LEVEL}. Reads only
+     * base profiles, so it never depends on another crossing.
+     */
+    private Crossing crossing(int chunkX, int chunkZ) {
+        long key = key(chunkX, chunkZ);
+        Crossing cached = crossings.get(key);
+        if (cached != null) {
+            return cached;
+        }
+        List<CityLinkGraph.Link> links = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        for (CityLinkGraph.Hit hit : hits.hits(chunkX, chunkZ)) {
+            if (links.contains(hit.link())) {
+                continue;
+            }
+            Profile p = base(hit.link()).profile;
+            int i = hit.index();
+            if (i < p.start || i > p.end) {
+                continue;
+            }
+            links.add(hit.link());
+            indices.add(i);
+            low = Math.min(low, p.in[i]);
+            high = Math.max(high, p.in[i]);
+        }
+        Crossing crossing;
+        if (links.size() < 2) {
+            crossing = NO_CROSSING;
+        } else if (low == high) {
+            crossing = new Crossing(links, indices, low);
+        } else {
+            int best = NO_LEVEL;
+            int bestCost = Integer.MAX_VALUE;
+            for (int level = low; level <= high; level++) {
+                int cost = 0;
+                for (int k = 0; k < links.size() && cost != Integer.MAX_VALUE; k++) {
+                    Base b = base(links.get(k));
+                    cost = b.reaches(indices.get(k), level) ? cost + b.cost(level) : Integer.MAX_VALUE;
+                }
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    best = level;
+                }
+            }
+            crossing = new Crossing(links, indices, best);
+        }
+        crossings.put(key, crossing);
+        return crossing;
+    }
+
+    /**
+     * Returns the crossings a link can meet, by path index. Walking from its lower plaza, it keeps every crossing at its
+     * own base level (the base meets those together), and another crossing when the ramp room reaches its level from
+     * the last kept one and, from there, the next crossing at a base level or the far plaza. So the kept crossings can
+     * always be met together, and so can any subset of them.
+     */
+    private boolean[] keeps(CityLinkGraph.Link link) {
+        boolean[] cached = keeps.get(link);
+        if (cached != null) {
+            return cached;
+        }
+        Base base = base(link);
+        Profile p = base.profile;
+        List<LinkRaster.Step> path = link.path();
+        boolean[] keep = new boolean[path.size()];
+        int[] level = new int[path.size()];
+        boolean[] own = new boolean[path.size()];
+        for (int i = p.start; i <= p.end; i++) {
+            if (base.shared[i]) {
+                LinkRaster.Step at = path.get(i);
+                Crossing c = crossing(at.chunkX(), at.chunkZ());
+                level[i] = c.level;
+                own[i] = c.level == p.in[i];
+            } else {
+                level[i] = NO_LEVEL;
+            }
+        }
+        int prev = p.start;
+        int prevLevel = base.startLevel();
+        for (int i = p.start; i <= p.end; i++) {
+            if (level[i] == NO_LEVEL) {
+                continue;
+            }
+            if (!own[i]) {
+                int next = i + 1;
+                while (next <= p.end && !own[next]) {
+                    next++;
+                }
+                int nextLevel = next <= p.end ? level[next] : base.endLevel();
+                int to = Math.min(next, p.end);
+                if (Math.abs(level[i] - prevLevel) > base.room(prev, i)
+                    || Math.abs(nextLevel - level[i]) > base.room(i, to)) {
+                    continue;
+                }
+            }
+            keep[i] = true;
+            prev = i;
+            prevLevel = level[i];
+        }
+        keeps.put(link, keep);
+        return keep;
+    }
+
+    /** Whether every link at a crossing meets it at its level. */
+    private boolean matched(Crossing c) {
+        if (c.level == NO_LEVEL) {
             return false;
         }
-        for (CityLinkGraph.Hit hit : graph.hits(x, z)) {
+        for (int k = 0; k < c.links.size(); k++) {
+            if (!keeps(c.links.get(k))[c.indices.get(k)]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns a link's profile with its matched crossings met: the base itself when it already meets them all, else
+     * the ramps re-placed between the plazas and the matched crossings ({@link #replan}).
+     */
+    private Profile crossed(CityLinkGraph.Link link, Base base) {
+        Profile p = base.profile;
+        if (hits == null || !p.written()) {
+            return p;
+        }
+        List<LinkRaster.Step> path = link.path();
+        List<int[]> waypoints = new ArrayList<>();
+        boolean moves = false;
+        for (int i = p.start; i <= p.end; i++) {
+            if (!base.shared[i]) {
+                continue;
+            }
+            LinkRaster.Step at = path.get(i);
+            Crossing c = crossing(at.chunkX(), at.chunkZ());
+            if (c == NO_CROSSING || !matched(c)) {
+                continue;
+            }
+            waypoints.add(new int[] { i, c.level });
+            moves |= c.level != p.in[i];
+        }
+        if (!moves) {
+            return p;
+        }
+        Profile diagonal = replan(link, base, waypoints, p.staircase);
+        if (diagonal == null) {
+            return p;
+        }
+        if (!p.staircase && staircase(link, ends, diagonal)) {
+            Profile stairs = replan(link, base, waypoints, true);
+            if (stairs != null) {
+                return stairs;
+            }
+        }
+        return diagonal;
+    }
+
+    /**
+     * Places a link's ramps between fixed levels (D-link-crossing-1): its plazas at the base's levels and each matched
+     * crossing at the crossing's level. In each stretch between two of these, the ramps go as in {@link #levels},
+     * diagonal chunks first, nearest the stretch's middle. Returns {@code null} when a stretch lacks the room, which
+     * {@link #keeps} rules out for the base's own piece kinds.
+     */
+    private static Profile replan(CityLinkGraph.Link link, Base base, List<int[]> waypoints, boolean staircase) {
+        Profile p = base.profile;
+        List<LinkRaster.Step> path = link.path();
+        int n = path.size();
+        List<int[]> fixed = new ArrayList<>();
+        fixed.add(new int[] { p.start, base.startLevel() });
+        fixed.addAll(waypoints);
+        fixed.add(new int[] { p.end, base.endLevel() });
+        boolean[] ramp = new boolean[n];
+        int[] step = new int[n];
+        for (int k = 0; k + 1 < fixed.size(); k++) {
+            int from = fixed.get(k)[0];
+            int to = fixed.get(k + 1)[0];
+            int delta = fixed.get(k + 1)[1] - fixed.get(k)[1];
+            List<Integer> candidates = new ArrayList<>();
+            for (int i = from + 1; i < to; i++) {
+                if (rampable(path.get(i), staircase) && !base.shared[i]) {
+                    candidates.add(i);
+                }
+            }
+            if (candidates.size() < Math.abs(delta)) {
+                return null;
+            }
+            sortRamps(path, candidates, from + to);
+            for (int i = 0; i < Math.abs(delta); i++) {
+                ramp[candidates.get(i)] = true;
+                step[candidates.get(i)] = Integer.signum(delta);
+            }
+        }
+        int[] in = new int[n];
+        int[] out = new int[n];
+        int level = base.startLevel();
+        for (int i = p.start; i <= p.end; i++) {
+            in[i] = level;
+            if (ramp[i]) {
+                level += step[i];
+            }
+            out[i] = level;
+        }
+        return new Profile(p.start, p.end, in, out, staircase);
+    }
+
+    /** Sorts ramp candidates: diagonal chunks first, then nearest the middle, then by index. */
+    private static void sortRamps(List<LinkRaster.Step> path, List<Integer> candidates, int twiceMiddle) {
+        candidates.sort((x, y) -> {
+            boolean dx = path.get(x)
+                .kind() == LinkRaster.Kind.DIAGONAL;
+            boolean dy = path.get(y)
+                .kind() == LinkRaster.Kind.DIAGONAL;
+            if (dx != dy) {
+                return dx ? -1 : 1;
+            }
+            int c = Integer.compare(Math.abs(2 * x - twiceMiddle), Math.abs(2 * y - twiceMiddle));
+            return c != 0 ? c : Integer.compare(x, y);
+        });
+    }
+
+    /** Whether another link's path crosses a chunk of this link's path; never without a graph (unit fixtures). */
+    private boolean shared(CityLinkGraph.Link link, int x, int z) {
+        if (hits == null) {
+            return false;
+        }
+        for (CityLinkGraph.Hit hit : hits.hits(x, z)) {
             if (!hit.link()
                 .equals(link)) {
                 return true;
@@ -618,18 +992,7 @@ public final class LinkHighways {
                 candidates.add(i);
             }
         }
-        final int twiceMiddle = start + end;
-        candidates.sort((x, y) -> {
-            boolean dx = path.get(x)
-                .kind() == LinkRaster.Kind.DIAGONAL;
-            boolean dy = path.get(y)
-                .kind() == LinkRaster.Kind.DIAGONAL;
-            if (dx != dy) {
-                return dx ? -1 : 1;
-            }
-            int c = Integer.compare(Math.abs(2 * x - twiceMiddle), Math.abs(2 * y - twiceMiddle));
-            return c != 0 ? c : Integer.compare(x, y);
-        });
+        sortRamps(path, candidates, start + end);
         boolean[] ramp = new boolean[n];
         for (int i = 0; i < Math.min(need, candidates.size()); i++) {
             ramp[candidates.get(i)] = true;
@@ -659,8 +1022,9 @@ public final class LinkHighways {
      * Merges the pieces several links write in one chunk (0015 §5). Identical pieces merge. All flat pieces at one
      * level
      * become one: a plaza when one is a plaza (it opens on all of their openings), else a straight piece, bend, T or
-     * crossing when they open only on sides, else a {@link HighwayInfo.Shape#LINK_JUNCTION}. Ramps and pieces at other
-     * levels stay, lowest first, so the lower passes under.
+     * crossing when they open only on sides, else a {@link HighwayInfo.Shape#LINK_JUNCTION}. Matched crossings put
+     * their links at one level first (class Javadoc, Crossings); ramps and pieces at other levels (an unmatched
+     * crossing, a city highway) stay, lowest first, so the lower passes under.
      *
      * @param pieces the pieces, in any order
      * @return the merged pieces, lowest first
