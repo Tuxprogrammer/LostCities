@@ -34,6 +34,13 @@ class LateMixinLoaderTest {
     }
 
     @Test
+    void witcheryVetoOnlyWithWitchery() {
+        assertEquals(
+            Collections.singletonList("MixinWitcheryWorldGenerator"),
+            LateMixinLoader.mixinsFor(new HashSet<>(Arrays.asList("witchery"))));
+    }
+
+    @Test
     void configNamesTheLatePackage() throws IOException {
         try (InputStream in = LateMixinLoader.class.getResourceAsStream("/" + LateMixinLoader.CONFIG)) {
             assertTrue(in != null, "the late mixin config is a resource");

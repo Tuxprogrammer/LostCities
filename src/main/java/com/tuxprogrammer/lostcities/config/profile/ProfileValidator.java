@@ -334,8 +334,9 @@ public final class ProfileValidator {
 
     /**
      * Returns what is wrong with a {@code landmarkTreatment} value, or {@code null} when it is well formed. The value
-     * is a comma-separated list: a bare treatment sets every landmark kind other than villages, and
-     * {@code <kind>=<treatment>} sets one kind, the kind in lower case ({@code ocean_monument=AVOID}).
+     * is a comma-separated list: a bare treatment sets every kept landmark kind other than villages (ocean monuments
+     * and terrain landmarks), and {@code <kind>=<treatment>} sets one kind, the kind in lower case
+     * ({@code ocean_monument=AVOID}). Overwritten kinds ({@link LandmarkKind#overwritten()}) change only by an entry.
      *
      * @param text the value
      * @return the problem, or {@code null}
@@ -352,13 +353,19 @@ public final class ProfileValidator {
     /**
      * Parses a {@code landmarkTreatment} value into one treatment per landmark kind other than villages.
      *
-     * @param text the value; empty means {@code BUILD_AROUND} for every kind
+     * <p>
+     * A kind named by no entry takes the bare treatment if it is kept, else its
+     * {@link LandmarkKind#defaultTreatment()}: {@code IGNORE} for Roguelike Dungeons, Witchery, LootGames and
+     * meteorites (D-landmark-policy-2). So a world pinned before that decision with the old default
+     * {@code BUILD_AROUND} builds over them in its new chunks.
+     *
+     * @param text the value; empty means each kind's {@link LandmarkKind#defaultTreatment()}
      * @return the treatments, by kind
      * @throws IllegalArgumentException for an unknown kind or treatment
      */
     public static Map<LandmarkKind, LandmarkTreatment> parseLandmarkTreatments(String text) {
         Map<LandmarkKind, LandmarkTreatment> out = new TreeMap<>();
-        LandmarkTreatment all = LandmarkTreatment.BUILD_AROUND;
+        LandmarkTreatment all = null;
         Map<LandmarkKind, LandmarkTreatment> specific = new TreeMap<>();
         for (String part : text.split(",")) {
             String entry = part.trim();
@@ -382,7 +389,10 @@ public final class ProfileValidator {
         for (LandmarkKind kind : LandmarkKind.values()) {
             if (kind != LandmarkKind.VILLAGE) {
                 LandmarkTreatment value = specific.get(kind);
-                out.put(kind, value == null ? all : value);
+                if (value == null) {
+                    value = all == null || kind.overwritten() ? kind.defaultTreatment() : all;
+                }
+                out.put(kind, value);
             }
         }
         return out;

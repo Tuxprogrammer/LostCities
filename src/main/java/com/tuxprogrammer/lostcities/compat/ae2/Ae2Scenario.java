@@ -18,7 +18,6 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
-import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
 import com.tuxprogrammer.lostcities.scenario.RegionJob;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
@@ -157,10 +156,11 @@ public final class Ae2Scenario implements Scenario {
             int chunkX = cap.centerX() >> 4;
             int chunkZ = cap.centerZ() >> 4;
             ZoneInfo impact = planner.zone(chunkX, chunkZ);
-            // Another landmark's core may cover the same chunk (the strongest zone wins, ties by identity).
+            // D-landmark-policy-1: a meteorite is not a landmark; the city builds over its impact.
             context.check(
-                impact.zone() == Zone.CORE,
-                "expected the layout to hold " + landmark.id() + "'s impact chunk as a core, found " + impact);
+                !landmark.id()
+                    .equals(impact.landmarkId()),
+                "expected no zone for " + landmark.id() + "'s impact chunk, found " + impact);
             if (cityWithin(planner, chunkX, chunkZ, CITY_NEAR_CHUNKS)) {
                 nearCity.add(landmark);
             }

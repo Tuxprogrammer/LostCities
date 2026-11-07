@@ -16,6 +16,8 @@ import com.gtnewhorizon.gtnhmixins.LateMixin;
  * <li>{@code MixinRoguelikeDungeon}: the Roguelike Dungeons steering (0006 §5), when {@code Roguelike} is loaded.</li>
  * <li>{@code MixinGtWorldgenStone}: the footprint frame around GregTech's stone boulders, when {@code gregtech} is
  * loaded.</li>
+ * <li>{@code MixinWitcheryWorldGenerator}: the Witchery veto (D-landmark-policy-3), when {@code witchery} is
+ * loaded.</li>
  * </ul>
  *
  * <p>
@@ -30,6 +32,8 @@ public final class LateMixinLoader implements ILateMixinLoader {
     static final String ROGUELIKE = "Roguelike";
     /** GregTech's mod ID. */
     static final String GREGTECH = "gregtech";
+    /** Witchery's mod ID. */
+    static final String WITCHERY = "witchery";
 
     @Override
     public String getMixinConfig() {
@@ -54,6 +58,9 @@ public final class LateMixinLoader implements ILateMixinLoader {
         }
         if (loadedMods.contains(ROGUELIKE)) {
             mixins.add("MixinRoguelikeDungeon");
+        }
+        if (loadedMods.contains(WITCHERY)) {
+            mixins.add("MixinWitcheryWorldGenerator");
         }
         return mixins;
     }

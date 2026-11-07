@@ -80,8 +80,11 @@ public class ProfileRegressionsTest {
         Map<LandmarkKind, LandmarkTreatment> defaults = ProfileValidator.parseLandmarkTreatments(
             ProfileValues.defaults()
                 .getString("landmarkTreatment"));
-        assertEquals(LandmarkTreatment.AVOID, avoided.get(LandmarkKind.WITCHERY));
-        assertEquals(LandmarkTreatment.BUILD_AROUND, defaults.get(LandmarkKind.WITCHERY));
+        assertEquals(LandmarkTreatment.AVOID, avoided.get(LandmarkKind.OCEAN_MONUMENT));
+        assertEquals(LandmarkTreatment.BUILD_AROUND, defaults.get(LandmarkKind.OCEAN_MONUMENT));
+        // D-landmark-policy-2: the city builds over Witchery whatever the bare value.
+        assertEquals(LandmarkTreatment.IGNORE, avoided.get(LandmarkKind.WITCHERY));
+        assertEquals(LandmarkTreatment.IGNORE, defaults.get(LandmarkKind.WITCHERY));
     }
 
     @Test

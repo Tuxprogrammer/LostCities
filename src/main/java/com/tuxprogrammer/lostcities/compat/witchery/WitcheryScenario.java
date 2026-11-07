@@ -330,7 +330,11 @@ public final class WitcheryScenario implements Scenario {
         context.check(failures.isEmpty(), summary + "; " + failures);
     }
 
-    /** Checks that no lot's core is a city chunk where the world's layout knows the lot. */
+    /**
+     * Counts the lots the city builds over where the world's layout knows the lot: since D-landmark-policy-2 a lot may
+     * lie under city chunks, and the veto ({@link WitcheryVeto}) then skips its structure; the count is reported, not
+     * failed.
+     */
     private String cityCheck(WorldServer world, List<String> failures) {
         OverlayWorld overlay = Overlays.INSTANCE.get(world);
         if (overlay == null || overlay.cities() == null) {
@@ -343,6 +347,7 @@ public final class WitcheryScenario implements Scenario {
             .landmarkMargin();
         int lots = 0;
         int chunks = 0;
+        int overCity = 0;
         for (int[] target : predicted) {
             String id = WitcheryOracle.id(target[0], target[1]);
             boolean known = structures.landmarksTouching(target[0], target[1], target[0], target[1])
@@ -356,18 +361,18 @@ public final class WitcheryScenario implements Scenario {
             lots++;
             BlockRect core = oracle.lot(target[0], target[1])
                 .grow(margin);
+            boolean city = false;
             for (int x = core.minChunkX(); x <= core.maxChunkX(); x++) {
                 for (int z = core.minChunkZ(); z <= core.maxChunkZ(); z++) {
                     chunks++;
-                    if (plan.chunk(x, z)
-                        .isCity()) {
-                        failures.add(id + ": core chunk " + x + "," + z + " is a city chunk");
-                    }
+                    city |= plan.chunk(x, z)
+                        .isCity();
                 }
             }
+            overCity += city ? 1 : 0;
         }
         return lots == 0 ? "city check skipped (the layout does not know Witchery lots)"
-            : "city check: " + lots + " lots, " + chunks + " core chunks";
+            : "city check: " + lots + " lots, " + chunks + " lot chunks, " + overCity + " lots under city (vetoed)";
     }
 
     /**
