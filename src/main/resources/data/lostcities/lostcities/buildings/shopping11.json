@@ -4,6 +4,8 @@
   "maxcellars": 0,
   "minfloors": 4,
   "maxfloors": 6,
+  "groundFloorHeight": 6,
+  "groundFloors": 2,
   "parts": [
     {
       "floor": 0,

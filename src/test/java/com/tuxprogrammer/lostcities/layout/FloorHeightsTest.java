@@ -63,6 +63,33 @@ public class FloorHeightsTest {
     }
 
     @Test
+    public void mallKeepsItsTwoPartAtriumAtTheLegacyHeight() {
+        // D-mall-1: floors 0 and 1 are the atrium (upstream's 12 blocks), floors 2 up take the pitch.
+        FloorHeights h = FloorHeights.of(8, -1, 6, 2);
+        assertFalse(h.isUniform());
+        assertEquals(2, h.groundFloors);
+        assertEquals(6, h.height(0));
+        assertEquals(6, h.height(1));
+        assertEquals(8, h.height(2));
+        assertEquals(8, h.height(-1), "cellars take the upper height");
+        assertEquals(6, h.offset(1));
+        assertEquals(12, h.offset(2), "the mezzanine slab stands where upstream has it");
+        assertEquals(20, h.offset(3), "the mezzanine rises 2 more");
+        assertEquals(28, h.offset(4), "and so does the floor above it");
+        assertEquals(1, h.floorOf(11));
+        assertEquals(2, h.floorOf(12));
+        assertEquals(2, h.floorOf(19));
+        assertEquals(3, h.floorOf(20));
+        for (int f = -3; f <= 10; f++) {
+            assertEquals(f, h.floorOf(h.offset(f)));
+            assertEquals(f, h.floorOf(h.offset(f) + h.height(f) - 1));
+        }
+        assertEquals("2x6/8", h.toString());
+        assertEquals(FloorHeights.uniform(6), FloorHeights.of(6, -1, 6, 2), "at the legacy pitch nothing changes");
+        assertEquals(FloorHeights.of(8, 5, 7), FloorHeights.of(8, 5, 7, 1));
+    }
+
+    @Test
     public void capFloorsCountsTheBuildingsOwnHeights() {
         // MAX_ROOF_FLOOR_Y is 248: at ground 200 the uniform pitch 8 fits 5 floors, 5-block floors fit 9.
         assertEquals(5, LayoutPlanner.capFloors(10, 200, 8));

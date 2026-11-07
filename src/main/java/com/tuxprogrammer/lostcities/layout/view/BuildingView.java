@@ -52,6 +52,14 @@ public interface BuildingView {
     }
 
     /**
+     * Returns {@code groundFloors}: how many floors, from the ground floor up, rise {@link #groundFloorHeight()}
+     * (decision log D-mall-1).
+     */
+    default int groundFloors() {
+        return 1;
+    }
+
+    /**
      * Picks the part for one level among the parts whose condition matches.
      *
      * <p>
