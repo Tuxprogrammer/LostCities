@@ -1,4 +1,6 @@
 package com.tuxprogrammer.lostcities.layout;
+
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 // Ported from Lost Cities (MIT):
 // https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/City.java
 // Avoids: PROF-11, PROF-10, CITY-05, CITY-06, CITY-07, CITY-39, CITY-40
@@ -253,6 +255,15 @@ final class CityMap {
     }
 
     private float computeCityFactor(int chunkX, int chunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return computeCityFactor0(chunkX, chunkZ);
+        } finally {
+            PerfCounters.add("cm.factor", perfStart);
+        }
+    }
+
+    private float computeCityFactor0(int chunkX, int chunkZ) {
         // Avoids CITY-07: every occupied chunk of a predefined building or street is forced, whatever the footprint.
         if (predefined.occupant(chunkX, chunkZ) != null) {
             return 1.0f;

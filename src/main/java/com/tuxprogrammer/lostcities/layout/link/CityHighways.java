@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -323,6 +325,15 @@ public final class CityHighways {
     }
 
     private Plan compute(int cx, int cz) {
+        long perfStart = PerfCounters.start();
+        try {
+            return compute0(cx, cz);
+        } finally {
+            PerfCounters.add("ch.compute", perfStart);
+        }
+    }
+
+    private Plan compute0(int cx, int cz) {
         if (layout == CityHighwayLayout.NONE) {
             return none(cx, cz, false);
         }

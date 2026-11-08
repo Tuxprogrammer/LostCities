@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.layout;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.highway.CityPotential;
@@ -352,6 +354,15 @@ public final class Networks implements InfrastructureView {
      * @return the highway info
      */
     public HighwayInfo highway(int chunkX, int chunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return highway0(chunkX, chunkZ);
+        } finally {
+            PerfCounters.add("net.highway", perfStart);
+        }
+    }
+
+    private HighwayInfo highway0(int chunkX, int chunkZ) {
         return linkHighways != null ? linkHighways.info(chunkX, chunkZ) : highways.info(chunkX, chunkZ);
     }
 

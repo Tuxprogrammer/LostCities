@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.layout;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -124,7 +125,9 @@ final class LandmarkZones {
         int minZ = cellZ * CELL - grow;
         int maxX = cellX * CELL + CELL - 1 + grow;
         int maxZ = cellZ * CELL + CELL - 1 + grow;
+        long perfNear = PerfCounters.start();
         List<Landmark> found = new ArrayList<>(oracle.landmarksTouching(minX, minZ, maxX, maxZ));
+        PerfCounters.add("lz.near.miss", perfNear);
         found.sort(Comparator.comparing(Landmark::id));
         List<Landmark> deduplicated = new ArrayList<>();
         for (Landmark landmark : found) {
@@ -263,7 +266,9 @@ final class LandmarkZones {
                 return cached;
             }
         }
+        long perfZone = PerfCounters.start();
         ZoneInfo computed = computeZone(chunkX, chunkZ);
+        PerfCounters.add("lz.zone.miss", perfZone);
         synchronized (zones) {
             ZoneInfo raced = zones.get(chunkX, chunkZ);
             return raced != null ? raced : zones.put(chunkX, chunkZ, computed);

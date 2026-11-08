@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -406,7 +407,9 @@ public final class CityLinkGraph {
         Pair pair = lower ? new Pair(x1, z1, x2, z2) : new Pair(x2, z2, x1, z1);
         Link cached = routes.get(pair);
         if (cached == null) {
+            long perfRoute = PerfCounters.start();
             Link computed = computeRoute(x1, z1, x2, z2);
+            PerfCounters.add("clg.route", perfRoute);
             cached = routes.putIfAbsent(pair, computed == null ? NO_ROUTE : computed);
         }
         return cached == NO_ROUTE ? null : cached;
@@ -477,7 +480,10 @@ public final class CityLinkGraph {
     public List<Link> links(int cellX, int cellZ) {
         List<Link> cached = symmetric.get(key(cellX, cellZ));
         if (cached == null) {
-            cached = symmetric.putIfAbsent(key(cellX, cellZ), Collections.unmodifiableList(computeLinks(cellX, cellZ)));
+            long perfLinks = PerfCounters.start();
+            List<Link> computed = Collections.unmodifiableList(computeLinks(cellX, cellZ));
+            PerfCounters.add("clg.links", perfLinks);
+            cached = symmetric.putIfAbsent(key(cellX, cellZ), computed);
         }
         return cached;
     }
@@ -523,7 +529,10 @@ public final class CityLinkGraph {
         int cellZ = Math.floorDiv(chunkZ, cell);
         Map<Long, List<Hit>> index = cellIndex.get(key(cellX, cellZ));
         if (index == null) {
-            index = cellIndex.putIfAbsent(key(cellX, cellZ), buildIndex(cellX, cellZ));
+            long perfIndex = PerfCounters.start();
+            Map<Long, List<Hit>> built = buildIndex(cellX, cellZ);
+            PerfCounters.add("clg.buildIndex", perfIndex);
+            index = cellIndex.putIfAbsent(key(cellX, cellZ), built);
         }
         List<Hit> hits = index.get(key(chunkX, chunkZ));
         return hits == null ? Collections.<Hit>emptyList() : hits;

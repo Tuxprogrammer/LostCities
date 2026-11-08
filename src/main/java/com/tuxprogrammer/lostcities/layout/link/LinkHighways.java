@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -278,6 +280,7 @@ public final class LinkHighways {
         if (cached != null) {
             return cached;
         }
+        long perfInfo = PerfCounters.start();
         List<HighwayInfo.Piece> pieces = pieces(chunkX, chunkZ);
         int low = -1;
         int high = -1;
@@ -451,9 +454,11 @@ public final class LinkHighways {
         if (cached != null) {
             return cached;
         }
+        long perfProfile = PerfCounters.start();
         Base base = base(link);
         Profile profile = crossed(link, base);
         profiles.put(link, profile);
+        PerfCounters.add("lh.profile.miss", perfProfile);
         if (com.tuxprogrammer.lostcities.layout.LayoutTrace.on()) {
             List<LinkRaster.Step> path = link.path();
             int n = path.size();
