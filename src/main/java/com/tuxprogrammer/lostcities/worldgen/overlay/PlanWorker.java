@@ -79,6 +79,9 @@ public final class PlanWorker {
     private final AtomicLong fetched = new AtomicLong();
     private final AtomicLong deferrals = new AtomicLong();
     private final AtomicLong failures = new AtomicLong();
+    /** Time spent in units, and the longest unit: the longest the server thread can wait to close a window. */
+    private final AtomicLong unitNanos = new AtomicLong();
+    private final AtomicLong longestUnit = new AtomicLong();
     private volatile boolean warned;
 
     /**
@@ -157,18 +160,29 @@ public final class PlanWorker {
         probe.bindWorker(null, source -> false);
     }
 
+    /** Forgets the counts {@link #summary()} reports, with the prefetcher's at the end of a budget warm-up. */
+    public void resetStats() {
+        planned.set(0);
+        fetched.set(0);
+        deferrals.set(0);
+        failures.set(0);
+        unitNanos.set(0);
+        longestUnit.set(0);
+    }
+
     /** Returns a line for the budget report. */
     public String summary() {
-        return "plan worker: " + planned.get()
-            + " plans, "
-            + fetched.get()
-            + " fetches, "
-            + deferrals.get()
-            + " deferred to the server thread, "
-            + failures.get()
-            + " failed, "
-            + queued()
-            + " queued";
+        return String.format(
+            java.util.Locale.ROOT,
+            "plan worker: %d plans, %d fetches, %d deferred to the server thread, %d failed, %d queued;"
+                + " units %.1f ms in all, longest %.3f ms",
+            planned.get(),
+            fetched.get(),
+            deferrals.get(),
+            failures.get(),
+            queued(),
+            unitNanos.get() / 1_000_000.0,
+            longestUnit.get() / 1_000_000.0);
     }
 
     private void run() {
@@ -195,12 +209,16 @@ public final class PlanWorker {
         int z = (int) key;
         for (int fetches = 0; fetches <= MAX_FETCHES_PER_TARGET; fetches++) {
             lock.acquireUnit();
+            long start = System.nanoTime();
             try {
                 if (unit(key, x, z)) {
                     return;
                 }
             } finally {
+                long nanos = System.nanoTime() - start;
                 lock.releaseUnit();
+                unitNanos.addAndGet(nanos);
+                longestUnit.accumulateAndGet(nanos, Math::max);
             }
         }
         if (!warned) {

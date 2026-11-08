@@ -3,11 +3,13 @@ package com.tuxprogrammer.lostcities.compat;
 import java.util.Locale;
 
 import net.minecraft.world.World;
+import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.gen.FlatGeneratorInfo;
 import net.minecraft.world.gen.FlatLayerInfo;
 
 import com.tuxprogrammer.lostcities.compat.rwg.RwgHeightOracle;
 import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2HeightOracle;
+import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2WorkerInputs;
 import com.tuxprogrammer.lostcities.worldgen.height.ConstantHeightOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
 
@@ -29,7 +31,43 @@ public final class HeightOracles {
     /** Classic RWG's mod ID. */
     public static final String RWG_MOD = "RWG";
 
+    /** A plan worker's own world inputs (D-plan-worker-2): a private biome provider and a height oracle over it. */
+    public static final class WorkerInputs {
+
+        /** The worker's biome provider, a copy of the world's built from the same seed. */
+        public final WorldChunkManager manager;
+        /** The worker's height oracle, over {@link #manager}. */
+        public final TerrainHeightOracle oracle;
+
+        /**
+         * Pairs a worker's provider and oracle.
+         *
+         * @param manager the provider
+         * @param oracle  the oracle over it
+         */
+        public WorkerInputs(WorldChunkManager manager, TerrainHeightOracle oracle) {
+            this.manager = manager;
+            this.oracle = oracle;
+        }
+    }
+
     private HeightOracles() {}
+
+    /**
+     * Builds the inputs of a world's plan worker, on the server thread. Only RWG2 worlds have them: their biome
+     * provider can be copied from the seed, whereas vanilla's GenLayer stack shares {@code IntCache} statics across
+     * threads, so other world types plan on the server thread only (D-plan-worker-2).
+     *
+     * @param world the world, whose generator already exists
+     * @return the inputs, or {@code null} when the world plans on the server thread only
+     */
+    public static WorkerInputs forWorker(World world) {
+        String type = worldType(world).toUpperCase(Locale.ROOT);
+        if (!("RWG2_CONTINENTS".equals(type) || "RWG2".equals(type)) || !Loader.isModLoaded(RWG2_MOD)) {
+            return null;
+        }
+        return Rwg2WorkerInputs.create(world, "RWG2_CONTINENTS".equals(type));
+    }
 
     /**
      * Returns a world's oracle.

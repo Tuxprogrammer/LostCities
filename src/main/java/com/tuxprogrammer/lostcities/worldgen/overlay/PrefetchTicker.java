@@ -1,6 +1,7 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
@@ -8,6 +9,11 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  * Gives each wrapped world's {@link PlanPrefetcher} its share of every server tick, at the end of the tick, after
  * the chunks that tick generated (docs/design/0005-rwg-overlay.md §8, B4). {@code -Dlostcitiesnh.prefetch=false}
  * turns it off, for comparing budget runs; what is generated is the same either way.
+ *
+ * <p>
+ * With a plan worker (D-plan-worker-1) the ticker also opens each world's plan window after the prefetcher's turn, as
+ * the last handler of the tick's end, and closes it as the first handler of the next tick's start, so the worker plans
+ * while the server thread waits for the next tick.
  *
  * <p>
  * Registered on FML's bus, where tick events are posted. Server thread only. Side: server.
@@ -29,7 +35,7 @@ public final class PrefetchTicker {
      * @param overlays the installer, whose worlds are ticked
      */
     static void register(Overlays overlays) {
-        if (!Boolean.parseBoolean(System.getProperty(PROPERTY, "true"))) {
+        if (!enabled()) {
             return;
         }
         FMLCommonHandler.instance()
@@ -38,18 +44,43 @@ public final class PrefetchTicker {
     }
 
     /**
-     * Runs the prefetchers once the tick's own work is done.
+     * Returns whether the JVM switch leaves the prefetcher on.
+     *
+     * @return {@code true} unless {@code -Dlostcitiesnh.prefetch=false}
+     */
+    static boolean enabled() {
+        return Boolean.parseBoolean(System.getProperty(PROPERTY, "true"));
+    }
+
+    /**
+     * Closes the plan windows before any other handler of the tick runs.
      *
      * @param event FML's server tick event
      */
-    @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTickStart(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) {
+            return;
+        }
+        for (OverlayWorld overlay : overlays.all()) {
+            overlay.closeTickWindow();
+        }
+    }
+
+    /**
+     * Runs the prefetchers once the tick's own work is done, then opens the plan windows.
+     *
+     * @param event FML's server tick event
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onTickEnd(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) {
             return;
         }
         for (OverlayWorld overlay : overlays.all()) {
             overlay.prefetcher()
                 .tick();
+            overlay.openTickWindow();
         }
     }
 }

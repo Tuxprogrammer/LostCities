@@ -66,6 +66,8 @@ public final class PlanPrefetcher {
     private final java.util.Map<String, Long> fetchTotals = new java.util.TreeMap<>();
 
     private static final int PERIMETER = 8 * LEAD;
+    /** Most targets waiting for the plan worker; the perimeter walk pauses there and resumes next tick. */
+    static final int WORKER_QUEUE = 2 * PERIMETER;
 
     private final CachedCityPlan plan;
     private final HeightProbe probe;
@@ -90,6 +92,8 @@ public final class PlanPrefetcher {
     private long tickLongestAttempt;
     private long worstTickNanos;
     private String worstTick = "none";
+    /** The world's plan worker, or {@code null} when every plan is computed on the server thread. */
+    private PlanWorker worker;
 
     /**
      * Creates the prefetcher of one world.
@@ -119,6 +123,16 @@ public final class PlanPrefetcher {
         recentCount = Math.min(RECENT, recentCount + 1);
     }
 
+    /**
+     * Hands the targets to a plan worker (D-plan-worker-1): each tick then runs the fetches the worker set aside and
+     * queues targets for it, instead of probing plans itself.
+     *
+     * @param worker the world's worker
+     */
+    void worker(PlanWorker worker) {
+        this.worker = worker;
+    }
+
     /** Returns how many generated chunks wait to be centers of targets. */
     int pending() {
         return recentCount + (hasCenter ? 1 : 0);
@@ -130,6 +144,9 @@ public final class PlanPrefetcher {
      * @return how many values were fetched
      */
     int tick() {
+        if (worker != null) {
+            return workerTick();
+        }
         if (!hasCenter && recentCount == 0) {
             return 0;
         }
@@ -182,6 +199,80 @@ public final class PlanPrefetcher {
                     tickLongestAttempt / 1_000_000.0,
                     tickFetches,
                     tickFetchNanos / 1_000_000.0);
+            }
+        }
+        return fetched;
+    }
+
+    /**
+     * One tick with a plan worker: first the fetches the worker set aside for the server thread (a heavy one only at
+     * the start of the tick, and it ends this part, as in {@link #attempt}), each target resubmitted ahead of the
+     * others; then the next perimeter targets that are neither cached nor loaded, until the worker's queue is full.
+     *
+     * @return how many fetches ran
+     */
+    private int workerTick() {
+        if (worker.peekDeferred() == null && !hasCenter && recentCount == 0) {
+            return 0;
+        }
+        GenerationTimers.PhaseMark mark = timers.mark();
+        long start = System.nanoTime();
+        int fetched = 0;
+        long fetchNanosTotal = 0;
+        int lastX = 0;
+        int lastZ = 0;
+        PlanWorker.Deferred next;
+        while ((next = worker.peekDeferred()) != null && System.nanoTime() - start < TICK_BUDGET_NANOS) {
+            if (next.heavy && System.nanoTime() - start > HEAVY_START_NANOS) {
+                break;
+            }
+            worker.pollDeferred();
+            long fetchStart = System.nanoTime();
+            probe.miss(next.fetch);
+            probe.fetchMissing();
+            long fetchNanos = System.nanoTime() - fetchStart;
+            if (fetchNanos > SLOW_FETCH_NANOS) {
+                slowFetches.merge(probe.lastFetchSource(), fetchNanos, Math::max);
+            }
+            fetchTotals.merge(probe.lastFetchSource(), fetchNanos, Long::sum);
+            fetchNanosTotal += fetchNanos;
+            fetched++;
+            fetchedTotal++;
+            lastX = (int) (next.target >> 32);
+            lastZ = (int) next.target;
+            worker.submit(lastX, lastZ, true);
+            if (next.heavy) {
+                timers.recordStructures(fetchNanos);
+                break;
+            }
+        }
+        int submitted = 0;
+        while (worker.queued() < WORKER_QUEUE && System.nanoTime() - start < TICK_BUDGET_NANOS && nextTarget()) {
+            int[] offset = perimeterOffset(perimeterIndex);
+            int x = centerX + offset[0];
+            int z = centerZ + offset[1];
+            advance();
+            if (!plan.isCached(x, z) && !loaded.test(x, z)) {
+                worker.submit(x, z, false);
+                submitted++;
+                lastX = x;
+                lastZ = z;
+            }
+        }
+        if (fetched > 0 || submitted > 0) {
+            long nanos = System.nanoTime() - start;
+            timers.recordPhase(GenerationTimers.Series.PREFETCH, null, lastX, lastZ, nanos, mark);
+            if (nanos > worstTickNanos) {
+                worstTickNanos = nanos;
+                worstTick = String.format(
+                    Locale.ROOT,
+                    "%.3f ms at chunk %d,%d: %d deferred fetches %.3f ms, %d targets queued",
+                    nanos / 1_000_000.0,
+                    lastX,
+                    lastZ,
+                    fetched,
+                    fetchNanosTotal / 1_000_000.0,
+                    submitted);
             }
         }
         return fetched;
@@ -272,6 +363,9 @@ public final class PlanPrefetcher {
         failedAttemptNanos = 0;
         worstTickNanos = 0;
         worstTick = "none";
+        if (worker != null) {
+            worker.resetStats();
+        }
     }
 
     /** A map of source to nanoseconds as milliseconds, sorted by source. */
@@ -307,7 +401,7 @@ public final class PlanPrefetcher {
             planned,
             fetchedTotal,
             failedAttemptNanos / 1_000_000.0,
-            worstTick);
+            worstTick) + (worker == null ? "" : "; " + worker.summary());
     }
 
     /** Makes sure there is a current target: the next perimeter cell of the newest center. */

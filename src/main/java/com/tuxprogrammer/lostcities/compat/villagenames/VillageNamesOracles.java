@@ -125,7 +125,7 @@ public final class VillageNamesOracles {
                 LostCities.LOG.info("[LCNH-VN] dimension {}: no oracle ({})", world.provider.dimensionId, settings);
                 return StructureOracle.NONE;
             }
-            BiomeNames biomes = new ChunkManagerBiomeNames(world.getWorldChunkManager());
+            BiomeNames biomes = new ChunkManagerBiomeNames(world);
             VillageNamesPlans plans = new VillageNamesPlans(world);
             VillageOracle villages = new VillageOracle(
                 world.getSeed(),

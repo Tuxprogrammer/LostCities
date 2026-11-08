@@ -210,7 +210,7 @@ public final class VillageNamesScenario implements Scenario {
         Map<Long, Actual> actualVillages = readStructures(world, "Village");
         Map<Long, Actual> actualMonuments = readStructures(world, "Monument");
         BiomeNames stored = storedBiomes(world);
-        BiomeNames provider = new ChunkManagerBiomeNames(world.getWorldChunkManager());
+        BiomeNames provider = new ChunkManagerBiomeNames(world);
         VillageNamesSettings settings = VillageNamesConfig.read(world);
         List<String> failures = new ArrayList<>();
 

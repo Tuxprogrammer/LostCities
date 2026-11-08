@@ -1,7 +1,9 @@
 package com.tuxprogrammer.lostcities.compat.villagenames;
 
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.WorldChunkManager;
+
+import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
 
 /**
  * Biome names from a world's biome provider, {@code WorldChunkManager.getBiomeGenAt}: the provider VillageNames' start
@@ -10,24 +12,26 @@ import net.minecraft.world.biome.WorldChunkManager;
  * loaded.
  *
  * <p>
- * Server thread only: vanilla's biome cache and RWG's are not thread-safe. Side: server.
+ * Vanilla's biome cache and RWG's are not thread-safe, so a world's plan worker asks its own copy of the provider
+ * ({@link PlanThreads#manager(World)}, D-plan-worker-2). Side: server.
  */
 final class ChunkManagerBiomeNames implements BiomeNames {
 
-    private final WorldChunkManager manager;
+    private final World world;
 
     /**
-     * Wraps a biome provider.
+     * Wraps a world's biome provider.
      *
-     * @param manager the world's chunk manager
+     * @param world the world
      */
-    ChunkManagerBiomeNames(WorldChunkManager manager) {
-        this.manager = manager;
+    ChunkManagerBiomeNames(World world) {
+        this.world = world;
     }
 
     @Override
     public String nameAt(int blockX, int blockZ) {
-        BiomeGenBase biome = manager.getBiomeGenAt(blockX, blockZ);
+        BiomeGenBase biome = PlanThreads.manager(world)
+            .getBiomeGenAt(blockX, blockZ);
         return biome == null ? null : biome.biomeName;
     }
 }

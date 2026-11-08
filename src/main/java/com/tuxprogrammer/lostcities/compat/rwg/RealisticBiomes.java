@@ -8,6 +8,8 @@ import net.minecraft.world.biome.WorldChunkManager;
 
 import cpw.mods.fml.common.Loader;
 
+import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
+
 /**
  * The RWG realistic biome behind a column, for the {@code rwg:} biome matcher (docs/new-spec/05-assets/
  * asset-format.md, "Biome matchers"; P05-6 and P-PROF-4, decision log D31). RWG's biome provider reports base biomes,
@@ -56,7 +58,8 @@ public final class RealisticBiomes {
      * @return the realistic biome in lower snake case, or null when neither RWG version shapes this world
      */
     public static String at(World world, int blockX, int blockZ) {
-        WorldChunkManager manager = world.getWorldChunkManager();
+        // The plan worker asks its own copy of the provider (D-plan-worker-2).
+        WorldChunkManager manager = PlanThreads.manager(world);
         if (Loader.isModLoaded(RWG2)) {
             String name = Rwg2.at(manager, blockX, blockZ);
             if (name != null) {

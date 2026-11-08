@@ -2,7 +2,10 @@ package com.tuxprogrammer.lostcities.compat.rwg2;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.world.World;
+
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
 
 import rwg2.biomes.realistic.land.RealisticBiomeMountainChain;
 import rwg2.config.ConfigRWG;
@@ -38,7 +41,8 @@ import rwg2.world.ChunkManagerRealistic;
  * (the protection rule this mirrors).
  *
  * <p>
- * Load only when {@code Loader.isModLoaded("rwg2")}. Server thread only: the manager's caches are not thread-safe.
+ * Load only when {@code Loader.isModLoaded("rwg2")}. The manager's caches are not thread-safe, so one instance is used by one thread;
+ * {@link #forWorld} routes the plan worker to its own.
  * Side: server.
  */
 final class ManagerLandforms implements Rwg2Landforms {
@@ -54,6 +58,44 @@ final class ManagerLandforms implements Rwg2Landforms {
     ManagerLandforms(ChunkManagerRealistic manager) {
         this.manager = manager;
         this.continents = continents(manager);
+    }
+
+    /**
+     * Returns the landforms of a world for whichever thread asks: over the world's manager on the server thread, over
+     * the plan worker's own copy on the worker (D-plan-worker-2), since the manager's memo maps are not thread-safe.
+     *
+     * @param world   the world
+     * @param manager the world's manager
+     * @return the routed landforms
+     */
+    static Rwg2Landforms forWorld(World world, ChunkManagerRealistic manager) {
+        ManagerLandforms server = new ManagerLandforms(manager);
+        return new Rwg2Landforms() {
+
+            private Rwg2Landforms current() {
+                return PlanThreads.route(world, server, copy -> new ManagerLandforms((ChunkManagerRealistic) copy));
+            }
+
+            @Override
+            public long volcanoCenter(int blockX, int blockZ) {
+                return current().volcanoCenter(blockX, blockZ);
+            }
+
+            @Override
+            public long lavaCaveCenter(int blockX, int blockZ) {
+                return current().lavaCaveCenter(blockX, blockZ);
+            }
+
+            @Override
+            public float junctionStrength(int blockX, int blockZ) {
+                return current().junctionStrength(blockX, blockZ);
+            }
+
+            @Override
+            public boolean mountainChain(int blockX, int blockZ) {
+                return current().mountainChain(blockX, blockZ);
+            }
+        };
     }
 
     private static ContinentalNoise continents(ChunkManagerRealistic manager) {
