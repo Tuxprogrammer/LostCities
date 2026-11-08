@@ -188,7 +188,7 @@ Each is split by chunk class: city, blend or untouched. The report also names th
 | B2 | Population phase on city chunks: p95 ≤ 0.5 × RWG's `populate` p50 |
 | B3 | Over the whole 64 × 64 region, all overlay work ≤ 15 % of RWG's total generation time |
 | B4 | No single chunk's overlay work above 10 ms at p99.9: half of Hodgepodge's 20 ms per-tick generation budget. Judged per terrain-phase and population-phase invocation and per prefetch tick; an invocation during which the JVM collected garbage is set apart and counted, since a 20 to 60 ms G1 pause lands wherever the server thread is (D127) |
-| B5 | Oracle cache and layout caches bounded to 16 MB per world, freed on unload |
+| B5 | Oracle cache and layout caches bounded to 48 MB per world (estimated worst case), freed on unload. 16 MB until D-perf-1: the 4x city scale made the link graph's footprint 100 to 1000 times the caches sized for it |
 
 The headless worldgen scenario (decision log D7) fails when B1 to B4 are exceeded on the build server: `overlay.budget` ([docs/testing/](../testing/README.md)).
 

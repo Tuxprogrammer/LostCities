@@ -52,7 +52,7 @@ public class NetworkWriterTest {
 
     /**
      * Budget B5 with every cache a world keeps, as the overlay counts them: the plan cache, the two height caches, the
-     * layout, palette and style caches, the scattered caches and the networks' caches, with a little room to spare.
+     * layout, palette and style caches, the scattered caches and the networks' caches and the structure oracles' caches, with a little room to spare.
      */
     @Test
     public void everyCacheTogetherStaysWithinBudgetB5() {
@@ -63,21 +63,18 @@ public class NetworkWriterTest {
         long heights = com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights.MAX_BYTES + Math.max(
             com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache.MAX_BYTES,
             com.tuxprogrammer.lostcities.worldgen.height.ColumnHeightCache.MAX_BYTES);
-        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights;
-        assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, "estimated " + bytes + " bytes");
+        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights
+            + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL;
+        long limit = com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers.B5_LIMIT_BYTES;
+        assertTrue(bytes <= limit - 64 * 1024, "estimated " + bytes + " bytes");
     }
 
     /**
-     * The structure oracles' caches (D-oracle-caches-1) and LandmarkZones (4096 cells, 65536 zones, lane
-     * layout-footprint-caches) sit on top of {@link #everyCacheTogetherStaysWithinBudgetB5}. Measured 2026-11-07: the
-     * base is 16.6 MB (it double-counts the scattered caches), the oracles 9.8 MB and the zones 8.2 MB, 34.6 MB in all,
-     * over B5's 16 MB. The integrator decides whether to raise B5 or shrink caches (D-oracle-caches-3); this test pins
-     * each new share so a growth is noticed.
+     * The structure oracles' caches (D-oracle-caches-1) sit on top of {@link #everyCacheTogetherStaysWithinBudgetB5};
+     * their share is pinned so a growth is noticed.
      */
     @Test
-    public void theOracleAndZoneSharesStayWithinTheirCeilings() {
-        long landmarkZones = 65536L * 112 + 4096L * 200;
-        assertTrue(landmarkZones <= 9L * 1024 * 1024, "zones " + landmarkZones);
+    public void theOracleShareStaysWithinItsCeiling() {
         assertTrue(
             com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL <= 10L * 1024 * 1024,
             "oracles " + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL);

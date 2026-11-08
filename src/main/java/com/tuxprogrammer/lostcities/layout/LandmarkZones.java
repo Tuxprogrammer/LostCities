@@ -46,11 +46,13 @@ final class LandmarkZones {
     /** Margin, in chunks, beyond the rings for lanes that reach just past them. */
     private static final int LANE_MARGIN = 2;
     /**
-     * Cells the link mask cache holds: 256 cells of 8 × 8 chunks cover 16384 chunks, a 128-chunk square, in about
-     * 4.4 KB. That is what fits the B5 headroom; a miss costs one oracle query of about 12 × 12 chunks
-     * (D-linkgraph-shrink-5).
+     * Cells the link mask cache holds: 4096 cells of 8 × 8 chunks cover 262144 chunks, a 512-chunk square, about the
+     * width of one link route, in about 70 KB; a miss costs one oracle query of about 12 × 12 chunks
+     * (D-linkgraph-shrink-5, grown under D-perf-1).
      */
-    static final int LINK_MASK_SLOTS = 256;
+    static final int LINK_MASK_SLOTS = 4096;
+    /** Fewest cells the near-landmark cache holds: 1024 cells of 8 × 8 chunks, 256 KB (D-perf-1). */
+    static final int MIN_NEAR_CELLS = 1024;
     /** Estimated bytes of one {@link #near} cache entry: map entry, key, list and a landmark or two. */
     static final int CELL_ENTRY_BYTES = 256;
 
@@ -74,7 +76,7 @@ final class LandmarkZones {
         // blocks, lies within EDGE_RING_DISTANCE chunks of it; the plain rectangle then lies within that plus the
         // margin rounded up to whole chunks. Never wider than near()'s reach, so the mask sees near()'s candidates.
         this.linkMaskReach = Math.min(reach, EDGE_RING_DISTANCE + (profile.landmarkMargin + 15) / 16);
-        this.cellCapacity = Math.max(64, cacheSize / (CELL * CELL));
+        this.cellCapacity = Math.max(MIN_NEAR_CELLS, cacheSize / (CELL * CELL));
         this.cells = new ChunkCache<>(cellCapacity);
         this.zones = new ChunkCache<>(cacheSize);
     }

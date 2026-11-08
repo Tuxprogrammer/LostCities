@@ -50,8 +50,8 @@ public final class GenerationTimers {
     public static final double B3_SHARE = 0.15;
     /** B2: the population phase on city chunks at p95 at most this share of RWG's populate p50. */
     public static final double B2_SHARE = 0.5;
-    /** B5: caches bounded to this many bytes per world. */
-    public static final long B5_LIMIT_BYTES = 16L * 1024 * 1024;
+    /** B5: caches bounded to this many bytes per world (48 MB since D-perf-1; 16 MB before the 4x city scale). */
+    public static final long B5_LIMIT_BYTES = 48L * 1024 * 1024;
 
     /** How many of the slowest phase invocations the report names. */
     public static final int SLOWEST_KEPT = 8;
