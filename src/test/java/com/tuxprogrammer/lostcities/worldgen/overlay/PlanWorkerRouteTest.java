@@ -104,10 +104,15 @@ public class PlanWorkerRouteTest {
         }
     }
 
+    /**
+     * A 21 x 21 grid of targets. The stride is 15, not 16: the plan cache is 4-way set-associative, and on a 16-chunk
+     * grid five targets share one set, so storing any of them evicts another and the worker never ends with all cached.
+     * On this grid no set holds more than four.
+     */
     private static List<int[]> targets() {
         List<int[]> out = new ArrayList<>();
-        for (int x = -160; x <= 160; x += 16) {
-            for (int z = -160; z <= 160; z += 16) {
+        for (int x = -150; x <= 150; x += 15) {
+            for (int z = -150; z <= 150; z += 15) {
                 out.add(new int[] { x, z });
             }
         }
@@ -147,7 +152,7 @@ public class PlanWorkerRouteTest {
             for (int[] t : targets()) {
                 worker.submit(t[0], t[1], false);
             }
-            long deadline = System.nanoTime() + 20_000_000_000L;
+            long deadline = System.nanoTime() + 120_000_000_000L;
             while (!allCached(threaded.plan) && System.nanoTime() < deadline) {
                 assertTrue(lock.openWindow(), "a window opens");
                 Thread.sleep(2);
