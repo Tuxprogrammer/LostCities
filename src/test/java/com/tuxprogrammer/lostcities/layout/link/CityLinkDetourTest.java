@@ -82,7 +82,7 @@ class CityLinkDetourTest {
     }
 
     /**
-     * Over many seeds, every city in a 9 x 9-cell window has at least two links, every link's path is clear of
+     * Over many seeds, every city in a 9 x 9-cell window has at least two links, every routed link's path is clear of
      * landmarks, steps between 8-neighbors and turns at most 45° per chunk, so it is built of a plain link's pieces.
      */
     @Test
@@ -108,7 +108,8 @@ class CityLinkDetourTest {
                             .equals(LinkRaster.rasterize(link.ax(), link.az(), link.bx(), link.bz()))) {
                             detours++;
                         }
-                        checkPath(oracle, link);
+                        // An unroutable link kept so a city keeps two (D-perf2-links-2) runs straight through.
+                        checkPath(oracle, link, graph.route(link.ax(), link.az(), link.bx(), link.bz()) != null);
                     }
                 }
             }
@@ -117,7 +118,7 @@ class CityLinkDetourTest {
         assertTrue(detours > 0, "the fixture's landmarks force detours");
     }
 
-    private static void checkPath(Nodes oracle, CityLinkGraph.Link link) {
+    private static void checkPath(Nodes oracle, CityLinkGraph.Link link, boolean routed) {
         List<LinkRaster.Step> path = link.path();
         assertEquals(
             link.ax(),
@@ -132,7 +133,7 @@ class CityLinkDetourTest {
         assertEquals(link.bz(), last.chunkZ());
         for (int i = 0; i < path.size(); i++) {
             LinkRaster.Step s = path.get(i);
-            assertTrue(!oracle.blocked(s.chunkX(), s.chunkZ()), link + " crosses a landmark at " + s);
+            assertTrue(!routed || !oracle.blocked(s.chunkX(), s.chunkZ()), link + " crosses a landmark at " + s);
             if (i > 0) {
                 LinkRaster.Step p = path.get(i - 1);
                 assertEquals(s.chunkX() - p.chunkX(), s.inDx());
