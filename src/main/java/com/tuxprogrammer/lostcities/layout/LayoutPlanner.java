@@ -1,4 +1,6 @@
 package com.tuxprogrammer.lostcities.layout;
+
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 // Ported from Lost Cities (MIT):
 // https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/BuildingInfo.java
 // Avoids: CITY-10, CITY-11, TERR-07, PROF-06, CITY-15, CITY-16, CITY-17, CITY-18, CITY-19, CITY-20, CITY-21, TERR-24,
@@ -374,7 +376,10 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (cached != null) {
             return cached;
         }
-        return plans.put(chunkX, chunkZ, computePlan(chunkX, chunkZ));
+        long perfPlan = PerfCounters.start();
+        ChunkPlan computed = computePlan(chunkX, chunkZ);
+        PerfCounters.add("lp.plan.miss", perfPlan);
+        return plans.put(chunkX, chunkZ, computed);
     }
 
     /**
