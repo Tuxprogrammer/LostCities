@@ -21,6 +21,7 @@ import com.tuxprogrammer.lostcities.editor.EditModeData;
 import com.tuxprogrammer.lostcities.editor.EditSessions;
 import com.tuxprogrammer.lostcities.layout.LayoutInputs;
 import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
+import com.tuxprogrammer.lostcities.layout.LayoutProfile;
 import com.tuxprogrammer.lostcities.layout.ScatteredFootprints;
 import com.tuxprogrammer.lostcities.layout.ScatteredPlanner;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
@@ -197,15 +198,16 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights, oracle);
+        LayoutProfile layoutProfile = CityProfiles.layoutProfile(settings, values);
         StructureOracle structures = timed(
             world,
-            StructureOracles.forWorld(world, oracle, settings.landmarkMargin()),
+            StructureOracles.forWorld(world, oracle, settings.landmarkMargin(), layoutProfile),
             timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(
                     world.getSeed(),
-                    CityProfiles.layoutProfile(settings, values),
+                    layoutProfile,
                     new LayoutAssets(
                         assets,
                         worldStyle,
