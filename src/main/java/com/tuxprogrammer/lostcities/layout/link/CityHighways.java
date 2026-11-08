@@ -313,6 +313,15 @@ public final class CityHighways {
         return out;
     }
 
+    /**
+     * Returns the links at a city center's node. Every use while one plan is computed (the beltway's joins, the
+     * cut-through's entries, the trace) reads the graph's per-cell cache, so the symmetric scan runs once per center
+     * (D-linkgraph-shrink-4).
+     */
+    private List<CityLinkGraph.Link> linksAt(int cx, int cz) {
+        return graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()));
+    }
+
     private Plan compute(int cx, int cz) {
         if (layout == CityHighwayLayout.NONE) {
             return none(cx, cz, false);
@@ -368,8 +377,7 @@ public final class CityHighways {
         StringBuilder links = new StringBuilder();
         int usable = 0;
         if (graph != null) {
-            for (CityLinkGraph.Link link : graph
-                .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
+            for (CityLinkGraph.Link link : linksAt(cx, cz)) {
                 int[] entry = entry(link, cx, cz, radius);
                 if (entry != null) {
                     usable++;
@@ -405,7 +413,7 @@ public final class CityHighways {
             roll(cx, cz),
             beltwayChance(full),
             graph == null ? -1
-                : graph.links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))
+                : linksAt(cx, cz)
                     .size(),
             usable,
             plan.kind(),
@@ -536,8 +544,7 @@ public final class CityHighways {
         }
         List<CityLinkGraph.Link> joined = new ArrayList<>();
         if (graph != null) {
-            for (CityLinkGraph.Link link : graph
-                .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()))) {
+            for (CityLinkGraph.Link link : linksAt(cx, cz)) {
                 if (climbs(link, cx, cz, half, level)) {
                     joined.add(link);
                 }
@@ -576,8 +583,7 @@ public final class CityHighways {
         if (graph == null) {
             return none(cx, cz, fits);
         }
-        List<CityLinkGraph.Link> links = graph
-            .links(Math.floorDiv(cx, cities.cell()), Math.floorDiv(cz, cities.cell()));
+        List<CityLinkGraph.Link> links = linksAt(cx, cz);
         List<CityLinkGraph.Link> usable = new ArrayList<>();
         List<int[]> entries = new ArrayList<>();
         for (CityLinkGraph.Link link : links) {
