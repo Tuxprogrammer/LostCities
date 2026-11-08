@@ -51,9 +51,9 @@ public final class VillageOracle implements StructureOracle {
      */
     public static final int REACH_CHUNKS = 11;
     /** Starts kept in the cache: a layout query covers at most about nine grid cells. */
-    public static final int CACHE_SIZE = 256;
+    public static final int CACHE_SIZE = 4096;
     /** Village plans kept for the retry of a prediction a probe abandoned while its plan was fetched. */
-    static final int PLAN_CACHE_SIZE = 16;
+    public static final int PLAN_CACHE_SIZE = 256;
 
     /** Why a start chunk is or is not a village; for the scenario's report. */
     public enum Status {

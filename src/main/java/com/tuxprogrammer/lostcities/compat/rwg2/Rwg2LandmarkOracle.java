@@ -97,7 +97,7 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
     /** How far from its peak a junction's footprint is gathered, blocks. */
     public static final int JUNCTION_GATHER = 128;
     /** Regions kept in each region cache. */
-    public static final int REGION_CACHE_SIZE = 2048;
+    public static final int REGION_CACHE_SIZE = 16384;
     /** Landmarks and chain-grid points kept. */
     public static final int LANDMARK_CACHE_SIZE = 512;
 

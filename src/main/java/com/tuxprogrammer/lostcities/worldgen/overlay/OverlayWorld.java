@@ -588,7 +588,8 @@ public final class OverlayWorld {
         // The column cache is a ChunkColumnCache on classic RWG and a smaller ColumnHeightCache on RWG2: the larger.
         return plan.estimatedMaxBytes() + ChunkHeights.MAX_BYTES
             + Math.max(ChunkColumnCache.MAX_BYTES, ColumnHeightCache.MAX_BYTES)
-            + (cities == null ? 0 : cities.estimatedCacheBytes());
+            + (cities == null ? 0 : cities.estimatedCacheBytes())
+            + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL;
     }
 
     /** Returns whether the pinned profile has {@code editMode}: the part editor's commands work here. */

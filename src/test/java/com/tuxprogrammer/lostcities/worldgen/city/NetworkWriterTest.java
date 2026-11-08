@@ -63,7 +63,16 @@ public class NetworkWriterTest {
         long heights = com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights.MAX_BYTES + Math.max(
             com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache.MAX_BYTES,
             com.tuxprogrammer.lostcities.worldgen.height.ColumnHeightCache.MAX_BYTES);
-        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights;
+        // LandmarkZones (lane layout-footprint-caches): 65536 zones at ~112 bytes (ZoneInfo, key, map entry, slot) and
+        // 4096 cells at ~200 bytes (a short landmark list, key, map entry, slot); not counted by the planner yet.
+        long landmarkZones = 65536L * 112 + 4096L * 200;
+        long oracles = com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL;
+        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights + landmarkZones + oracles;
+        System.out.println("B5 breakdown: planner+layout " + PLAN.estimatedCacheBytes() + ", scattered " + scattered
+            + ", planCache " + planCache + ", heights " + heights + ", landmarkZones " + landmarkZones + ", oracles "
+            + oracles + " (rwg2 landmarks " + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.RWG2_LANDMARKS
+            + ", rwg2 heights " + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.RWG2_HEIGHTS + ", villages "
+            + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.VILLAGES + ") total " + bytes);
         assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, "estimated " + bytes + " bytes");
     }
 
