@@ -26,6 +26,7 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.GtnhLayerScenario;
+import com.tuxprogrammer.lostcities.worldgen.overlay.PerfScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.NetworkScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OracleCostScenario;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
@@ -91,6 +92,7 @@ public class CommonProxy {
         CityScenarios.registerAll(ScenarioRegistry.INSTANCE);
         ProfileScenarios.registerAll(ScenarioRegistry.INSTANCE);
         NetworkScenarios.registerAll(ScenarioRegistry.INSTANCE);
+        PerfScenarios.registerAll(ScenarioRegistry.INSTANCE);
         VillageNamesScenario.registerAll(ScenarioRegistry.INSTANCE);
         RoguelikeScenario.registerAll(ScenarioRegistry.INSTANCE);
         LootGamesScenario.registerAll(ScenarioRegistry.INSTANCE);

@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.compat.witchery;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -112,6 +114,15 @@ public final class WitcheryOracle implements StructureOracle {
 
     @Override
     public synchronized List<Landmark> landmarksTouching(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return landmarksTouching0(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
+        } finally {
+            PerfCounters.add("wi.touching", perfStart);
+        }
+    }
+
+    private List<Landmark> landmarksTouching0(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
         if (!settings.on()) {
             return Collections.emptyList();
         }
@@ -199,6 +210,15 @@ public final class WitcheryOracle implements StructureOracle {
     }
 
     private Landmark compute(int chunkX, int chunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return compute0(chunkX, chunkZ);
+        } finally {
+            PerfCounters.add("wi.compute", perfStart);
+        }
+    }
+
+    private Landmark compute0(int chunkX, int chunkZ) {
         if (!grid.isCandidate(chunkX, chunkZ) || !biomeAccepts(chunkX, chunkZ)) {
             return NONE;
         }
