@@ -286,25 +286,13 @@ public final class LinkRails {
 
     private Map<Long, Integer> buildIndex(int cellX, int cellZ) {
         int cell = graph.cell();
-        int reach = graph.reach();
-        // A line lies in its ends' box widened by one chunk along X.
+        // A line lies in its ends' box widened by one chunk along X. The graph routes only the links whose ends' box
+        // overlaps that rectangle (D-perf2-links-3), not every link of every cell in reach.
         int minX = cellX * cell - 1;
         int minZ = cellZ * cell;
         int maxX = minX + cell + 1;
         int maxZ = minZ + cell - 1;
-        List<CityLinkGraph.Link> all = new ArrayList<>();
-        for (int ox = -reach; ox <= reach; ox++) {
-            for (int oz = -reach; oz <= reach; oz++) {
-                for (CityLinkGraph.Link link : graph.chosen(cellX + ox, cellZ + oz)) {
-                    if (Math.max(link.ax(), link.bx()) >= minX && Math.min(link.ax(), link.bx()) <= maxX
-                        && Math.max(link.az(), link.bz()) >= minZ
-                        && Math.min(link.az(), link.bz()) <= maxZ
-                        && !all.contains(link)) {
-                        all.add(link);
-                    }
-                }
-            }
-        }
+        List<CityLinkGraph.Link> all = graph.linksNear(cellX, cellZ, minX, minZ, maxX, maxZ);
         Map<Long, Integer> index = new LinkedHashMap<>();
         int x0 = cellX * cell;
         int z0 = cellZ * cell;
