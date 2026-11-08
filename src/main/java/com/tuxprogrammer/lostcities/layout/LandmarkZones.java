@@ -60,18 +60,20 @@ final class LandmarkZones {
     /** Estimated bytes of one {@link #near} cache entry: map entry, key, list and a landmark or two. */
     static final int CELL_ENTRY_BYTES = 256;
     /**
-     * Chunks per side of a super-cell, the unit of every oracle query: 8 × 8 cells. One query of a 64-chunk square
-     * grown by {@link #reach()} costs the oracles about what a few cells' queries did (each oracle pads its own
-     * search), and serves 64 cells (D-perf2-route-1).
+     * Chunks per side of a super-cell, the unit of every oracle query: 2 × 2 cells. The oracles cache their own
+     * samples by region, so a query's real cost is the ground it adds to what earlier queries sampled: a 16-chunk
+     * square grown by {@link #reach()} keeps that close to a link corridor's own width, while serving four cells with
+     * one query. Wider super-cells sample ground the corridor never needs: at 64 chunks the junction samples tripled
+     * and the slowest chunk doubled (D-perf2-route-1, D-perf2-route-3).
      */
-    static final int SUPER = 64;
-    /** Super-cells the landmark list cache holds: 256 cover a 1024-chunk square, wider than a link route's corridor. */
-    static final int SUPER_SLOTS = 256;
+    static final int SUPER = 16;
+    /** Super-cells the landmark list cache holds: 2048 cover a 724-chunk square, wider than a link route's corridor. */
+    static final int SUPER_SLOTS = 2048;
     /**
-     * Estimated bytes of one super-cell entry: map entry, key, list and bounds of a few dozen landmarks, the landmarks
-     * themselves shared with the oracles' caches.
+     * Estimated bytes of one super-cell entry: map entry, key, list and bounds of a handful of landmarks, the
+     * landmarks themselves shared with the oracles' caches.
      */
-    static final int SUPER_ENTRY_BYTES = 8 * 1024;
+    static final int SUPER_ENTRY_BYTES = 1024;
 
     private final StructureOracle oracle;
     private final LayoutProfile profile;
