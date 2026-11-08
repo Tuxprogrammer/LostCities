@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.compat.villagenames;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -167,6 +169,15 @@ public final class VillageOracle implements StructureOracle {
 
     @Override
     public synchronized List<Landmark> landmarksTouching(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return landmarksTouching0(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
+        } finally {
+            PerfCounters.add("vo.touching", perfStart);
+        }
+    }
+
+    private List<Landmark> landmarksTouching0(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
         if (!settings.villagesOn()) {
             return Collections.emptyList();
         }
@@ -210,10 +221,22 @@ public final class VillageOracle implements StructureOracle {
 
     /** Builds a village's plan with VillageNames' start constructor and keeps it for retries. */
     private synchronized VillagePlan fetchPlan(int chunkX, int chunkZ) {
-        return planCache.put(BoundedCache.key(chunkX, chunkZ), plans.plan(chunkX, chunkZ));
+        long perfPlan = PerfCounters.start();
+        VillagePlan plan = plans.plan(chunkX, chunkZ);
+        PerfCounters.add("vo.plan", perfPlan);
+        return planCache.put(BoundedCache.key(chunkX, chunkZ), plan);
     }
 
     private Prediction compute(int chunkX, int chunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return compute0(chunkX, chunkZ);
+        } finally {
+            PerfCounters.add("vo.compute", perfStart);
+        }
+    }
+
+    private Prediction compute0(int chunkX, int chunkZ) {
         if (!settings.villagesOn()) {
             return new Prediction(chunkX, chunkZ, Status.NOT_CANDIDATE, null, null, null);
         }

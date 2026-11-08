@@ -4,6 +4,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.WorldChunkManager;
 
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 import rwg2.biomes.realistic.RealisticBiomeBase;
 import rwg2.world.ChunkGeneratorRealistic;
@@ -88,7 +89,9 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
      * so one instance's computation runs on one thread; the cache around it is what is shared.
      */
     private float[] sampleChunk(int chunkX, int chunkZ) {
+        long perfNoise = PerfCounters.start();
         float[] noise = sampler.getNewNoise(manager, chunkX << 4, chunkZ << 4, biomes, STRIDE);
+        PerfCounters.add("ho.noise", perfNoise);
         // x-major: column (x, z) is noise[x * 16 + z]; the samples sit at x, z in {0, 8}.
         return new float[] { noise[0], noise[8], noise[8 * 16], noise[8 * 16 + 8] };
     }

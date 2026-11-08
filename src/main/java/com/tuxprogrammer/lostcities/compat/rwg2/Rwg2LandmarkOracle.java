@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.compat.rwg2;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -152,6 +154,15 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
 
     @Override
     public synchronized List<Landmark> landmarksTouching(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return landmarksTouching0(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
+        } finally {
+            PerfCounters.add("rwg2.touching", perfStart);
+        }
+    }
+
+    private List<Landmark> landmarksTouching0(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
         BlockRect query = new BlockRect(minChunkX << 4, minChunkZ << 4, (maxChunkX << 4) + 15, (maxChunkZ << 4) + 15);
         TreeMap<String, Landmark> out = new TreeMap<>();
         for (long center : discCenters(query.grow(VOLCANO_REACH + DISC_SPACING), 0)) {
@@ -206,6 +217,15 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
     }
 
     private synchronized long[] fetchDiscRegion(int regionX, int regionZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return fetchDiscRegion0(regionX, regionZ);
+        } finally {
+            PerfCounters.add("rwg2.disc", perfStart);
+        }
+    }
+
+    private long[] fetchDiscRegion0(int regionX, int regionZ) {
         long[] samples = new long[DISC_POINTS * DISC_POINTS * 2];
         int index = 0;
         for (int i = 0; i < DISC_POINTS; i++) {
@@ -297,6 +317,15 @@ public final class Rwg2LandmarkOracle implements StructureOracle {
      * of the cell's strong samples.
      */
     private synchronized int[] fetchJunctionRegion(int regionX, int regionZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return fetchJunctionRegion0(regionX, regionZ);
+        } finally {
+            PerfCounters.add("rwg2.junction", perfStart);
+        }
+    }
+
+    private int[] fetchJunctionRegion0(int regionX, int regionZ) {
         int originX = regionX * REGION;
         int originZ = regionZ * REGION;
         float[][] coarse = new float[CELLS + 1][CELLS + 1];
