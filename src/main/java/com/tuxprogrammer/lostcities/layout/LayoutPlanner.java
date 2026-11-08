@@ -1,11 +1,5 @@
 package com.tuxprogrammer.lostcities.layout;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-// Ported from Lost Cities (MIT):
-// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/BuildingInfo.java
-// Avoids: CITY-10, CITY-11, TERR-07, PROF-06, CITY-15, CITY-16, CITY-17, CITY-18, CITY-19, CITY-20, CITY-21, TERR-24,
-// CITY-24, CITY-35, CITY-36, LOOT-10
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +39,7 @@ import com.tuxprogrammer.lostcities.layout.view.Selection;
 import com.tuxprogrammer.lostcities.layout.view.StyleView;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * One dimension's city layout: what each chunk holds, as a pure function of the world seed, the chunk coordinates,

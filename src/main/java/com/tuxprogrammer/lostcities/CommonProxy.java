@@ -26,11 +26,11 @@ import com.tuxprogrammer.lostcities.scenario.ScenarioRunner;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityLoot;
 import com.tuxprogrammer.lostcities.worldgen.overlay.CityScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.GtnhLayerScenario;
-import com.tuxprogrammer.lostcities.worldgen.overlay.PerfScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.NetworkScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OracleCostScenario;
 import com.tuxprogrammer.lostcities.worldgen.overlay.OverlayScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.Overlays;
+import com.tuxprogrammer.lostcities.worldgen.overlay.PerfScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.ProfileScenarios;
 import com.tuxprogrammer.lostcities.worldgen.overlay.SpawnSelection;
 

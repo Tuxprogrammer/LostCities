@@ -197,7 +197,10 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights, oracle);
-        StructureOracle structures = timed(world, StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
+        StructureOracle structures = timed(
+            world,
+            StructureOracles.forWorld(world, oracle, settings.landmarkMargin()),
+            timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(

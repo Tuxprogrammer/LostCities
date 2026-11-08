@@ -85,8 +85,10 @@ class CityLinkShrinkTest {
                 for (int ox = -reach; ox <= reach; ox++) {
                     for (int oz = -reach; oz <= reach; oz++) {
                         for (Link link : graph.chosen(cx + ox, cz + oz)) {
-                            if (self != null && (link.ax() == self[0] && link.az() == self[1]
-                                || link.bx() == self[0] && link.bz() == self[1]) && !expected.contains(link)) {
+                            if (self != null
+                                && (link.ax() == self[0] && link.az() == self[1]
+                                    || link.bx() == self[0] && link.bz() == self[1])
+                                && !expected.contains(link)) {
                                 expected.add(link);
                             }
                             if (!crossing.contains(link)) {

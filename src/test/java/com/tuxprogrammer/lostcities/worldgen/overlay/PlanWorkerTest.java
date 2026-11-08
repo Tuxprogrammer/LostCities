@@ -20,7 +20,6 @@ import com.tuxprogrammer.lostcities.layout.LayoutPlanner;
 import com.tuxprogrammer.lostcities.layout.NetworkSettings;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
-import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 import com.tuxprogrammer.lostcities.worldgen.TestTerrain;
 import com.tuxprogrammer.lostcities.worldgen.city.CityFixtures;
 import com.tuxprogrammer.lostcities.worldgen.city.CityPalettes;
@@ -33,6 +32,7 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan;
 import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
 import com.tuxprogrammer.lostcities.worldgen.terrain.NameBlockClassifier;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainSettings;
+import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 
 /**
  * The plan worker leaves the same plans as the server thread alone (D-plan-worker-1..3): a 32 x 32 region planned
@@ -44,7 +44,9 @@ public class PlanWorkerTest {
 
     private static final int SIZE = 32;
 
-    /** One world's planning objects: probed heights, a structure oracle whose fetches are deferred, the network gate. */
+    /**
+     * One world's planning objects: probed heights, a structure oracle whose fetches are deferred, the network gate.
+     */
     private static final class Stack {
 
         final HeightProbe probe = new HeightProbe();

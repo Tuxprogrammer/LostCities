@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.compat.roguelike;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,6 +14,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * The structure oracle for Roguelike Dungeons' towers (0006 §2): for each grid cell, the site its dungeon is predicted

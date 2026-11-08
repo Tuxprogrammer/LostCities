@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -10,6 +8,7 @@ import java.util.Map;
 
 import com.tuxprogrammer.lostcities.layout.CityHighwayLayout;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * Each link-network city's own highway (design record 0017): a beltway or a cut-through, chosen per city by its room.
@@ -423,9 +422,7 @@ public final class CityHighways {
             full,
             roll(cx, cz),
             beltwayChance(full),
-            graph == null ? -1
-                : linksAt(cx, cz)
-                    .size(),
+            graph == null ? -1 : linksAt(cx, cz).size(),
             usable,
             plan.kind(),
             plan.level(),

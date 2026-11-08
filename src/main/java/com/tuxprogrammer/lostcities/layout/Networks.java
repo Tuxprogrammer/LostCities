@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.layout;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.List;
 
 import com.tuxprogrammer.lostcities.layout.highway.CityPotential;
@@ -18,6 +16,7 @@ import com.tuxprogrammer.lostcities.layout.rail.RailwayInputs;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayLayout;
 import com.tuxprogrammer.lostcities.layout.view.InfrastructureView;
 import com.tuxprogrammer.lostcities.layout.view.RailInfo;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * A world's highway and railway networks (M06), built by the {@link LayoutPlanner} from its own city map, city levels

@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.WorldChunkManager;
 
-import cpw.mods.fml.common.Loader;
-
 import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
+
+import cpw.mods.fml.common.Loader;
 
 /**
  * The RWG realistic biome behind a column, for the {@code rwg:} biome matcher (docs/new-spec/05-assets/

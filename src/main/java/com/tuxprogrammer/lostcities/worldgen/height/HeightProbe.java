@@ -14,7 +14,8 @@ package com.tuxprogrammer.lostcities.worldgen.height;
  *
  * <p>
  * <p>
- * A world's plan worker (D-plan-worker-1) uses the same probe, always under the world's plan lock, so the probe is never
+ * A world's plan worker (D-plan-worker-1) uses the same probe, always under the world's plan lock, so the probe is
+ * never
  * used by two threads at once. On the worker thread {@link #fetchMissing()} runs only fetches of the sources the worker
  * may run ({@link #bindWorker}); any other fetch, and every heavy one, is set aside for the server thread
  * ({@link #takeDeferred()}) and the probe's exception is thrown again, so the plan is abandoned on the worker.

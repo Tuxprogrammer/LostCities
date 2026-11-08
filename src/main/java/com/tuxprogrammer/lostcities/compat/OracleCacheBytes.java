@@ -30,8 +30,7 @@ public final class OracleCacheBytes {
 
     /** RWG2's landmark oracle: two region caches, three landmark caches and the chain grid. */
     public static final long RWG2_LANDMARKS = (long) Rwg2LandmarkOracle.REGION_CACHE_SIZE
-        * (DISC_REGION_BYTES + JUNCTION_REGION_BYTES)
-        + 3L * Rwg2LandmarkOracle.LANDMARK_CACHE_SIZE * LANDMARK_BYTES
+        * (DISC_REGION_BYTES + JUNCTION_REGION_BYTES) + 3L * Rwg2LandmarkOracle.LANDMARK_CACHE_SIZE * LANDMARK_BYTES
         + 8L * Rwg2LandmarkOracle.LANDMARK_CACHE_SIZE * CHAIN_FLAG_BYTES;
     /** RWG2's height oracle. */
     public static final long RWG2_HEIGHTS = Rwg2HeightOracle.CACHE_BYTES;

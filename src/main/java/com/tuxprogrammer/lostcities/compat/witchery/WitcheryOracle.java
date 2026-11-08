@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.compat.witchery;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +13,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * The structure oracle for Witchery's standalone structures (0006 §2; coexistence.md § Witchery): a landmark lot over

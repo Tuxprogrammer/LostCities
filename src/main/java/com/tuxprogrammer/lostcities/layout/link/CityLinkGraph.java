@@ -1,11 +1,12 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * The city link graph of a grid-placed world ({@code networkLayout=links}, docs/design/0015-city-link-network.md §1).

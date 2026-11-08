@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.compat.villagenames;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +13,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * The structure oracle for VillageNames villages (0006 §2; coexistence.md § How a VillageNames village is placed):
@@ -129,7 +128,8 @@ public final class VillageOracle implements StructureOracle {
     private final int gateClearance;
     private final BoundedCache<Prediction> cache;
     /**
-     * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}, never more than the predictions): a plan prefetcher's probe (0005 §8)
+     * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}, never more than the predictions): a
+     * plan prefetcher's probe (0005 §8)
      * abandons a prediction whose plan is not built, fetches the plan alone and asks again, and VillageNames' start
      * constructor must not run again on the retry.
      */

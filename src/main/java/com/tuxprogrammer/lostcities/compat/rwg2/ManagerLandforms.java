@@ -41,7 +41,8 @@ import rwg2.world.ChunkManagerRealistic;
  * (the protection rule this mirrors).
  *
  * <p>
- * Load only when {@code Loader.isModLoaded("rwg2")}. The manager's caches are not thread-safe, so one instance is used by one thread;
+ * Load only when {@code Loader.isModLoaded("rwg2")}. The manager's caches are not thread-safe, so one instance is used
+ * by one thread;
  * {@link #forWorld} routes the plan worker to its own.
  * Side: server.
  */

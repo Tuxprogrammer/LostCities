@@ -52,7 +52,8 @@ public class NetworkWriterTest {
 
     /**
      * Budget B5 with every cache a world keeps, as the overlay counts them: the plan cache, the two height caches, the
-     * layout, palette and style caches, the scattered caches and the networks' caches and the structure oracles' caches, with a little room to spare.
+     * layout, palette and style caches, the scattered caches and the networks' caches and the structure oracles'
+     * caches, with a little room to spare.
      */
     @Test
     public void everyCacheTogetherStaysWithinBudgetB5() {
@@ -63,7 +64,9 @@ public class NetworkWriterTest {
         long heights = com.tuxprogrammer.lostcities.worldgen.height.ChunkHeights.MAX_BYTES + Math.max(
             com.tuxprogrammer.lostcities.worldgen.height.ChunkColumnCache.MAX_BYTES,
             com.tuxprogrammer.lostcities.worldgen.height.ColumnHeightCache.MAX_BYTES);
-        long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights
+        long bytes = PLAN.estimatedCacheBytes() + scattered
+            + planCache
+            + heights
             + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL;
         long limit = com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers.B5_LIMIT_BYTES;
         assertTrue(bytes <= limit - 64 * 1024, "estimated " + bytes + " bytes");

@@ -22,7 +22,9 @@ public class PerfCountersTest {
         assertEquals(0L, PerfCounters.start());
         PerfCounters.add("x", PerfCounters.start());
         PerfCounters.hit("y");
-        assertTrue(PerfCounters.report().isEmpty());
+        assertTrue(
+            PerfCounters.report()
+                .isEmpty());
     }
 
     @Test
@@ -46,9 +48,13 @@ public class PerfCountersTest {
         table.add("big", 5_000_000L);
         List<String> lines = table.report();
         assertEquals(2, lines.size());
-        assertTrue(lines.get(0).startsWith("big"));
+        assertTrue(
+            lines.get(0)
+                .startsWith("big"));
         table.reset();
-        assertTrue(table.report().isEmpty());
+        assertTrue(
+            table.report()
+                .isEmpty());
     }
 
     @Test

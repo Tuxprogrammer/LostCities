@@ -1,10 +1,5 @@
 package com.tuxprogrammer.lostcities.layout;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-// Ported from Lost Cities (MIT):
-// https://github.com/McJtyMods/LostCities/blob/f18a094d/src/main/java/mcjty/lostcities/worldgen/lost/City.java
-// Avoids: PROF-11, PROF-10, CITY-05, CITY-06, CITY-07, CITY-39, CITY-40
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +9,7 @@ import com.tuxprogrammer.lostcities.layout.predefined.PredefinedCity;
 import com.tuxprogrammer.lostcities.layout.random.WeightedPicker;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * Where the cities are and which city style governs each chunk: upstream's {@code City} (centers, radii, the city

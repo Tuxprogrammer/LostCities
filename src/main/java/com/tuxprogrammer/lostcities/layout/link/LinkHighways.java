@@ -1,7 +1,5 @@
 package com.tuxprogrammer.lostcities.layout.link;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * The highways of the city link network ({@code networkLayout=links}, design record 0015): one highway along every

@@ -46,7 +46,8 @@ public final class PlanWorker {
      */
     public static final Set<String> SAFE_SOURCES = Collections.unmodifiableSet(
         new HashSet<>(
-            Arrays.asList("ColumnHeightCache", "ChunkHeights", "ChunkColumnCache", "NetworkGate", "Rwg2LandmarkOracle")));
+            Arrays
+                .asList("ColumnHeightCache", "ChunkHeights", "ChunkColumnCache", "NetworkGate", "Rwg2LandmarkOracle")));
     /** Fetches after which a target is dropped; the server thread plans it inline if it is ever needed. */
     static final int MAX_FETCHES_PER_TARGET = PlanPrefetcher.MAX_FETCHES_PER_TARGET;
 

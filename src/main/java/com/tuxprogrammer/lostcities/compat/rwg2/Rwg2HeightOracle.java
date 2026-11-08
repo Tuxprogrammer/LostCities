@@ -31,7 +31,8 @@ import rwg2.world.ChunkManagerRealistic;
  * </ul>
  *
  * <p>
- * Load this class only when {@code Loader.isModLoaded("rwg2")}. One instance computes noise on one thread (its sampler is stateful); its cache is safe for concurrent
+ * Load this class only when {@code Loader.isModLoaded("rwg2")}. One instance computes noise on one thread (its sampler
+ * is stateful); its cache is safe for concurrent
  * callers. Side: server.
  */
 public final class Rwg2HeightOracle implements TerrainHeightOracle {

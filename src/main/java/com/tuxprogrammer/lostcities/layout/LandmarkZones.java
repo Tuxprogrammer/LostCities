@@ -1,6 +1,5 @@
 package com.tuxprogrammer.lostcities.layout;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,6 +12,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
 
 /**
  * Derives each chunk's landmark zone from the structure oracle (0006 §1, landmark-zones.md § Zones): the core (chunks
@@ -144,7 +144,8 @@ final class LandmarkZones {
      * Returns whether a link may not cross a chunk: the chunk is a landmark's {@link Zone#CORE}, {@link Zone#EDGE_RING}
      * or {@link Zone#AVOID_RING} (0013 §1, 0015 §6). Always the answer {@link #zone} gives, since those are the three
      * strongest zones and a landmark not ignored gives one of them exactly when the chunk lies within
-     * {@link #EDGE_RING_DISTANCE} of its grown footprint; but read from a per-cell bit mask whose oracle query grows the
+     * {@link #EDGE_RING_DISTANCE} of its grown footprint; but read from a per-cell bit mask whose oracle query grows
+     * the
      * cell by {@link #linkMaskReach()} only, kept apart from the zone caches (D-linkgraph-shrink-1).
      *
      * @param chunkX chunk X
@@ -332,7 +333,8 @@ final class LandmarkZones {
 
     /**
      * A direct-mapped cache of link masks, one {@code long} per 8 × 8-chunk cell (bit {@code dx * 8 + dz} set when that
-     * chunk {@linkplain #blocksLinks blocks links}), in three primitive arrays. A slot holds the last cell hashed to it;
+     * chunk {@linkplain #blocksLinks blocks links}), in three primitive arrays. A slot holds the last cell hashed to
+     * it;
      * a collision only costs a recomputation, never a different answer. Not thread-safe by itself: the owner locks it.
      */
     private static final class LinkMasks {
