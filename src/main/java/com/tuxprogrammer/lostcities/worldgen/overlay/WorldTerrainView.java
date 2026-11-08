@@ -75,7 +75,7 @@ public final class WorldTerrainView implements TerrainView {
     }
 
     private BiomeGenBase biome(int chunkX, int chunkZ) {
-        return world.getWorldChunkManager()
+        return PlanThreads.manager(world)
             .getBiomeGenAt((chunkX << 4) + CENTER, (chunkZ << 4) + CENTER);
     }
 }

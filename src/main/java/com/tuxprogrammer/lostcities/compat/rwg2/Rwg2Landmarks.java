@@ -108,7 +108,7 @@ public final class Rwg2Landmarks {
             LostCities.LOG
                 .info("[LCNH-RWG2] dimension {}: landmark oracle on ({})", world.provider.dimensionId, settings());
             return new Rwg2LandmarkOracle(
-                new ManagerLandforms(manager),
+                ManagerLandforms.forWorld(world, manager),
                 heights,
                 Rwg2LandmarkOracle.REGION_CACHE_SIZE,
                 Rwg2LandmarkOracle.LANDMARK_CACHE_SIZE);

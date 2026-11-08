@@ -9,6 +9,7 @@ import net.minecraftforge.common.BiomeDictionary;
 
 import com.tuxprogrammer.lostcities.asset.match.BiomeDescriptor;
 import com.tuxprogrammer.lostcities.compat.rwg.RealisticBiomes;
+import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
 
 /**
  * Builds the plain-data {@link BiomeDescriptor} that biome matchers test, from a world and a column: the provider
@@ -32,7 +33,8 @@ public final class BiomeDescriptors {
      * @return the descriptor
      */
     public static BiomeDescriptor at(World world, int blockX, int blockZ) {
-        BiomeGenBase biome = world.getWorldChunkManager()
+        // The plan worker asks its own copy of the provider (D-plan-worker-2).
+        BiomeGenBase biome = PlanThreads.manager(world)
             .getBiomeGenAt(blockX, blockZ);
         return BiomeDescriptor
             .of(types(biome), biome == null ? "" : biome.biomeName, RealisticBiomes.at(world, blockX, blockZ));

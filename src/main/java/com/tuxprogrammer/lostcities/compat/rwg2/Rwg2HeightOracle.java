@@ -71,6 +71,19 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
         return new Rwg2HeightOracle(new ChunkGeneratorRealistic(manager, world.getSeed(), continental), manager);
     }
 
+    /**
+     * Builds a plan worker's own oracle over the worker's own copy of the world's manager (D-plan-worker-2): the same
+     * sampler {@link #create} builds, so the heights are the same.
+     *
+     * @param manager     the worker's manager, {@code new ChunkManagerRealistic(seed, continental)}
+     * @param seed        the world's seed
+     * @param continental whether the world type is RWG2 Continents
+     * @return the oracle
+     */
+    public static Rwg2HeightOracle forWorker(ChunkManagerRealistic manager, long seed, boolean continental) {
+        return new Rwg2HeightOracle(new ChunkGeneratorRealistic(manager, seed, continental), manager);
+    }
+
     @Override
     public int height(int blockX, int blockZ) {
         int chunkX = blockX >> 4;

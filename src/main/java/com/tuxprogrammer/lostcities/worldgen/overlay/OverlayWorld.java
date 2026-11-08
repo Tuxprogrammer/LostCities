@@ -1,5 +1,6 @@
 package com.tuxprogrammer.lostcities.worldgen.overlay;
 
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -10,6 +11,7 @@ import com.tuxprogrammer.lostcities.asset.AssetSet;
 import com.tuxprogrammer.lostcities.asset.BlockRef;
 import com.tuxprogrammer.lostcities.asset.model.WorldStyle;
 import com.tuxprogrammer.lostcities.asset.view.LayoutAssets;
+import com.tuxprogrammer.lostcities.compat.HeightOracles;
 import com.tuxprogrammer.lostcities.compat.packhouses.PackHouses;
 import com.tuxprogrammer.lostcities.config.profile.ProfileSnapshot;
 import com.tuxprogrammer.lostcities.config.profile.ProfileValues;
@@ -76,6 +78,11 @@ public final class OverlayWorld {
     private final int chunksBeforeInstall;
     private final EditSessions editSessions = new EditSessions();
     private final boolean editMode;
+    /** The plan lock and worker (D-plan-worker-1); {@code null} when planning stays on the server thread. */
+    private final PlanLock planLock;
+    private final PlanWorker planWorker;
+    /** Depth of server-thread generation calls in progress, so a window opens only at the outermost one. */
+    private int generating;
     private long cascades;
 
     OverlayWorld(WorldServer world, ProfileSnapshot snapshot, TerrainHeightOracle oracle, int chunksBeforeInstall) {
@@ -94,9 +101,20 @@ public final class OverlayWorld {
             settings,
             classifier,
             BlockRefs::exists);
-        TerrainHeightOracle columns = ChunkColumnCache.wrap(oracle, probe);
+        // The plan worker's own inputs (D-plan-worker-2), built here on the server thread; RWG2 worlds only.
+        HeightOracles.WorkerInputs workerInputs = PlanWorker.enabled() && PrefetchTicker.enabled()
+            ? HeightOracles.forWorker(world)
+            : null;
+        TerrainHeightOracle routed = workerInputs == null ? oracle
+            : new RoutedHeightOracle(world, oracle, workerInputs.oracle);
+        TerrainHeightOracle columns = ChunkColumnCache.wrap(routed, probe);
         this.columns = columns;
-        this.heights = new ChunkHeights(columns, settings.heightSampleSize(), timers::recordOracle, probe);
+        // The timers measure the server thread; the worker's samples are its own (PlanWorker#summary).
+        this.heights = new ChunkHeights(columns, settings.heightSampleSize(), nanos -> {
+            if (!PlanThreads.onWorker(world)) {
+                timers.recordOracle(nanos);
+            }
+        }, probe);
         this.biomes = new WorldBiomes(world);
         this.cities = layoutPlan(world, snapshot, settings, columns, heights, biomes, classifier, timers, probe, refs);
         this.editMode = snapshot.profileValues()
@@ -115,6 +133,20 @@ public final class OverlayWorld {
             probe,
             timers,
             (x, z) -> world.theChunkProviderServer != null && world.theChunkProviderServer.chunkExists(x, z));
+        if (workerInputs != null && cities != null) {
+            this.planLock = new PlanLock();
+            this.planWorker = new PlanWorker(
+                "LCNH plan worker dim " + dimension,
+                plan,
+                probe,
+                planLock,
+                () -> PlanThreads.bind(world, workerInputs.manager));
+            prefetcher.worker(planWorker);
+            LostCities.LOG.info("LCNH plan worker started for dimension {}", dimension);
+        } else {
+            this.planLock = null;
+            this.planWorker = null;
+        }
         this.terrainPhase = new TerrainPhase(context, plan);
         if (cities != null) {
             // The API's generation events (docs/api.md); with no listener they change nothing.
@@ -165,7 +197,7 @@ public final class OverlayWorld {
             return null;
         }
         WorldTerrainView terrain = new WorldTerrainView(world, heights, oracle);
-        StructureOracle structures = timed(StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
+        StructureOracle structures = timed(world, StructureOracles.forWorld(world, oracle, settings.landmarkMargin()), timers);
         LayoutPlanner planner = new LayoutPlanner(
             LayoutInputs
                 .builder(
@@ -240,7 +272,7 @@ public final class OverlayWorld {
     }
 
     /** Wraps a structure oracle so each call is timed (the {@code structures} series of the timers). */
-    private static StructureOracle timed(StructureOracle oracle, GenerationTimers timers) {
+    private static StructureOracle timed(World world, StructureOracle oracle, GenerationTimers timers) {
         if (oracle == StructureOracle.NONE) {
             return oracle;
         }
@@ -249,7 +281,9 @@ public final class OverlayWorld {
             try {
                 return oracle.landmarksTouching(minX, minZ, maxX, maxZ);
             } finally {
-                timers.recordStructures(System.nanoTime() - start);
+                if (!PlanThreads.onWorker(world)) {
+                    timers.recordStructures(System.nanoTime() - start);
+                }
             }
         };
     }
@@ -568,6 +602,77 @@ public final class OverlayWorld {
         return columns.computations();
     }
 
+    /**
+     * Enters a server-thread generation call (a chunk's base terrain or population), which may plan: closes a window
+     * left open between ticks, since another mod's tick handler may generate chunks there (D-plan-worker-1).
+     *
+     * @return whether a window was closed, to pass to {@link #exitGeneration(boolean)}
+     */
+    boolean enterGeneration() {
+        generating++;
+        if (planLock != null && planLock.isOpen()) {
+            planLock.closeWindow();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Leaves a server-thread generation call.
+     *
+     * @param reopen what {@link #enterGeneration()} returned
+     */
+    void exitGeneration(boolean reopen) {
+        generating--;
+        if (reopen) {
+            planLock.openWindow();
+        }
+    }
+
+    /**
+     * Opens a window while the wrapped generator builds a chunk's base terrain, which runs no planning code of this
+     * mod: only at the outermost generation call and never inside a population, where planning may be under way
+     * further up the stack (D-plan-worker-1).
+     *
+     * @return whether a window was opened, to pass to {@link #closeBaseWindow(boolean)}
+     */
+    boolean openBaseWindow() {
+        return planLock != null && generating == 1 && !FootprintGuard.populating() && planLock.openWindow();
+    }
+
+    /**
+     * Closes the window {@link #openBaseWindow()} opened, waiting for the worker's current unit.
+     *
+     * @param opened what {@link #openBaseWindow()} returned
+     */
+    void closeBaseWindow(boolean opened) {
+        if (opened) {
+            planLock.closeWindow();
+        }
+    }
+
+    /**
+     * Opens the window between ticks, after the prefetcher's turn: the server thread plans nothing until the next tick
+     * starts (D-plan-worker-1).
+     */
+    void openTickWindow() {
+        if (planLock != null && generating == 0) {
+            planLock.openWindow();
+        }
+    }
+
+    /** Closes the window between ticks, at the start of a tick, waiting for the worker's current unit. */
+    void closeTickWindow() {
+        if (planLock != null) {
+            planLock.closeWindow();
+        }
+    }
+
+    /** Returns the world's plan worker, or {@code null} when planning stays on the server thread. */
+    PlanWorker planWorker() {
+        return planWorker;
+    }
+
     /** Returns the plan prefetcher. */
     public PlanPrefetcher prefetcher() {
         return prefetcher;
@@ -609,6 +714,10 @@ public final class OverlayWorld {
 
     /** Frees the caches; the world is unloading. */
     void close() {
+        if (planWorker != null) {
+            planWorker.stop();
+            LostCities.LOG.info("LCNH plan worker stopped for dimension {}: {}", dimension, planWorker.summary());
+        }
         editSessions.clear();
         plan.clear();
         heights.clear();

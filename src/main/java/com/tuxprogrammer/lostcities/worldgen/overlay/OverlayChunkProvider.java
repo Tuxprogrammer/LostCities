@@ -58,13 +58,25 @@ public final class OverlayChunkProvider implements IChunkProvider {
 
     @Override
     public Chunk provideChunk(int chunkX, int chunkZ) {
+        boolean reopen = overlay.enterGeneration();
+        try {
+            return provide(chunkX, chunkZ);
+        } finally {
+            overlay.exitGeneration(reopen);
+        }
+    }
+
+    private Chunk provide(int chunkX, int chunkZ) {
         long start = System.nanoTime();
         boolean deferring = SkylightDeferral.begin(world, chunkX, chunkZ);
         boolean owed = false;
         Chunk chunk;
+        // The plan worker may plan while the wrapped generator builds the base terrain (D-plan-worker-1).
+        boolean window = overlay.openBaseWindow();
         try {
             chunk = delegate.provideChunk(chunkX, chunkZ);
         } finally {
+            overlay.closeBaseWindow(window);
             if (deferring) {
                 owed = SkylightDeferral.end();
             }
@@ -102,6 +114,15 @@ public final class OverlayChunkProvider implements IChunkProvider {
 
     @Override
     public void populate(IChunkProvider provider, int chunkX, int chunkZ) {
+        boolean reopen = overlay.enterGeneration();
+        try {
+            populateChunk(provider, chunkX, chunkZ);
+        } finally {
+            overlay.exitGeneration(reopen);
+        }
+    }
+
+    private void populateChunk(IChunkProvider provider, int chunkX, int chunkZ) {
         long start = System.nanoTime();
         boolean pushed = FootprintGuard.push(world, overlay.plan(), true);
         if (!pushed) {
