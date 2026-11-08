@@ -414,6 +414,45 @@ final class DetourSearch {
         return out;
     }
 
+    /** One search node: a chunk reached with a heading, its cost so far and the node it came from. */
+    private static final class Node {
+
+        final int x;
+        final int z;
+        final int heading;
+        final int g;
+        final int f;
+        final int h;
+        final Node parent;
+
+        Node(int x, int z, int heading, int g, int h, Node parent) {
+            this.x = x;
+            this.z = z;
+            this.heading = heading;
+            this.g = g;
+            this.h = h;
+            this.f = g + h;
+            this.parent = parent;
+        }
+    }
+
+    private static int compare(Node p, Node q) {
+        int c = Integer.compare(p.f, q.f);
+        if (c != 0) {
+            return c;
+        }
+        c = Integer.compare(p.h, q.h);
+        if (c != 0) {
+            return c;
+        }
+        c = Integer.compare(p.x, q.x);
+        if (c != 0) {
+            return c;
+        }
+        c = Integer.compare(p.z, q.z);
+        return c != 0 ? c : Integer.compare(p.heading, q.heading);
+    }
+
     private static int octile(int x, int z, int gx, int gz) {
         int dx = Math.abs(gx - x);
         int dz = Math.abs(gz - z);
