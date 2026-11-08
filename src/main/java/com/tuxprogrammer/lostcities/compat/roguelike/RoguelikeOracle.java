@@ -12,9 +12,9 @@ import com.tuxprogrammer.lostcities.layout.landmark.Certainty;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
-import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * The structure oracle for Roguelike Dungeons' towers (0006 §2): for each grid cell, the site its dungeon is predicted

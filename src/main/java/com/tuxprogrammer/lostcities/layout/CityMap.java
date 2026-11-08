@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.layout.predefined.PredefinedCity;
 import com.tuxprogrammer.lostcities.layout.random.WeightedPicker;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
-import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Where the cities are and which city style governs each chunk: upstream's {@code City} (centers, radii, the city

@@ -3,10 +3,10 @@ package com.tuxprogrammer.lostcities.worldgen.overlay;
 import net.minecraft.util.ChunkCoordinates;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
-import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Diagnostic scenario {@code perf.sites}: generates several fresh 25 x 25 chunk squares spaced about 1000 blocks

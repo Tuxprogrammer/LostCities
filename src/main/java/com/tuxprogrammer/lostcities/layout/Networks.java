@@ -11,12 +11,12 @@ import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.link.CityHighways;
 import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 import com.tuxprogrammer.lostcities.layout.link.LinkHighways;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.layout.rail.RailChunk;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayInputs;
 import com.tuxprogrammer.lostcities.layout.rail.RailwayLayout;
 import com.tuxprogrammer.lostcities.layout.view.InfrastructureView;
 import com.tuxprogrammer.lostcities.layout.view.RailInfo;
-import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * A world's highway and railway networks (M06), built by the {@link LayoutPlanner} from its own city map, city levels

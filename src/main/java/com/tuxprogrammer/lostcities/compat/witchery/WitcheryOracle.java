@@ -11,9 +11,9 @@ import com.tuxprogrammer.lostcities.layout.landmark.Certainty;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
-import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * The structure oracle for Witchery's standalone structures (0006 §2; coexistence.md § Witchery): a landmark lot over
