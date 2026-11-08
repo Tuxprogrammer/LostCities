@@ -1,4 +1,4 @@
-package com.tuxprogrammer.lostcities.worldgen.timing;
+package com.tuxprogrammer.lostcities.layout.perf;
 
 import java.util.ArrayList;
 import java.util.List;

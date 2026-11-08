@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.tuxprogrammer.lostcities.layout.CityHighwayLayout;
 import com.tuxprogrammer.lostcities.layout.highway.HighwayInfo;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Each link-network city's own highway (design record 0017): a beltway or a cut-through, chosen per city by its room.

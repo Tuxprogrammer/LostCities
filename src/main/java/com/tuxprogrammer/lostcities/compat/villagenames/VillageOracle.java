@@ -13,7 +13,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * The structure oracle for VillageNames villages (0006 §2; coexistence.md § How a VillageNames village is placed):

@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * The city link graph of a grid-placed world ({@code networkLayout=links}, docs/design/0015-city-link-network.md §1).

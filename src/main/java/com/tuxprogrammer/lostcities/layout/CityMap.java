@@ -9,7 +9,7 @@ import com.tuxprogrammer.lostcities.layout.predefined.PredefinedCity;
 import com.tuxprogrammer.lostcities.layout.random.WeightedPicker;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Where the cities are and which city style governs each chunk: upstream's {@code City} (centers, radii, the city

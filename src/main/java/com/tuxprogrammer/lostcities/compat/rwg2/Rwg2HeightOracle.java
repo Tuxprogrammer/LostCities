@@ -4,7 +4,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.WorldChunkManager;
 
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 import rwg2.biomes.realistic.RealisticBiomeBase;
 import rwg2.world.ChunkGeneratorRealistic;

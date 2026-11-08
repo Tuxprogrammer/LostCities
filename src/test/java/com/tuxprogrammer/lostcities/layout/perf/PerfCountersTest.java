@@ -1,4 +1,4 @@
-package com.tuxprogrammer.lostcities.worldgen.timing;
+package com.tuxprogrammer.lostcities.layout.perf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

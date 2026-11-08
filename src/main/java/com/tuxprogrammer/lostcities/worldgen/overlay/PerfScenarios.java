@@ -6,7 +6,7 @@ import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Diagnostic scenario {@code perf.sites}: generates several fresh 25 x 25 chunk squares spaced about 1000 blocks
@@ -15,9 +15,9 @@ import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
  */
 public final class PerfScenarios {
 
-    static final int SITES = Integer.getInteger("lostcitiesnh.perf.sites", 6);
-    static final int SITE_RADIUS = Integer.getInteger("lostcitiesnh.perf.radius", 12);
-    static final int SITE_SPACING = Integer.getInteger("lostcitiesnh.perf.spacing", 63);
+    static final int SITES = Integer.getInteger("lostcitiesnh.perfSites", 6);
+    static final int SITE_RADIUS = Integer.getInteger("lostcitiesnh.perfRadius", 12);
+    static final int SITE_SPACING = Integer.getInteger("lostcitiesnh.perfSpacing", 63);
 
     private PerfScenarios() {}
 

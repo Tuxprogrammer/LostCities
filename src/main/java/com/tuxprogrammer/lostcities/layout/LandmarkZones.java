@@ -12,7 +12,7 @@ import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.layout.landmark.Zone;
 import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * Derives each chunk's landmark zone from the structure oracle (0006 §1, landmark-zones.md § Zones): the core (chunks

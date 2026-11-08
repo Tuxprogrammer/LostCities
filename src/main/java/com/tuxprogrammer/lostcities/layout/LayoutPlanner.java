@@ -39,7 +39,7 @@ import com.tuxprogrammer.lostcities.layout.view.Selection;
 import com.tuxprogrammer.lostcities.layout.view.StyleView;
 import com.tuxprogrammer.lostcities.layout.view.TerrainView;
 import com.tuxprogrammer.lostcities.layout.view.WorldStyleView;
-import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**
  * One dimension's city layout: what each chunk holds, as a pure function of the world seed, the chunk coordinates,
