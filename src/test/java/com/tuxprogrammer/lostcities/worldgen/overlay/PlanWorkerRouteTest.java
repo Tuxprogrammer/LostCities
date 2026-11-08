@@ -167,7 +167,9 @@ public class PlanWorkerRouteTest {
                     }
                 }
             }
-            assertTrue(allCached(threaded.plan), "the worker planned every target: " + worker.summary() + " uncached " + uncached(threaded.plan));
+            assertTrue(
+                allCached(threaded.plan),
+                "the worker planned every target: " + worker.summary() + " uncached " + uncached(threaded.plan));
         } finally {
             worker.stop();
         }
@@ -187,7 +189,10 @@ public class PlanWorkerRouteTest {
         for (int[] t : targets()) {
             if (!plan.isCached(t[0], t[1])) {
                 if (n++ < 12) {
-                    out.append(t[0]).append(',').append(t[1]).append(' ');
+                    out.append(t[0])
+                        .append(',')
+                        .append(t[1])
+                        .append(' ');
                 }
             }
         }
