@@ -153,6 +153,14 @@ public class PlanWorkerRouteTest {
                 Thread.sleep(2);
                 lock.closeWindow();
                 prefetcher.tick();
+                if (worker.queued() == 0 && worker.peekDeferred() == null) {
+                    // The worker's queue is bounded: targets it dropped are submitted again.
+                    for (int[] t : targets()) {
+                        if (!threaded.plan.isCached(t[0], t[1])) {
+                            worker.submit(t[0], t[1], false);
+                        }
+                    }
+                }
             }
             assertTrue(allCached(threaded.plan), "the worker planned every target: " + worker.summary());
         } finally {
