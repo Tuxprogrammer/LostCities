@@ -26,8 +26,16 @@ import com.tuxprogrammer.lostcities.layout.landmark.ZoneInfo;
  * order. Both caches are bounded and belong to the planner.
  *
  * <p>
+ * Link routing asks only whether a chunk is a core or the ring around one ({@link #blocksLinks}), along paths hundreds
+ * of chunks long. It reads a separate per-cell bit mask whose oracle query grows the cell by {@link #linkMaskReach()}
+ * chunks instead of {@link #reach()}, so a long route neither queries the oracles over the wide square nor evicts the
+ * caches the planner needs (D-linkgraph-shrink-1).
+ *
+ * <p>
  * Spec: docs/new-spec/04-city-layout/landmark-zones.md, docs/design/0006-build-around-other-worldgen.md §1. Side:
- * server.
+ * server. Thread-safe: each cache is locked around each read and write, never while the oracle runs, and every value
+ * is a pure function of its key, so a value two threads compute at once is the same either way; the first one stored
+ * is the one both return.
  */
 final class LandmarkZones {
 
@@ -37,12 +45,23 @@ final class LandmarkZones {
     static final int EDGE_RING_DISTANCE = 1;
     /** Margin, in chunks, beyond the rings for lanes that reach just past them. */
     private static final int LANE_MARGIN = 2;
+    /**
+     * Cells the link mask cache holds: 256 cells of 8 × 8 chunks cover 16384 chunks, a 128-chunk square, in about
+     * 4.4 KB. That is what fits the B5 headroom; a miss costs one oracle query of about 12 × 12 chunks
+     * (D-linkgraph-shrink-5).
+     */
+    static final int LINK_MASK_SLOTS = 256;
+    /** Estimated bytes of one {@link #near} cache entry: map entry, key, list and a landmark or two. */
+    static final int CELL_ENTRY_BYTES = 256;
 
     private final StructureOracle oracle;
     private final LayoutProfile profile;
     private final int reach;
+    private final int linkMaskReach;
+    private final int cellCapacity;
     private final ChunkCache<List<Landmark>> cells;
     private final ChunkCache<ZoneInfo> zones;
+    private final LinkMasks linkMasks = new LinkMasks(LINK_MASK_SLOTS);
 
     LandmarkZones(StructureOracle oracle, LayoutProfile profile, int cacheSize) {
         this.oracle = oracle;
@@ -51,13 +70,23 @@ final class LandmarkZones {
         int ringReach = EDGE_RING_DISTANCE + profile.villageTransitionRings + LANE_MARGIN;
         int linkReach = profile.villageLinkDistance + EDGE_RING_DISTANCE + LANE_MARGIN;
         this.reach = Math.max(capReach, Math.max(ringReach, linkReach));
-        this.cells = new ChunkCache<>(Math.max(64, cacheSize / (CELL * CELL)));
+        // A landmark puts a chunk in its core or ring only when one of its footprint rectangles, grown by the margin in
+        // blocks, lies within EDGE_RING_DISTANCE chunks of it; the plain rectangle then lies within that plus the
+        // margin rounded up to whole chunks. Never wider than near()'s reach, so the mask sees near()'s candidates.
+        this.linkMaskReach = Math.min(reach, EDGE_RING_DISTANCE + (profile.landmarkMargin + 15) / 16);
+        this.cellCapacity = Math.max(64, cacheSize / (CELL * CELL));
+        this.cells = new ChunkCache<>(cellCapacity);
         this.zones = new ChunkCache<>(cacheSize);
     }
 
     /** Returns how far, in chunks, a landmark's rules can reach beyond its core. */
     int reach() {
         return reach;
+    }
+
+    /** Returns how far, in chunks, the link mask's oracle query reaches beyond its cell ({@link #blocksLinks}). */
+    int linkMaskReach() {
+        return linkMaskReach;
     }
 
     /**
@@ -67,14 +96,32 @@ final class LandmarkZones {
     List<Landmark> near(int chunkX, int chunkZ) {
         int cellX = Math.floorDiv(chunkX, CELL);
         int cellZ = Math.floorDiv(chunkZ, CELL);
-        List<Landmark> cached = cells.get(cellX, cellZ);
+        List<Landmark> cached = cachedNear(cellX, cellZ);
         if (cached != null) {
             return cached;
         }
-        int minX = cellX * CELL - reach;
-        int minZ = cellZ * CELL - reach;
-        int maxX = cellX * CELL + CELL - 1 + reach;
-        int maxZ = cellZ * CELL + CELL - 1 + reach;
+        List<Landmark> found = query(cellX, cellZ, reach);
+        synchronized (cells) {
+            List<Landmark> raced = cells.get(cellX, cellZ);
+            return raced != null ? raced : cells.put(cellX, cellZ, found);
+        }
+    }
+
+    private List<Landmark> cachedNear(int cellX, int cellZ) {
+        synchronized (cells) {
+            return cells.get(cellX, cellZ);
+        }
+    }
+
+    /**
+     * Returns the landmarks touching a query cell grown by some chunks: sorted by identity, the first of each identity
+     * kept, unmodifiable.
+     */
+    private List<Landmark> query(int cellX, int cellZ, int grow) {
+        int minX = cellX * CELL - grow;
+        int minZ = cellZ * CELL - grow;
+        int maxX = cellX * CELL + CELL - 1 + grow;
+        int maxZ = cellZ * CELL + CELL - 1 + grow;
         List<Landmark> found = new ArrayList<>(oracle.landmarksTouching(minX, minZ, maxX, maxZ));
         found.sort(Comparator.comparing(Landmark::id));
         List<Landmark> deduplicated = new ArrayList<>();
@@ -85,7 +132,74 @@ final class LandmarkZones {
                 deduplicated.add(landmark);
             }
         }
-        return cells.put(cellX, cellZ, Collections.unmodifiableList(deduplicated));
+        return Collections.unmodifiableList(deduplicated);
+    }
+
+    /**
+     * Returns whether a link may not cross a chunk: the chunk is a landmark's {@link Zone#CORE}, {@link Zone#EDGE_RING}
+     * or {@link Zone#AVOID_RING} (0013 §1, 0015 §6). Always the answer {@link #zone} gives, since those are the three
+     * strongest zones and a landmark not ignored gives one of them exactly when the chunk lies within
+     * {@link #EDGE_RING_DISTANCE} of its grown footprint; but read from a per-cell bit mask whose oracle query grows the
+     * cell by {@link #linkMaskReach()} only, kept apart from the zone caches (D-linkgraph-shrink-1).
+     *
+     * @param chunkX chunk X
+     * @param chunkZ chunk Z
+     * @return whether the chunk is a core or the ring around one
+     */
+    boolean blocksLinks(int chunkX, int chunkZ) {
+        int cellX = Math.floorDiv(chunkX, CELL);
+        int cellZ = Math.floorDiv(chunkZ, CELL);
+        long key = ChunkCache.key(cellX, cellZ);
+        long mask = 0L;
+        boolean held;
+        synchronized (linkMasks) {
+            held = linkMasks.holds(key);
+            if (held) {
+                mask = linkMasks.mask(key);
+            }
+        }
+        if (!held) {
+            mask = computeLinkMask(cellX, cellZ);
+            synchronized (linkMasks) {
+                linkMasks.put(key, mask);
+            }
+        }
+        int bit = (chunkX - cellX * CELL) * CELL + (chunkZ - cellZ * CELL);
+        return (mask >>> bit & 1L) != 0;
+    }
+
+    private long computeLinkMask(int cellX, int cellZ) {
+        // near()'s list when it is at hand: it holds every landmark the narrower query would, plus farther ones that
+        // cannot set a bit.
+        List<Landmark> landmarks = cachedNear(cellX, cellZ);
+        if (landmarks == null) {
+            landmarks = query(cellX, cellZ, linkMaskReach);
+        }
+        long mask = 0L;
+        for (Landmark landmark : landmarks) {
+            if (profile.treatment(landmark.kind()) == LandmarkTreatment.IGNORE) {
+                continue;
+            }
+            for (int dx = 0; dx < CELL; dx++) {
+                for (int dz = 0; dz < CELL; dz++) {
+                    if (landmark.coreDistance(cellX * CELL + dx, cellZ * CELL + dz, profile.landmarkMargin)
+                        <= EDGE_RING_DISTANCE) {
+                        mask |= 1L << (dx * CELL + dz);
+                    }
+                }
+            }
+        }
+        return mask;
+    }
+
+    /**
+     * Returns the most memory the near-landmark cache and the link mask cache can hold, estimated, in bytes, for budget
+     * B5. The zone cache is one of the layout caches {@code LayoutCityPlan} already counts.
+     *
+     * @return bytes
+     */
+    long estimatedCacheBytes() {
+        return (long) cellCapacity * CELL_ENTRY_BYTES + LinkMasks.bytes(LINK_MASK_SLOTS);
     }
 
     /**
@@ -141,11 +255,17 @@ final class LandmarkZones {
 
     /** Returns a chunk's zone. */
     ZoneInfo zone(int chunkX, int chunkZ) {
-        ZoneInfo cached = zones.get(chunkX, chunkZ);
-        if (cached != null) {
-            return cached;
+        synchronized (zones) {
+            ZoneInfo cached = zones.get(chunkX, chunkZ);
+            if (cached != null) {
+                return cached;
+            }
         }
-        return zones.put(chunkX, chunkZ, computeZone(chunkX, chunkZ));
+        ZoneInfo computed = computeZone(chunkX, chunkZ);
+        synchronized (zones) {
+            ZoneInfo raced = zones.get(chunkX, chunkZ);
+            return raced != null ? raced : zones.put(chunkX, chunkZ, computed);
+        }
     }
 
     private ZoneInfo computeZone(int chunkX, int chunkZ) {
@@ -201,5 +321,51 @@ final class LandmarkZones {
             return 4;
         }
         return Integer.MAX_VALUE;
+    }
+
+    /**
+     * A direct-mapped cache of link masks, one {@code long} per 8 × 8-chunk cell (bit {@code dx * 8 + dz} set when that
+     * chunk {@linkplain #blocksLinks blocks links}), in three primitive arrays. A slot holds the last cell hashed to it;
+     * a collision only costs a recomputation, never a different answer. Not thread-safe by itself: the owner locks it.
+     */
+    private static final class LinkMasks {
+
+        private final long[] keys;
+        private final long[] masks;
+        private final boolean[] filled;
+
+        LinkMasks(int slots) {
+            keys = new long[slots];
+            masks = new long[slots];
+            filled = new boolean[slots];
+        }
+
+        /** Returns the most memory a cache of some slots holds, in bytes: the three arrays and their headers. */
+        static long bytes(int slots) {
+            return slots * (2L * Long.BYTES + 1) + 3 * 16;
+        }
+
+        private int slot(long key) {
+            return (int) (ChunkKeys.of((int) (key >> 32), (int) key) >>> 40) & (keys.length - 1);
+        }
+
+        /** Returns whether a cell's mask is held. */
+        boolean holds(long key) {
+            int slot = slot(key);
+            return filled[slot] && keys[slot] == key;
+        }
+
+        /** Returns a held cell's mask. */
+        long mask(long key) {
+            return masks[slot(key)];
+        }
+
+        /** Stores a cell's mask. */
+        void put(long key, long mask) {
+            int slot = slot(key);
+            keys[slot] = key;
+            masks[slot] = mask;
+            filled[slot] = true;
+        }
     }
 }

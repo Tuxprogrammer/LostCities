@@ -42,6 +42,8 @@ public final class Networks implements InfrastructureView {
     /** The city link graph ({@code networkLayout=links} with grid-placed cities), or {@code null}. */
     private final CityLinkGraph links;
     private final LinkHighways linkHighways;
+    /** The planner's landmark zones, whose link mask the link graph routes by. */
+    private final LandmarkZones zones;
 
     /**
      * Builds the networks of a planner's world.
@@ -53,6 +55,7 @@ public final class Networks implements InfrastructureView {
         CityMap cities = planner.cities;
         CityLevels levels = planner.levels;
         LandmarkZones zones = planner.zones;
+        this.zones = zones;
         float maxMultiplier = planner.worldStyle.maxCityChanceMultiplier();
         CityPotential potential = new CityPotential() {
 
@@ -179,10 +182,9 @@ public final class Networks implements InfrastructureView {
 
                 @Override
                 public boolean blocked(int chunkX, int chunkZ) {
-                    // A landmark's core or margin (0013 §1, 0015 §6).
-                    Zone zone = zones.zone(chunkX, chunkZ)
-                        .zone();
-                    return zone == Zone.CORE || zone == Zone.EDGE_RING || zone == Zone.AVOID_RING;
+                    // A landmark's core or margin (0013 §1, 0015 §6): the zone's CORE, EDGE_RING or AVOID_RING, read
+                    // from the link mask so a long route never sweeps the zone caches (D-linkgraph-shrink-1).
+                    return zones.blocksLinks(chunkX, chunkZ);
                 }
             }, LINK_CACHE_CELLS);
             // Each city's beltway or cut-through (0017), from terrain, zones and the city map only.
@@ -322,7 +324,9 @@ public final class Networks implements InfrastructureView {
      * @return bytes
      */
     public long estimatedCacheBytes() {
-        return highways.estimatedCacheBytes() + railways.estimatedCacheBytes();
+        // The landmark zones' near-landmark and link mask caches are counted here: the layout's own count covers the
+        // zone cache only (D-linkgraph-shrink-5).
+        return highways.estimatedCacheBytes() + railways.estimatedCacheBytes() + zones.estimatedCacheBytes();
     }
 
     /** Returns whether the cities' subways generate (the {@code railways} module). */

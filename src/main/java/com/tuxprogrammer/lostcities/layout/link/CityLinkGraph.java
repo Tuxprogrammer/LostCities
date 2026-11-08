@@ -21,7 +21,15 @@ import java.util.Map;
  * only, never loads a chunk, so the graph cannot cascade.
  *
  * <p>
- * Side: server. Not thread-safe; one instance per dimension's layout, like the other planners.
+ * Work is shared and bounded (D-linkgraph-shrink-2, -3): a link's route is computed once per unordered pair of ends and
+ * cached, a node's symmetric {@link #links} are cached, and every scan over neighboring cells skips the cells that
+ * cannot hold a node or a path in range. None of this changes an answer: each skipped cell provably contributes
+ * nothing, and each cached value is the one the computation returns.
+ *
+ * <p>
+ * Side: server. One instance per dimension's layout, like the other planners. Thread-safe: the caches are synchronized
+ * LRUs locked only around each read and write, never while a value is computed, and their values are immutable pure
+ * functions of the key, so concurrent callers that compute the same value at once both return the first one stored.
  */
 public final class CityLinkGraph {
 
@@ -64,45 +72,54 @@ public final class CityLinkGraph {
         }
     }
 
-    /** One link: two city centers, lower end first. */
+    /**
+     * One link: two city centers, lower end first, and its path. Immutable, so links cached and shared between threads
+     * need no lock: the path is rasterized in the constructor.
+     */
     public static final class Link {
 
         private final int ax;
         private final int az;
         private final int bx;
         private final int bz;
-        private List<LinkRaster.Step> path;
-        private int minX;
-        private int minZ;
-        private int maxX;
-        private int maxZ;
+        private final List<LinkRaster.Step> path;
+        private final int minX;
+        private final int minZ;
+        private final int maxX;
+        private final int maxZ;
 
+        /** The straight link between two centers, given in either order. */
         Link(int ax, int az, int bx, int bz) {
+            this(ax, az, bx, bz, null);
+        }
+
+        /**
+         * A link along a given path (a detour, D390), or the straight raster when the path is {@code null}; the path
+         * runs from the lower end.
+         */
+        Link(int ax, int az, int bx, int bz, List<LinkRaster.Step> path) {
             boolean lower = LinkRaster.lower(ax, az, bx, bz);
             this.ax = lower ? ax : bx;
             this.az = lower ? az : bz;
             this.bx = lower ? bx : ax;
             this.bz = lower ? bz : az;
-        }
-
-        /** A link along a given path (a detour, D390); the path runs from the lower end. */
-        Link(int ax, int az, int bx, int bz, List<LinkRaster.Step> path) {
-            this(ax, az, bx, bz);
-            setPath(path);
-        }
-
-        private void setPath(List<LinkRaster.Step> steps) {
-            path = steps;
-            minX = Integer.MAX_VALUE;
-            minZ = Integer.MAX_VALUE;
-            maxX = Integer.MIN_VALUE;
-            maxZ = Integer.MIN_VALUE;
+            List<LinkRaster.Step> steps = path != null ? path
+                : LinkRaster.rasterize(this.ax, this.az, this.bx, this.bz);
+            int x0 = Integer.MAX_VALUE;
+            int z0 = Integer.MAX_VALUE;
+            int x1 = Integer.MIN_VALUE;
+            int z1 = Integer.MIN_VALUE;
             for (LinkRaster.Step step : steps) {
-                minX = Math.min(minX, step.chunkX());
-                minZ = Math.min(minZ, step.chunkZ());
-                maxX = Math.max(maxX, step.chunkX());
-                maxZ = Math.max(maxZ, step.chunkZ());
+                x0 = Math.min(x0, step.chunkX());
+                z0 = Math.min(z0, step.chunkZ());
+                x1 = Math.max(x1, step.chunkX());
+                z1 = Math.max(z1, step.chunkZ());
             }
+            this.path = steps;
+            this.minX = x0;
+            this.minZ = z0;
+            this.maxX = x1;
+            this.maxZ = z1;
         }
 
         /** Returns the lower end's chunk X. */
@@ -138,15 +155,11 @@ public final class CityLinkGraph {
          * landmark (D390). Equal links carry the same path, since the graph derives it from the ends alone.
          */
         public List<LinkRaster.Step> path() {
-            if (path == null) {
-                setPath(LinkRaster.rasterize(ax, az, bx, bz));
-            }
             return path;
         }
 
         /** Returns whether the path's bounding box overlaps a chunk rectangle. */
         boolean overlaps(int x0, int z0, int x1, int z1) {
-            path();
             return maxX >= x0 && minX <= x1 && maxZ >= z0 && minZ <= z1;
         }
 
@@ -200,14 +213,18 @@ public final class CityLinkGraph {
     }
 
     private static final int[] NONE = new int[0];
+    /** The route cache's mark for a pair no path clears; never handed out. */
+    private static final Link NO_ROUTE = new Link(0, 0, 0, 0);
 
     private final Nodes nodes;
     private final int cell;
     private final int reach;
     private final int maxDistance;
-    private final Lru<int[]> centers;
-    private final Lru<List<Link>> neighbors;
-    private final Lru<Map<Long, List<Hit>>> cellIndex;
+    private final Lru<Long, int[]> centers;
+    private final Lru<Long, List<Link>> neighbors;
+    private final Lru<Long, List<Link>> symmetric;
+    private final Lru<Pair, Link> routes;
+    private final Lru<Long, Map<Long, List<Hit>>> cellIndex;
 
     /**
      * Builds the graph over a node oracle.
@@ -224,6 +241,9 @@ public final class CityLinkGraph {
         int size = Math.max(64, cacheSize);
         this.centers = new Lru<>(size * 4);
         this.neighbors = new Lru<>(size * 2);
+        this.symmetric = new Lru<>(size * 2);
+        // About the routes the cached nodes asked for; most hold the very links the neighbor cache holds.
+        this.routes = new Lru<>(size * 2 * NEAREST);
         // A cell's chunk index grows with the cell's area; keep about the same chunk area cached at every cell size.
         long scale = (long) cell * cell / ((long) REFERENCE_CELL * REFERENCE_CELL);
         this.cellIndex = new Lru<>((int) Math.max(16, size / 8 / Math.max(1, scale)));
@@ -265,12 +285,29 @@ public final class CityLinkGraph {
      * @return {chunkX, chunkZ}, or {@code null}
      */
     public int[] node(int cellX, int cellZ) {
-        int[] cached = centers.get(cellX, cellZ);
+        int[] cached = centers.get(key(cellX, cellZ));
         if (cached == null) {
             int[] center = nodes.cityCenter(cellX, cellZ);
-            cached = centers.put(cellX, cellZ, center == null ? NONE : center);
+            cached = centers.putIfAbsent(key(cellX, cellZ), center == null ? NONE : center);
         }
         return cached.length == 0 ? null : cached;
+    }
+
+    /**
+     * Returns whether a cell's chunk box lies farther than {@link #maxDistance()} from a point, in straight-line
+     * distance: then no node in that cell is within link range of the point (D-linkgraph-shrink-3).
+     */
+    private boolean outOfRange(int x, int z, int cellX, int cellZ) {
+        long dx = gap(x, cellX);
+        long dz = gap(z, cellZ);
+        return dx * dx + dz * dz > (long) maxDistance * maxDistance;
+    }
+
+    /** Returns how far a coordinate lies outside a cell's span along one axis, 0 inside. */
+    private int gap(int v, int cellV) {
+        int min = cellV * cell;
+        int max = min + cell - 1;
+        return v < min ? min - v : v > max ? v - max : 0;
     }
 
     /**
@@ -285,7 +322,7 @@ public final class CityLinkGraph {
      * @return the chosen links
      */
     public List<Link> chosen(int cellX, int cellZ) {
-        List<Link> cached = neighbors.get(cellX, cellZ);
+        List<Link> cached = neighbors.get(key(cellX, cellZ));
         if (cached != null) {
             return cached;
         }
@@ -295,7 +332,8 @@ public final class CityLinkGraph {
             long max = (long) maxDistance * maxDistance;
             for (int ox = -reach; ox <= reach; ox++) {
                 for (int oz = -reach; oz <= reach; oz++) {
-                    if (ox == 0 && oz == 0) {
+                    // A cell out of range holds no candidate: its node, if any, fails the distance test below.
+                    if (ox == 0 && oz == 0 || outOfRange(self[0], self[1], cellX + ox, cellZ + oz)) {
                         continue;
                     }
                     int[] other = node(cellX + ox, cellZ + oz);
@@ -340,7 +378,7 @@ public final class CityLinkGraph {
                 found.size(),
                 out.size());
         }
-        return neighbors.put(cellX, cellZ, Collections.unmodifiableList(out));
+        return neighbors.putIfAbsent(key(cellX, cellZ), Collections.unmodifiableList(out));
     }
 
     /** Waypoint offsets across the link, in chunks, nearest first (D390). */
@@ -354,7 +392,8 @@ public final class CityLinkGraph {
      * waypoint offset across the link (each of {@link #DETOUR_OFFSETS}, at each of {@link #DETOUR_ALONG}, left before
      * right), whose waypoint lies within {@link #maxDistance()} of both ends, so {@link #reach} still bounds every
      * chunk of the path. A function of the two ends (taken lower first) and the oracle only, so whichever end asks
-     * gets the same path.
+     * gets the same path; so it is computed once per unordered pair and cached under the pair, lower end first
+     * (D-linkgraph-shrink-2).
      *
      * @param x1 one end's chunk X
      * @param z1 one end's chunk Z
@@ -363,6 +402,22 @@ public final class CityLinkGraph {
      * @return the link, or null when no path clears
      */
     Link route(int x1, int z1, int x2, int z2) {
+        boolean lower = LinkRaster.lower(x1, z1, x2, z2);
+        Pair pair = lower ? new Pair(x1, z1, x2, z2) : new Pair(x2, z2, x1, z1);
+        Link cached = routes.get(pair);
+        if (cached == null) {
+            Link computed = computeRoute(x1, z1, x2, z2);
+            cached = routes.putIfAbsent(pair, computed == null ? NO_ROUTE : computed);
+        }
+        return cached == NO_ROUTE ? null : cached;
+    }
+
+    /** Returns how many routes the cache holds, for tests. */
+    int cachedRoutes() {
+        return routes.size();
+    }
+
+    private Link computeRoute(int x1, int z1, int x2, int z2) {
         Link straight = new Link(x1, z1, x2, z2);
         if (!crossesBlocked(straight.path())) {
             return straight;
@@ -412,12 +467,22 @@ public final class CityLinkGraph {
 
     /**
      * Returns every link at a cell's node, symmetric: the ones it chose and the ones that chose it. Sorted by far end.
+     * Cached per cell, so the city highways, districts and scenarios that ask for the same node share one computation
+     * (D-linkgraph-shrink-4).
      *
      * @param cellX cell X
      * @param cellZ cell Z
-     * @return the links; empty when the cell has no node
+     * @return the links, unmodifiable; empty when the cell has no node
      */
     public List<Link> links(int cellX, int cellZ) {
+        List<Link> cached = symmetric.get(key(cellX, cellZ));
+        if (cached == null) {
+            cached = symmetric.putIfAbsent(key(cellX, cellZ), Collections.unmodifiableList(computeLinks(cellX, cellZ)));
+        }
+        return cached;
+    }
+
+    private List<Link> computeLinks(int cellX, int cellZ) {
         int[] self = node(cellX, cellZ);
         List<Link> out = new ArrayList<>();
         if (self == null) {
@@ -428,7 +493,8 @@ public final class CityLinkGraph {
         }
         for (int ox = -reach; ox <= reach; ox++) {
             for (int oz = -reach; oz <= reach; oz++) {
-                if (ox == 0 && oz == 0) {
+                // A node that chose this one lies within maxDistance of it, so a cell out of range chose nothing here.
+                if (ox == 0 && oz == 0 || outOfRange(self[0], self[1], cellX + ox, cellZ + oz)) {
                     continue;
                 }
                 for (Link link : chosen(cellX + ox, cellZ + oz)) {
@@ -455,9 +521,9 @@ public final class CityLinkGraph {
     public List<Hit> hits(int chunkX, int chunkZ) {
         int cellX = Math.floorDiv(chunkX, cell);
         int cellZ = Math.floorDiv(chunkZ, cell);
-        Map<Long, List<Hit>> index = cellIndex.get(cellX, cellZ);
+        Map<Long, List<Hit>> index = cellIndex.get(key(cellX, cellZ));
         if (index == null) {
-            index = cellIndex.put(cellX, cellZ, buildIndex(cellX, cellZ));
+            index = cellIndex.putIfAbsent(key(cellX, cellZ), buildIndex(cellX, cellZ));
         }
         List<Hit> hits = index.get(key(chunkX, chunkZ));
         return hits == null ? Collections.<Hit>emptyList() : hits;
@@ -469,8 +535,15 @@ public final class CityLinkGraph {
         int maxX = minX + cell - 1;
         int maxZ = minZ + cell - 1;
         List<Link> all = new ArrayList<>();
+        // Every chunk of a path lies in the bounding box of its ends and waypoint, each within maxDistance of the
+        // node that chose it, so per axis within maxDistance of that node: a cell whose box is farther than that from
+        // this cell's box chose no link that crosses it (D-linkgraph-shrink-3). One chunk of slack on top.
+        int cells = 1 + (maxDistance + 1) / cell;
         for (int ox = -reach; ox <= reach; ox++) {
             for (int oz = -reach; oz <= reach; oz++) {
+                if (Math.abs(ox) > cells || Math.abs(oz) > cells) {
+                    continue;
+                }
                 for (Link link : chosen(cellX + ox, cellZ + oz)) {
                     if (link.overlaps(minX, minZ, maxX, maxZ)) {
                         addOnce(all, link);
@@ -507,30 +580,72 @@ public final class CityLinkGraph {
         return (long) x << 32 | z & 0xffffffffL;
     }
 
-    /** A small access-ordered LRU keyed by cell or chunk coordinates. */
-    private static final class Lru<V> {
+    /** An unordered pair of link ends, lower end first: the route cache's key. */
+    private static final class Pair {
 
-        private final LinkedHashMap<Long, V> map;
+        private final int ax;
+        private final int az;
+        private final int bx;
+        private final int bz;
+
+        Pair(int ax, int az, int bx, int bz) {
+            this.ax = ax;
+            this.az = az;
+            this.bx = bx;
+            this.bz = bz;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Pair)) {
+                return false;
+            }
+            Pair p = (Pair) o;
+            return ax == p.ax && az == p.az && bx == p.bx && bz == p.bz;
+        }
+
+        @Override
+        public int hashCode() {
+            return ((ax * 31 + az) * 31 + bx) * 31 + bz;
+        }
+    }
+
+    /**
+     * A small access-ordered LRU, synchronized. Values are computed outside it and stored with {@link #putIfAbsent}, so
+     * two threads that computed the same value at once both get the first one stored.
+     */
+    private static final class Lru<K, V> {
+
+        private final LinkedHashMap<K, V> map;
 
         Lru(int capacity) {
-            this.map = new LinkedHashMap<Long, V>(16, 0.75f, true) {
+            this.map = new LinkedHashMap<K, V>(16, 0.75f, true) {
 
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected boolean removeEldestEntry(Map.Entry<Long, V> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
                     return size() > capacity;
                 }
             };
         }
 
-        V get(int x, int z) {
-            return map.get(key(x, z));
+        synchronized V get(K key) {
+            return map.get(key);
         }
 
-        V put(int x, int z, V value) {
-            map.put(key(x, z), value);
+        /** Stores a value unless one is held, and returns the one held afterwards. */
+        synchronized V putIfAbsent(K key, V value) {
+            V held = map.get(key);
+            if (held != null) {
+                return held;
+            }
+            map.put(key, value);
             return value;
+        }
+
+        synchronized int size() {
+            return map.size();
         }
     }
 }
