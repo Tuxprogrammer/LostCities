@@ -1,5 +1,7 @@
 package com.tuxprogrammer.lostcities.compat.roguelike;
 
+import com.tuxprogrammer.lostcities.worldgen.timing.PerfCounters;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -112,6 +114,15 @@ public final class RoguelikeOracle implements StructureOracle {
 
     @Override
     public synchronized List<Landmark> landmarksTouching(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return landmarksTouching0(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
+        } finally {
+            PerfCounters.add("rl.touching", perfStart);
+        }
+    }
+
+    private List<Landmark> landmarksTouching0(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
         if (!enabled()) {
             return Collections.emptyList();
         }
@@ -193,6 +204,15 @@ public final class RoguelikeOracle implements StructureOracle {
     }
 
     private Prediction compute(int cellX, int cellZ) {
+        long perfStart = PerfCounters.start();
+        try {
+            return compute0(cellX, cellZ);
+        } finally {
+            PerfCounters.add("rl.compute", perfStart);
+        }
+    }
+
+    private Prediction compute0(int cellX, int cellZ) {
         return new Progress(cellX, cellZ).advance(Integer.MAX_VALUE);
     }
 
