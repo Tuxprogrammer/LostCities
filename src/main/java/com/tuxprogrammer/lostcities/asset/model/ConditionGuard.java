@@ -191,6 +191,11 @@ public final class ConditionGuard {
         return top;
     }
 
+    /** Returns the {@code floor} clause, or null. */
+    public Integer floor() {
+        return floor;
+    }
+
     /** Returns the {@code cellar} clause, or null. */
     public Boolean cellar() {
         return cellar;

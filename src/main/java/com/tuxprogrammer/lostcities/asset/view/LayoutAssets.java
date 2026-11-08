@@ -392,6 +392,11 @@ public final class LayoutAssets implements AssetView {
         }
 
         @Override
+        public int groundFloors() {
+            return building.groundFloors();
+        }
+
+        @Override
         public String pickPart(Random random, PartContext context) {
             return name(building.randomPart(random, context(context)));
         }

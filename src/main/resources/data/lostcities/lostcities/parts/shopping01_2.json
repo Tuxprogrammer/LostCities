@@ -3,6 +3,10 @@
     {
       "key": "dontconnect",
       "boolean": true
+    },
+    {
+      "key": "stretchrow",
+      "integer": 3
     }
   ],
   "xsize": 16,

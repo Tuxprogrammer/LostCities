@@ -1,4 +1,10 @@
 {
+  "meta": [
+    {
+      "key": "stretchrow",
+      "integer": 3
+    }
+  ],
   "xsize": 16,
   "zsize": 16,
   "slices": [

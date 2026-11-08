@@ -33,6 +33,9 @@ public final class Building {
     /** The highest {@code floorHeight} a building may set. */
     public static final int MAX_FLOOR_HEIGHT = 16;
 
+    /** The most floors {@code groundFloors} may give the ground height (decision log D-mall-1). */
+    public static final int MAX_GROUND_FLOORS = 4;
+
     /** A part reference: a part and the conditions under which a floor may use it. */
     public static final class PartRef {
 
@@ -65,6 +68,7 @@ public final class Building {
     private final int maxCellars;
     private final int floorHeight;
     private final int groundFloorHeight;
+    private final int groundFloors;
     private final boolean allowDoors;
     private final boolean allowFillers;
     private final boolean overrideFloors;
@@ -84,6 +88,7 @@ public final class Building {
         this.maxCellars = limits[3];
         this.floorHeight = limits[4];
         this.groundFloorHeight = limits[5];
+        this.groundFloors = limits[6];
         this.allowDoors = flags[0];
         this.allowFillers = flags[1];
         this.overrideFloors = flags[2];
@@ -114,7 +119,7 @@ public final class Building {
         }
         int[] limits = { root.integer("minfloors", UNSET), root.integer("maxfloors", UNSET),
             root.integer("mincellars", UNSET), root.integer("maxcellars", UNSET), root.integer("floorHeight", UNSET),
-            root.integer("groundFloorHeight", UNSET) };
+            root.integer("groundFloorHeight", UNSET), root.integer("groundFloors", 1) };
         // D-floor-heights-1: a building's own floor heights, slab to slab; unset takes the world's pitch.
         for (int i = 4; i <= 5; i++) {
             if (limits[i] != UNSET && (limits[i] < MIN_FLOOR_HEIGHT || limits[i] > MAX_FLOOR_HEIGHT)) {
@@ -124,6 +129,11 @@ public final class Building {
                     "must be between " + MIN_FLOOR_HEIGHT + " and " + MAX_FLOOR_HEIGHT);
                 ok = false;
             }
+        }
+        // D-mall-1: a ground storey several parts tall takes groundFloorHeight on each of them.
+        if (limits[6] < 1 || limits[6] > MAX_GROUND_FLOORS) {
+            root.error("groundFloors", Integer.toString(limits[6]), "must be between 1 and " + MAX_GROUND_FLOORS);
+            ok = false;
         }
         boolean[] flags = { root.flag("allowDoors", true), root.flag("allowFillers", true),
             root.flag("overrideFloors", false) };
@@ -260,6 +270,14 @@ public final class Building {
      */
     public int groundFloorHeight() {
         return groundFloorHeight;
+    }
+
+    /**
+     * Returns {@code groundFloors}: how many floors, from the ground floor up, rise {@link #groundFloorHeight()}; 1
+     * when unset (decision log D-mall-1).
+     */
+    public int groundFloors() {
+        return groundFloors;
     }
 
     /** Returns whether only this building's floor and cellar limits apply. */

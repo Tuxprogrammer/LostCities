@@ -246,19 +246,16 @@ public class StairContinuityTest {
     private static final int FITS_TO_PITCH = 8;
 
     /**
-     * The pairs of extra rows two stacked floors of this building take at a pitch: cellar under cellar, cellar under
-     * the ground floor, ground floor under the first floor, and floor under floor.
+     * The pairs of extra rows two stacked floors of this building take at a pitch: every floor under the next, from
+     * cellar under cellar, through the ground floors ({@code groundFloors} of them, D-mall-1), to floor under floor.
      */
     private static Set<List<Integer>> extraPairs(Building building, int pitch) {
-        FloorHeights heights = FloorHeights.of(pitch, building.floorHeight(), building.groundFloorHeight());
-        int cellar = heights.height(-1) - 6;
-        int ground = heights.height(0) - 6;
-        int upper = heights.height(1) - 6;
+        FloorHeights heights = FloorHeights
+            .of(pitch, building.floorHeight(), building.groundFloorHeight(), building.groundFloors());
         Set<List<Integer>> out = new LinkedHashSet<>();
-        out.add(Arrays.asList(cellar, cellar));
-        out.add(Arrays.asList(cellar, ground));
-        out.add(Arrays.asList(ground, upper));
-        out.add(Arrays.asList(upper, upper));
+        for (int f = -2; f <= heights.groundFloors + 1; f++) {
+            out.add(Arrays.asList(heights.height(f) - 6, heights.height(f + 1) - 6));
+        }
         return out;
     }
 

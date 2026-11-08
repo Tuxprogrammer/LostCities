@@ -1381,7 +1381,8 @@ public final class LayoutPlanner implements HierarchicalBridgePlanner.Context {
         if (building == null) {
             return FloorHeights.uniform(profile.floorPitch);
         }
-        return FloorHeights.of(profile.floorPitch, building.floorHeight(), building.groundFloorHeight());
+        return FloorHeights
+            .of(profile.floorPitch, building.floorHeight(), building.groundFloorHeight(), building.groundFloors());
     }
 
     /** Steps 12.1 to 12.15 of building-info.md, for single and top-left chunks, in upstream's draw order. */

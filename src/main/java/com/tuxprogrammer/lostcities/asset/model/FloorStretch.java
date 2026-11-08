@@ -43,10 +43,15 @@ public final class FloorStretch {
      * Returns the row a part repeats when it is stretched.
      *
      * @param part the floor part
-     * @return the row from 1 to {@code height − 2} with the most spaces, the highest on a tie; -1 when the part is
-     *         under 3 rows tall and cannot stretch
+     * @return the part's {@code stretchrow} when it sets one from 1 to {@code height − 2} (decision log D-mall-1);
+     *         otherwise the row from 1 to {@code height − 2} with the most spaces, the highest on a tie; -1 when the
+     *         part is under 3 rows tall and cannot stretch
      */
     public static int repeatRow(Part part) {
+        Integer pinned = part.metaInteger(Part.MetaKey.STRETCHROW);
+        if (pinned != null && pinned >= 1 && pinned <= part.height() - 2) {
+            return pinned;
+        }
         int best = -1;
         int bestSpaces = -1;
         for (int y = 1; y <= part.height() - 2; y++) {

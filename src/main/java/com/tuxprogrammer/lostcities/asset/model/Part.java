@@ -30,7 +30,10 @@ import com.tuxprogrammer.lostcities.asset.json.JsonFields;
  */
 public final class Part {
 
-    /** The metadata keys upstream reads, with the value type each expects (upstream's {@code ILostCities.META_*}). */
+    /**
+     * The metadata keys read, with the value type each expects: upstream's {@code ILostCities.META_*} and our
+     * {@link #STRETCHROW}.
+     */
     public enum MetaKey {
 
         /** No doorway or corridor connection into this floor. */
@@ -44,7 +47,13 @@ public final class Part {
         /** Hard air below the water level stays air. */
         NOWATER("nowater", Boolean.class),
         /** Hard air always becomes air. */
-        FORCEDAIR("forcedair", Boolean.class);
+        FORCEDAIR("forcedair", Boolean.class),
+        /**
+         * The row this part repeats when its floor stretches (decision log D-mall-1), so the parts of one multibuilding
+         * floor stretch alike; ours, not upstream's. Unset, or outside 1 to {@code height − 2}, picks the row as
+         * {@link FloorStretch#repeatRow(Part)} describes.
+         */
+        STRETCHROW("stretchrow", Integer.class);
 
         private final String key;
         private final Class<?> type;

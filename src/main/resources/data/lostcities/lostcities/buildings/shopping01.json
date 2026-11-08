@@ -5,6 +5,8 @@
   "minfloors": 4,
   "maxfloors": 6,
   "preferslonely": 0.9,
+  "groundFloorHeight": 6,
+  "groundFloors": 2,
   "parts": [
     {
       "floor": 0,
