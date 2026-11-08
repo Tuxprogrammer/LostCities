@@ -46,10 +46,11 @@ final class LandmarkZones {
     /** Margin, in chunks, beyond the rings for lanes that reach just past them. */
     private static final int LANE_MARGIN = 2;
     /**
-     * Cells the link mask cache holds: 2048 cells of 8 × 8 chunks cover 131072 chunks, six times the ≈21000 distinct
-     * chunks the routes of one {@code rarecities} site touched (handoff perf-chunkgen §3), in about 34 KB.
+     * Cells the link mask cache holds: 256 cells of 8 × 8 chunks cover 16384 chunks, a 128-chunk square, in about
+     * 4.4 KB. That is what fits the B5 headroom; a miss costs one oracle query of about 12 × 12 chunks
+     * (D-linkgraph-shrink-5).
      */
-    static final int LINK_MASK_SLOTS = 2048;
+    static final int LINK_MASK_SLOTS = 256;
     /** Estimated bytes of one {@link #near} cache entry: map entry, key, list and a landmark or two. */
     static final int CELL_ENTRY_BYTES = 256;
 

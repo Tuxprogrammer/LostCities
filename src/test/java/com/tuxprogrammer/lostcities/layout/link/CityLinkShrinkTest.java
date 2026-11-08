@@ -55,14 +55,19 @@ class CityLinkShrinkTest {
 
     @Test
     public void aRouteIsTheSameWhicheverEndAsksAndIsComputedOnce() {
+        // A long pair across blocked discs that has a route, found in a scratch graph.
+        CityLinkGraph scratch = new CityLinkGraph(new Nodes(), 64);
+        int bz = 90;
+        while (scratch.route(10, 30, 560, bz) == null) {
+            bz += 7;
+        }
         CityLinkGraph graph = new CityLinkGraph(new Nodes(), 64);
-        // Straight through blocked squares: the route detours.
-        Link ab = graph.route(10, 30, 560, 90);
-        Link ba = graph.route(560, 90, 10, 30);
+        Link ab = graph.route(10, 30, 560, bz);
+        Link ba = graph.route(560, bz, 10, 30);
         assertSame(ab, ba);
         assertEquals(1, graph.cachedRoutes());
         CityLinkGraph fresh = new CityLinkGraph(new Nodes(), 64);
-        Link reverse = fresh.route(560, 90, 10, 30);
+        Link reverse = fresh.route(560, bz, 10, 30);
         assertEquals(ab, reverse);
         assertEquals(steps(ab), steps(reverse));
     }
