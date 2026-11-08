@@ -67,12 +67,12 @@
       },
       "offset": [
         8,
-        10,
-        45
+        24,
+        48
       ],
       "yaw": 180,
-      "pitch": -10,
-      "caption": "The south wall straight on: library01 and library11 bands should be level at local x 16."
+      "pitch": 20,
+      "caption": "The south wall from high to the south: library01 and library11 bands should be level at local x 16."
     },
     {
       "name": "ground-wide",
