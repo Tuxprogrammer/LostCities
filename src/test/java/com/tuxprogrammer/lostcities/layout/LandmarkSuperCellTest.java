@@ -167,10 +167,10 @@ class LandmarkSuperCellTest {
         System.out.println(
             "D-perf2-route-1 one " + link.path()
                 .size() + "-chunk route: oracle queries before " + before + ", after " + after);
-        // The route's corridor is at most 2 * CORRIDOR + 1 = 129 chunks wide: about 3 rows of super-cells over the
-        // 10 columns of a 600-chunk link.
-        assertTrue(after <= 40, "bounded: " + after);
-        assertTrue(after * 3 <= before, "far fewer than before: " + after + " vs " + before);
+        // A 600-chunk link crosses about 38 columns of 16-chunk super-cells; the raster and its detours touch one or
+        // two rows of each, far fewer than the whole 129-chunk corridor (D-perf2-route-3).
+        assertTrue(after <= 100, "bounded: " + after);
+        assertTrue(after * 5 <= before, "far fewer than before: " + after + " vs " + before);
     }
 
     /** Random villages and avoided landmarks: every routed path is clear by the zone answer, in any query order. */
