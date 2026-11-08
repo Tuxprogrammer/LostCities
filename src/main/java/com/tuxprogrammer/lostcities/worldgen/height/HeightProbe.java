@@ -13,7 +13,15 @@ package com.tuxprogrammer.lostcities.worldgen.height;
  * swallow {@link NotCached}; see {@link #isProbe(Throwable)}.
  *
  * <p>
- * One per world; not thread-safe. Server thread only. Side: server, and plain Java in tests.
+ * <p>
+ * A world's plan worker (D-plan-worker-1) uses the same probe, always under the world's plan lock, so the probe is never
+ * used by two threads at once. On the worker thread {@link #fetchMissing()} runs only fetches of the sources the worker
+ * may run ({@link #bindWorker}); any other fetch, and every heavy one, is set aside for the server thread
+ * ({@link #takeDeferred()}) and the probe's exception is thrown again, so the plan is abandoned on the worker.
+ *
+ * <p>
+ * One per world; not thread-safe: used by the server thread, or by the plan worker while it holds the plan lock. Side:
+ * server, and plain Java in tests.
  */
 public final class HeightProbe {
 
@@ -40,6 +48,38 @@ public final class HeightProbe {
     }
 
     private String lastFetchSource = "none";
+
+    private volatile Thread worker;
+    private java.util.function.Predicate<String> workerSafe = source -> false;
+    private Runnable deferred;
+    private boolean deferredHeavy;
+
+    /**
+     * Names the world's plan worker thread and the fetch sources it may run itself ({@link #lastFetchSource()} names).
+     *
+     * @param thread     the worker thread, or {@code null} for none
+     * @param safeSource whether a fetch of that source may run on the worker
+     */
+    public void bindWorker(Thread thread, java.util.function.Predicate<String> safeSource) {
+        this.workerSafe = safeSource;
+        this.worker = thread;
+    }
+
+    /**
+     * Returns and forgets the fetch the worker set aside for the server thread, if any.
+     *
+     * @return the fetch, or {@code null}
+     */
+    public Runnable takeDeferred() {
+        Runnable fetch = deferred;
+        deferred = null;
+        return fetch;
+    }
+
+    /** Returns whether the fetch {@link #takeDeferred()} would return is a heavy one. */
+    public boolean deferredIsHeavy() {
+        return deferred != null && deferredHeavy;
+    }
 
     /**
      * Starts or ends a probe.
@@ -101,6 +141,12 @@ public final class HeightProbe {
             return false;
         }
         String source = sourceOf(fetch);
+        if (worker != null && Thread.currentThread() == worker && (missingHeavy || !workerSafe.test(source))) {
+            // VillageNames' start and every source not known to be pure stay on the server thread.
+            deferred = fetch;
+            deferredHeavy = missingHeavy;
+            throw NOT_CACHED;
+        }
         boolean was = active;
         active = false;
         try {
