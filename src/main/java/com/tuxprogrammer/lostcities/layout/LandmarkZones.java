@@ -124,7 +124,8 @@ final class LandmarkZones {
     }
 
     /**
-     * Returns the landmarks of a cell's super-cell whose footprint touches the cell grown by {@link #reach()}: sorted by
+     * Returns the landmarks of a cell's super-cell whose footprint touches the cell grown by {@link #reach()}: sorted
+     * by
      * identity, the first of each identity kept, unmodifiable. The super-cell's query covers that grown cell, so by the
      * oracle's completeness every landmark touching it is in the super-cell's list.
      */
@@ -263,7 +264,8 @@ final class LandmarkZones {
     }
 
     /**
-     * Returns the most memory the near-landmark, super-cell and link mask caches can hold, estimated, in bytes, for budget
+     * Returns the most memory the near-landmark, super-cell and link mask caches can hold, estimated, in bytes, for
+     * budget
      * B5. The zone cache is one of the layout caches {@code LayoutCityPlan} already counts.
      *
      * @return bytes

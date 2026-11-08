@@ -165,17 +165,32 @@ final class DetourSearch {
         LinkRaster.Step to = straight.get(e);
         int startHeading = s == 0 ? NONE : heading(from.inDx(), from.inDz());
         int endHeading = e == n - 1 ? NONE : heading(to.outDx(), to.outDz());
-        List<int[]> middle = astar(from.chunkX(), from.chunkZ(), startHeading, to.chunkX(), to.chunkZ(), endHeading, kept);
+        List<int[]> middle = astar(
+            from.chunkX(),
+            from.chunkZ(),
+            startHeading,
+            to.chunkX(),
+            to.chunkZ(),
+            endHeading,
+            kept);
         if (middle == null) {
             return null;
         }
         List<int[]> moves = new ArrayList<>(s + middle.size() + n - e);
         for (int i = 0; i < s; i++) {
-            moves.add(new int[] { straight.get(i).outDx(), straight.get(i).outDz() });
+            moves.add(
+                new int[] { straight.get(i)
+                    .outDx(),
+                    straight.get(i)
+                        .outDz() });
         }
         moves.addAll(middle);
         for (int i = e; i < n - 1; i++) {
-            moves.add(new int[] { straight.get(i).outDx(), straight.get(i).outDz() });
+            moves.add(
+                new int[] { straight.get(i)
+                    .outDx(),
+                    straight.get(i)
+                        .outDz() });
         }
         List<LinkRaster.Step> path = LinkRaster.fromMoves(ax, az, moves);
         Set<Long> seen = new HashSet<>();
