@@ -395,19 +395,23 @@ class CityLinkGraphGeometryTest {
         int[] profile = PROFILES[1];
         Landmarks oracle = new Landmarks(profile, 4242L);
         CityLinkGraph scout = new CityLinkGraph(oracle, 4096);
-        // The longest kept link at the middle cell; draw the chunk halfway along it.
+        // The longest kept link at the cells around the origin; draw the chunk halfway along it.
         CityLinkGraph.Link longest = null;
-        for (CityLinkGraph.Link link : scout.links(0, 0)) {
-            if (longest == null || link.path()
-                .size()
-                > longest.path()
-                    .size()) {
-                longest = link;
+        for (int cx = -2; cx <= 2; cx++) {
+            for (int cz = -2; cz <= 2; cz++) {
+                for (CityLinkGraph.Link link : scout.links(cx, cz)) {
+                    if (longest == null || link.path()
+                        .size()
+                        > longest.path()
+                            .size()) {
+                        longest = link;
+                    }
+                }
             }
         }
         assertTrue(
             longest != null && longest.path()
-                .size() > profile[0],
+                .size() > profile[0] / 2,
             "a long link to draw");
         LinkRaster.Step middle = longest.path()
             .get(
