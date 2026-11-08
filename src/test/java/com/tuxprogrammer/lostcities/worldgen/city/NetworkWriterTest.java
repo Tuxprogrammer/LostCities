@@ -68,12 +68,12 @@ public class NetworkWriterTest {
         long landmarkZones = 65536L * 112 + 4096L * 200;
         long oracles = com.tuxprogrammer.lostcities.compat.OracleCacheBytes.TOTAL;
         long bytes = PLAN.estimatedCacheBytes() + scattered + planCache + heights + landmarkZones + oracles;
-        System.out.println("B5 breakdown: planner+layout " + PLAN.estimatedCacheBytes() + ", scattered " + scattered
+        String breakdown = "B5 breakdown: planner+layout " + PLAN.estimatedCacheBytes() + ", scattered " + scattered
             + ", planCache " + planCache + ", heights " + heights + ", landmarkZones " + landmarkZones + ", oracles "
             + oracles + " (rwg2 landmarks " + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.RWG2_LANDMARKS
             + ", rwg2 heights " + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.RWG2_HEIGHTS + ", villages "
-            + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.VILLAGES + ") total " + bytes);
-        assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, "estimated " + bytes + " bytes");
+            + com.tuxprogrammer.lostcities.compat.OracleCacheBytes.VILLAGES + ") total " + bytes;
+        assertTrue(bytes <= 16L * 1024 * 1024 - 64 * 1024, breakdown);
     }
 
     private static final LayoutPlanner PLANNER = PLAN.planner();
