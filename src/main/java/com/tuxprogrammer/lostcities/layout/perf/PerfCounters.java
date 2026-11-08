@@ -43,7 +43,8 @@ public final class PerfCounters {
 
     /**
      * Gives the current thread's counters a suffix, so a report tells where the work ran (D-perf2-worker-1): the plan
-     * worker tags itself {@code ".worker"}, and its routes count as {@code clg.route.step.worker}. Untagged threads (the
+     * worker tags itself {@code ".worker"}, and its routes count as {@code clg.route.step.worker}. Untagged threads
+     * (the
      * server thread) count under the plain names.
      *
      * @param suffix appended to every counter name this thread records, or {@code null} for none

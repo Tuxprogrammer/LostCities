@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.tuxprogrammer.lostcities.layout.highway.PlanningGate;
-
 import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
 /**

@@ -20,7 +20,8 @@ import com.tuxprogrammer.lostcities.layout.highway.PlanningGate;
 /**
  * Routes computed in bounded steps (D-perf2-worker-1) equal routes computed at once: a {@link DetourSearch} advanced a
  * few units at a time, or interrupted by a blocked test that throws the first time it meets new ground, ends with the
- * same path as {@link DetourSearch#find}; each step keeps its work bound; a graph whose gate defers routes to a stand-in
+ * same path as {@link DetourSearch#find}; each step keeps its work bound; a graph whose gate defers routes to a
+ * stand-in
  * worker publishes only finished routes, and the server path then finds them cached and routes nothing inline.
  */
 public class RouteStepTest {
@@ -235,9 +236,7 @@ public class RouteStepTest {
             }
             assertTrue(graph.routeCached(p[0], p[1], p[2], p[3]));
             assertNull(graph.routeTask(p[0], p[1], p[2], p[3]), "a finished route needs no task");
-            assertEquals(
-                describe(inline.route(p[0], p[1], p[2], p[3])),
-                describe(graph.route(p[2], p[3], p[0], p[1])));
+            assertEquals(describe(inline.route(p[0], p[1], p[2], p[3])), describe(graph.route(p[2], p[3], p[0], p[1])));
         }
         assertEquals(0, graph.inlineRoutes(), "every route came from its steps");
     }
