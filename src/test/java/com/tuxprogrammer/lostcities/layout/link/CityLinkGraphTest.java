@@ -83,6 +83,7 @@ class CityLinkGraphTest {
             assertTrue(nodes > 100, "nodes " + nodes);
         }
     }
+
     @Test
     void linksAreSymmetric() {
         CityLinkGraph graph = new CityLinkGraph(grid(99L), 512);

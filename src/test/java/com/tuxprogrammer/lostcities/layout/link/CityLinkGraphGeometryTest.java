@@ -399,13 +399,16 @@ class CityLinkGraphGeometryTest {
         CityLinkGraph.Link longest = null;
         for (CityLinkGraph.Link link : scout.links(0, 0)) {
             if (longest == null || link.path()
-                .size() > longest.path()
+                .size()
+                > longest.path()
                     .size()) {
                 longest = link;
             }
         }
-        assertTrue(longest != null && longest.path()
-            .size() > profile[0], "a long link to draw");
+        assertTrue(
+            longest != null && longest.path()
+                .size() > profile[0],
+            "a long link to draw");
         LinkRaster.Step middle = longest.path()
             .get(
                 longest.path()
