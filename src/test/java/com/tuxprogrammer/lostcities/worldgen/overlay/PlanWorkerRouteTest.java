@@ -147,7 +147,7 @@ public class PlanWorkerRouteTest {
             for (int[] t : targets()) {
                 worker.submit(t[0], t[1], false);
             }
-            long deadline = System.nanoTime() + 120_000_000_000L;
+            long deadline = System.nanoTime() + 20_000_000_000L;
             while (!allCached(threaded.plan) && System.nanoTime() < deadline) {
                 assertTrue(lock.openWindow(), "a window opens");
                 Thread.sleep(2);
@@ -162,7 +162,7 @@ public class PlanWorkerRouteTest {
                     }
                 }
             }
-            assertTrue(allCached(threaded.plan), "the worker planned every target: " + worker.summary());
+            assertTrue(allCached(threaded.plan), "the worker planned every target: " + worker.summary() + " uncached " + uncached(threaded.plan));
         } finally {
             worker.stop();
         }
@@ -174,6 +174,19 @@ public class PlanWorkerRouteTest {
         assertEquals(expected, actual);
         assertTrue(threaded.graph.steppedRoutes() > 0, "routes ran in steps on the worker");
         assertEquals(inlineBefore, threaded.graph.inlineRoutes(), "the server path found the worker's routes cached");
+    }
+
+    private static String uncached(CachedCityPlan plan) {
+        StringBuilder out = new StringBuilder();
+        int n = 0;
+        for (int[] t : targets()) {
+            if (!plan.isCached(t[0], t[1])) {
+                if (n++ < 12) {
+                    out.append(t[0]).append(',').append(t[1]).append(' ');
+                }
+            }
+        }
+        return n + ": " + out;
     }
 
     private static boolean allCached(CachedCityPlan plan) {
