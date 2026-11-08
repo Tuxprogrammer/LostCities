@@ -51,9 +51,9 @@ public final class VillageOracle implements StructureOracle {
      */
     public static final int REACH_CHUNKS = 11;
     /** Starts kept in the cache: a layout query covers at most about nine grid cells. */
-    public static final int CACHE_SIZE = 256;
+    public static final int CACHE_SIZE = 4096;
     /** Village plans kept for the retry of a prediction a probe abandoned while its plan was fetched. */
-    static final int PLAN_CACHE_SIZE = 16;
+    public static final int PLAN_CACHE_SIZE = 256;
 
     /** Why a start chunk is or is not a village; for the scenario's report. */
     public enum Status {
@@ -127,11 +127,11 @@ public final class VillageOracle implements StructureOracle {
     private final int gateClearance;
     private final BoundedCache<Prediction> cache;
     /**
-     * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}): a plan prefetcher's probe (0005 §8)
+     * Village plans kept apart from the predictions ({@value #PLAN_CACHE_SIZE}, never more than the predictions): a plan prefetcher's probe (0005 §8)
      * abandons a prediction whose plan is not built, fetches the plan alone and asks again, and VillageNames' start
      * constructor must not run again on the retry.
      */
-    private final BoundedCache<VillagePlan> planCache = new BoundedCache<>(PLAN_CACHE_SIZE);
+    private final BoundedCache<VillagePlan> planCache;
     /** The probe that guards the height oracle's cache; while it is active, a plan not built yet is fetched apart. */
     private final HeightProbe probe;
 
@@ -155,6 +155,7 @@ public final class VillageOracle implements StructureOracle {
         this.heights = heights;
         this.gateClearance = gateClearance;
         this.cache = new BoundedCache<>(cacheSize);
+        this.planCache = new BoundedCache<>(Math.min(PLAN_CACHE_SIZE, cacheSize));
         HeightProbe guard = heights == null ? null : heights.probe();
         this.probe = guard == null ? new HeightProbe() : guard;
     }

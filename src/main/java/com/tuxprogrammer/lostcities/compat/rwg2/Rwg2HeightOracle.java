@@ -30,7 +30,8 @@ import rwg2.world.ChunkManagerRealistic;
  * </ul>
  *
  * <p>
- * Load this class only when {@code Loader.isModLoaded("rwg2")}. Server thread only. Side: server.
+ * Load this class only when {@code Loader.isModLoaded("rwg2")}. One instance computes noise on one thread (its sampler is stateful); its cache is safe for concurrent
+ * callers. Side: server.
  */
 public final class Rwg2HeightOracle implements TerrainHeightOracle {
 
@@ -40,11 +41,13 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
     private final ChunkGeneratorRealistic sampler;
     private final ChunkManagerRealistic manager;
     private final RealisticBiomeBase[] biomes = new RealisticBiomeBase[256];
-    /** The last chunk's noise, copied: callers ask for many columns of one chunk in a row (a crater's chunk, a lot). */
-    private final float[] lastNoise = new float[256];
-    private int lastChunkX;
-    private int lastChunkZ;
-    private boolean hasLast;
+    /** Chunks of noise kept. */
+    public static final int CACHE_CHUNKS = 4096;
+    /** Most bytes the noise cache can hold, estimated, for budget B5. */
+    public static final long CACHE_BYTES = CACHE_CHUNKS * ChunkNoiseCache.ENTRY_BYTES;
+
+    /** Recently asked chunks' stride samples; the map is locked, the noise computation is not. */
+    private final ChunkNoiseCache cache = new ChunkNoiseCache(CACHE_CHUNKS, this::sampleChunk);
 
     private Rwg2HeightOracle(ChunkGeneratorRealistic sampler, ChunkManagerRealistic manager) {
         this.sampler = sampler;
@@ -71,28 +74,22 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
     public int height(int blockX, int blockZ) {
         int chunkX = blockX >> 4;
         int chunkZ = blockZ >> 4;
-        float[] noise = noiseOf(chunkX, chunkZ);
+        float[] samples = cache.get(chunkX, chunkZ);
         int localX = blockX & 15;
         int localZ = blockZ & 15;
-        // RWG's arrays are x-major: generateTerrain writes column (x, z) from noise[x × 16 + z].
-        int index = (localX - localX % STRIDE) * 16 + (localZ - localZ % STRIDE);
-        return (int) noise[index] + 1;
+        // RWG's arrays are x-major: generateTerrain writes column (x, z) from noise[x * 16 + z]; the cache keeps the
+        // four stride samples, slot (localX / 8) * 2 + (localZ / 8).
+        return (int) samples[(localX >> 3) * 2 + (localZ >> 3)] + 1;
     }
 
     /**
-     * Returns a chunk's noise, from the one-chunk memo when the chunk is the last one asked for: {@code getNewNoise}
-     * evaluates the chunk's four stride samples whatever column is asked, so a run of columns of one chunk costs one
-     * evaluation instead of one each. The answer is the same.
+     * Computes a chunk's four stride samples: {@code getNewNoise} evaluates them whatever column is asked, so a run of
+     * columns of one chunk costs one evaluation. The sampler and the {@code biomes} scratch belong to this instance,
+     * so one instance's computation runs on one thread; the cache around it is what is shared.
      */
-    private float[] noiseOf(int chunkX, int chunkZ) {
-        if (hasLast && chunkX == lastChunkX && chunkZ == lastChunkZ) {
-            return lastNoise;
-        }
+    private float[] sampleChunk(int chunkX, int chunkZ) {
         float[] noise = sampler.getNewNoise(manager, chunkX << 4, chunkZ << 4, biomes, STRIDE);
-        System.arraycopy(noise, 0, lastNoise, 0, Math.min(noise.length, lastNoise.length));
-        lastChunkX = chunkX;
-        lastChunkZ = chunkZ;
-        hasLast = true;
-        return lastNoise;
+        // x-major: column (x, z) is noise[x * 16 + z]; the samples sit at x, z in {0, 8}.
+        return new float[] { noise[0], noise[8], noise[8 * 16], noise[8 * 16 + 8] };
     }
 }
