@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan;
 
@@ -25,6 +26,10 @@ import com.tuxprogrammer.lostcities.worldgen.plan.CachedCityPlan;
  * <li>Each unit of work holds the world's {@link PlanLock}: the target's plan asked for with the probe active, and on a
  * miss one fetch. The plan lands in the shared {@link CachedCityPlan} under the lock, so the server thread reads it
  * there; it is immutable once built.</li>
+ * <li>City-link routes (D-perf2-worker-1): a route the target's plan misses is a fetch through the
+ * {@link NetworkGate}, which advances the route one bounded step per unit ({@code CityLinkGraph.STEP_WORK}), so the
+ * routes whose widened box covers a target are computed here, in steps, and published whole into the graph's route
+ * cache, where the server thread finds them.</li>
  * <li>A fetch the worker may not run (VillageNames' start, which touches the world and the generator's random, and any
  * source not listed as pure) is handed to the server thread with its target ({@link #pollDeferred()}); the worker
  * drops the target meanwhile.</li>
@@ -48,6 +53,8 @@ public final class PlanWorker {
         new HashSet<>(
             Arrays
                 .asList("ColumnHeightCache", "ChunkHeights", "ChunkColumnCache", "NetworkGate", "Rwg2LandmarkOracle")));
+    /** The suffix of the worker thread's perf counter names ({@link PerfCounters#tagThread}). */
+    public static final String THREAD_TAG = ".worker";
     /** Fetches after which a target is dropped; the server thread plans it inline if it is ever needed. */
     static final int MAX_FETCHES_PER_TARGET = PlanPrefetcher.MAX_FETCHES_PER_TARGET;
 
@@ -187,6 +194,8 @@ public final class PlanWorker {
     }
 
     private void run() {
+        // The worker's perf counters carry a thread suffix (clg.route.step.worker), D-perf2-worker-1.
+        PerfCounters.tagThread(THREAD_TAG);
         probe.bindWorker(Thread.currentThread(), SAFE_SOURCES::contains);
         bindThread.run();
         try {

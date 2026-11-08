@@ -27,7 +27,13 @@ import java.util.Set;
  * (lower first) and the blocked test, in any generation order.
  *
  * <p>
- * Pure: no world access, no shared state. Side: server.
+ * The search is resumable (D-perf2-worker-1): {@link #advance} runs it a bounded number of units at a time, and may be
+ * called again after the blocked test threw, so the plan worker can route a link in steps that each hold the plan lock
+ * briefly. {@link #find} runs the same steps unbounded, so a stepped search ends with the same path.
+ *
+ * <p>
+ * Pure: no world access, no shared state. Not thread-safe: one search is advanced by one thread at a time (its owner,
+ * {@code CityLinkGraph.RouteTask}, serializes it). Side: server.
  */
 final class DetourSearch {
 
@@ -44,6 +50,9 @@ final class DetourSearch {
     private static final int DIAGONAL = 14;
     /** The heading of a search node that has not moved yet. */
     private static final int NONE = 8;
+    private static final int SCAN = 0;
+    private static final int SEARCH = 1;
+    private static final int DONE = 2;
     /** The eight headings, counterclockwise from +X; adjacent indices differ by 45°. */
     private static final int[] DX = { 1, 1, 0, -1, -1, -1, 0, 1 };
     private static final int[] DZ = { 0, 1, 1, 1, 0, -1, -1, -1 };
@@ -74,6 +83,15 @@ final class DetourSearch {
     private final Map<Long, Boolean> memo = new HashMap<>();
     private int budget = MAX_EXPANSIONS;
     private int expansions;
+    /** Where the search is: the opening scan, a window's A* search, or finished. */
+    private int phase = SCAN;
+    private boolean endsTested;
+    private int scanIndex;
+    private int first = -1;
+    private int last = -1;
+    private Window window;
+    private List<LinkRaster.Step> result;
+    private long work;
 
     /**
      * Prepares a search; {@link #find} runs it.
@@ -110,12 +128,62 @@ final class DetourSearch {
     }
 
     /**
-     * Runs the search once.
+     * Runs the search to its end in one call.
      *
      * @return the path, lower end first, or {@code null} when none is found within the bounds
      */
     List<LinkRaster.Step> find() {
-        return search();
+        while (!advance(Integer.MAX_VALUE)) {
+            // advance returns false only when its work bound is reached
+        }
+        return result;
+    }
+
+    /**
+     * Advances the search by at most {@code maxWork} units of work, one per raster chunk the opening scan tests and one
+     * per node the A* search expands (D-perf2-worker-1). The plan worker calls it in bounded steps so a route never
+     * holds the plan lock for long; {@link #find} is the same loop without a bound, so a search advanced in any number
+     * of steps of any sizes ends with exactly the path {@link #find} returns.
+     *
+     * <p>
+     * Safe to call again after the blocked test threw (a probe's miss, or any other error): a unit tests every chunk it
+     * needs before it changes any state, and each test's answer is memoized only once it returns, so a throw leaves the
+     * search as it was before that unit, and the next call repeats the unit.
+     *
+     * @param maxWork the most units to spend in this call, at least 1
+     * @return {@code true} when the search has finished ({@link #result()})
+     */
+    boolean advance(int maxWork) {
+        int spent = 0;
+        while (phase != DONE) {
+            if (spent >= maxWork) {
+                return false;
+            }
+            if (phase == SCAN) {
+                scanStep();
+                spent++;
+                work++;
+            } else if (searchStep()) {
+                spent++;
+                work++;
+            }
+        }
+        return true;
+    }
+
+    /** Returns whether the search has finished. */
+    boolean done() {
+        return phase == DONE;
+    }
+
+    /** Returns the path found, or {@code null} when there is none or the search has not finished. */
+    List<LinkRaster.Step> result() {
+        return result;
+    }
+
+    /** Returns how many units of work {@link #advance} has spent in all. */
+    long work() {
+        return work;
     }
 
     /** Returns how many nodes the search expanded, never more than {@link #MAX_EXPANSIONS}. */
@@ -123,61 +191,108 @@ final class DetourSearch {
         return expansions;
     }
 
-    private List<LinkRaster.Step> search() {
+    /**
+     * One unit of the opening scan: the two ends first (either blocked, or a raster of one chunk, means no route), then
+     * one raster chunk, then the window around the blocked stretch, or the straight raster when nothing is blocked.
+     */
+    private void scanStep() {
         int n = straight.size();
-        if (n < 2 || isBlocked(ax, az) || isBlocked(bx, bz)) {
-            return null;
+        if (!endsTested) {
+            if (n < 2 || isBlocked(ax, az) || isBlocked(bx, bz)) {
+                finish(null);
+                return;
+            }
+            endsTested = true;
+            return;
         }
-        int first = -1;
-        int last = -1;
-        for (int i = 0; i < n; i++) {
-            LinkRaster.Step step = straight.get(i);
+        if (scanIndex < n) {
+            LinkRaster.Step step = straight.get(scanIndex);
             if (isBlocked(step.chunkX(), step.chunkZ())) {
                 if (first < 0) {
-                    first = i;
+                    first = scanIndex;
                 }
-                last = i;
+                last = scanIndex;
             }
+            scanIndex++;
+            return;
         }
         if (first < 0) {
-            return straight;
+            finish(straight);
+            return;
         }
-        int s = Math.max(0, first - MARGIN);
-        int e = Math.min(n - 1, last + MARGIN);
-        List<LinkRaster.Step> path = window(s, e);
-        if (path == null && (s > 0 || e < n - 1)) {
-            path = window(0, n - 1);
-        }
-        return path;
+        window = new Window(Math.max(0, first - MARGIN), Math.min(n - 1, last + MARGIN));
+        phase = SEARCH;
     }
 
-    /** Searches the stretch from step s to step e and joins it to the kept raster, or returns {@code null}. */
-    private List<LinkRaster.Step> window(int s, int e) {
+    /**
+     * One pass of the current window's A* loop: drops a stale queue entry, ends the window at its goal or when the
+     * budget is spent, or expands one node.
+     *
+     * @return {@code true} when a node was expanded (one unit of work)
+     */
+    private boolean searchStep() {
+        Window w = window;
+        if (w.open.isEmpty()) {
+            windowFailed(w);
+            return false;
+        }
+        Node node = w.open.peek();
+        Integer known = w.best.get(state(node.x, node.z, node.heading));
+        if (known != null && known < node.g) {
+            w.open.poll();
+            return false;
+        }
+        if (node.x == w.gx && node.z == w.gz) {
+            w.open.poll();
+            windowFound(w, moves(node));
+            return false;
+        }
+        if (budget <= 0) {
+            budget--;
+            windowFailed(w);
+            return false;
+        }
+        int[] headings = node.heading == NONE ? ALL
+            : new int[] { (node.heading + 7) & 7, node.heading, (node.heading + 1) & 7 };
+        // Every blocked test this expansion needs, before anything changes: a throw here leaves the state as it was.
+        for (int heading : headings) {
+            int nx = node.x + DX[heading];
+            int nz = node.z + DZ[heading];
+            if (nx != w.gx || nz != w.gz) {
+                open(nx, nz, w.kept);
+            }
+        }
+        w.open.poll();
+        budget--;
+        expansions++;
+        for (int heading : headings) {
+            int nx = node.x + DX[heading];
+            int nz = node.z + DZ[heading];
+            if (nx == w.gx && nz == w.gz) {
+                if (w.endHeading != NONE && !gentle(heading, w.endHeading)) {
+                    continue;
+                }
+            } else if (!open(nx, nz, w.kept)) {
+                continue;
+            }
+            int g = node.g + ((heading & 1) == 0 ? SIDE : DIAGONAL)
+                + (node.heading != NONE && heading != node.heading ? TURN : 0);
+            long state = state(nx, nz, heading);
+            Integer seen = w.best.get(state);
+            if (seen != null && seen <= g) {
+                continue;
+            }
+            w.best.put(state, g);
+            w.open.add(new Node(nx, nz, heading, g, octile(nx, nz, w.gx, w.gz), node));
+        }
+        return true;
+    }
+
+    /** Joins a window's moves to the kept raster; a join that revisits a chunk fails the window. */
+    private void windowFound(Window w, List<int[]> middle) {
         int n = straight.size();
-        Set<Long> kept = new HashSet<>();
-        for (int i = 0; i < s; i++) {
-            kept.add(key(straight.get(i)));
-        }
-        for (int i = e + 1; i < n; i++) {
-            kept.add(key(straight.get(i)));
-        }
-        LinkRaster.Step from = straight.get(s);
-        LinkRaster.Step to = straight.get(e);
-        int startHeading = s == 0 ? NONE : heading(from.inDx(), from.inDz());
-        int endHeading = e == n - 1 ? NONE : heading(to.outDx(), to.outDz());
-        List<int[]> middle = astar(
-            from.chunkX(),
-            from.chunkZ(),
-            startHeading,
-            to.chunkX(),
-            to.chunkZ(),
-            endHeading,
-            kept);
-        if (middle == null) {
-            return null;
-        }
-        List<int[]> moves = new ArrayList<>(s + middle.size() + n - e);
-        for (int i = 0; i < s; i++) {
+        List<int[]> moves = new ArrayList<>(w.s + middle.size() + n - w.e);
+        for (int i = 0; i < w.s; i++) {
             moves.add(
                 new int[] { straight.get(i)
                     .outDx(),
@@ -185,7 +300,7 @@ final class DetourSearch {
                         .outDz() });
         }
         moves.addAll(middle);
-        for (int i = e; i < n - 1; i++) {
+        for (int i = w.e; i < n - 1; i++) {
             moves.add(
                 new int[] { straight.get(i)
                     .outDx(),
@@ -196,98 +311,66 @@ final class DetourSearch {
         Set<Long> seen = new HashSet<>();
         for (LinkRaster.Step step : path) {
             if (!seen.add(key(step))) {
-                return null;
+                windowFailed(w);
+                return;
             }
         }
-        return path;
+        finish(path);
     }
 
-    /** One search node: a chunk reached with a heading, its cost so far and the node it came from. */
-    private static final class Node {
-
-        final int x;
-        final int z;
-        final int heading;
-        final int g;
-        final int f;
-        final int h;
-        final Node parent;
-
-        Node(int x, int z, int heading, int g, int h, Node parent) {
-            this.x = x;
-            this.z = z;
-            this.heading = heading;
-            this.g = g;
-            this.h = h;
-            this.f = g + h;
-            this.parent = parent;
+    /** A window found no path: the whole link is searched once more, unless that was the whole link. */
+    private void windowFailed(Window w) {
+        int n = straight.size();
+        if (w.s > 0 || w.e < n - 1) {
+            window = new Window(0, n - 1);
+        } else {
+            finish(null);
         }
     }
 
-    private static int compare(Node p, Node q) {
-        int c = Integer.compare(p.f, q.f);
-        if (c != 0) {
-            return c;
-        }
-        c = Integer.compare(p.h, q.h);
-        if (c != 0) {
-            return c;
-        }
-        c = Integer.compare(p.x, q.x);
-        if (c != 0) {
-            return c;
-        }
-        c = Integer.compare(p.z, q.z);
-        return c != 0 ? c : Integer.compare(p.heading, q.heading);
+    private void finish(List<LinkRaster.Step> path) {
+        result = path;
+        window = null;
+        phase = DONE;
     }
 
     /**
-     * The cheapest moves from a chunk entered with one heading to a chunk left with another ({@link #NONE} at a link
-     * end), avoiding blocked and kept chunks and the ground out of bounds; {@code null} when the budget runs out first
-     * or no path exists.
+     * The A* state of one window: the stretch from step s to step e, searched from the chunk at s entered with the
+     * raster's heading there to the chunk at e left with the raster's heading there ({@link #NONE} at a link end),
+     * avoiding blocked and kept chunks and the ground out of bounds.
      */
-    private List<int[]> astar(int sx, int sz, int startHeading, int gx, int gz, int endHeading, Set<Long> kept) {
-        PriorityQueue<Node> open = new PriorityQueue<>(256, DetourSearch::compare);
-        Map<Long, Integer> best = new HashMap<>();
-        open.add(new Node(sx, sz, startHeading, 0, octile(sx, sz, gx, gz), null));
-        best.put(state(sx, sz, startHeading), 0);
-        while (!open.isEmpty()) {
-            Node node = open.poll();
-            Integer known = best.get(state(node.x, node.z, node.heading));
-            if (known != null && known < node.g) {
-                continue;
+    private final class Window {
+
+        final int s;
+        final int e;
+        final Set<Long> kept = new HashSet<>();
+        final int gx;
+        final int gz;
+        final int endHeading;
+        final PriorityQueue<Node> open = new PriorityQueue<>(256, DetourSearch::compare);
+        final Map<Long, Integer> best = new HashMap<>();
+
+        Window(int s, int e) {
+            int n = straight.size();
+            this.s = s;
+            this.e = e;
+            for (int i = 0; i < s; i++) {
+                kept.add(key(straight.get(i)));
             }
-            if (node.x == gx && node.z == gz) {
-                return moves(node);
+            for (int i = e + 1; i < n; i++) {
+                kept.add(key(straight.get(i)));
             }
-            if (budget-- <= 0) {
-                return null;
-            }
-            expansions++;
-            int[] headings = node.heading == NONE ? ALL
-                : new int[] { (node.heading + 7) & 7, node.heading, (node.heading + 1) & 7 };
-            for (int heading : headings) {
-                int nx = node.x + DX[heading];
-                int nz = node.z + DZ[heading];
-                if (nx == gx && nz == gz) {
-                    if (endHeading != NONE && !gentle(heading, endHeading)) {
-                        continue;
-                    }
-                } else if (!open(nx, nz, kept)) {
-                    continue;
-                }
-                int g = node.g + ((heading & 1) == 0 ? SIDE : DIAGONAL)
-                    + (node.heading != NONE && heading != node.heading ? TURN : 0);
-                long state = state(nx, nz, heading);
-                Integer seen = best.get(state);
-                if (seen != null && seen <= g) {
-                    continue;
-                }
-                best.put(state, g);
-                open.add(new Node(nx, nz, heading, g, octile(nx, nz, gx, gz), node));
-            }
+            LinkRaster.Step from = straight.get(s);
+            LinkRaster.Step to = straight.get(e);
+            int startHeading = s == 0 ? NONE : heading(from.inDx(), from.inDz());
+            this.endHeading = e == n - 1 ? NONE : heading(to.outDx(), to.outDz());
+            this.gx = to.chunkX();
+            this.gz = to.chunkZ();
+            int sx = from.chunkX();
+            int sz = from.chunkZ();
+            open.add(new Node(sx, sz, startHeading, 0, octile(sx, sz, gx, gz), null));
+            best.put(state(sx, sz, startHeading), 0);
         }
-        return null;
     }
 
     private static final int[] ALL = { 0, 1, 2, 3, 4, 5, 6, 7 };

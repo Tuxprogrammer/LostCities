@@ -2,10 +2,13 @@ package com.tuxprogrammer.lostcities.layout.link;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.tuxprogrammer.lostcities.layout.highway.PlanningGate;
 
 import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
 
@@ -39,6 +42,17 @@ import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
  * Side: server. One instance per dimension's layout, like the other planners. Thread-safe: the caches are synchronized
  * LRUs locked only around each read and write, never while a value is computed, and their values are immutable pure
  * functions of the key, so concurrent callers that compute the same value at once both return the first one stored.
+ *
+ * <p>
+ * Routes in steps (D-perf2-worker-1): a route not yet cached is a {@link RouteTask}, held in a small map of pending
+ * tasks, and the {@link PlanningGate} is asked first ({@link PlanningGate#enterSteps}). Inline (the default, and the
+ * server thread) the task runs to its end at once; the plan worker's gate instead abandons the plan and advances the
+ * task one bounded step per lock hold ({@link #STEP_WORK}, {@link #STEP_NANOS}), so a route never holds the plan lock
+ * for long. A task publishes only its finished route, into the same route cache, with the same value a one-shot
+ * computation gives ({@link DetourSearch#advance}); a caller never sees a partial route. Publication: the task's
+ * methods are synchronized and the route cache is a synchronized map, so a route stored by the worker happens-before
+ * every later read of it on the server thread, independently of the plan lock (which serializes planning anyway,
+ * D-plan-worker-1).
  */
 public final class CityLinkGraph {
 
@@ -63,6 +77,17 @@ public final class CityLinkGraph {
      * detours that widens them must widen this too.
      */
     public static final int ROUTE_MARGIN = 66;
+    /**
+     * Most units of route work ({@link DetourSearch#advance}: raster chunks tested, A* nodes expanded) one step of a
+     * {@link RouteTask} spends (D-perf2-worker-1).
+     */
+    public static final int STEP_WORK = 2048;
+    /** Longest one route step runs, in nanoseconds, checked every {@link #STEP_CHUNK} units. */
+    public static final long STEP_NANOS = 1_000_000L;
+    /** Units a route step runs between clock checks. */
+    static final int STEP_CHUNK = 128;
+    /** Pending route tasks kept, beyond which the oldest is forgotten and restarts from scratch if asked again. */
+    static final int PENDING_TASKS = 64;
 
     /** Where the nodes are: the grid's centers and whether each yields a city. */
     public interface Nodes {
@@ -320,7 +345,11 @@ public final class CityLinkGraph {
     private final Lru<Pair, Link> kept;
     private final Lru<Long, List<Candidate>> cellCandidates;
     private final Lru<Long, List<Hit>> chunkHits;
+    private final Lru<Pair, RouteTask> pending = new Lru<>(PENDING_TASKS);
+    private final PlanningGate gate;
     private final AtomicInteger candidateBuilds = new AtomicInteger();
+    private final AtomicInteger steppedRoutes = new AtomicInteger();
+    private final AtomicInteger inlineRoutes = new AtomicInteger();
 
     /**
      * Builds the graph over a node oracle.
@@ -329,7 +358,19 @@ public final class CityLinkGraph {
      * @param cacheSize cache capacity, in cells
      */
     public CityLinkGraph(Nodes nodes, int cacheSize) {
+        this(nodes, cacheSize, PlanningGate.NONE);
+    }
+
+    /**
+     * Builds the graph over a node oracle, routing through a gate (class Javadoc, D-perf2-worker-1).
+     *
+     * @param nodes     the grid's city centers
+     * @param cacheSize cache capacity, in cells
+     * @param gate      decides whether a missing route is computed inline or in steps later
+     */
+    public CityLinkGraph(Nodes nodes, int cacheSize, PlanningGate gate) {
         this.nodes = nodes;
+        this.gate = gate == null ? PlanningGate.NONE : gate;
         this.cell = nodes.cell();
         this.maxDistance = maxDistanceFor(cell);
         // A center lies anywhere in its cell, so two centers maxDistance apart are at most this many cells apart.
@@ -600,38 +641,201 @@ public final class CityLinkGraph {
         Pair pair = lower ? new Pair(x1, z1, x2, z2) : new Pair(x2, z2, x1, z1);
         Link cached = routes.get(pair);
         if (cached == null) {
-            long perfRoute = PerfCounters.start();
-            Link computed = computeRoute(x1, z1, x2, z2);
-            PerfCounters.add("clg.route", perfRoute);
-            cached = routes.putIfAbsent(pair, computed == null ? NO_ROUTE : computed);
+            RouteTask task = task(pair);
+            // The plan worker's gate throws here and steps the task later; inline, it returns.
+            gate.enterSteps(task::step);
+            cached = task.finish();
         }
         return cached == NO_ROUTE ? null : cached;
+    }
+
+    /** Returns the pending task of a pair not yet routed, creating it. */
+    private RouteTask task(Pair pair) {
+        RouteTask task = pending.get(pair);
+        return task != null ? task : pending.putIfAbsent(pair, new RouteTask(pair));
+    }
+
+    /**
+     * Returns the task that routes a pair, or {@code null} when its route is cached already, for tests.
+     *
+     * @param x1 one end's chunk X
+     * @param z1 one end's chunk Z
+     * @param x2 the other end's chunk X
+     * @param z2 the other end's chunk Z
+     * @return the task, or {@code null}
+     */
+    RouteTask routeTask(int x1, int z1, int x2, int z2) {
+        Pair pair = pair(x1, z1, x2, z2);
+        return routes.get(pair) != null ? null : task(pair);
+    }
+
+    /** Returns whether a pair's route is cached, for tests. */
+    boolean routeCached(int x1, int z1, int x2, int z2) {
+        return routes.get(pair(x1, z1, x2, z2)) != null;
+    }
+
+    private static Pair pair(int x1, int z1, int x2, int z2) {
+        return LinkRaster.lower(x1, z1, x2, z2) ? new Pair(x1, z1, x2, z2) : new Pair(x2, z2, x1, z1);
+    }
+
+    /** Returns how many routes were finished by {@link RouteTask#step} (the plan worker's gate), for diagnostics. */
+    public int steppedRoutes() {
+        return steppedRoutes.get();
+    }
+
+    /** Returns how many routes were finished inline ({@link #route} with the gate returning), for diagnostics. */
+    public int inlineRoutes() {
+        return inlineRoutes.get();
+    }
+
+    /**
+     * One route being computed (class Javadoc, D-perf2-worker-1): the straight raster's scan, then a resumable
+     * {@link DetourSearch} when it crosses a blocked chunk; the same computation as a one-shot route, in steps. It
+     * publishes the finished route into the route cache (under the pair, with {@code putIfAbsent}) and leaves the
+     * pending map; nothing before that is visible to any caller. Synchronized: one thread advances it at a time, and
+     * its state written by one thread is seen by the next.
+     */
+    final class RouteTask {
+
+        private final Pair pair;
+        private final Link straight;
+        private final Map<Long, Boolean> memo = new HashMap<>();
+        private int scan;
+        private boolean anyBlocked;
+        private long scanWork;
+        private DetourSearch search;
+        private Link result;
+
+        RouteTask(Pair pair) {
+            this.pair = pair;
+            this.straight = new Link(pair.ax, pair.az, pair.bx, pair.bz);
+        }
+
+        /**
+         * Advances the route by one bounded step, at most {@link #STEP_WORK} units and about {@link #STEP_NANOS}. A
+         * throw from the blocked test (a probe's miss) ends the step early; it is rethrown only when the step made no
+         * progress, so a caller that fetches the missing input and steps again always gets further, and nothing is
+         * lost either way ({@link DetourSearch#advance}). Drops itself when the pair's route was published meanwhile.
+         *
+         * @return {@code true} once the route is cached
+         */
+        synchronized boolean step() {
+            if (result != null) {
+                return true;
+            }
+            Link published = routes.get(pair);
+            if (published != null) {
+                // Stale: another task for the pair finished it (this one was evicted from the pending map meanwhile).
+                result = published;
+                pending.remove(pair, this);
+                return true;
+            }
+            long perf = PerfCounters.start();
+            long start = System.nanoTime();
+            long before = work();
+            try {
+                while (!advance(STEP_CHUNK)) {
+                    if (work() - before >= STEP_WORK || System.nanoTime() - start >= STEP_NANOS) {
+                        return false;
+                    }
+                }
+                steppedRoutes.incrementAndGet();
+                return true;
+            } catch (RuntimeException e) {
+                if (work() > before) {
+                    // Progress was made: the next step meets the same throw first (the blocked test is pure).
+                    return false;
+                }
+                throw e;
+            } finally {
+                PerfCounters.add("clg.route.step", perf);
+            }
+        }
+
+        /** Runs the route to its end, from wherever its steps left it, and returns the cached value. */
+        synchronized Link finish() {
+            if (result == null) {
+                long perf = PerfCounters.start();
+                while (!advance(Integer.MAX_VALUE)) {
+                    // advance returns false only at its work bound
+                }
+                inlineRoutes.incrementAndGet();
+                PerfCounters.add("clg.route", perf);
+            }
+            return result;
+        }
+
+        /** Returns whether the route is finished and published. */
+        synchronized boolean done() {
+            return result != null;
+        }
+
+        /** Units spent so far: raster chunks scanned and the search's own units. */
+        synchronized long work() {
+            return scanWork + (search == null ? 0 : search.work());
+        }
+
+        /** Advances by at most {@code maxWork} units, at least 1; {@code true} once finished and published. */
+        private boolean advance(int maxWork) {
+            if (result != null) {
+                return true;
+            }
+            List<LinkRaster.Step> path = straight.path();
+            int spent = 0;
+            while (!anyBlocked && scan < path.size()) {
+                if (spent >= maxWork) {
+                    return false;
+                }
+                LinkRaster.Step step = path.get(scan);
+                if (blocked(step.chunkX(), step.chunkZ())) {
+                    anyBlocked = true;
+                } else {
+                    scan++;
+                }
+                spent++;
+                scanWork++;
+            }
+            if (!anyBlocked) {
+                publish(straight);
+                return true;
+            }
+            if (straight.ax == straight.bx && straight.az == straight.bz) {
+                publish(null);
+                return true;
+            }
+            if (search == null) {
+                search = new DetourSearch(straight.path(), this::blocked, maxDistance);
+            }
+            if (spent >= maxWork || !search.advance(maxWork - spent)) {
+                return false;
+            }
+            List<LinkRaster.Step> detour = search.result();
+            publish(detour == null ? null : new Link(straight.ax, straight.az, straight.bx, straight.bz, detour));
+            return true;
+        }
+
+        private boolean blocked(int chunkX, int chunkZ) {
+            Long key = key(chunkX, chunkZ);
+            Boolean cached = memo.get(key);
+            if (cached == null) {
+                cached = nodes.blocked(chunkX, chunkZ);
+                memo.put(key, cached);
+            }
+            return cached;
+        }
+
+        private void publish(Link link) {
+            scanWork += search == null ? 0 : search.work();
+            search = null;
+            memo.clear();
+            result = routes.putIfAbsent(pair, link == null ? NO_ROUTE : link);
+            pending.remove(pair, this);
+        }
     }
 
     /** Returns how many routes the cache holds, for tests. */
     int cachedRoutes() {
         return routes.size();
-    }
-
-    private Link computeRoute(int x1, int z1, int x2, int z2) {
-        Link straight = new Link(x1, z1, x2, z2);
-        if (!crossesBlocked(straight.path())) {
-            return straight;
-        }
-        if (straight.ax == straight.bx && straight.az == straight.bz) {
-            return null;
-        }
-        List<LinkRaster.Step> path = DetourSearch.detour(straight.path(), nodes::blocked, maxDistance);
-        return path == null ? null : new Link(straight.ax, straight.az, straight.bx, straight.bz, path);
-    }
-
-    private boolean crossesBlocked(List<LinkRaster.Step> path) {
-        for (LinkRaster.Step step : path) {
-            if (nodes.blocked(step.chunkX(), step.chunkZ())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -840,6 +1044,13 @@ public final class CityLinkGraph {
 
         synchronized int size() {
             return map.size();
+        }
+
+        /** Forgets a key while it still maps to a given value. */
+        synchronized void remove(K key, V value) {
+            if (map.get(key) == value) {
+                map.remove(key);
+            }
         }
     }
 }

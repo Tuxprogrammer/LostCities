@@ -187,7 +187,7 @@ public final class Networks implements InfrastructureView {
                     // from the link mask so a long route never sweeps the zone caches (D-linkgraph-shrink-1).
                     return zones.blocksLinks(chunkX, chunkZ);
                 }
-            }, LINK_CACHE_CELLS);
+            }, LINK_CACHE_CELLS, settings.gate());
             // Each city's beltway or cut-through (0017), from terrain, zones and the city map only.
             final CityLinkGraph graph = links;
             CityHighways cityHighways = new CityHighways(
