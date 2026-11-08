@@ -133,23 +133,28 @@ public class PlanWorkerTest {
 
     @Test
     public void theWorkerLeavesTheSamePlansAsTheServerThread() throws InterruptedException {
-        // The region: the first ring around the origin, 32 x 32, with a city chunk and a highway in it.
+        // The region: the first 32 x 32 block, nearest the origin, with a city chunk and a highway in it.
         Stack inline = new Stack();
-        int minX = -SIZE / 2;
-        int minZ = -SIZE / 2;
-        List<String> expected = new ArrayList<>();
-        boolean city = false;
-        boolean highway = false;
-        for (int x = minX; x < minX + SIZE; x++) {
-            for (int z = minZ; z < minZ + SIZE; z++) {
-                ChunkPlan plan = inline.plan.chunk(x, z);
-                city |= plan.isCity();
-                highway |= plan.hasHighway();
-                expected.add(describe(plan));
+        int minX = 0;
+        int minZ = 0;
+        List<String> expected = null;
+        search: for (int ring = 0; ring <= 8; ring++) {
+            for (int rx = -ring; rx <= ring; rx++) {
+                for (int rz = -ring; rz <= ring; rz++) {
+                    if (Math.max(Math.abs(rx), Math.abs(rz)) != ring) {
+                        continue;
+                    }
+                    List<String> region = regionWithCityAndHighway(inline.plan, rx * SIZE, rz * SIZE);
+                    if (region != null) {
+                        minX = rx * SIZE;
+                        minZ = rz * SIZE;
+                        expected = region;
+                        break search;
+                    }
+                }
             }
         }
-        assertTrue(city, "a city chunk in the region");
-        assertTrue(highway, "a highway in the region");
+        assertTrue(expected != null, "a region with a city chunk and a highway near the origin");
 
         Stack threaded = new Stack();
         PlanLock lock = new PlanLock();
@@ -202,6 +207,22 @@ public class PlanWorkerTest {
             }
         }
         assertEquals(expected, actual);
+    }
+
+    /** The region's descriptions, or {@code null} unless it holds a city chunk and a highway. */
+    private static List<String> regionWithCityAndHighway(CachedCityPlan plan, int minX, int minZ) {
+        List<String> out = new ArrayList<>();
+        boolean city = false;
+        boolean highway = false;
+        for (int x = minX; x < minX + SIZE; x++) {
+            for (int z = minZ; z < minZ + SIZE; z++) {
+                ChunkPlan chunk = plan.chunk(x, z);
+                city |= chunk.isCity();
+                highway |= chunk.hasHighway();
+                out.add(describe(chunk));
+            }
+        }
+        return city && highway ? out : null;
     }
 
     private static boolean allCached(CachedCityPlan plan, int minX, int minZ) {
