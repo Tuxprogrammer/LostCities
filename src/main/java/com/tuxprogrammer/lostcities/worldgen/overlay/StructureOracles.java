@@ -2,7 +2,9 @@ package com.tuxprogrammer.lostcities.worldgen.overlay;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.world.World;
 
@@ -13,7 +15,10 @@ import com.tuxprogrammer.lostcities.compat.roguelike.RoguelikeOracles;
 import com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Landmarks;
 import com.tuxprogrammer.lostcities.compat.villagenames.VillageNamesOracles;
 import com.tuxprogrammer.lostcities.compat.witchery.WitcheryOracles;
+import com.tuxprogrammer.lostcities.layout.LayoutProfile;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
+import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
+import com.tuxprogrammer.lostcities.layout.landmark.LandmarkTreatment;
 import com.tuxprogrammer.lostcities.layout.landmark.StructureOracle;
 import com.tuxprogrammer.lostcities.worldgen.height.HeightProbe;
 import com.tuxprogrammer.lostcities.worldgen.height.TerrainHeightOracle;
@@ -80,6 +85,37 @@ public final class StructureOracles {
     }
 
     /**
+     * Returns the landmark kinds each factory of {@link #factories()} produces, in the same order. A factory whose
+     * kinds are all {@link LandmarkTreatment#IGNORE} in the profile is neither built nor asked
+     * (D-perf2-oracles-1).
+     *
+     * @return the kinds, one set per factory
+     */
+    public static List<Set<LandmarkKind>> factoryKinds() {
+        List<Set<LandmarkKind>> kinds = new ArrayList<>();
+        kinds.add(EnumSet.of(LandmarkKind.VILLAGE, LandmarkKind.OCEAN_MONUMENT));
+        kinds.add(EnumSet.of(LandmarkKind.ROGUELIKE));
+        kinds.add(EnumSet.of(LandmarkKind.WITCHERY));
+        kinds.add(EnumSet.of(LandmarkKind.TERRAIN));
+        return kinds;
+    }
+
+    /**
+     * Returns the composite oracle of a world over every factory, skipping those the profile ignores.
+     *
+     * @param world          the world
+     * @param heights        the world's height oracle
+     * @param landmarkMargin the pinned profile's {@code landmarkMargin}, blocks
+     * @param profile        the layout profile; a factory all of whose kinds it treats as {@code IGNORE} is skipped,
+     *                       since the landmark zones would drop its landmarks anyway
+     * @return the oracle; {@link StructureOracle#NONE} when no factory knows anything
+     */
+    public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin,
+        LayoutProfile profile) {
+        return compose(build(world, heights, landmarkMargin, activeFactories(factories(), factoryKinds(), profile)));
+    }
+
+    /**
      * Returns the composite oracle of a world over every factory.
      *
      * @param world          the world
@@ -89,6 +125,33 @@ public final class StructureOracles {
      */
     public static StructureOracle forWorld(World world, TerrainHeightOracle heights, int landmarkMargin) {
         return compose(build(world, heights, landmarkMargin, factories()));
+    }
+
+    /**
+     * Drops the factories whose kinds the profile ignores entirely. Landmark zones discard IGNOREd landmarks, so a
+     * skipped factory changes no zone, only the cost of finding them.
+     *
+     * @param factories the factories
+     * @param kinds     the kinds of each factory, same order
+     * @param profile   the layout profile
+     * @return the factories to build, in order
+     */
+    public static List<Factory> activeFactories(List<Factory> factories, List<Set<LandmarkKind>> kinds,
+        LayoutProfile profile) {
+        List<Factory> active = new ArrayList<>();
+        for (int i = 0; i < factories.size(); i++) {
+            boolean ignored = true;
+            for (LandmarkKind kind : kinds.get(i)) {
+                if (profile.treatment(kind) != LandmarkTreatment.IGNORE) {
+                    ignored = false;
+                    break;
+                }
+            }
+            if (!ignored) {
+                active.add(factories.get(i));
+            }
+        }
+        return active;
     }
 
     /**
@@ -121,7 +184,7 @@ public final class StructureOracles {
      * @param factories      the factories
      * @return the oracles that are not {@link StructureOracle#NONE}
      */
-    static List<StructureOracle> build(World world, TerrainHeightOracle heights, int landmarkMargin,
+    public static List<StructureOracle> build(World world, TerrainHeightOracle heights, int landmarkMargin,
         List<Factory> factories) {
         List<StructureOracle> oracles = new ArrayList<>();
         for (Factory factory : factories) {
