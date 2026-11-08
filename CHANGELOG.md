@@ -2,6 +2,17 @@
 
 All notable changes to Lost Cities: New Horizons. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions come from git tags.
 
+## 0.4.1-beta (2026-11-07)
+
+Fixes for two buildings that 0.4.0-beta should have shipped with: the shopping mall and the library. Same install: one jar on the server and every client, GT New Horizons 2.9.0. Worlds made with 0.4.0-beta keep working.
+
+### Fixed
+- The shopping mall at a taller floor pitch: the double-height ground floor and its escalator stand as in the original again (the escalator no longer runs into the door, and its cobblestone supports sit under the steps), the mezzanine and the floors above it are each 2 blocks taller, and the upper windows line up across all four quarters of the mall.
+- The library at a taller floor pitch: its windows and bookshelf walls grow in one level band across all four quarters instead of stepping a block at one chunk border, and its stairs still run unbroken to the floor above.
+
+### Upgrade notes
+- Malls and libraries already generated stay as they are. Both buildings cover 2 × 2 chunks, so one that was only partly generated before the upgrade finishes in the new shape and can show a seam at the chunk border. Explore somewhere new to see the fixed buildings.
+
 ## 0.4.0-beta (2026-11-07)
 
 Faster chunk generation, mostly around the highways and railways between cities. Same install: one jar on the server and every client, GT New Horizons 2.9.0. Worlds made with 0.3.0-beta keep working; see the upgrade notes for how links change at the edge of old ground.
