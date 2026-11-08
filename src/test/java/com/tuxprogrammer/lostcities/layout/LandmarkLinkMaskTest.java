@@ -17,7 +17,8 @@ import com.tuxprogrammer.lostcities.layout.link.CityLinkGraph;
 
 /**
  * The link mask (D-linkgraph-shrink-1) blocks exactly the chunks whose zone is {@link Zone#CORE},
- * {@link Zone#EDGE_RING} or {@link Zone#AVOID_RING}, and a long route read from it asks the oracle far less.
+ * {@link Zone#EDGE_RING} or {@link Zone#AVOID_RING}, and a long route read from it asks the oracle no more than the
+ * zone answer does.
  */
 class LandmarkLinkMaskTest {
 
@@ -150,6 +151,8 @@ class LandmarkLinkMaskTest {
                 + " (area "
                 + after.area
                 + " chunks)");
-        assertTrue(after.area < before.area, "the mask asks about less area");
+        // Both read the same super-cell lists (D-perf2-route-1): the mask never asks more than the zone does.
+        assertTrue(after.calls <= before.calls, "the mask asks no more often");
+        assertTrue(after.area <= before.area, "the mask asks about no more area");
     }
 }

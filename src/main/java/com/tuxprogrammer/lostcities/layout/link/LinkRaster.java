@@ -151,6 +151,19 @@ public final class LinkRaster {
         return out;
     }
 
+    /**
+     * Walks a list of moves from a chunk into steps, as every raster does: the path a detour search found
+     * ({@link DetourSearch}). The caller keeps each turn at most 45° and starts from the lower end.
+     *
+     * @param ax    first end's chunk X
+     * @param az    first end's chunk Z
+     * @param moves the moves, each {dx, dz} with both in −1..1 and not both 0
+     * @return the chunks in order, first end first
+     */
+    static List<Step> fromMoves(int ax, int az, List<int[]> moves) {
+        return steps(ax, az, moves);
+    }
+
     /** Appends the moves of the octilinear path between two chunks (class Javadoc). */
     private static void moves(List<int[]> out, int ax, int az, int bx, int bz) {
         int dx = bx - ax;
