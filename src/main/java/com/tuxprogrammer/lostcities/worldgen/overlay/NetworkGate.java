@@ -38,6 +38,20 @@ final class NetworkGate implements PlanningGate {
         throw probe.miss(() -> step(compute));
     }
 
+    /**
+     * A city link's route (D-perf2-worker-1): while a probe is active, the plan is abandoned with a step that advances
+     * the route by one bounded step ({@code CityLinkGraph.STEP_WORK}) with the probe on, or, when the step stops at an
+     * input not yet cached before any progress, fetches that one input. So each worker unit holds the plan lock for one
+     * route step or one fetch, never a whole route; the prefetcher asks again until the route is cached.
+     */
+    @Override
+    public void enterSteps(java.util.function.BooleanSupplier step) {
+        if (!probe.active() || stepping) {
+            return;
+        }
+        throw probe.miss(() -> step(step::getAsBoolean));
+    }
+
     /** Computes the hub with the probe on; a height it misses is fetched, and the next step tries again. */
     private void step(Runnable compute) {
         stepping = true;

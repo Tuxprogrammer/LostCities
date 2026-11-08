@@ -36,7 +36,31 @@ public final class PerfCounters {
 
     private static final Table GLOBAL = new Table();
 
+    /** The current thread's counter-name suffix ({@link #tagThread}), or {@code null} for the plain names. */
+    private static final ThreadLocal<String> SUFFIX = new ThreadLocal<>();
+
     private PerfCounters() {}
+
+    /**
+     * Gives the current thread's counters a suffix, so a report tells where the work ran (D-perf2-worker-1): the plan
+     * worker tags itself {@code ".worker"}, and its routes count as {@code clg.route.step.worker}. Untagged threads
+     * (the
+     * server thread) count under the plain names.
+     *
+     * @param suffix appended to every counter name this thread records, or {@code null} for none
+     */
+    public static void tagThread(String suffix) {
+        if (suffix == null) {
+            SUFFIX.remove();
+        } else {
+            SUFFIX.set(suffix);
+        }
+    }
+
+    private static String named(String name) {
+        String suffix = SUFFIX.get();
+        return suffix == null ? name : name + suffix;
+    }
 
     /**
      * Starts timing a call.
@@ -55,7 +79,7 @@ public final class PerfCounters {
      */
     public static void add(String name, long started) {
         if (ENABLED) {
-            GLOBAL.add(name, System.nanoTime() - started);
+            GLOBAL.add(named(name), System.nanoTime() - started);
         }
     }
 
@@ -66,7 +90,7 @@ public final class PerfCounters {
      */
     public static void hit(String name) {
         if (ENABLED) {
-            GLOBAL.hit(name);
+            GLOBAL.hit(named(name));
         }
     }
 
