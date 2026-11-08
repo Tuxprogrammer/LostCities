@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.tuxprogrammer.lostcities.layout.landmark.BlockRect;
 import com.tuxprogrammer.lostcities.layout.landmark.HeightCap;
 import com.tuxprogrammer.lostcities.layout.landmark.Landmark;
 import com.tuxprogrammer.lostcities.layout.landmark.LandmarkKind;
@@ -22,15 +23,17 @@ import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
  * ring around a core is non-city instead (upstream's avoidance); under {@code IGNORE} the landmark has no effect.
  *
  * <p>
- * The oracle is asked once per 8 × 8-chunk cell, for the cell grown by the farthest reach any rule has, and the
- * landmarks are sorted by identity, so a chunk's zone never depends on which chunk asked first or on the oracle's
- * order. Both caches are bounded and belong to the planner.
+ * The oracle is asked once per {@link #SUPER} × {@link #SUPER}-chunk super-cell, for the super-cell grown by the
+ * farthest reach any rule has (D-perf2-route-1); each 8 × 8-chunk cell's list is the super-cell's landmarks whose
+ * footprint touches that cell grown by the same reach, which is every landmark a query of the cell alone must return.
+ * The landmarks are sorted by identity, so a chunk's zone never depends on which chunk asked first or on the oracle's
+ * order. Every cache is bounded and belongs to the planner.
  *
  * <p>
  * Link routing asks only whether a chunk is a core or the ring around one ({@link #blocksLinks}), along paths hundreds
- * of chunks long. It reads a separate per-cell bit mask whose oracle query grows the cell by {@link #linkMaskReach()}
- * chunks instead of {@link #reach()}, so a long route neither queries the oracles over the wide square nor evicts the
- * caches the planner needs (D-linkgraph-shrink-1).
+ * of chunks long. It reads a separate per-cell bit mask, derived from the same super-cell list, so a long route asks
+ * the oracle once per super-cell it crosses, not once per cell, and never evicts the zone caches the planner needs
+ * (D-linkgraph-shrink-1, D-perf2-route-1).
  *
  * <p>
  * Spec: docs/new-spec/04-city-layout/landmark-zones.md, docs/design/0006-build-around-other-worldgen.md §1. Side:
@@ -56,14 +59,27 @@ final class LandmarkZones {
     static final int MIN_NEAR_CELLS = 1024;
     /** Estimated bytes of one {@link #near} cache entry: map entry, key, list and a landmark or two. */
     static final int CELL_ENTRY_BYTES = 256;
+    /**
+     * Chunks per side of a super-cell, the unit of every oracle query: 8 × 8 cells. One query of a 64-chunk square
+     * grown by {@link #reach()} costs the oracles about what a few cells' queries did (each oracle pads its own
+     * search), and serves 64 cells (D-perf2-route-1).
+     */
+    static final int SUPER = 64;
+    /** Super-cells the landmark list cache holds: 256 cover a 1024-chunk square, wider than a link route's corridor. */
+    static final int SUPER_SLOTS = 256;
+    /**
+     * Estimated bytes of one super-cell entry: map entry, key, list and bounds of a few dozen landmarks, the landmarks
+     * themselves shared with the oracles' caches.
+     */
+    static final int SUPER_ENTRY_BYTES = 8 * 1024;
 
     private final StructureOracle oracle;
     private final LayoutProfile profile;
     private final int reach;
-    private final int linkMaskReach;
     private final int cellCapacity;
     private final ChunkCache<List<Landmark>> cells;
     private final ChunkCache<ZoneInfo> zones;
+    private final ChunkCache<SuperCell> supers = new ChunkCache<>(SUPER_SLOTS);
     private final LinkMasks linkMasks = new LinkMasks(LINK_MASK_SLOTS);
 
     LandmarkZones(StructureOracle oracle, LayoutProfile profile, int cacheSize) {
@@ -73,10 +89,6 @@ final class LandmarkZones {
         int ringReach = EDGE_RING_DISTANCE + profile.villageTransitionRings + LANE_MARGIN;
         int linkReach = profile.villageLinkDistance + EDGE_RING_DISTANCE + LANE_MARGIN;
         this.reach = Math.max(capReach, Math.max(ringReach, linkReach));
-        // A landmark puts a chunk in its core or ring only when one of its footprint rectangles, grown by the margin in
-        // blocks, lies within EDGE_RING_DISTANCE chunks of it; the plain rectangle then lies within that plus the
-        // margin rounded up to whole chunks. Never wider than near()'s reach, so the mask sees near()'s candidates.
-        this.linkMaskReach = Math.min(reach, EDGE_RING_DISTANCE + (profile.landmarkMargin + 15) / 16);
         this.cellCapacity = Math.max(MIN_NEAR_CELLS, cacheSize / (CELL * CELL));
         this.cells = new ChunkCache<>(cellCapacity);
         this.zones = new ChunkCache<>(cacheSize);
@@ -85,11 +97,6 @@ final class LandmarkZones {
     /** Returns how far, in chunks, a landmark's rules can reach beyond its core. */
     int reach() {
         return reach;
-    }
-
-    /** Returns how far, in chunks, the link mask's oracle query reaches beyond its cell ({@link #blocksLinks}). */
-    int linkMaskReach() {
-        return linkMaskReach;
     }
 
     /**
@@ -103,7 +110,7 @@ final class LandmarkZones {
         if (cached != null) {
             return cached;
         }
-        List<Landmark> found = query(cellX, cellZ, reach);
+        List<Landmark> found = nearFromSuper(cellX, cellZ);
         synchronized (cells) {
             List<Landmark> raced = cells.get(cellX, cellZ);
             return raced != null ? raced : cells.put(cellX, cellZ, found);
@@ -117,14 +124,50 @@ final class LandmarkZones {
     }
 
     /**
-     * Returns the landmarks touching a query cell grown by some chunks: sorted by identity, the first of each identity
-     * kept, unmodifiable.
+     * Returns the landmarks of a cell's super-cell whose footprint touches the cell grown by {@link #reach()}: sorted by
+     * identity, the first of each identity kept, unmodifiable. The super-cell's query covers that grown cell, so by the
+     * oracle's completeness every landmark touching it is in the super-cell's list.
      */
-    private List<Landmark> query(int cellX, int cellZ, int grow) {
-        int minX = cellX * CELL - grow;
-        int minZ = cellZ * CELL - grow;
-        int maxX = cellX * CELL + CELL - 1 + grow;
-        int maxZ = cellZ * CELL + CELL - 1 + grow;
+    private List<Landmark> nearFromSuper(int cellX, int cellZ) {
+        SuperCell sup = superCell(Math.floorDiv(cellX, SUPER / CELL), Math.floorDiv(cellZ, SUPER / CELL));
+        List<Landmark> out = new ArrayList<>();
+        for (Landmark landmark : sup.landmarks) {
+            if (withinReach(landmark, cellX, cellZ)) {
+                out.add(landmark);
+            }
+        }
+        return out.isEmpty() ? Collections.<Landmark>emptyList() : Collections.unmodifiableList(out);
+    }
+
+    /** Returns whether a landmark's footprint touches a cell grown by {@link #reach()}: {@link #near}'s test. */
+    private boolean withinReach(Landmark landmark, int cellX, int cellZ) {
+        int minX = (cellX * CELL - reach) * 16;
+        int minZ = (cellZ * CELL - reach) * 16;
+        int maxX = (cellX * CELL + CELL - 1 + reach) * 16 + 15;
+        int maxZ = (cellZ * CELL + CELL - 1 + reach) * 16 + 15;
+        for (BlockRect rect : landmark.footprint()) {
+            if (rect.minX() <= maxX && rect.maxX() >= minX && rect.minZ() <= maxZ && rect.maxZ() >= minZ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns a super-cell's landmarks, querying the oracle once on a miss for the super-cell grown by
+     * {@link #reach()}: the {@code lz.near.miss} counter counts these queries.
+     */
+    private SuperCell superCell(int superX, int superZ) {
+        synchronized (supers) {
+            SuperCell cached = supers.get(superX, superZ);
+            if (cached != null) {
+                return cached;
+            }
+        }
+        int minX = superX * SUPER - reach;
+        int minZ = superZ * SUPER - reach;
+        int maxX = superX * SUPER + SUPER - 1 + reach;
+        int maxZ = superZ * SUPER + SUPER - 1 + reach;
         long perfNear = PerfCounters.start();
         List<Landmark> found = new ArrayList<>(oracle.landmarksTouching(minX, minZ, maxX, maxZ));
         PerfCounters.add("lz.near.miss", perfNear);
@@ -137,16 +180,24 @@ final class LandmarkZones {
                 deduplicated.add(landmark);
             }
         }
-        return Collections.unmodifiableList(deduplicated);
+        int[][] bounds = new int[deduplicated.size()][];
+        for (int i = 0; i < bounds.length; i++) {
+            bounds[i] = deduplicated.get(i)
+                .coreChunkBounds(profile.landmarkMargin);
+        }
+        SuperCell computed = new SuperCell(Collections.unmodifiableList(deduplicated), bounds);
+        synchronized (supers) {
+            SuperCell raced = supers.get(superX, superZ);
+            return raced != null ? raced : supers.put(superX, superZ, computed);
+        }
     }
 
     /**
      * Returns whether a link may not cross a chunk: the chunk is a landmark's {@link Zone#CORE}, {@link Zone#EDGE_RING}
      * or {@link Zone#AVOID_RING} (0013 §1, 0015 §6). Always the answer {@link #zone} gives, since those are the three
      * strongest zones and a landmark not ignored gives one of them exactly when the chunk lies within
-     * {@link #EDGE_RING_DISTANCE} of its grown footprint; but read from a per-cell bit mask whose oracle query grows
-     * the
-     * cell by {@link #linkMaskReach()} only, kept apart from the zone caches (D-linkgraph-shrink-1).
+     * {@link #EDGE_RING_DISTANCE} of its grown footprint; but read from a per-cell bit mask, derived from the cell's
+     * super-cell list ({@link #SUPER}), kept apart from the zone caches (D-linkgraph-shrink-1, D-perf2-route-1).
      *
      * @param chunkX chunk X
      * @param chunkZ chunk Z
@@ -175,22 +226,35 @@ final class LandmarkZones {
     }
 
     private long computeLinkMask(int cellX, int cellZ) {
-        // near()'s list when it is at hand: it holds every landmark the narrower query would, plus farther ones that
-        // cannot set a bit.
-        List<Landmark> landmarks = cachedNear(cellX, cellZ);
-        if (landmarks == null) {
-            landmarks = query(cellX, cellZ, linkMaskReach);
-        }
+        // The super-cell's list holds every landmark within reach() of the cell, a superset of what the old per-cell
+        // query grown by the ring and margin saw. Only those near() would give the cell count, so the mask stays the
+        // zone's answer at every margin; one whose core bounds, grown by the ring, miss the cell cannot set a bit, so
+        // only the overlap is tested chunk by chunk.
+        SuperCell sup = superCell(Math.floorDiv(cellX, SUPER / CELL), Math.floorDiv(cellZ, SUPER / CELL));
+        List<Landmark> landmarks = sup.landmarks;
+        int cellMinX = cellX * CELL;
+        int cellMinZ = cellZ * CELL;
         long mask = 0L;
-        for (Landmark landmark : landmarks) {
+        for (int i = 0; i < landmarks.size(); i++) {
+            Landmark landmark = landmarks.get(i);
             if (profile.treatment(landmark.kind()) == LandmarkTreatment.IGNORE) {
                 continue;
             }
-            for (int dx = 0; dx < CELL; dx++) {
-                for (int dz = 0; dz < CELL; dz++) {
-                    if (landmark.coreDistance(cellX * CELL + dx, cellZ * CELL + dz, profile.landmarkMargin)
-                        <= EDGE_RING_DISTANCE) {
-                        mask |= 1L << (dx * CELL + dz);
+            int[] b = sup.bounds[i];
+            if (b[0] - EDGE_RING_DISTANCE > cellMinX + CELL - 1 || b[2] + EDGE_RING_DISTANCE < cellMinX
+                || b[1] - EDGE_RING_DISTANCE > cellMinZ + CELL - 1
+                || b[3] + EDGE_RING_DISTANCE < cellMinZ
+                || !withinReach(landmark, cellX, cellZ)) {
+                continue;
+            }
+            int x0 = Math.max(cellMinX, b[0] - EDGE_RING_DISTANCE);
+            int z0 = Math.max(cellMinZ, b[1] - EDGE_RING_DISTANCE);
+            int x1 = Math.min(cellMinX + CELL - 1, b[2] + EDGE_RING_DISTANCE);
+            int z1 = Math.min(cellMinZ + CELL - 1, b[3] + EDGE_RING_DISTANCE);
+            for (int x = x0; x <= x1; x++) {
+                for (int z = z0; z <= z1; z++) {
+                    if (landmark.coreDistance(x, z, profile.landmarkMargin) <= EDGE_RING_DISTANCE) {
+                        mask |= 1L << ((x - cellMinX) * CELL + (z - cellMinZ));
                     }
                 }
             }
@@ -199,13 +263,14 @@ final class LandmarkZones {
     }
 
     /**
-     * Returns the most memory the near-landmark cache and the link mask cache can hold, estimated, in bytes, for budget
+     * Returns the most memory the near-landmark, super-cell and link mask caches can hold, estimated, in bytes, for budget
      * B5. The zone cache is one of the layout caches {@code LayoutCityPlan} already counts.
      *
      * @return bytes
      */
     long estimatedCacheBytes() {
-        return (long) cellCapacity * CELL_ENTRY_BYTES + LinkMasks.bytes(LINK_MASK_SLOTS);
+        return (long) cellCapacity * CELL_ENTRY_BYTES + LinkMasks.bytes(LINK_MASK_SLOTS)
+            + (long) SUPER_SLOTS * SUPER_ENTRY_BYTES;
     }
 
     /**
@@ -329,6 +394,18 @@ final class LandmarkZones {
             return 4;
         }
         return Integer.MAX_VALUE;
+    }
+
+    /** A super-cell's landmarks, sorted by identity, and each one's core chunk bounds {minX, minZ, maxX, maxZ}. */
+    private static final class SuperCell {
+
+        final List<Landmark> landmarks;
+        final int[][] bounds;
+
+        SuperCell(List<Landmark> landmarks, int[][] bounds) {
+            this.landmarks = landmarks;
+            this.bounds = bounds;
+        }
     }
 
     /**

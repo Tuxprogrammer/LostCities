@@ -383,19 +383,13 @@ public final class CityLinkGraph {
         return neighbors.putIfAbsent(key(cellX, cellZ), Collections.unmodifiableList(out));
     }
 
-    /** Waypoint offsets across the link, in chunks, nearest first (D390). */
-    private static final int[] DETOUR_OFFSETS = { 12, 24, 36, 48, 64 };
-    /** Waypoint positions along the link, as a share of its length (D390). */
-    private static final double[] DETOUR_ALONG = { 0.5, 0.3, 0.7 };
-
     /**
      * Returns the link between two centers along a path that crosses no {@link Nodes#blocked} chunk, or {@code null}:
-     * the straight raster if it is clear, else the first clear detour ({@link LinkRaster#rasterizeVia}) through a
-     * waypoint offset across the link (each of {@link #DETOUR_OFFSETS}, at each of {@link #DETOUR_ALONG}, left before
-     * right), whose waypoint lies within {@link #maxDistance()} of both ends, so {@link #reach} still bounds every
-     * chunk of the path. A function of the two ends (taken lower first) and the oracle only, so whichever end asks
-     * gets the same path; so it is computed once per unordered pair and cached under the pair, lower end first
-     * (D-linkgraph-shrink-2).
+     * the straight raster if it is clear, else the straight raster with only its blocked stretch replaced by a bounded
+     * search around the landmarks ({@link DetourSearch}, D-perf2-route-2), every chunk within {@link #maxDistance()} of
+     * both ends, so {@link #reach} still bounds every chunk of the path. A function of the two ends (taken lower first)
+     * and the oracle only, so whichever end asks gets the same path; so it is computed once per unordered pair and
+     * cached under the pair, lower end first (D-linkgraph-shrink-2).
      *
      * @param x1 one end's chunk X
      * @param z1 one end's chunk Z
@@ -426,38 +420,11 @@ public final class CityLinkGraph {
         if (!crossesBlocked(straight.path())) {
             return straight;
         }
-        int ax = straight.ax;
-        int az = straight.az;
-        int bx = straight.bx;
-        int bz = straight.bz;
-        double dx = bx - ax;
-        double dz = bz - az;
-        double length = Math.sqrt(dx * dx + dz * dz);
-        if (length == 0) {
+        if (straight.ax == straight.bx && straight.az == straight.bz) {
             return null;
         }
-        // The unit normal, left of the lower-to-upper direction.
-        double nx = -dz / length;
-        double nz = dx / length;
-        long max = (long) maxDistance * maxDistance;
-        for (int offset : DETOUR_OFFSETS) {
-            for (double along : DETOUR_ALONG) {
-                for (int side = 1; side >= -1; side -= 2) {
-                    int wx = (int) Math.round(ax + along * dx + side * offset * nx);
-                    int wz = (int) Math.round(az + along * dz + side * offset * nz);
-                    long da = (long) (wx - ax) * (wx - ax) + (long) (wz - az) * (wz - az);
-                    long db = (long) (wx - bx) * (wx - bx) + (long) (wz - bz) * (wz - bz);
-                    if (da > max || db > max) {
-                        continue;
-                    }
-                    List<LinkRaster.Step> path = LinkRaster.rasterizeVia(ax, az, wx, wz, bx, bz);
-                    if (path != null && !crossesBlocked(path)) {
-                        return new Link(ax, az, bx, bz, path);
-                    }
-                }
-            }
-        }
-        return null;
+        List<LinkRaster.Step> path = DetourSearch.detour(straight.path(), nodes::blocked, maxDistance);
+        return path == null ? null : new Link(straight.ax, straight.az, straight.bx, straight.bz, path);
     }
 
     private boolean crossesBlocked(List<LinkRaster.Step> path) {
