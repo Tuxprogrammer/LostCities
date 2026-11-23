@@ -1,6 +1,6 @@
 # Lost Cities: New Horizons
 
-Abandoned cities for the **GT New Horizons** overworld (Minecraft 1.7.10). This is a backport of McJty's [Lost Cities](https://github.com/McJtyMods/LostCities), built for GTNH 2.9.0 and its Realistic World Gen terrain.
+Abandoned cities for the **GT New Horizons** overworld (Minecraft 1.7.10). This is a backport of McJty's [Lost Cities](https://github.com/McJtyMods/LostCities), built for GTNH 2.9.1 and its Realistic World Gen terrain.
 
 Explore cities that were here before you, salvage what they left behind, or move into a block of buildings and build your base inside it.
 
@@ -51,7 +51,7 @@ All taken in a GTNH 2.9.0 world on RWG2 Continents with the default settings.
 
 ## Requirements
 
-- **GT New Horizons 2.9.0**, server and client. The pack provides GTNHLib, the one hard dependency.
+- **GT New Horizons 2.9.1**, server and client (0.4.1-beta and earlier: 2.9.0). The pack provides GTNHLib, the one hard dependency.
 - An overworld of type **RWG2 Continents**, **RWG2**, **classic RWG** or **flat**. Other world types get no cities.
 
 ## Installing
@@ -61,7 +61,7 @@ The same jar goes on the server and on every client: a server running the mod tu
 ### Dedicated server
 
 1. Stop the server and put `lostcitiesnh-<version>.jar` in `mods/`.
-2. Choose the world type in `server.properties` **before the world is created**. The GTNH 2.9.0 server pack ships `level-type=rwg`, which is classic RWG. For RWG2 Continents, set `level-type=RWG2_CONTINENTS`.
+2. Choose the world type in `server.properties` **before the world is created**. The GTNH 2.9.1 server pack ships `level-type=rwg2_continents` (RWG2 Continents). For classic RWG, set `level-type=rwg`.
 3. Optionally choose a profile (below).
 4. Start the server with a **new world** (delete or rename the old `world/` folder, or set `level-name` to a new name). Cities appear from the first chunk.
 

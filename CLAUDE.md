@@ -1,6 +1,6 @@
 # Agent guide
 
-Lost Cities: New Horizons backports McJty's Lost Cities (MIT, upstream branch `1.20`) to **GT New Horizons 2.9.0 (Minecraft 1.7.10, Forge)**. It is faithful to the original's functionality, not its bugs. Cities generate in the GTNH overworld over RWG terrain, with a GTNH layer on top. This file is a map: load the skill or document you need, not everything up front.
+Lost Cities: New Horizons backports McJty's Lost Cities (MIT, upstream branch `1.20`) to **GT New Horizons 2.9.1 (Minecraft 1.7.10, Forge)**. It is faithful to the original's functionality, not its bugs. Cities generate in the GTNH overworld over RWG terrain, with a GTNH layer on top. This file is a map: load the skill or document you need, not everything up front.
 
 Skills live in [.claude/skills/](.claude/skills/); agent definitions in [.claude/agents/](.claude/agents/), guard hooks in [.claude/hooks/](.claude/hooks/) (see [.claude/README.md](.claude/README.md)), brief templates in [docs/agent-setup/](docs/agent-setup/README.md), and quiet-run and wait helpers in [tools/agent/](tools/agent/README.md). Claude Code loads one automatically when its description matches the task; you can also ask for one by name.
 

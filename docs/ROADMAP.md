@@ -330,7 +330,16 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 ## Next version · GTNH 2.9.1
 
-The pack has moved to GTNH 2.9.1. The next release targets it: the upgrade work comes first, then these checks run against the 2.9.1 jar. The upgrade's own items are added here as they are confirmed.
+The pack has moved to GTNH 2.9.1. The next release, 0.4.2-beta, targets it: the upgrade work comes first, then these checks run against the 2.9.1 jar. The upgrade's items come from the pack maintainer's 2.9.1 list (D-291-1).
+
+### GTNH 2.9.1 upgrade
+
+- [x] **RWG2 2.0.9 config.** 0.4.1-beta fails with `NoSuchFieldError` on 2.9.1 because RWG2 moved the fields we read out of `ConfigRWG`. `compat.rwg2.Rwg2Config` reads them by reflection, 2.0.9 class first, `ConfigRWG` second. *`Rwg2ConfigTest`; build `r291` green, 1426 tests.*
+- [x] **Pins.** RWG2 2.0.9, GTNHLib 0.11.58, VillageNames 4.5.22-GTNH, AE2 rv3-beta-1104-GTNH in `dependencies.gradle`. *[0002](design/0002-target-pack.md) has the 2.9.1 column.*
+- [x] **Junction oracle.** Re-read against 2.0.9's `RiverJunctionLandmark`: same climb and thresholds, island radius 7 plus a firefly at most 1 block out, inside the 8-block margin. Volcano radius still 160. *D-291-1.*
+- [x] **Et Futurum 2.6.66 ruined portals and shipwrecks.** Inventoried at the tag; T3, accepted, with a T4 guard named if one is seen in a city. *[other-worldgen.md § Mod structures](new-spec/00-pack-integration/other-worldgen.md#mod-structures).*
+- [x] **Build box on 2.9.1.** Real pack swapped to 2.9.1 with 2.9.0 kept beside it; `run.sh` takes the pack's default level type (`rwg2_continents` on 2.9.1). *tools/remote/server/README.txt.*
+- [ ] **Real-pack check on 2.9.1.** Scenario suite on fresh RWG2 Continents and classic RWG worlds, the RWG2 landmark oracle self-check, `city.real` hashes stable across two fresh worlds, no cascades, a client join.
 
 ### Chunk-generation performance follow-ups
 
