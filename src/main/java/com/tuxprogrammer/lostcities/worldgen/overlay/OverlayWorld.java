@@ -305,11 +305,13 @@ public final class OverlayWorld {
      * @return how the chunk was treated
      */
     TerrainPhase.ChunkClass terrain(Chunk chunk) {
-        if (FootprintGuard.populating()) {
+        boolean ours = ownPopulation > 0;
+        if (ours || FootprintGuard.populating()) {
             // A chunk generated while a population runs is a cascade (ArchaicFix logs it too, with a stack trace
-            // when asked); the overlay never causes one itself, so count it for the scenario.
+            // when asked); count it for the scenarios. Our own population phase runs under a suspended guard
+            // frame, where populating() is false, so it is recognized by ownPopulation instead (D-291-3).
             cascades++;
-            if (ownPopulation > 0) {
+            if (ours) {
                 ownCascades++;
             }
         }

@@ -168,6 +168,8 @@ public final class CityScenarios {
         private RegionGenerator generator;
         private CityFinder.Result center;
         private boolean done;
+        /** This mod's own cascades before the region, so only the region's are checked (D-291-3). */
+        private long ownCascadesBefore;
 
         @Override
         public String name() {
@@ -188,6 +190,7 @@ public final class CityScenarios {
         public void setup(ScenarioContext context) {
             OverlayWorld overlay = requireCities(context);
             center = freshCenter(context, overlay);
+            ownCascadesBefore = overlay.ownCascades();
             int inner = REGION_RADIUS - 2;
             overlay.recorder()
                 .record(
@@ -288,7 +291,7 @@ public final class CityScenarios {
                     Locale.ROOT,
                     "[LCNH-CITY] region: %d city chunks, %d buildings of %d kinds, %d streets (%d paved), %d parks,"
                         + " %d bridges, %d population jobs, decoration logs and leaves in footprints %d, guard dropped"
-                        + " %d writes, cascades during population %d",
+                        + " %d writes, cascades during population %d (of them ours %d)",
                     cityChunks,
                     buildings,
                     buildingNames.size(),
@@ -299,7 +302,8 @@ public final class CityScenarios {
                     jobs,
                     addedFoliage,
                     FootprintGuard.droppedWrites(),
-                    overlay.cascades()));
+                    overlay.cascades(),
+                    overlay.ownCascades() - ownCascadesBefore));
             LostCities.LOG.info("[LCNH-CITY] buildings: {}", buildingNames);
             LostCities.LOG.info(
                 "[LCNH-HASH] worldType={} seed={} chunks={} terrain={} population={}",
@@ -319,6 +323,11 @@ public final class CityScenarios {
             context.check(
                 FootprintGuard.leakedFoliage() == 0,
                 "expected no log or leaf past the guard during population, found " + FootprintGuard.leakedFoliage());
+            // Other mods' decorators cascade on the 2.9.1 pack and are only logged (D-291-2); ours fail the run.
+            context.check(
+                overlay.ownCascades() == ownCascadesBefore,
+                "expected no chunk generated during our population, found " + (overlay.ownCascades()
+                    - ownCascadesBefore));
         }
 
         /** Whether at least 9 in 10 of a street chunk's inner columns hold a block at the city ground. */

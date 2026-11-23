@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -268,7 +269,8 @@ public final class PopulationPhase {
     /**
      * Turns a block of this chunk into air without its block hooks: the tile entity is dropped and the section written
      * straight, then clients are told. {@code World.setBlock} would run the block's {@code breakBlock}, and a chest's
-     * comparator update there reads its neighbors, loading the next chunk when the chest stands on the edge. Only
+     * comparator update there reads its neighbors, loading the next chunk when the chest stands on the edge;
+     * {@code World.removeTileEntity} runs the same update, so the tile is taken out through the chunk alone. Only
      * blocks that neither give nor block light are cleared this way (chests, spawners), so light and height map hold.
      */
     private boolean clearQuietly(int x, int y, int z) {
@@ -281,7 +283,14 @@ public final class PopulationPhase {
             return false;
         }
         handle(x, y, z);
-        world.removeTileEntity(x, y, z);
+        // Not World.removeTileEntity: it ends with the same comparator update (World.func_147453_f), which reads
+        // the four blocks beside the chest and, for a chest on the chunk's edge, loaded or generated the next chunk
+        // (D-291-3). Dropping the tile from the chunk's own map and invalidating it touches nothing outside the
+        // chunk; the world prunes an invalid tile from its ticking list itself on the next tick.
+        TileEntity tile = (TileEntity) chunk.chunkTileEntityMap.remove(new ChunkPosition(x & 15, y, z & 15));
+        if (tile != null) {
+            tile.invalidate();
+        }
         section.func_150818_a(x & 15, y & 15, z & 15, Blocks.air);
         section.setExtBlockMetadata(x & 15, y & 15, z & 15, 0);
         chunk.setChunkModified();
