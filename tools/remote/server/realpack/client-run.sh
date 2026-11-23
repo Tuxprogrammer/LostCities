@@ -5,7 +5,7 @@
 #               [--jvm '<extra jvm args>'] [--hold <file>] (after the shots, stay up until <file> exists)
 #               [--restore-options] (put options.txt and optionsnf.txt back as they were after the run, and
 #               turn JourneyMap's waypoint beacons and deathpoints off for the run, putting its file back too)
-# Launch the real GTNH 2.9.0 client (client/, built by client-prepare.py) headless on our own Xvfb
+# Launch the real GTNH 2.9.1 client (client/, built by client-prepare.py) headless on our own Xvfb
 # display with Mesa software GL (llvmpipe), wait until the main menu is up (or, with --server, until
 # the client has joined), wait --wait more seconds, screenshot the display into
 # runs/client-<id>/<shot>.png, then stop only the JVM and Xvfb this script started.
