@@ -4,6 +4,7 @@ import net.minecraft.util.ChunkCoordinates;
 
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.layout.perf.PerfCounters;
+import com.tuxprogrammer.lostcities.layout.perf.PerfSpans;
 import com.tuxprogrammer.lostcities.scenario.Scenario;
 import com.tuxprogrammer.lostcities.scenario.ScenarioContext;
 import com.tuxprogrammer.lostcities.scenario.ScenarioRegistry;
@@ -23,6 +24,23 @@ public final class PerfScenarios {
 
     public static void registerAll(ScenarioRegistry registry) {
         registry.register(new Sites());
+        registry.register(new PerfWalk());
+    }
+
+    /**
+     * The split of a site's generator time into exclusive {@link PerfSpans} (D-perf3-1): the parts of
+     * {@code ChunkProviderServer.loadChunk} and {@code populate} outside the wrapped generator get names.
+     */
+    static final String[] SPLIT = { RegionGenerator.SPAN_LOAD, OverlayChunkProvider.SPAN_PROVIDE,
+        OverlayChunkProvider.SPAN_POPULATE, LoadChunkProbe.WORLD_GENERATORS, LoadChunkProbe.CHUNK_LOAD_EVENT,
+        RegionGenerator.SPAN_POPULATE };
+
+    static String splitLine(long wholeNanos) {
+        long[] nanos = new long[SPLIT.length];
+        for (int i = 0; i < SPLIT.length; i++) {
+            nanos[i] = PerfCounters.totalNanos(PerfSpans.PREFIX + SPLIT[i]);
+        }
+        return PerfSpans.split(wholeNanos, SPLIT, nanos);
     }
 
     static final class Sites implements Scenario {
@@ -131,6 +149,7 @@ public final class PerfScenarios {
                         .summary(),
                     overlay.planMisses() - planMissesAtStart);
             }
+            LostCities.LOG.info("[LCNH-PERF] site {} split {}", site, splitLine(siteNanos));
             for (String line : PerfCounters.report()) {
                 LostCities.LOG.info("[LCNH-PERF] site {} counter {}", site, line);
             }

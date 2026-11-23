@@ -75,6 +75,7 @@ public final class Overlays {
         MinecraftForge.TERRAIN_GEN_BUS.register(INSTANCE.vetoes);
         TreeGuard.register(INSTANCE);
         PrefetchTicker.register(INSTANCE);
+        LoadChunkProbe.register();
     }
 
     /**
