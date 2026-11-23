@@ -328,6 +328,22 @@ Scopes are written from S1 to S3 when they land. In outline:
 
 **Open before the gate:** the owner's playtest of the beta jar ([README](../README.md), [CHANGELOG](../CHANGELOG.md)).
 
+## Next version · GTNH 2.9.1
+
+The pack has moved to GTNH 2.9.1. The next release targets it: the upgrade work comes first, then these checks run against the 2.9.1 jar. The upgrade's own items are added here as they are confirmed.
+
+### Chunk-generation performance follow-ups
+
+Rounds 1 and 2 are in (`gtnh` `1b305cb5`, 0.4.0-beta; D-perf-1 and the D-perf2 entries in the decision log). After round 2, `perf.sites` on seed 4242, RWG2 Continents, measures 27.29 to 27.67 s on rarecities (worst chunk 626 to 868 ms) and 28.92 to 29.38 s on default (worst chunk 397 to 411 ms). Turning the plan worker off adds 0.8 to 1.0 s. Before round 2, on rarecities with the worker off (27.6 s), RWG2's provide took 28 % of generator time and delegate populate (vanilla, RWG2, GT, other mods) 50 %; about 17 % was unaccounted for (loadChunk, events, lighting). The terrain overlay was 1.26 s and LC population 0.04 s, so this mod controls only about 5 to 7 % of the total. Runs vary by about 1 s from one to the next, so repeat each A/B arm at least three times. Round-2 evidence: `reference/remote/realpack/` 20261107-131601-i5, 185023-i5, 185305-i6, 185301-i5, 131621-i6 and 185026-i6.
+
+- [ ] **Cold-teleport worst chunk.** A cold teleport puts chunk 251,3 on rarecities at about 630 ms, because its link routes run on the server thread: `clg.route` (~30 ms) and `clg.buildIndex` (~105 ms) do not fit in the plan worker's 1 to 2.5 ms steps. Either split them into steps or plan them ahead of a teleport target.
+- [ ] **MSPT on a live walk.** `perf.sites` times only `RegionGenerator.tick()` and leaves out prefetch (`PerfScenarios`, `PrefetchTicker`), so it cannot show what the plan worker gains. Measure MSPT and tick-to-tick time on a walk, and add a thread dimension to `PerfCounters`.
+- [ ] **JFR on delegate populate.** Profile it by decorator. Populate is about half of generator time; if 10 % of it can be cut, that saves about 1.4 s per run.
+- [ ] **Time loadChunk.** Put a timer around it to break down the roughly 4.9 s that is unaccounted for.
+- [ ] **Larger `ho.noise` cache.** Estimated at 0.2 to 0.4 s per run.
+
+Not planned: saving routes per world, because it would need a new saved-data format.
+
 ## After beta
 
 - **PersonalSpace:** cities inside a personal dimension, on a flat world ([0003](design/0003-world-presence.md)). Upstream's other landscape types (floating islands, glass-bubble space cities with monorails, caverns, biospheres) are the first candidates there, with terrain this mod generates (decision log D12).

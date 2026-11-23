@@ -115,24 +115,7 @@ public final class Rwg2Landmarks {
         }
 
         static String settings() {
-            return String.format(
-                Locale.ROOT,
-                "continent=%.0f-%.0f,island=%.0f-%.0f,ocean=%.0f/%.0f/%.2f,islandChance=%.2f,volcanoChance=%.2f,"
-                    + "landmarks=%.2f,landmassOffset=%d/%d,biomeOffset=%d/%d",
-                rwg2.config.ConfigRWG.minimumContinentWidth,
-                rwg2.config.ConfigRWG.maximumContinentWidth,
-                rwg2.config.ConfigRWG.minimumIslandWidth,
-                rwg2.config.ConfigRWG.maximumIslandWidth,
-                rwg2.config.ConfigRWG.averageOceanWidth,
-                rwg2.config.ConfigRWG.minimumOceanWidth,
-                rwg2.config.ConfigRWG.maximumOceanFraction,
-                rwg2.config.ConfigRWG.islandPlacementChance,
-                rwg2.config.ConfigRWG.largeIslandVolcanoChance,
-                rwg2.config.ConfigRWG.averageLandmarksPerTypeAndContinent,
-                rwg2.config.ConfigRWG.landmassOffsetX,
-                rwg2.config.ConfigRWG.landmassOffsetZ,
-                rwg2.config.ConfigRWG.biomeOffsetX,
-                rwg2.config.ConfigRWG.biomeOffsetZ);
+            return Rwg2Config.summary();
         }
     }
 }

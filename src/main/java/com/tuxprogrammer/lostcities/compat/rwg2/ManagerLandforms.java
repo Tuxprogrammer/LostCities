@@ -8,7 +8,6 @@ import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.worldgen.overlay.PlanThreads;
 
 import rwg2.biomes.realistic.land.RealisticBiomeMountainChain;
-import rwg2.config.ConfigRWG;
 import rwg2.util.ContinentalNoise;
 import rwg2.world.ChunkManagerRealistic;
 
@@ -119,11 +118,12 @@ final class ManagerLandforms implements Rwg2Landforms {
             return NONE;
         }
         if (continents != null) {
-            long center = continents
-                .getVolcanoCenterCoordinates(blockX + ConfigRWG.landmassOffsetX, blockZ + ConfigRWG.landmassOffsetZ);
+            int offsetX = Rwg2Config.landmassOffsetX();
+            int offsetZ = Rwg2Config.landmassOffsetZ();
+            long center = continents.getVolcanoCenterCoordinates(blockX + offsetX, blockZ + offsetZ);
             if (center != Long.MIN_VALUE) {
-                int x = (int) (center >> 32) - ConfigRWG.landmassOffsetX;
-                int z = (int) center - ConfigRWG.landmassOffsetZ;
+                int x = (int) (center >> 32) - offsetX;
+                int z = (int) center - offsetZ;
                 return Rwg2Landforms.pack(x, z);
             }
         }
