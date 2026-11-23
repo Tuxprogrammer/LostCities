@@ -161,7 +161,7 @@ The `[LCNH-BUDGET]` lines give the `provide`, `terrain`, `populate` and `populat
 
 ### Overlay runs on the real pack
 
-The overlay scenarios run on the real GTNH 2.9.0 server with the release jar, on both world types, with ArchaicFix's cascade warning switched on for the run (D33, D82):
+The overlay scenarios run on the real GTNH 2.9.1 server with the release jar, on both world types, with ArchaicFix's cascade warning switched on for the run (D33, D82):
 
 ```sh
 tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
@@ -174,7 +174,7 @@ Repeat with `--level-type RWG`, and run each a second time with `--fresh` to com
 
 ### VillageNames oracle runs on the real pack
 
-The oracle scenario runs on the real GTNH 2.9.0 server with the release jar, on fresh worlds of both types, twice per type to compare the hashes (D33):
+The oracle scenario runs on the real GTNH 2.9.1 server with the release jar, on fresh worlds of both types, twice per type to compare the hashes (D33):
 
 ```sh
 tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
@@ -186,7 +186,7 @@ Repeat with `--level-type RWG`. The `[LCNH-VN]` lines give, per world, the scan'
 
 ### Review screenshots on the real pack
 
-Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.0 server and client (D93 to D98). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
+Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.1 server and client (D93 to D98). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot>

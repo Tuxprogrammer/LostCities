@@ -76,7 +76,7 @@ The client uses an offline account, so it can join only the real-pack server, wh
 tools/remote/lc-remote.sh build main gtnh                       # format check, compile, tests
 tools/remote/lc-remote.sh build feat HEAD -- test               # unpushed work, tests only
 tools/remote/lc-remote.sh devserver main gtnh -- --cmds 'forge tps'
-tools/remote/lc-remote.sh realpack -- --fresh                   # bare pack, classic RWG
+tools/remote/lc-remote.sh realpack -- --fresh                   # bare pack, RWG2 Continents (the 2.9.1 default)
 tools/remote/lc-remote.sh realpack --slot main -- --fresh --world rwg2c \
     --level-type RWG2_CONTINENTS --seed 12345 --cmds 'forge tps'
 tools/remote/lc-remote.sh client -- --shot menu                 # main-menu screenshot
