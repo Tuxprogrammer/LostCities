@@ -28,7 +28,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  * the next tick, when the plan worker plans. The first {@code -Dlostcitiesnh.walkWarmup} (100) ticks are left out.
  * Hodgepodge's per-player generation throttle does not see this walk.
  */
-final class PerfWalk implements Scenario {
+public final class PerfWalk implements Scenario {
 
     static final int TICKS = Integer.getInteger("lostcitiesnh.walkTicks", 4800);
     static final double SPEED = Double.parseDouble(System.getProperty("lostcitiesnh.walkSpeed", "0.28"));
