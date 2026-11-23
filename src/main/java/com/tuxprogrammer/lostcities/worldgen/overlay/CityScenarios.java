@@ -326,8 +326,8 @@ public final class CityScenarios {
             // Other mods' decorators cascade on the 2.9.1 pack and are only logged (D-291-2); ours fail the run.
             context.check(
                 overlay.ownCascades() == ownCascadesBefore,
-                "expected no chunk generated during our population, found " + (overlay.ownCascades()
-                    - ownCascadesBefore));
+                "expected no chunk generated during our population, found "
+                    + (overlay.ownCascades() - ownCascadesBefore));
         }
 
         /** Whether at least 9 in 10 of a street chunk's inner columns hold a block at the city ground. */
