@@ -19,9 +19,7 @@ public class TickStatsTest {
         assertEquals(99_000_000L, stats.quantile(0.99));
         assertEquals(100_000_000L, stats.max());
         assertEquals(50, stats.over(50_000_000L));
-        assertEquals(
-            "n=100 mean=50.50 p95=95.00 p99=99.00 max=100.00 ms, over 50 ms 50",
-            stats.summary());
+        assertEquals("n=100 mean=50.50 p95=95.00 p99=99.00 max=100.00 ms, over 50 ms 50", stats.summary());
     }
 
     @Test

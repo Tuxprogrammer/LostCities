@@ -10,8 +10,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
-import com.tuxprogrammer.lostcities.layout.perf.PerfSpans;
 import com.tuxprogrammer.lostcities.LostCities;
+import com.tuxprogrammer.lostcities.layout.perf.PerfSpans;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
 

@@ -56,7 +56,8 @@ public class PerfSpansTest {
 
     @Test
     void splitNamesTheRest() {
-        String line = PerfSpans.split(1_000_000_000L, new String[] { "a", "b" }, new long[] { 600_000_000L, 300_000_000L });
+        String line = PerfSpans
+            .split(1_000_000_000L, new String[] { "a", "b" }, new long[] { 600_000_000L, 300_000_000L });
         assertEquals("1000.0 ms = a 600.0 (60.0 %) + b 300.0 (30.0 %) + outside 100.0 (10.0 %)", line);
     }
 }
