@@ -7,6 +7,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 
+import com.tuxprogrammer.lostcities.layout.perf.PerfSpans;
+
 /**
  * Generates a square of chunks one at a time in spiral order from its center, over many server ticks, and populates
  * every chunk whose 3 × 3 neighborhood exists, as the worldgen scenarios need (docs/design/0005-rwg-overlay.md §8,
@@ -21,6 +23,13 @@ final class RegionGenerator {
 
     /** Most time one tick spends generating, in nanoseconds, so the server keeps ticking. */
     static final long TICK_BUDGET_NANOS = 40_000_000L;
+    /**
+     * Perf span of one {@code ChunkProviderServer.loadChunk}: what is left of it once the wrapped generator, the world
+     * generators and the chunk-load handlers are taken out (D-perf3-1).
+     */
+    static final String SPAN_LOAD = "loadChunk";
+    /** Perf span of one {@code ChunkProviderServer.populate} this generator asks for, outside the wrapped generator. */
+    static final String SPAN_POPULATE = "serverPopulate";
 
     private final WorldServer world;
     private final int centerX;
@@ -71,7 +80,12 @@ final class RegionGenerator {
         long start = System.nanoTime();
         while (next < order.size() && System.nanoTime() - start < TICK_BUDGET_NANOS) {
             long[] chunk = order.get(next++);
-            server.loadChunk((int) chunk[0], (int) chunk[1]);
+            PerfSpans.enter(SPAN_LOAD);
+            try {
+                server.loadChunk((int) chunk[0], (int) chunk[1]);
+            } finally {
+                PerfSpans.exit(SPAN_LOAD);
+            }
         }
         if (next < order.size()) {
             return false;
@@ -86,7 +100,12 @@ final class RegionGenerator {
             populateCursor++;
             Chunk chunk = server.provideChunk(x, z);
             if (!chunk.isTerrainPopulated) {
-                server.populate(server, x, z);
+                PerfSpans.enter(SPAN_POPULATE);
+                try {
+                    server.populate(server, x, z);
+                } finally {
+                    PerfSpans.exit(SPAN_POPULATE);
+                }
             }
         }
         return populateCursor >= side * side;

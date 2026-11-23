@@ -10,6 +10,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import com.tuxprogrammer.lostcities.layout.perf.PerfSpans;
 import com.tuxprogrammer.lostcities.LostCities;
 import com.tuxprogrammer.lostcities.worldgen.terrain.TerrainPhase;
 import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
@@ -32,6 +33,11 @@ import com.tuxprogrammer.lostcities.worldgen.timing.GenerationTimers;
  * Server thread only. Side: server.
  */
 public final class OverlayChunkProvider implements IChunkProvider {
+
+    /** Perf span of one wrapped {@code provideChunk}: the delegate's, the terrain phase, the sky light (D-perf3-1). */
+    static final String SPAN_PROVIDE = "provide";
+    /** Perf span of one wrapped {@code populate}: the delegate's and the population phase (D-perf3-1). */
+    static final String SPAN_POPULATE = "populate";
 
     private final IChunkProvider delegate;
     private final OverlayWorld overlay;
@@ -58,11 +64,13 @@ public final class OverlayChunkProvider implements IChunkProvider {
 
     @Override
     public Chunk provideChunk(int chunkX, int chunkZ) {
+        PerfSpans.enter(SPAN_PROVIDE);
         boolean reopen = overlay.enterGeneration();
         try {
             return provide(chunkX, chunkZ);
         } finally {
             overlay.exitGeneration(reopen);
+            PerfSpans.exit(SPAN_PROVIDE);
         }
     }
 
@@ -114,11 +122,13 @@ public final class OverlayChunkProvider implements IChunkProvider {
 
     @Override
     public void populate(IChunkProvider provider, int chunkX, int chunkZ) {
+        PerfSpans.enter(SPAN_POPULATE);
         boolean reopen = overlay.enterGeneration();
         try {
             populateChunk(provider, chunkX, chunkZ);
         } finally {
             overlay.exitGeneration(reopen);
+            PerfSpans.exit(SPAN_POPULATE);
         }
     }
 

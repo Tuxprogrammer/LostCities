@@ -84,6 +84,38 @@ public final class PerfCounters {
     }
 
     /**
+     * Records one call of a known duration; does nothing when the counters are off.
+     *
+     * @param name  counter name
+     * @param nanos the call's duration
+     */
+    public static void addNanos(String name, long nanos) {
+        if (ENABLED) {
+            GLOBAL.add(named(name), nanos);
+        }
+    }
+
+    /**
+     * Returns a counter's total, for reports that combine counters.
+     *
+     * @param name counter name, as recorded on an untagged thread
+     * @return the nanoseconds recorded, 0 when unknown or when the counters are off
+     */
+    public static long totalNanos(String name) {
+        return ENABLED ? GLOBAL.totalNanos(name) : 0L;
+    }
+
+    /**
+     * Returns a counter's call count, for reports that combine counters.
+     *
+     * @param name counter name, as recorded on an untagged thread
+     * @return the calls recorded, 0 when unknown or when the counters are off
+     */
+    public static long count(String name) {
+        return ENABLED ? GLOBAL.count(name) : 0L;
+    }
+
+    /**
      * Records a call with no timing; does nothing when the counters are off.
      *
      * @param name counter name
