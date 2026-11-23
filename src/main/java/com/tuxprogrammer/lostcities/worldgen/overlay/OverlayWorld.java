@@ -85,6 +85,9 @@ public final class OverlayWorld {
     /** Depth of server-thread generation calls in progress, so a window opens only at the outermost one. */
     private int generating;
     private long cascades;
+    /** Depth of this mod's own population work in progress: its population phase and pack-house writes. */
+    private int ownPopulation;
+    private long ownCascades;
 
     OverlayWorld(WorldServer world, ProfileSnapshot snapshot, TerrainHeightOracle oracle, int chunksBeforeInstall) {
         this.world = world;
@@ -306,6 +309,9 @@ public final class OverlayWorld {
             // A chunk generated while a population runs is a cascade (ArchaicFix logs it too, with a stack trace
             // when asked); the overlay never causes one itself, so count it for the scenario.
             cascades++;
+            if (ownPopulation > 0) {
+                ownCascades++;
+            }
         }
         buffer.attach(chunk);
         try {
@@ -360,12 +366,15 @@ public final class OverlayWorld {
      */
     void population(int chunkX, int chunkZ) {
         ChunkPlan chunkPlan = plan.chunk(chunkX, chunkZ);
+        ownPopulation++;
         try {
             populationPhase.run(chunkX, chunkZ, chunkPlan);
         } catch (RuntimeException e) {
             timers.countFailure();
             LostCities.LOG
                 .error("Population phase failed for chunk ({}, {}) of dimension {}", chunkX, chunkZ, dimension, e);
+        } finally {
+            ownPopulation--;
         }
         if (chunkPlan.packHouseSide() >= 0) {
             packHouse(chunkX, chunkZ, chunkPlan);
@@ -383,6 +392,7 @@ public final class OverlayWorld {
      */
     String packHouse(int chunkX, int chunkZ, ChunkPlan chunkPlan) {
         boolean framed = FootprintGuard.pushHouse(world, plan);
+        ownPopulation++;
         try {
             return PackHouses.build(world, chunkX, chunkZ, chunkPlan.groundY(), chunkPlan.packHouseSide());
         } catch (RuntimeException e) {
@@ -390,6 +400,7 @@ public final class OverlayWorld {
             LostCities.LOG.error("Pack house failed for chunk ({}, {}) of dimension {}", chunkX, chunkZ, dimension, e);
             return null;
         } finally {
+            ownPopulation--;
             if (framed) {
                 FootprintGuard.pop();
             }
@@ -683,9 +694,20 @@ public final class OverlayWorld {
         return prefetcher;
     }
 
-    /** Returns how many chunks were generated while a population ran (cascades). */
+    /**
+     * Returns how many chunks were generated while any population ran (cascades), whoever caused them: in the real
+     * pack other mods' decorators cascade too (IC2 rubber trees, Et Futurum glow lichen, Thaumcraft nodes).
+     */
     public long cascades() {
         return cascades;
+    }
+
+    /**
+     * Returns how many of {@link #cascades()} happened while this mod's own population work ran: its population phase
+     * or a pack-house write. Those are the ones this mod causes, and should stay at 0.
+     */
+    public long ownCascades() {
+        return ownCascades;
     }
 
     /** Returns how many chunks the world had loaded when the wrapper was installed; 0 on a new world. */
