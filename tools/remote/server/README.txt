@@ -57,13 +57,17 @@ Proof (2026-11-01, gtnh 5450e6cc, the renamed ExampleMod skeleton)
   Done after 16 s, stop, Gradle exit 0.
 
 Real-pack server: realpack/
-  dl/          GT_New_Horizons_2.9.0_Server_Java_17-26.zip (568,348,402 bytes)
+  dl/          GT_New_Horizons_2.9.1_Server_Java_17-26.zip, the pack server in use since 2026-11-22,
+               sha256 df20c7bb5423f1b5170047498d4278ad8342aef7632b0bacf7352e100296cae0 (also in dl/*.sha256).
+               server-2.9.0/, client-2.9.0/ and instances-2.9.0/ keep the GTNH 2.9.0 trees; its zip is still here:
+               GT_New_Horizons_2.9.0_Server_Java_17-26.zip (568,348,402 bytes)
                from https://downloads.gtnewhorizons.com/ServerPacks/GT_New_Horizons_2.9.0_Server_Java_17-26.zip
                sha256 0ab3de26e4d0de80a2df286916570d9af31c3394cb1f44aee8b9aa1f2ead9831 (also in dl/*.sha256)
   server/      the unpacked zip. Edits: eula.txt eula=true; server.properties server-port=25800,
                server-ip=127.0.0.1, online-mode=false, view-distance=6, white-list=false,
                snooper-enabled=false. Everything else is the pack's (level-name=World,
-               level-type=rwg, difficulty=3, ...). server.properties.pack-original is the zip's file.
+               level-type=rwg2_continents in 2.9.1, difficulty=3, ...). server.properties.pack-original is
+               the zip's file; run.sh takes the pack's default level-type from it.
                The server rewrites server.properties on boot (adds keys, reorders); that is harmless.
   run.sh       the only supported way to start it (below).
   runs/<id>/   one folder per run: console.log, fml-server-latest.log, latest.log, new crash
@@ -74,12 +78,12 @@ Real-pack server: realpack/
 World types (verified)
   The dedicated server takes the world type from server.properties level-type, matched
   case-insensitively against registered WorldType names (vanilla WorldType.parseWorldType).
-    RWG2 Continents   level-type=RWG2_CONTINENTS   (rwg2-2.0.6, rwg2/RWG.java)
+    RWG2 Continents   level-type=RWG2_CONTINENTS   (rwg2-2.0.9 in 2.9.1, rwg2/RWG.java)
     RWG2 (no continents) level-type=RWG2           (registered, hidden on the client's screen)
     classic RWG       level-type=RWG  (or rwg)     (RWG-alpha-1.5.3, rwg/RWG.java)
-  The server zip ships level-type=rwg, so the server pack's default is CLASSIC RWG: a --fresh boot
-  writes generatorName=RWG to level.dat. RWG2_CONTINENTS is the default only on the client's
-  Create World screen, set by config/defaultworldgenerator.cfg ("World Generator"=RWG2_CONTINENTS,
+  The 2.9.1 server zip ships level-type=rwg2_continents, so a --fresh boot without --level-type
+  makes an RWG2 Continents world. (The 2.9.0 zip shipped level-type=rwg, CLASSIC RWG.) On the
+  client the Create World default is set by config/defaultworldgenerator.cfg ("World Generator"=RWG2_CONTINENTS,
   whitelist flat/RWG/RWG2_CONTINENTS); DefaultWorldGenerator is a client-only GUI mod.
   The world type is fixed when a world is created; it only matters with --fresh or a new --world.
 
@@ -124,7 +128,7 @@ run.sh [--mod <jar>] [--jvm '<args>'] [--cmds '<cmd>; ...'] [--fresh] [--world <
   Disk: dl 543M, server ~650M before worlds.
 
 Real-pack client: realpack/client/, client-prepare.py, client-run.sh
-  client/game/      mods/ and config/ of the GTNH 2.9.0 client pack (copied from a laptop's
+  client/game/      mods/ and config/ of the GTNH 2.9.1 client pack (from its Prism zip; 2.9.0's was copied from a laptop's
                     Prism instance), and everything the client writes (logs/, options.txt, ...).
   client/instance/  mmc-pack.json, patches/*.json and libraries/ (lwjgl3ify forgePatches jar).
   client/libraries, assets, natives   fetched by client-prepare.py (Mojang, Forge maven).

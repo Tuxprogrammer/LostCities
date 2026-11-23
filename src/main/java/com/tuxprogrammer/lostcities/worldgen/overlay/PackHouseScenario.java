@@ -21,7 +21,8 @@ import com.tuxprogrammer.lostcities.worldgen.plan.ChunkPlan;
  * <li>the lot chunk holds the house's blocks above its ground, and none (apart from the terrain's own trees and plants)
  * in the
  * outermost columns of the chunk;</li>
- * <li>no chunk was generated while a population ran (no cascade);</li>
+ * <li>no chunk was generated while this mod's population phase or the house's write ran (no cascade of ours;
+ * other mods' decorators cascade in the real pack, and are counted and logged, not failed);</li>
  * <li>building the house a second time gives the same blocks (the piece is a pure function of the seed and chunk).</li>
  * </ul>
  * The log line {@code [LCNH-PACKHOUSE]} carries the kind and the block hash, so two fresh runs of one seed compare.
@@ -45,6 +46,7 @@ final class PackHouseScenario implements Scenario {
     private int lotZ;
     private ChunkPlan lot;
     private long cascadesBefore;
+    private long ownCascadesBefore;
     private boolean done;
 
     @Override
@@ -103,6 +105,7 @@ final class PackHouseScenario implements Scenario {
         LostCities.LOG.info("[LCNH-PACKHOUSE] lot ({}, {}) side {} kinds {}", lotX, lotZ, lot.packHouseSide(), kinds);
         context.check(!kinds.isEmpty(), "expected at least vanilla's houses to be usable");
         cascadesBefore = overlay.cascades();
+        ownCascadesBefore = overlay.ownCascades();
         generator = new RegionGenerator(context.world(), lotX, lotZ, REGION_RADIUS);
     }
 
@@ -120,9 +123,13 @@ final class PackHouseScenario implements Scenario {
         }
         OverlayWorld overlay = Overlays.INSTANCE.get(context.world());
         context.check(done, "expected the region generated");
+        LostCities.LOG.info(
+            "[LCNH-PACKHOUSE] cascades during population {} (of them ours {})",
+            overlay.cascades() - cascadesBefore,
+            overlay.ownCascades() - ownCascadesBefore);
         context.check(
-            overlay.cascades() == cascadesBefore,
-            "expected no chunk generated during a population, found " + (overlay.cascades() - cascadesBefore));
+            overlay.ownCascades() == ownCascadesBefore,
+            "expected no chunk generated during our population, found " + (overlay.ownCascades() - ownCascadesBefore));
         Chunk chunk = context.world()
             .getChunkFromChunkCoords(lotX, lotZ);
         int ground = lot.groundY();

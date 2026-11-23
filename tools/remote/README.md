@@ -1,6 +1,6 @@
 # Remote builds and runs
 
-Builds, tests and Minecraft runs happen on the shared build server, never on a development laptop (decision log D4). [`lc-remote.sh`](lc-remote.sh) drives that server from the laptop over ssh. It checks out a commit there, builds it, boots the dev server, runs the real GTNH 2.9.0 server and client, and copies logs and screenshots back into the git-ignored `reference/remote/`.
+Builds, tests and Minecraft runs happen on the shared build server, never on a development laptop (decision log D4). [`lc-remote.sh`](lc-remote.sh) drives that server from the laptop over ssh. It checks out a commit there, builds it, boots the dev server, runs the real GTNH 2.9.1 server and client, and copies logs and screenshots back into the git-ignored `reference/remote/`.
 
 Nothing about the server is committed: its address and paths live in the git-ignored `.env`.
 
@@ -15,12 +15,12 @@ LC_REMOTE_ROOT=<project dir on the host>
 
 Environment variables of the same names override `.env`, and `LC_ENV_FILE` points the script at another file. Worktrees read the main checkout's `.env` and write to its `reference/remote/`.
 
-The server-side scripts live in [server/](server/), laid out as they sit under `LC_REMOTE_ROOT`; `lc-remote.sh install-tools` copies the tracked ones there. Each finds the root from its own location, so nothing in them names the host or the path. The rest of the root is set up by hand once (JDKs and the Xvfb userland in `shared/`, the GTNH 2.9.0 server and client in `realpack/`), and [server/README.txt](server/README.txt) records how:
+The server-side scripts live in [server/](server/), laid out as they sit under `LC_REMOTE_ROOT`; `lc-remote.sh install-tools` copies the tracked ones there. Each finds the root from its own location, so nothing in them names the host or the path. The rest of the root is set up by hand once (JDKs and the Xvfb userland in `shared/`, the GTNH 2.9.1 server and client in `realpack/`), and [server/README.txt](server/README.txt) records how:
 
 - `env.sh` sets up the toolchain: JDK 21 runs Gradle, the buildscript compiles with the JDK 8 toolchain, and `GRADLE_USER_HOME` is the project's own;
 - `bin/lc-sync.sh`, `bin/lc-build.sh` and `bin/lc-devserver.sh` handle the per-slot checkouts in `wt/<slot>/`;
-- `realpack/run.sh` runs the GTNH 2.9.0 dedicated server;
-- `realpack/client-run.sh` runs the GTNH 2.9.0 client under Xvfb.
+- `realpack/run.sh` runs the GTNH 2.9.1 dedicated server;
+- `realpack/client-run.sh` runs the GTNH 2.9.1 client under Xvfb.
 
 ## Commands
 
@@ -53,7 +53,7 @@ The server-side scripts live in [server/](server/), laid out as they sit under `
 
 Each run writes `runs/<id>/` with the console, the FML log, any crash report and a `run.done` summary: status, boot seconds and peak RSS.
 
-World types: a dedicated server reads `level-type` from `server.properties`, and the GTNH 2.9.0 server pack ships `level-type=rwg`. Its default is therefore **classic RWG**, unlike single player, where the client's DefaultWorldGenerator selects RWG2 Continents ([rwg.md](../../docs/new-spec/00-pack-integration/rwg.md)). Pass `--level-type RWG2_CONTINENTS` or `--level-type RWG` with `--fresh` (or a new `--world`) to pick one.
+World types: a dedicated server reads `level-type` from `server.properties`. The GTNH 2.9.1 server pack ships `level-type=rwg2_continents`, so its default is **RWG2 Continents**, the same as single player, where the client's DefaultWorldGenerator selects it. GTNH 2.9.0's server pack shipped `level-type=rwg`, classic RWG. `run.sh` reads the pack's default from `realpack/server.properties.pack-original` ([rwg.md](../../docs/new-spec/00-pack-integration/rwg.md)). Pass `--level-type RWG2_CONTINENTS` or `--level-type RWG` with `--fresh` (or a new `--world`) to pick one.
 
 ### Client arguments (`client-run.sh`)
 
@@ -76,7 +76,7 @@ The client uses an offline account, so it can join only the real-pack server, wh
 tools/remote/lc-remote.sh build main gtnh                       # format check, compile, tests
 tools/remote/lc-remote.sh build feat HEAD -- test               # unpushed work, tests only
 tools/remote/lc-remote.sh devserver main gtnh -- --cmds 'forge tps'
-tools/remote/lc-remote.sh realpack -- --fresh                   # bare pack, classic RWG
+tools/remote/lc-remote.sh realpack -- --fresh                   # bare pack, RWG2 Continents (the 2.9.1 default)
 tools/remote/lc-remote.sh realpack --slot main -- --fresh --world rwg2c \
     --level-type RWG2_CONTINENTS --seed 12345 --cmds 'forge tps'
 tools/remote/lc-remote.sh client -- --shot menu                 # main-menu screenshot

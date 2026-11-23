@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Boot the real GTNH 2.9.0 dedicated server headless, optionally with a Lost Cities: New Horizons jar,
+# Boot the real GTNH 2.9.1 dedicated server headless, optionally with a Lost Cities: New Horizons jar,
 # run console commands once it is up, stop it cleanly, and write a run.done marker. See README.txt.
 #
 # usage: run.sh [--mod <jar>] [--jvm '<extra jvm args>'] [--cmds '<cmd1>; <cmd2>; ...']
@@ -21,7 +21,10 @@ LC="$(dirname "$RP")"
 SRV="$RP/server"
 JAVA="${REALPACK_JAVA:-$LC/shared/jdk21/bin/java}"
 HEAP="${REALPACK_HEAP:-8G}"
-PACK_LEVEL_TYPE=rwg      # what the GTNH 2.9.0 server zip ships in server.properties (classic RWG)
+# The level-type the pack's server zip ships, from the copy of its server.properties kept beside server/:
+# GTNH 2.9.1 ships rwg2_continents (2.9.0 shipped rwg, classic RWG).
+PACK_LEVEL_TYPE="$(sed -n 's/^level-type=//p' "$RP/server.properties.pack-original" 2>/dev/null | tail -1)"
+PACK_LEVEL_TYPE="${PACK_LEVEL_TYPE:-rwg2_continents}"
 export JAVA_TOOL_OPTIONS="-Duser.home=$LC/shared/home"
 
 MOD="" JVM_EXTRA="" CMDS="" TIMEOUT=900 FRESH=0 CMD_WAIT=2 RUN_TIMEOUT=21600 UNTIL="" WORLD=""

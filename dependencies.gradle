@@ -40,16 +40,16 @@
 // com.tuxprogrammer.lostcities.compat.<mod> behind Loader.isModLoaded checks.
 dependencies {
     // GTNHLib: the annotation config, its automatic config screen, and the network channel base classes (M01).
-    api("com.github.GTNewHorizons:GTNHLib:0.11.54:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.11.58:dev")
 
     // Optional: the rwg: biome matcher reads the realistic biome of both RWG versions the pack ships
     // (compat.rwg.RealisticBiomes, docs/new-spec/05-assets/asset-format.md). Compile only, never a dependency.
     compileOnly("com.github.GTNewHorizons:Realistic-World-Gen:alpha-1.5.3:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:Realistic-World-Gen-2:2.0.6:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:Realistic-World-Gen-2:2.0.9:dev") { transitive = false }
 
     // Optional: the VillageNames structure oracle builds each village's plan with VillageNames' own start class, as its
     // generator does (compat.villagenames, decision log D84). Compile only, never a dependency.
-    compileOnly("com.github.GTNewHorizons:VillageNames:4.5.21-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:VillageNames:4.5.22-GTNH:dev") { transitive = false }
 
     // Optional: the Roguelike Dungeons structure oracle reads its config, and the late steering mixin targets its
     // Dungeon.validLocation (compat.roguelike, docs/design/0006-build-around-other-worldgen.md §5). Compile only.
@@ -57,7 +57,7 @@ dependencies {
 
     // Optional: the AE2 meteorite oracle reads AE2's own meteorite settings, and its scenario AE2's spawn data
     // (compat.ae2, docs/design/0006-build-around-other-worldgen.md §2). Compile only, never a dependency.
-    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1095-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1104-GTNH:dev") { transitive = false }
 
     // Optional: the LootGames dungeon oracle reads LootGames' own world-generation settings (compat.lootgames, 0006 §2).
     // Compile only, never a dependency.
@@ -69,7 +69,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     // GTNHLib's config code uses fastutil, which the game gets from GTNHLib's dependency loader at launch; unit tests
     // run outside that loader. Same pin and reason as GTNHLib's own build:
-    // https://github.com/GTNewHorizons/GTNHLib/blob/0.11.54/dependencies.gradle
+    // https://github.com/GTNewHorizons/GTNHLib/blob/0.11.58/dependencies.gradle
     testRuntimeOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 

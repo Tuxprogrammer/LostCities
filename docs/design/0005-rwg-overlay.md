@@ -307,6 +307,31 @@ Where the time went (Java Flight Recorder, classic RWG, seed 4242): before the p
 
 Every budget holds on both world types, before and after. Against the beta pass on the same seeds, city realism raised RWG2's terrain phase on city chunks from 772 to 1,005 ms and its p95 from 1.05 to 2.10 ms, exactly B1's limit, and B3 from 10.2 to 12.1 %. Classic RWG seed 777 rose only from 7.2 to 7.7 %. Java Flight Recorder on the RWG2 world put the furnish pass at about a seventh of the terrain phase, nearly all of it `RoomScanner.scan` (up to seven block reads a column and a substring per block), and the per-write block and opacity lookups behind `WorldChunkBuffer.writable` at about a twentieth. The rest is the city writer's part placement, `moveUp`'s column copy, the terrain blend and the section's own block reads. D381 reads each level once, matches names in place and caches the written block per reference. That took RWG2's city terrain phase to 928 ms with p95 1.84 ms. Classic RWG is unchanged within noise. Both worlds print the `city.real` and `scattered.real` hashes they printed before the change: RWG2 Continents `69471358…`/`94e530d4…` and classic RWG `6c88bbbc…`/`0d78f84a…`. The tightest budget is still B4 on classic RWG seed 777, a prefetch tick that builds a VillageNames start (9.8 ms, as in the beta pass). One classic population phase took 14 to 15 ms in both runs (chunk 76,3, no height samples), and B4's p99.9 over all chunks leaves it out.
 
+**Measured in perf round 3** (D-perf3-1 to D-perf3-5): the real GTNH 2.9.1 server, `perf.sites` (six fresh 25 × 25-chunk sites) on fresh RWG2 Continents worlds, seed 4242, real-pack instances 3 and 4, one run per instance at a time. The base is `edc44e55`; "after" is the round's jar, which adds only instrumentation. Generator time is the sum of the six sites, in seconds; the worst chunk is the slowest terrain-phase chunk, in milliseconds.
+
+| | Base, three runs | After, worker on | After, worker off | After, noise cache 65536 |
+|---|---|---|---|---|
+| Rarecities, generator time | 27.80 to 27.92 | 26.94 to 28.97 | 26.81 to 28.25 | 26.82 to 28.41 |
+| Rarecities, worst chunk (251,3) | 669 to 873 | 647 to 709 | 636 to 666 | 651 to 690 |
+| Default, generator time | 28.88 to 29.40 | 29.20 to 30.32 | | |
+| Default, worst chunk (122,2) | 411 to 421 | 422 to 435 | | |
+
+Run-to-run spread (about 1 to 2 s) covers every difference between the columns. Where the time goes, on the rarecities runs with the worker on (the `split` line, exclusive spans): the wrapped provide with this mod's terrain 9.4 to 10.0 s, the delegate's populate 14.7 to 15.8 s, the `IWorldGenerator`s and the rest of `loadChunk` 4.8 to 5.3 s together (the two trade 1.9 to 3.4 s between them from run to run as generators at the edge weights fall either side), `ChunkEvent.Load` handlers 0.06 s. The spans sum to 2.0 to 2.3 s more than generator time, because chunks also load outside the timed tick.
+
+Java Flight Recorder on one rarecities run (worker on, `20261122-183111-i4`, execution samples on the server thread, aggregated by script) names the other mods' cost:
+
+| Under the delegate's populate (15,444 samples) | Share | Under `GameRegistry.generateWorld` (6,160 samples) | Share |
+|---|---|---|---|
+| RWG2 `RealisticBiomeSupport.rDecorate` | 37.6 % | GregTech `GTWorldgenerator` | 28.1 % |
+| RWG2 `EtFuturumCaveVines.decorate` | 18.2 % | Et Futurum late generator | 21.2 % |
+| Vanilla `WorldGenMinable`, from RWG2's decorate | 12.8 % | Et Futurum generator | 20.0 % |
+| RWG2 BOP ocean `rDecorateAfterIce` | 11.3 % | ExtraBees | 6.5 % |
+| RWG2 mountain chain `rDecorate` | 6.5 % | CoFH world handler | 6.1 % |
+| RWG2 `LandmarkDecorations` | 4.0 % | Roguelike dungeons | 4.8 % |
+| This mod's own frames (self time) | 1.0 % | Pam's trees | 3.5 % |
+
+On the overworld, `loadChunk` time outside provide, populate and `generateWorld` is under 1 % of its samples. This mod's frames take 1.2 % of all `loadChunk` samples, so nothing of this mod's is left to cut there. The noise cache at 65536 chunks (7.3 MB, inside B5) did not move `ho.noise` (195 to 200 ms against 196 to 203 ms), so it stays at 4096 (about 0.46 MB). On `perf.walk` (4800 ticks, 1092 chunks at sprint speed, three runs each), MSPT mean is 4.04 to 4.53 ms with the plan worker and 4.14 to 4.54 ms without, p99 127 to 135 against 128 to 134 ms, and tick-to-tick time averages 50.00 ms in every run. Row loads set the spikes there, so the worker's gain on a walk is inside the noise. In `perf.sites` it still moves 0.8 s of prefetch and 0.38 s of noise sampling off the server thread. The round changes no output: `city.real` (default profile, which has a city within 96 chunks of seed 4242's spawn where rarecities does not) hashes terrain `ec502e46…` and population `af299338…` on RWG2 Continents and `3ffca6fa…` and `d4f6d209…` on classic RWG, the same on the base and after, worker on and off.
+
 ## Consequences
 
 - **M04 scope:**

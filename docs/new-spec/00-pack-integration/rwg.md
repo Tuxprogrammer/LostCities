@@ -10,6 +10,8 @@ Every fact below either cites a pinned permalink or is marked *unverified*. Vani
 |---|---|---|---|---|
 | Realistic World Gen 2 | 2.0.6 | `rwg2` | [GTNewHorizons/Realistic-World-Gen-2 @ 2.0.6](https://github.com/GTNewHorizons/Realistic-World-Gen-2/tree/2.0.6) (commit `497fc1f4`) | GPL-3.0 |
 | Realistic World Gen (classic) | alpha-1.5.3 | `RWG` | [GTNewHorizons/Realistic-World-Gen @ alpha-1.5.3](https://github.com/GTNewHorizons/Realistic-World-Gen/tree/alpha-1.5.3) (commit `90d0d6cf`) | GPL-3.0 |
+
+**GTNH 2.9.1** ships RWG2 **2.0.9** ([@ 2.0.9](https://github.com/GTNewHorizons/Realistic-World-Gen-2/tree/2.0.9)). Its generator, landmarks and defaults match 2.0.6 for everything this sheet relies on, but its config moved from `ConfigRWG` into GTNHLib annotated classes (`ContinentalConfig`, `MigrationConfig`, `SettingsConfig`; commit `d09e3dc`), with the same names, types and defaults. The mod reads each field through `compat.rwg2.Rwg2Config`, 2.0.9 class first, so the `ConfigRWG` permalinks below still give the values. The river-junction landmark was re-read at 2.0.9 and still fits inside the junction oracle's 8-block margin (D-291-1).
 | Hodgepodge | 2.7.221 | `hodgepodge` | [GTNewHorizons/Hodgepodge @ 2.7.221](https://github.com/GTNewHorizons/Hodgepodge/tree/2.7.221) | LGPL-3.0 |
 | GT5-Unofficial | 5.09.54.265 | `gregtech` | [GTNewHorizons/GT5-Unofficial @ 5.09.54.265](https://github.com/GTNewHorizons/GT5-Unofficial/tree/5.09.54.265) | LGPL-3.0 |
 | NewHorizonsCoreMod | 2.9.99 | `dreamcraft` | [GTNewHorizons/NewHorizonsCoreMod @ 2.9.99](https://github.com/GTNewHorizons/NewHorizonsCoreMod/tree/2.9.99) | GPL-3.0 |

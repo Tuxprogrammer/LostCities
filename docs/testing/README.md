@@ -112,7 +112,8 @@ Run scenarios on new worlds (`--fresh`, or a new `--world`), on both generators:
 | `commands.editor` | Part editor (M10) | In an `editMode` world (pin it for a run with `-Dlostcitiesnh.profileOverrides=editMode=true`): generates the building chunk nearest the arena and checks its records, then as an operator `listparts`, `editpart`, an edit with a block no palette has, `exportpart` (the file in `config/lostcitiesnh/export/parts/` with the block in its `missingpalette`; a second export needs `confirm`), `resumeedit` (the edit kept), `locatepart`, `createpart` at Y 120 and `createbuilding` in the arena, and a logout that ends the session. In a world without `editMode` it checks the edit-mode gate; without cities, the dimension check | yes |
 | `api.live` | API (M10) | `LostCitiesAPI.get().getLostInfo` answers for the overworld (`null` without cities) and agrees with the layout for a building chunk; while it listens, it generates a building chunk, another whose `PreGenCityChunk` it cancels and a chunk outside the city, 128 chunks south of its arena: every event fires, a listener reads the chunk's blocks, and the cancelled chunk has no building. Needs a fresh world. Prints `[LCNH-API]` lines | yes |
 
-| `perf.sites` | Performance | Manual-only, test hooks. Generates `-Dlostcitiesnh.perfSites` (6) fresh squares of `-Dlostcitiesnh.perfRadius` (12) chunks around centers `-Dlostcitiesnh.perfSpacing` (63) chunks apart along +X from spawn and logs `[LCNH-PERF]` per site: ms per chunk, the generation timers (`timer slow` names the worst chunks), prefetch stats and the `PerfCounters` (`counter`). Test hooks turn the counters on; `-Dlostcitiesnh.perfCounters=true` does it for other runs. Run with `-Dlostcitiesnh.dimensionProfiles=0=rarecities` for the link network | no (manual-only) |
+| `perf.sites` | Performance | Manual-only, test hooks. Generates `-Dlostcitiesnh.perfSites` (6) fresh squares of `-Dlostcitiesnh.perfRadius` (12) chunks around centers `-Dlostcitiesnh.perfSpacing` (63) chunks apart along +X from spawn and logs `[LCNH-PERF]` per site: ms per chunk, the generation timers (`timer slow` names the worst chunks), prefetch stats and the `PerfCounters` (`counter`). Test hooks turn the counters on; `-Dlostcitiesnh.perfCounters=true` does it for other runs. Run with `-Dlostcitiesnh.dimensionProfiles=0=rarecities` for the link network. Each site also logs a `split` line (D-perf3-1): its generator time broken into exclusive spans, `provide` (the wrapped provide with LC's terrain), `populate` (the delegate's populate with LC's population), `worldGenerators` (the `IWorldGenerator`s, GT ores among them), `chunkLoadEvent` (the `ChunkEvent.Load` handlers), `serverPopulate` and `loadChunk` (the rest of `ChunkProviderServer.loadChunk`); `outside` is generator time minus the spans, negative when chunks load outside the timed tick | no (manual-only) |
+| `perf.walk` | Performance | Manual-only, test hooks; run it after `perf.sites` or alone. Walks a player-sized load window (radius `-Dlostcitiesnh.walkRadius`, the server's view distance by default) along +Z from 24 chunks past spawn at `-Dlostcitiesnh.walkSpeed` (0.28, sprinting) blocks a tick for `-Dlostcitiesnh.walkTicks` (4800) ticks, loading each new row through `ChunkProviderServer.loadChunk` so the prefetcher and the plan worker see it, and logs `[LCNH-PERF] walk mspt` (mean, p95, p99 and max server tick, the first `-Dlostcitiesnh.walkWarmup` (100) ticks left out) and the tick-to-tick time. Compare runs with `-Dlostcitiesnh.planWorker=false` for the worker's gain (D-perf3-4) | no (manual-only) |
 
 Each feature adds its scenarios to this table.
 
@@ -161,7 +162,7 @@ The `[LCNH-BUDGET]` lines give the `provide`, `terrain`, `populate` and `populat
 
 ### Overlay runs on the real pack
 
-The overlay scenarios run on the real GTNH 2.9.0 server with the release jar, on both world types, with ArchaicFix's cascade warning switched on for the run (D33, D82):
+The overlay scenarios run on the real GTNH 2.9.1 server with the release jar, on both world types, with ArchaicFix's cascade warning switched on for the run (D33, D82):
 
 ```sh
 tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
@@ -170,11 +171,11 @@ tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --lev
     --cmds 'lostcities test overlay; until:\[LCNH-SCENARIO\] Scenarios:; lostcities timers; lostcities timers reset; lostcities test overlay.budget; until:\[LCNH-BUDGET\] worldType; wait:5'
 ```
 
-Repeat with `--level-type RWG`, and run each a second time with `--fresh` to compare the `[LCNH-HASH]` lines. Cascade warnings are attributed by adding `--set-config 'archaicfix.cfg:logCascadingWorldgenStacktrace=true'`: a warning caused by the overlay would show `worldgen.terrain`, `worldgen.overlay.PopulationPhase` or the guard as the frame that loads the chunk; `OverlayChunkProvider.populate` only passes RWG's own population through.
+Repeat with `--level-type RWG`, and run each a second time with `--fresh` to compare the `[LCNH-HASH]` lines. Cascade warnings are attributed by adding `--set-config 'archaicfix.cfg:logCascadingWorldgen=true' --set-config 'archaicfix.cfg:logCascadingWorldgenStacktrace=true'` (the pack turns the first off, and the second does nothing without it): a warning caused by the overlay would show `worldgen.terrain`, `worldgen.overlay.PopulationPhase` or the guard as the frame that loads the chunk; `OverlayChunkProvider.populate` only passes RWG's own population through.
 
 ### VillageNames oracle runs on the real pack
 
-The oracle scenario runs on the real GTNH 2.9.0 server with the release jar, on fresh worlds of both types, twice per type to compare the hashes (D33):
+The oracle scenario runs on the real GTNH 2.9.1 server with the release jar, on fresh worlds of both types, twice per type to compare the hashes (D33):
 
 ```sh
 tools/remote/lc-remote.sh realpack --slot <slot> -- --fresh --world <name> --level-type RWG2_CONTINENTS --seed 4242 \
@@ -186,7 +187,7 @@ Repeat with `--level-type RWG`. The `[LCNH-VN]` lines give, per world, the scan'
 
 ### Review screenshots on the real pack
 
-Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.0 server and client (D93 to D98). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
+Screenshots for review, such as the alpha gate's set, come from a shot list run on the real GTNH 2.9.1 server and client (D93 to D98). The list is a JSON file under `tools/remote/shots/` naming the world and each viewpoint, with a caption; `lc-remote.sh shots` takes every shot clean and writes a review page to `reference/remote/shots/<id>/index.html`:
 
 ```sh
 tools/remote/lc-remote.sh shots tools/remote/shots/synthetic-city.json --slot <slot>

@@ -79,7 +79,7 @@ final class VillageNamesConfig {
     private static final class Rwg2Switch {
 
         static boolean generateVillages() {
-            return rwg2.config.ConfigRWG.generateVillages;
+            return com.tuxprogrammer.lostcities.compat.rwg2.Rwg2Config.generateVillages();
         }
     }
 

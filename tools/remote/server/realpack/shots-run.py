@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Take a shot list's screenshots on the real GTNH 2.9.0 pack, clean, and write a review page.
+"""Take a shot list's screenshots on the real GTNH 2.9.1 pack, clean, and write a review page.
 
 usage: python3 -I shots-run.py --mod <jar> [--shotlist <file>|-] [--label <name>] [--level-type <type>]
                                [--seed <seed>] [--world <name>] [--fresh|--reuse-world] [--jvm '<server args>']

@@ -1,4 +1,4 @@
-"""Build a launchable GTNH 2.9.0 client from a Prism instance's metadata, without Prism.
+"""Build a launchable GTNH 2.9.1 client from a Prism instance's metadata, without Prism.
 
 usage: python3 -I client-prepare.py <client-dir>
 
