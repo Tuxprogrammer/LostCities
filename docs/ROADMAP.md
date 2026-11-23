@@ -355,6 +355,10 @@ Round 3 is in (D-perf3-1 to D-perf3-5, 0005 §8). It measured and named the part
 
 Not planned: saving routes per world, because it would need a new saved-data format.
 
+## Next patch
+
+- [ ] **False "other structure generator settings" warning.** On the live 2.9.1 world, 0.4.2-beta logs `Dimension 0 was created with other structure generator settings` although the values are equal: the snapshot pinned on 2.9.0 has `2700` where RWG2 2.0.9's doubles now give `2700.0`. `Overlays.warnIfAssetsChanged` compares the two summaries as strings. Compare them key by key with numbers parsed, and leave out keys that only say where a value was read (such as `source=`). Add a unit test with a 2.0.6-style and a 2.0.9-style summary. *Reported by the pack's upgrade run, 2026-11-22.*
+
 ## After beta
 
 - **PersonalSpace:** cities inside a personal dimension, on a flat world ([0003](design/0003-world-presence.md)). Upstream's other landscape types (floating islands, glass-bubble space cities with monorails, caverns, biospheres) are the first candidates there, with terrain this mod generates (decision log D12).
