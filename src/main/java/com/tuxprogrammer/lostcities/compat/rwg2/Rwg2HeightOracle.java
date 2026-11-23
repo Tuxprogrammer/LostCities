@@ -43,12 +43,8 @@ public final class Rwg2HeightOracle implements TerrainHeightOracle {
     private final ChunkGeneratorRealistic sampler;
     private final ChunkManagerRealistic manager;
     private final RealisticBiomeBase[] biomes = new RealisticBiomeBase[256];
-    /**
-     * Chunks of noise kept per oracle: 4096 unless {@code -Dlostcitiesnh.noiseCacheChunks} sets another size, which the
-     * {@code ho.noise} A/B of D-perf3-3 used. The size changes only how often a chunk's samples are computed again,
-     * never a height.
-     */
-    public static final int CACHE_CHUNKS = Math.max(1, Integer.getInteger("lostcitiesnh.noiseCacheChunks", 4096));
+    /** Chunks of noise kept. 16 times as many did not cut {@code ho.noise} (D-perf3-3). */
+    public static final int CACHE_CHUNKS = 4096;
     /** Most bytes the noise cache can hold, estimated, for budget B5. */
     public static final long CACHE_BYTES = CACHE_CHUNKS * ChunkNoiseCache.ENTRY_BYTES;
 
